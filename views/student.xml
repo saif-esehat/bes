@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+    <record id="candidate_action" model="ir.actions.act_window">
+            <field name="name">Seafarer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bes.candidate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Seafarer</p>
+            </field>
+        </record>
+
+
+        <record id="candidate_form" model="ir.ui.view">
+            <field name="name">bes.candidate.form</field>
+            <field name="model">bes.candidate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="name" placeholder="Seafarer Name" required="1"/>
+                            </h1>
+                        </group>
+                        <group style="width:100%;">
+                          <field name="indos_no"/>
+                          <field name="candidate_code"/>
+                          <field name="roll_no"/>
+                        </group>
+                       
+                        <group>
+                            <group>
+                                <span class="o_form_label o_td_label">
+                                    <b>Address</b>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city" />
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                </div>
+                            </group>
+                            <group >
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="email"/>
+                                <field name="dob"/>                                
+                            </group>
+                        </group>
+                         <group style="width:50%;">
+                            <field name="tenth_percent"/>
+                            <field name="twelve_percent"/>
+                        </group>
+                         <group style="width:50%;">
+                           <field name="iti_percent"/>
+                            <field name="sc_st"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

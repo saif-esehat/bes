@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="custom_survey_form_view">
+            <field name="name">survey.survey.view.form.inherited</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="arch" type="xml">
+
+                <field name="title" position="attributes">
+                    <attribute name="placeholder">e.g. Question Bank 2022</attribute>
+                </field>
+            </field>
+        </record>
+
+        <template id="survey_fill_form_start_inherited" inherit_id="survey.survey_fill_form_start">
+            <xpath expr="//button[contains(., 'Start Survey')]" position="replace">
+                <button type="submit" value="start" class="btn btn-primary btn-lg">
+                    <t t-if="survey.certification">
+                    Start Certification
+                    </t>
+                    <t t-else="">
+                    Start Exam
+                    </t>
+                </button>
+            </xpath>
+            <xpath expr="//div[@t-if='survey.is_time_limited']" position="replace">
+                <div t-if="survey.is_time_limited">
+                    <p>
+                        <span>Time limit for this exam: </span>
+                        <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
+                    </p>
+                </div>
+            </xpath>
+
+        </template>
+
+        <template id="survey_selection_key_inherited" inherit_id="survey.survey_selection_key">
+            <xpath expr="//span[@class='text-primary text-center w-100 position-relative']" position="replace">
+
+            </xpath>
+        </template>
+
+
+
+        <template id="survey_fill_form_done_inherited" inherit_id="survey.survey_fill_form_done">
+            <xpath expr="//div[@class='o_survey_finished mt32 mb32']" position="replace">
+                <!-- Your custom content here -->
+                <h1>Thank you!</h1>
+                <div t-field="survey.description_done" class="oe_no_empty" />
+                <div t-if="survey.is_trigger_exam" class="mt16 mb16">
+                    <a role="button" class="btn btn-primary btn-lg" t-att-href="survey.trigger_exam_url">
+                        <i role="img"/>
+                            Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/> Exam
+                    </a>
+                    
+                </div>
+            </xpath>
+        </template>
+
+
+        <record id="survey_form_inherited" model="ir.ui.view">
+            <field name="name">survey.survey.inherited</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='users_can_go_back']" position="after">
+                    <field name="is_trigger_exam" />
+                    <field name="trigger_exam" attrs="{'invisible': [('is_trigger_exam','=',False)],'required':[('is_trigger_exam','=',True)]}" />
+                    <field name="trigger_exam_url" attrs="{'invisible': [('is_trigger_exam','=',False)]}" />
+                </xpath>
+            </field>
+        </record>
+
+
+
+    </data>
+
+
+
+</odoo>
