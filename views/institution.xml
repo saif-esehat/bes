@@ -12,15 +12,44 @@
             </field>
         </record>
 
+        <record id="create_batch_wizard_form" model="ir.ui.view">
+            <field name="name">create.institute.batches.wizard.form</field>
+            <field name="model">create.institute.batches.wizard</field>
+            <field name="arch" type="xml">
+                <form >
+                    <group>
+                        <field name="batch_name"/>
+                    </group>
+                    <group style="width:50%;">
+                        <field name="from_date"/>
+                    </group>
+                    <group style="width:50%;">
+                        <field name="to_date"/>
+                    </group>
+
+                    <footer>
+                        <button name="create_batches" string="Create Batches" type="object" class="btn-primary"/>
+                        <!-- <button string="Cancel" class="btn-secondary" special="cancel"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="create_batch_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Institute</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.institute.batches.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="create_batch_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
 
         <record id="institute_form" model="ir.ui.view">
             <field name="name">bes.institute.form</field>
             <field name="model">bes.institute</field>
             <field name="arch" type="xml">
                 <form>
-
-                    
-
                     <sheet>
                         <div class="oe_button_box" name="button_box"  >
                             <button name="batch_button" string="Batches" 
@@ -90,6 +119,22 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="institute_tree" model="ir.ui.view">
+            <field name="name">bes.institute.form</field>
+            <field name="model">bes.institute</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="open_create_institute_batches_wizard"  string="Create Batches" type="object"/>
+                    </header>
+
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="code" />
+                </tree>
             </field>
         </record>
 

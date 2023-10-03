@@ -5,3 +5,4 @@ from . import batches
 from . import examiner
 from . import student
 from . import exam_center
+from . import invoice

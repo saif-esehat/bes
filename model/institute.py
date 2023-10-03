@@ -36,6 +36,23 @@ class Institute(models.Model):
     
     name_of_second_authorized_person = fields.Char("Name of the second authorised person representing the Institute")
 
+    def open_create_institute_batches_wizard(self):
+        # Create a new instance of the wizard
+        wizard = self.env['create.institute.batches.wizard'].create({
+            'batch_name': '',  # Set default values if needed
+        })
+
+        # Open the wizard view
+        return {
+            'name': 'Create Institute Batches',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'create.institute.batches.wizard',
+            'res_id': wizard.id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': self.env.context,  # Pass the current context
+        }
 
     def _generate_password(self, length=8):
         characters = string.ascii_letters + string.digits

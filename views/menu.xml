@@ -23,11 +23,13 @@
 
         <menuitem id="examiner_menu" parent="bes_menu" name="Examiner" action="bes_examiner_action" />
 
-        <menuitem id="candidate_menu" parent="bes_menu" name="Sea Farer" action="candidate_action" />
+        <menuitem id="candidate_menu" parent="bes_menu" name="Candidate" action="candidate_action" />
 
         <menuitem id="bes_batch_menu" parent="bes_menu" name="Schedule" action="bes_institute_batch_action" />
 
         <menuitem id="exam_center_menu" parent="bes_menu" name="Exam Center" action="exam_center_action" />
+
+        <menuitem id="batches_menu" parent="bes_menu" name="Batches" action="batch_form_kanban_action" />
 
 
         <record id="survey.menu_surveys" model="ir.ui.menu">

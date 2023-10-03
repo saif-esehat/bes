@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="account_move_inherit_form" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Add a new field after the existing fields -->
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="batch_ok" invisible="1"/>
+                    <field name="batch" attrs="{'invisible': [('batch_ok', '=', False)]}" />
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

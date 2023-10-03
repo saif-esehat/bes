@@ -2,13 +2,13 @@
 <odoo>
     <data>
 
-    <record id="candidate_action" model="ir.actions.act_window">
-            <field name="name">Seafarer</field>
+        <record id="candidate_action" model="ir.actions.act_window">
+            <field name="name">Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bes.candidate</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">Seafarer</p>
+                <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
         </record>
 
@@ -19,12 +19,21 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <div class="oe_button_box" name="button_box"  >
+                            <button name="open_attendance" string="Attendance" 
+                                type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <!-- <button name="open_stcw" string="STCW Certificates" 
+                                type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
+                        </div>
                         <group style="width:100%;">
                             <h1>
-                                <field name="name" placeholder="Seafarer Name" required="1"/>
+                                <field name="name" placeholder="Candidate" required="1"/>
                             </h1>
                         </group>
                         <group style="width:100%;">
+                          <field name="institute_batch_id"/>
                           <field name="indos_no"/>
                           <field name="candidate_code"/>
                           <field name="roll_no"/>
@@ -58,6 +67,67 @@
                            <field name="iti_percent"/>
                             <field name="sc_st"/>
                         </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="candidate_attendance_form" model="ir.ui.view">
+            <field name="name">candidate.attendance.form</field>
+            <field name="model">candidate.attendance</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group style="width:100%;">
+                            <field name="candidate_id" />
+                            <field name="compliance_1" style="margin-bottom:10px; margin-top: 15px;"/>
+                            <field name="compliance_2" style="margin-top: 14px;" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="stcw_form" model="ir.ui.view">
+            <field name="name">candidate.stcw.certificate.form</field>
+            <field name="model">candidate.stcw.certificate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                         <field name="candidate_id" invisible="1"/>
+                        <group style="width:50%;">
+                            <field name="pst_certifcate"/>
+                        </group>
+                        <group style="width:50%;">
+                         <field name="pst_document_file" attrs="{'invisible': [('pst_certifcate', '=', False)],'required': [('pst_certifcate', '=', True)]}"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="efa_certifcate"/>
+                        </group>
+                        <group style="width:50%;">
+                         <field name="efa_document_file" attrs="{'invisible': [('efa_certifcate', '=', False)],'required': [('efa_certifcate', '=', True)]}"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="fpff_certifcate"/>
+                        </group>
+                        <group style="width:50%;">
+                         <field name="fpff_document_file" attrs="{'invisible': [('fpff_certifcate', '=', False)],'required': [('fpff_certifcate', '=', True)]}"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="pssr_certifcate"/>
+                        </group>
+                        <group style="width:50%;">
+                         <field name="pssr_document_file" attrs="{'invisible': [('pssr_certifcate', '=', False)],'required': [('pssr_certifcate', '=', True)]}"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="stsdsd_certifcate"/>
+                        </group>
+                        <group style="width:50%;">
+                         <field name="stsdsd_document_file" attrs="{'invisible': [('stsdsd_certifcate', '=', False)],'required': [('stsdsd_certifcate', '=', True)]}"/>
+                        </group>
+                        <field name="other_certificates"/>
                     </sheet>
                 </form>
             </field>
