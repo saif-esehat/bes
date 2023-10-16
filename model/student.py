@@ -4,6 +4,7 @@ from odoo.exceptions import UserError,ValidationError
 class Candidate(models.Model):
     _name = 'bes.candidate'
     _description = 'Candidate'
+    
     institute_batch_id = fields.Many2one("institute.batches","Batch")
     name = fields.Char("Name of Candidate",required=True)
     indos_no = fields.Char("Indos No.")
@@ -14,7 +15,7 @@ class Candidate(models.Model):
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
     zip = fields.Char("Zip",required=True)
-    state_id = fields.Many2one("res.country.state","State",required=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
     phone = fields.Char("Phone")
     mobile = fields.Char("Mobile")
     email = fields.Char("Email")
@@ -26,7 +27,27 @@ class Candidate(models.Model):
     stcw_certificate_id = fields.Many2one("candidate.stcw.certificate","STCW Certificate")
     ship_visits_count = fields.Char("No. of Ship Visits")
 
+
+    
+    def open_ship_visits(self):
+        
+        return {
+                    'name': _('Candidate Ship Visit'),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'candidate.ship.visits',
+                    'type': 'ir.actions.act_window',
+                    'view_id': False,
+                    'target': 'current',
+                    'domain': [('candidate_id', '=', self.id)],
+                    'context':{
+                        'default_candidate_id': self.id    
+                     }
+                }
+        
+
     def open_stcw(self):
+        
         if self.stcw_certificate_id:
             
             return {
@@ -138,3 +159,19 @@ class CandidateSTCW(models.Model):
     stcw_certificate = fields.Many2one("candidate.stcw.certificate","STCW Certificate")
     name = fields.Char("Certificate Name")
     certificate_file = fields.Binary(string='Upload Document', attachment=True)
+    
+
+class CandidateShipVisits(models.Model):
+    _name = 'candidate.ship.visits'
+    _description = 'Ship Visits'
+    candidate_id = fields.Many2one("bes.candidate","Candidate")
+    name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus")
+    imo_no = fields.Char("Name of  the Ship Visited/ Ship in Campus")
+    name_of_ports_visited = fields.Char("Name of the Port Visited / Place of SIC")
+    date_of_visits = fields.Date("Date Of Visit")
+    time_spent_on_ship = fields.Float("Hours")
+    bridge = fields.Boolean("Bridge")
+    eng_room = fields.Boolean("Eng. Room")
+    cargo_area = fields.Boolean("Cargo Area")
+    
+    

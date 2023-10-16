@@ -6,3 +6,6 @@ from . import examiner
 from . import student
 from . import exam_center
 from . import invoice
+from . import exam_schedule
+from .marksheets import mek
+from .marksheets import gsk

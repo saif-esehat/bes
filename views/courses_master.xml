@@ -30,6 +30,11 @@
                         <group>
                          <field name="exam_fees"/>
                         </group>
+                        <field name="subjects" >
+                            <tree editable="bottom" >
+                                <field name="name" required="1"  />
+                            </tree>
+                        </field>
                         
                     </sheet>
                 </form>

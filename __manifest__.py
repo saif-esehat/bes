@@ -17,6 +17,11 @@
         'views/institution.xml',
         'views/survey.xml',
         'views/invoice.xml',
+        'views/marksheets/mek.xml',
+        'views/marksheets/gsk.xml',
+        'views/exam_schedule.xml',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/menu.xml'
 ]
 }

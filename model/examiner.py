@@ -40,19 +40,24 @@ class Examiner(models.Model):
     institute_association = fields.Boolean("Are you associated with any institute conducting ratings training?")
     associated_training_institute = fields.Text("Name & address of the training institute to which you were associated",required=True)
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
+    course_id = fields.Many2one("course.master","Course")
 
 
     @api.model
     def create(self, values):
         examiner = super(Examiner, self).create(values)
+        group_xml_id = 'bes.group_examiners'
+        
         user_values = {
             'name': examiner.name,
             'login': examiner.email,  # You can set the login as the same as the user name
             'password': 12345678,  # Generate a random password
-            'sel_groups_1_9_10':9
+            'sel_groups_1_9_10':1
         }
- 
+
+        group_id = self.env.ref(group_xml_id).id
         portal_user = self.env['res.users'].sudo().create(user_values)
+        portal_user.write({'groups_id': [(4, group_id)]  })
         examiner.write({'user_id': portal_user.id})  # Associate the user with the institute
         # import wdb; wdb.set_trace()
         examiner_tag = self.env.ref('bes.examiner_tags').id

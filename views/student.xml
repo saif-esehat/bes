@@ -19,12 +19,12 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <div class="oe_button_box" name="button_box"  >
-                            <button name="open_attendance" string="Attendance" 
-                                type="object" class="oe_stat_button" icon="fa-align-justify">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
-                            <!-- <button name="open_stcw" string="STCW Certificates" 
-                                type="object" class="oe_stat_button" icon="fa-align-justify">
+                            <button name="open_stcw" string="STCW Certificates" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <!-- <button name="open_ship_visits" string="Ship Visits" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button> -->
                         </div>
                         <group style="width:100%;">
@@ -32,13 +32,14 @@
                                 <field name="name" placeholder="Candidate" required="1"/>
                             </h1>
                         </group>
+                        
                         <group style="width:100%;">
-                          <field name="institute_batch_id"/>
-                          <field name="indos_no"/>
-                          <field name="candidate_code"/>
-                          <field name="roll_no"/>
+                            <field name="institute_batch_id"/>
+                            <field name="indos_no"/>
+                            <field name="candidate_code"/>
+                            <field name="roll_no"/>
                         </group>
-                       
+                          
                         <group>
                             <group>
                                 <span class="o_form_label o_td_label">
@@ -56,15 +57,15 @@
                                 <field name="phone" widget="phone"/>
                                 <field name="mobile" widget="phone"/>
                                 <field name="email"/>
-                                <field name="dob"/>                                
+                                <field name="dob"/>
                             </group>
                         </group>
-                         <group style="width:50%;">
+                        <group style="width:50%;">
                             <field name="tenth_percent"/>
                             <field name="twelve_percent"/>
                         </group>
-                         <group style="width:50%;">
-                           <field name="iti_percent"/>
+                        <group style="width:50%;">
+                            <field name="iti_percent"/>
                             <field name="sc_st"/>
                         </group>
                     </sheet>
@@ -81,9 +82,20 @@
                     <sheet>
                         <group style="width:100%;">
                             <field name="candidate_id" />
-                            <field name="compliance_1" style="margin-bottom:10px; margin-top: 15px;"/>
-                            <field name="compliance_2" style="margin-top: 14px;" />
+                            <!-- <field name="compliance_1" style="margin-bottom:10px; margin-top: 15px;"/>
+                            <field name="compliance_2" style="margin-top: 14px;" /> -->
                         </group>
+                  
+                            <label for="compliance_1" />
+                            <div>
+                                <field name="compliance_1" />
+                            </div>
+
+                             <label for="compliance_2" />
+                            <div>
+                                <field name="compliance_2" />
+                            </div>
+                       
                     </sheet>
                 </form>
             </field>
@@ -96,42 +108,88 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                         <field name="candidate_id" invisible="1"/>
+                        <field name="candidate_id" invisible="1"/>
                         <group style="width:50%;">
                             <field name="pst_certifcate"/>
                         </group>
                         <group style="width:50%;">
-                         <field name="pst_document_file" attrs="{'invisible': [('pst_certifcate', '=', False)],'required': [('pst_certifcate', '=', True)]}"/>
+                            <field name="pst_document_file" attrs="{'invisible': [('pst_certifcate', '=', False)],'required': [('pst_certifcate', '=', True)]}"/>
                         </group>
                         <group style="width:50%;">
                             <field name="efa_certifcate"/>
                         </group>
                         <group style="width:50%;">
-                         <field name="efa_document_file" attrs="{'invisible': [('efa_certifcate', '=', False)],'required': [('efa_certifcate', '=', True)]}"/>
+                            <field name="efa_document_file" attrs="{'invisible': [('efa_certifcate', '=', False)],'required': [('efa_certifcate', '=', True)]}"/>
                         </group>
                         <group style="width:50%;">
                             <field name="fpff_certifcate"/>
                         </group>
                         <group style="width:50%;">
-                         <field name="fpff_document_file" attrs="{'invisible': [('fpff_certifcate', '=', False)],'required': [('fpff_certifcate', '=', True)]}"/>
+                            <field name="fpff_document_file" attrs="{'invisible': [('fpff_certifcate', '=', False)],'required': [('fpff_certifcate', '=', True)]}"/>
                         </group>
                         <group style="width:50%;">
                             <field name="pssr_certifcate"/>
                         </group>
                         <group style="width:50%;">
-                         <field name="pssr_document_file" attrs="{'invisible': [('pssr_certifcate', '=', False)],'required': [('pssr_certifcate', '=', True)]}"/>
+                            <field name="pssr_document_file" attrs="{'invisible': [('pssr_certifcate', '=', False)],'required': [('pssr_certifcate', '=', True)]}"/>
                         </group>
                         <group style="width:50%;">
                             <field name="stsdsd_certifcate"/>
                         </group>
                         <group style="width:50%;">
-                         <field name="stsdsd_document_file" attrs="{'invisible': [('stsdsd_certifcate', '=', False)],'required': [('stsdsd_certifcate', '=', True)]}"/>
+                            <field name="stsdsd_document_file" attrs="{'invisible': [('stsdsd_certifcate', '=', False)],'required': [('stsdsd_certifcate', '=', True)]}"/>
                         </group>
                         <field name="other_certificates"/>
                     </sheet>
                 </form>
             </field>
         </record>
+
+
+        <record id="candidate_ship_visits_form" model="ir.ui.view">
+            <field name="name">candidate.ship.visits.form</field>
+            <field name="model">candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="candidate_id"/>
+                        </group>
+                        <group>
+                            <field name="name_of_ships"/>
+                            <field name="imo_no"/>
+                            <field name="name_of_ports_visited"/>
+                            <field name="date_of_visits"/>
+                            <field name="time_spent_on_ship"/>
+                            <field name="bridge"/>
+                            <field name="eng_room"/>
+                            <field name="cargo_area"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="candidate_ship_visits_tree" model="ir.ui.view">
+            <field name="name">candidate.ship.visits.form</field>
+            <field name="model">candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name_of_ships"/>
+                    <field name="imo_no"/>
+                    <field name="name_of_ports_visited"/>
+                    <field name="date_of_visits"/>
+                    <field name="time_spent_on_ship"/>
+                    <field name="bridge"/>
+                    <field name="eng_room"/>
+                    <field name="cargo_area"/>
+                </tree>
+            </field>
+        </record>
+
+
+
 
     </data>
 </odoo>
