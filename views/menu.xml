@@ -31,11 +31,21 @@
                   action="candidate_action"
                   sequence="1" />
         
-        <menuitem id="candidate_cc_action" 
+        <menuitem id="candidate_cc_menu" 
                   parent="candidate_menus" 
                   name="CCMC Candidates"
                   action="candidate_cc_rating_action"
+<<<<<<< HEAD
                   sequence="2" /> -->
+=======
+                  sequence="2" />
+        
+        <menuitem id="candidate_gp_rating_menu" 
+                  parent="candidate_menus" 
+                  name="GP Candidates"
+                  action="candidate_gp_rating_action"
+                  sequence="3" />
+>>>>>>> 45bbbf640617e51bf291089e5957e4c76ee67c48
 
         <menuitem id="bes_batch_menu" 
                   parent="bes_menu" 

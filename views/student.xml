@@ -13,11 +13,22 @@
         </record>
 
          <record id="candidate_cc_rating_action" model="ir.actions.act_window">
-            <field name="name">Candidate</field>
+            <field name="name">CC Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bes.candidate</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('institute_batch_id.course.course_code', '=', 'CC')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Candidate</p>
+            </field>
+        </record>
+
+        <record id="candidate_gp_rating_action" model="ir.actions.act_window">
+            <field name="name">GP Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bes.candidate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('institute_batch_id.course.course_code', '=', 'GP')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
