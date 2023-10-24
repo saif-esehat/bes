@@ -35,6 +35,13 @@ class Institute(models.Model):
     admin_email= fields.Char("E-mail of Admin Officer of Training Institute")
     
     name_of_second_authorized_person = fields.Char("Name of the second authorised person representing the Institute")
+    
+    institute_computer_lab = fields.Boolean("Does the institue have inhouse Computer Lab")
+    computer_lab_pc_count = fields.Integer("How many PC does the computer Lab Have")
+    internet_strength = fields.Char("Strength of Internet connection")
+    institute_approved_conduct_stcw = fields.Boolean("Is the Institute Approved to conduct STCW and Security Courses")
+    is_lab_used_for_stcw_exit_exam = fields.Boolean("IS the Lab being used for STCW exit exams")
+    
 
     def open_create_institute_batches_wizard(self):
         # Create a new instance of the wizard

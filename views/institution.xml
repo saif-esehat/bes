@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
+        
         <record id="institute_action" model="ir.actions.act_window">
             <field name="name">Institute</field>
             <field name="type">ir.actions.act_window</field>
@@ -11,7 +11,7 @@
                 <p class="o_view_nocontent_smiling_face">Institute</p>
             </field>
         </record>
-
+        
         <record id="create_batch_wizard_form" model="ir.ui.view">
             <field name="name">create.institute.batches.wizard.form</field>
             <field name="model">create.institute.batches.wizard</field>
@@ -26,7 +26,7 @@
                     <group style="width:50%;">
                         <field name="to_date"/>
                     </group>
-
+                    
                     <footer>
                         <button name="create_batches" string="Create Batches" type="object" class="btn-primary"/>
                         <!-- <button string="Cancel" class="btn-secondary" special="cancel"/> -->
@@ -34,7 +34,7 @@
                 </form>
             </field>
         </record>
-
+        
         <record id="create_batch_wizard_action" model="ir.actions.act_window">
             <field name="name">Create Institute</field>
             <field name="type">ir.actions.act_window</field>
@@ -43,8 +43,8 @@
             <field name="view_id" ref="create_batch_wizard_form"/>
             <field name="target">new</field>
         </record>
-
-
+        
+        
         <record id="institute_form" model="ir.ui.view">
             <field name="name">bes.institute.form</field>
             <field name="model">bes.institute</field>
@@ -53,7 +53,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box"  >
                             <button name="batch_button" string="Batches" 
-                                type="object" class="oe_stat_button" icon="fa-align-justify">
+                                    type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
                         <group style="width:100%;">
@@ -64,11 +64,11 @@
                         <group style="width:50%;">
                             <field name="email" required="1"/>
                         </group>
-                         <group style="width:50%;">
+                        <group style="width:50%;">
                             <field name="code" required="1"/>
                         </group>
                         <group>
-
+                            
                             <group >
                                 
                                 <span class="o_form_label o_td_label">
@@ -81,13 +81,13 @@
                                     <field name="state" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
                                     <field name="zip" placeholder="ZIP" class="o_address_zip" />
                                 </div>
-
+                                
                             </group>
                             <group style="width:50%;">
                                 <field name="mti" />
                                 <field name="exam_center" />
                             </group>
-
+                            
                             <group style="width:50%;">
                                 <label for="principal_name" style="margin-bottom:10px; margin-top: 15px;"/>   
                                 <field name="principal_name"  nolabel="1" style="margin-top: 14px;" />
@@ -106,22 +106,31 @@
                                 <label for="admin_email" style="margin-bottom:10px; margin-top: 15px;"/>
                                 <field name="admin_email"   nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
                             </group>
-                             <group style="width:100%;">
+                            <group style="width:100%;">
                                 <field name="name_of_second_authorized_person"/>
                             </group>
-                             <field name="courses">
-                                    <tree editable="bottom">
-                                        <field name="course" options="{'no_create': True}" />
-                                        <field name="approved_capacity" />  
-                                        <field name="approved_date" />
-                                    </tree>
-                              </field>
+                            
+                            <group style="width:100%;">
+                                <field name="institute_computer_lab"/>
+                                <field name="computer_lab_pc_count" attrs="{'required': [('institute_computer_lab', '=', True)]" />
+                                <field name="internet_strength"/>
+                                <field name="institute_approved_conduct_stcw"/>
+                                <field name="is_lab_used_for_stcw_exit_exam"/>
+                            </group>
+
+                            <field name="courses">
+                                <tree editable="bottom">
+                                    <field name="course" options="{'no_create': True}" />
+                                    <field name="approved_capacity" />  
+                                    <field name="approved_date" />
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-
+        
         <record id="institute_tree" model="ir.ui.view">
             <field name="name">bes.institute.form</field>
             <field name="model">bes.institute</field>
@@ -130,14 +139,14 @@
                     <header>
                         <button name="open_create_institute_batches_wizard"  string="Create Batches" type="object"/>
                     </header>
-
+                    
                     <field name="name"/>
                     <field name="email"/>
                     <field name="code" />
                 </tree>
             </field>
         </record>
-
-
+        
+        
     </data>
 </odoo>
