@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('payment_state', '!=', 'not_paid'),]}"/>
+                        <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-pending_invoice'),]}"/>
                         <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/>
                         <button name="confirm_indos" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-indos_pending')]}"/>
                         <button name="create_invoice" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('create_invoice_button_invisible', '=', False)]}"/>

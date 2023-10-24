@@ -67,6 +67,8 @@ class InstituteBatches(models.Model):
             rec.candidate_count = candidate_count
     
     def move_to_invoiced(self):
+        if self.payment_state == 'not_paid':
+            raise ValidationError("Invoice is not Paid")
         self.write({"state":'4-invoiced'})
 
           
