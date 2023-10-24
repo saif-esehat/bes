@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Exam Schedule -->
+
+
+        <record id="bes_institute_exam_action" model="ir.actions.act_window">
+            <field name="name">Schedules</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bes.exam.schedule</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Exam Schedules</p>
+            </field>
+        </record>
+
+
+
+        <record id="bes_exam_form" model="ir.ui.view">
+            <field name="name">bes.exam.schedule.form</field>
+            <field name="model">bes.exam.schedule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="exam_confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-draft'),]}"/>
+                        <button name="open_assign_examiner_wizard" string="Assign Examiners" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirm'),]}"/>
+                        <button name="exam_planned" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),]}" />
+                        <!-- attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),]}" -->
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_exam_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
+                                <field name="candidate_count" string="Candidate"  widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="schedule_name" placeholder="Schedule Name"/>
+                            </h1>
+                        </group>
+                        <group style="width:100%;">
+                            <field name="exam_date"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="course"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="exam_center"/>
+                        </group>
+                        <group style="width:100%;">
+                            <field name="examiners" readonly="1" widget="many2many_tags" />
+                        </group>
+                        <span attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}" style="font-weight: bold; font-size: 18px;">Online Exam</span>
+                        <field name="exam_online" attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}">
+                            <tree editable="bottom" >
+                                <field name="exam_schedule_id" invisible="1" />
+                                <field name="examiners" required="1" options="{'no_create': True}"  />
+                                <field name="subject"/>
+                                <field name="start_time_online" required="1" />
+                                <field name="end_time_online" required="1"   />
+                                <field name="candidate_count" readonly="1"   />
+                            </tree>
+                        </field>
+                        <span attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}" style="font-weight: bold; font-size: 18px;">Oral and Practical Exam</span>
+                        <field name="exam_oral_practical" attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}">
+                            <tree editable="bottom">
+                                <field name="exam_schedule_id" invisible="1" />
+                                <field name="examiners" required="1" options="{'no_create': True}"  />
+                                <field name="subject" required="1" />
+                                <field name="start_time_online" required="1" />
+                                <field name="end_time_online" required="1"/>
+                                <field name="candidate_count" readonly="1" />
+                                <field name="state" readonly="1" widget="badge" />
+
+                                <!-- <field name="candidates" readonly="1"   /> -->
+
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bes_exam_tree" model="ir.ui.view">
+            <field name="name">bes.exam.schedule.tree</field>
+            <field name="model">bes.exam.schedule</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="schedule_name"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
+        <record id="exam_candidate_batches" model="ir.ui.view">
+            <field name="name">exam.schedule.bes.candidate.form</field>
+            <field name="model">exam.schedule.bes.candidate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button string="MEK Oral Marksheet" attrs="{'invisible': [('mek_visiblity', '=', False)]}" name="open_mek_oral_sheet" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button string="MEK Practical Marksheet" attrs="{'invisible': [('mek_visiblity', '=', False)]}" name="open_mek_practical_sheet" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button string="GSK Oral Marksheet" name="open_gsk_oral_sheet" attrs="{'invisible': [('gsk_visiblity', '=', False)]}" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button string="GSK Practical Marksheet" attrs="{'invisible': [('gsk_visiblity', '=', False)]}" name="open_gsk_practical_sheet" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
+                        <group style="width:50%;">
+                            <field name="exam_schedule_id" />
+                            <field name="partner_id" />
+                            <field name="name" />
+                            <field name="mek_visiblity" invisible="1" />
+                            <field name="gsk_visiblity" invisible="1" />
+                        </group >
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="assign_examiner_wizard_form" model="ir.ui.view">
+            <field name="name">assign.examiner.wizard.form</field>
+            <field name="model">assign.examiner.wizard</field>
+            <field name="arch" type="xml">
+                <form >
+                    <group>
+                        <field name="course" invisible="1"/>
+                        <field name="state_id" invisible="1"/>
+                        <field name="examiners" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('course_id', '=', course), ('state_id', '=', state_id)]" />
+                    </group>
+
+                    <footer>
+                        <button name="assign_examiner" string="Assign Examiner" type="object" class="btn-primary"/>
+                        <!-- <button string="Cancel" class="btn-secondary" special="cancel"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="assign_examiner_wizard_action" model="ir.actions.act_window">
+            <field name="name">Assign Examiners</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">assign.examiner.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="assign_examiner_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- END Exam Schedule -->
+    </data>
+</odoo>

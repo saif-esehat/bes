@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="mek_prac_marksheet" model="ir.ui.view">
+            <field name="name">practical.mek.form</field>
+            <field name="model">practical.mek</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!-- <header>
+                        
+                    </header> -->
+                    <sheet>
+                        <field name="exam_bes_candidate_id" invisible="1"/>
+                        <!-- <group style="width:50%;"> -->
+                            <group>
+                                <label for="using_hand_plumbing_tools_task_1" />
+                                <div >
+                                    <field name="using_hand_plumbing_tools_task_1" min="0" max="10" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="using_hand_plumbing_tools_task_2" />
+                                <div >
+                                    <field name="using_hand_plumbing_tools_task_2" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="using_hand_plumbing_tools_task_3" />
+                                <div >
+                                    <field name="using_hand_plumbing_tools_task_3" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="use_of_chipping_tools_paint_brushes" />
+                                <div >
+                                    <field name="use_of_chipping_tools_paint_brushes" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="use_of_carpentry" />
+                                <div >
+                                    <field name="use_of_carpentry" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="use_of_measuring_instruments" />
+                                <div >
+                                    <field name="use_of_measuring_instruments" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="welding" />
+                                <div >
+                                    <field name="welding" nolabel="1"/>
+                                    / 
+                                    <span>20 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="lathe" />
+                                <div >
+                                    <field name="lathe" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                            <group>
+                                <label for="electrical" />
+                                <div >
+                                    <field name="electrical" nolabel="1"/>
+                                    / 
+                                    <span>10 Marks</span>
+                                </div>
+                            </group>
+
+                        <!-- </group> -->
+                        <group style="width:100%;">
+                            <field name="total_marks"/>                            
+                        </group>
+
+
+                        <group style="width:100%;">
+                            <field name="remarks"/>                            
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="mek_oral_marksheet" model="ir.ui.view">
+            <field name="name">oral.mek.form</field>
+            <field name="model">oral.mek</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="exam_bes_candidate_id" invisible="1"/>
+
+                    <group>
+                        <label for="using_hand_plumbing_carpentry_tools" />
+                            <div>
+                                <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                                / 
+                                <span>10 Marks</span>
+                            </div>
+                    </group>
+
+                    <group>
+                        <label for="use_of_chipping_tools_paints" />
+                            <div>
+                                <field name="use_of_chipping_tools_paints" nolabel="1"/>
+                                / 
+                                <span>10 Marks</span>
+                            </div>
+                    </group>
+
+                    <group>
+                        <label for="welding" />
+                            <div>
+                                <field name="welding" nolabel="1"/>
+                                / 
+                                <span>10 Marks</span>
+                            </div>
+                    </group>
+
+                    <group>
+                        <label for="lathe_drill_grinder" />
+                            <div>
+                                <field name="lathe_drill_grinder" nolabel="1"/>
+                                / 
+                                <span>10 Marks</span>
+                            </div>
+                    </group>
+
+
+                    <group>
+                        <label for="electrical" />
+                            <div>
+                                <field name="electrical" nolabel="1"/>
+                                / 
+                                <span>10 Marks</span>
+                            </div>
+                    </group>
+
+                    <group>
+                        <label for="journal" />
+                            <div>
+                                <field name="journal" nolabel="1"/>
+                                / 
+                                <span>25 Marks</span>
+                            </div>
+                    </group>
+
+                    <group style="width:100%;">
+                            <field name="remarks"/>                            
+                    </group>
+
+                    <group style="width:100%;">
+                            <field name="total_marks"/>                            
+                    </group>
+                    
+
+                 </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

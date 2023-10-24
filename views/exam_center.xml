@@ -23,7 +23,9 @@
                             <h1>
                                 <field name="name" placeholder="Exam Center"/>
                             </h1>
+                            
                         </group>
+                        <field name="state_id" required="1"/>
 
                     </sheet>
                 </form>
@@ -37,6 +39,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="state_id" required="1"/>
                 </tree>
             </field>
         </record>

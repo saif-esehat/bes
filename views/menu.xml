@@ -12,20 +12,50 @@
         </record>
 
 
-        <menuitem id="bes_menu" name="BES" sequence="1" />
+        <menuitem id="bes_menu" name="BES" sequence="1"  />
 
         <menuitem id="course_master_menu" parent="bes_menu" name="Course Master" sequence="1" />
 
-        <menuitem id="course_menu" parent="course_master_menu" name="Courses" action="course_master_action" />
+        <menuitem id="course_menu" parent="course_master_menu" name="Courses" action="course_master_action" sequence="1" />
 
 
-        <menuitem id="institute_menu" parent="bes_menu" name="Institute" action="institute_action" />
+        <menuitem id="institute_menu" parent="bes_menu" name="Institute" action="institute_action" sequence="2"/>
 
-        <menuitem id="examiner_menu" parent="bes_menu" name="Examiner" action="bes_examiner_action" />
+        <menuitem id="examiner_menu" parent="bes_menu" name="Examiner" action="bes_examiner_action" sequence="3"/>
 
-        <menuitem id="candidate_menu" parent="bes_menu" name="Candidate" action="candidate_action" />
+        <menuitem id="candidate_menus" parent="bes_menu" name="Candidates"  sequence="4"/>
 
-        <menuitem id="bes_batch_menu" parent="bes_menu" name="Schedule" action="bes_institute_batch_action" />
+        <menuitem id="candidate_all_action" 
+                  parent="candidate_menus" 
+                  name="All Candidates"
+                  action="candidate_action"
+                  sequence="1" />
+        
+        <menuitem id="candidate_cc_action" 
+                  parent="candidate_menus" 
+                  name="CCMC Candidates"
+                  action="candidate_cc_rating_action"
+                  sequence="2" />
+
+        <menuitem id="bes_batch_menu" 
+                  parent="bes_menu" 
+                  name="Exams"
+                  sequence="5" />
+
+        <menuitem id="bes_batch_schedule_menus" 
+                  parent="bes_batch_menu" 
+                  name="Schedule"
+                  groups=""
+                  action="bes_institute_exam_action"
+                  sequence="1" />
+
+        <menuitem id="bes_batch_examiner_duty_menu" 
+                  parent="bes_batch_menu" 
+                  name="Examiner Practical/Oral Duty" 
+                  action="bes_examiner_oral_practical_duty_action" 
+                  sequence="2"/>
+
+        <menuitem id="bes_batch_examiner_duty_menus_group_examiner" sequence="0" name="Examiner Practical/Oral Duty" action="bes_examiner_oral_practical_duty_action" groups="bes.group_examiners" />
 
         <menuitem id="exam_center_menu" parent="bes_menu" name="Exam Center" action="exam_center_action" />
 
@@ -39,6 +69,20 @@
         <record id="survey.menu_survey_form" model="ir.ui.menu">
             <field name="name">CEMS</field>
         </record>
+
+        <!-- <record id="bes.bes_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('bes.group_examiners')])]"/>
+        </record>
+
+        <record id="bes.bes_batch_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('bes.group_examiners')])]"/>
+        </record>
+
+        <record id="bes.bes_batch_examiner_duty_menus" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('bes.group_examiners')])]"/>
+        </record> -->
+
+        
 
 
     </data>
