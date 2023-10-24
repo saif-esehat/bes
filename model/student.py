@@ -48,6 +48,25 @@ class Candidate(models.Model):
                 }
         
 
+
+    
+    def open_ship_visits(self):
+        
+        return {
+                    'name': _('Candidate Ship Visit'),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'candidate.ship.visits',
+                    'type': 'ir.actions.act_window',
+                    'view_id': False,
+                    'target': 'current',
+                    'domain': [('candidate_id', '=', self.id)],
+                    'context':{
+                        'default_candidate_id': self.id    
+                     }
+                }
+        
+
     def open_stcw(self):
         
         if self.stcw_certificate_id:
