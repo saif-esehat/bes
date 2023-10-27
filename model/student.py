@@ -41,6 +41,8 @@ class GPCandidate(models.Model):
          ('yes', 'Yes'),
          ('no', 'No')
     ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
+
+    stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate")
     
     # attendance_compliance_2 = fields.Boolean([
     #     ('yes', 'Yes'),
@@ -147,11 +149,22 @@ class GPCandidate(models.Model):
         
         
 
-class CandidateSTCWV2(models.Model):
-    _name = 'candidate.stcw.certificate.v2'
+class STCWCandidate(models.Model):
+    _name = 'gp.candidate.stcw.certificate'
     _description = 'STCW'
     
-    candidate_id = fields.Many2one("bes.candidate","Candidate")
+    candidate_id = fields.Many2one("gp.candidate","Candidate")
+
+    course_name = fields.Char("Course Name")
+    institute_name = fields.Many2one("bes.institute","Institute Name")
+    marine_training_inst_number = fields.Char("Marine Training Institute Number")
+    mti_indos_no = fields.Char("MTI Indos No.")
+    candidate_cert_no = fields.Char("Candidate Certificate Number")
+    course_start_date = fields.Date(string="Course Start Date")
+    course_end_date = fields.Date(string="Course End Date")
+
+
+
 
 class CandidateSTCW(models.Model):
     _name = 'candidate.stcw.certificate'

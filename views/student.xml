@@ -107,6 +107,21 @@
                              <!-- <page string="Ship Visits">
                                     <field name="ship_visits"/>
                             </page> -->
+                            <page string="STCW Certificate">
+                                <field name="stcw_certificate" nolabel="1" >
+                                    <tree editable="bottom">
+                                        <field name='candidate_id'/>
+                                        <field name='course_name'/>
+                                        <field name="institute_name"/>
+                                        <field name='marine_training_inst_number'/>
+                                        <field name="mti_indos_no"/>
+                                        
+                                        <field name="candidate_cert_no"/>
+                                        <field name="course_start_date"/>
+                                        <field name="course_end_date"/>                                 
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
