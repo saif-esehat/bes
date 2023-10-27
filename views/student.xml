@@ -94,6 +94,9 @@
                         </group>
 
                         <notebook>
+                            <page string="Ship Visits">
+                                    <field name="ship_visits"/>
+                            </page>
                             <page string="Attendance">
                                 <label for="attendance_compliance_1" />
                                 <div>
@@ -176,9 +179,9 @@
         </record>
 
 
-        <record id="candidate_ship_visits_form" model="ir.ui.view">
-            <field name="name">candidate.ship.visits.form</field>
-            <field name="model">candidate.ship.visits</field>
+        <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
+            <field name="name">gp.candidate.ship.visits.form</field>
+            <field name="model">gp.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -201,9 +204,9 @@
         </record>
 
 
-        <record id="candidate_ship_visits_tree" model="ir.ui.view">
-            <field name="name">candidate.ship.visits.form</field>
-            <field name="model">candidate.ship.visits</field>
+        <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
+            <field name="name">gp.candidate.ship.visits.form</field>
+            <field name="model">gp.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name_of_ships"/>
