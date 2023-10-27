@@ -5,14 +5,14 @@
         <record id="candidate_action" model="ir.actions.act_window">
             <field name="name">Candidate</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">bes.candidate</field>
+            <field name="res_model">gp.candidate</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
         </record>
 
-        <record id="candidate_cc_rating_action" model="ir.actions.act_window">
+        <!-- <record id="candidate_cc_rating_action" model="ir.actions.act_window">
             <field name="name">CC Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bes.candidate</field>
@@ -21,12 +21,12 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
-        </record>
+        </record> -->
 
         <record id="candidate_gp_rating_action" model="ir.actions.act_window">
             <field name="name">GP Candidate</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">bes.candidate</field>
+            <field name="res_model">gp.candidate</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('institute_batch_id.course.course_code', '=', 'GP')]</field>
             <field name="help" type="html">
@@ -36,31 +36,28 @@
 
 
 
-        <record id="candidate_form" model="ir.ui.view">
-            <field name="name">bes.candidate.form</field>
-            <field name="model">bes.candidate</field>
+        <record id="gp_candidate_form" model="ir.ui.view">
+            <field name="name">gp.candidate.form</field>
+            <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button> -->
-                            <button name="open_stcw" string="STCW Certificates" type="object" class="oe_stat_button" icon="fa-align-justify">
-                            </button>
                             <!-- <button name="open_ship_visits" string="Ship Visits" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button> -->
                         </div>
-                        <group style="width:100%;">
-                            <h1>
-                                <field name="name" placeholder="Candidate" required="1"/>
-                            </h1>
-                        </group>
 
+                        <field name="candidate_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
                         <group style="width:100%;">
-                            <field name="institute_batch_id"/>
-                            <field name="indos_no"/>
                             <field name="candidate_code"/>
                             <field name="roll_no"/>
+                            <field name="name" placeholder="Candidate" required="1"/>
+                            <field name="indos_no"/>
+                            <field name="dob"/>
+                            <field name="age"/>
+
                         </group>
 
                         <group>
@@ -80,16 +77,20 @@
                                 <field name="phone" widget="phone"/>
                                 <field name="mobile" widget="phone"/>
                                 <field name="email"/>
-                                <field name="dob"/>
                             </group>
                         </group>
+
+                        <group style="width:100%;">
+                            <field name="institute_batch_id"/>
+                        </group>
+
+                        
                         <group style="width:50%;">
                             <field name="tenth_percent"/>
                             <field name="twelve_percent"/>
-                        </group>
-                        <group style="width:50%;">
                             <field name="iti_percent"/>
                             <field name="sc_st"/>
+                            <field name="candidate_attendance_record"/>
                         </group>
 
                         <notebook>
@@ -103,9 +104,9 @@
                                     <field name="attendance_compliance_2"/>
                                 </div>
                             </page>
-                             <page string="Ship Visits">
+                             <!-- <page string="Ship Visits">
                                     <field name="ship_visits"/>
-                            </page>
+                            </page> -->
                         </notebook>
                     </sheet>
                 </form>
@@ -113,32 +114,7 @@
         </record>
 
 
-        <record id="candidate_attendance_form" model="ir.ui.view">
-            <field name="name">candidate.attendance.form</field>
-            <field name="model">candidate.attendance</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <group style="width:100%;">
-                            <field name="candidate_id" />
-                            <!-- <field name="compliance_1" style="margin-bottom:10px; margin-top: 15px;"/>
-                            <field name="compliance_2" style="margin-top: 14px;" /> -->
-                        </group>
-
-                        <label for="compliance_1" />
-                        <div>
-                            <field name="compliance_1" />
-                        </div>
-
-                        <label for="compliance_2" />
-                        <div>
-                            <field name="compliance_2" />
-                        </div>
-
-                    </sheet>
-                </form>
-            </field>
-        </record>
+        
 
 
         <record id="stcw_form" model="ir.ui.view">

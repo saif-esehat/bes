@@ -1,14 +1,18 @@
 from odoo import api, fields, models , _
 from odoo.exceptions import UserError,ValidationError
 
-class Candidate(models.Model):
-    _name = 'bes.candidate'
-    _description = 'Candidate'
+class GPCandidate(models.Model):
+    _name = 'gp.candidate'
+    _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.batches","Batch")
-    name = fields.Char("Name of Candidate",required=True)
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
+    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
+    
+    name = fields.Char("Full Name of Candidate as in INDOS",required=True)
+    age = fields.Char("Age")
     indos_no = fields.Char("Indos No.")
-    candidate_code = fields.Char("Candidate Code No.")
+    candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
     dob = fields.Date("DOB")
     street = fields.Char("Street")
@@ -23,16 +27,31 @@ class Candidate(models.Model):
     twelve_percent = fields.Char("% 12th Std in Eng.")
     iti_percent = fields.Char("% ITI")
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
-    attendance_id = fields.Many2one("candidate.attendance","Attendance ID")
-    stcw_certificate_id = fields.Many2one("candidate.stcw.certificate","STCW Certificate")
     ship_visits_count = fields.Char("No. of Ship Visits")
     
-    
-    attendance_compliance_1 = fields.Boolean("Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)")
-    attendance_compliance_2 = fields.Boolean("Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)")
+    candidate_attendance_record = fields.Integer("Candidate Attendance Record")
     
     
-    ship_visits = fields.One2many("candidate.ship.visits","candidate_id",string="Ship Visit")
+    attendance_compliance_1 = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no')
+    
+    attendance_compliance_2 = fields.Selection([
+         ('yes', 'Yes'),
+         ('no', 'No')
+    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
+    
+    # attendance_compliance_2 = fields.Boolean([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No')
+    # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
+    
+    
+    # ship_visits = fields.One2many("candidate.ship.visits","candidate_id",string="Ship Visit")
+
+
+
 
 
     
@@ -128,30 +147,11 @@ class Candidate(models.Model):
         
         
 
-
-class CandidateAttendance(models.Model):
-    _name = 'candidate.attendance'
-    _description = 'Attendance'
-    candidate_id = fields.Many2one("bes.candidate","Candidate")
-    compliance_1 = fields.Boolean("Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)")
-    compliance_2 = fields.Boolean("Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)")
-    
-    @api.model
-    def create(self, values):
-        attendance = super(CandidateAttendance, self).create(values)
-        attendance.candidate_id.write({
-            'attendance_id':attendance.id
-        })
-        
-        return attendance
-
 class CandidateSTCWV2(models.Model):
     _name = 'candidate.stcw.certificate.v2'
     _description = 'STCW'
     
     candidate_id = fields.Many2one("bes.candidate","Candidate")
-    course_name = fields.Char("Name of  the Ship Visited / Ship in Campus")
-
 
 class CandidateSTCW(models.Model):
     _name = 'candidate.stcw.certificate'
