@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="exam_center_action" model="ir.actions.act_window">
+            <field name="name">Exam Center</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">exam.center</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Exam Center</p>
+            </field>
+        </record>
+
+        <record id="exam_center_form" model="ir.ui.view">
+            <field name="name">exam.center.form</field>
+            <field name="model">exam.center</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="name" placeholder="Exam Center"/>
+                            </h1>
+                            
+                        </group>
+                        <field name="state_id" required="1"/>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="exam_center_tree" model="ir.ui.view">
+            <field name="name">exam.center.tree</field>
+            <field name="model">exam.center</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="state_id" required="1"/>
+                </tree>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

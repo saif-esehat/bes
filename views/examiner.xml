@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="bes_examiner_action" model="ir.actions.act_window">
+            <field name="name">Examiner</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bes.examiner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Examiner</p>
+            </field>
+        </record>
+
+        <record id="bes_examiner_form" model="ir.ui.view">
+            <field name="name">bes.examiner.form</field>
+            <field name="model">bes.examiner</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field nolabel="1" name="examiner_image" widget="image" options="{'preview_image': 'image'}" width="150" height="150"/>
+                        </group>
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="name" placeholder="Examiner Name"/>
+                            </h1>
+                        </group>
+                        <group style="width:100%;">
+                            <field name="course_id" string="Course" />
+                        </group>
+                        <group>
+                            <group>
+                                <span class="o_form_label o_td_label">
+                                    <b>Address</b>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city" />
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                </div>
+                            </group>
+                            <group >
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="email"/>
+                                <field name="pan_no"/>
+                                <field name="dob"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="present_designation"/>
+                            <field name="name_address_present_employer"/>
+                        </group>
+                        <group>
+                            <field name="designation"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="competency_no"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="date_of_issue"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="member_of_imei_cmmi"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="membership_no" attrs="{'invisible': [('member_of_imei_cmmi', '=','no')] , 'required':[('member_of_imei_cmmi','=','yes')]}"/>
+                        </group>
+                        <group>
+                            <field name="institute_association"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="associated_training_institute" attrs="{'invisible': [('institute_association', '=',False)] }"/>
+                        </group>
+
+                        <group>
+                            <field name="present_employer_clearance" />
+                        </group>
+
+
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="bes_examiner_tree" model="ir.ui.view">
+            <field name="name">bes.examiner.tree</field>
+            <field name="model">bes.examiner</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bes_examiner_oral_practical_duty_action" model="ir.actions.act_window">
+            <field name="name">Examiner Duty</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">exam.type.oral.practical</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Examiner Duty</p>
+            </field>
+        </record>
+
+
+        <record id="bes_examiner_oral_practical_duty_action_form" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.form</field>
+            <field name="model">exam.type.oral.practical</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                            <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                         <div class="oe_button_box" name="button_box">
+                            <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
+                                <field name="candidate_count" string="Candidate"  widget="statinfo"/>
+                            </button>
+                        </div>
+                        
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="exam_schedule_id" placeholder="Exam Schedule"/>
+                            </h1>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="examiners"/>
+                            <field name="start_time_online"/>
+                            <!-- <field name="candidate_count"/> -->
+                        </group>
+                        <group style="width:50%;">
+                            <field name="subject"/>
+                            <field name="end_time_online"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bes_examiner_oral_practical_duty_action_tree" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.tree</field>
+            <field name="model">exam.type.oral.practical</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="exam_schedule_id"/>
+                    <field name="examiners"/>
+                    <field name="subject"/>
+                    <field name="start_time_online"/>
+                    <field name="end_time_online"/>
+                    <field name="candidate_count"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+
+    </data>
+</odoo>

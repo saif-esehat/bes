@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="institute_action" model="ir.actions.act_window">
+            <field name="name">Institute</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bes.institute</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Institute</p>
+            </field>
+        </record>
+
+        <record id="create_batch_wizard_form" model="ir.ui.view">
+            <field name="name">create.institute.batches.wizard.form</field>
+            <field name="model">create.institute.batches.wizard</field>
+            <field name="arch" type="xml">
+                <form >
+                    <group>
+                        <field name="batch_name"/>
+                    </group>
+                    <group style="width:50%;">
+                        <field name="from_date"/>
+                    </group>
+                    <group style="width:50%;">
+                        <field name="to_date"/>
+                    </group>
+
+                    <footer>
+                        <button name="create_batches" string="Create Batches" type="object" class="btn-primary"/>
+                        <!-- <button string="Cancel" class="btn-secondary" special="cancel"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="create_batch_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Institute</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.institute.batches.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="create_batch_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <record id="institute_form" model="ir.ui.view">
+            <field name="name">bes.institute.form</field>
+            <field name="model">bes.institute</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_faculty" string="Faculty" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="batch_button" string="Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="name" placeholder="Institute Name" required="1"/>
+                            </h1>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="email" required="1"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="code" required="1"/>
+                        </group>
+                        <group>
+
+                            <group >
+
+                                <span class="o_form_label o_td_label">
+                                    <b>Address</b>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city" />
+                                    <field name="state" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                </div>
+
+                            </group>
+                            <group style="width:50%;">
+                                <field name="mti" />
+                                <field name="exam_center" />
+                            </group>
+
+                            <group style="width:50%;">
+                                <label for="principal_name" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="principal_name" nolabel="1" style="margin-top: 14px;" />
+                                <label for="principal_phone" style="margin-bottom:10px; margin-top: 15px;" />
+                                <field name="principal_phone" style="margin-top: 14px;" nolabel="1"/>
+                                <label for="principal_mobile" style="margin-bottom:10px; margin-top: 15px;" />
+                                <field name="principal_mobile" style="margin-bottom:10px; margin-top: 15px;" nolabel="1"/>
+                                <label for="principal_email" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="principal_email" style="margin-bottom:10px; margin-top: 15px;" nolabel="1"/>
+                            </group>
+                            <group style="width:50%;">
+                                <label for="admin_phone" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="admin_phone" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <label for="admin_mobile" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="admin_mobile" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <label for="admin_email" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="admin_email" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                            </group>
+                            <group style="width:100%;">
+                                <field name="name_of_second_authorized_person"/>
+                            </group>
+
+                            <group style="width:50%;">
+                                <label for="institute_computer_lab" style="margin-bottom:10px; margin-top: 15px;"/>
+
+                                <field name="institute_computer_lab" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+
+                            </group>
+
+                            <group style="width:50%;">
+                                <label for="computer_lab_pc_count" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="computer_lab_pc_count" nolabel="1" style="margin-bottom:10px; margin-top: 15px;" attrs="{'required': [('institute_computer_lab', '=', True)]}" />
+                            </group>
+
+                            <group style="width:100%;">
+                                <label for="internet_strength" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="internet_strength" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                            </group>
+
+                            <group style="width:100%;">
+                                <label for="institute_approved_conduct_stcw" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="institute_approved_conduct_stcw" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                            </group>
+
+                            <group style="width:100%;">
+                                <label for="is_lab_used_for_stcw_exit_exam" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="is_lab_used_for_stcw_exit_exam" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                            </group>
+
+                            <field name="courses">
+                                <tree editable="bottom">
+                                    <field name="course" options="{'no_create': True}" />
+                                    <field name="approved_capacity" />
+                                    <field name="approved_date" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="institute_tree" model="ir.ui.view">
+            <field name="name">bes.institute.form</field>
+            <field name="model">bes.institute</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="open_create_institute_batches_wizard" string="Create Batches" type="object"/>
+                    </header>
+
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="view_faculty_form" model="ir.ui.view">
+            <field name="name">institute.faculty.form</field>
+            <field name="model">institute.faculty</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="faculty_photo" widget="image" options="{'size': (100, 100)}" />
+                            <field name="course_name"/>
+                            <field name="faculty_name"/>
+                            <field name="dob"/>
+                            <field name="designation"/>
+                            <field name="qualification"/>
+                            <field name="contract_terms"/>
+                            <field name="courses_taught" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_faculty_tree" model="ir.ui.view">
+            <field name="name">institute.faculty.tree</field>
+            <field name="model">institute.faculty</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="course_name"/>
+                    <field name="faculty_name"/>
+                    <field name="dob"/>
+                    <field name="designation"/>
+                    <field name="qualification"/>
+                    <field name="contract_terms"/>
+                    <field name="courses_taught" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="institute_notification_email" model="mail.template">
+        <field name="name">Example Email Template</field>
+        <field name="subject">Subject of Your Email</field>
+        <field name="email_from">your@email.com</field>
+        <field name="partner_to" eval="False"/>
+        <field name="model_id" ref="model_your_model_name"/> <!-- Replace with the actual model you're using -->
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html">
+            <![CDATA[
+                <p>Hello,</p>
+                <p>This is an example email template created using XML in Odoo.</p>
+            ]]>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+        <data noupdate="1">
+
+        <record id="institute_tag" model="res.partner.category">
+            <field name="name">Institutes</field>
+        </record>
+        <record id="examiner_tags" model="res.partner.category">
+            <field name="name">Examiners</field>
+        </record>
+        <record id="candidates_tags" model="res.partner.category">
+            <field name="name">Candidates</field>
+        </record>
+        <record id="exam_center_tags" model="res.partner.category">
+            <field name="name">Exam Centers</field>
+        </record>
+
+        </data>
+</odoo>
