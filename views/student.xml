@@ -135,48 +135,7 @@
         
 
 
-        <record id="stcw_form" model="ir.ui.view">
-            <field name="name">candidate.stcw.certificate.form</field>
-            <field name="model">candidate.stcw.certificate</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <field name="candidate_id" invisible="1"/>
-                        <group style="width:50%;">
-                            <field name="pst_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="pst_document_file" attrs="{'invisible': [('pst_certifcate', '=', False)],'required': [('pst_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="efa_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="efa_document_file" attrs="{'invisible': [('efa_certifcate', '=', False)],'required': [('efa_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="fpff_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="fpff_document_file" attrs="{'invisible': [('fpff_certifcate', '=', False)],'required': [('fpff_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="pssr_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="pssr_document_file" attrs="{'invisible': [('pssr_certifcate', '=', False)],'required': [('pssr_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="stsdsd_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="stsdsd_document_file" attrs="{'invisible': [('stsdsd_certifcate', '=', False)],'required': [('stsdsd_certifcate', '=', True)]}"/>
-                        </group>
-                        <field name="other_certificates"/>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+        
 
 
         <record id="gp_candidate_ship_visits_form" model="ir.ui.view">

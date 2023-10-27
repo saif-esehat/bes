@@ -166,45 +166,7 @@ class STCWCandidate(models.Model):
 
 
 
-class CandidateSTCW(models.Model):
-    _name = 'candidate.stcw.certificate'
-    _description = 'STCW'
-    candidate_id = fields.Many2one("bes.candidate","Candidate")
-    
-    pst_certifcate = fields.Boolean("PST Certificates")
-    pst_document_file = fields.Binary(string='Upload Document for PST Certificates', attachment=True)
-    
-    efa_certifcate = fields.Boolean("EFA Certificates")
-    efa_document_file = fields.Binary(string='Upload Document for EFA Certificates', attachment=True)
-    
-    fpff_certifcate = fields.Boolean("FPFF Certificates")
-    fpff_document_file = fields.Binary(string='Upload Document for FPFF Certificates', attachment=True)
-    
-    pssr_certifcate = fields.Boolean("PSSR Certificates")  # Corrected field name
-    pssr_document_file = fields.Binary(string='Upload Document for PSSR Certificates', attachment=True)
-    
-    stsdsd_certifcate = fields.Boolean("STSDSD Certificates")  # Corrected field name
-    stsdsd_document_file = fields.Binary(string='Upload Document for STSDSD Certificates', attachment=True)
-    
-    other_certificates = fields.One2many("other.certificates","stcw_certificate",string="Other Certificate")
-    
-    
-    @api.model
-    def create(self, values):
-        stcw = super(CandidateSTCW, self).create(values)
-        stcw.candidate_id.write({
-            'stcw_certificate_id':self.id
-        })
-        
-        return stcw
 
-
-class CandidateSTCW(models.Model):
-    _name = 'other.certificates'
-    _description = 'Cerificate'
-    stcw_certificate = fields.Many2one("candidate.stcw.certificate","STCW Certificate")
-    name = fields.Char("Certificate Name")
-    certificate_file = fields.Binary(string='Upload Document', attachment=True)
     
 
 class GPCandidateShipVisits(models.Model):
