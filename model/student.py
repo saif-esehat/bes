@@ -48,7 +48,7 @@ class GPCandidate(models.Model):
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
     
-    # ship_visits = fields.One2many("candidate.ship.visits","candidate_id",string="Ship Visit")
+    ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
 
 
 
@@ -194,10 +194,10 @@ class CandidateSTCW(models.Model):
     certificate_file = fields.Binary(string='Upload Document', attachment=True)
     
 
-class CandidateShipVisits(models.Model):
-    _name = 'candidate.ship.visits'
+class GPCandidateShipVisits(models.Model):
+    _name = 'gp.candidate.ship.visits'
     _description = 'Ship Visits'
-    candidate_id = fields.Many2one("bes.candidate","Candidate")
+    candidate_id = fields.Many2one("gp.candidate","Candidate")
     name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus")
     imo_no = fields.Char("Ship IMO Number")
     name_of_ports_visited = fields.Char("Name of the Port Visited / Place of SIC")
