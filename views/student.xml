@@ -63,8 +63,13 @@
                         <field name="candidate_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
                         <group style="width:100%;">
                             <field name="candidate_code"/>
+                        </group>
+
+                        <group style="width:100%;">
+                            
                             <field name="roll_no"/>
                             <field name="name" placeholder="Candidate" required="1"/>
+                            <field name="institute_id"/>
                             <field name="indos_no"/>
                             <field name="dob"/>
                             <field name="age"/>
@@ -210,7 +215,7 @@
                         <group style="width:100%;">
                             <field name="candidate_code"/>
                             <field name="roll_no"/>
-                            <field name="institute_name"/>
+                            <field name="institute_id"/>
                             <field name="name" placeholder="Candidate" required="1"/>
                             <field name="indos_no"/>
                             <field name="dob"/>
