@@ -65,8 +65,8 @@ class STCWCandidate(models.Model):
 
     course_name = fields.Char("Course Name")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    marine_training_inst_number = fields.Char("Marine Training Institute Number")
-    mti_indos_no = fields.Char("MTI Indos No.")
+    marine_training_inst_number = fields.Char("MTI Number")
+    mti_indos_no = fields.Char("Indos No.")
     candidate_cert_no = fields.Char("Candidate Certificate Number")
     course_start_date = fields.Date(string="Course Start Date")
     course_end_date = fields.Date(string="Course End Date")

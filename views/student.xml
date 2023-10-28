@@ -113,7 +113,7 @@
                             <page string="STCW Certificate">
                                 <field name="stcw_certificate" nolabel="1" >
                                     <tree editable="bottom">
-                                        <field name='candidate_id'/>
+                                        <!-- <field name='candidate_id'/> -->
                                         <field name='course_name'/>
                                         <field name="institute_name"/>
                                         <field name='marine_training_inst_number'/>
