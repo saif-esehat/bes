@@ -43,6 +43,13 @@
                   name="GP Candidates"
                   action="candidate_gp_rating_action"
                   sequence="3" />
+        
+        <menuitem id="candidate_ccmc_menu" 
+                  parent="candidate_menus" 
+                  name="CCMC Candidates"
+                  action="candidate_ccmc_action"
+                  sequence="4" />
+
 
         <menuitem id="bes_batch_menu" 
                   parent="bes_menu" 

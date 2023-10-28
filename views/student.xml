@@ -28,11 +28,22 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">gp.candidate</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('institute_batch_id.course.course_code', '=', 'GP')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
         </record>
+
+        <record id="candidate_ccmc_action" model="ir.actions.act_window">
+            <field name="name">CCMC Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ccmc.candidate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Candidate</p>
+            </field>
+        </record>
+
+        
 
 
 
@@ -166,6 +177,147 @@
         <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
             <field name="name">gp.candidate.ship.visits.form</field>
             <field name="model">gp.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name_of_ships"/>
+                    <field name="imo_no"/>
+                    <field name="name_of_ports_visited"/>
+                    <field name="date_of_visits"/>
+                    <field name="time_spent_on_ship"/>
+                    <field name="bridge"/>
+                    <field name="eng_room"/>
+                    <field name="cargo_area"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- CCMC  -->
+
+        <record id="ccmc_candidate_form" model="ir.ui.view">
+            <field name="name">ccmc.candidate.form</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
+                            <!-- <button name="open_ship_visits" string="Ship Visits" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
+                        </div>
+
+                        <field name="candidate_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
+                        <group style="width:100%;">
+                            <field name="candidate_code"/>
+                            <field name="roll_no"/>
+                            <field name="institute_name"/>
+                            <field name="name" placeholder="Candidate" required="1"/>
+                            <field name="indos_no"/>
+                            <field name="dob"/>
+                            <field name="age"/>
+
+                        </group>
+
+                        <group>
+                            <group>
+                                <span class="o_form_label o_td_label">
+                                    <b>Address</b>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city" />
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                </div>
+                            </group>
+                            <group >
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="institute_batch_id"/>
+                        </group>
+
+                        
+                        <group style="width:50%;">
+                            <field name="tenth_percent"/>
+                            <field name="twelve_percent"/>
+                            <field name="iti_percent"/>
+                            <field name="sc_st"/>
+                            <field name="candidate_attendance_record"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Ship Visits">
+                                    <field name="ship_visits"/>
+                            </page>
+                            <page string="Attendance">
+                                <label for="attendance_compliance_1" />
+                                <div>
+                                    <field name="attendance_compliance_1"/>
+                                </div>
+                                <label for="attendance_compliance_2" />
+                                <div>
+                                    <field name="attendance_compliance_2"/>
+                                </div>
+                            </page>
+                             <!-- <page string="Ship Visits">
+                                    <field name="ship_visits"/>
+                            </page> -->
+                            <page string="STCW Certificate">
+                                <field name="stcw_certificate" nolabel="1" >
+                                    <tree editable="bottom">
+                                        <field name='candidate_id'/>
+                                        <field name='course_name'/>
+                                        <field name="institute_name"/>
+                                        <field name='marine_training_inst_number'/>
+                                        <field name="mti_indos_no"/>
+                                        
+                                        <field name="candidate_cert_no"/>
+                                        <field name="course_start_date"/>
+                                        <field name="course_end_date"/>                                 
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="ccmc_candidate_ship_visits_form" model="ir.ui.view">
+            <field name="name">ccmc.candidate.ship.visits.form</field>
+            <field name="model">ccmc.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="candidate_id"/>
+                        </group>
+                        <group>
+                            <field name="name_of_ships"/>
+                            <field name="imo_no"/>
+                            <field name="name_of_ports_visited"/>
+                            <field name="date_of_visits"/>
+                            <field name="time_spent_on_ship"/>
+                            <field name="bridge"/>
+                            <field name="eng_room"/>
+                            <field name="cargo_area"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="ccmc_candidate_ship_visits_tree" model="ir.ui.view">
+            <field name="name">ccmc.candidate.ship.visits.form</field>
+            <field name="model">ccmc.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name_of_ships"/>
