@@ -52,9 +52,239 @@ class GPCandidate(models.Model):
     
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
 
+    # MEK Practical
+    
+    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
+    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
+    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
+    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes")
+    use_of_carpentry = fields.Integer("Use of Carpentry Tools")
+    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
+    welding = fields.Integer("Welding (1 Task)")
+    lathe = fields.Integer("Lathe Work (1 Task)")
+    electrical = fields.Integer("Electrical (1 Task)")
+    
+    mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
+    
+    mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    
+    
+    
+    @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
+                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
+                 'welding', 'lathe', 'electrical')
+    def _compute_mek_practical_total_marks(self):
+        for record in self:
+            total = (
+                record.using_hand_plumbing_tools_task_1 +
+                record.using_hand_plumbing_tools_task_2 +
+                record.using_hand_plumbing_tools_task_3 +
+                record.use_of_chipping_tools_paint_brushes +
+                record.use_of_carpentry +
+                record.use_of_measuring_instruments +
+                record.welding +
+                record.lathe +
+                record.electrical
+            )
+            record.mek_practical_total_marks = total
+    
+    
+    @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
+    def _check_values(self):
+        for record in self:
+            fields_to_check = {
+                'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
+                'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
+                'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
+                'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
+                'use_of_carpentry': "Use of Carpentry Tools",
+                'use_of_measuring_instruments': "Use of Measuring Instruments",
+                'welding': "Welding (1 Task)",
+                'lathe': "Lathe Work (1 Task)",
+                'electrical': "Electrical (1 Task)",
+            }
+
+            for field_name, field_label in fields_to_check.items():
+                field_value = record[field_name]
+                if field_name == 'welding' and field_value > 20:
+                    raise ValidationError(f"{field_label} value cannot exceed 20.")
+                elif field_value > 10:
+                    raise ValidationError(f"{field_label} value cannot exceed 10.")
+                
+    # MEK ORAL
+    
+    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools")
+    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints")
+    welding = fields.Integer("Welding")
+    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder")
+    electrical = fields.Integer("Electrical")
+    journal = fields.Integer("Journal")
+    
+    
+    mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True)
+
+    mek_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    
+    
+    @api.constrains('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    def _check_field_limits(self):
+         for record in self:
+            field_names = {
+                'using_hand_plumbing_carpentry_tools': record.using_hand_plumbing_carpentry_tools,
+                'use_of_chipping_tools_paints': record.use_of_chipping_tools_paints,
+                'welding': record.welding,
+                'lathe_drill_grinder': record.lathe_drill_grinder,
+                'electrical': record.electrical,
+                'journal': record.journal,
+            }
+            for field_name, field_value in field_names.items():
+                if field_value > 10 and field_name != 'journal':
+                    raise ValidationError(f"{self._fields[field_name].string} value cannot exceed 10.")
+                if field_value > 25 and field_name == 'journal':
+                    raise ValidationError(f"{self._fields[field_name].string} value cannot exceed 25.")
+    
+    @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    def _compute_mek_oral_total_marks(self):
+        for record in self:
+            total = (
+                record.using_hand_plumbing_carpentry_tools +
+                record.use_of_chipping_tools_paints +
+                record.welding +
+                record.lathe_drill_grinder +
+                record.electrical +
+                record.journal
+            )
+            record.mek_oral_total_marks = total        
+    
+    
+    # GSK Practical
+    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
+    buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders")
+    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
+    rig_stage = fields.Integer("Rig a stage for painting shipside ")
+    rig_pilot = fields.Integer("Rig a Pilot Ladder ")
+    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height ") 
+    fast_ropes = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper   ")
+    
+    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase ")
+    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight ")
+    
+    gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks")
+    gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")    
 
 
-        
+    @api.constrains('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    def _check_max_value(self):
+        for record in self:
+            fields_to_check = {
+                'climbing_mast': "Climb the mast with safe practices, Prepare and throw Heaving Line",
+                'buoy_flags_recognition': "Recognise buyos and flags, Hoisting a Flag correctly, Steering and Helm Orders",
+                'bosun_chair': "Rigging Bosun's Chair and self lower and hoist",
+                'rig_stage': "Rig a stage for painting shipside",
+                'rig_pilot': "Rig a Pilot Ladder",
+                'rig_scaffolding': "Rig scaffolding to work at a height",
+                'fast_ropes': "Making fast Ropes and Wires, Use Rope-Stopper / Chain Stopper",
+                'knots_bend': "Knots, Bends, Hitches, Whippings/Seizing/Splicing Ropes/Wires, Reeve 3-fold / 2-fold purchase",
+                'sounding_rod': "Taking Soundings with sounding rod / sounding taps, Reading of Draft, Manual lifting of weight",
+            }
+            
+            for field_name, field_label in fields_to_check.items():
+                field_value = record[field_name]
+                if field_name == 'climbing_mast' and field_value > 12:
+                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                elif field_name == 'buoy_flags_recognition' and field_value > 12:
+                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                elif field_name == 'bosun_chair' and field_value > 8:
+                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'rig_stage' and field_value > 8:
+                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'rig_pilot' and field_value > 8:
+                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'rig_scaffolding' and field_value > 8:
+                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'fast_ropes' and field_value > 8:
+                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'knots_bend' and field_value > 18:
+                    raise ValidationError(f"{field_label} value cannot exceed 18.")
+       
+    @api.depends('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    def _compute_gsk_practical_total_marks(self):
+        for record in self:
+            total_marks = 0
+            total_marks += record.climbing_mast
+            total_marks += record.buoy_flags_recognition
+            total_marks += record.bosun_chair
+            total_marks += record.rig_stage
+            total_marks += record.rig_pilot
+            total_marks += record.rig_scaffolding
+            total_marks += record.fast_ropes
+            total_marks += record.knots_bend
+            total_marks += record.sounding_rod
+            record.gsk_practical_total_marks = total_marks
+
+
+    # GSK Oral
+    
+    subject_area_1 = fields.Integer("Subject Area 1")
+    subject_area_2 = fields.Integer("Subject Area 2")
+    subject_area_3 = fields.Integer("Subject Area 3")
+    subject_area_4 = fields.Integer("Subject Area 4")
+    subject_area_5 = fields.Integer("Subject Area 5")
+    subject_area_6 = fields.Integer("Subject Area 6")
+    practical_record_journals = fields.Integer("Practical Record Book and Journal")
+    
+    
+    gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True)
+    gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    
+    
+    @api.constrains('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    def _check_max_value(self):
+        for record in self:
+            fields_to_check = {
+                'subject_area_1': record._fields['subject_area_1'].string,
+                'subject_area_2': record._fields['subject_area_2'].string,
+                'subject_area_3': record._fields['subject_area_3'].string,
+                'subject_area_4': record._fields['subject_area_4'].string,
+                'subject_area_5': record._fields['subject_area_5'].string,
+                'subject_area_6': record._fields['subject_area_6'].string,
+                'practical_record_journals': record._fields['practical_record_journals'].string,
+            }
+
+            for field_name, field_label in fields_to_check.items():
+                field_value = record[field_name]
+                if field_name == 'subject_area_1' and field_value > 9:
+                    raise ValidationError(f"{field_label} value cannot exceed 9.")
+                elif field_name == 'subject_area_2' and field_value > 6:
+                    raise ValidationError(f"{field_label} value cannot exceed 6.")
+                elif field_name == 'subject_area_3' and field_value > 9:
+                    raise ValidationError(f"{field_label} value cannot exceed 9.")
+                elif field_name == 'subject_area_4' and field_value > 9:
+                    raise ValidationError(f"{field_label} value cannot exceed 9.")
+                elif field_name == 'subject_area_5' and field_value > 12:
+                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                elif field_name == 'subject_area_6' and field_value > 5:
+                    raise ValidationError(f"{field_label} value cannot exceed 5.")
+                elif field_name == 'practical_record_journals' and field_value > 25:
+                    raise ValidationError(f"{field_label} value cannot exceed 25.")
+    
+    @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    def _compute_gsk_oral_total_marks(self):
+        for record in self:
+            total_marks = sum([
+                record.subject_area_1,
+                record.subject_area_2,
+                record.subject_area_3,
+                record.subject_area_4,
+                record.subject_area_5,
+                record.subject_area_6,
+                record.practical_record_journals,
+            ])
+
+            record.gsk_oral_total_marks = total_marks
+       
+
+    
         
 
 class GPSTCWCandidate(models.Model):
