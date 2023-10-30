@@ -63,8 +63,13 @@
                         <field name="candidate_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
                         <group style="width:100%;">
                             <field name="candidate_code"/>
+                        </group>
+
+                        <group style="width:100%;">
+                            
                             <field name="roll_no"/>
                             <field name="name" placeholder="Candidate" required="1"/>
+                            <field name="institute_id"/>
                             <field name="indos_no"/>
                             <field name="dob"/>
                             <field name="age"/>
@@ -210,7 +215,7 @@
                         <group style="width:100%;">
                             <field name="candidate_code"/>
                             <field name="roll_no"/>
-                            <field name="institute_name"/>
+                            <field name="institute_id"/>
                             <field name="name" placeholder="Candidate" required="1"/>
                             <field name="indos_no"/>
                             <field name="dob"/>
@@ -271,7 +276,7 @@
                             <page string="STCW Certificate">
                                 <field name="stcw_certificate" nolabel="1" >
                                     <tree editable="bottom">
-                                        <field name='candidate_id'/>
+                                        <!-- <field name='candidate_id'/> -->
                                         <field name='course_name'/>
                                         <field name="institute_name"/>
                                         <field name='marine_training_inst_number'/>
@@ -282,6 +287,144 @@
                                         <field name="course_end_date"/>                                 
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Cookery and Bakery" >
+                                
+                                <group>
+                                    <label for="hygien_grooming" />
+                                    <div>
+                                        <field name="hygien_grooming"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <span><h1><Strong>Dish 1</Strong></h1></span>
+                                <group>
+                                    <label for="appearance" />
+                                    <div>
+                                        <field name="appearance"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="taste" />
+                                    <div>
+                                        <field name="taste"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="texture" />
+                                    <div>
+                                        <field name="texture"  nolabel="1"/>
+                                                / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+                                <span><h1><Strong>Dish 2</Strong></h1></span>
+                                <group>
+                                    <label for="appearance_2" />
+                                    <div>
+                                        <field name="appearance_2"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="taste_2" />
+                                    <div>
+                                        <field name="taste_2"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="texture_2" />
+                                    <div>
+                                        <field name="texture_2"  nolabel="1"/>
+                                                / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+                                <span><h1><Strong>Dish 3</Strong></h1></span>
+                                <group>
+                                    <label for="appearance_3" />
+                                    <div>
+                                        <field name="appearance_3"  nolabel="1"/>
+                                                / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="taste_3" />
+                                    <div>
+                                        <field name="taste_3"  nolabel="1"/>
+                                                / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="texture_3" />
+                                    <div>
+                                        <field name="texture_3"  nolabel="1"/>
+                                                / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+                                <span></span>
+                                <group>
+                                    <label for="identification_ingredians" />
+                                    <div>
+                                        <field name="identification_ingredians"  nolabel="1"/>
+                                                 / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="knowledge_of_menu" />
+                                    <div>
+                                        <field name="knowledge_of_menu"  nolabel="1"/>
+                                                 / 
+                                        <span>8 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="total_mrks" />
+                                    <div>
+                                        <field name="total_mrks"  nolabel="1"/>
+                                                / 
+                                        <span>100 Marks</span>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="CCMC rating" invisible="1">
+                                <span><h2><Strong>Marks for Oral</Strong></h2></span>
+                                <group>
+                                    <label for="gsk_ccmc" />
+                                    <div>
+                                        <field name="gsk_ccmc"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="safety_ccmc" />
+                                    <div>
+                                        <field name="safety_ccmc"  nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="toal_ccmc_rating" />
+                                    <div>
+                                        <field name="toal_ccmc_rating"  nolabel="1"/>
+                                                / 
+                                        <span>20 Marks</span>
+                                    </div>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
