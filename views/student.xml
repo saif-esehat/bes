@@ -721,7 +721,7 @@
                                     </div>
                                 </group>
                             </page>
-                            <page string="CCMC rating" invisible="1">
+                            <page string="CCMC Oral" >
                                 <span><h2><Strong>Marks for Oral</Strong></h2></span>
                                 <group>
                                     <label for="gsk_ccmc" />
