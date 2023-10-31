@@ -52,64 +52,11 @@ class GPCandidate(models.Model):
     
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
 
-    # MEK Practical
-    
-    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
-    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
-    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
-    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes")
-    use_of_carpentry = fields.Integer("Use of Carpentry Tools")
-    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
-    welding = fields.Integer("Welding (1 Task)")
-    lathe = fields.Integer("Lathe Work (1 Task)")
-    electrical = fields.Integer("Electrical (1 Task)")
-    
-    mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
-    
-    mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
-    
-    
-    
-    @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
-                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
-                 'welding', 'lathe', 'electrical')
-    def _compute_mek_practical_total_marks(self):
-        for record in self:
-            total = (
-                record.using_hand_plumbing_tools_task_1 +
-                record.using_hand_plumbing_tools_task_2 +
-                record.using_hand_plumbing_tools_task_3 +
-                record.use_of_chipping_tools_paint_brushes +
-                record.use_of_carpentry +
-                record.use_of_measuring_instruments +
-                record.welding +
-                record.lathe +
-                record.electrical
-            )
-            record.mek_practical_total_marks = total
-    
-    
-    @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
-    def _check_values(self):
-        for record in self:
-            fields_to_check = {
-                'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
-                'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
-                'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
-                'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
-                'use_of_carpentry': "Use of Carpentry Tools",
-                'use_of_measuring_instruments': "Use of Measuring Instruments",
-                'welding': "Welding (1 Task)",
-                'lathe': "Lathe Work (1 Task)",
-                'electrical': "Electrical (1 Task)",
-            }
+    # # MEK Practical
 
-            for field_name, field_label in fields_to_check.items():
-                field_value = record[field_name]
-                if field_name == 'welding' and field_value > 20:
-                    raise ValidationError(f"{field_label} value cannot exceed 20.")
-                elif field_value > 10:
-                    raise ValidationError(f"{field_label} value cannot exceed 10.")
+    mek_practical_child_line = fields.One2many("gp.mek.practical.line","mek_parent",string="MEK Practical")
+    
+    
                 
     # MEK ORAL
     
@@ -449,8 +396,6 @@ class CookeryBakeryLine(models.Model):
     cookery_bekary_start_time = fields.Datetime(string="Start Time")
     cookery_bekary_end_time = fields.Datetime(string="End Time")
 
-
-
     @api.depends(
         'hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2',
         'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu'
@@ -472,5 +417,68 @@ class CookeryBakeryLine(models.Model):
                 record.knowledge_of_menu
             )
             record.total_mrks = total
+
+
+class MekPrcticalLine(models.Model):
+    _name = 'gp.mek.practical.line'
+    _description = 'MEK Practical Line'
+
+    mek_parent = fields.Many2one("gp.candidate",string="Parent")
+
+    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
+    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
+    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
+    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes")
+    use_of_carpentry = fields.Integer("Use of Carpentry Tools")
+    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
+    welding = fields.Integer("Welding (1 Task)")
+    lathe = fields.Integer("Lathe Work (1 Task)")
+    electrical = fields.Integer("Electrical (1 Task)")
+    
+    mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
+    
+    mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
     
     
+    
+    @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
+                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
+                 'welding', 'lathe', 'electrical')
+    def _compute_mek_practical_total_marks(self):
+        for record in self:
+            total = (
+                record.using_hand_plumbing_tools_task_1 +
+                record.using_hand_plumbing_tools_task_2 +
+                record.using_hand_plumbing_tools_task_3 +
+                record.use_of_chipping_tools_paint_brushes +
+                record.use_of_carpentry +
+                record.use_of_measuring_instruments +
+                record.welding +
+                record.lathe +
+                record.electrical
+            )
+            record.mek_practical_total_marks = total
+    
+    
+    @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
+    def _check_values(self):
+        for record in self:
+            fields_to_check = {
+                'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
+                'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
+                'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
+                'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
+                'use_of_carpentry': "Use of Carpentry Tools",
+                'use_of_measuring_instruments': "Use of Measuring Instruments",
+                'welding': "Welding (1 Task)",
+                'lathe': "Lathe Work (1 Task)",
+                'electrical': "Electrical (1 Task)",
+            }
+
+            for field_name, field_label in fields_to_check.items():
+                field_value = record[field_name]
+                if field_name == 'welding' and field_value > 20:
+                    raise ValidationError(f"{field_label} value cannot exceed 20.")
+                elif field_value > 10:
+                    raise ValidationError(f"{field_label} value cannot exceed 10.")
+      
