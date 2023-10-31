@@ -41,7 +41,7 @@
         <menuitem id="candidate_gp_rating_menu" 
                   parent="candidate_menus" 
                   name="GP Candidates"
-                  action="candidate_gp_rating_action"
+                  action="gp_candidate_action"
                   sequence="3" />
         
         <menuitem id="candidate_ccmc_menu" 
