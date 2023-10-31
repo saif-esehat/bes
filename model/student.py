@@ -140,53 +140,18 @@ class CCMCCandidate(models.Model):
     #     ('no', 'No')
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
-    
+        # Ship Visits
     ship_visits = fields.One2many("ccmc.candidate.ship.visits","candidate_id",string="Ship Visit")
 
-        #Start Cookery & Bakery 
-    hygien_grooming = fields.Integer("Hygiene & Grooming")
-    appearance = fields.Integer("Appearance")
-    taste = fields.Integer("Taste")
-    texture = fields.Integer("Texture")
-    appearance_2 = fields.Integer("Appearance")
-    taste_2 = fields.Integer("Taste")
-    texture_2 = fields.Integer("Texture")
-    appearance_3 = fields.Integer("Appearance")
-    taste_3 = fields.Integer("Taste")
-    texture_3 = fields.Integer("Texture")
-    identification_ingredians = fields.Integer("identification of ingredients")
-    knowledge_of_menu = fields.Integer("Knowledge of menu")
-    total_mrks = fields.Integer("Total", compute="_compute_total_mrks", store=True)
+        # Cookery an Bakery
+    cookery_child_line = fields.One2many("ccmc.cookery.bakery.line","cookery_parent",string="Cookery & Bakery")
+    
 
-        #Start CCMC rating
+        #Start CCMC rating Oral
     gsk_ccmc = fields.Integer("GSK")
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
     
-
-
-    @api.depends(
-        'hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2',
-        'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu'
-    )
-    def _compute_total_mrks(self):
-        for record in self:
-            total = (
-                record.hygien_grooming +
-                record.appearance +
-                record.taste +
-                record.texture +
-                record.appearance_2 +
-                record.taste_2 +
-                record.texture_2 +
-                record.appearance_3 +
-                record.taste_3 +
-                record.texture_3 +
-                record.identification_ingredians +
-                record.knowledge_of_menu
-            )
-            record.total_mrks = total
-
 
     @api.depends(
         'gsk_ccmc', 'safety_ccmc'
@@ -199,12 +164,7 @@ class CCMCCandidate(models.Model):
             )
             record.toal_ccmc_rating = rating_total
     
-
-
-
-
-        
-        
+     
 
 class CCMCSTCWCandidate(models.Model):
     _name = 'ccmc.candidate.stcw.certificate'
@@ -235,5 +195,52 @@ class CCMCCandidateShipVisits(models.Model):
     bridge = fields.Boolean("Bridge")
     eng_room = fields.Boolean("Eng. Room")
     cargo_area = fields.Boolean("Cargo Area")
+
+class CookeryBakeryLine(models.Model):
+    _name = 'ccmc.cookery.bakery.line'
+    _description = 'Cookery and Bakery Line'
+
+    cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
+
+    hygien_grooming = fields.Integer("Hygiene & Grooming")
+    appearance = fields.Integer("Appearance(Dish 1)")
+    taste = fields.Integer("Taste(Dish 1)")
+    texture = fields.Integer("Texture(Dish 1)")
+    appearance_2 = fields.Integer("Appearance(Dish 2)")
+    taste_2 = fields.Integer("Taste(Dish 2)")
+    texture_2 = fields.Integer("Texture(Dish 2)")
+    appearance_3 = fields.Integer("Appearance(Dish 3)")
+    taste_3 = fields.Integer("Taste(Dish 3)")
+    texture_3 = fields.Integer("Texture(Dish 3)")
+    identification_ingredians = fields.Integer("identification of ingredients")
+    knowledge_of_menu = fields.Integer("Knowledge of menu")
+    total_mrks = fields.Integer("Total", compute="_compute_total_mrks", store=True)
+    cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
+    cookery_bekary_start_time = fields.Datetime(string="Start Time")
+    cookery_bekary_end_time = fields.Datetime(string="End Time")
+
+
+
+    @api.depends(
+        'hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2',
+        'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu'
+    )
+    def _compute_total_mrks(self):
+        for record in self:
+            total = (
+                record.hygien_grooming +
+                record.appearance +
+                record.taste +
+                record.texture +
+                record.appearance_2 +
+                record.taste_2 +
+                record.texture_2 +
+                record.appearance_3 +
+                record.taste_3 +
+                record.texture_3 +
+                record.identification_ingredians +
+                record.knowledge_of_menu
+            )
+            record.total_mrks = total
     
     
