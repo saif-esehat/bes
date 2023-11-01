@@ -144,8 +144,7 @@
                             </page>
                             <page string="MEK Practical">
                                 <field name="mek_practical_child_line" nolabel="1">
-                                    <tree>
-                                       
+                                    <tree>                                  
                                         <field name='using_hand_plumbing_tools_task_1'/>
                                         <field name="using_hand_plumbing_tools_task_2"/>
                                         <field name='using_hand_plumbing_tools_task_3'/>
@@ -154,7 +153,6 @@
                                         <field name="use_of_carpentry"/>
                                         <field name="use_of_measuring_instruments"/>
                                         <field name="welding"/>
-                                        <field name="welding"/>
                                         <field name="lathe"/>
                                         <field name="electrical"/>
                                         <field name="mek_practical_total_marks"/>
@@ -162,237 +160,58 @@
                                     </tree>
                                 </field>
                             </page>
-                            
                             <page string="MEK Oral">
-                                <group>
-                                    <label for="using_hand_plumbing_carpentry_tools" />
-                                    <div>
-                                        <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
-                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
+                                <field name="mek_oral_child_line" nolabel="1">
+                                    <tree>                                     
+                                        <field name='using_hand_plumbing_carpentry_tools'/>
+                                        <field name="use_of_chipping_tools_paints"/>
+                                        <field name='welding'/>
+                                        <field name="lathe_drill_grinder"/>
 
-                                <group>
-                                    <label for="use_of_chipping_tools_paints" />
-                                    <div>
-                                        <field name="use_of_chipping_tools_paints" nolabel="1"/>
-                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="welding" />
-                                    <div>
-                                        <field name="welding" nolabel="1"/>
-                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="lathe_drill_grinder" />
-                                    <div>
-                                        <field name="lathe_drill_grinder" nolabel="1"/>
-                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
-
-
-                                <group>
-                                    <label for="electrical" />
-                                    <div>
-                                        <field name="electrical" nolabel="1"/>
-                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="journal" />
-                                    <div>
-                                        <field name="journal" nolabel="1"/>
-                                / 
-                                        <span>25 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group style="width:100%;">
-                                    <field name="mek_oral_remarks"/>
-                                </group>
-
-                                <group style="width:100%;">
-                                    <field name="mek_oral_total_marks"/>
-                                </group>
+                                        <field name="electrical"/>
+                                        <field name="journal"/>
+                                        <field name="mek_oral_remarks"/>
+                                        <field name="mek_oral_total_marks"/>                                      
+                                    </tree>
+                                </field>
                             </page>
+
                             <page string="GSK Practical">
-                                <group>
-                                    <label for="climbing_mast" />
-                                    <div>
-                                        <field name="climbing_mast" nolabel="1"/>
-                                    / 
-                                        <span>12 Marks</span>
-                                    </div>
-                                </group>
+                                <field name="gsk_practical_child_line" nolabel="1">
+                                    <tree>                                   
+                                        <field name='climbing_mast'/>
+                                        <field name="buoy_flags_recognition"/>
+                                        <field name='bosun_chair'/>
+                                        <field name="rig_stage"/>
 
-                                <group>
-                                    <label for="buoy_flags_recognition" />
-                                    <div>
-                                        <field name="buoy_flags_recognition" nolabel="1"/>
-                                    / 
-                                        <span>12 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="bosun_chair" />
-                                    <div>
-                                        <field name="bosun_chair" nolabel="1"/>
-                                    / 
-                                        <span>08 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="rig_stage" />
-                                    <div>
-                                        <field name="rig_stage" nolabel="1"/>
-                                    / 
-                                        <span>08 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="rig_pilot" />
-                                    <div>
-                                        <field name="rig_pilot" nolabel="1"/>
-                                    / 
-                                        <span>08 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="rig_scaffolding" />
-                                    <div>
-                                        <field name="rig_scaffolding" nolabel="1"/>
-                                    / 
-                                        <span>08 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="fast_ropes" />
-                                    <div>
-                                        <field name="fast_ropes" nolabel="1"/>
-                                    / 
-                                        <span>08 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="knots_bend" />
-                                    <div>
-                                        <field name="knots_bend" nolabel="1"/>
-                                    / 
-                                        <span>18 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="sounding_rod" />
-                                    <div>
-                                        <field name="sounding_rod" nolabel="1"/>
-                                    / 
-                                        <span>18 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group style="width:100%;">
-                                    <field name="gsk_practical_total_marks"/>
-                                </group>
-
-
-                                <group style="width:100%;">
-                                    <field name="gsk_practical_remarks"/>
-                                </group>
+                                        <field name="rig_pilot"/>
+                                        <field name="rig_scaffolding"/>
+                                        <field name="fast_ropes"/>
+                                        <field name="knots_bend"/>
+                                        <field name="sounding_rod"/>
+                                        <field name="gsk_practical_total_marks"/>
+                                        <field name="gsk_practical_remarks"/>                                       
+                                    </tree>
+                                </field>
                             </page>
+
                             <page string="GSK Oral">
-                                <group>
-                                    <label for="subject_area_1" />
-                                    <div>
-                                        <field name="subject_area_1" nolabel="1"/>
-                                    / 
-                                        <span>9 Marks</span>
-                                    </div>
-                                </group>
+                                <field name="gsk_oral_child_line" nolabel="1">
+                                    <tree>              
+                                        <field name='subject_area_1'/>
+                                        <field name="subject_area_2"/>
+                                        <field name='subject_area_3'/>
+                                        <field name="subject_area_4"/>
 
-                                <group>
-                                    <label for="subject_area_2" />
-                                    <div>
-                                        <field name="subject_area_2" nolabel="1"/>
-                                    / 
-                                        <span>6 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="subject_area_3" />
-                                    <div>
-                                        <field name="subject_area_3" nolabel="1"/>
-                                    / 
-                                        <span>9 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="subject_area_4" />
-                                    <div>
-                                        <field name="subject_area_4" nolabel="1"/>
-                                    / 
-                                        <span>9 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="subject_area_5" />
-                                    <div>
-                                        <field name="subject_area_5" nolabel="1"/>
-                                    / 
-                                        <span>12 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="subject_area_6" />
-                                    <div>
-                                        <field name="subject_area_6" nolabel="1"/>
-                                    / 
-                                        <span>5 Marks</span>
-                                    </div>
-                                </group>
-
-                                <group>
-                                    <label for="practical_record_journals" />
-                                    <div>
-                                        <field name="practical_record_journals" nolabel="1"/>
-                                    / 
-                                        <span>25 Marks</span>
-                                    </div>
-                                </group>
-
-
-
-                                <group style="width:100%;">
-                                    <field name="gsk_oral_total_marks"/>
-                                </group>
-
-
-                                <group style="width:100%;">
-                                    <field name="gsk_oral_remarks"/>
-                                </group>
+                                        <field name="subject_area_5"/>
+                                        <field name="subject_area_6"/>
+                                        <field name="practical_record_journals"/>
+                                        <field name="gsk_oral_total_marks"/>
+                                        <field name="gsk_oral_remarks"/>
+                                    </tree>
+                                </field>
                             </page>
+                            
                         </notebook>
                     </sheet>
                 </form>
@@ -864,6 +683,267 @@
                 </form>
             </field>
         </record>
+
+            <!-- Mek Oral -->
+        <record id="gp_mek_oral_form" model="ir.ui.view">
+            <field name="name">gp.mek.oral.line.form</field>
+            <field name="model">gp.mek.oral.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="using_hand_plumbing_carpentry_tools" />
+                            <div>
+                                <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="use_of_chipping_tools_paints" />
+                            <div>
+                                <field name="use_of_chipping_tools_paints" nolabel="1"/>
+                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="welding" />
+                            <div>
+                                <field name="welding" nolabel="1"/>
+                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="lathe_drill_grinder" />
+                            <div>
+                                <field name="lathe_drill_grinder" nolabel="1"/>
+                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+
+                        <group>
+                            <label for="electrical" />
+                            <div>
+                                <field name="electrical" nolabel="1"/>
+                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="journal" />
+                            <div>
+                                <field name="journal" nolabel="1"/>
+                        / 
+                                <span>25 Marks</span>
+                            </div>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="mek_oral_remarks"/>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="mek_oral_total_marks"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+            <!-- GSK Practical -->
+        <record id="gp_gsk_practical_form" model="ir.ui.view">
+            <field name="name">gp.gsk.practical.line.form</field>
+            <field name="model">gp.gsk.practical.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        
+                        <group>
+                            <label for="climbing_mast" />
+                            <div>
+                                <field name="climbing_mast" nolabel="1"/>
+                            / 
+                                <span>12 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="buoy_flags_recognition" />
+                            <div>
+                                <field name="buoy_flags_recognition" nolabel="1"/>
+                            / 
+                                <span>12 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="bosun_chair" />
+                            <div>
+                                <field name="bosun_chair" nolabel="1"/>
+                            / 
+                                <span>08 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="rig_stage" />
+                            <div>
+                                <field name="rig_stage" nolabel="1"/>
+                            / 
+                                <span>08 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="rig_pilot" />
+                            <div>
+                                <field name="rig_pilot" nolabel="1"/>
+                            / 
+                                <span>08 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="rig_scaffolding" />
+                            <div>
+                                <field name="rig_scaffolding" nolabel="1"/>
+                            / 
+                                <span>08 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="fast_ropes" />
+                            <div>
+                                <field name="fast_ropes" nolabel="1"/>
+                            / 
+                                <span>08 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="knots_bend" />
+                            <div>
+                                <field name="knots_bend" nolabel="1"/>
+                            / 
+                                <span>18 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="sounding_rod" />
+                            <div>
+                                <field name="sounding_rod" nolabel="1"/>
+                            / 
+                                <span>18 Marks</span>
+                            </div>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="gsk_practical_total_marks"/>
+                        </group>
+
+
+                        <group style="width:100%;">
+                            <field name="gsk_practical_remarks"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+            <!-- GSK ORAL -->
+
+        <record id="gp_gsk_oral_form" model="ir.ui.view">
+            <field name="name">gp.gsk.oral.line.form</field>
+            <field name="model">gp.gsk.oral.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="subject_area_1" />
+                            <div>
+                                <field name="subject_area_1" nolabel="1"/>
+                            / 
+                                <span>9 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="subject_area_2" />
+                            <div>
+                                <field name="subject_area_2" nolabel="1"/>
+                            / 
+                                <span>6 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="subject_area_3" />
+                            <div>
+                                <field name="subject_area_3" nolabel="1"/>
+                            / 
+                                <span>9 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="subject_area_4" />
+                            <div>
+                                <field name="subject_area_4" nolabel="1"/>
+                            / 
+                                <span>9 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="subject_area_5" />
+                            <div>
+                                <field name="subject_area_5" nolabel="1"/>
+                            / 
+                                <span>12 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="subject_area_6" />
+                            <div>
+                                <field name="subject_area_6" nolabel="1"/>
+                            / 
+                                <span>5 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="practical_record_journals" />
+                            <div>
+                                <field name="practical_record_journals" nolabel="1"/>
+                            / 
+                                <span>25 Marks</span>
+                            </div>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="gsk_oral_total_marks"/>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="gsk_oral_remarks"/>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
 
 
 
