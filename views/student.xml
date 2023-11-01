@@ -6,11 +6,13 @@
             <field name="name">GP Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">gp.candidate</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
         </record>
+
+
 
         <!-- <record id="candidate_cc_rating_action" model="ir.actions.act_window">
             <field name="name">CC Candidate</field>
@@ -27,7 +29,7 @@
             <field name="name">GP Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">gp.candidate</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
@@ -37,13 +39,65 @@
             <field name="name">CCMC Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ccmc.candidate</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
         </record>
 
 
+
+        <record id="gp_candidate_kanban" model="ir.ui.view">
+            <field name="name">gp.candidate.kanban</field>
+            <field name="model">gp.candidate</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                <div class="o_kanban_image d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('gp.candidate','candidate_image',record.id.raw_value)}')">
+                                    <!-- <img class="o_kanban_image_inner_pic" 
+                                        t-att-src="kanban_image('gp.candidate','candidate_image',record.id.raw_value)"/> -->
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <record id="ccmc_candidate_kanban" model="ir.ui.view">
+            <field name="name">ccmc.candidate.kanban</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                <div class="o_kanban_image d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('gp.candidate','candidate_image',record.id.raw_value)}')">
+                                    <!-- <img class="o_kanban_image_inner_pic" 
+                                        t-att-src="kanban_image('gp.candidate','candidate_image',record.id.raw_value)"/> -->
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+
+                </kanban>
+            </field>
+        </record>
 
 
 
@@ -53,6 +107,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <field name="elligiblity_criteria" invisible="1"/>
+                        <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
+                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+                        
                         <div class="oe_button_box" name="button_box">
                             <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button> -->
@@ -60,7 +118,14 @@
                             </button> -->
                         </div>
 
-                        <field name="candidate_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
+                        <field name="candidate_image" widget="image" class="oe_avatar" />
+                        <div class="oe_title mb24">
+
+                            <h1>
+                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name "/>
+                            </h1>
+
+                        </div>
                         <group style="width:100%;">
                             <field name="candidate_code"/>
                         </group>
@@ -68,7 +133,7 @@
                         <group style="width:100%;">
 
                             <field name="roll_no"/>
-                            <field name="name" placeholder="Candidate" required="1"/>
+                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
                             <field name="institute_id"/>
                             <field name="indos_no"/>
                             <field name="dob"/>
@@ -102,9 +167,10 @@
 
 
                         <group style="width:50%;">
-                            <field name="tenth_percent"/>
-                            <field name="twelve_percent"/>
-                            <field name="iti_percent"/>
+                            <field name="qualification"/>
+                            <field name="tenth_percent" attrs="{'invisible': [('qualification', '!=', 'tenth')] , 'required':[('qualification', '=', 'tenth')] }"/>
+                            <field name="twelve_percent" attrs="{'invisible': [('qualification', '!=', 'twelve')], 'required':[('qualification', '=', 'twelve')] }"/>
+                            <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
                         </group>
@@ -134,9 +200,15 @@
                                         <field name="institute_name"/>
                                         <field name='marine_training_inst_number'/>
                                         <field name="mti_indos_no"/>
+<<<<<<< HEAD
 
                                         
+=======
+>>>>>>> 37ba18e (Pull)
                                         <field name="candidate_cert_no"/>
+                                        <field name="certificate_upload" widget="binary" filename="file_name"/>
+                                        <field name="file_name" invisible="1"/>
+
                                         <field name="course_start_date"/>
                                         <field name="course_end_date"/>
                                     </tree>
@@ -450,6 +522,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <field name="elligiblity_criteria" invisible="1"/>
+                        <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
+                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+
                         <div class="oe_button_box" name="button_box">
                             <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button> -->
@@ -457,12 +533,19 @@
                             </button> -->
                         </div>
 
-                        <field name="candidate_image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}" />
+                        <field name="candidate_image" widget="image" class="oe_avatar" />
+                        <div class="oe_title mb24">
+
+                            <h1>
+                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name "/>
+                            </h1>
+
+                        </div>
                         <group style="width:100%;">
                             <field name="candidate_code"/>
                             <field name="roll_no"/>
                             <field name="institute_id"/>
-                            <field name="name" placeholder="Candidate" required="1"/>
+                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
                             <field name="indos_no"/>
                             <field name="dob"/>
                             <field name="age"/>
@@ -495,9 +578,10 @@
 
 
                         <group style="width:50%;">
-                            <field name="tenth_percent"/>
-                            <field name="twelve_percent"/>
-                            <field name="iti_percent"/>
+                            <field name="qualification"/>
+                            <field name="tenth_percent" attrs="{'invisible': [('qualification', '!=', 'tenth')] , 'required':[('qualification', '=', 'tenth')] }"/>
+                            <field name="twelve_percent" attrs="{'invisible': [('qualification', '!=', 'twelve')], 'required':[('qualification', '=', 'twelve')] }"/>
+                            <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
                         </group>
@@ -523,17 +607,20 @@
                                 <field name="stcw_certificate" nolabel="1">
                                     <tree editable="bottom">
                                         <!-- <field name='candidate_id'/> -->
+
                                         <field name='course_name'/>
                                         <field name="institute_name"/>
                                         <field name='marine_training_inst_number'/>
                                         <field name="mti_indos_no"/>
-
                                         <field name="candidate_cert_no"/>
+                                        <field name="certificate_upload" widget="binary" filename="file_name"/>
+                                        <field name="file_name" invisible="1"/>
                                         <field name="course_start_date"/>
                                         <field name="course_end_date"/>
                                     </tree>
                                 </field>
                             </page>
+<<<<<<< HEAD
                             
 
                             <page string="Cooker And bakery">
@@ -561,13 +648,141 @@
                                         <field name="total_mrks"/>                               
                                     </tree>
                                 </field>
+=======
+                            <page string="Cookery and Bakery">
+
+                                <group>
+                                    <label for="hygien_grooming" />
+                                    <div>
+                                        <field name="hygien_grooming" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <span>
+                                    <h1>
+                                        <Strong>Dish 1</Strong>
+                                    </h1>
+                                </span>
+                                <group>
+                                    <label for="appearance" />
+                                    <div>
+                                        <field name="appearance" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="taste" />
+                                    <div>
+                                        <field name="taste" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="texture" />
+                                    <div>
+                                        <field name="texture" nolabel="1"/>
+                                                / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+                                <span>
+                                    <h1>
+                                        <Strong>Dish 2</Strong>
+                                    </h1>
+                                </span>
+                                <group>
+                                    <label for="appearance_2" />
+                                    <div>
+                                        <field name="appearance_2" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="taste_2" />
+                                    <div>
+                                        <field name="taste_2" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="texture_2" />
+                                    <div>
+                                        <field name="texture_2" nolabel="1"/>
+                                                / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+                                <span>
+                                    <h1>
+                                        <Strong>Dish 3</Strong>
+                                    </h1>
+                                </span>
+                                <group>
+                                    <label for="appearance_3" />
+                                    <div>
+                                        <field name="appearance_3" nolabel="1"/>
+                                                / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="taste_3" />
+                                    <div>
+                                        <field name="taste_3" nolabel="1"/>
+                                                / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="texture_3" />
+                                    <div>
+                                        <field name="texture_3" nolabel="1"/>
+                                                / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+                                <span></span>
+                                <group>
+                                    <label for="identification_ingredians" />
+                                    <div>
+                                        <field name="identification_ingredians" nolabel="1"/>
+                                                 / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="knowledge_of_menu" />
+                                    <div>
+                                        <field name="knowledge_of_menu" nolabel="1"/>
+                                                 / 
+                                        <span>8 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="total_mrks" />
+                                    <div>
+                                        <field name="total_mrks" nolabel="1"/>
+                                                / 
+                                        <span>100 Marks</span>
+                                    </div>
+                                </group>
+>>>>>>> 37ba18e (Pull)
                             </page>
-                            <page string="CCMC Oral" >
-                                <span><h2><Strong>Marks for Oral</Strong></h2></span>
+                            <page string="CCMC Oral">
+                                <span>
+                                    <h2>
+                                        <Strong>Marks for Oral</Strong>
+                                    </h2>
+                                </span>
                                 <group>
                                     <label for="gsk_ccmc" />
                                     <div>
-                                        <field name="gsk_ccmc"  nolabel="1"/>
+                                        <field name="gsk_ccmc" nolabel="1"/>
                                                 / 
                                         <span>10 Marks</span>
                                     </div>
@@ -575,7 +790,7 @@
                                 <group>
                                     <label for="safety_ccmc"/>
                                     <div>
-                                        <field name="safety_ccmc"  nolabel="1"/>
+                                        <field name="safety_ccmc" nolabel="1"/>
                                                 / 
                                         <span>10 Marks</span>
                                     </div>
@@ -583,7 +798,7 @@
                                 <group>
                                     <label for="toal_ccmc_rating" />
                                     <div>
-                                        <field name="toal_ccmc_rating"  nolabel="1"/>
+                                        <field name="toal_ccmc_rating" nolabel="1"/>
                                                 / 
                                         <span>20 Marks</span>
                                     </div>

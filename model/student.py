@@ -7,7 +7,7 @@ class GPCandidate(models.Model):
     
     institute_batch_id = fields.Many2one("institute.batches","Batch")
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
-    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
+    candidate_image = fields.Image(string='Candidate Image', help='Select an image in JPEG format.')
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
     age = fields.Char("Age")
@@ -23,12 +23,22 @@ class GPCandidate(models.Model):
     phone = fields.Char("Phone")
     mobile = fields.Char("Mobile")
     email = fields.Char("Email")
-    tenth_percent = fields.Char("% Xth Std in Eng.")
-    twelve_percent = fields.Char("% 12th Std in Eng.")
-    iti_percent = fields.Char("% ITI")
+    tenth_percent = fields.Integer("% Xth Std in Eng.")
+    twelve_percent = fields.Integer("% 12th Std in Eng.")
+    iti_percent = fields.Integer("% ITI")
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
     ship_visits_count = fields.Char("No. of Ship Visits")
+    elligiblity_criteria = fields.Selection([
+        ('elligible', 'Elligible'),
+        ('not_elligible', 'Not Elligible')
+    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
     
+    qualification = fields.Selection([
+        ('tenth', '10th std'),
+        ('twelve', '12th std'),
+        ('iti', 'ITI')
+    ],string="Qualification", default='tenth')
+
     candidate_attendance_record = fields.Integer("Candidate Attendance Record")
     
     
@@ -52,7 +62,82 @@ class GPCandidate(models.Model):
     
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
 
+<<<<<<< HEAD
     # # MEK Practical
+=======
+    # MEK Practical
+    
+    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
+    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
+    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
+    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes")
+    use_of_carpentry = fields.Integer("Use of Carpentry Tools")
+    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
+    welding = fields.Integer("Welding (1 Task)")
+    lathe = fields.Integer("Lathe Work (1 Task)")
+    electrical = fields.Integer("Electrical (1 Task)")
+    
+    mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
+    
+    mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    
+    
+    @api.depends('name', 'age', 'indos_no', 'candidate_code', 'roll_no', 'dob', 'street', 'street2',
+                 'city', 'zip', 'state_id', 'phone', 'mobile', 'email', 'sc_st', 'qualification','tenth_percent','twelve_percent','iti_percent')
+    def _compute_eligibility(self):
+        for candidate in self:
+            # candidate.elligibility_criteria = 'not_elligible'
+            # Check if all the fields are filled
+            # import wdb; wdb.set_trace()
+            all_fields_filled = all([candidate.name, candidate.age, candidate.indos_no, candidate.candidate_code, candidate.roll_no,
+                    candidate.dob, candidate.street, candidate.street2, candidate.city, candidate.zip,
+                    candidate.state_id, candidate.phone, candidate.mobile, candidate.email, candidate.sc_st,
+                    candidate.qualification])
+
+            if all_fields_filled:
+                # import wdb; wdb.set_trace()
+                if candidate.qualification == 'tenth' and candidate.tenth_percent > 40 or candidate.qualification == 'twelve' and candidate.twelve_percent > 40 or candidate.qualification == 'iti' and candidate.iti_percent > 50:
+                   candidate.elligiblity_criteria = 'elligible'                
+                else:
+                   candidate.elligiblity_criteria = 'not_elligible'
+            else:
+                candidate.elligiblity_criteria = 'not_elligible'       
+    
+    
+    @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
+                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
+                 'welding', 'lathe', 'electrical')
+    def _compute_mek_practical_total_marks(self):
+        for record in self:
+            total = (
+                record.using_hand_plumbing_tools_task_1 +
+                record.using_hand_plumbing_tools_task_2 +
+                record.using_hand_plumbing_tools_task_3 +
+                record.use_of_chipping_tools_paint_brushes +
+                record.use_of_carpentry +
+                record.use_of_measuring_instruments +
+                record.welding +
+                record.lathe +
+                record.electrical
+            )
+            record.mek_practical_total_marks = total
+    
+    
+    @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
+    def _check_values(self):
+        for record in self:
+            fields_to_check = {
+                'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
+                'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
+                'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
+                'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
+                'use_of_carpentry': "Use of Carpentry Tools",
+                'use_of_measuring_instruments': "Use of Measuring Instruments",
+                'welding': "Welding (1 Task)",
+                'lathe': "Lathe Work (1 Task)",
+                'electrical': "Electrical (1 Task)",
+            }
+>>>>>>> 37ba18e (Pull)
 
     mek_practical_child_line = fields.One2many("gp.mek.practical.line","mek_parent",string="MEK Practical")
     
@@ -240,13 +325,23 @@ class GPSTCWCandidate(models.Model):
     
     candidate_id = fields.Many2one("gp.candidate","Candidate")
 
-    course_name = fields.Char("Course Name")
+    course_name =  fields.Selection([
+        ('pst', 'PST'),
+        ('efa', 'EFA'),
+        ('fpff', 'FPFF'),
+        ('pssr', 'PSSR'),
+        ('stsdsd', 'STSDSD')
+    ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("MTI Number")
     mti_indos_no = fields.Char("Indos No.")
     candidate_cert_no = fields.Char("Candidate Certificate Number")
     course_start_date = fields.Date(string="Course Start Date")
     course_end_date = fields.Date(string="Course End Date")
+    file_name = fields.Char('File Name')
+    certificate_upload = fields.Binary("Certificate Upload")
+    
+
 
 
 
@@ -297,7 +392,18 @@ class CCMCCandidate(models.Model):
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
     ship_visits_count = fields.Char("No. of Ship Visits")
     
+    qualification = fields.Selection([
+        ('tenth', '10th std'),
+        ('twelve', '12th std'),
+        ('iti', 'ITI')
+    ],string="Qualification", default='tenth')
+    
     candidate_attendance_record = fields.Integer("Candidate Attendance Record")
+    
+    elligiblity_criteria = fields.Selection([
+        ('elligible', 'Elligible'),
+        ('not_elligible', 'Not Elligible')
+    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
     
     
     attendance_compliance_1 = fields.Selection([
@@ -329,6 +435,27 @@ class CCMCCandidate(models.Model):
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
     
+    
+    @api.depends('name', 'age', 'indos_no', 'candidate_code', 'roll_no', 'dob', 'street', 'street2',
+                 'city', 'zip', 'state_id', 'phone', 'mobile', 'email', 'sc_st', 'qualification','tenth_percent','twelve_percent','iti_percent')
+    def _compute_eligibility(self):
+        for candidate in self:
+            # candidate.elligibility_criteria = 'not_elligible'
+            # Check if all the fields are filled
+            # import wdb; wdb.set_trace()
+            all_fields_filled = all([candidate.name, candidate.age, candidate.indos_no, candidate.candidate_code, candidate.roll_no,
+                    candidate.dob, candidate.street, candidate.street2, candidate.city, candidate.zip,
+                    candidate.state_id, candidate.phone, candidate.mobile, candidate.email, candidate.sc_st,
+                    candidate.qualification])
+
+            if all_fields_filled:
+                # import wdb; wdb.set_trace()
+                if candidate.qualification == 'tenth' and candidate.tenth_percent > 40 or candidate.qualification == 'twelve' and candidate.twelve_percent > 40 or candidate.qualification == 'iti' and candidate.iti_percent > 50:
+                   candidate.elligiblity_criteria = 'elligible'                
+                else:
+                   candidate.elligiblity_criteria = 'not_elligible'
+            else:
+                candidate.elligiblity_criteria = 'not_elligible'        
 
     @api.depends(
         'gsk_ccmc', 'safety_ccmc'
@@ -348,14 +475,22 @@ class CCMCSTCWCandidate(models.Model):
     _description = 'STCW'
     
     candidate_id = fields.Many2one("ccmc.candidate","Candidate")
-
-    course_name = fields.Char("Course Name")
+    course_name =  fields.Selection([
+        ('pst', 'PST'),
+        ('efa', 'EFA'),
+        ('fpff', 'FPFF'),
+        ('pssr', 'PSSR'),
+        ('stsdsd', 'STSDSD')
+    ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("Marine Training Institute Number")
     mti_indos_no = fields.Char("MTI Indos No.")
     candidate_cert_no = fields.Char("Candidate Certificate Number")
+    file_name = fields.Char('File Name')
+    certificate_upload = fields.Binary("Certificate Upload")
     course_start_date = fields.Date(string="Course Start Date")
     course_end_date = fields.Date(string="Course End Date")
+    
 
 
     
