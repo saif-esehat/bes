@@ -62,9 +62,6 @@ class GPCandidate(models.Model):
     
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
 
-<<<<<<< HEAD
-    # # MEK Practical
-=======
     # MEK Practical
     
     using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
@@ -137,7 +134,6 @@ class GPCandidate(models.Model):
                 'lathe': "Lathe Work (1 Task)",
                 'electrical': "Electrical (1 Task)",
             }
->>>>>>> 37ba18e (Pull)
 
     mek_practical_child_line = fields.One2many("gp.mek.practical.line","mek_parent",string="MEK Practical")
     

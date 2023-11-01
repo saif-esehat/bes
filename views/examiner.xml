@@ -27,7 +27,7 @@
                             </h1>
                         </group>
                         <group style="width:100%;">
-                            <field name="course_id" string="Course" />
+                            <field name="subject_id" string="Subject" />
                         </group>
                         <group>
                             <group>
