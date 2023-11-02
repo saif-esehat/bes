@@ -405,9 +405,6 @@ class MekPrcticalLine(models.Model):
                     raise ValidationError(f"{field_label} value cannot exceed 20.")
                 elif field_value > 10:
                     raise ValidationError(f"{field_label} value cannot exceed 10.")
-<<<<<<< HEAD
-      
-=======
 
 class MekOralLine(models.Model):
     _name = 'gp.mek.oral.line'
@@ -593,4 +590,3 @@ class GskOralLine(models.Model):
             record.gsk_oral_total_marks = total_marks
 
 
->>>>>>> 23bfb9451575ee7789addc651c6d6ee4e0cd6244
