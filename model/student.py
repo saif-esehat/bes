@@ -8,7 +8,7 @@ class GPCandidate(models.Model):
     
     institute_batch_id = fields.Many2one("institute.batches","Batch")
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
-    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
+    candidate_image = fields.Image(string='Candidate Image', help='Select an image in JPEG format.')
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
     age = fields.Char("Age")
@@ -24,12 +24,22 @@ class GPCandidate(models.Model):
     phone = fields.Char("Phone")
     mobile = fields.Char("Mobile")
     email = fields.Char("Email")
-    tenth_percent = fields.Char("% Xth Std in Eng.")
-    twelve_percent = fields.Char("% 12th Std in Eng.")
-    iti_percent = fields.Char("% ITI")
+    tenth_percent = fields.Integer("% Xth Std in Eng.")
+    twelve_percent = fields.Integer("% 12th Std in Eng.")
+    iti_percent = fields.Integer("% ITI")
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
     ship_visits_count = fields.Char("No. of Ship Visits")
+    elligiblity_criteria = fields.Selection([
+        ('elligible', 'Elligible'),
+        ('not_elligible', 'Not Elligible')
+    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
     
+    qualification = fields.Selection([
+        ('tenth', '10th std'),
+        ('twelve', '12th std'),
+        ('iti', 'ITI')
+    ],string="Qualification", default='tenth')
+
     candidate_attendance_record = fields.Integer("Candidate Attendance Record")
     
     
@@ -52,6 +62,33 @@ class GPCandidate(models.Model):
     
     
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
+
+    
+    
+    
+    @api.depends('name', 'age', 'indos_no', 'candidate_code', 'roll_no', 'dob', 'street', 'street2',
+                 'city', 'zip', 'state_id', 'phone', 'mobile', 'email', 'sc_st', 'qualification','tenth_percent','twelve_percent','iti_percent')
+    def _compute_eligibility(self):
+        for candidate in self:
+            # candidate.elligibility_criteria = 'not_elligible'
+            # Check if all the fields are filled
+            # import wdb; wdb.set_trace()
+            all_fields_filled = all([candidate.name, candidate.age, candidate.indos_no, candidate.candidate_code, candidate.roll_no,
+                    candidate.dob, candidate.street, candidate.street2, candidate.city, candidate.zip,
+                    candidate.state_id, candidate.phone, candidate.mobile, candidate.email, candidate.sc_st,
+                    candidate.qualification])
+
+            if all_fields_filled:
+                # import wdb; wdb.set_trace()
+                if candidate.qualification == 'tenth' and candidate.tenth_percent > 40 or candidate.qualification == 'twelve' and candidate.twelve_percent > 40 or candidate.qualification == 'iti' and candidate.iti_percent > 50:
+                   candidate.elligiblity_criteria = 'elligible'                
+                else:
+                   candidate.elligiblity_criteria = 'not_elligible'
+            else:
+                candidate.elligiblity_criteria = 'not_elligible'       
+    
+    
+    
 
     # MEK Practical
 
@@ -78,14 +115,29 @@ class GPSTCWCandidate(models.Model):
     
     candidate_id = fields.Many2one("gp.candidate","Candidate")
 
-    course_name = fields.Char("Course Name")
+    course_name =  fields.Selection([
+        ('pst', 'PST'),
+        ('efa', 'EFA'),
+        ('fpff', 'FPFF'),
+        ('pssr', 'PSSR'),
+        ('stsdsd', 'STSDSD')
+    ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("MTI Number")
     mti_indos_no = fields.Char("Indos No.")
     candidate_cert_no = fields.Char("Candidate Certificate Number")
     course_start_date = fields.Date(string="Course Start Date")
     course_end_date = fields.Date(string="Course End Date")
+    file_name = fields.Char('File Name')
+    certificate_upload = fields.Binary("Certificate Upload")
+    
 
+
+
+
+
+
+    
 
 class GPCandidateShipVisits(models.Model):
     _name = 'gp.candidate.ship.visits'
@@ -130,7 +182,18 @@ class CCMCCandidate(models.Model):
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
     ship_visits_count = fields.Char("No. of Ship Visits")
     
+    qualification = fields.Selection([
+        ('tenth', '10th std'),
+        ('twelve', '12th std'),
+        ('iti', 'ITI')
+    ],string="Qualification", default='tenth')
+    
     candidate_attendance_record = fields.Integer("Candidate Attendance Record")
+    
+    elligiblity_criteria = fields.Selection([
+        ('elligible', 'Elligible'),
+        ('not_elligible', 'Not Elligible')
+    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
     
     
     attendance_compliance_1 = fields.Selection([
@@ -157,11 +220,33 @@ class CCMCCandidate(models.Model):
     cookery_child_line = fields.One2many("ccmc.cookery.bakery.line","cookery_parent",string="Cookery & Bakery")
     
 
-        #Start CCMC rating Oral
+        # Start CCMC rating Oral
+
     gsk_ccmc = fields.Integer("GSK")
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
     
+    
+    @api.depends('name', 'age', 'indos_no', 'candidate_code', 'roll_no', 'dob', 'street', 'street2',
+                 'city', 'zip', 'state_id', 'phone', 'mobile', 'email', 'sc_st', 'qualification','tenth_percent','twelve_percent','iti_percent')
+    def _compute_eligibility(self):
+        for candidate in self:
+            # candidate.elligibility_criteria = 'not_elligible'
+            # Check if all the fields are filled
+            # import wdb; wdb.set_trace()
+            all_fields_filled = all([candidate.name, candidate.age, candidate.indos_no, candidate.candidate_code, candidate.roll_no,
+                    candidate.dob, candidate.street, candidate.street2, candidate.city, candidate.zip,
+                    candidate.state_id, candidate.phone, candidate.mobile, candidate.email, candidate.sc_st,
+                    candidate.qualification])
+
+            if all_fields_filled:
+                # import wdb; wdb.set_trace()
+                if candidate.qualification == 'tenth' and candidate.tenth_percent > 40 or candidate.qualification == 'twelve' and candidate.twelve_percent > 40 or candidate.qualification == 'iti' and candidate.iti_percent > 50:
+                   candidate.elligiblity_criteria = 'elligible'                
+                else:
+                   candidate.elligiblity_criteria = 'not_elligible'
+            else:
+                candidate.elligiblity_criteria = 'not_elligible'        
 
     @api.depends(
         'gsk_ccmc', 'safety_ccmc'
@@ -179,15 +264,24 @@ class CCMCSTCWCandidate(models.Model):
     _description = 'STCW'
     
     candidate_id = fields.Many2one("ccmc.candidate","Candidate")
-
-    course_name = fields.Char("Course Name")
+    course_name =  fields.Selection([
+        ('pst', 'PST'),
+        ('efa', 'EFA'),
+        ('fpff', 'FPFF'),
+        ('pssr', 'PSSR'),
+        ('stsdsd', 'STSDSD')
+    ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("Marine Training Institute Number")
     mti_indos_no = fields.Char("MTI Indos No.")
     candidate_cert_no = fields.Char("Candidate Certificate Number")
+    file_name = fields.Char('File Name')
+    certificate_upload = fields.Binary("Certificate Upload")
     course_start_date = fields.Date(string="Course Start Date")
     course_end_date = fields.Date(string="Course End Date")
 
+
+    
 
 class CCMCCandidateShipVisits(models.Model):
     _name = 'ccmc.candidate.ship.visits'
@@ -310,7 +404,6 @@ class MekPrcticalLine(models.Model):
                     raise ValidationError(f"{field_label} value cannot exceed 20.")
                 elif field_value > 10:
                     raise ValidationError(f"{field_label} value cannot exceed 10.")
-
 
 class MekOralLine(models.Model):
     _name = 'gp.mek.oral.line'
@@ -494,4 +587,5 @@ class GskOralLine(models.Model):
             ])
 
             record.gsk_oral_total_marks = total_marks
+
 
