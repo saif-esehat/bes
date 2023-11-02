@@ -88,3 +88,10 @@ class Examiner(models.Model):
         examiner_tag = self.env.ref('bes.examiner_tags').id
         portal_user.partner_id.write({'email': examiner.email,'phone':examiner.phone,'mobile':examiner.mobile,'street':examiner.street,'street2':examiner.street2,'city':examiner.city,'zip':examiner.zip,'state_id':examiner.state_id.id,'category_id':[examiner_tag]})
         return examiner
+
+
+
+# class ExaminerAssignment(models.Model):
+#     _name = "examiner.assignment"
+#     _description= 'Examiner Assignment'
+        
