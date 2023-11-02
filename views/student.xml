@@ -2,17 +2,17 @@
 <odoo>
     <data>
 
-        <record id="candidate_action" model="ir.actions.act_window">
-            <field name="name">Candidate</field>
+        <record id="gp_candidate_action" model="ir.actions.act_window">
+            <field name="name">GP Candidate</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">bes.candidate</field>
-            <field name="view_mode">tree,form</field>
+            <field name="res_model">gp.candidate</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
         </record>
 
-         <record id="candidate_cc_rating_action" model="ir.actions.act_window">
+         <!-- <record id="candidate_cc_rating_action" model="ir.actions.act_window">
             <field name="name">CC Candidate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bes.candidate</field>
@@ -21,14 +21,23 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
-        </record>
+        </record> -->
 
         <record id="candidate_gp_rating_action" model="ir.actions.act_window">
             <field name="name">GP Candidate</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">bes.candidate</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('institute_batch_id.course.course_code', '=', 'GP')]</field>
+            <field name="res_model">gp.candidate</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Candidate</p>
+            </field>
+        </record>
+
+        <record id="candidate_ccmc_action" model="ir.actions.act_window">
+            <field name="name">CCMC Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ccmc.candidate</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Candidate</p>
             </field>
@@ -36,33 +45,100 @@
 
 
 
-        <record id="candidate_form" model="ir.ui.view">
-            <field name="name">bes.candidate.form</field>
-            <field name="model">bes.candidate</field>
+        <record id="gp_candidate_kanban" model="ir.ui.view">
+            <field name="name">gp.candidate.kanban</field>
+            <field name="model">gp.candidate</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                <div class="o_kanban_image d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('gp.candidate','candidate_image',record.id.raw_value)}')">
+                                    <!-- <img class="o_kanban_image_inner_pic" 
+                                        t-att-src="kanban_image('gp.candidate','candidate_image',record.id.raw_value)"/> -->
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <record id="ccmc_candidate_kanban" model="ir.ui.view">
+            <field name="name">ccmc.candidate.kanban</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                <div class="o_kanban_image d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('gp.candidate','candidate_image',record.id.raw_value)}')">
+                                    <!-- <img class="o_kanban_image_inner_pic" 
+                                        t-att-src="kanban_image('gp.candidate','candidate_image',record.id.raw_value)"/> -->
+                                </div>
+                                <div class="oe_kanban_details d-flex flex-column">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <record id="gp_candidate_form" model="ir.ui.view">
+            <field name="name">gp.candidate.form</field>
+            <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <field name="elligiblity_criteria" invisible="1"/>
+                        <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
+                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+                        
                         <div class="oe_button_box" name="button_box">
-                            <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
-                            </button>
-                            <button name="open_stcw" string="STCW Certificates" type="object" class="oe_stat_button" icon="fa-align-justify">
-                            </button>
+                            <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
                             <!-- <button name="open_ship_visits" string="Ship Visits" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button> -->
                         </div>
-                        <group style="width:100%;">
+
+                        <field name="candidate_image" widget="image" class="oe_avatar" />
+                        <div class="oe_title mb24">
+
                             <h1>
-                                <field name="name" placeholder="Candidate" required="1"/>
+                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name "/>
                             </h1>
-                        </group>
-                        
+
+                        </div>
                         <group style="width:100%;">
-                            <field name="institute_batch_id"/>
-                            <field name="indos_no"/>
                             <field name="candidate_code"/>
-                            <field name="roll_no"/>
                         </group>
-                          
+
+                        <group style="width:100%;">
+
+                            <field name="roll_no"/>
+                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
+                            <field name="institute_id"/>
+                            <field name="indos_no"/>
+                            <field name="dob"/>
+                            <field name="age"/>
+
+                        </group>
+
                         <group>
                             <group>
                                 <span class="o_form_label o_td_label">
@@ -80,98 +156,320 @@
                                 <field name="phone" widget="phone"/>
                                 <field name="mobile" widget="phone"/>
                                 <field name="email"/>
-                                <field name="dob"/>
                             </group>
                         </group>
-                        <group style="width:50%;">
-                            <field name="tenth_percent"/>
-                            <field name="twelve_percent"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="iti_percent"/>
-                            <field name="sc_st"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
 
-
-        <record id="candidate_attendance_form" model="ir.ui.view">
-            <field name="name">candidate.attendance.form</field>
-            <field name="model">candidate.attendance</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
                         <group style="width:100%;">
-                            <field name="candidate_id" />
-                            <!-- <field name="compliance_1" style="margin-bottom:10px; margin-top: 15px;"/>
-                            <field name="compliance_2" style="margin-top: 14px;" /> -->
+                            <field name="institute_batch_id"/>
                         </group>
-                  
-                            <label for="compliance_1" />
-                            <div>
-                                <field name="compliance_1" />
-                            </div>
 
-                             <label for="compliance_2" />
-                            <div>
-                                <field name="compliance_2" />
-                            </div>
-                       
+
+                        <group style="width:50%;">
+                            <field name="qualification"/>
+                            <field name="tenth_percent" attrs="{'invisible': [('qualification', '!=', 'tenth')] , 'required':[('qualification', '=', 'tenth')] }"/>
+                            <field name="twelve_percent" attrs="{'invisible': [('qualification', '!=', 'twelve')], 'required':[('qualification', '=', 'twelve')] }"/>
+                            <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
+                            <field name="sc_st"/>
+                            <field name="candidate_attendance_record"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Ship Visits">
+                                <field name="ship_visits"/>
+                            </page>
+                            <page string="Attendance">
+                                <label for="attendance_compliance_1" />
+                                <div>
+                                    <field name="attendance_compliance_1"/>
+                                </div>
+                                <label for="attendance_compliance_2" />
+                                <div>
+                                    <field name="attendance_compliance_2"/>
+                                </div>
+                            </page>
+                            <!-- <page string="Ship Visits">
+                                    <field name="ship_visits"/>
+                            </page> -->
+                            <page string="STCW Certificate">
+                                <field name="stcw_certificate" nolabel="1">
+                                    <tree editable="bottom">
+                                        <!-- <field name='candidate_id'/> -->
+                                        <field name='course_name'/>
+                                        <field name="institute_name"/>
+                                        <field name='marine_training_inst_number'/>
+                                        <field name="mti_indos_no"/>
+
+                                        
+                                        <field name="candidate_cert_no"/>
+                                        <field name="certificate_upload" widget="binary" filename="file_name"/>
+                                        <field name="file_name" invisible="1"/>
+
+                                        <field name="course_start_date"/>
+                                        <field name="course_end_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="MEK Practical">
+                                <field name="mek_practical_child_line" nolabel="1">
+                                    <tree>
+                                       
+                                        <field name='using_hand_plumbing_tools_task_1'/>
+                                        <field name="using_hand_plumbing_tools_task_2"/>
+                                        <field name='using_hand_plumbing_tools_task_3'/>
+                                        <field name="use_of_chipping_tools_paint_brushes"/>
+
+                                        <field name="use_of_carpentry"/>
+                                        <field name="use_of_measuring_instruments"/>
+                                        <field name="welding"/>
+                                        <field name="welding"/>
+                                        <field name="lathe"/>
+                                        <field name="electrical"/>
+                                        <field name="mek_practical_total_marks"/>
+                                        <field name="mek_practical_remarks"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page string="MEK Oral">
+                                <group>
+                                    <label for="using_hand_plumbing_carpentry_tools" />
+                                    <div>
+                                        <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="use_of_chipping_tools_paints" />
+                                    <div>
+                                        <field name="use_of_chipping_tools_paints" nolabel="1"/>
+                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="welding" />
+                                    <div>
+                                        <field name="welding" nolabel="1"/>
+                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="lathe_drill_grinder" />
+                                    <div>
+                                        <field name="lathe_drill_grinder" nolabel="1"/>
+                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+
+
+                                <group>
+                                    <label for="electrical" />
+                                    <div>
+                                        <field name="electrical" nolabel="1"/>
+                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="journal" />
+                                    <div>
+                                        <field name="journal" nolabel="1"/>
+                                / 
+                                        <span>25 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group style="width:100%;">
+                                    <field name="mek_oral_remarks"/>
+                                </group>
+
+                                <group style="width:100%;">
+                                    <field name="mek_oral_total_marks"/>
+                                </group>
+                            </page>
+                            <page string="GSK Practical">
+                                <group>
+                                    <label for="climbing_mast" />
+                                    <div>
+                                        <field name="climbing_mast" nolabel="1"/>
+                                    / 
+                                        <span>12 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="buoy_flags_recognition" />
+                                    <div>
+                                        <field name="buoy_flags_recognition" nolabel="1"/>
+                                    / 
+                                        <span>12 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="bosun_chair" />
+                                    <div>
+                                        <field name="bosun_chair" nolabel="1"/>
+                                    / 
+                                        <span>08 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="rig_stage" />
+                                    <div>
+                                        <field name="rig_stage" nolabel="1"/>
+                                    / 
+                                        <span>08 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="rig_pilot" />
+                                    <div>
+                                        <field name="rig_pilot" nolabel="1"/>
+                                    / 
+                                        <span>08 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="rig_scaffolding" />
+                                    <div>
+                                        <field name="rig_scaffolding" nolabel="1"/>
+                                    / 
+                                        <span>08 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="fast_ropes" />
+                                    <div>
+                                        <field name="fast_ropes" nolabel="1"/>
+                                    / 
+                                        <span>08 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="knots_bend" />
+                                    <div>
+                                        <field name="knots_bend" nolabel="1"/>
+                                    / 
+                                        <span>18 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="sounding_rod" />
+                                    <div>
+                                        <field name="sounding_rod" nolabel="1"/>
+                                    / 
+                                        <span>18 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group style="width:100%;">
+                                    <field name="gsk_practical_total_marks"/>
+                                </group>
+
+
+                                <group style="width:100%;">
+                                    <field name="gsk_practical_remarks"/>
+                                </group>
+                            </page>
+                            <page string="GSK Oral">
+                                <group>
+                                    <label for="subject_area_1" />
+                                    <div>
+                                        <field name="subject_area_1" nolabel="1"/>
+                                    / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="subject_area_2" />
+                                    <div>
+                                        <field name="subject_area_2" nolabel="1"/>
+                                    / 
+                                        <span>6 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="subject_area_3" />
+                                    <div>
+                                        <field name="subject_area_3" nolabel="1"/>
+                                    / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="subject_area_4" />
+                                    <div>
+                                        <field name="subject_area_4" nolabel="1"/>
+                                    / 
+                                        <span>9 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="subject_area_5" />
+                                    <div>
+                                        <field name="subject_area_5" nolabel="1"/>
+                                    / 
+                                        <span>12 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="subject_area_6" />
+                                    <div>
+                                        <field name="subject_area_6" nolabel="1"/>
+                                    / 
+                                        <span>5 Marks</span>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="practical_record_journals" />
+                                    <div>
+                                        <field name="practical_record_journals" nolabel="1"/>
+                                    / 
+                                        <span>25 Marks</span>
+                                    </div>
+                                </group>
+
+
+
+                                <group style="width:100%;">
+                                    <field name="gsk_oral_total_marks"/>
+                                </group>
+
+
+                                <group style="width:100%;">
+                                    <field name="gsk_oral_remarks"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
 
 
-        <record id="stcw_form" model="ir.ui.view">
-            <field name="name">candidate.stcw.certificate.form</field>
-            <field name="model">candidate.stcw.certificate</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <field name="candidate_id" invisible="1"/>
-                        <group style="width:50%;">
-                            <field name="pst_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="pst_document_file" attrs="{'invisible': [('pst_certifcate', '=', False)],'required': [('pst_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="efa_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="efa_document_file" attrs="{'invisible': [('efa_certifcate', '=', False)],'required': [('efa_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="fpff_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="fpff_document_file" attrs="{'invisible': [('fpff_certifcate', '=', False)],'required': [('fpff_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="pssr_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="pssr_document_file" attrs="{'invisible': [('pssr_certifcate', '=', False)],'required': [('pssr_certifcate', '=', True)]}"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="stsdsd_certifcate"/>
-                        </group>
-                        <group style="width:50%;">
-                            <field name="stsdsd_document_file" attrs="{'invisible': [('stsdsd_certifcate', '=', False)],'required': [('stsdsd_certifcate', '=', True)]}"/>
-                        </group>
-                        <field name="other_certificates"/>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-
-        <record id="candidate_ship_visits_form" model="ir.ui.view">
-            <field name="name">candidate.ship.visits.form</field>
-            <field name="model">candidate.ship.visits</field>
+        <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
+            <field name="name">gp.candidate.ship.visits.form</field>
+            <field name="model">gp.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -194,9 +492,9 @@
         </record>
 
 
-        <record id="candidate_ship_visits_tree" model="ir.ui.view">
-            <field name="name">candidate.ship.visits.form</field>
-            <field name="model">candidate.ship.visits</field>
+        <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
+            <field name="name">gp.candidate.ship.visits.form</field>
+            <field name="model">gp.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name_of_ships"/>
@@ -208,6 +506,447 @@
                     <field name="eng_room"/>
                     <field name="cargo_area"/>
                 </tree>
+            </field>
+        </record>
+
+        <!-- CCMC  -->
+
+        <record id="ccmc_candidate_form" model="ir.ui.view">
+            <field name="name">ccmc.candidate.form</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="elligiblity_criteria" invisible="1"/>
+                        <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
+                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+
+                        <div class="oe_button_box" name="button_box">
+                            <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
+                            <!-- <button name="open_ship_visits" string="Ship Visits" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
+                        </div>
+
+                        <field name="candidate_image" widget="image" class="oe_avatar" />
+                        <div class="oe_title mb24">
+
+                            <h1>
+                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name "/>
+                            </h1>
+
+                        </div>
+                        <group style="width:100%;">
+                            <field name="candidate_code"/>
+                            <field name="roll_no"/>
+                            <field name="institute_id"/>
+                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
+                            <field name="indos_no"/>
+                            <field name="dob"/>
+                            <field name="age"/>
+
+                        </group>
+
+                        <group>
+                            <group>
+                                <span class="o_form_label o_td_label">
+                                    <b>Address</b>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city" />
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                </div>
+                            </group>
+                            <group >
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+
+                        <group style="width:100%;">
+                            <field name="institute_batch_id"/>
+                        </group>
+
+
+                        <group style="width:50%;">
+                            <field name="qualification"/>
+                            <field name="tenth_percent" attrs="{'invisible': [('qualification', '!=', 'tenth')] , 'required':[('qualification', '=', 'tenth')] }"/>
+                            <field name="twelve_percent" attrs="{'invisible': [('qualification', '!=', 'twelve')], 'required':[('qualification', '=', 'twelve')] }"/>
+                            <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
+                            <field name="sc_st"/>
+                            <field name="candidate_attendance_record"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Ship Visits">
+                                <field name="ship_visits"/>
+                            </page>
+                            <page string="Attendance">
+                                <label for="attendance_compliance_1" />
+                                <div>
+                                    <field name="attendance_compliance_1"/>
+                                </div>
+                                <label for="attendance_compliance_2" />
+                                <div>
+                                    <field name="attendance_compliance_2"/>
+                                </div>
+                            </page>
+                            <!-- <page string="Ship Visits">
+                                    <field name="ship_visits"/>
+                            </page> -->
+                            <page string="STCW Certificate">
+                                <field name="stcw_certificate" nolabel="1">
+                                    <tree editable="bottom">
+                                        <!-- <field name='candidate_id'/> -->
+
+                                        <field name='course_name'/>
+                                        <field name="institute_name"/>
+                                        <field name='marine_training_inst_number'/>
+                                        <field name="mti_indos_no"/>
+                                        <field name="candidate_cert_no"/>
+                                        <field name="certificate_upload" widget="binary" filename="file_name"/>
+                                        <field name="file_name" invisible="1"/>
+                                        <field name="course_start_date"/>
+                                        <field name="course_end_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+
+                            <page string="Cooker And bakery">
+                                <field name="cookery_child_line" nolabel="1" >
+                                    <tree>
+                                        <field name='cookery_examiner'/>
+                                        <field name='cookery_bekary_start_time'/>
+                                        <field name='cookery_bekary_end_time'/>
+                                        <field name='hygien_grooming'/>
+                                    
+                                        <field name="appearance"/>
+                                        <field name='taste'/>
+                                        <field name="texture"/>
+                                        
+                                        <field name="appearance_2"/>
+                                        <field name="taste_2"/>
+                                        <field name="texture_2"/>
+                                    
+                                        <field name="appearance_3"/>
+                                        <field name="taste_3"/>
+                                        <field name="texture_3"/>
+                            
+                                        <field name="identification_ingredians"/>
+                                        <field name="knowledge_of_menu"/>
+                                        <field name="total_mrks"/>                               
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="CCMC Oral">
+                                <span>
+                                    <h2>
+                                        <Strong>Marks for Oral</Strong>
+                                    </h2>
+                                </span>
+                                <group>
+                                    <label for="gsk_ccmc" />
+                                    <div>
+                                        <field name="gsk_ccmc" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="safety_ccmc"/>
+                                    <div>
+                                        <field name="safety_ccmc" nolabel="1"/>
+                                                / 
+                                        <span>10 Marks</span>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="toal_ccmc_rating" />
+                                    <div>
+                                        <field name="toal_ccmc_rating" nolabel="1"/>
+                                                / 
+                                        <span>20 Marks</span>
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="ccmc_candidate_ship_visits_form" model="ir.ui.view">
+            <field name="name">ccmc.candidate.ship.visits.form</field>
+            <field name="model">ccmc.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="candidate_id"/>
+                        </group>
+                        <group>
+                            <field name="name_of_ships"/>
+                            <field name="imo_no"/>
+                            <field name="name_of_ports_visited"/>
+                            <field name="date_of_visits"/>
+                            <field name="time_spent_on_ship"/>
+                            <field name="bridge"/>
+                            <field name="eng_room"/>
+                            <field name="cargo_area"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="ccmc_candidate_ship_visits_tree" model="ir.ui.view">
+            <field name="name">ccmc.candidate.ship.visits.form</field>
+            <field name="model">ccmc.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name_of_ships"/>
+                    <field name="imo_no"/>
+                    <field name="name_of_ports_visited"/>
+                    <field name="date_of_visits"/>
+                    <field name="time_spent_on_ship"/>
+                    <field name="bridge"/>
+                    <field name="eng_room"/>
+                    <field name="cargo_area"/>
+                </tree>
+            </field>
+        </record>
+
+          <!-- CCMC CooKery Bakery Line Form -->
+        <record id="ccmc_candidate_cookery_bekary_form" model="ir.ui.view">
+            <field name="name">ccmc.cookery.bakery.line.form</field>
+            <field name="model">ccmc.cookery.bakery.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name='cookery_examiner'/>
+                            <field name='cookery_bekary_start_time'/>
+                            <field name='cookery_bekary_end_time'/>
+                        </group>
+                        
+                        <group>
+                            <label for="hygien_grooming" />
+                            <div>
+                                <field name="hygien_grooming"  nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <span><h1><Strong>Dish 1</Strong></h1></span>
+                        <group>
+                            <label for="appearance" />
+                            <div>
+                                <field name="appearance"  nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="taste" />
+                            <div>
+                                <field name="taste"  nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="texture" />
+                            <div>
+                                <field name="texture"  nolabel="1"/>
+                                        / 
+                                <span>9 Marks</span>
+                            </div>
+                        </group>
+                        <span><h1><Strong>Dish 2</Strong></h1></span>
+                        <group>
+                            <label for="appearance_2" />
+                            <div>
+                                <field name="appearance_2"  nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="taste_2" />
+                            <div>
+                                <field name="taste_2"  nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="texture_2" />
+                            <div>
+                                <field name="texture_2"  nolabel="1"/>
+                                        / 
+                                <span>9 Marks</span>
+                            </div>
+                        </group>
+                        <span><h1><Strong>Dish 3</Strong></h1></span>
+                        <group>
+                            <label for="appearance_3" />
+                            <div>
+                                <field name="appearance_3"  nolabel="1"/>
+                                        / 
+                                <span>5 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="taste_3" />
+                            <div>
+                                <field name="taste_3"  nolabel="1"/>
+                                        / 
+                                <span>5 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="texture_3" />
+                            <div>
+                                <field name="texture_3"  nolabel="1"/>
+                                        / 
+                                <span>5 Marks</span>
+                            </div>
+                        </group>
+                        <span></span>
+                        <group>
+                            <label for="identification_ingredians" />
+                            <div>
+                                <field name="identification_ingredians"  nolabel="1"/>
+                                            / 
+                                <span>9 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="knowledge_of_menu" />
+                            <div>
+                                <field name="knowledge_of_menu"  nolabel="1"/>
+                                            / 
+                                <span>8 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="total_mrks" />
+                            <div>
+                                <field name="total_mrks"  nolabel="1"/>
+                                        / 
+                                <span>100 Marks</span>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+            <!-- MEK Practical Line Form -->
+        <record id="gp_mek_practical_form" model="ir.ui.view">
+            <field name="name">gp.mek.practical.line.form</field>
+            <field name="model">gp.mek.practical.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="using_hand_plumbing_tools_task_1" />
+                            <div >
+                                <field name="using_hand_plumbing_tools_task_1" min="0" max="10" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="using_hand_plumbing_tools_task_2" />
+                            <div >
+                                <field name="using_hand_plumbing_tools_task_2" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="using_hand_plumbing_tools_task_3" />
+                            <div >
+                                <field name="using_hand_plumbing_tools_task_3" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="use_of_chipping_tools_paint_brushes" />
+                            <div >
+                                <field name="use_of_chipping_tools_paint_brushes" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="use_of_carpentry" />
+                            <div >
+                                <field name="use_of_carpentry" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="use_of_measuring_instruments" />
+                            <div >
+                                <field name="use_of_measuring_instruments" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="welding" />
+                            <div >
+                                <field name="welding" nolabel="1"/>
+                            / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="lathe" />
+                            <div >
+                                <field name="lathe" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="electrical" />
+                            <div >
+                                <field name="electrical" nolabel="1"/>
+                            / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+
+                        
+                        <group style="width:100%;">
+                            <field name="mek_practical_total_marks"/>
+                        </group>
+
+
+                        <group style="width:100%;">
+                            <field name="mek_practical_remarks"/>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 

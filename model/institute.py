@@ -135,6 +135,21 @@ class Institute(models.Model):
             'default_institute_id': self.id    
             }
         }
+    
+    def open_faculty(self):
+        
+        return {
+        'name': 'Faculty',
+        'domain': [('institute_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'institute.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_institute_id': self.id    
+            }
+        }
 
 
 
@@ -152,4 +167,20 @@ class InstituteCourses(models.Model):
     approved_capacity = fields.Integer("Approved Capacity")
     approved_date = fields.Date("Approved Date")
 
+
+class InstituteFaculty(models.Model):
+    _name = "institute.faculty"
+    _description= 'Institute Faculty'
+    
+    institute_id = fields.Many2one("bes.institute","Institute ID")
+    course_name = fields.Many2one("course.master","Course")
+    faculty_name = fields.Char(string='Name of the Faculty', required=True)
+    faculty_photo = fields.Binary(string='Faculty Photo')
+    dob = fields.Date(string='Date of Birth of the Faculty')
+    designation = fields.Char(string='Designation of the Faculty')
+    qualification = fields.Text(string='Qualification of Faculty')
+    contract_terms = fields.Text(string='Contract Terms')
+    courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
+    
+    
 

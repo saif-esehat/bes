@@ -132,7 +132,7 @@
                     <group>
                         <field name="course" invisible="1"/>
                         <field name="state_id" invisible="1"/>
-                        <field name="examiners" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('course_id', '=', course), ('state_id', '=', state_id)]" />
+                        <field name="examiners" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('state_id', '=', state_id)]" />
                     </group>
 
                     <footer>
