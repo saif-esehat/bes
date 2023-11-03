@@ -41,6 +41,7 @@ class Examiner(models.Model):
     associated_training_institute = fields.Text("Name & address of the training institute to which you were associated")
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
     subject_id = fields.Many2one("course.master.subject","Subject")
+    assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
 
     
     @api.onchange('designation')
@@ -91,7 +92,14 @@ class Examiner(models.Model):
 
 
 
-# class ExaminerAssignment(models.Model):
-#     _name = "examiner.assignment"
-#     _description= 'Examiner Assignment'
-        
+class ExaminerAssignment(models.Model):
+    _name = "examiner.assignment"
+    _description= 'Examiner Assignment'
+    
+    
+    examiner_id = fields.Many2one("bes.examiner","Examiner")
+    assignment_date = fields.Date("Assignment Date")
+    exam_date = fields.Date("Exam Date")
+    subject_id = fields.Many2one("course.master.subject","Subject")
+    gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate")
+    ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")

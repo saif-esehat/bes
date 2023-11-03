@@ -9,6 +9,7 @@
  'depends':['product','portal','survey','sale'],
  'data': [
         'data/tags.xml',
+        'views/portal/portal_docs.xml',
         'views/batches.xml',
         'views/examiner.xml',
         'views/exam_center.xml',
