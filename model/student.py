@@ -303,6 +303,9 @@ class CookeryBakeryLine(models.Model):
 
     cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
 
+    # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
+    exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True)
+    cookery_exam_date = fields.Date(string="Exam Date")
     hygien_grooming = fields.Integer("Hygiene & Grooming")
     appearance = fields.Integer("Appearance(Dish 1)")
     taste = fields.Integer("Taste(Dish 1)")
@@ -319,6 +322,7 @@ class CookeryBakeryLine(models.Model):
     cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
     cookery_bekary_start_time = fields.Datetime(string="Start Time")
     cookery_bekary_end_time = fields.Datetime(string="End Time")
+
 
     @api.depends(
         'hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2',
@@ -342,6 +346,51 @@ class CookeryBakeryLine(models.Model):
             )
             record.total_mrks = total
 
+    @api.constrains('hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2', 'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu')
+    def _check_max_values(self):
+        for record in self:
+            if record.hygien_grooming > 10:
+                raise ValidationError("In Cookery and Bakery, Hygiene & Grooming Marks cannot exceed 10.")
+            if record.appearance > 10:
+                raise ValidationError("In Cookery and Bakery, Appearance (Dish 1) Marks cannot exceed 10.")
+            if record.taste > 10:
+                raise ValidationError("In Cookery and Bakery, Taste (Dish 1) Marks cannot exceed 10.")
+            if record.texture > 9:
+                raise ValidationError("In Cookery and Bakery, Texture (Dish 1) Marks cannot exceed 9.")
+            if record.appearance_2 > 10:
+                raise ValidationError("In Cookery and Bakery, Appearance (Dish 2) Marks cannot exceed 10.")
+            if record.taste_2 > 10:
+                raise ValidationError("In Cookery and Bakery, Taste (Dish 2) Marks cannot exceed 10.")
+            if record.texture_2 > 9:
+                raise ValidationError("In Cookery and Bakery, Texture (Dish 2) Marks cannot exceed 9.")
+            if record.appearance_3 > 5:
+                raise ValidationError("In Cookery and Bakery, Appearance (Dish 3) Marks cannot exceed 5.")
+            if record.taste_3 > 5:
+                raise ValidationError("In Cookery and Bakery, Taste (Dish 3) Marks cannot exceed 5.")
+            if record.texture_3 > 5:
+                raise ValidationError("In Cookery and Bakery, Texture (Dish 3) Marks cannot exceed 5.")
+            if record.identification_ingredians > 9:
+                raise ValidationError("In Cookery and Bakery, Identification of Ingredients Marks cannot exceed 9.")
+            if record.knowledge_of_menu > 8:
+                raise ValidationError("In Cookery and Bakery, Knowledge of Menu Marks cannot exceed 8.")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('exam_attempt_number', 0) == 0:
+            # Calculate the next serial number
+            last_attempt_number = self.search([('cookery_parent', '=', vals.get('cookery_parent'))], order="exam_attempt_number desc", limit=1)
+            next_attempt_number = last_attempt_number.exam_attempt_number + 1 if last_attempt_number else 1
+
+            vals['exam_attempt_number'] = next_attempt_number
+
+        return super(CookeryBakeryLine, self).create(vals)
+
+    @api.constrains('exam_attempt_number')
+    def _check_attempt_number_limit(self):
+        for record in self:
+            if record.exam_attempt_number > 7:
+                raise ValidationError("A candidate can't have more than 7 exam attempts in Cookery & Bakery.")
+
 
 class MekPrcticalLine(models.Model):
     _name = 'gp.mek.practical.line'
@@ -349,6 +398,8 @@ class MekPrcticalLine(models.Model):
 
     mek_parent = fields.Many2one("gp.candidate",string="Parent")
 
+    mek_prcatical_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
+    mek_practical_exam_date = fields.Date(string="Exam Date")
     using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
     using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
     using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
@@ -362,8 +413,7 @@ class MekPrcticalLine(models.Model):
     mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
     
     mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
-    
-    
+  
     
     @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
                  'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
@@ -402,9 +452,26 @@ class MekPrcticalLine(models.Model):
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
                 if field_name == 'welding' and field_value > 20:
-                    raise ValidationError(f"{field_label} value cannot exceed 20.")
+                    raise ValidationError(f"In MEK Practical, {field_label} Marks cannot exceed 20.")
                 elif field_value > 10:
-                    raise ValidationError(f"{field_label} value cannot exceed 10.")
+                    raise ValidationError(f"In MEK Practical, {field_label} Marks cannot exceed 10.")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('mek_prcatical_attempt_no', 0) == 0:
+            # Calculate the next serial number
+            last_attempt_no = self.search([('mek_parent', '=', vals.get('mek_parent'))], order="mek_prcatical_attempt_no desc", limit=1)
+            next_attempt_no = last_attempt_no.mek_prcatical_attempt_no + 1 if last_attempt_no else 1
+
+            vals['mek_prcatical_attempt_no'] = next_attempt_no
+
+        return super(MekPrcticalLine, self).create(vals)
+
+    @api.constrains('mek_prcatical_attempt_no')
+    def _check_attempt_no_limit(self):
+        for record in self:
+            if record.mek_prcatical_attempt_no > 7:
+                raise ValidationError("A candidate can't have more than 7 exam attempts in MEK Practical.")
 
 class MekOralLine(models.Model):
     _name = 'gp.mek.oral.line'
@@ -412,6 +479,9 @@ class MekOralLine(models.Model):
 
     mek_oral_parent = fields.Many2one("gp.candidate", string="Parent")
 
+
+    mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
+    mek_oral_exam_date = fields.Date(string="Exam Date")
     using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools")
     use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints")
     welding = fields.Integer("Welding")
@@ -422,22 +492,6 @@ class MekOralLine(models.Model):
     mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True)
 
     mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak")
-
-    @api.constrains('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
-    def _check_field_limits(self):
-        for record in self:
-            if record.using_hand_plumbing_carpentry_tools > 10:
-                raise ValidationError("Uses of Hand/Plumbing/Carpentry Tools value cannot exceed 10.")
-            if record.use_of_chipping_tools_paints > 10:
-                raise ValidationError("Use of Chipping Tools & Brushes & Paints value cannot exceed 10.")
-            if record.welding > 10:
-                raise ValidationError("Welding value cannot exceed 10.")
-            if record.lathe_drill_grinder > 10:
-                raise ValidationError("Lathe/Drill/Grinder value cannot exceed 10.")
-            if record.electrical > 10:
-                raise ValidationError("Electrical value cannot exceed 10.")
-            if record.journal > 25:
-                raise ValidationError("Journal value cannot exceed 25.")
 
     @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
     def _compute_mek_oral_total_marks(self):
@@ -452,6 +506,39 @@ class MekOralLine(models.Model):
             )
             record.mek_oral_total_marks = total
 
+    @api.constrains('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    def _check_field_limits(self):
+        for record in self:
+            if record.using_hand_plumbing_carpentry_tools > 10:
+                raise ValidationError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools Marks cannot exceed 10.")
+            if record.use_of_chipping_tools_paints > 10:
+                raise ValidationError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
+            if record.welding > 10:
+                raise ValidationError("In MEK Oral, Welding Marks cannot exceed 10.")
+            if record.lathe_drill_grinder > 10:
+                raise ValidationError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
+            if record.electrical > 10:
+                raise ValidationError("In MEK Oral, Electrical Marks cannot exceed 10.")
+            if record.journal > 25:
+                raise ValidationError("In MEK Oral, Journal Marks cannot exceed 25.")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('mek_oral_attempt_no', 0) == 0:
+            # Calculate the next serial number
+            last_attempt_no = self.search([('mek_oral_parent', '=', vals.get('mek_oral_parent'))], order="mek_oral_attempt_no desc", limit=1)
+            next_attempt_no = last_attempt_no.mek_oral_attempt_no + 1 if last_attempt_no else 1
+
+            vals['mek_oral_attempt_no'] = next_attempt_no
+
+        return super(MekOralLine, self).create(vals)
+
+    @api.constrains('mek_oral_attempt_no')
+    def _check_mek_oral_attempt(self):
+        for record in self:
+            if record.mek_oral_attempt_no > 7:
+                raise ValidationError("A candidate can't have more than 7 exam attempts in MEK Oral.")
+
 
 class GskPracticallLine(models.Model):
     _name = 'gp.gsk.practical.line'
@@ -459,6 +546,8 @@ class GskPracticallLine(models.Model):
 
     gsk_practical_parent = fields.Many2one("gp.candidate", string="Parent")
 
+    gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
+    gsk_practical_exam_date = fields.Date(string="Exam Date")
     climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
     buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders")
     bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
@@ -471,8 +560,23 @@ class GskPracticallLine(models.Model):
     sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight ")
     
     gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks")
-    gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")    
+    gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
 
+      
+    @api.depends('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    def _compute_gsk_practical_total_marks(self):
+        for record in self:
+            total_marks = 0
+            total_marks += record.climbing_mast
+            total_marks += record.buoy_flags_recognition
+            total_marks += record.bosun_chair
+            total_marks += record.rig_stage
+            total_marks += record.rig_pilot
+            total_marks += record.rig_scaffolding
+            total_marks += record.fast_ropes
+            total_marks += record.knots_bend
+            total_marks += record.sounding_rod
+            record.gsk_practical_total_marks = total_marks
 
     @api.constrains('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
     def _check_max_value(self):
@@ -492,36 +596,38 @@ class GskPracticallLine(models.Model):
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
                 if field_name == 'climbing_mast' and field_value > 12:
-                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 12.")
                 elif field_name == 'buoy_flags_recognition' and field_value > 12:
-                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 12.")
                 elif field_name == 'bosun_chair' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
                 elif field_name == 'rig_stage' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
                 elif field_name == 'rig_pilot' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
                 elif field_name == 'rig_scaffolding' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
                 elif field_name == 'fast_ropes' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
                 elif field_name == 'knots_bend' and field_value > 18:
-                    raise ValidationError(f"{field_label} value cannot exceed 18.")
-       
-    @api.depends('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
-    def _compute_gsk_practical_total_marks(self):
+                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 18.")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('gsk_practical_attempt_no', 0) == 0:
+            # Calculate the next serial number
+            last_attempt_no = self.search([('gsk_practical_parent', '=', vals.get('gsk_practical_parent'))], order="gsk_practical_attempt_no desc", limit=1)
+            next_attempt_no = last_attempt_no.gsk_practical_attempt_no + 1 if last_attempt_no else 1
+
+            vals['gsk_practical_attempt_no'] = next_attempt_no
+
+        return super(GskPracticallLine, self).create(vals)
+
+    @api.constrains('gsk_practical_attempt_no')
+    def _check_attempt_gsk_practical(self):
         for record in self:
-            total_marks = 0
-            total_marks += record.climbing_mast
-            total_marks += record.buoy_flags_recognition
-            total_marks += record.bosun_chair
-            total_marks += record.rig_stage
-            total_marks += record.rig_pilot
-            total_marks += record.rig_scaffolding
-            total_marks += record.fast_ropes
-            total_marks += record.knots_bend
-            total_marks += record.sounding_rod
-            record.gsk_practical_total_marks = total_marks
+            if record.gsk_practical_attempt_no > 7:
+                raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Practical.")
 
 
 class GskOralLine(models.Model):
@@ -530,7 +636,8 @@ class GskOralLine(models.Model):
 
     gsk_oral_parent = fields.Many2one("gp.candidate", string="Parent")
 
-
+    gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True)
+    gsk_oral_exam_date = fields.Date(string="Exam Date")
     subject_area_1 = fields.Integer("Subject Area 1")
     subject_area_2 = fields.Integer("Subject Area 2")
     subject_area_3 = fields.Integer("Subject Area 3")
@@ -542,8 +649,25 @@ class GskOralLine(models.Model):
     
     gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True)
     gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+
     
     
+    
+    @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    def _compute_gsk_oral_total_marks(self):
+        for record in self:
+            total_marks = sum([
+                record.subject_area_1,
+                record.subject_area_2,
+                record.subject_area_3,
+                record.subject_area_4,
+                record.subject_area_5,
+                record.subject_area_6,
+                record.practical_record_journals,
+            ])
+
+            record.gsk_oral_total_marks = total_marks
+
     @api.constrains('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
     def _check_max_value(self):
         for record in self:
@@ -560,33 +684,34 @@ class GskOralLine(models.Model):
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
                 if field_name == 'subject_area_1' and field_value > 9:
-                    raise ValidationError(f"{field_label} value cannot exceed 9.")
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 9.")
                 elif field_name == 'subject_area_2' and field_value > 6:
-                    raise ValidationError(f"{field_label} value cannot exceed 6.")
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 6.")
                 elif field_name == 'subject_area_3' and field_value > 9:
-                    raise ValidationError(f"{field_label} value cannot exceed 9.")
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 9.")
                 elif field_name == 'subject_area_4' and field_value > 9:
-                    raise ValidationError(f"{field_label} value cannot exceed 9.")
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 9.")
                 elif field_name == 'subject_area_5' and field_value > 12:
-                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 12.")
                 elif field_name == 'subject_area_6' and field_value > 5:
-                    raise ValidationError(f"{field_label} value cannot exceed 5.")
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 5.")
                 elif field_name == 'practical_record_journals' and field_value > 25:
-                    raise ValidationError(f"{field_label} value cannot exceed 25.")
-    
-    @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
-    def _compute_gsk_oral_total_marks(self):
-        for record in self:
-            total_marks = sum([
-                record.subject_area_1,
-                record.subject_area_2,
-                record.subject_area_3,
-                record.subject_area_4,
-                record.subject_area_5,
-                record.subject_area_6,
-                record.practical_record_journals,
-            ])
+                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 25.")
 
-            record.gsk_oral_total_marks = total_marks
+    @api.model
+    def create(self, vals):
+        if vals.get('gsk_oral_attempt_no', 0) == 0:
+            # Calculate the next serial number
+            last_attempt_no = self.search([('gsk_oral_parent', '=', vals.get('gsk_oral_parent'))], order="gsk_oral_attempt_no desc", limit=1)
+            next_attempt_no = last_attempt_no.gsk_oral_attempt_no + 1 if last_attempt_no else 1
+            vals['gsk_oral_attempt_no'] = next_attempt_no
+
+        return super(GskOralLine, self).create(vals)
+
+    @api.constrains('gsk_oral_attempt_no')
+    def _check_attempt_no_limit(self):
+        for record in self:
+            if record.gsk_oral_attempt_no >= 7:
+                raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Oral.")
 
 

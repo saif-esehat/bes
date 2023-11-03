@@ -31,9 +31,9 @@
             <field name="active" eval="True"/>
     </record>
 
-    <record id="contacts.menu_contacts" model="ir.ui.menu">
+    <!-- <record id="contacts.menu_contacts" model="ir.ui.menu">
         <field name="groups_id" eval="[(3,ref('group_examiners'))]"/>
-    </record>
+    </record> -->
 
     <record id="mail.menu_root_discuss" model="ir.ui.menu">
         <field name="groups_id" eval="[(3,ref('group_examiners'))]"/>
