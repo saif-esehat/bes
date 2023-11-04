@@ -22,6 +22,12 @@
         'views/exam_schedule.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
-        'views/menu.xml'
-]
+        'views/menu.xml',
+        'views/template.xml'
+],
+'assets': {
+		'web.assets_frontend': [
+			'bes/static/src/js/candidate.js',
+		],
+	},
 }

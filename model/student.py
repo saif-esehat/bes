@@ -6,7 +6,7 @@ class GPCandidate(models.Model):
     _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.batches","Batch")
-    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute")
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
@@ -17,9 +17,9 @@ class GPCandidate(models.Model):
     dob = fields.Date("DOB")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
-    city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True)
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
+    city = fields.Char("City")
+    zip = fields.Char("Zip")
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
     phone = fields.Char("Phone")
     mobile = fields.Char("Mobile")
     email = fields.Char("Email")
