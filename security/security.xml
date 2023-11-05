@@ -9,6 +9,11 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <record id="group_institute" model="res.groups">
+        <field name="name">Institute</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <record id="group_bes_admin" model="res.groups">
         <field name="name">BES Admin</field>
         <field name="category_id" ref="bes_access_category"/>

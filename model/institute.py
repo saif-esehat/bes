@@ -69,11 +69,21 @@ class Institute(models.Model):
     @api.model
     def create(self, values):
         institute = super(Institute, self).create(values)
+        group_xml_ids = [
+            'bes.group_institute',
+            'base.group_portal'
+            # Add more XML IDs as needed
+        ]
+        
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+
+        # group_id = self.env.ref('bes.group_institute')
         user_values = {
             'name': institute.name,
             'login': institute.email,  # You can set the login as the same as the user name
             'password': 12345678,  # Generate a random password
-            'sel_groups_1_9_10':9
+            'sel_groups_1_9_10':9,
+            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
         }
  
         portal_user = self.env['res.users'].sudo().create(user_values)

@@ -29,18 +29,44 @@ class Examiner(models.Model):
     designation = fields.Selection([
         ('master', 'Master'),
         ('chief', 'Chief')
-    ], string='Designation',default='master')
+    ], string='Rank',default='master')
     competency_no = fields.Char("Certificate of competency no.",required=True)
     date_of_issue = fields.Date("Date of Issue",required=True)
     member_of_imei_cmmi = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No')
+        ('imei', 'IMEI'),
+        ('cmmi', 'CMMI')
     ], string='Are you a member of IMEI or CMMI?',default='no')
     membership_no = fields.Char("Membership No.")
     institute_association = fields.Boolean("Are you associated with any institute conducting ratings training?")
     associated_training_institute = fields.Text("Name & address of the training institute to which you were associated")
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
-    course_id = fields.Many2one("course.master","Course")
+    subject_id = fields.Many2one("course.master.subject","Subject")
+    assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
+
+    
+    @api.onchange('designation')
+    def _onchange_compute_subject_id(self):
+        if self.designation == 'master':
+            subject_id = self.env["course.master.subject"].sudo().search([('name','=','GSK')]).id
+            self.subject_id = subject_id
+        elif self.designation == 'chief':
+            subject_id = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).id
+            self.subject_id = subject_id
+        else:
+            self.subject_id = False
+    
+    
+    @api.onchange('designation')
+    def _onchange_compute_member_of_imei_cmmi(self):
+        if self.designation == 'master':
+            rank = 'cmmi'
+            self.member_of_imei_cmmi = rank
+        elif self.designation == 'chief':
+            rank = 'imei'
+            self.member_of_imei_cmmi = rank
+        else:
+            self.member_of_imei_cmmi = False
+            
 
 
     @api.model
@@ -63,3 +89,17 @@ class Examiner(models.Model):
         examiner_tag = self.env.ref('bes.examiner_tags').id
         portal_user.partner_id.write({'email': examiner.email,'phone':examiner.phone,'mobile':examiner.mobile,'street':examiner.street,'street2':examiner.street2,'city':examiner.city,'zip':examiner.zip,'state_id':examiner.state_id.id,'category_id':[examiner_tag]})
         return examiner
+
+
+
+class ExaminerAssignment(models.Model):
+    _name = "examiner.assignment"
+    _description= 'Examiner Assignment'
+    
+    
+    examiner_id = fields.Many2one("bes.examiner","Examiner")
+    assignment_date = fields.Date("Assignment Date")
+    exam_date = fields.Date("Exam Date")
+    subject_id = fields.Many2one("course.master.subject","Subject")
+    gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate")
+    ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")

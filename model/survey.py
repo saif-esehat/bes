@@ -14,6 +14,7 @@ class InheritedSurvey(models.Model):
     users_login_required = fields.Boolean('Login Required',default=True, help="If checked, users have to login before answering even with a valid token.")
     is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user",
                                          compute="_compute_is_attempts_limited",default=True, store=True, readonly=False)
+    users_login_required = fields.Boolean('Login Required',default=True, help="If checked, users have to login before answering even with a valid token.")
     scoring_type = fields.Selection([
         ('no_scoring', 'No scoring'),
         ('scoring_with_answers', 'Scoring with answers at the end'),

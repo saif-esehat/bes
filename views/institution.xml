@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        
 
         <record id="institute_action" model="ir.actions.act_window">
             <field name="name">Institute</field>
@@ -11,6 +12,7 @@
                 <p class="o_view_nocontent_smiling_face">Institute</p>
             </field>
         </record>
+        
 
         <record id="create_batch_wizard_form" model="ir.ui.view">
             <field name="name">create.institute.batches.wizard.form</field>
@@ -26,6 +28,7 @@
                     <group style="width:50%;">
                         <field name="to_date"/>
                     </group>
+                    
 
                     <footer>
                         <button name="create_batches" string="Create Batches" type="object" class="btn-primary"/>
@@ -34,6 +37,7 @@
                 </form>
             </field>
         </record>
+        
 
         <record id="create_batch_wizard_action" model="ir.actions.act_window">
             <field name="name">Create Institute</field>
@@ -43,6 +47,8 @@
             <field name="view_id" ref="create_batch_wizard_form"/>
             <field name="target">new</field>
         </record>
+        
+        
 
 
         <record id="institute_form" model="ir.ui.view">
@@ -82,6 +88,7 @@
                                     <field name="state" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
                                     <field name="zip" placeholder="ZIP" class="o_address_zip" />
                                 </div>
+                                
 
                             </group>
                             <group style="width:50%;">
@@ -150,6 +157,7 @@
                 </form>
             </field>
         </record>
+        
 
         <record id="institute_tree" model="ir.ui.view">
             <field name="name">bes.institute.form</field>
