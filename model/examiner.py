@@ -1,7 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError,ValidationError
-from datetime import datetime
-
+from datetime import datetime, timedelta
 
 
 
@@ -103,3 +102,25 @@ class ExaminerAssignment(models.Model):
     subject_id = fields.Many2one("course.master.subject","Subject")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
+    
+    
+    @api.constrains('exam_date', 'subject_id', 'gp_candidates')
+    def _check_duplicate_assignment(self):
+        for record in self:
+            # Check if the same candidate is assigned to the same subject
+            # import wdb;wdb.set_trace()
+            # if len(record.gp_candidates.filtered(lambda c: c in record.subject_id.gp_candidates)) > 1:
+            #     raise ValidationError("A candidate cannot be assigned twice to the same subject.")
+
+            # Check if the same subject is scheduled within 90 days
+             for candidate in record.gp_candidates:
+                # Check if the same candidate has an exam for the same subject within 90 days
+                similar_assignments = self.search([
+                    ('id', '!=', record.id),
+                    ('subject_id', '=', record.subject_id.id),
+                    ('gp_candidates', 'in', candidate.id),
+                    ('exam_date', '>=', fields.Date.to_string(fields.Date.from_string(record.exam_date) - timedelta(days=90))),
+                    ('exam_date', '<=', record.exam_date)
+                ])
+                if similar_assignments:
+                    raise ValidationError(f"{candidate.name} cannot have an exam for the same subject within 90 days.")

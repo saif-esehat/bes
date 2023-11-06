@@ -21,6 +21,7 @@ class GPCandidate(models.Model):
     candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
     dob = fields.Date("DOB")
+    user_id = fields.Many2one("res.users", "Portal User")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")
@@ -67,6 +68,34 @@ class GPCandidate(models.Model):
     
     
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
+    
+    
+    
+    @api.model
+    def create(self, values):
+        gp_candidate = super(GPCandidate, self).create(values)
+        group_xml_ids = [
+            'bes.group_gp_candidates',
+            'base.group_portal'
+            # Add more XML IDs as needed
+        ]
+        
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+        
+        user_values = {
+            'name': gp_candidate.name,
+            'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
+            'password': 12345678,  # Generate a random password
+            'sel_groups_1_9_10':9,
+            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
+        }
+
+        portal_user = self.env['res.users'].sudo().create(user_values)
+        gp_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
+        # import wdb; wdb.set_trace()
+        candidate_tag = self.env.ref('bes.candidates_tags').id
+        portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
+        return gp_candidate
 
 
     
@@ -169,6 +198,7 @@ class CCMCCandidate(models.Model):
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
+    user_id = fields.Many2one("res.users", "Portal User")    
     age = fields.Char("Age")
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("CCMC Candidate Code No.")
@@ -231,6 +261,34 @@ class CCMCCandidate(models.Model):
     gsk_ccmc = fields.Integer("GSK")
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+    
+    
+    @api.model
+    def create(self, values):
+        ccmc_candidate = super(CCMCCandidate, self).create(values)
+        group_xml_ids = [
+            'bes.group_ccmc_candidates',
+            'base.group_portal'
+            # Add more XML IDs as needed
+        ]
+        
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+        
+        user_values = {
+            'name': ccmc_candidate.name,
+            'login': ccmc_candidate.indos_no,  # You can set the login as the same as the user name
+            'password': 12345678,  # Generate a random password
+            'sel_groups_1_9_10':9,
+            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
+        }
+
+        portal_user = self.env['res.users'].sudo().create(user_values)
+        ccmc_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
+        # import wdb; wdb.set_trace()
+        candidate_tag = self.env.ref('bes.candidates_tags').id
+        portal_user.partner_id.write({'email': ccmc_candidate.email,'phone':ccmc_candidate.phone,'mobile':ccmc_candidate.mobile,'street':ccmc_candidate.street,'street2':ccmc_candidate.street2,'city':ccmc_candidate.city,'zip':ccmc_candidate.zip,'state_id':ccmc_candidate.state_id.id,'category_id':[candidate_tag]})
+        return ccmc_candidate    
+    
     
     
     @api.depends('name', 'age', 'indos_no', 'candidate_code', 'roll_no', 'dob', 'street', 'street2',
@@ -672,6 +730,7 @@ class GskOralLine(models.Model):
             ])
 
             record.gsk_oral_total_marks = total_marks
+    
 
     @api.constrains('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
     def _check_max_value(self):

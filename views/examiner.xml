@@ -81,10 +81,11 @@
                         </group>
 
                         <field name="assignments">
-                            <tree editable="bottom">
+                            <tree >
                                 <field name="examiner_id" />
                                 <field name="assignment_date" />
                                 <field name="exam_date" />
+                                <field name="subject_id" />
                                 <field name="gp_candidates" />
                                 <field name="ccmc_candidates" />
                             </tree>
