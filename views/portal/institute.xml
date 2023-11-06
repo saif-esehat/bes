@@ -27,7 +27,7 @@
     </template>
 
 
-    <template id="candidate_portal_list">
+    <template id="gp_candidate_portal_list">
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_table">
                 <thead>
