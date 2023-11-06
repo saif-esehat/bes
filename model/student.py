@@ -1,6 +1,7 @@
 from odoo import api, fields, models , _
 from odoo.exceptions import UserError,ValidationError
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 class GPCandidate(models.Model):
     _name = 'gp.candidate'
@@ -253,9 +254,8 @@ class CCMCCandidate(models.Model):
 
         # Start CCMC rating Oral
 
-    gsk_ccmc = fields.Integer("GSK")
-    safety_ccmc = fields.Integer("Safety")
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+    ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
+    
     
     
     @api.model
@@ -307,16 +307,6 @@ class CCMCCandidate(models.Model):
             else:
                 candidate.elligiblity_criteria = 'not_elligible'        
 
-    @api.depends(
-        'gsk_ccmc', 'safety_ccmc'
-    )
-    def _compute_ccmc_rating_total(self):
-        for record in self:
-            rating_total = (
-                record.gsk_ccmc +
-                record.safety_ccmc
-            )
-            record.toal_ccmc_rating = rating_total
     
 class CCMCSTCWCandidate(models.Model):
     _name = 'ccmc.candidate.stcw.certificate'
@@ -381,7 +371,7 @@ class CookeryBakeryLine(models.Model):
     cookery_bekary_start_time = fields.Datetime(string="Start Time")
     cookery_bekary_end_time = fields.Datetime(string="End Time")
 
-
+    
     @api.depends(
         'hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2',
         'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu'
@@ -404,33 +394,34 @@ class CookeryBakeryLine(models.Model):
             )
             record.total_mrks = total
 
-    @api.constrains('hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2', 'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu')
-    def _check_max_values(self):
-        for record in self:
-            if record.hygien_grooming > 10:
-                raise ValidationError("In Cookery and Bakery, Hygiene & Grooming Marks cannot exceed 10.")
-            if record.appearance > 10:
-                raise ValidationError("In Cookery and Bakery, Appearance (Dish 1) Marks cannot exceed 10.")
-            if record.taste > 10:
-                raise ValidationError("In Cookery and Bakery, Taste (Dish 1) Marks cannot exceed 10.")
-            if record.texture > 9:
-                raise ValidationError("In Cookery and Bakery, Texture (Dish 1) Marks cannot exceed 9.")
-            if record.appearance_2 > 10:
-                raise ValidationError("In Cookery and Bakery, Appearance (Dish 2) Marks cannot exceed 10.")
-            if record.taste_2 > 10:
-                raise ValidationError("In Cookery and Bakery, Taste (Dish 2) Marks cannot exceed 10.")
-            if record.texture_2 > 9:
-                raise ValidationError("In Cookery and Bakery, Texture (Dish 2) Marks cannot exceed 9.")
-            if record.appearance_3 > 5:
-                raise ValidationError("In Cookery and Bakery, Appearance (Dish 3) Marks cannot exceed 5.")
-            if record.taste_3 > 5:
-                raise ValidationError("In Cookery and Bakery, Taste (Dish 3) Marks cannot exceed 5.")
-            if record.texture_3 > 5:
-                raise ValidationError("In Cookery and Bakery, Texture (Dish 3) Marks cannot exceed 5.")
-            if record.identification_ingredians > 9:
-                raise ValidationError("In Cookery and Bakery, Identification of Ingredients Marks cannot exceed 9.")
-            if record.knowledge_of_menu > 8:
-                raise ValidationError("In Cookery and Bakery, Knowledge of Menu Marks cannot exceed 8.")
+    @api.onchange('hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2', 'texture_2', 'appearance_3', 'taste_3', 'texture_3', 'identification_ingredians', 'knowledge_of_menu')
+    def _onchange_ccmc_oral_marks_limit(self):
+        if self.hygien_grooming > 10:
+            raise UserError("In Cookery & Bakery, Hygiene & Grooming marks should not be greater than 10.")
+        if self.appearance > 10:
+            raise UserError("In Cookery & Bakery, Appearance(Dish 1) marks should not be greater than 10.")
+        if self.taste > 10:
+            raise UserError("In Cookery & Bakery, Taste(Dish 1) marks should not be greater than 10.")
+        if self.texture > 9:
+            raise UserError("In Cookery & Bakery, Texture(Dish 1) marks should not be greater than 9.")
+        if self.appearance_2 > 10:
+            raise UserError("In Cookery & Bakery, Appearance(Dish 2) marks should not be greater than 10.")
+        if self.taste_2 > 10:
+            raise UserError("In Cookery & Bakery, taste_2 marks should not be greater than 10.")
+        if self.texture_2 > 9:
+            raise UserError("In Cookery & Bakery, texture_2 marks should not be greater than 9.")
+        if self.appearance_3 > 5:
+            raise UserError("In Cookery & Bakery, appearance_3 marks should not be greater than 5.")
+        if self.taste_3 > 5:
+            raise UserError("In Cookery & Bakery, taste_3 marks should not be greater than 5.")
+        if self.texture_3 > 5:
+            raise UserError("In Cookery & Bakery, texture_3 marks should not be greater than 5.")
+        if self.identification_ingredians > 9:
+            raise UserError("In Cookery & Bakery, identification_ingredians marks should not be greater than 9.")
+        if self.knowledge_of_menu > 8:
+            raise UserError("In Cookery & Bakery, knowledge_of_menu marks should not be greater than 8.")
+
+    
 
     @api.model
     def create(self, vals):
@@ -471,6 +462,30 @@ class MekPrcticalLine(models.Model):
     mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
     
     mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+
+
+    @api.onchange('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
+                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
+                 'welding', 'lathe', 'electrical')
+    def _onchange_ccmc_oral_marks_limit(self):
+        if self.using_hand_plumbing_tools_task_1 > 10:
+            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 1) Marks cannot exceed 10.")
+        if self.using_hand_plumbing_tools_task_2 > 10:
+            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 2) Marks cannot exceed 10.")
+        if self.using_hand_plumbing_tools_task_3 > 10:
+            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 3) Marks cannot exceed 10.")
+        if self.use_of_chipping_tools_paint_brushes > 10:
+            raise UserError("In MEK Practical, Use of Chipping Tools & paint Brushes Marks cannot exceed 10.")
+        if self.use_of_carpentry > 10:
+            raise UserError("In MEK Practical, Use of Carpentry Tools Marks cannot exceed 10.")
+        if self.use_of_measuring_instruments > 10:
+            raise UserError("In MEK Practical, Use of Measuring Instruments Marks cannot exceed 10.")
+        if self.welding > 20:
+            raise UserError("In MEK Practical, Welding (1 Task) Marks cannot exceed 20.")
+        if self.lathe > 10:
+            raise UserError("In MEK Practical, Lathe Work (1 Task) Marks cannot exceed 10.")
+        if self.electrical > 10:
+            raise UserError("In MEK Practical, Electrical (1 Task) Marks cannot exceed 10.")
   
     
     @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
@@ -551,6 +566,8 @@ class MekOralLine(models.Model):
 
     mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak")
 
+    
+
     @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
     def _compute_mek_oral_total_marks(self):
         for record in self:
@@ -564,21 +581,22 @@ class MekOralLine(models.Model):
             )
             record.mek_oral_total_marks = total
 
-    @api.constrains('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
-    def _check_field_limits(self):
-        for record in self:
-            if record.using_hand_plumbing_carpentry_tools > 10:
-                raise ValidationError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools Marks cannot exceed 10.")
-            if record.use_of_chipping_tools_paints > 10:
-                raise ValidationError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
-            if record.welding > 10:
-                raise ValidationError("In MEK Oral, Welding Marks cannot exceed 10.")
-            if record.lathe_drill_grinder > 10:
-                raise ValidationError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
-            if record.electrical > 10:
-                raise ValidationError("In MEK Oral, Electrical Marks cannot exceed 10.")
-            if record.journal > 25:
-                raise ValidationError("In MEK Oral, Journal Marks cannot exceed 25.")
+    @api.onchange('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    def _onchange_ccmc_oral_marks_limit(self):
+        if self.using_hand_plumbing_carpentry_tools > 10:
+            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools Marks cannot exceed 10.")
+        if self.use_of_chipping_tools_paints > 10:
+            raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
+        if self.welding > 10:
+            raise UserError("In MEK Oral, Welding Marks cannot exceed 10.")
+        if self.lathe_drill_grinder > 10:
+            raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
+        if self.electrical > 10:
+            raise UserError("In MEK Oral, Electrical Marks cannot exceed 10.")
+        if self.journal > 25:
+            raise UserError("In MEK Oral, Journal Marks cannot exceed 25.")
+
+
 
     @api.model
     def create(self, vals):
@@ -608,14 +626,14 @@ class GskPracticallLine(models.Model):
     gsk_practical_exam_date = fields.Date(string="Exam Date")
     climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
     buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders")
-    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
-    rig_stage = fields.Integer("Rig a stage for painting shipside ")
-    rig_pilot = fields.Integer("Rig a Pilot Ladder ")
-    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height ") 
+    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist")
+    rig_stage = fields.Integer("Rig a stage for painting shipside")
+    rig_pilot = fields.Integer("Rig a Pilot Ladder")
+    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height") 
     fast_ropes = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper")
     
-    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase ")
-    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight ")
+    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase")
+    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight")
     
     gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks")
     gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
@@ -636,40 +654,28 @@ class GskPracticallLine(models.Model):
             total_marks += record.sounding_rod
             record.gsk_practical_total_marks = total_marks
 
-    @api.constrains('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
-    def _check_max_value(self):
-        for record in self:
-            fields_to_check = {
-                'climbing_mast': "Climb the mast with safe practices, Prepare and throw Heaving Line",
-                'buoy_flags_recognition': "Recognise buyos and flags, Hoisting a Flag correctly, Steering and Helm Orders",
-                'bosun_chair': "Rigging Bosun's Chair and self lower and hoist",
-                'rig_stage': "Rig a stage for painting shipside",
-                'rig_pilot': "Rig a Pilot Ladder",
-                'rig_scaffolding': "Rig scaffolding to work at a height",
-                'fast_ropes': "Making fast Ropes and Wires, Use Rope-Stopper / Chain Stopper",
-                'knots_bend': "Knots, Bends, Hitches, Whippings/Seizing/Splicing Ropes/Wires, Reeve 3-fold / 2-fold purchase",
-                'sounding_rod': "Taking Soundings with sounding rod / sounding taps, Reading of Draft, Manual lifting of weight",
-            }
-            
-            for field_name, field_label in fields_to_check.items():
-                field_value = record[field_name]
-                if field_name == 'climbing_mast' and field_value > 12:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 12.")
-                elif field_name == 'buoy_flags_recognition' and field_value > 12:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 12.")
-                elif field_name == 'bosun_chair' and field_value > 8:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
-                elif field_name == 'rig_stage' and field_value > 8:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
-                elif field_name == 'rig_pilot' and field_value > 8:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
-                elif field_name == 'rig_scaffolding' and field_value > 8:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
-                elif field_name == 'fast_ropes' and field_value > 8:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 8.")
-                elif field_name == 'knots_bend' and field_value > 18:
-                    raise ValidationError(f"In GSK Practical, {field_label} Marks cannot exceed 18.")
+    @api.onchange('climbing_mast','buoy_flags_recognition','bosun_chair','rig_stage','rig_pilot','rig_scaffolding','fast_ropes','knots_bend','sounding_rod')
+    def _onchange_gsk_practicals_marks_limit(self):
+        if self.climbing_mast > 12:
+            raise UserError("Climb the mast with safe practices , Prepare and throw Heaving Line marks should not be greater than 12.")
+        if self.buoy_flags_recognition > 12:
+            raise UserError("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders marks should not be greater than 12.")
+        if self.bosun_chair > 8:
+            raise UserError("Rigging Bosun's Chair and self lower and hoist marks should not be greater than 8.")
+        if self.rig_stage > 8:
+            raise UserError("Rig a stage for painting shipside marks should not be greater than 8.")
+        if self.rig_pilot > 8:
+            raise UserError("Rig a Pilot Ladder marks should not be greater than 8.")
+        if self.rig_scaffolding > 8:
+            raise UserError("Rig scaffolding to work at a height marks should not be greater than 8.")
+        if self.fast_ropes > 8:
+            raise UserError("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper marks should not be greater than 8.")
+        if self.knots_bend > 18:
+            raise UserError(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase marks should not be greater than 18.")
+        if self.sounding_rod > 18:
+            raise UserError("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight marks should not be greater than 18.")
 
+    
     @api.model
     def create(self, vals):
         if vals.get('gsk_practical_attempt_no', 0) == 0:
@@ -709,8 +715,7 @@ class GskOralLine(models.Model):
     gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
 
     
-    
-    
+
     @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
     def _compute_gsk_oral_total_marks(self):
         for record in self:
@@ -727,35 +732,23 @@ class GskOralLine(models.Model):
             record.gsk_oral_total_marks = total_marks
     
 
-    @api.constrains('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
-    def _check_max_value(self):
-        for record in self:
-            fields_to_check = {
-                'subject_area_1': record._fields['subject_area_1'].string,
-                'subject_area_2': record._fields['subject_area_2'].string,
-                'subject_area_3': record._fields['subject_area_3'].string,
-                'subject_area_4': record._fields['subject_area_4'].string,
-                'subject_area_5': record._fields['subject_area_5'].string,
-                'subject_area_6': record._fields['subject_area_6'].string,
-                'practical_record_journals': record._fields['practical_record_journals'].string,
-            }
+    @api.onchange('subject_area_1','subject_area_2','subject_area_3','subject_area_4','subject_area_5','subject_area_6','practical_record_journals')
+    def _onchange_gsk_oral__marks_limit(self):
+        if self.subject_area_1 > 9:
+            raise UserError("Subject Area 1 marks should not be greater than 9.")
+        if self.subject_area_2 > 6:
+            raise UserError("Subject Area 2 marks should not be greater than 6.")
+        if self.subject_area_3 > 9:
+            raise UserError("Subject Area 3 marks should not be greater than 9.")
+        if self.subject_area_4 > 9:
+            raise UserError("Subject Area 4 marks should not be greater than 9.")
+        if self.subject_area_5 > 12:
+            raise UserError("Subject Area 5 marks should not be greater than 12.")
+        if self.subject_area_6 > 5:
+            raise UserError("Subject Area 6 marks should not be greater than 5.")
+        if self.practical_record_journals > 25:
+            raise UserError("Practical Record Book and Journal marks should not be greater than 25.")
 
-            for field_name, field_label in fields_to_check.items():
-                field_value = record[field_name]
-                if field_name == 'subject_area_1' and field_value > 9:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 9.")
-                elif field_name == 'subject_area_2' and field_value > 6:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 6.")
-                elif field_name == 'subject_area_3' and field_value > 9:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 9.")
-                elif field_name == 'subject_area_4' and field_value > 9:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 9.")
-                elif field_name == 'subject_area_5' and field_value > 12:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 12.")
-                elif field_name == 'subject_area_6' and field_value > 5:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 5.")
-                elif field_name == 'practical_record_journals' and field_value > 25:
-                    raise ValidationError(f"in GSK Oral, {field_label} Marks cannot exceed 25.")
 
     @api.model
     def create(self, vals):
@@ -772,5 +765,56 @@ class GskOralLine(models.Model):
         for record in self:
             if record.gsk_oral_attempt_no >= 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Oral.")
+
+
+class CcmcOralLine(models.Model):
+    _name = 'ccmc.oral.line'
+    _description = 'CCMC Oral Line'
+
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
+
+    # ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.",default=0,readonly=True)
+    ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
+    ccmc_oral_exam_date = fields.Date(string="Exam Date")
+    gsk_ccmc = fields.Integer("GSK")
+    safety_ccmc = fields.Integer("Safety")
+    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+ 
+    @api.depends(
+        'gsk_ccmc', 'safety_ccmc'
+    )
+    def _compute_ccmc_rating_total(self):
+        for record in self:
+            rating_total = (
+                record.gsk_ccmc +
+                record.safety_ccmc
+            )
+            record.toal_ccmc_rating = rating_total
+
+
+    @api.onchange('gsk_ccmc','safety_ccmc')
+    def _onchange_ccmc_oral_marks_limit(self):
+        if self.gsk_ccmc > 10:
+            raise UserError("In CCMC Oral, GSK marks should not be greater than 10.")
+        if self.safety_ccmc > 10:
+            raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('ccmc_oral_attempt_no', 0) == 0:
+            # Calculate the next attempt number
+            last_attempt = self.search([
+                ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
+            ], order='ccmc_oral_attempt_no desc', limit=1)
+            next_attempt = last_attempt.ccmc_oral_attempt_no + 1 if last_attempt else 1
+            vals['ccmc_oral_attempt_no'] = next_attempt
+        return super(CcmcOralLine, self).create(vals)
+
+    @api.constrains('ccmc_oral_attempt_no')
+    def _check_attempt_no(self):
+        for record in self:
+            if record.ccmc_oral_attempt_no > 7:
+                raise ValidationError("A Candidate can't have more than 7 exam attempts in CCMC Oral.")
+
 
 

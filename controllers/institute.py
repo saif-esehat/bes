@@ -1,6 +1,8 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.http import request
 from odoo import http
+import base64
+
 
 class InstitutePortal(CustomerPortal):
     
@@ -16,6 +18,48 @@ class InstitutePortal(CustomerPortal):
         vals = {'candidates':candidates , 'page_name': 'gp_candidate'}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
+    
+    
+    
+    @http.route(['/my/institute_document/list'],type="http",auth="user",website=True)
+    def InstituteDocumentList(self,**kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
+        lod = request.env["lod.institute"].sudo().search([('institute_id','=',institute_id)])
+        vals = {'lods':lod , 'page_name': 'lod_list'}
+        return request.render("bes.institute_document_list", vals)
+
+        
+    @http.route(['/my/institute_document'],type="http",method=["POST","GET"],auth="user",website=True)
+    def InstituteDocumentView(self,**kw):
+        
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
+        # import wdb; wdb.set_trace()
+        vals={}
+
+        if request.httprequest.method == 'POST':
+            # import wdb; wdb.set_trace()
+            file_content = kw.get("fileUpload").read()
+            filename = kw.get('fileUpload').filename
+            # attachment = uploaded_file.read()
+
+            data = request.env["lod.institute"].sudo().create({'institute_id':institute_id,
+                                                        'document_name':kw.get('documentName'),
+                                                        'upload_date': kw.get('uploadDate'),
+                                                        'document_file':file_content,
+                                                        'documents_name':filename
+                                                        })
+                                                        # 'document_file': uploaded_file
+
+            
+
+            
+
+        
+        
+        return request.render("bes.institute_documents", vals)
+
     
     
     @http.route(['/my/ccmccandidate/list'],type="http",auth="user",website=True)

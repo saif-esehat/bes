@@ -60,6 +60,60 @@
         </t>
     </template>
 
+    <template id="institute_document_list">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Name of Document</th>
+                        <th>Upload Date</th>
+                        <!-- <th>Upload Document</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="lods" t-as="lod">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="lod.document_name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="lod.upload_date" />
+                            </td>
+                            <!-- <td class="text-center">
+                                <t t-out="lod.candidate_code" />
+                            </td> -->
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="institute_documents_form">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5">
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <div class="form-group">
+                        <label for="documentName">Name of Document</label>
+                        <input type="text" class="form-control" id="documentName" name="documentName"  placeholder="Enter document name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadDate">Upload Date</label>
+                        <input type="date" class="form-control" name="uploadDate" id="uploadDate"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileUpload">File Upload</label>
+                        <input type="file" class="form-control-file"  accept=".xlsx, .csv, .pdf" name="fileUpload" id="fileUpload"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    
+
 
     <template id="ccmc_candidate_portal_list">
         <t t-call="portal.portal_layout">
@@ -123,7 +177,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="street">Street</label>
-                            <input type="text" class="form-control" id="street" name="street"  t-att-value="institutes.street" placeholder="Enter Street"/>
+                            <input type="text" class="form-control" id="street" name="street" t-att-value="institutes.street" placeholder="Enter Street"/>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="street2">Street2</label>
@@ -143,7 +197,7 @@
 
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary" >Update</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>
 
