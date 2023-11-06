@@ -54,6 +54,10 @@
                                 CCMC Candidate
                                 </a>
                             <!-- </t> -->
+    
+                                <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/institute_document">
+                                 Documents
+                                </a>
                         </div>
                     </div>
                 </t>
