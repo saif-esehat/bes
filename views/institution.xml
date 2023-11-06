@@ -57,12 +57,12 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
+                        <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_faculty" string="Faculty" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                             <button name="batch_button" string="Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
-                        </div>
+                        </div> -->
                         <group style="width:100%;">
                             <h1>
                                 <field name="name" placeholder="Institute Name" required="1"/>
@@ -144,26 +144,43 @@
                                 <label for="is_lab_used_for_stcw_exit_exam" style="margin-bottom:10px; margin-top: 15px;"/>
                                 <field name="is_lab_used_for_stcw_exit_exam" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
                             </group>
-
-                            <field name="courses">
-                                <tree editable="bottom">
-                                    <field name="course" options="{'no_create': True}" />
-                                    <field name="approved_capacity" />
-                                    <field name="approved_date" />
-                                </tree>
-                            </field>
-
-                            <field name="documents">
-                                <tree editable="bottom">
-
-                                    <field name="document_name" />
-                                    <field name="upload_date" />
-                                    <field name="document_file" widget="binary" filename="documents_name"/>
-
-                                </tree>
-                            </field>
-
                         </group>
+                        <notebook>
+                            <page string="Courses">
+                                <field name="courses"  nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="course" options="{'no_create': True}" />
+                                        <field name="approved_capacity" />
+                                        <field name="approved_date" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Documents">
+                                <field name="documents"  nolabel="1">
+                                    <tree editable="bottom">
+
+                                        <field name="document_name" />
+                                        <field name="upload_date" />
+                                        <field name="document_file" widget="binary" filename="documents_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Faculty">
+                                <field name="faculty_ids"  nolabel="1">
+                                    <tree>
+                                        <field name="faculty_photo" widget="binary" filename="documents_name"/>
+                                        <field name="course_name" />
+                                        <field name="faculty_name" />
+                                        <field name="dob" />
+                                        <field name="designation"/>
+                                        <field name="qualification"/>
+                                        <field name="contract_terms"/>
+                                        <field name="courses_taught"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                        </notebook>
                     </sheet>
                 </form>
             </field>

@@ -43,6 +43,9 @@ class Institute(models.Model):
     is_lab_used_for_stcw_exit_exam = fields.Boolean("IS the Lab being used for STCW exit exams")
     documents = fields.One2many("lod.institute","institute_id","Documents")
 
+    #------- Faculty
+    faculty_ids= fields.One2many('institute.faculty','institute_id',string="Faculty")
+
 
     def open_create_institute_batches_wizard(self):
         # Create a new instance of the wizard
@@ -203,6 +206,9 @@ class InstituteFaculty(models.Model):
     qualification = fields.Text(string='Qualification of Faculty')
     contract_terms = fields.Text(string='Contract Terms')
     courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
+
+
+    
     
     
 
