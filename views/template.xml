@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="sub_menu" model="website.menu">
+		<field name="name">Candidate</field>
+		<field name="url">/candidate</field>
+		<field name="parent_id" ref="website.main_menu"/>
+		<field name="sequence" type="int">21</field>
+	</record>
+
+
+	<template id="candidate_thankyou">
+		<style>
+			.form-start {padding:20px;background:#85c440;margin:10% auto 0;max-width:400px;border-radius:10px;}
+			.form-start h1 {margin-bottom:15px;}
+			.form-start p, .form-start span {font-size: 20px;line-height: 25px;}
+		</style>
+		<t t-call="website.layout">
+			<div id="wrap" class="oe_structure oe_empty">
+				<section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
+					<div class="s_allow_columns container">
+						<div class="form-start">
+							<h1 style="text-align: center;">
+								<strong>Thank you.</strong>
+							</h1>
+
+						</div>
+					</div>
+				</section>
+			</div>
+		</t>
+	</template>
+
+	<template name="Candidate" t-name="bes.candidate_entry_page">
+		<style>
+			/* Define a primary color for buttons */
+			.primary-button {
+				background: #00a65a;
+				color: #fff;
+				border: 1px solid #00a65a;
+			}
+
+			/* Style the primary button on hover */
+			.primary-button:hover {
+				background: #fff;
+				color: #00a65a;
+			}
+
+			/* Center the form horizontally */
+			.form-wrap {
+				width: 80%;
+				margin: 0 auto;
+			}
+
+			/* Style error messages in red */
+			.red-text {
+				color: red;
+			}
+
+			/* Form container styles */
+			.form-start {
+				padding: 20px;
+				background: #fff;
+				margin: 10% auto;
+				max-width: 600px; /* Increased max-width for the two-column layout */
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+				display: flex; /* Make the form a flex container */
+			}
+
+			.form-start label {
+				padding: 5px 0;
+				display: block;
+				color: #000;
+			}
+
+			.form-start .error {
+				color: red;
+				display: none;
+			}
+
+			.form-start #visitor_submit {
+				margin-top: 20px;
+			}
+
+			/* Input field styles */
+			.form-control {
+				width: 100%;
+			padding: 8px;
+			margin: 8px 0;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			}
+
+			/* Right column styles */
+			.form-right {
+				flex: 1; /* Take up the remaining space */
+				margin-left: 20px; /* Add some spacing between the form and right column */
+			}
+		</style>
+		<t t-call="website.layout">
+			<div id="wrap">
+				<div class="oe_structure">
+					<div class="container">
+						<form role="form" id="candidate_form" action="/candidate" method="POST">
+							<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+							<div class="form-start form-wrap">
+								<div>
+									<div class="form-group">
+										<label for="candidate_code">Candidate Code No</label>
+										<input type="number" id="candidate_code" autocomplete="off" name="candidate_code" class="form-control" required="required" />
+
+										<label for="roll_no">Roll No</label>
+										<input type="number" id="roll_no" autocomplete="off" name="roll_no" class="form-control" required="required" />
+
+										<label for="full_name_of_candidate">Full Name Of Candidate As In INDOS</label>
+										<input type="text" id="full_name_of_candidate" autocomplete="off" name="full_name_of_candidate" class="form-control" required="required" oninput="this.value = this.value.toUpperCase()" />
+
+										<label for="indos_no">Indos No</label>
+										<input type="number" id="indos_no" autocomplete="off" name="indos_no" class="form-control" required="required" />
+
+										<label for="dob">DOB</label>
+										<input type="date" id="dob" autocomplete="off" name="dob" class="form-control" required="required" />
+
+										<label for="age">Age</label>
+										<input type="number" id="age" autocomplete="off" name="age" class="form-control" required="required" />
+									</div>
+									<div class="form-group">
+										<button type="submit" id="visitor_submit" class="btn btn-primary primary-button">Submit</button>
+									</div>
+								</div>
+								<div class="form-right">
+									<label for="phone">Phone</label>
+									<input type="tel" id="phone" autocomplete="off" name="phone" class="form-control" required="required" pattern="[0-9]{10}" />
+
+									<label for="mobile">Mobile</label>
+									<input type="tel" id="mobile" autocomplete="off" name="mobile" class="form-control" required="required" pattern="[0-9]{10}" />
+
+									<label for="email">Email</label>
+									<input type="email" id="email" autocomplete="off" name="email" class="form-control" required="required" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" />
+
+									<label for="tenth_percent">10th %</label>
+									<input type="number" id="tenth_percent" autocomplete="off" name="tenth_percent" class="form-control" required="required" />
+
+									<label for="twelfth_percent">12th %</label>
+									<input type="number" id="twelfth_percent" autocomplete="off" name="twelfth_percent" class="form-control" required="required" />
+
+									<label for="iti_percent">ITI %</label>
+									<input type="number" id="iti_percent" autocomplete="off" name="iti_percent" class="form-control" required="required" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+		</t>
+	</template>
+				
+
+</odoo>

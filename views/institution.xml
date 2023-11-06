@@ -152,6 +152,17 @@
                                     <field name="approved_date" />
                                 </tree>
                             </field>
+
+                            <field name="documents">
+                                <tree editable="bottom">
+
+                                    <field name="document_name" />
+                                    <field name="upload_date" />
+                                    <field name="document_file" widget="binary" filename="documents_name"/>
+
+                                </tree>
+                            </field>
+
                         </group>
                     </sheet>
                 </form>
