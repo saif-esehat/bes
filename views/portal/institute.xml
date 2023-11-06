@@ -35,7 +35,7 @@
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
-                        <th>Candidate Name</th>
+                        <th>GP Candidate Name</th>
                         <th>Roll No.</th>
                         <th>GP Candidate Code No.</th>
                     </tr>
