@@ -7,7 +7,7 @@ class InstitutePortal(CustomerPortal):
     
     
     @http.route(['/my/gpcandidate/list'],type="http",auth="user",website=True)
-    def candidateListView(self,**kw):
+    def GPcandidateListView(self,**kw):
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
@@ -15,8 +15,19 @@ class InstitutePortal(CustomerPortal):
         candidates =  request.env["gp.candidate"].sudo().search([('institute_id','=',institute_id)])
         vals = {'candidates':candidates , 'page_name': 'gp_candidate'}
         # self.env["gp.candidate"].sudo().search([('')])
-        return request.render("bes.candidate_portal_list", vals)
+        return request.render("bes.gp_candidate_portal_list", vals)
     
+    
+    @http.route(['/my/ccmccandidate/list'],type="http",auth="user",website=True)
+    def CCMCcandidateListView(self,**kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
+        candidates =  request.env["ccmc.candidate"].sudo().search([('institute_id','=',institute_id)])
+        vals = {'candidates':candidates , 'page_name': 'ccmc_candidate'}
+        # self.env["gp.candidate"].sudo().search([('')])
+        return request.render("bes.ccmc_candidate_portal_list", vals)
     
     
     

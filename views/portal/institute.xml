@@ -5,6 +5,9 @@
             <li t-if="page_name == 'gp_candidate'" class="breadcrumb-item active">
              GP Candidate
             </li>
+            <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
+             CCMC Candidate
+            </li>
             <li t-if="page_name == 'institute_page'" class="breadcrumb-item active">
              Institute Detail
             </li>
@@ -35,6 +38,37 @@
                         <th>Candidate Name</th>
                         <th>Roll No.</th>
                         <th>GP Candidate Code No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="candidates" t-as="candidate">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="candidate.name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.candidate_code" />
+                            </td>
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="ccmc_candidate_portal_list">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Roll No.</th>
+                        <th>CCMC Candidate Code No.</th>
                     </tr>
                 </thead>
                 <tbody>
