@@ -1,0 +1,215 @@
+<odoo>
+
+    <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'gp_candidate'" class="breadcrumb-item active">
+             GP Candidate
+            </li>
+            <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
+             CCMC Candidate
+            </li>
+            <li t-if="page_name == 'institute_page'" class="breadcrumb-item active">
+             Institute Detail
+            </li>
+        </xpath>
+    </template>
+
+
+    <template id="institute_portal_layout" inherit_id="portal.portal_layout">
+        <xpath expr="//div[hasclass('o_portal_my_security')]" position="after">
+            <t t-if="env.user.has_group('bes.group_institute')">
+                <div class="o_portal_my_security mt-3">
+                    <h4>Institute Details</h4>
+                    <hr class="mt-1 mb-1"/>
+                    <a href="/my/editinstitute">
+                        <i class="fa fa-pencil mx-1"/>
+                Edit Institute Details</a>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+
+    <template id="gp_candidate_portal_list">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>GP Candidate Name</th>
+                        <th>Roll No.</th>
+                        <th>GP Candidate Code No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="candidates" t-as="candidate">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="candidate.name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.candidate_code" />
+                            </td>
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="institute_document_list">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Name of Document</th>
+                        <th>Upload Date</th>
+                        <!-- <th>Upload Document</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="lods" t-as="lod">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="lod.document_name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="lod.upload_date" />
+                            </td>
+                            <!-- <td class="text-center">
+                                <t t-out="lod.candidate_code" />
+                            </td> -->
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="institute_documents_form">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5">
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <div class="form-group">
+                        <label for="documentName">Name of Document</label>
+                        <input type="text" class="form-control" id="documentName" name="documentName"  placeholder="Enter document name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadDate">Upload Date</label>
+                        <input type="date" class="form-control" name="uploadDate" id="uploadDate"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileUpload">File Upload</label>
+                        <input type="file" class="form-control-file"  accept=".xlsx, .csv, .pdf" name="fileUpload" id="fileUpload"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    
+
+
+    <template id="ccmc_candidate_portal_list">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Roll No.</th>
+                        <th>CCMC Candidate Code No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="candidates" t-as="candidate">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="candidate.name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.candidate_code" />
+                            </td>
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="institute_detail_form" name="Institute Detail">
+        <t t-call="portal.portal_layout">
+            <!-- <t t-foreach="institutes" t-as="institute"> -->
+
+            <div class="container">
+                <h2>Edit Institute Details</h2>
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <label for="code">Institute Name</label>
+                                <input type="text" class="form-control" id="institute_name" name="institute_name" t-att-value="institutes.name" t-att-readonly="'1'" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="code">MTI no.</label>
+                                <input type="text" class="form-control" id="code" name="code" t-att-value="institutes.code" t-att-readonly="'1'" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" t-att-value="institutes.email"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="street">Street</label>
+                            <input type="text" class="form-control" id="street" name="street" t-att-value="institutes.street" placeholder="Enter Street"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="street2">Street2</label>
+                            <input type="text" class="form-control" id="street2" name="street2" t-att-value="institutes.street2" placeholder="Enter Street2"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="city" name="city" t-att-value="institutes.city" placeholder="Enter City" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="zip">Zip</label>
+                            <input type="text" class="form-control" id="zip" name="zip" t-att-value="institutes.zip" placeholder="Enter Zip" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <!-- </t> -->
+        </t>
+    </template>
+
+
+    
+
+
+</odoo>

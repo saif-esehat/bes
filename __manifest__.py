@@ -6,10 +6,12 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','portal','survey','sale'],
+ 'depends':['product','portal','survey','website','sale'],
  'data': [
         'data/tags.xml',
         'views/portal/portal_docs.xml',
+        'views/portal/institute.xml',
+        'views/portal/candidate.xml',
         'views/batches.xml',
         'views/examiner.xml',
         'views/exam_center.xml',

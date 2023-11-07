@@ -132,6 +132,12 @@
 
                             <field name="roll_no"/>
 
+                            <field name="name" placeholder="Candidate" required="1"/>
+                            
+
+                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
+                            <field name="institute_id"/>
+
                             <field name="indos_no"/>
                             <field name="dob"/>
                             <field name="age"/>
@@ -472,6 +478,17 @@
                                 </field>
                             </page>
                             <page string="CCMC Oral">
+                                <field name="ccmc_oral_child_line" nolabel="1" >
+                                    <tree>
+                                        <field name="ccmc_oral_attempt_no"/>
+                                        <field name="ccmc_oral_exam_date"/>
+                                        <field name='gsk_ccmc'/>
+                                        <field name='safety_ccmc'/>
+                                        <field name='toal_ccmc_rating'/>                               
+                                    </tree>
+                                </field>
+                            </page>
+                            <!-- <page string="CCMC Oral">
                                 <span>
                                     <h2>
                                         <Strong>Marks for Oral</Strong>
@@ -501,7 +518,7 @@
                                         <span>20 Marks</span>
                                     </div>
                                 </group>
-                            </page>
+                            </page> -->
                         </notebook>
                     </sheet>
                 </form>
@@ -674,6 +691,52 @@
                                 <span>100 Marks</span>
                             </div>
                         </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- CCMC Oral -->
+        <record id="ccmc_oral_eaxm_form" model="ir.ui.view">
+            <field name="name">ccmc.oral.line.form</field>
+            <field name="model">ccmc.oral.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_oral_attempt_no"/>
+                            <field name="ccmc_oral_exam_date"/>
+                        </group>
+                        <span>
+                            <h2>
+                                <Strong>Marks for Oral</Strong>
+                            </h2>
+                        </span>
+                        <group>
+                            <label for="gsk_ccmc" />
+                            <div>
+                                <field name="gsk_ccmc" nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="safety_ccmc"/>
+                            <div>
+                                <field name="safety_ccmc" nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="toal_ccmc_rating" />
+                            <div>
+                                <field name="toal_ccmc_rating" nolabel="1"/>
+                                        / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+                        
+
                     </sheet>
                 </form>
             </field>
