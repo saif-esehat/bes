@@ -131,13 +131,7 @@
                         <group style="width:100%;">
 
                             <field name="roll_no"/>
-<<<<<<< HEAD
-                            <field name="name" placeholder="Candidate" required="1"/>
-                            
-=======
-                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
-                            <field name="institute_id"/>
->>>>>>> b13f8c678cc349fdd7e880dce8a9457ab18ef921
+
                             <field name="indos_no"/>
                             <field name="dob"/>
                             <field name="age"/>
