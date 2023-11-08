@@ -124,14 +124,14 @@
 
 										<label for="age">Age</label>
 										<input type="number" id="age" autocomplete="off" name="age" class="form-control" required="required" />
+										<label for="phone">Phone</label>
+										<input type="tel" id="phone" autocomplete="off" name="phone" class="form-control" required="required" pattern="[0-9]{10}" />
 									</div>
 									<div class="form-group">
 										<button type="submit" id="visitor_submit" class="btn btn-primary primary-button">Submit</button>
 									</div>
 								</div>
 								<div class="form-right">
-									<label for="phone">Phone</label>
-									<input type="tel" id="phone" autocomplete="off" name="phone" class="form-control" required="required" pattern="[0-9]{10}" />
 
 									<label for="mobile">Mobile</label>
 									<input type="tel" id="mobile" autocomplete="off" name="mobile" class="form-control" required="required" pattern="[0-9]{10}" />
@@ -139,14 +139,20 @@
 									<label for="email">Email</label>
 									<input type="email" id="email" autocomplete="off" name="email" class="form-control" required="required" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" />
 
-									<label for="tenth_percent">10th %</label>
+									<label for="tenth_percent">10th % (Eng)</label>
 									<input type="number" id="tenth_percent" autocomplete="off" name="tenth_percent" class="form-control" required="required" />
 
-									<label for="twelfth_percent">12th %</label>
+									<label for="twelfth_percent">12th % (Eng)</label>
 									<input type="number" id="twelfth_percent" autocomplete="off" name="twelfth_percent" class="form-control" required="required" />
 
 									<label for="iti_percent">ITI %</label>
 									<input type="number" id="iti_percent" autocomplete="off" name="iti_percent" class="form-control" required="required" />
+									<label for="status">Status (SC/ST/OTHER)</label>
+									<select id="status" name="status" class="form-control" required="required">
+										<option value="yes">Yes</option>
+										<option value="no">No</option>
+									</select>
+
 								</div>
 							</div>
 						</form>

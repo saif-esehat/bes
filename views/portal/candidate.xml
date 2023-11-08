@@ -1,36 +1,36 @@
 <odoo>
 
-    <template id="gp_candidate_portal_view" inherit_id="portal.portal_my_home">
-        <xpath expr="//div[hasclass('o_portal_my_home')]" position="after">
+    <template id="gp_exam_list_view" >
+       <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Exam</th>
+                        <th>Course</th>
+                        <th>Subject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="registered_exams" t-as="registered_exam">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="registered_exam.survey_id.title" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="registered_exam.survey_id.course.name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="registered_exam.survey_id.subject.name" />
+                            </td>
+                             <td class="text-center">
+                                <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a>
+                            </td>
+                        </tr>
+                    </t>
 
-            <!-- <div class="o_portal_my_home">
-                <t t-if="env.user.has_group('bes.group_gp_candidates')">
-                    <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                    <h3>GP Candidate</h3>
-
-                    <div >
-                    </div>
-                </t>
-                <t t-elif="env.user.has_group('bes.group_ccmc_candidates')">
-
-                    <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                    <h3>CCMC Candidate</h3>
-                    <div >
-
-                    </div>
-                </t>
-                <t t-else="">
-
-                    <div class="o_portal_my_home">
-                        <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                        <h3>Documents</h3>
-                        <div class="o_portal_docs list-group">
-                        </div>
-                    </div>
-                </t>
-            </div> -->
-
-        </xpath>
+                </tbody>
+            </t>
+        </t>
     </template>
 
    

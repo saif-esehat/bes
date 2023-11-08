@@ -8,6 +8,7 @@ class InheritedSurvey(models.Model):
     _inherit = "survey.survey"
     
     title = fields.Char('Exam Title', required=True, translate=True)
+    institute = fields.Many2one("bes.institute",string="Institute")
     course = fields.Many2one("course.master",string="Course",required=True)
     subject_ids = fields.Many2many("course.master.subject",string="Subject IDS",compute="_compute_subject_ids")
     subject = fields.Many2one("course.master.subject","Subject",required=True)
@@ -23,12 +24,18 @@ class InheritedSurvey(models.Model):
     is_trigger_exam = fields.Boolean('Trigger Exam')
     trigger_exam = fields.Many2one("survey.survey","Triggering Exam")
     trigger_exam_url = fields.Char("Trigger Exam URL",compute="_compute_exam_start_url")
-    
+    survey_start_url = fields.Char('Survey URL', compute='_compute_survey_start_url')
     questions_layout = fields.Selection([
         ('one_page', 'One page with all the questions'),
         ('page_per_section', 'One page per section'),
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
+    
+    @api.depends('access_token')
+    def _compute_survey_start_url(self):
+        for survey in self:
+            survey.survey_start_url = werkzeug.urls.url_join(survey.get_base_url(), survey.get_start_url()) if survey else False
+
     
     @api.depends('course')
     def _compute_subject_ids(self):
