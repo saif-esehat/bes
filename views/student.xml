@@ -131,10 +131,13 @@
                         <group style="width:100%;">
 
                             <field name="roll_no"/>
+
                             <field name="name" placeholder="Candidate" required="1"/>
                             
+
                             <!-- <field name="name" placeholder="Candidate" required="1"/> -->
                             <field name="institute_id"/>
+
                             <field name="indos_no"/>
                             <field name="dob"/>
                             <field name="age"/>
