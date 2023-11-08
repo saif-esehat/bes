@@ -477,45 +477,15 @@
                             <page string="CCMC Oral">
                                 <field name="ccmc_oral_child_line" nolabel="1" >
                                     <tree>
+                                       
                                         <field name="ccmc_oral_attempt_no"/>
                                         <field name="ccmc_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
                                         <field name='safety_ccmc'/>
-                                        <field name='toal_ccmc_rating'/>                               
+                                        <field name='toal_ccmc_rating'/>             
                                     </tree>
                                 </field>
                             </page>
-                            <!-- <page string="CCMC Oral">
-                                <span>
-                                    <h2>
-                                        <Strong>Marks for Oral</Strong>
-                                    </h2>
-                                </span>
-                                <group>
-                                    <label for="gsk_ccmc" />
-                                    <div>
-                                        <field name="gsk_ccmc" nolabel="1"/>
-                                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
-                                <group>
-                                    <label for="safety_ccmc"/>
-                                    <div>
-                                        <field name="safety_ccmc" nolabel="1"/>
-                                                / 
-                                        <span>10 Marks</span>
-                                    </div>
-                                </group>
-                                <group>
-                                    <label for="toal_ccmc_rating" />
-                                    <div>
-                                        <field name="toal_ccmc_rating" nolabel="1"/>
-                                                / 
-                                        <span>20 Marks</span>
-                                    </div>
-                                </group>
-                            </page> -->
                         </notebook>
                     </sheet>
                 </form>
@@ -732,8 +702,6 @@
                                 <span>20 Marks</span>
                             </div>
                         </group>
-                        
-
                     </sheet>
                 </form>
             </field>
@@ -843,6 +811,7 @@
                 </form>
             </field>
         </record>
+       
 
             <!-- Mek Oral -->
         <record id="gp_mek_oral_form" model="ir.ui.view">
@@ -1114,10 +1083,5 @@
                 </form>
             </field>
         </record>
-
-
-
-
-
     </data>
 </odoo>
