@@ -46,6 +46,10 @@ class Institute(models.Model):
     #------- Faculty
     faculty_ids= fields.One2many('institute.faculty','institute_id',string="Faculty")
 
+    # -------- Payement Slip
+    payment_slip_ids= fields.One2many('institute.payment.slip.line','payment_slip_id',string="Payment Slip")
+
+
 
     def open_create_institute_batches_wizard(self):
         # Create a new instance of the wizard
@@ -207,6 +211,42 @@ class InstituteFaculty(models.Model):
     contract_terms = fields.Text(string='Contract Terms')
     courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
 
+class InstitutePaymentSlip(models.Model):
+    _name = "institute.payment.slip.line"
+    _description= 'Institute Payment Slip'
+    
+    payment_slip_id = fields.Many2one("bes.institute","Payment Slip ID")
+
+    sr_no = fields.Integer(string="Sr.No.",readonly=True, copy=False,default="1")
+    name_of_payment = fields.Char('Name Of The Payment')
+    pay_method = fields.Selection([('1','Cheque'),('2','Bank Draft'),('3','Cash'),('4','UPI')],string='Payment Method')
+    pay_date = fields.Date(string="Payment Date") 
+    invoice_generated = fields.Boolean(string="Invoice Generated and Sent")
+    invoice_number = fields.Char("Invoice Number")
+    invoive_date = fields.Date(string="Invoice Date")
+
+
+
+
+    
+    
+
+    @api.model
+    def create(self, vals):
+        # Set the serial_no based on the existing records for the same parent
+        if vals.get('payment_slip_id'):
+            existing_records = self.search([('payment_slip_id', '=', vals['payment_slip_id'])])
+            if existing_records:
+                max_serial_no = max(existing_records.mapped('sr_no'))
+                vals['sr_no'] = max_serial_no + 1
+
+        return super(InstitutePaymentSlip, self).create(vals)
+
+    def _reorder_serial_numbers(self):
+        # Reorder the serial numbers based on the positions of the records in child_lines
+        records = self.sorted('id')
+        for index, record in enumerate(records):
+            record.sr_no = index + 1  
 
     
     
