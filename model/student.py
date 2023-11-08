@@ -1,4 +1,4 @@
-from odoo import api, fields, models , _
+from odoo import api, fields, models , _, exceptions
 from odoo.exceptions import UserError,ValidationError
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
@@ -260,6 +260,7 @@ class CCMCCandidate(models.Model):
         # Start CCMC rating Oral
 
     ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
+
     
     
     
@@ -445,6 +446,11 @@ class CookeryBakeryLine(models.Model):
             if record.exam_attempt_number > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in Cookery & Bakery.")
 
+    def unlink(self):
+        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+        return super(CookeryBakeryLine, self - undeletable_records).unlink()
+
+
 
 class MekPrcticalLine(models.Model):
     _name = 'gp.mek.practical.line'
@@ -551,6 +557,10 @@ class MekPrcticalLine(models.Model):
             if record.mek_prcatical_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in MEK Practical.")
 
+    def unlink(self):
+        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+        return super(MekPrcticalLine, self - undeletable_records).unlink()
+
 class MekOralLine(models.Model):
     _name = 'gp.mek.oral.line'
     _description = 'MEK Oral Line'
@@ -619,6 +629,11 @@ class MekOralLine(models.Model):
         for record in self:
             if record.mek_oral_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in MEK Oral.")
+
+    def unlink(self):
+        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+        return super(MekOralLine, self - undeletable_records).unlink()
+
 
 
 class GskPracticallLine(models.Model):
@@ -698,6 +713,11 @@ class GskPracticallLine(models.Model):
             if record.gsk_practical_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Practical.")
 
+    def unlink(self):
+        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+        return super(GskPracticallLine, self - undeletable_records).unlink()
+
+
 
 class GskOralLine(models.Model):
     _name = 'gp.gsk.oral.line'
@@ -768,8 +788,12 @@ class GskOralLine(models.Model):
     @api.constrains('gsk_oral_attempt_no')
     def _check_attempt_no_limit(self):
         for record in self:
-            if record.gsk_oral_attempt_no >= 7:
+            if record.gsk_oral_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Oral.")
+
+    def unlink(self):
+        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+        return super(GskOralLine, self - undeletable_records).unlink()
 
 
 class CcmcOralLine(models.Model):
@@ -778,13 +802,13 @@ class CcmcOralLine(models.Model):
 
     ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
 
-    # ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.",default=0,readonly=True)
     ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     ccmc_oral_exam_date = fields.Date(string="Exam Date")
     gsk_ccmc = fields.Integer("GSK")
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
- 
+    
+
     @api.depends(
         'gsk_ccmc', 'safety_ccmc'
     )
@@ -804,6 +828,7 @@ class CcmcOralLine(models.Model):
         if self.safety_ccmc > 10:
             raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
 
+
     @api.model
     def create(self, vals):
         if vals.get('ccmc_oral_attempt_no', 0) == 0:
@@ -815,11 +840,14 @@ class CcmcOralLine(models.Model):
             vals['ccmc_oral_attempt_no'] = next_attempt
         return super(CcmcOralLine, self).create(vals)
 
+
     @api.constrains('ccmc_oral_attempt_no')
     def _check_attempt_no(self):
         for record in self:
             if record.ccmc_oral_attempt_no > 7:
                 raise ValidationError("A Candidate can't have more than 7 exam attempts in CCMC Oral.")
 
-
+    def unlink(self):
+        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+        return super(CcmcOralLine, self - undeletable_records).unlink()
 
