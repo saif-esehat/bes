@@ -1,6 +1,7 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.http import request
 from odoo import http
+from werkzeug.utils import secure_filename
 import base64
 
 
@@ -28,6 +29,26 @@ class InstitutePortal(CustomerPortal):
         lod = request.env["lod.institute"].sudo().search([('institute_id','=',institute_id)])
         vals = {'lods':lod , 'page_name': 'lod_list'}
         return request.render("bes.institute_document_list", vals)
+    
+    @http.route(['/my/institute_document/download/<model("lod.institute"):document_id>'],type="http",auth="user",website=True)
+    def InstituteDocumentDownload(self,document_id,**kw):
+        # import wdb; wdb.set_trace()
+        document = request.env['lod.institute'].sudo().browse(document_id.id)
+        
+        if document and document.document_file:  # Ensure the document and file data exist
+            file_content = base64.b64decode(document.document_file)  # Decoding file data
+            file_name = document.documents_name  # File name
+            file_name = secure_filename(file_name)  # Secure file name
+            
+            # Return the file as a download attachment
+            headers = [
+                ('Content-Type', 'application/octet-stream'),
+                ('Content-Disposition', f'attachment; filename="{file_name}"'),
+            ]
+            return request.make_response(file_content, headers)
+        else:
+            return "File not found or empty."
+
 
         
     @http.route(['/my/institute_document'],type="http",method=["POST","GET"],auth="user",website=True)
@@ -36,7 +57,6 @@ class InstitutePortal(CustomerPortal):
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
         # import wdb; wdb.set_trace()
-        vals={}
 
         if request.httprequest.method == 'POST':
             # import wdb; wdb.set_trace()
@@ -52,13 +72,11 @@ class InstitutePortal(CustomerPortal):
                                                         })
                                                         # 'document_file': uploaded_file
 
-            
+            return request.redirect('/my/institute_document/list')
+        else:
+            vals={}
+            return request.render("bes.institute_documents_form", vals)
 
-            
-
-        
-        
-        return request.render("bes.institute_documents", vals)
 
     
     

@@ -82,6 +82,8 @@
             <field name="inherit_id" ref="survey.survey_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//field[@name='user_id']" position="after">
+                     <field name="survey_start_url" />
+                     <field name="institute" />
                      <field name="course" />
                      <field name="subject_ids" invisible="1" />
                      <field name="subject" domain="[('id', 'in', subject_ids)]" />
