@@ -11,6 +11,10 @@
             <li t-if="page_name == 'institute_page'" class="breadcrumb-item active">
              Institute Detail
             </li>
+             <li t-if="page_name == 'lod_list'" class="breadcrumb-item active">
+               List of Document
+
+            </li>
         </xpath>
     </template>
 
@@ -60,8 +64,10 @@
         </t>
     </template>
 
-    <template id="institute_document_list">
+    <template id="institute_document_list" name="Document">
         <t t-call="portal.portal_layout">
+            <a href="/my/institute_document" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
@@ -79,6 +85,9 @@
                             <td class="text-center">
                                 <t t-out="lod.upload_date" />
                             </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/institute_document/download/{{lod.id}}" class="fa fa-download">Start Exam</a>
+                            </td>
                             <!-- <td class="text-center">
                                 <t t-out="lod.candidate_code" />
                             </td> -->
@@ -90,13 +99,15 @@
     </template>
 
     <template id="institute_documents_form">
+            
         <t t-call="portal.portal_layout">
+            
             <div class="container mt-5">
-                <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <div class="form-group">
                         <label for="documentName">Name of Document</label>
-                        <input type="text" class="form-control" id="documentName" name="documentName"  placeholder="Enter document name"/>
+                        <input type="text" class="form-control" id="documentName" name="documentName" placeholder="Enter document name"/>
                     </div>
                     <div class="form-group">
                         <label for="uploadDate">Upload Date</label>
@@ -104,7 +115,7 @@
                     </div>
                     <div class="form-group">
                         <label for="fileUpload">File Upload</label>
-                        <input type="file" class="form-control-file"  accept=".xlsx, .csv, .pdf" name="fileUpload" id="fileUpload"/>
+                        <input type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="fileUpload" id="fileUpload"/>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -112,7 +123,7 @@
         </t>
     </template>
 
-    
+
 
 
     <template id="ccmc_candidate_portal_list">
