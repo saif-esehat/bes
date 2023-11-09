@@ -3,12 +3,93 @@ from odoo.http import request
 from odoo import http
 from werkzeug.utils import secure_filename
 import base64
+import csv
+from io import StringIO
+from datetime import datetime
+
 
 
 class InstitutePortal(CustomerPortal):
     
+    @http.route(['/my/uploadgpcandidatedata'],type="http",auth="user",website=True)
+    def UploadGPCandidateData(self,**kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
+
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+        file_content_str = file_content.decode('utf-8')
+        
+        
+        if file_content_str.startswith('\ufeff'):
+            file_content_str = file_content_str.lstrip('\ufeff')
+        
+        csv_file = StringIO(file_content_str)
+        csv_reader = csv.DictReader(csv_file)
+        
+        
+        for row in csv_reader:
+            # import wdb; wdb.set_trace()
+            full_name = row['Full Name of candidate as in INDOS']
+            indos_no = row['Indos No.']
+            dob =  datetime.strptime(row['DOB'],'%d/%m/%y').date()
+            address = row['Address']
+            dist_city = row['Dist./City']
+            if row['State (short)']:
+                state = request.env['res.country.state'].sudo().search([('country_id.code','=','IN'),('code','=',row['State (short)'])]).id
+                # state = row['State (short)']
+            pin_code = row['Pin code']
+            xth_std_eng =  float(row['%  Xth Std in Eng.'])
+            
+            if not row['%12th Std in Eng.']:
+                twelfth_std_eng = 0
+            else:
+                twelfth_std_eng = float(row['%12th Std in Eng.'])
+            
+            if not row['%ITI ']:
+                iti = 0
+            else:
+                iti = float(row['%ITI '])
+                
+            candidate_st = row['To be mentioned if Candidate SC/ST']
+            
+            if candidate_st == 'Yes':
+                candidate_st = True
+            else:
+                candidate_st = False
+            
+            
+            new_candidate = request.env['gp.candidate'].sudo().create({
+                            'name': full_name,
+                            'institute_id':institute_id,
+                            'indos_no': indos_no,
+                            'dob': dob,
+                            # Include other fields here with their corresponding data
+                            'street': address,
+                            'city': dist_city,
+                            'state_id': state,
+                            'zip': pin_code,
+                            'tenth_percent': xth_std_eng,
+                            'twelve_percent': twelfth_std_eng,
+                            'iti_percent': iti,
+                            'sc_st': candidate_st  # Assuming 'Yes' as value for SC/ST
+                            # Add other fields similarly
+                        })
+
+            
+            
+            # import wdb; wdb.set_trace()
+        
+        return request.redirect("/my/gpcandidate/list")
     
-    
+    @http.route(['/my/gpcandidateform/<int:candidate_id>'],type="http",auth="user",website=True)
+    def GPcandidateFormView(self,candidate_id,**kw):
+        # import wdb; wdb.set_trace()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        vals = {'candidate':candidate, "page_name": "gp_candidate_form"}
+        return request.render("bes.gp_candidate_profile_view",vals)
+        
+        
     @http.route(['/my/gpcandidate/list'],type="http",auth="user",website=True)
     def GPcandidateListView(self,**kw):
         # import wdb; wdb.set_trace()

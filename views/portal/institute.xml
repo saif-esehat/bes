@@ -2,8 +2,11 @@
 
     <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'gp_candidate'" class="breadcrumb-item active">
+            <li t-if="page_name == 'gp_candidate'" class="breadcrumb-item ">
              GP Candidate
+            </li>
+            <li t-if="page_name == 'gp_candidate_form'" class="breadcrumb-item ">
+                <a href="/my/gpcandidate/list">GP Candidate</a>
             </li>
             <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
              CCMC Candidate
@@ -11,9 +14,8 @@
             <li t-if="page_name == 'institute_page'" class="breadcrumb-item active">
              Institute Detail
             </li>
-             <li t-if="page_name == 'lod_list'" class="breadcrumb-item active">
+            <li t-if="page_name == 'lod_list'" class="breadcrumb-item active">
                List of Document
-
             </li>
         </xpath>
     </template>
@@ -33,13 +35,162 @@
         </xpath>
     </template>
 
-
-    <template id="gp_candidate_portal_list">
+    <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
+            <div class="container py-5">
+
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <t t-if="candidate.candidate_image">
+                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                </t>
+                                <t t-else="">
+                                    <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                </t>
+                                <h5 class="my-3"> <t t-out="candidate.name" /></h5>
+                                <p class="text-muted mb-1"><t t-out="candidate.street" /></p>
+                                <p class="text-muted mb-4"><t t-out="candidate.street2"/></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Full Name</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0"><t t-out="candidate.name"/></p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Indos</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0"><t t-out="candidate.indos_no"/></p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Phone</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0"><t t-out="candidate.phone"/></p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Mobile</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0"><t t-out="candidate.mobile"/></p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Address</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0"><t t-out="candidate.street"/></p>
+                                            <p class="text-muted mb-0"><t t-out="candidate.street2"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+
+
+            </div>
+        </t>
+    </template>
+
+
+
+    <template id="gp_candidate_portal_list" name="GP Candidate">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
+
+            <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Candidate</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Modal content goes here -->
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadgpcandidatedata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">CSV Upload</label>
+                                        <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
                         <th>GP Candidate Name</th>
+                        <th>Indos No.</th>
                         <th>Roll No.</th>
                         <th>GP Candidate Code No.</th>
                     </tr>
@@ -51,11 +202,18 @@
                                 <t t-out="candidate.name" />
                             </td>
                             <td class="text-center">
+                                <t t-out="candidate.indos_no" />
+                            </td>
+                            <td class="text-center">
                                 <t t-out="candidate.roll_no" />
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
+                            <!-- <td class="text-center">
+                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
+                            </td> -->
+
                         </tr>
                     </t>
 
@@ -88,6 +246,7 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/institute_document/download/{{lod.id}}" class="fa fa-download">Start Exam</a>
                             </td>
+
                             <!-- <td class="text-center">
                                 <t t-out="lod.candidate_code" />
                             </td> -->
@@ -99,11 +258,11 @@
     </template>
 
     <template id="institute_documents_form">
-            
+
         <t t-call="portal.portal_layout">
-            
+
             <div class="container mt-5">
-                    <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <div class="form-group">
                         <label for="documentName">Name of Document</label>
@@ -220,7 +379,7 @@
     </template>
 
 
-    
+
 
 
 </odoo>

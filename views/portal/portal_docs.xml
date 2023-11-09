@@ -31,7 +31,7 @@
                             <t t-set="gp_course_exists" t-value="0"/>
 
                             <t t-foreach="courses" t-as="course">
-                                <t t-if="course.course.name == 'GP'">
+                                <t t-if="course.course.course_code == 'GP'">
                                     <t t-set="gp_course_exists" t-value="1"/>
                                 </t>
                             </t>
@@ -41,7 +41,7 @@
                             <t t-set="ccmc_course_exists" t-value="0"/> -->
 
                             <!-- <t t-foreach="courses" t-as="course">
-                                <t t-if="course.course.name == 'CCMC'">
+                                <t t-if="course.course.course_code == 'CCMC'">
                                     <t t-set="ccmc_course_exists" t-value="1"/>
                                 </t>
                             </t> -->
