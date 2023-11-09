@@ -179,6 +179,19 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Payment Slip">
+                                <field name="payment_slip_ids"  nolabel="1">
+                                    <tree>
+                                        <field name="sr_no" />
+                                        <field name="name_of_payment" />
+                                        <field name="pay_method" />
+                                        <field name="pay_date" />
+                                        <field name="invoice_generated"/>
+                                        <field name="invoice_number"/>
+                                        <field name="invoive_date"/>
+                                    </tree>
+                                </field>
+                            </page>
                             
                         </notebook>
                     </sheet>
@@ -241,6 +254,47 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_payment_slip_form" model="ir.ui.view">
+            <field name="name">institute.payment.slip.line.form</field>
+            <field name="model">institute.payment.slip.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                                <group>
+                                <field name="sr_no" />
+                                </group>
+                                <group></group>
+
+                                <group>                 
+                                <field name="name_of_payment" />
+
+                                <field name="pay_method" widget='radio'/>
+                                                
+                                <field name="pay_date"/>
+                                </group>
+
+                                <group>
+                                <field name="invoice_generated" widget="boolean_toggle" />
+
+                                <field name="invoice_number" />
+                  
+                                <field name="invoive_date"/>
+                                </group>
+                            
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        
+
+        
+        
+
+
 
 
 
