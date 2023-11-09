@@ -9,9 +9,9 @@ class InheritedSurvey(models.Model):
     
     title = fields.Char('Exam Title', required=True, translate=True)
     institute = fields.Many2one("bes.institute",string="Institute")
-    course = fields.Many2one("course.master",string="Course",required=True)
+    course = fields.Many2one("course.master",string="Course")
     subject_ids = fields.Many2many("course.master.subject",string="Subject IDS",compute="_compute_subject_ids")
-    subject = fields.Many2one("course.master.subject","Subject",required=True)
+    subject = fields.Many2one("course.master.subject","Subject")
     users_login_required = fields.Boolean('Login Required',default=True, help="If checked, users have to login before answering even with a valid token.")
     is_attempts_limited = fields.Boolean('Limited number of attempts', help="Check this option if you want to limit the number of attempts per user",
                                          compute="_compute_is_attempts_limited",default=True, store=True, readonly=False)
