@@ -186,7 +186,7 @@
                                         <field name="name_of_payment" />
                                         <field name="pay_method" />
                                         <field name="pay_date" />
-                                        <field name="invoice_generated"/>
+                                        <field name="invoice_generated" widget="boolean_toggle" />
                                         <field name="invoice_number"/>
                                         <field name="invoive_date"/>
                                     </tree>
@@ -263,24 +263,24 @@
                     <sheet>
                         <group>
                                 <group>
-                                <field name="sr_no" />
+                                    <field name="sr_no" />
                                 </group>
                                 <group></group>
 
                                 <group>                 
-                                <field name="name_of_payment" />
+                                    <field name="name_of_payment"/>
 
-                                <field name="pay_method" widget='radio'/>
-                                                
-                                <field name="pay_date"/>
+                                    <field name="pay_method" widget='radio'/>
+                                                    
+                                    <field name="pay_date"/>
                                 </group>
 
                                 <group>
-                                <field name="invoice_generated" widget="boolean_toggle" />
+                                    <field name="invoice_generated" widget="boolean_toggle" />
 
-                                <field name="invoice_number" />
-                  
-                                <field name="invoive_date"/>
+                                    <field name="invoice_number" />
+                    
+                                    <field name="invoive_date"/>
                                 </group>
                             
                         </group>
