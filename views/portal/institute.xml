@@ -210,9 +210,9 @@
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-                            </td>
+                            </td> -->
 
                         </tr>
                     </t>
