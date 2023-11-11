@@ -99,7 +99,7 @@
 
 
 
-        <record id="gp_candidate_form" model="ir.ui.view">
+        <record id="gp_candidate_forms" model="ir.ui.view">
             <field name="name">gp.candidate.form</field>
             <field name="model">gp.candidate</field>
             <field name="arch" type="xml">

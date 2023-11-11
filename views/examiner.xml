@@ -80,16 +80,41 @@
                             <field name="present_employer_clearance" />
                         </group>
 
-                        <field name="assignments">
+                        <group style="width:50%;">
+                            <field name="exam_coordinator" />
+                        </group>
+                        <notebook>
+                            <page string="Assignment of Examinations">
+                                <field name="assignments">
+                                    <tree>
+                                        <field name="examiner_id" />
+                                        <field name="assignment_date" />
+                                        <field name="exam_start_time" />
+                                        <field name="exam_end_time" />
+                                        <field name="assigned_to" />
+                                        <field name="subject_id" />
+                                        <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                                        <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Payment Details">
+                                
+                            </page>
+                        </notebook>
+
+                        <!-- <field name="assignments">
                             <tree >
                                 <field name="examiner_id" />
                                 <field name="assignment_date" />
-                                <field name="exam_date" />
+                                <field name="exam_start_time" />
+                                <field name="exam_end_time" />
+                                <field name="assigned_to" />
                                 <field name="subject_id" />
                                 <field name="gp_candidates" />
                                 <field name="ccmc_candidates" />
                             </tree>
-                        </field>
+                        </field> -->
 
 
 
@@ -169,6 +194,37 @@
                 </tree>
             </field>
         </record>
+
+    <record id="examiner_assignment_form" model="ir.ui.view">
+            <field name="name">examiner.assignment.form</field>
+            <field name="model">examiner.assignment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="examiner_id" />
+                            <field name="exam_start_time" />
+                            <field name="assigned_to" />
+                            <field name="subject_id" />
+                        </group>
+                        <group>
+                            <field name="assignment_date" />
+                            <field name="exam_end_time" />
+                            <field name="gp_batches" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                        </group>
+
+                        <group style="width:100%">
+                            <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                        </group>
+                        <group style="width:100%">
+                            <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
+                        </group>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
 
 
 

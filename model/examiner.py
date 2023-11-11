@@ -41,6 +41,7 @@ class Examiner(models.Model):
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
     subject_id = fields.Many2one("course.master.subject","Subject")
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
+    exam_coordinator = fields.Boolean("Exam Coordinator")
 
     
     @api.onchange('designation')
@@ -98,10 +99,26 @@ class ExaminerAssignment(models.Model):
     
     examiner_id = fields.Many2one("bes.examiner","Examiner")
     assignment_date = fields.Date("Assignment Date")
-    exam_date = fields.Date("Exam Date")
+    # exam_date = fields.Date("Exam Date")
+    exam_start_time = fields.Datetime("Exam Start Time")
+    exam_end_time = fields.Datetime("Exam End Time")
+    assigned_to = fields.Selection([
+        ('gp_candidate', 'GP Candidate'),
+        ('ccmc_candidate', 'CCMC Candidate'),
+    ], string='Assigned to',default="gp_candidate")
     subject_id = fields.Many2one("course.master.subject","Subject")
-    gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate")
+    gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches")
+    gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
+
+
+    @api.depends('gp_batches')
+    def _compute_gp_candidates(self):
+        for record in self:
+            students = self.env['gp.candidate'].search([('institute_batch_id','=',record.gp_batches.id)])
+            # print("Students",students)
+            record.gp_candidates = students
+
     
     
     @api.constrains('exam_date', 'subject_id', 'gp_candidates')
