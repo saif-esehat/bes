@@ -2,12 +2,34 @@
 
     <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'gp_candidate'" class="breadcrumb-item ">
-             GP Candidate
+            <t t-if="page_name == 'gp_candidate'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <t t-out="candidates[0].institute_batch_id.batch_name"/>
+                </li>
+            </t>
+
+            <li t-if="page_name == 'gp_batches'" class="breadcrumb-item ">
+             GP Batches
             </li>
-            <li t-if="page_name == 'gp_candidate_form'" class="breadcrumb-item ">
-                <a href="/my/gpcandidate/list">GP Candidate</a>
-            </li>
+            <t t-if="page_name == 'gp_candidate_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/candidates/{{candidate.institute_batch_id.id}}">
+                        <t t-out="candidate.institute_batch_id.batch_name"/>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    GP Candidate
+                </li>
+            </t>
+            <!-- <li class="breadcrumb-item ">
+                <a t-attf-href="/my/gpbatch/candidates/{{candidate.institute_batch_id.id}}">GP Batches</a>
+            </li> -->
             <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
              CCMC Candidate
             </li>
@@ -35,6 +57,46 @@
         </xpath>
     </template>
 
+
+    <template id="institute_gp_batches" name="GP Batches">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>From Date.</th>
+                        <th>To Date.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="batches" t-as="batch">
+                        <tr>
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
+                                    <t t-out="batch.batch_name"/>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <t t-out="batch.from_date" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="batch.to_date" />
+                            </td>
+                            <!-- <td class="text-center">
+                                <t t-out="candidate.candidate_code" />
+                            </td>
+                            <td class="text-center">
+                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
+                            </td> -->
+
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
             <div class="container py-5">
@@ -50,71 +112,192 @@
                                 <t t-else="">
                                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
                                 </t>
-                                <h5 class="my-3"> <t t-out="candidate.name" /></h5>
-                                <p class="text-muted mb-1"><t t-out="candidate.street" /></p>
-                                <p class="text-muted mb-4"><t t-out="candidate.street2"/></p>
+                                <h5 class="my-3">
+                                    <t t-out="candidate.name" />
+                                </h5>
+                                <p class="text-muted mb-1">
+                                    <t t-out="candidate.street" />
+                                </p>
+                                <p class="text-muted mb-4">
+                                    <t t-out="candidate.street2"/>
+                                </p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-8">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Full Name</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0"><t t-out="candidate.name"/></p>
-                                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Full Name</p>
                                     </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Indos</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0"><t t-out="candidate.indos_no"/></p>
-                                        </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.name"/>
+                                        </p>
                                     </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Phone</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0"><t t-out="candidate.phone"/></p>
-                                        </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Indos</p>
                                     </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Mobile</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0"><t t-out="candidate.mobile"/></p>
-                                        </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.indos_no"/>
+                                        </p>
                                     </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Address</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0"><t t-out="candidate.street"/></p>
-                                            <p class="text-muted mb-0"><t t-out="candidate.street2"/></p>
-                                        </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.phone"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Mobile</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.mobile"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Address</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.street"/>
+                                        </p>
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.street2"/>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    
                     </div>
+
+                </div>
 
 
             </div>
         </t>
     </template>
 
+    <template id="gp_candidate_form_view" name="GP Candidate Form">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 50px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">GP Candidate</h2>
+                        <div class="card-img-container">
+                            <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo"/>
+                        </div>
+                        <form>
+                            <div class="form-group">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" placeholder="name@example.com" />
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" />
+                            </div>
+                            <div class="form-group">
+                                <label for="photo" class="form-label">Candidate Photo</label>
+                                <input type="file" class="form-control" id="photo" accept="image/*" onchange="displayImage(this)" />
+                            </div>
+                            <button type="submit" class="btn btn-submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
 
 
     <template id="gp_candidate_portal_list" name="GP Candidate">
@@ -210,9 +393,15 @@
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
+<<<<<<< HEAD
                             <!-- <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
                             </td> -->
+=======
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
+                            </td>
+>>>>>>> 90b1055 (Data)
 
                         </tr>
                     </t>
@@ -261,6 +450,7 @@
 
         <t t-call="portal.portal_layout">
 
+
             <div class="container mt-5">
                 <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -279,6 +469,7 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
+
         </t>
     </template>
 
@@ -334,7 +525,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="code">MTI no.</label>
-                                <input type="text" class="form-control" id="code" name="code" t-att-value="institutes.code" t-att-readonly="'1'" />
+                                <input type="text" class="form-control" id="code" name="code" t-att-value="institutes.mti" t-att-readonly="'1'" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Code</label>
+                                <input type="text" class="form-control" id="email" name="email" t-att-value="institutes.code" t-att-readonly="'1'"/>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -343,6 +540,8 @@
                                 <input type="text" class="form-control" id="email" name="email" t-att-value="institutes.email"/>
                             </div>
                         </div>
+
+
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -364,6 +563,90 @@
                             <input type="text" class="form-control" id="zip" name="zip" t-att-value="institutes.zip" placeholder="Enter Zip" />
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="principal_name">Name of Principal / Trustee of Training Institute</label>
+                                <input type="text" class="form-control" id="principal_name" name="principal_name" t-att-value="institutes.principal_name" />
+                            </div>
+                        </div>
+                        <!-- Principal Phone -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="principal_phone">Phone No. of Principal / Trustee of Training Institute</label>
+                                <input type="text" class="form-control" id="principal_phone" name="principal_phone" t-att-value="institutes.principal_phone" />
+                            </div>
+                        </div>
+
+                        <!-- Principal Mobile -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="principal_mobile">Mobile No. of Principal / Trustee of Training Institute</label>
+                                <input type="text" class="form-control" id="principal_mobile" name="principal_mobile" t-att-value="institutes.principal_mobile" />
+                            </div>
+                        </div>
+
+                        <!-- Principal Email -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="principal_email">E-mail of Principal / Trustee of Training Institute</label>
+                                <input type="text" class="form-control" id="principal_email" name="principal_email" t-att-value="institutes.principal_email" />
+                            </div>
+                        </div>
+
+                        <!-- Admin Phone -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="admin_phone">Phone No. of Admin Officer of Training Institute</label>
+                                <input type="text" class="form-control" id="admin_phone" name="admin_phone" t-att-value="institutes.admin_phone" />
+                            </div>
+                        </div>
+
+                        <!-- Admin Mobile -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="admin_mobile">Mobile No. of Admin Officer of Training Institute</label>
+                                <input type="text" class="form-control" id="admin_mobile" name="admin_mobile" t-att-value="institutes.admin_mobile" />
+                            </div>
+                        </div>
+
+                        <!-- Admin Email -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="admin_email">E-mail of Admin Officer of Training Institute</label>
+                                <input type="text" class="form-control" id="admin_email" name="admin_email" t-att-value="institutes.admin_email" />
+                            </div>
+                        </div>
+
+                        <!-- Second Authorized Person -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="second_authorized_person">Name of the second authorised person representing the Institute</label>
+                                <input type="text" class="form-control" id="second_authorized_person" name="second_authorized_person" t-att-value="institutes.name_of_second_authorized_person" />
+                            </div>
+                        </div>
+
+                        <!-- Computer Lab PC Count -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="computer_lab_pc_count">How many PCs does the computer lab have</label>
+                                <input type="number" class="form-control" id="computer_lab_pc_count" name="computer_lab_pc_count" t-att-value="institutes.computer_lab_pc_count" />
+                            </div>
+                        </div>
+
+                        <!-- Internet Strength -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="internet_strength">Strength of Internet connection</label>
+                                <input type="text" class="form-control" id="internet_strength" name="internet_strength" t-att-value="institutes.internet_strength" />
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
 
                     <div class="form-group row">
                         <div class="col-sm-10">

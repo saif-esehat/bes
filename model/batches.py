@@ -9,8 +9,8 @@ from datetime import datetime
     
 
 
-class InstituteBatches(models.Model):
-    _name = "institute.batches"
+class InstituteGPBatches(models.Model):
+    _name = "institute.gp.batches"
     _rec_name = "batch_name"
     _description= 'Batches'
     
@@ -19,7 +19,7 @@ class InstituteBatches(models.Model):
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     from_date = fields.Date("From Date")
     to_date = fields.Date("To Date")
-    course = fields.Many2one("course.master","Course")
+    # course = fields.Many2one("course.master","Course")
     account_move = fields.Many2one("account.move",string="Invoice")
     invoice_created = fields.Boolean("Invoice Created")
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",
@@ -63,7 +63,7 @@ class InstituteBatches(models.Model):
     @api.depends("candidate_count")
     def _compute_candidate_count(self):
         for rec in self:
-            candidate_count = self.env["bes.candidate"].search_count([('institute_batch_id','=', rec.id)])
+            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', rec.id)])
             rec.candidate_count = candidate_count
     
     def move_to_invoiced(self):
@@ -111,6 +111,7 @@ class InstituteBatches(models.Model):
         }
     
     def confirm_batch(self):
+        
         self.write({"state":"2-indos_pending"})
         
     
@@ -122,10 +123,10 @@ class InstituteBatches(models.Model):
     def open_batch_candidate(self):
         
         return {
-        'name': 'Batch',
+        'name': 'GP Batch',
         'domain': [('institute_batch_id', '=', self.id)],
         'view_type': 'form',
-        'res_model': 'bes.candidate',
+        'res_model': 'gp.candidate',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
