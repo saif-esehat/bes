@@ -99,7 +99,84 @@
 
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
+            <script>
+                function displayImage(input) {
+                    const cardImg = document.querySelector('.card-img');
+                    const file = input.files[0];
+
+                    if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        cardImg.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                    }
+                }
+            </script>
+            <style>
+                .card-img-container {
+                text-align: left;
+                margin-bottom: 10px;
+                }
+
+                .card-img {
+                width: 150px; /* Adjust the width as needed */
+                height: 150px; /* Adjust the height as needed */
+                object-fit: cover;
+                border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+                }
+            </style>
             <div class="container py-5">
+
+                <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
+                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a> -->
+
+                <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/updategpcandidate"  enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Indos and Image</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Modal content goes here -->
+                                    <div class="container mt-5">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="card-img-container">
+                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="candidate_photo" class="form-label">Candidate Photo</label>
+                                                    <input type="file" class="form-control" id="candidate_photo" name="candidate_photo" accept="image/*" onchange="displayImage(this)" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Indos No.</label>
+                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
 
 
                 <div class="row">
@@ -187,6 +264,13 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -204,7 +288,7 @@
             .container {
             max-width: 500px;
             margin: auto;
-            margin-top: 50px;
+            margin-top: 20px;
             }
 
             .card {
@@ -271,27 +355,157 @@
 
                     <div class="card-body">
                         <h2 class="form-title mb-4">GP Candidate</h2>
-                        <div class="card-img-container">
-                            <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo"/>
-                        </div>
-                        <form>
-                            <div class="form-group">
-                                <label for="fullName" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" />
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="batch_id" name="batch_id" t-att-value="batch_id"/>
+                                <!-- <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div> -->
                             </div>
-                            <div class="form-group">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="email" placeholder="name@example.com" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Full Name of Candidate as in INDOS</label>
+                                        <input type="text" class="form-control" id="name" name="name" required="true" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="indos_no">Indos No.</label>
+                                        <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="candidate_code">GP Candidate Code No.</label>
+                                        <input type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="roll_no">Roll No.</label>
+                                        <input type="text" class="form-control" id="roll_no" name="roll_no" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dob">DOB</label>
+                                        <input type="date" class="form-control" id="dob" name="dob" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="street">Street</label>
+                                        <input type="text" class="form-control" id="street" name="street"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="street2">Street2</label>
+                                        <input type="text" class="form-control" id="street2" name="street2"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" id="city" name="city"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="zip">Zip</label>
+                                        <input type="text" class="form-control" id="zip" name="zip"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="state_id">State</label>
+                                        <select class="form-control" id="state_id" name="state_id">
+                                            <t t-foreach="states" t-as="state">
+                                                <option t-attf-value="{{state.id}}">
+                                                    <t t-out="state.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mobile">Mobile</label>
+                                        <input type="text" class="form-control" id="mobile" name="mobile"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tenth_percent">% Xth Std in Eng.</label>
+                                        <input type="number" class="form-control" id="tenth_percent" name="tenth_percent"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="twelve_percent">% 12th Std in Eng.</label>
+                                        <input type="number" class="form-control" id="twelve_percent" name="twelve_percent"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="iti_percent">% ITI</label>
+                                        <input type="number" class="form-control" id="iti_percent" name="iti_percent"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="sc_st" name="sc_st"/>
+                                        <label class="form-check-label" for="sc_st">To be mentioned if Candidate SC/ST</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+
+
+
+
+
                             </div>
-                            <div class="form-group">
-                                <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" />
-                            </div>
-                            <div class="form-group">
-                                <label for="photo" class="form-label">Candidate Photo</label>
-                                <input type="file" class="form-control" id="photo" accept="image/*" onchange="displayImage(this)" />
-                            </div>
-                            <button type="submit" class="btn btn-submit">Submit</button>
+
+
+
                         </form>
                     </div>
                 </div>
@@ -334,6 +548,8 @@
 
         <t t-call="portal.portal_layout">
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
+
+            <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -469,8 +685,6 @@
 
         </t>
     </template>
-
-
 
 
     <template id="ccmc_candidate_portal_list">
