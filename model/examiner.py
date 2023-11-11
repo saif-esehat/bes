@@ -41,6 +41,7 @@ class Examiner(models.Model):
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
     subject_id = fields.Many2one("course.master.subject","Subject")
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
+    exam_coordinator = fields.Boolean("Exam Coordinator")
 
     
     @api.onchange('designation')
