@@ -98,7 +98,13 @@ class ExaminerAssignment(models.Model):
     
     examiner_id = fields.Many2one("bes.examiner","Examiner")
     assignment_date = fields.Date("Assignment Date")
-    exam_date = fields.Date("Exam Date")
+    # exam_date = fields.Date("Exam Date")
+    exam_start_time = fields.Datetime("Exam Start Time")
+    exam_end_time = fields.Datetime("Exam End Time")
+    assigned_to = fields.Selection([
+        ('gp_candidate', 'GP Candidate'),
+        ('ccmc_candidate', 'CCMC Candidate'),
+    ], string='Assigned to',default="gp_candidate")
     subject_id = fields.Many2one("course.master.subject","Subject")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
