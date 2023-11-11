@@ -7,7 +7,7 @@ class GPCandidate(models.Model):
     _name = 'gp.candidate'
     _description = 'GP Candidate'
     
-    institute_batch_id = fields.Many2one("institute.batches","Batch")
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute")
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')

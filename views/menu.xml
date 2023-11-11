@@ -73,7 +73,7 @@
 
         <menuitem id="exam_center_menu" parent="bes_menu" name="Exam Center" action="exam_center_action" />
 
-        <menuitem id="batches_menu" parent="bes_menu" name="Batches" action="batch_form_kanban_action" />
+        <menuitem id="batches_menu" parent="bes_menu" name="Batches" action="gpbatch_form_kanban_action" />
 
 
         <record id="survey.menu_surveys" model="ir.ui.menu">

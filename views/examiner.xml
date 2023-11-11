@@ -190,11 +190,14 @@
                             <field name="assigned_to" />
                             <field name="subject_id" />
                         </group>
-                        <group>
+                        <group style="width:100%">
                             <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                        </group>
+                        <group style="width:100%">
                             <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
                         </group>
                     </group>
+
                 </form>
             </field>
         </record>

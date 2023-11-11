@@ -57,12 +57,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <!-- <div class="oe_button_box" name="button_box">
-                            <button name="open_faculty" string="Faculty" type="object" class="oe_stat_button" icon="fa-align-justify">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="batch_button" string="GP Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
-                            <button name="batch_button" string="Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
-                            </button>
-                        </div> -->
+                        </div>
                         <group style="width:100%;">
                             <h1>
                                 <field name="name" placeholder="Institute Name" required="1"/>

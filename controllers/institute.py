@@ -11,6 +11,16 @@ from datetime import datetime
 
 class InstitutePortal(CustomerPortal):
     
+    @http.route(['/my/gpbatch'],type="http",auth="user",website=True)
+    def GPBatchList(self,**kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
+        batches = request.env["institute.gp.batches"].sudo().search([('institute_id','=',institute_id)])
+        
+        vals = {"batches":batches,"page_name": "gp_batches"}
+        return request.render("bes.institute_gp_batches",vals)
+        
+    
     @http.route(['/my/uploadgpcandidatedata'],type="http",auth="user",website=True)
     def UploadGPCandidateData(self,**kw):
         user_id = request.env.user.id
@@ -82,21 +92,27 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect("/my/gpcandidate/list")
     
-    @http.route(['/my/gpcandidateform/<int:candidate_id>'],type="http",auth="user",website=True)
-    def GPcandidateFormView(self,candidate_id,**kw):
+    @http.route(['/my/gpcandidateprofile/<int:candidate_id>'],type="http",auth="user",website=True)
+    def GPcandidateProfileView(self,candidate_id,**kw):
         # import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         vals = {'candidate':candidate, "page_name": "gp_candidate_form"}
         return request.render("bes.gp_candidate_profile_view",vals)
+    
+    @http.route(['/my/gpcandidateform/view'],type="http",auth="user",website=True)
+    def GPcandidateFormView(self,**kw):
+        
+        vals = {}
+        return request.render("bes.gp_candidate_form_view",vals)
         
         
-    @http.route(['/my/gpcandidate/list'],type="http",auth="user",website=True)
-    def GPcandidateListView(self,**kw):
+    @http.route(['/my/gpbatch/candidates/<int:batch_id>'],type="http",auth="user",website=True)
+    def GPcandidateListView(self,batch_id,**kw):
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search([('user_id','=',user_id)]).id
-        candidates =  request.env["gp.candidate"].sudo().search([('institute_id','=',institute_id)])
+        candidates =  request.env["gp.candidate"].sudo().search([('institute_id','=',institute_id),('institute_batch_id','=',batch_id)])
         vals = {'candidates':candidates , 'page_name': 'gp_candidate'}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
@@ -187,7 +203,18 @@ class InstitutePortal(CustomerPortal):
                              "street":kw.get("street"),
                              "street2":kw.get("street2"),
                              "city":kw.get("city"),
-                             "zip":kw.get("zip")})
+                             "zip":kw.get("zip"),
+                             "principal_name": kw.get("principal_name"),
+                                "principal_phone": kw.get("principal_phone"),
+                                "principal_mobile": kw.get("principal_mobile"),
+                                "principal_email": kw.get("principal_email"),
+                                "admin_phone": kw.get("admin_phone"),
+                                "admin_mobile": kw.get("admin_mobile"),
+                                "admin_email": kw.get("admin_email"),
+                                "name_of_second_authorized_person": kw.get("second_authorized_person"),
+                                "computer_lab_pc_count": kw.get("computer_lab_pc_count"),
+                                "internet_strength": kw.get("internet_strength")
+                            })
             
             vals = {'institutes':institute , 'page_name': 'institute_page'}
             

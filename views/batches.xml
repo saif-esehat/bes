@@ -4,9 +4,9 @@
 
         <!-- Institute Batches -->
 
-        <record id="batch_form" model="ir.ui.view">
-            <field name="name">institute.batches.form</field>
-            <field name="model">institute.batches</field>
+        <record id="gp_batch_form" model="ir.ui.view">
+            <field name="name">institute.gp.batches.form</field>
+            <field name="model">institute.gp.batches</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
@@ -32,9 +32,9 @@
                             <field name="from_date"/>
                             <field name="to_date"/>
                         </group>
-                        <group style="width:50%;">
+                        <!-- <group style="width:50%;">
                             <field name="course"/>
-                        </group>
+                        </group> -->
                         <group style="width:50%;">
                             <field name="account_move"/>
                             <field name="payment_state"/>
@@ -52,9 +52,9 @@
         </record>
 
 
-        <record id="batch_form_kanban" model="ir.ui.view">
-            <field name="name">institute.batches.kanban</field>
-            <field name="model">institute.batches</field>
+        <record id="gpbatch_form_kanban" model="ir.ui.view">
+            <field name="name">institute.gp.batches.kanban</field>
+            <field name="model">institute.gp.batches</field>
             <field name="arch" type="xml">
                 <kanban disable_drag_drop_record="true" create="false" default_group_by="state">
                     <field name="state" readonly="1" />
@@ -77,9 +77,6 @@
                                 <b>To : </b>
                                 <field name="to_date"/>
                                 <br/>
-                                <b>Course : </b>
-                                <field name="course"/>
-                                <br/>
                                 <b>No of Candidate : </b>
                                 <field name="candidate_count"/>
                                 <br/>
@@ -101,25 +98,25 @@
             </field>
         </record>
 
-        <record id="institute_batch_tree" model="ir.ui.view">
-            <field name="name">institute.batches.tree</field>
-            <field name="model">institute.batches</field>
+        <record id="institute_gpbatch_tree" model="ir.ui.view">
+            <field name="name">institute.gp.batches.tree</field>
+            <field name="model">institute.gp.batches</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="batch_name"/>
                     <field name="institute_id"/>
                     <field name="from_date"/>
                     <field name="to_date"/>
-                    <field name="course"/>
+                    <!-- <field name="course"/> -->
                 </tree>
             </field>
         </record>
 
 
-        <record id="batch_form_kanban_action" model="ir.actions.act_window">
+        <record id="gpbatch_form_kanban_action" model="ir.actions.act_window">
             <field name="name">Batches</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">institute.batches</field>
+            <field name="res_model">institute.gp.batches</field>
             <field name="view_mode">kanban,form,tree</field>
 
         </record>

@@ -142,10 +142,10 @@ class Institute(models.Model):
     def batch_button(self):
         
         return {
-        'name': 'Batch',
+        'name': 'GP Batch',
         'domain': [('institute_id', '=', self.id)],
         'view_type': 'form',
-        'res_model': 'institute.batches',
+        'res_model': 'institute.gp.batches',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
