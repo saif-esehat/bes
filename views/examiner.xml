@@ -180,16 +180,16 @@
                     <group>
                         <group>
                             <field name="examiner_id" />
-                            <field name="assignment_date" />
-                        </group>
-                        <group>
                             <field name="exam_start_time" />
-                            <field name="exam_end_time" />
-                        </group>
-                        <group>
                             <field name="assigned_to" />
                             <field name="subject_id" />
                         </group>
+                        <group>
+                            <field name="assignment_date" />
+                            <field name="exam_end_time" />
+                            <field name="gp_batches" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                        </group>
+
                         <group style="width:100%">
                             <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
                         </group>

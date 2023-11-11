@@ -393,15 +393,12 @@
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
-<<<<<<< HEAD
                             <!-- <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
                             </td> -->
-=======
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
->>>>>>> 90b1055 (Data)
 
                         </tr>
                     </t>
