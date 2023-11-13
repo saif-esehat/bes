@@ -202,6 +202,7 @@ class InstituteFaculty(models.Model):
     _description= 'Institute Faculty'
     
     institute_id = fields.Many2one("bes.institute","Institute ID")
+    gp_batches_id = fields.Many2one('institute.gp.batches')
     course_name = fields.Many2one("course.master","Course")
     faculty_name = fields.Char(string='Name of the Faculty', required=True)
     faculty_photo = fields.Binary(string='Faculty Photo')
@@ -210,6 +211,12 @@ class InstituteFaculty(models.Model):
     qualification = fields.Text(string='Qualification of Faculty')
     contract_terms = fields.Text(string='Contract Terms')
     courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
+
+    @api.model
+    def create(self, values):
+        gp_faculty = super(InstituteFaculty, self).create(values)
+        
+        return gp_faculty
 
 class InstitutePaymentSlip(models.Model):
     _name = "institute.payment.slip.line"

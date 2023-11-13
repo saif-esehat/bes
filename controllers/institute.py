@@ -158,6 +158,48 @@ class InstitutePortal(CustomerPortal):
         vals = {"states" : states,"batch_id":batch_id}
         return request.render("bes.gp_candidate_form_view", vals)
 
+
+    # @http.route(['/my/gpfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
+    # def GPFacultiesFormView(self,batch_id, **kw):
+
+    #     states = request.env['res.country.state'].sudo().search(
+    #                 [('country_id.code', '=', 'IN')])
+        
+    #     user_id = request.env.user.id
+        
+    #     institute_id = request.env["bes.institute"].sudo().search(
+    #         [('user_id', '=', user_id)]).id
+
+    #     if request.httprequest.method == 'POST':
+    #         faculty_name = kw.get("faculty_name")
+    #         dob = kw.get("dob")
+    #         designation = kw.get("designation")
+    #         qualification = kw.get("qualification")
+    #         contract_terms = kw.get("contract_terms")
+    #         courses_taught = kw.get("courses_taught")
+
+            
+    #         faculty_data = {
+    #             "faculty_name": faculty_name,
+    #             "institute_id":institute_id,
+    #             "dob": dob,
+    #             "designation": designation,
+    #             "qualification": qualification,
+    #             "contract_terms": contract_terms,
+    #             "courses_taught": courses_taught,
+
+    #         }
+    #         # import wdb; wdb.set_trace();
+
+    #         request.env['institute.faculty'].sudo().create(faculty_data)
+            
+    #         return request.redirect("/my/gpbatch/faculties/"+str(batch_id))
+            
+        
+        
+        vals = {"states" : states,"batch_id":batch_id}
+        return request.render("bes.gp_candidate_form_view", vals)
+
     @http.route(['/my/gpbatch/candidates/<int:batch_id>'], type="http", auth="user", website=True)
     def GPcandidateListView(self, batch_id, **kw):
         # import wdb; wdb.set_trace()
@@ -170,6 +212,19 @@ class InstitutePortal(CustomerPortal):
         vals = {'candidates': candidates, 'page_name': 'gp_candidate','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
+
+    # @http.route(['/my/gpbatch/faculties/<int:batch_id>'], type="http", auth="user", website=True)
+    # def GPFacultyListView(self, batch_id, **kw):
+    #     # import wdb; wdb.set_trace()
+
+    #     user_id = request.env.user.id
+    #     institute_id = request.env["bes.institute"].sudo().search(
+    #         [('user_id', '=', user_id)]).id
+    #     faculties = request.env["institute.faculty"].sudo().search(
+    #         [('institute_id', '=', institute_id)])
+    #     vals = {'faculties': faculties, 'page_name': 'gp_faculty','batch_id':batch_id}
+    #     # self.env["gp.candidate"].sudo().search([('')])
+    #     return request.render("bes.gp_faculty_portal_list", vals)
 
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):

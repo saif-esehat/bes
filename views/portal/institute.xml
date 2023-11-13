@@ -64,6 +64,7 @@
                 <thead>
                     <tr>
                         <th>Batch Name</th>
+                        <!-- <th>Faculties</th> -->
                         <th>From Date.</th>
                         <th>To Date.</th>
                     </tr>
@@ -76,6 +77,9 @@
                                     <t t-out="batch.batch_name"/>
                                 </a>
                             </td>
+                            <!-- <td class="text-center">
+                                <t t-out="batch.faculty_name" />
+                            </td> -->
                             <td class="text-center">
                                 <t t-out="batch.from_date" />
                             </td>
@@ -96,6 +100,9 @@
             </t>
         </t>
     </template>
+
+
+    
 
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
@@ -611,12 +618,6 @@
                             </td>
                             <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-<<<<<<< HEAD
-=======
-                            </td> -->
-                            <td class="text-center">
-                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
->>>>>>> 852666922ae19eac0d26a6a054576b04ab7ebd51
                             </td>
 
                         </tr>
@@ -626,6 +627,113 @@
             </t>
         </t>
     </template>
+
+    <!-- <template id="gp_faculty_portal_list" name="Faculty">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a>
+
+            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+
+            <div class="modal fade" id="uploadFacultyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Faculty</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadgpcandidatedata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">CSV Upload</label>
+                                        <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Faculty Name</th>
+                        <th>Designation</th>
+                        <th>Qualification</th>
+                        <th>Contract Terms</th>
+                        <th>Coarses Taught</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="faculties" t-as="faculty">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="faculty.faculty_name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="faculty.designation" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="faculty.qualification" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="faculty.contract_terms" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="faculty.courses_taught" />
+                            </td>
+                            <td class="text-center">
+                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
+                            </td>
+
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template> -->
 
     <template id="institute_document_list" name="Document">
         <t t-call="portal.portal_layout">

@@ -163,7 +163,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Faculty">
+                            <!-- <page string="Faculty">
                                 <field name="faculty_ids"  nolabel="1">
                                     <tree>
                                         <field name="faculty_photo" widget="binary" filename="documents_name"/>
@@ -176,7 +176,7 @@
                                         <field name="courses_taught"/>
                                     </tree>
                                 </field>
-                            </page>
+                            </page> -->
                             <page string="Payment Slip">
                                 <field name="payment_slip_ids"  nolabel="1">
                                     <tree>
