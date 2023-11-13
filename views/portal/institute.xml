@@ -109,6 +109,7 @@
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
             <script>
+                
                 function displayImage(input) {
                     const cardImg = document.querySelector('.card-img');
                     const file = input.files[0];
@@ -124,7 +125,18 @@
                     }
                 }
             </script>
+
             <style>
+                    .o_portal_my_doc_table {
+                width: 60%; /* You can adjust the percentage as needed */
+                margin: 0 auto; /* Centers the table horizontally */
+            }
+
+            /* Optionally, you can set specific widths for individual columns */
+            .o_portal_my_doc_table th,
+            .o_portal_my_doc_table td {
+                width: auto; /* Adjust as needed */
+            }
                 .card-img-container {
                 text-align: left;
                 margin-bottom: 10px;
@@ -140,11 +152,11 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a> -->
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
 
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/updategpcandidate"  enctype="multipart/form-data">
+                        <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
                             <div class="modal-content">
@@ -185,6 +197,7 @@
                         </form>
                     </div>
                 </div>
+
 
 
 
@@ -276,6 +289,176 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
+
+                                <div class="container">
+                                    <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                                                <i class="fas fa-chart-pie fa-fw me-2"></i>Ship Visits</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="ex-with-icons-tab-2" data-toggle="tab" href="#ex-with-icons-tabs-2" role="tab" aria-controls="ex-with-icons-tabs-2" aria-selected="false">
+                                                <i class="fas fa-chart-line fa-fw me-2"></i>Attendance</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="ex-with-icons-tab-3" data-toggle="tab" href="#ex-with-icons-tabs-3" role="tab" aria-controls="ex-with-icons-tabs-3" aria-selected="false">
+                                                <i class="fas fa-chart-pie fa-fw me-2"></i>STCW Certificate</a>
+                                        </li>
+                                    </ul>
+
+                                  
+
+                                    <div class="tab-content" id="ex-with-icons-content">
+                                        <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" class="btn btn-primary btn_cta">Add</a>
+
+                                            <div class="modal fade" id="AddShipVisit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add Ship Visit</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Modal content goes here -->
+                                                                <div class="container mt-5">
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="name_of_ships">Name of the Ship Visited / Ship in Campus</label>
+                                                                                <input type="text" class="form-control" id="name_of_ships" name="name_of_ships"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="imo_no">Ship IMO Number</label>
+                                                                                <input type="text" class="form-control" id="imo_no" name="imo_no"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="name_of_ports_visited">Name of the Port Visited / Place of SIC</label>
+                                                                                <input type="text" class="form-control" id="name_of_ports_visited" name="name_of_ports_visited"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="date_of_visits">Date Of Visit</label>
+                                                                                <input type="date" class="form-control" id="date_of_visits" name="date_of_visits"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="time_spent_on_ship">Hours Spent on Ship</label>
+                                                                                <input type="number" class="form-control" id="time_spent_on_ship" name="time_spent_on_ship"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="bridge" name="bridge"/>
+                                                                                <label class="form-check-label" for="bridge">Bridge</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room"/>
+                                                                                <label class="form-check-label" for="eng_room">Eng. Room</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area"/>
+                                                                                <label class="form-check-label" for="cargo_area">Cargo Area</label>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive border rounded border-top-0 ">
+
+                                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Name of the Ship Visited / Ship in Campus</th>
+                                                            <th>Ship IMO Number</th>
+                                                            <th>Name of Ports</th>
+                                                            <th>Date Of Visit</th>
+                                                            <th>Hours</th>
+                                                            <th>Bridge</th>
+                                                            <th>Eng. Room</th>
+                                                            <th>Cargo Area</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="candidate.ship_visits" t-as="ship_visit">
+                                                            <tr>
+                                                                <td>
+                                                                    <t t-out="ship_visit.name_of_ships" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.imo_no" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.name_of_ports_visited" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.date_of_visits" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.time_spent_on_ship" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.bridge == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.eng_room == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.cargo_area == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+                                        Tab 2 content
+                                        </div>
+                                        <div class="tab-pane fade" id="ex-with-icons-tabs-3" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+                                        Tab 3 content
+                                        </div>
+                                    </div>
+                                </div>
+
 
                             </div>
                         </div>
@@ -510,6 +693,132 @@
 
 
 
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="gp_faculty_form_view" name="Faculty Form">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">Faculty</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="batch_id" name="batch_id" t-att-value="batch_id"/>
+                                <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Faculty Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="faculty_photo" class="form-label">Faculties Photo</label>
+                                        <input type="file" class="form-control" id="faculty_photo" name="faculty_photo" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="faculty_name">Full Name of Faculty</label>
+                                        <input type="text" class="form-control" id="faculty_name" name="faculty_name" required="true" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dob">DOB</label>
+                                        <input type="date" class="form-control" id="dob" name="dob" />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
 
                             </div>
 

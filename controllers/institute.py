@@ -167,26 +167,27 @@ class InstitutePortal(CustomerPortal):
         
         user_id = request.env.user.id
         
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+        print("BATCH id",batch_id)
 
         if request.httprequest.method == 'POST':
             faculty_name = kw.get("faculty_name")
+            faculty_photo = kw.get('faculty_photo')
             dob = kw.get("dob")
-            designation = kw.get("designation")
-            qualification = kw.get("qualification")
-            contract_terms = kw.get("contract_terms")
-            courses_taught = kw.get("courses_taught")
+            # designation = kw.get("designation")
+            # qualification = kw.get("qualification")
+            # contract_terms = kw.get("contract_terms")
+            # courses_taught = kw.get("courses_taught")
 
             
             faculty_data = {
                 "faculty_name": faculty_name,
+                # "faculty_photo":faculty_photo,
                 "institute_id":institute_id,
-                "dob": dob,
-                "designation": designation,
-                "qualification": qualification,
-                "contract_terms": contract_terms,
-                "courses_taught": courses_taught,
+                "dob": dob
+                # "designation": designation,
+                # "qualification": qualification,
+                # "contract_terms": contract_terms,
+                # "courses_taught": courses_taught,
 
             }
             # import wdb; wdb.set_trace();
@@ -198,7 +199,7 @@ class InstitutePortal(CustomerPortal):
         
         
         vals = {"states" : states,"batch_id":batch_id}
-        return request.render("bes.gp_candidate_form_view", vals)
+        return request.render("bes.gp_faculty_form_view", vals)
 
     @http.route(['/my/gpbatch/candidates/<int:batch_id>'], type="http", auth="user", website=True)
     def GPcandidateListView(self, batch_id, **kw):
