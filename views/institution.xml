@@ -224,6 +224,7 @@
                     <sheet>
                         <group>
                             <field name="faculty_photo" widget="image" options="{'size': (100, 100)}" />
+                            <field name="gp_batches_id"/>
                             <field name="course_name"/>
                             <field name="faculty_name"/>
                             <field name="dob"/>

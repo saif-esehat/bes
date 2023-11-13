@@ -64,7 +64,7 @@
                 <thead>
                     <tr>
                         <th>Batch Name</th>
-                        <!-- <th>Faculties</th> -->
+                        <th>Faculties</th>
                         <th>From Date.</th>
                         <th>To Date.</th>
                     </tr>
@@ -77,9 +77,11 @@
                                     <t t-out="batch.batch_name"/>
                                 </a>
                             </td>
-                            <!-- <td class="text-center">
-                                <t t-out="batch.faculty_name" />
-                            </td> -->
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpbatch/faculties/{{batch.id}}" class="fa">
+                                Faculty
+                                </a>
+                            </td>
                             <td class="text-center">
                                 <t t-out="batch.from_date" />
                             </td>
@@ -628,7 +630,7 @@
         </t>
     </template>
 
-    <!-- <template id="gp_faculty_portal_list" name="Faculty">
+    <template id="gp_faculty_portal_list" name="Faculty">
         <script>
                                     $(document).ready(function () {
                                         $('#uploadBtn').on('click', function () {
@@ -701,39 +703,39 @@
                         <th>Designation</th>
                         <th>Qualification</th>
                         <th>Contract Terms</th>
-                        <th>Coarses Taught</th>
+                        <th>Courses Taught</th>
 
                     </tr>
                 </thead>
                 <tbody>
                     <t t-foreach="faculties" t-as="faculty">
                         <tr>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="faculty.faculty_name" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="faculty.designation" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="faculty.qualification" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="faculty.contract_terms" />
                             </td>
-                            <td class="text-center">
-                                <t t-out="faculty.courses_taught" />
+                            <td class="text-left">
+                                <t t-out="faculty.courses_taught.name" />
                             </td>
-                            <td class="text-center">
-                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-                            </td>
-
+                            
+                            <!-- <td class="text-center">
+                                 <a t-attf-href="/my/gpcandidateform/{{faculty.id}}" class="fa">View</a>
+                            </td> -->
                         </tr>
                     </t>
 
                 </tbody>
             </t>
         </t>
-    </template> -->
+    </template>
 
     <template id="institute_document_list" name="Document">
         <t t-call="portal.portal_layout">
