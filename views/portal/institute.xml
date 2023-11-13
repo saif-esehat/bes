@@ -7,7 +7,7 @@
                     <a t-attf-href="/my/gpbatch">GP Batches</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <t t-out="candidates[0].institute_batch_id.batch_name"/>
+                    <t t-out="batches.batch_name"/>
                 </li>
             </t>
 
@@ -130,8 +130,7 @@
             </style>
             <div class="container py-5">
 
-                <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a> -->
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
 
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -611,12 +610,6 @@
                             </td>
                             <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-<<<<<<< HEAD
-=======
-                            </td> -->
-                            <td class="text-center">
-                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
->>>>>>> 852666922ae19eac0d26a6a054576b04ab7ebd51
                             </td>
 
                         </tr>

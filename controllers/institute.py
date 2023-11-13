@@ -167,7 +167,9 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         candidates = request.env["gp.candidate"].sudo().search(
             [('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id)])
-        vals = {'candidates': candidates, 'page_name': 'gp_candidate','batch_id':batch_id}
+        batches = request.env["institute.gp.batches"].sudo().search(
+            [('id', '=', batch_id)])
+        vals = {'candidates': candidates, 'page_name': 'gp_candidate','batch_id':batch_id,'batches':batches}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
 
