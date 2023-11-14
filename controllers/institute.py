@@ -181,8 +181,9 @@ class InstitutePortal(CustomerPortal):
             
             faculty_data = {
                 "faculty_name": faculty_name,
+                'gp_batches_id':batch_id,
                 # "faculty_photo":faculty_photo,
-                "institute_id":institute_id,
+                # "institute_id":institute_id,
                 "dob": dob
                 # "designation": designation,
                 # "qualification": qualification,
