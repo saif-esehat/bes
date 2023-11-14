@@ -37,6 +37,13 @@ class GPCandidate(models.Model):
         ('not_elligible', 'Not Elligible')
     ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
     
+    fees_paid = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ],string="Fees Paid", default='no')
+    
+    invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
+    
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
@@ -94,8 +101,13 @@ class GPCandidate(models.Model):
         # portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
         return gp_candidate
 
-
-    
+    @api.depends('fees_paid')
+    def _compute_invoice_no(self):
+        for candidate in self:
+            if candidate.fees_paid == 'yes':
+                candidate.invoice_no = candidate.institute_batch_id.account_move.name
+            else:
+                candidate.invoice_no = ''    
     
     
     @api.depends('name', 'age', 'indos_no', 'candidate_code', 'roll_no', 'dob', 'street', 'street2',

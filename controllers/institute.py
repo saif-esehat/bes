@@ -409,7 +409,7 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
-    @http.route(['/my/addstcw'], method=["POST", "GET"], type="http", auth="user", website=True)
+    @http.route(['/my/gpcandidate/addstcw'], method=["POST", "GET"], type="http", auth="user", website=True)
     def AddSTCW(self, **kw):
         
         candidate_id = kw.get('candidate_id')
@@ -442,5 +442,20 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
+    
+    
+    @http.route(['/my/gpcandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFees(self, **kw):
+        candidate_id = kw.get('candidate_id')
+        fees_paid = kw.get('fees_paid')
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+        
     
     

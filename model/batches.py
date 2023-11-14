@@ -20,7 +20,7 @@ class InstituteGPBatches(models.Model):
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     from_date = fields.Date("From Date")
     to_date = fields.Date("To Date")
-    # course = fields.Many2one("course.master","Course")
+    course = fields.Many2one("course.master","Course")
     account_move = fields.Many2one("account.move",string="Invoice")
     invoice_created = fields.Boolean("Invoice Created")
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",

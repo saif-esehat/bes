@@ -137,7 +137,6 @@
 
                 
             </script>
-
             <style>
                     .o_portal_my_doc_table {
                         width: 60%; /* You can adjust the percentage as needed */
@@ -161,6 +160,7 @@
                         border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
                         }
             </style>
+
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
@@ -295,6 +295,74 @@
                                         </p>
                                     </div>
                                 </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="fees_paid">Fees Paid</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+
+                                        <t t-if="candidate.fees_paid == 'yes'">
+                                            Yes
+                                        </t>
+                                        <t t-else="">
+                                            No
+                                        </t>
+                                        
+                                            
+                                            <!-- <select id="fees_paid" name="fees_paid" t-att-disabled="1">
+                                                <option value="yes">Yes</option>
+                                                <option value="no"  t-att-selected="1" >No</option>
+                                            </select> -->
+                                        </p>
+                                            
+                                        <p class="text-muted mb-0">
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateFeesPaid" class="btn btn-primary btn_cta">Update</a>
+                                        </p>
+                                        <div class="modal fade" id="updateFeesPaid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/gpcandidate/updatefees" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Update Fees Paid</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}"  name="candidate_id"/>
+                                                                <label for="fees_paid">Fees Paid:</label>
+    
+                                                                <select id="fees_paid" name="fees_paid">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                 <t t-if="candidate.fees_paid == 'yes'">
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="invoice_no">Invoice No.</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                         <t t-out="candidate.invoice_no"/>
+                                        </div>                                   
+                                    </div>
+                                </t>
+
+
                             </div>
                         </div>
                     </div>
@@ -320,7 +388,7 @@
 
 
 
-                                    
+
                                     <div class="tab-content" id="ex-with-icons-content">
 
                                         <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
@@ -500,11 +568,11 @@
 
                                         </div>
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
-                                            
+
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
                                             <div class="modal fade" id="AddStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
-                                                    <form method="post" action="/my/addstcw" enctype="multipart/form-data">
+                                                    <form method="post" action="/my/gpcandidate/addstcw" enctype="multipart/form-data">
                                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                         <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
                                                         <div class="modal-content">
@@ -597,7 +665,7 @@
                                                 </div>
                                             </div>
                                             <div class="table-responsive border rounded border-top-0 ">
-                                                <!-- <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                                                     <thead>
                                                         <tr>
                                                             <th>Course</th>
@@ -641,7 +709,7 @@
                                                         </t>
 
                                                     </tbody>
-                                                </table> -->
+                                                </table>
                                             </div>
 
 
@@ -1233,7 +1301,7 @@
                                         <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
                                     </div>
                                     <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                                
+
 
                                 </form>
                             </div>
@@ -1274,7 +1342,7 @@
                             <td class="text-left">
                                 <t t-out="faculty.courses_taught.name" />
                             </td>
-                            
+
                             <!-- <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{faculty.id}}" class="fa">View</a>
                             </td> -->
