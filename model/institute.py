@@ -158,14 +158,14 @@ class Institute(models.Model):
         
         return {
         'name': 'Faculty',
-        'domain': [('institute_id', '=', self.id)],
+        'domain': [('gp_batches_id', '=', self.id)],
         'view_type': 'form',
         'res_model': 'institute.faculty',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
         'context': {
-            'default_institute_id': self.id    
+            'default_gp_batches_id': self.id    
             }
         }
 
@@ -200,8 +200,10 @@ class InstituteCourses(models.Model):
 class InstituteFaculty(models.Model):
     _name = "institute.faculty"
     _description= 'Institute Faculty'
+    _rec_name = 'faculty_name'
     
     institute_id = fields.Many2one("bes.institute","Institute ID")
+    gp_batches_id = fields.Many2one('institute.gp.batches')
     course_name = fields.Many2one("course.master","Course")
     faculty_name = fields.Char(string='Name of the Faculty', required=True)
     faculty_photo = fields.Binary(string='Faculty Photo')
@@ -210,6 +212,12 @@ class InstituteFaculty(models.Model):
     qualification = fields.Text(string='Qualification of Faculty')
     contract_terms = fields.Text(string='Contract Terms')
     courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
+
+    @api.model
+    def create(self, values):
+        gp_faculty = super(InstituteFaculty, self).create(values)
+        self.gp_batches_id.write({'model_id':self.id})
+        return gp_faculty
 
 class InstitutePaymentSlip(models.Model):
     _name = "institute.payment.slip.line"

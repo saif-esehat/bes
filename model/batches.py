@@ -16,6 +16,7 @@ class InstituteGPBatches(models.Model):
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_name = fields.Char("Batch Name",required=True)
+    faculty_name = fields.Char("Faculty name")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     from_date = fields.Date("From Date")
     to_date = fields.Date("To Date")
@@ -134,3 +135,18 @@ class InstituteGPBatches(models.Model):
             'default_institute_batch_id': self.id    
             }
         }        
+
+    def open_batch_faculty(self):
+        
+        return {
+        'name': 'Faculties',
+        'domain': [('gp_batches_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'institute.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_batches_id': self.id    
+            }
+        } 

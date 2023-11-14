@@ -64,6 +64,7 @@
                 <thead>
                     <tr>
                         <th>Batch Name</th>
+                        <th>Faculties</th>
                         <th>From Date.</th>
                         <th>To Date.</th>
                     </tr>
@@ -74,6 +75,11 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
                                     <t t-out="batch.batch_name"/>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpbatch/faculties/{{batch.id}}" class="fa">
+                                Faculty
                                 </a>
                             </td>
                             <td class="text-center">
@@ -97,9 +103,13 @@
         </t>
     </template>
 
+
+
+
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
             <script>
+                
                 function displayImage(input) {
                     const cardImg = document.querySelector('.card-img');
                     const file = input.files[0];
@@ -114,27 +124,51 @@
                     reader.readAsDataURL(file);
                     }
                 }
-            </script>
-            <style>
-                .card-img-container {
-                text-align: left;
-                margin-bottom: 10px;
+
+                        function openDeleteModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                var candidate_id = button.getAttribute('candidate-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('visit_id').value = dataId;
+                document.getElementById('candidate_id').value = candidate_id;
+
                 }
 
-                .card-img {
-                width: 150px; /* Adjust the width as needed */
-                height: 150px; /* Adjust the height as needed */
-                object-fit: cover;
-                border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
-                }
+                
+            </script>
+
+            <style>
+                    .o_portal_my_doc_table {
+                        width: 60%; /* You can adjust the percentage as needed */
+                        margin: 0 auto; /* Centers the table horizontally */
+                    }
+
+                    /* Optionally, you can set specific widths for individual columns */
+                    .o_portal_my_doc_table th,
+                    .o_portal_my_doc_table td {
+                        width: auto; /* Adjust as needed */
+                    }
+                        .card-img-container {
+                        text-align: left;
+                        margin-bottom: 10px;
+                        }
+
+                        .card-img {
+                        width: 150px; /* Adjust the width as needed */
+                        height: 150px; /* Adjust the height as needed */
+                        object-fit: cover;
+                        border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+                        }
             </style>
             <div class="container py-5">
 
+                <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
 
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/updategpcandidate"  enctype="multipart/form-data">
+                        <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
                             <div class="modal-content">
@@ -175,6 +209,7 @@
                         </form>
                     </div>
                 </div>
+
 
 
 
@@ -266,6 +301,355 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-body">
+
+                                <div class="container">
+                                    <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                                                <i class="fas fa-chart-pie fa-fw me-2"></i>Ship Visits</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="ex-with-icons-tab-2" data-toggle="tab" href="#ex-with-icons-tabs-2" role="tab" aria-controls="ex-with-icons-tabs-2" aria-selected="false">
+                                                <i class="fas fa-chart-line fa-fw me-2"></i>Attendance</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="ex-with-icons-tab-3" data-toggle="tab" href="#stcw_certificates" role="tab" aria-controls="ex-with-icons-tabs-3" aria-selected="false">
+                                                <i class="fas fa-chart-pie fa-fw me-2"></i>STCW Certificate</a>
+                                        </li>
+                                    </ul>
+
+
+
+                                    
+                                    <div class="tab-content" id="ex-with-icons-content">
+
+                                        <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" class="btn btn-primary btn_cta">Add</a>
+
+                                            <div class="modal fade" id="DeleteShipVisitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/shipvisit/delete" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete Ship Visit</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete ?
+                                                                <input type="hidden" id="visit_id" name="visit_id"/>
+                                                                <input type="hidden" id="candidate_id" name="candidate_id"/>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal fade" id="AddShipVisit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/addshipvisit" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add Ship Visit</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Modal content goes here -->
+                                                                <div class="container mt-5">
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-6">
+                                                                            <input type="hidden" class="form-control" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}" />
+                                                                            <div class="form-group">
+                                                                                <label for="name_of_ships">Name of the Ship Visited / Ship in Campus</label>
+                                                                                <input type="text" class="form-control" id="name_of_ships" name="name_of_ships"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="imo_no">Ship IMO Number</label>
+                                                                                <input type="text" class="form-control" id="imo_no" name="imo_no"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="name_of_ports_visited">Name of the Port Visited / Place of SIC</label>
+                                                                                <input type="text" class="form-control" id="name_of_ports_visited" name="name_of_ports_visited"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="date_of_visits">Date Of Visit</label>
+                                                                                <input type="date" class="form-control" id="date_of_visits" name="date_of_visits"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="time_spent_on_ship">Hours Spent on Ship</label>
+                                                                                <input type="number" class="form-control" id="time_spent_on_ship" name="time_spent_on_ship"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="bridge" name="bridge"/>
+                                                                                <label class="form-check-label" for="bridge">Bridge</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room"/>
+                                                                                <label class="form-check-label" for="eng_room">Eng. Room</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area"/>
+                                                                                <label class="form-check-label" for="cargo_area">Cargo Area</label>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive border rounded border-top-0 ">
+                                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Action</th>
+                                                            <th>Name of the Ship Visited / Ship in Campus</th>
+                                                            <th>Ship IMO Number</th>
+                                                            <th>Name of Ports</th>
+                                                            <th>Date Of Visit</th>
+                                                            <th>Hours</th>
+                                                            <th>Bridge</th>
+                                                            <th>Eng. Room</th>
+                                                            <th>Cargo Area</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="candidate.ship_visits" t-as="ship_visit">
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-danger" t-attf-data-id="{{ship_visit.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openDeleteModal(this)" data-target="#DeleteShipVisitModal">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                                        </svg>
+                                                                    </button>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.name_of_ships" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.imo_no" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.name_of_ports_visited" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.date_of_visits" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.time_spent_on_ship" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.bridge == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.eng_room == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.cargo_area == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+
+                                        </div>
+                                        <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+                                            
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
+                                            <div class="modal fade" id="AddStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/addstcw" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add STCW Certificate</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_name">Course</label>
+                                                                            <select class="form-control" id="course_name" name="course_name">
+                                                                                <option value="pst">PST</option>
+                                                                                <option value="efa">EFA</option>
+                                                                                <option value="fpff">FPFF</option>
+                                                                                <option value="pssr">PSSR</option>
+                                                                                <option value="stsdsd">STSDSD</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="institute_name">Institute Name</label>
+                                                                            <!-- Assuming you have a list of institutes available -->
+                                                                            <select class="form-control" id="institute_name" name="institute_name">
+                                                                                <t t-foreach="institutes" t-as="institute">
+                                                                                    <option t-attf-value="{{institute.id}}">
+                                                                                        <t t-out="institute.name"/>
+                                                                                    </option>
+                                                                                </t>
+                                                                                <!-- Add more options as needed -->
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="marine_training_inst_number">MTI Number</label>
+                                                                            <input type="text" class="form-control" id="marine_training_inst_number" name="marine_training_inst_number"/>
+                                                                            <input type="hidden" class="form-control" t-attf-value="{{candidate.id}}" id="candidate_id" name="candidate_id"/>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="mti_indos_no">Indos No.</label>
+                                                                            <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="candidate_cert_no">Candidate Certificate Number</label>
+                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_start_date">Course Start Date</label>
+                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_end_date">Course End Date</label>
+                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="certificate_upload">Certificate Upload</label>
+                                                                            <input type="file" class="form-control" id="certificate_upload" name="certificate_upload"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive border rounded border-top-0 ">
+                                                <!-- <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Course</th>
+                                                            <th>Institute Name</th>
+                                                            <th>MTI Number</th>
+                                                            <th>INDOS No.</th>
+                                                            <th>Candidate Certificate Number</th>
+                                                            <th>Certificate Docs</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                                            <tr>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.institute_name.name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.marine_training_inst_number" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.mti_indos_no" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.candidate_cert_no" />
+                                                                </td>
+                                                                <td>
+                                                                        Download
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_start_date" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_end_date" />
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+
+                                                    </tbody>
+                                                </table> -->
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
 
                             </div>
                         </div>
@@ -513,6 +897,132 @@
     </template>
 
 
+    <template id="gp_faculty_form_view" name="Faculty Form">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">Faculty</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="batch_id" name="batch_id" t-att-value="batch_id"/>
+                                <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Faculty Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="faculty_photo" class="form-label">Faculties Photo</label>
+                                        <input type="file" class="form-control" id="faculty_photo" name="faculty_photo" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="faculty_name">Full Name of Faculty</label>
+                                        <input type="text" class="form-control" id="faculty_name" name="faculty_name" required="true" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dob">DOB</label>
+                                        <input type="date" class="form-control" id="dob" name="dob" />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
     <template id="gp_candidate_portal_list" name="GP Candidate">
         <script>
                                     $(document).ready(function () {
@@ -521,6 +1031,8 @@
                                             $('#loader-overlay').show();
                                         });
                                     });
+
+                                    
         </script>
         <style>
                                 /* CSS to style the loader and overlay */
@@ -609,9 +1121,116 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
+                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
 
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="gp_faculty_portal_list" name="Faculty">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a>
+
+            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+
+            <div class="modal fade" id="uploadFacultyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Faculty</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadgpcandidatedata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">CSV Upload</label>
+                                        <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Faculty Name</th>
+                        <th>Designation</th>
+                        <th>Qualification</th>
+                        <th>Contract Terms</th>
+                        <th>Courses Taught</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="faculties" t-as="faculty">
+                        <tr>
+                            <td class="text-left">
+                                <t t-out="faculty.faculty_name" />
+                            </td>
+                            <td class="text-left">
+                                <t t-out="faculty.designation" />
+                            </td>
+                            <td class="text-left">
+                                <t t-out="faculty.qualification" />
+                            </td>
+                            <td class="text-left">
+                                <t t-out="faculty.contract_terms" />
+                            </td>
+                            <td class="text-left">
+                                <t t-out="faculty.courses_taught.name" />
+                            </td>
+                            
+                            <!-- <td class="text-center">
+                                 <a t-attf-href="/my/gpcandidateform/{{faculty.id}}" class="fa">View</a>
+                            </td> -->
                         </tr>
                     </t>
 
@@ -642,7 +1261,7 @@
                                 <t t-out="lod.upload_date" />
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="/my/institute_document/download/{{lod.id}}" class="fa fa-download">Start Exam</a>
+                                <a t-attf-href="/my/institute_document/download/{{lod.id}}" class="fa fa-download">Download</a>
                             </td>
 
                             <!-- <td class="text-center">
