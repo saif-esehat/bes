@@ -210,7 +210,9 @@
                         <group>
                             <field name="assignment_date" />
                             <field name="exam_end_time" />
+                            <field name="institute_id" />
                             <field name="gp_batches" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+
                         </group>
 
                         <group style="width:100%">

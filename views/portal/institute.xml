@@ -104,7 +104,7 @@
     </template>
 
 
-    
+
 
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
@@ -124,30 +124,42 @@
                     reader.readAsDataURL(file);
                     }
                 }
+
+                        function openDeleteModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                var candidate_id = button.getAttribute('candidate-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('visit_id').value = dataId;
+                document.getElementById('candidate_id').value = candidate_id;
+
+                }
+
+                
             </script>
 
             <style>
                     .o_portal_my_doc_table {
-                width: 60%; /* You can adjust the percentage as needed */
-                margin: 0 auto; /* Centers the table horizontally */
-            }
+                        width: 60%; /* You can adjust the percentage as needed */
+                        margin: 0 auto; /* Centers the table horizontally */
+                    }
 
-            /* Optionally, you can set specific widths for individual columns */
-            .o_portal_my_doc_table th,
-            .o_portal_my_doc_table td {
-                width: auto; /* Adjust as needed */
-            }
-                .card-img-container {
-                text-align: left;
-                margin-bottom: 10px;
-                }
+                    /* Optionally, you can set specific widths for individual columns */
+                    .o_portal_my_doc_table th,
+                    .o_portal_my_doc_table td {
+                        width: auto; /* Adjust as needed */
+                    }
+                        .card-img-container {
+                        text-align: left;
+                        margin-bottom: 10px;
+                        }
 
-                .card-img {
-                width: 150px; /* Adjust the width as needed */
-                height: 150px; /* Adjust the height as needed */
-                object-fit: cover;
-                border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
-                }
+                        .card-img {
+                        width: 150px; /* Adjust the width as needed */
+                        height: 150px; /* Adjust the height as needed */
+                        object-fit: cover;
+                        border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+                        }
             </style>
             <div class="container py-5">
 
@@ -301,23 +313,47 @@
                                                 <i class="fas fa-chart-line fa-fw me-2"></i>Attendance</a>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="ex-with-icons-tab-3" data-toggle="tab" href="#ex-with-icons-tabs-3" role="tab" aria-controls="ex-with-icons-tabs-3" aria-selected="false">
+                                            <a class="nav-link" id="ex-with-icons-tab-3" data-toggle="tab" href="#stcw_certificates" role="tab" aria-controls="ex-with-icons-tabs-3" aria-selected="false">
                                                 <i class="fas fa-chart-pie fa-fw me-2"></i>STCW Certificate</a>
                                         </li>
                                     </ul>
 
-                                  
 
+
+                                    
                                     <div class="tab-content" id="ex-with-icons-content">
+
                                         <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
 
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" class="btn btn-primary btn_cta">Add</a>
 
+                                            <div class="modal fade" id="DeleteShipVisitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/shipvisit/delete" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete Ship Visit</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete ?
+                                                                <input type="hidden" id="visit_id" name="visit_id"/>
+                                                                <input type="hidden" id="candidate_id" name="candidate_id"/>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                             <div class="modal fade" id="AddShipVisit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
-                                                    <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
+                                                    <form method="post" action="/my/addshipvisit" enctype="multipart/form-data">
                                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                                        <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="exampleModalLabel">Add Ship Visit</h5>
@@ -328,6 +364,7 @@
                                                                     <div class="row">
 
                                                                         <div class="col-md-6">
+                                                                            <input type="hidden" class="form-control" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}" />
                                                                             <div class="form-group">
                                                                                 <label for="name_of_ships">Name of the Ship Visited / Ship in Campus</label>
                                                                                 <input type="text" class="form-control" id="name_of_ships" name="name_of_ships"/>
@@ -396,12 +433,12 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive border rounded border-top-0 ">
 
+                                            <div class="table-responsive border rounded border-top-0 ">
                                                 <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                                                     <thead>
                                                         <tr>
-
+                                                            <th>Action</th>
                                                             <th>Name of the Ship Visited / Ship in Campus</th>
                                                             <th>Ship IMO Number</th>
                                                             <th>Name of Ports</th>
@@ -416,6 +453,14 @@
                                                     <tbody>
                                                         <t t-foreach="candidate.ship_visits" t-as="ship_visit">
                                                             <tr>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-danger" t-attf-data-id="{{ship_visit.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openDeleteModal(this)" data-target="#DeleteShipVisitModal">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                                        </svg>
+                                                                    </button>
+                                                                </td>
                                                                 <td>
                                                                     <t t-out="ship_visit.name_of_ships" />
                                                                 </td>
@@ -450,12 +495,158 @@
                                                 </table>
                                             </div>
                                         </div>
+
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
-                                        Tab 2 content
+
                                         </div>
-                                        <div class="tab-pane fade" id="ex-with-icons-tabs-3" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
-                                        Tab 3 content
+                                        <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+                                            
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
+                                            <div class="modal fade" id="AddStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/addstcw" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add STCW Certificate</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_name">Course</label>
+                                                                            <select class="form-control" id="course_name" name="course_name">
+                                                                                <option value="pst">PST</option>
+                                                                                <option value="efa">EFA</option>
+                                                                                <option value="fpff">FPFF</option>
+                                                                                <option value="pssr">PSSR</option>
+                                                                                <option value="stsdsd">STSDSD</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="institute_name">Institute Name</label>
+                                                                            <!-- Assuming you have a list of institutes available -->
+                                                                            <select class="form-control" id="institute_name" name="institute_name">
+                                                                                <t t-foreach="institutes" t-as="institute">
+                                                                                    <option t-attf-value="{{institute.id}}">
+                                                                                        <t t-out="institute.name"/>
+                                                                                    </option>
+                                                                                </t>
+                                                                                <!-- Add more options as needed -->
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="marine_training_inst_number">MTI Number</label>
+                                                                            <input type="text" class="form-control" id="marine_training_inst_number" name="marine_training_inst_number"/>
+                                                                            <input type="hidden" class="form-control" t-attf-value="{{candidate.id}}" id="candidate_id" name="candidate_id"/>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="mti_indos_no">Indos No.</label>
+                                                                            <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="candidate_cert_no">Candidate Certificate Number</label>
+                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_start_date">Course Start Date</label>
+                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_end_date">Course End Date</label>
+                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="certificate_upload">Certificate Upload</label>
+                                                                            <input type="file" class="form-control" id="certificate_upload" name="certificate_upload"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive border rounded border-top-0 ">
+                                                <!-- <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Course</th>
+                                                            <th>Institute Name</th>
+                                                            <th>MTI Number</th>
+                                                            <th>INDOS No.</th>
+                                                            <th>Candidate Certificate Number</th>
+                                                            <th>Certificate Docs</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                                            <tr>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.institute_name.name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.marine_training_inst_number" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.mti_indos_no" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.candidate_cert_no" />
+                                                                </td>
+                                                                <td>
+                                                                        Download
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_start_date" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_end_date" />
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+
+                                                    </tbody>
+                                                </table> -->
+                                            </div>
+
+
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -758,6 +949,51 @@
             border-radius: 5px;
             cursor: pointer;
             }
+            .chip{
+                display: inline-flex;
+                flex-direction: row;
+                background-color: #e5e5e5;
+                border: none;
+                cursor: default;
+                height: 36px;
+                outline: none;
+                padding: 0;
+                font-size: 14px;
+                font-color: #333333;
+                font-family:"Open Sans", sans-serif;
+                white-space: nowrap;
+                align-items: center;
+                border-radius: 16px;
+                vertical-align: middle;
+                text-decoration: none;
+                justify-content: center;
+            }
+            .chip-content{
+                cursor: inherit;
+                display: flex;
+                align-items: center;
+                user-select: none;
+                white-space: nowrap;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            .chip-svg{
+                    color: #999999;
+                cursor: pointer;
+                height: auto;
+                margin: 4px 4px 0 -8px;
+            fill: currentColor;
+                width: 1em;
+                height: 1em;
+                display: inline-block;
+                font-size: 24px;
+                transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+                user-select: none;
+                flex-shrink: 0;
+            }
+            .chip-svg:hover{
+                color: #666666;
+            }
         </style>
         <script>
             function displayImage(input) {
@@ -783,7 +1019,7 @@
                     <div class="card-body">
                         <h2 class="form-title mb-4">Faculty</h2>
 
-                        <form method="post">
+                        <form method="post"  enctype="multipart/form-data">
                             <div class="row">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <input type="hidden" class="form-control" id="batch_id" name="batch_id" t-att-value="batch_id"/>
@@ -799,6 +1035,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <t t-set="courses" t-value="env['course.master'].sudo().search([])"/>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -806,13 +1043,59 @@
                                         <input type="text" class="form-control" id="faculty_name" name="faculty_name" required="true" />
                                     </div>
                                 </div>
-                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="dob">DOB</label>
                                         <input type="date" class="form-control" id="dob" name="dob" />
                                     </div>
                                 </div>
+                                
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="course_name">Course Name</label>
+                                        <!-- Assuming you have a list of courses available -->
+                                        <select class="form-control" id="course_name" name="course_name">
+                                            <t t-foreach="courses" t-as="course">
+                                                <option t-attf-value="{{course.id}}">
+                                                    <t t-out="course.name"/>
+                                                </option>
+                                            </t>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="designation">Designation</label>
+                                        <input type="text" class="form-control" id="designation" name="designation" required="true" />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="qualification">Qualification</label>
+                                        <textarea type="text" class="form-control" id="qualification" name="qualification" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                               
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="contract_terms">Contract Terms</label>
+                                        <textarea type="text" class="form-control" id="contract_terms" name="contract_terms" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                                
+                            
                             
                                 <div class="form-group row">
                                     <div class="col-sm-10">
@@ -820,7 +1103,6 @@
                                     </div>
                                 </div>
 
-                            </div>
 
 
 
@@ -840,6 +1122,8 @@
                                             $('#loader-overlay').show();
                                         });
                                     });
+
+                                    
         </script>
         <style>
                                 /* CSS to style the loader and overlay */
@@ -928,7 +1212,7 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
+                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
 
                         </tr>
@@ -1068,7 +1352,7 @@
                                 <t t-out="lod.upload_date" />
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="/my/institute_document/download/{{lod.id}}" class="fa fa-download">Start Exam</a>
+                                <a t-attf-href="/my/institute_document/download/{{lod.id}}" class="fa fa-download">Download</a>
                             </td>
 
                             <!-- <td class="text-center">
