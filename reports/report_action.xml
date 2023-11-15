@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="candidate_admit_card_action" model="ir.actions.report">
+        <field name="name">Admit Card</field>
+        <field name="model">gp.candidate</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bes.candidate_admit_card</field>
+        <field name="report_file">bes.candidate_admit_card</field>
+        <field name="binding_model_id" ref="model_gp_candidate"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

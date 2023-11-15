@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="candidate_admit_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.html_container">
+                    <!-- Your content here -->
+                    <div style="text-align:center; font-size:24px">
+                        <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
+                    </div>
+                    <div style="text-align:center; font-size:22px">
+                        <strong>ADMIT CARD - GP Fresh</strong>
+                    </div>
+                    <div style="font-size:20px;text-align:center;">
+                        <strong>Exam Center: <span t-field="docs.city"/></strong>
+                    </div>
+                    <div class="card-img-container"  t-if="docs.candidate_image">
+                        <img t-att-src="'docs:image/png;base64,%s' % docs.candidate_image" class="card-img-top card-img" style="width:150px; position:absolute;top:26px;right:8px;"/>
+                        <!-- <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.encode('utf-8')" class="card-img-top card-img" style="width: 150px; position:absolute;top:26px;right:8px;" alt="Candidate Photo" /> -->
+                    </div>
+                    
+                    
+                    <table style="width: 100%; text-align: left;">
+                    <tr>
+                        <td colspan="6">
+                            <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px">
+                                <strong>Examination: June 2022</strong>
+                            </div>
+                        </td>
+
+                        <td colspan="6">
+                            <div style="font-size:18px; font-weight: bold; margin-bottom:8px; text-align:left;margin-right:10px;">
+                                <strong>Roll No: <span t-field="docs.roll_no"/></strong>
+                            </div>
+                        </td>
+                    </tr>
+                    </table>
+                    
+                    
+                    <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px">
+                        <strong>Name as in INDOS:<span t-field="docs.name"/></strong>
+                    </div>
+                    <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px">
+                        <strong>DOB as in INDOS: <span t-field="docs.dob"/></strong>
+                    </div>
+                    <table style="width: 100%; text-align: left;">
+                        <tr>
+                            <td colspan="6" style="font-size:20px; font-weight: bold; margin-bottom:8px;">
+                                <span><strong>INDOs No: <span t-field="docs.indos_no"/></strong></span>
+                            </td>
+                            <td colspan="6" style="font-size:18px; font-weight: bold; margin-bottom:8px; text-align:right;">
+                                <span><strong>Code No: <span t-field="docs.candidate_code"/></strong></span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%; text-align: left;">
+                        <tr>
+                            <td style="font-size:20px; font-weight: bold; ">
+                                <strong>Signature of the Candidate</strong>
+                            </td>
+                            
+                            <td>
+                                <div style="display: block; width: 270px; height: 55px; border: 2px dotted #000;text-align:left;margin-top: 8px;margin-left:25px;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            
+                        </tr>
+                    </table>
+
+                    <div style="text-align:left; font-size:17px; font-weight: bold; margin-top:-32px">
+                        <h4>Please Sign within the box</h4>
+                    </div>
+                    
+                    <!-- <div t-if="docs.candidate_image" style="margin-top: 20px;">
+                        <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.decode('utf-8')" style="max-width: 100%;"/>
+                    </div> -->
+                    <div style="margin-top:50px">
+						
+						<div style="position:absolute;top:40%;right:0;width:42%">
+							<div>
+								<b>
+									Capt Pranab Kumar Mishra
+								</b>
+							</div>
+							<div style="height:20px">
+								
+							</div>
+							<div>
+								<b style="text-align:center">
+									Chief Executive Officer
+								</b>
+							</div>
+							<div>
+								<b style="text-align:left">
+									For Board of Examinations for Seafarers Trust
+								</b>
+							</div>
+						</div>
+					</div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
