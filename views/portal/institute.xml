@@ -65,6 +65,7 @@
                     <tr>
                         <th>Batch Name</th>
                         <th>Faculties</th>
+                        <th>Report</th>
                         <th>From Date.</th>
                         <th>To Date.</th>
                     </tr>
@@ -82,6 +83,11 @@
                                 Faculty
                                 </a>
                             </td>
+                            <!-- <td class="text-center">
+                                <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
+                                Download Report
+                                </a>
+                            </td> -->
                             <td class="text-center">
                                 <t t-out="batch.from_date" />
                             </td>
@@ -102,8 +108,6 @@
             </t>
         </t>
     </template>
-
-
 
 
     <template id="gp_candidate_profile_view" name="GP Candidate">

@@ -85,12 +85,14 @@
                      <field name="survey_start_url" />
                      <field name="examiner" /> 
                      <field name="examiner_token" readonly="1" /> 
+                     <button name="generate_token" string="Generate Token" type="object"/>
                      <field name="institute" />
                      <field name="course" />
                      <field name="subject_ids" invisible="1" />
                      <field name="subject" domain="[('id', 'in', subject_ids)]" />
                      <field name="start_time" />
                      <field name="end_time" />
+                     <field name="exam_state" readonly="1" />
                 </xpath>
                 <xpath expr="//field[@name='users_can_go_back']" position="after">
                     <field name="is_trigger_exam" />
@@ -99,6 +101,12 @@
                 </xpath>
                 <xpath expr="//label[@for='is_time_limited']" position="replace">
                     <label for="is_time_limited" string="Exam Time Limit"/>
+                </xpath>
+                 <xpath expr="//button[@name='action_print_survey']" position="after">
+                    <button name="start_exam" string="Start" type="object"  attrs="{'invisible': [('exam_state', '=', 'in_progress')]}"/>
+                    <button name="stop_exam" string="Stop" type="object"  attrs="{'invisible': [('exam_state', '=', 'stopped')]}"/>
+                    <button name="done_exam" string="Done" type="object"  />
+
                 </xpath>
             </field>
         </record>

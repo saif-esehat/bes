@@ -3,6 +3,7 @@ from odoo.exceptions import UserError,ValidationError
 import werkzeug
 import secrets
 import random
+import string
 
 
 
@@ -19,7 +20,7 @@ class InheritedSurvey(models.Model):
     end_time = fields.Datetime("End Time")
     exam_state = fields.Selection([
         ('stopped', 'Stopped'),
-        ('in_progress', 'In-Progress')
+        ('in_progress', 'In-Progress'),
         ('done', 'Done')     
     ], string='Exam State', default='stopped')
     subject_ids = fields.Many2many("course.master.subject",string="Subject IDS",compute="_compute_subject_ids")
@@ -46,28 +47,29 @@ class InheritedSurvey(models.Model):
     
     def generate_unique_string(self):
     # Define the length of the desired string
-        string_length = 10
+        characters = string.ascii_letters + string.digits
 
-        # Define characters to use in the string
-        characters = "0123456789"
+    # Use secrets module to generate a random string of the specified length
+        random_string = ''.join(secrets.choice(characters) for _ in range(10))
 
-        # Initialize an empty set to store generated strings
-        generated_strings = set()
+        return random_string
 
-        while True:
-            # Generate a random 10-digit string
-            random_string = ''.join(random.choice(characters) for i in range(string_length))
-
-            # Check if the string is unique
-            if random_string not in generated_strings:
-                # Add the string to the set
-                generated_strings.add(random_string)
-                
-                # Return the unique string
-                return random_string
     
     
     def generate_token(self):
+        self.examiner_token = self.generate_unique_string()
+        
+    
+    def start_exam(self):
+        self.exam_state = 'in_progress'
+    
+    def stop_exam(self):
+        self.exam_state = 'stopped'
+    
+    def done_exam(self):
+        self.exam_state = 'done'
+        
+
         
 
     
