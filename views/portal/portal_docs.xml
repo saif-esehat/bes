@@ -24,7 +24,7 @@
                 <t t-elif="env.user.has_group('bes.group_institute')">
                     <div class="o_portal_my_home">
                         <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                        <h3>Documents</h3>
+                        <h3>My Accounts</h3>
                         <div>
                             <!-- <t t-set="courses" t-value="env['bes.institute'].sudo().search([('user_id','=',env.user.id)]).courses"/>
 
@@ -50,18 +50,18 @@
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpbatch">
                                 GP Batches
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpcandidate/list">
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpcandidate/list">
                                 GP Candidate
-                            </a>
+                            </a> -->
                             <!-- </t> -->
                             <!-- <t t-if="ccmc_course_exists"> -->
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/invoices" title="Invoices &amp; Bills">
                                     Invoices &amp; Bills
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmccandidate/list">
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmccandidate/list">
                                 CCMC Candidate
-                            </a>
+                            </a> -->
                             <!-- </t> -->
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/institute_document/list">
                                     Documents

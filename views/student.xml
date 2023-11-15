@@ -176,6 +176,9 @@
                             <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
+                            <field name="fees_paid"/>
+                            <field name="invoice_no"/>
+
                         </group>
 
                         <notebook>
@@ -814,6 +817,8 @@
                 </form>
             </field>
         </record>
+
+        
        
 
             <!-- Mek Oral -->

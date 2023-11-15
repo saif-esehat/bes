@@ -13,6 +13,7 @@
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
         'views/portal/candidate.xml',
+        'views/custom_brand.xml',
         'views/batches.xml',
         'views/examiner.xml',
         'views/exam_center.xml',
