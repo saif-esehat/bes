@@ -83,10 +83,14 @@
             <field name="arch" type="xml">
                  <xpath expr="//field[@name='user_id']" position="after">
                      <field name="survey_start_url" />
+                     <field name="examiner" /> 
+                     <field name="examiner_token" readonly="1" /> 
                      <field name="institute" />
                      <field name="course" />
                      <field name="subject_ids" invisible="1" />
                      <field name="subject" domain="[('id', 'in', subject_ids)]" />
+                     <field name="start_time" />
+                     <field name="end_time" />
                 </xpath>
                 <xpath expr="//field[@name='users_can_go_back']" position="after">
                     <field name="is_trigger_exam" />

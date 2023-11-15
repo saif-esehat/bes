@@ -1,6 +1,9 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError,ValidationError
 import werkzeug
+import secrets
+import random
+
 
 
 
@@ -10,6 +13,15 @@ class InheritedSurvey(models.Model):
     title = fields.Char('Exam Title', required=True, translate=True)
     institute = fields.Many2one("bes.institute",string="Institute")
     course = fields.Many2one("course.master",string="Course")
+    examiner = fields.Many2one("bes.examiner",string="Examiner")
+    examiner_token = fields.Char(string="Examiner Token")
+    start_time = fields.Datetime("Start Time")
+    end_time = fields.Datetime("End Time")
+    exam_state = fields.Selection([
+        ('stopped', 'Stopped'),
+        ('in_progress', 'In-Progress')
+        ('done', 'Done')     
+    ], string='Exam State', default='stopped')
     subject_ids = fields.Many2many("course.master.subject",string="Subject IDS",compute="_compute_subject_ids")
     subject = fields.Many2one("course.master.subject","Subject")
     users_login_required = fields.Boolean('Login Required',default=True, help="If checked, users have to login before answering even with a valid token.")
@@ -30,6 +42,35 @@ class InheritedSurvey(models.Model):
         ('page_per_section', 'One page per section'),
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
+    
+    
+    def generate_unique_string(self):
+    # Define the length of the desired string
+        string_length = 10
+
+        # Define characters to use in the string
+        characters = "0123456789"
+
+        # Initialize an empty set to store generated strings
+        generated_strings = set()
+
+        while True:
+            # Generate a random 10-digit string
+            random_string = ''.join(random.choice(characters) for i in range(string_length))
+
+            # Check if the string is unique
+            if random_string not in generated_strings:
+                # Add the string to the set
+                generated_strings.add(random_string)
+                
+                # Return the unique string
+                return random_string
+    
+    
+    def generate_token(self):
+        
+
+    
     
     @api.depends('access_token')
     def _compute_survey_start_url(self):
