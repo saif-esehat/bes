@@ -107,7 +107,8 @@ class ExaminerAssignment(models.Model):
         ('ccmc_candidate', 'CCMC Candidate'),
     ], string='Assigned to',default="gp_candidate")
     subject_id = fields.Many2one("course.master.subject","Subject")
-    gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches")
+    institute_id = fields.Many2one('bes.institute',string="Institute")
+    gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
 

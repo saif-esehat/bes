@@ -171,22 +171,27 @@ class InstitutePortal(CustomerPortal):
 
         if request.httprequest.method == 'POST':
             faculty_name = kw.get("faculty_name")
-            faculty_photo = kw.get('faculty_photo')
+            # faculty_photo = kw.get('faculty_photo')
             dob = kw.get("dob")
-            # designation = kw.get("designation")
-            # qualification = kw.get("qualification")
-            # contract_terms = kw.get("contract_terms")
+            file_content = kw.get("faculty_photo").read()
+            filename = kw.get('faculty_photo').filename
+            designation = kw.get("designation")
+            qualification = kw.get("qualification")
+            contract_terms = kw.get("contract_terms")
+            course_name = kw.get('course_name')
             # courses_taught = kw.get("courses_taught")
 
             
             faculty_data = {
                 "faculty_name": faculty_name,
-                # "faculty_photo":faculty_photo,
-                "institute_id":institute_id,
-                "dob": dob
-                # "designation": designation,
-                # "qualification": qualification,
-                # "contract_terms": contract_terms,
+                'gp_batches_id':batch_id,
+                'faculty_photo':  base64.b64encode(file_content),
+                'faculty_photo_name': filename,
+                "dob": dob,
+                "designation": designation,
+                "qualification": qualification,
+                "contract_terms": contract_terms,
+                "course_name":course_name
                 # "courses_taught": courses_taught,
 
             }
@@ -406,7 +411,7 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
-    @http.route(['/my/addstcw'], method=["POST", "GET"], type="http", auth="user", website=True)
+    @http.route(['/my/gpcandidate/addstcw'], method=["POST", "GET"], type="http", auth="user", website=True)
     def AddSTCW(self, **kw):
         
         candidate_id = kw.get('candidate_id')
@@ -439,5 +444,20 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
+    
+    
+    @http.route(['/my/gpcandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFees(self, **kw):
+        candidate_id = kw.get('candidate_id')
+        fees_paid = kw.get('fees_paid')
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+        
     
     

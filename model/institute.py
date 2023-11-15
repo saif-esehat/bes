@@ -207,6 +207,7 @@ class InstituteFaculty(models.Model):
     course_name = fields.Many2one("course.master","Course")
     faculty_name = fields.Char(string='Name of the Faculty', required=True)
     faculty_photo = fields.Binary(string='Faculty Photo')
+    faculty_photo_name = fields.Char(string="Photo name")
     dob = fields.Date(string='Date of Birth of the Faculty')
     designation = fields.Char(string='Designation of the Faculty')
     qualification = fields.Text(string='Qualification of Faculty')
