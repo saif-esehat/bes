@@ -83,7 +83,7 @@
                         <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                         <h3>Examiner</h3>
                         <div>
-                           <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" >
+                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/examiner/online_exam" >
                                 Online Exam
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
