@@ -3,12 +3,12 @@
     <data>
 
         <record id="exam_center_action" model="ir.actions.act_window">
-            <field name="name">Exam Center</field>
+            <field name="name">Exam Region</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">exam.center</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">Exam Center</p>
+                <p class="o_view_nocontent_smiling_face">Exam Region</p>
             </field>
         </record>
 
@@ -21,7 +21,7 @@
 
                         <group style="width:100%;">
                             <h1>
-                                <field name="name" placeholder="Exam Center"/>
+                                <field name="name" placeholder="Exam Region"/>
                             </h1>
                             
                         </group>

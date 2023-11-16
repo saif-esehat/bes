@@ -7,7 +7,7 @@ class BatchesReport(models.AbstractModel):
     
     def generate_xlsx_report(self, workbook, data,lines):
         
-        import wdb; wdb.set_trace()
+        # import wdb; wdb.set_trace()
         gp_candidates = self.env["gp.candidate"].sudo().search([('institute_batch_id','=',lines.id)])
         faculties = self.env["institute.faculty"].sudo().search([('gp_batches_id','=',lines.id)])
         

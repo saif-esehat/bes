@@ -11,6 +11,8 @@ class Examiner(models.Model):
 
     examiner_image = fields.Binary(string='Examiner Image', attachment=True, help='Select an image in JPEG format.')
     user_id = fields.Many2one("res.users", "Portal User")
+    exam_center = fields.Many2one("exam.center", "Exam Region")
+
     name = fields.Char("Name",required=True)
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
