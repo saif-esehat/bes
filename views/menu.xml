@@ -17,6 +17,8 @@
         <menuitem id="course_master_menu" parent="bes_menu" name="Course Master" sequence="1" />
 
         <menuitem id="course_menu" parent="course_master_menu" name="Courses" action="course_master_action" sequence="1" />
+        <menuitem id="subject_menu" parent="course_master_menu" name="Subject" action="subject_master_action" sequence="2" />
+
 
 
         <menuitem id="institute_menu" parent="bes_menu" name="Institute" action="institute_action" sequence="2"/>
