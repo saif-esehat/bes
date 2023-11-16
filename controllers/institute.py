@@ -448,7 +448,6 @@ class InstitutePortal(CustomerPortal):
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
     
-    
     @http.route(['/my/gpcandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateFees(self, **kw):
         candidate_id = kw.get('candidate_id')
@@ -461,7 +460,6 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'fees_paid':fees_paid})
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
-        
     
     @http.route('/my/batches/download_report/<int:batch_id>', type='http', auth='user',website=True)
     def generate_report(self,batch_id ):
@@ -565,4 +563,22 @@ class InstitutePortal(CustomerPortal):
     def _get_report_data(self):
         # Your logic to fetch data for the report
         data = request.env['res.partner'].search([])
-        return data
+        return 
+    
+    
+    @http.route(['/my/gpcandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadAdmitCard(self,candidate_id,**kw ):
+        # import wdb; wdb.set_trace()
+        pdf, _ = request.env.ref('bes.candidate_admit_card_action').sudo()._render_qweb_pdf(int(candidate_id))
+        # print(pdf ,"Tbis is PDF")
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+
+
+        
+        
+        
+        
+
+    
+

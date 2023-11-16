@@ -1242,6 +1242,9 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
+                            </td>
 
                         </tr>
                     </t>

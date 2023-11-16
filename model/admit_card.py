@@ -16,7 +16,7 @@ class CandidateAdmitCard(models.AbstractModel):
         
         # import wdb; wdb.set_trace();
         
-        candidate_image = base64.b64encode(docs1.candidate_image).decode()
+        # candidate_image = base64.b64encode(docs1.candidate_image).decode()
         
         # try:
         #     docs1.candidate_image.decode('utf-8')
@@ -25,6 +25,5 @@ class CandidateAdmitCard(models.AbstractModel):
         return {
             'doc_ids': docids,
             'doc_model': 'gp.candidate',
-            'docs': docs1,
-            'candidate_image':candidate_image
-        }
+            'docs': docs1
+            }
