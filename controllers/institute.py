@@ -478,9 +478,7 @@ class InstitutePortal(CustomerPortal):
         #Candidate
         
         candidate_worksheet = workbook.add_worksheet("Candidate")
-        faculty_worksheet.write('A1', 'Candidate Name')
-
-        
+        candidate_worksheet.write('A1', 'Candidate Name')
 
 
         row = 1

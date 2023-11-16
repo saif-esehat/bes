@@ -9,7 +9,6 @@
  'depends':['product','portal','survey','website','sale'],
  'data': [
         'data/tags.xml',
-        'reports/report_action.xml',
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
@@ -31,7 +30,7 @@
         'views/menu.xml',
         'views/template.xml',
         'reports/admit_card_template.xml',
-
+        'reports/report_action.xml'
 ],
 'assets': {
 		'web.assets_frontend': [

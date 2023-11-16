@@ -18,7 +18,7 @@ class Institute(models.Model):
     mti = fields.Char("MTI no.")
     courses = fields.One2many("institute.courses","institute_id","Courses")
     user_id = fields.Many2one("res.users", "Portal User")
-    exam_center = fields.Many2one("exam.center", "Exam Center")
+    exam_center = fields.Many2one("exam.center", "Exam Region")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
