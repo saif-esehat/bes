@@ -127,7 +127,9 @@
                         <group style="width:100%;">
                             <field name="candidate_code"/>
                         </group>
-
+                        <group>
+                            <field name="candidate_signature" widget="image" class="oe_avatar" />
+                        </group>
                         <group style="width:100%;">
 
                             <field name="roll_no"/>
@@ -180,6 +182,7 @@
                             <field name="invoice_no"/>
 
                         </group>
+                        
 
                         <notebook>
                             <page string="Ship Visits">

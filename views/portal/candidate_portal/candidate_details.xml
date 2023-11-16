@@ -1,0 +1,145 @@
+<odoo>
+    <template id="custom_portal_my_details" inherit_id="portal.portal_my_details">
+        <xpath expr="//div[@class='clearfix'][1]/following-sibling::*[1]" position="replace">
+            <t t-if="env.user.has_group('bes.group_gp_candidates')">
+                <t t-set="institute" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).institute_id.name"/>
+
+                <div class="form-group  col-xl-6">
+                    <label class="col-form-label" for="email">Institute</label>
+                    <input type="email" name="email" t-attf-value="{{institute}}" t-att-readonly="1" class="form-control "/>
+                </div>
+            </t>
+            <t t-else="">
+                <div t-attf-class="form-group mb-1 #{error.get('company_name') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="company_name">Company Name</label>
+                    <!-- The <input> use "disabled" attribute to avoid sending an unauthorized value on form submit.
+                                        The user might not have rights to change company_name but should still be able to see it.
+                                    -->
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="company_name or partner.commercial_company_name" t-att-disabled="None if partner_can_edit_vat else '1'" />
+                    <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">
+                                        Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
+                    </small>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//label[@for='vat']/parent::div" position="replace">
+            <t t-if="env.user.has_group('bes.group_gp_candidates')">
+                <t t-set="mobile" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).mobile"/>
+
+                <div class="form-group  col-xl-6">
+                    <label class="col-form-label" for="email">Mobile</label>
+                    <input type="email" name="email" t-attf-value="{{mobile}}" t-att-readonly="1" class="form-control "/>
+                </div>
+            </t>
+            <t t-else="">
+                <div t-attf-class="form-group mb-1 #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="vat">VAT Number</label>
+
+                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-disabled="None if partner_can_edit_vat else '1'" />
+                    <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//label[@for='country_id']/parent::div" position="replace">
+            <t t-if="env.user.has_group('bes.group_gp_candidates')">
+                <t t-set="country" t-value="env['res.country'].sudo().search([('code','=','IN')])"/>
+
+                <div class="form-group  col-xl-6">
+                    <label class="col-form-label label-optional" for="country_id">Country:</label>
+                    <select name="country_id" t-attf-class="form-control" t-att-disabled="1">
+                    <option t-attf-value="{{country.id}}" t-att-selected="1" class="form-control">
+                        <t t-out="country.name" />
+                    </option>
+                    </select>
+                </div>
+            </t>
+            <t t-else="">
+
+                <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label" for="country_id">Country</label>
+                    <select name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
+                        <option value="">Country...</option>
+                        <t t-foreach="countries or []" t-as="country">
+                            <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
+                                <t t-esc="country.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+
+            </t>
+
+        </xpath>
+        <xpath expr="//label[@for='state_id']/parent::div" position="replace">
+
+            <t t-if="env.user.has_group('bes.group_gp_candidates')">
+                <t t-set="state" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).state_id"/>
+                <div class="form-group  col-xl-6">
+                    <label class="col-form-label label-optional" for="states_id">State / Province:</label>
+                    <select name="states_id" class="form-control"  t-att-disabled="1" >
+                    <option t-attf-value="{{state.id}}" t-att-selected="1" class="form-control">
+                        <t t-out="state.name" />
+                    </option>
+                    </select>
+                </div>
+            </t>
+            <t t-else="">
+
+                <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="state_id">State / Province</label>
+                    <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}">
+                        <option value="">select...</option>
+                        <t t-foreach="states or []" t-as="state">
+                            <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
+                                <t t-esc="state.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+
+        </xpath>
+         <xpath expr="//label[@for='states_id']/parent::div" position="after">
+                <t t-set="indos_no" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).indos_no"/>
+                <t t-if="env.user.has_group('bes.group_gp_candidates')">
+                    <div class="form-group  col-xl-6">
+                        <label class="col-form-label" for="email">Indos No.</label>
+                        <input type="email" name="email" t-attf-value="{{indos_no}}" t-att-readonly="1" class="form-control "/>
+                    </div>
+                </t>
+          </xpath>
+          <xpath expr="//div[@class='col-lg-8']" position="after">
+            <div class="col-lg-4">
+                <t t-set="candidate_image" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).candidate_image"/>
+                <t t-set="candidate_signature" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).candidate_signature"/>
+
+                 <div class="row">
+                    <t t-if="candidate_image">
+                        <img t-attf-src="data:image/png; base64, {{candidate_image}}" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 40px; margin-left:25px;" />
+                    </t>
+                    <t t-else="">
+                        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 40px; margin-left:25px;"/>
+                    </t>  
+                   
+                </div>
+                <div class="col">
+                    
+                     <t t-if="candidate_signature">
+                        <span style="margin-top: 25px; margin-left:25px;"><h4>Signature</h4></span>
+                        <img t-attf-src="data:image/png; base64, {{candidate_signature}}" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 20px; margin-left:15px;" />
+                    </t>
+                    <t t-else="">
+                        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 20px; margin-left:15px;"/>
+                    </t>                 
+                 </div>
+            </div>
+               
+          </xpath>
+
+
+
+    </template>
+
+
+
+</odoo>

@@ -9,6 +9,8 @@
  'depends':['product','portal','survey','website','sale'],
  'data': [
         'data/tags.xml',
+        'reports/report_action.xml',
+        'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
         'views/portal/candidate.xml',
@@ -27,11 +29,17 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/menu.xml',
-        'views/template.xml'
+        'views/template.xml',
+        'reports/admit_card_template.xml',
+
 ],
 'assets': {
 		'web.assets_frontend': [
 			'bes/static/src/js/candidate.js',
 		],
 	},
+'web.report_assets_common': [
+            '/bes/static/src/css/report_css.scss',
+
+        ],
 }

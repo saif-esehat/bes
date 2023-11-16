@@ -214,11 +214,11 @@ class InstituteFaculty(models.Model):
     contract_terms = fields.Text(string='Contract Terms')
     courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
 
-    @api.model
-    def create(self, values):
-        gp_faculty = super(InstituteFaculty, self).create(values)
-        self.gp_batches_id.write({'model_id':self.id})
-        return gp_faculty
+    # @api.model
+    # def create(self, values):
+    #     gp_faculty = super(InstituteFaculty, self).create(values)
+    #     self.gp_batches_id.write({'model_id':self.id})
+    #     return gp_faculty
 
 class InstitutePaymentSlip(models.Model):
     _name = "institute.payment.slip.line"
