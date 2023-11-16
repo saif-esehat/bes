@@ -18,12 +18,42 @@ class GPCandidatePortal(CustomerPortal):
     
     
     
-    @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
-    def StartExam(self,**kw):
-        partner_id = request.env.user.partner_id.id
-        registered_exam = request.env["survey.user_input"].sudo().search([('id','=',kw.get("id"))])
+    # @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
+    # def StartExam(self,**kw):
+    #     partner_id = request.env.user.partner_id.id
+    #     registered_exam = request.env["survey.user_input"].sudo().search([('id','=',kw.get("id"))])
 
-        exam_url = registered_exam.survey_id.survey_start_url
-        identification_token = registered_exam.access_token
-        # vals = {}
-        return request.redirect(exam_url+"?answer_token="+identification_token)
+    #     exam_url = registered_exam.survey_id.survey_start_url
+    #     identification_token = registered_exam.access_token
+    #     # vals = {}
+    #     return request.redirect(exam_url+"?answer_token="+identification_token)
+    
+    
+    
+    
+    @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
+    def VerifyToken(self,**kw):
+        partner_id = request.env.user.partner_id.id
+        
+        survey_input_id = kw.get("survey_input_id")
+        examiner_token = kw.get("examiner_token")
+        
+        # import wdb; wdb.set_trace(); 
+        registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
+        
+        survey_examiner_token = registered_exam.survey_id.examiner_token
+        
+        
+        if survey_examiner_token == examiner_token:
+            exam_url = registered_exam.survey_id.survey_start_url
+            identification_token = registered_exam.access_token
+            return request.redirect(exam_url+"?answer_token="+identification_token)
+        else:
+            
+            registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+            # import wdb; wdb.set_trace(); 
+            vals = {"registered_exams":registered_exams, "error":"Invalid Examiner Token"}
+            
+            return request.render("bes.gp_exam_list_view", vals)
+            
+            
