@@ -10,6 +10,7 @@
  'data': [
         'data/tags.xml',
         'reports/report_action.xml',
+        'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
         'views/portal/candidate.xml',

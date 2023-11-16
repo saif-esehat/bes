@@ -4,8 +4,11 @@ from odoo import http
 from werkzeug.utils import secure_filename
 import base64
 import csv
+import io
 from io import StringIO
 from datetime import datetime
+import xlsxwriter
+
 
 
 class InstitutePortal(CustomerPortal):
@@ -458,4 +461,64 @@ class InstitutePortal(CustomerPortal):
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
         
     
+    @http.route('/my/batches/download_report/<int:batch_id>', type='http', auth='user',website=True)
+    def generate_report(self,batch_id ):
+        
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        
+        gp_candidates = request.env["gp.candidate"].sudo().search([('institute_batch_id','=',batch_id)])
+        faculties = request.env["institute.faculty"].sudo().search([('gp_batches_id','=',batch_id)])
+        
+
+        #Candidate
+        
+        candidate_worksheet = workbook.add_worksheet("Candidate")
+        faculty_worksheet.write('A1', 'Candidate Name')
+
+        
+
+
+        row = 1
+        
+        for gp_candidate in gp_candidates:
+            candidate_worksheet.write(row,0,gp_candidate.name)
+            row += 1
+        
+        #Faculty
+        
+        faculty_worksheet = workbook.add_worksheet("Faculty")
+        faculty_worksheet.write('A1', 'Faculty Name')
+        row = 1
+        for faculty in faculties:
+            faculty_worksheet.write(row,0,faculty.faculty_name)
+            row += 1
+        
     
+
+        # Close the workbook to save the data to the buffer
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=my_excel_file.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+        
+    def _get_report_data(self):
+        # Your logic to fetch data for the report
+        data = request.env['res.partner'].search([])
+        return data

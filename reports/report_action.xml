@@ -9,4 +9,14 @@
         <field name="binding_model_id" ref="model_gp_candidate"/>
         <field name="binding_type">report</field>
     </record>
+
+    <report
+            id="batches_report_xlsx"
+            model="institute.gp.batches"
+            string="Print Report"
+            report_type="xlsx"
+            name="bes.report_batches"
+            file="bes.report_batches"
+    />
+
 </odoo>
