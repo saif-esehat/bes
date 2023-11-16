@@ -83,11 +83,11 @@
                                 Faculty
                                 </a>
                             </td>
-                            <!-- <td class="text-center">
+                            <td class="text-center">
                                 <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
                                 Download Report
                                 </a>
-                            </td> -->
+                            </td>
                             <td class="text-center">
                                 <t t-out="batch.from_date" />
                             </td>
