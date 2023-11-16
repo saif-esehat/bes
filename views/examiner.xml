@@ -28,6 +28,7 @@
                         </group>
                         <group style="width:100%;">
                             <field name="subject_id" string="Subject" />
+                            <field name="exam_center"  />
                         </group>
                         <group>
                             <group>

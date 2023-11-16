@@ -7,7 +7,7 @@
                     <a t-attf-href="/my/gpbatch">GP Batches</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <t t-out="candidates[0].institute_batch_id.batch_name"/>
+                    <t t-out="batches.batch_name"/>
                 </li>
             </t>
 

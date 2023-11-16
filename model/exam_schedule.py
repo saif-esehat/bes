@@ -18,7 +18,7 @@ class BesBatches(models.Model):
         ('3-examiner_assigned', 'Examiner Assigned'),     
         ('4-exam_planned', 'Exam Planned')        
     ], string='State', default='1-draft')
-    exam_center = fields.Many2one("exam.center","Exam Center",required=True)
+    exam_center = fields.Many2one("exam.center","Exam Region",required=True)
     examiners = fields.Many2many('bes.examiner', string="Examiners")
     exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
     exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")

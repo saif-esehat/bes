@@ -12,7 +12,7 @@
             <field name="name">Candidates</field>
         </record>
         <record id="exam_center_tags" model="res.partner.category">
-            <field name="name">Exam Centers</field>
+            <field name="name">Exam Region</field>
         </record>
 
         </data>
