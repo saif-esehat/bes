@@ -139,8 +139,8 @@ class ExaminerAssignment(models.Model):
                     ('id', '!=', record.id),
                     ('subject_id', '=', record.subject_id.id),
                     ('gp_candidates', 'in', candidate.id),
-                    ('exam_date', '>=', fields.Date.to_string(fields.Date.from_string(record.exam_date) - timedelta(days=90))),
-                    ('exam_date', '<=', record.exam_date)
+                    # ('exam_date', '>=', fields.Date.to_string(fields.Date.from_string(record.exam_date) - timedelta(days=90))),
+                    # ('exam_date', '<=', record.exam_date)
                 ])
                 if similar_assignments:
                     raise ValidationError(f"{candidate.name} cannot have an exam for the same subject within 90 days.")

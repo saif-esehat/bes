@@ -88,7 +88,7 @@
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" >
+                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/assignments">
                                 Exam Assignments
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
