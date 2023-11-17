@@ -63,7 +63,7 @@
                             
                             <td>
                                 <!-- <div style="display: block; width: 270px; height: 55px; border: 2px dotted #000;text-align:left;margin-top: 8px;margin-left:25px;"></div> -->
-                                <t t-if="o.candidate_image">
+                                <t t-if="o.candidate_signature">
                                 <img t-att-src="'data:image/png;base64,%s' % o.candidate_signature.decode('utf-8')" style="width: 270px;height:55px;border: 2px dotted #000;" />
                                 </t>
                             </td>
