@@ -14,11 +14,10 @@
                     <div style="font-size:20px;text-align:center;">
                         <strong>Exam Center: <span t-field="docs.city"/></strong>
                     </div>
-                    <div class="card-img-container"  t-if="o.candidate_image">
-                        <img t-att-src="'data:image/png;base64,%s' % o.candidate_image.decode('utf-8')" style="width: 150px; position:absolute;top:26px;right:8px;" />
+                        <t t-if="o.candidate_image">
+                            <img t-att-src="'data:image/png;base64,%s' % o.candidate_image.decode('utf-8')" style="width: 150px; position:absolute;top:26px;right:8px;" />
                         <!-- <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.encode('utf-8')" class="card-img-top card-img" style="width: 150px; position:absolute;top:26px;right:8px;" alt="Candidate Photo" /> -->
-                    </div>
-                    
+                        </t>
                     
                     <table style="width: 100%; text-align: left;">
                     <tr>
