@@ -257,10 +257,28 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             candidate_image = kw.get("candidate_photo").read()
             candidate_image_name = kw.get('candidate_photo').filename
-            indos_no = kw.get('indos_no')
-            candidate.write({'candidate_image': base64.b64encode(candidate_image),
+            
+            if candidate_image and candidate_image_name:
+                candidate.write({'candidate_image': base64.b64encode(candidate_image),
                              'candidate_image_name':  candidate_image_name,
-                             'indos_no':indos_no})
+                             })
+                
+            signature_photo = kw.get("signature_photo").read()
+            signature_photo_name = kw.get('signature_photo').filename
+            
+            # print(signature_photo)
+            # print(signature_photo_name)
+            # # import wdb; wdb.set_trace()
+            # print(signature_photo and signature_photo_name)
+            if signature_photo and signature_photo_name:
+                candidate.write({'candidate_signature': base64.b64encode(signature_photo),
+                             'candidate_signature_name':  signature_photo_name,
+                             })
+                
+            indos_no = kw.get('indos_no')
+            
+            if indos_no:
+                candidate.write({'indos_no':indos_no})
             
             # import wdb; wdb.set_trace()
             
