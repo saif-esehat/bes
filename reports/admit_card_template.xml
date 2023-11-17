@@ -14,10 +14,12 @@
                     <div style="font-size:20px;text-align:center;">
                         <strong>Exam Center: <span t-field="docs.city"/></strong>
                     </div>
-                    <div class="card-img-container"  t-if="o.candidate_image">
+                    <!-- <div class="card-img-container"  t-if="o.candidate_image"> -->
+                    <t t-if="o.candidate_image">
                         <img t-att-src="'data:image/png;base64,%s' % o.candidate_image.decode('utf-8')" style="width: 150px; position:absolute;top:26px;right:8px;" />
+                    </t>
                         <!-- <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.encode('utf-8')" class="card-img-top card-img" style="width: 150px; position:absolute;top:26px;right:8px;" alt="Candidate Photo" /> -->
-                    </div>
+                    <!-- </div> -->
                     
                     
                     <table style="width: 100%; text-align: left;">
@@ -60,7 +62,10 @@
                             </td>
                             
                             <td>
-                                <div style="display: block; width: 270px; height: 55px; border: 2px dotted #000;text-align:left;margin-top: 8px;margin-left:25px;"></div>
+                                <!-- <div style="display: block; width: 270px; height: 55px; border: 2px dotted #000;text-align:left;margin-top: 8px;margin-left:25px;"></div> -->
+                                <t t-if="o.candidate_image">
+                                <img t-att-src="'data:image/png;base64,%s' % o.candidate_signature.decode('utf-8')" style="width: 270px;height:55px;border: 2px dotted #000;" />
+                                </t>
                             </td>
                         </tr>
                         <tr>
