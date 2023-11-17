@@ -1318,11 +1318,11 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a>
+            <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a> -->
 
-            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <!-- <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a> -->
 
-            <div class="modal fade" id="uploadFacultyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- <div class="modal fade" id="uploadFacultyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1349,7 +1349,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <t t-call="portal.portal_table">
                 <thead>

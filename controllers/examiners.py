@@ -57,6 +57,18 @@ class ExaminerPortal(CustomerPortal):
         survey.write({"exam_state":"stopped"})        
         return request.redirect("/my/examiner/online_exam")
 
+
+    @http.route(['/my/assignments'], type="http", auth="user", website=True)
+    def ExaminerAssignmentListView(self, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        
+        examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
+        vals = {'assignments':examiner_assignments}
+        # self.env["gp.candidate"].sudo().search([('')])
+        return request.render("bes.examiner_assignment_list", vals)
+
     
     
     # def check_user_groups(group_xml_id):
