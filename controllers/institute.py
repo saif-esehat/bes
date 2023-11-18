@@ -29,7 +29,8 @@ class InstitutePortal(CustomerPortal):
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
-
+        
+        batch_id = int(kw.get("batch_id"))
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
         file_content_str = file_content.decode('utf-8')
@@ -77,6 +78,7 @@ class InstitutePortal(CustomerPortal):
                 'indos_no': indos_no,
                 'dob': dob,
                 # Include other fields here with their corresponding data
+                'institute_batch_id':batch_id,
                 'street': address,
                 'city': dist_city,
                 'state_id': state,
@@ -90,7 +92,7 @@ class InstitutePortal(CustomerPortal):
 
             # import wdb; wdb.set_trace()
 
-        return request.redirect("/my/gpcandidate/list")
+        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
     @http.route(['/my/gpcandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
     def GPcandidateProfileView(self, candidate_id, **kw):
