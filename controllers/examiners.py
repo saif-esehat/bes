@@ -79,5 +79,22 @@ class ExaminerPortal(CustomerPortal):
     #     ​	​	​return func(self, *args, **kwargs)
     #     ​	​return wrapper
     #     ​return decorator
+    @http.route('/open_candidate_form', type='http', auth="user", website=True)
+    def open_candidate_form(self, **kw):
+        rec_id = kw.get('rec_id')
+        # print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec_id)
+        assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
+
+        # Check if gp_candidate is set
+        if assignment.assigned_to == "gp_candidate":
+            candidate = assignment.gp_candidates
+        # Check if ccmc_candidate is set
+        elif assignment.assigned_to == "ccmc_candidate":
+            candidate = assignment.ccmc_candidates
+        else:
+            # Handle the case when both gp_candidate and ccmc_candidate are not set
+            candidate = False
+
+        return request.render("bes.examiner_candidate_list", {'candidate': candidate})
     
     

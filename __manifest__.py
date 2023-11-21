@@ -14,6 +14,7 @@
         'views/portal/institute.xml',
         'views/portal/candidate.xml',
         'views/portal/examiner_portal/examiner_online_exam.xml',
+        'views/portal/examiner_portal/candidate_selection.xml',
         'views/portal/examiner_portal/examiner_assignment.xml',
         'views/custom_brand.xml',
         'views/batches.xml',
