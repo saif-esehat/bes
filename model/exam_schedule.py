@@ -141,9 +141,7 @@ class BesBatches(models.Model):
             'default_exam_schedule_id': self.id    
             }
         }       
-        
-    
-    
+            
 class ExamCandidate(models.Model):
     _name = 'exam.schedule.bes.candidate'
     _description = 'Exam Candidate'
@@ -330,7 +328,6 @@ class ExamCandidate(models.Model):
                 }
             }
             
-    
 class AssignExaminerWizard(models.TransientModel):
     _name = 'assign.examiner.wizard'
     _description = 'Assign Examiner'
@@ -345,7 +342,6 @@ class AssignExaminerWizard(models.TransientModel):
         schedule_id = self.env.context.get('schedule_id')
         exam_schedule = self.env["bes.exam.schedule"].search([('id','=',schedule_id)])
         exam_schedule.write({'examiners':self.examiners,'state':'3-examiner_assigned'})
-
 
 class ExamOnline(models.Model):
     _name = 'exam.type.online'
@@ -367,10 +363,7 @@ class ExamOnline(models.Model):
         for rec in self:
             count = len(rec.candidates)
             rec.candidate_count = count
-  
-   
-
-    
+      
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
     _rec_name = "examiners"
@@ -428,4 +421,98 @@ class ExamOralPractical(models.Model):
 
     
     
+class GPExam(models.Model):
+    _name = "gp.exam.schedule"
+    _rec_name = "exam_id"
+    _description= 'Schedule'
     
+    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
+                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
+    
+    gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
+    mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
+    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
+    
+    gsk_total = fields.Float("GSK Total",readonly=True)
+    gsk_percentage = fields.Float("GSK Precentage",readonly=True)
+    gsk_oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='GSK Oral/Practical Status')
+    
+    
+    mek_total = fields.Float("Mek Total",readonly=True)
+    mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    mek_oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Mek Oral/Practical Status')
+
+    
+    
+    
+    
+    state = fields.Selection([
+        ('1-in_process', 'In Process'),
+        ('2-done', 'Done'),
+    ], string='State', default='1-in_process')
+    
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('gp_candidate'):
+            candidate_id = vals['gp_candidate']
+            last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
+            vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
+
+        return super(GPExam, self).create(vals)
+    
+    
+    
+    @api.constrains('gp_candidate')
+    def _check_exam_count(self):
+        max_exams = 7
+        for record in self:
+            # import wdb; wdb.set_trace();
+            candidate = record.gp_candidate
+            exams_count = self.env["gp.exam.schedule"].search_count([('gp_candidate', '=', candidate.id)])
+            if exams_count > max_exams:
+                raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
+                                      f"You cannot schedule more than {max_exams} exams for a candidate.")
+                
+
+    def move_done(self):
+        
+        mek_oral_marks = self.mek_oral.mek_oral_total_marks
+        mek_practical_marks = self.mek_prac.mek_practical_total_marks
+        mek_total_marks = mek_oral_marks + mek_practical_marks
+        self.mek_total = mek_total_marks
+        self.mek_percentage = (mek_total_marks/175) * 100
+        
+        
+        if self.mek_percentage >= 60:
+            self.mek_oral_prac_status = 'passed'
+        else:
+            self.mek_oral_prac_status = 'failed'
+
+
+        gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
+        gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
+        gsk_total_marks = gsk_oral_marks + gsk_practical_marks
+        self.gsk_total = gsk_total_marks
+        self.gsk_percentage = (gsk_total_marks/175) * 100
+        
+        
+        if self.gsk_percentage >= 60:
+            self.gsk_oral_prac_status = 'passed'
+        else:
+            self.gsk_oral_prac_status = 'failed'
+
+        
+        self.state = '2-done'
+        
+        
+        

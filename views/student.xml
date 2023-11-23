@@ -104,10 +104,17 @@
             <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
                 <form>
+                   
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_gp_candidate_exams" string="Exams" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
                         <field name="elligiblity_criteria" invisible="1"/>
                         <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
                         <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+
+                        
                         
                         <div class="oe_button_box" name="button_box">
                             <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">
@@ -224,7 +231,8 @@
                                 <field name="mek_practical_child_line" nolabel="1">
                                     <tree> 
                                         <field name="mek_prcatical_attempt_no"/>
-                                        <field name='mek_practical_exam_date'/>                                 
+                                        <field name='mek_practical_exam_date'/>
+                                        <field name='exam_id'/>
                                         <field name='using_hand_plumbing_tools_task_1'/>
                                         <field name="using_hand_plumbing_tools_task_2"/>
                                         <field name='using_hand_plumbing_tools_task_3'/>
@@ -244,7 +252,8 @@
                                 <field name="mek_oral_child_line" nolabel="1">
                                     <tree>
                                         <field name="mek_oral_attempt_no"/>
-                                        <field name='mek_oral_exam_date'/>                                     
+                                        <field name='mek_oral_exam_date'/>                              
+                                        <field name='exam_id'/>
                                         <field name='using_hand_plumbing_carpentry_tools'/>
                                         <field name="use_of_chipping_tools_paints"/>
                                         <field name='welding'/>
@@ -262,7 +271,8 @@
                                 <field name="gsk_practical_child_line" nolabel="1">
                                     <tree>
                                         <field name="gsk_practical_attempt_no"/>
-                                        <field name='gsk_practical_exam_date'/>                                   
+                                        <field name='gsk_practical_exam_date'/> 
+                                        <field name='exam_id'/>
                                         <field name='climbing_mast'/>
                                         <field name="buoy_flags_recognition"/>
                                         <field name='bosun_chair'/>
@@ -283,7 +293,9 @@
                                 <field name="gsk_oral_child_line" nolabel="1">
                                     <tree> 
                                          <field name='gsk_oral_attempt_no'/>
-                                        <field name='gsk_oral_exam_date'/>           
+                                        <field name='gsk_oral_exam_date'/>
+                                        <field name='exam_id'/>
+
                                         <field name='subject_area_1'/>
                                         <field name="subject_area_2"/>
                                         <field name='subject_area_3'/>
@@ -725,6 +737,7 @@
                         <group>
                             <field name='mek_prcatical_attempt_no'/>
                             <field name='mek_practical_exam_date'/>
+                            <field name='exam_id'/>
                         </group>
                         <group>
                             <label for="using_hand_plumbing_tools_task_1" />
@@ -834,6 +847,7 @@
                         <group>
                             <field name='mek_oral_attempt_no'/>
                             <field name='mek_oral_exam_date'/>
+                            <field name='exam_id'/>
                         </group>
                         <group>
                             <label for="using_hand_plumbing_carpentry_tools" />
@@ -912,6 +926,7 @@
                         <group>
                             <field name='gsk_practical_attempt_no'/>
                             <field name='gsk_practical_exam_date'/>
+                            <field name='exam_id'/>
                         </group>
                         <group>
                             <label for="climbing_mast" />
@@ -1018,7 +1033,9 @@
                         <group>
                             <field name='gsk_oral_attempt_no'/>
                             <field name='gsk_oral_exam_date'/>
+                            <field name='exam_id'/>
                         </group>
+                        
                         <group>
                             <label for="subject_area_1" />
                             <div>

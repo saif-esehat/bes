@@ -8,6 +8,7 @@
  'version': '13.0.1', 
  'depends':['product','portal','survey','website','sale'],
  'data': [
+        'data/exam_sequence.xml',
         'data/tags.xml',
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',

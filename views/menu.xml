@@ -53,16 +53,16 @@
                   sequence="4" />
 
 
-        <menuitem id="bes_batch_menu" 
+        <menuitem id="bes_exams_menu" 
                   parent="bes_menu" 
                   name="Exams"
                   sequence="5" />
 
-        <menuitem id="bes_batch_schedule_menus" 
-                  parent="bes_batch_menu" 
-                  name="Schedule"
+        <menuitem id="bes_exam" 
+                  parent="bes_exams_menu" 
+                  name="GP Exam"
                   groups=""
-                  action="bes_institute_exam_action"
+                  action="bes_gp_exam_action"
                   sequence="1" />
 
         <!-- <menuitem id="bes_batch_examiner_duty_menu" 

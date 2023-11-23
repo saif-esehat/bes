@@ -76,6 +76,24 @@ class GPCandidate(models.Model):
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
     
     
+    def open_gp_candidate_exams(self):
+        
+        
+        
+        return {
+                    'name': _('GP Exam'),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'gp.exam.schedule',
+                    'type': 'ir.actions.act_window',
+                    'view_id': False,
+                    'target': 'current',
+                    'domain': [('gp_candidate', '=', self.id)],
+                    'context':{
+                        'default_gp_candidate': self.id    
+                     }
+                }
+    
     
     @api.model
     def create(self, values):
@@ -456,9 +474,9 @@ class CookeryBakeryLine(models.Model):
             if record.exam_attempt_number > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in Cookery & Bakery.")
 
-    def unlink(self):
-        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
-        return super(CookeryBakeryLine, self - undeletable_records).unlink()
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(CookeryBakeryLine, self - undeletable_records).unlink()
 
 
 
@@ -467,7 +485,7 @@ class MekPrcticalLine(models.Model):
     _description = 'MEK Practical Line'
 
     mek_parent = fields.Many2one("gp.candidate",string="Parent")
-
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam Id")
     mek_prcatical_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
     mek_practical_exam_date = fields.Date(string="Exam Date")
     using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
@@ -528,27 +546,27 @@ class MekPrcticalLine(models.Model):
             record.mek_practical_total_marks = total
     
     
-    @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
-    def _check_values(self):
-        for record in self:
-            fields_to_check = {
-                'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
-                'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
-                'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
-                'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
-                'use_of_carpentry': "Use of Carpentry Tools",
-                'use_of_measuring_instruments': "Use of Measuring Instruments",
-                'welding': "Welding (1 Task)",
-                'lathe': "Lathe Work (1 Task)",
-                'electrical': "Electrical (1 Task)",
-            }
+    # @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
+    # def _check_values(self):
+    #     for record in self:
+    #         fields_to_check = {
+    #             'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
+    #             'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
+    #             'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
+    #             'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
+    #             'use_of_carpentry': "Use of Carpentry Tools",
+    #             'use_of_measuring_instruments': "Use of Measuring Instruments",
+    #             'welding': "Welding (1 Task)",
+    #             'lathe': "Lathe Work (1 Task)",
+    #             'electrical': "Electrical (1 Task)",
+    #         }
 
-            for field_name, field_label in fields_to_check.items():
-                field_value = record[field_name]
-                if field_name == 'welding' and field_value > 20:
-                    raise ValidationError(f"In MEK Practical, {field_label} Marks cannot exceed 20.")
-                elif field_value > 10:
-                    raise ValidationError(f"In MEK Practical, {field_label} Marks cannot exceed 10.")
+    #         for field_name, field_label in fields_to_check.items():
+    #             field_value = record[field_name]
+    #             if field_name == 'welding' and field_value > 20:
+    #                 raise ValidationError(f"In MEK Practical, {field_label} Marks cannot exceed 20.")
+    #             elif field_value > 10:
+    #                 raise ValidationError(f"In MEK Practical, {field_label} Marks cannot exceed 10.")
 
     @api.model
     def create(self, vals):
@@ -567,17 +585,16 @@ class MekPrcticalLine(models.Model):
             if record.mek_prcatical_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in MEK Practical.")
 
-    def unlink(self):
-        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
-        return super(MekPrcticalLine, self - undeletable_records).unlink()
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(MekPrcticalLine, self - undeletable_records).unlink()
 
 class MekOralLine(models.Model):
     _name = 'gp.mek.oral.line'
     _description = 'MEK Oral Line'
 
     mek_oral_parent = fields.Many2one("gp.candidate", string="Parent")
-
-
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
     mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
     mek_oral_exam_date = fields.Date(string="Exam Date")
     using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools")
@@ -640,9 +657,9 @@ class MekOralLine(models.Model):
             if record.mek_oral_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in MEK Oral.")
 
-    def unlink(self):
-        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
-        return super(MekOralLine, self - undeletable_records).unlink()
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(MekOralLine, self - undeletable_records).unlink()
 
 
 
@@ -651,7 +668,7 @@ class GskPracticallLine(models.Model):
     _description = 'GSK Practical Line'
 
     gsk_practical_parent = fields.Many2one("gp.candidate", string="Parent")
-
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
     gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     gsk_practical_exam_date = fields.Date(string="Exam Date")
     climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
@@ -723,9 +740,9 @@ class GskPracticallLine(models.Model):
             if record.gsk_practical_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Practical.")
 
-    def unlink(self):
-        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
-        return super(GskPracticallLine, self - undeletable_records).unlink()
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(GskPracticallLine, self - undeletable_records).unlink()
 
 
 
@@ -734,7 +751,7 @@ class GskOralLine(models.Model):
     _description = 'GSK Oral Line'
 
     gsk_oral_parent = fields.Many2one("gp.candidate", string="Parent")
-
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
     gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True)
     gsk_oral_exam_date = fields.Date(string="Exam Date")
     subject_area_1 = fields.Integer("Subject Area 1")
@@ -801,9 +818,9 @@ class GskOralLine(models.Model):
             if record.gsk_oral_attempt_no > 7:
                 raise ValidationError("A candidate can't have more than 7 exam attempts in GSK Oral.")
 
-    def unlink(self):
-        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
-        return super(GskOralLine, self - undeletable_records).unlink()
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(GskOralLine, self - undeletable_records).unlink()
 
 
 class CcmcOralLine(models.Model):
@@ -857,7 +874,7 @@ class CcmcOralLine(models.Model):
             if record.ccmc_oral_attempt_no > 7:
                 raise ValidationError("A Candidate can't have more than 7 exam attempts in CCMC Oral.")
 
-    def unlink(self):
-        raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
-        return super(CcmcOralLine, self - undeletable_records).unlink()
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(CcmcOralLine, self - undeletable_records).unlink()
 

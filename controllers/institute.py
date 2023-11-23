@@ -493,6 +493,65 @@ class InstitutePortal(CustomerPortal):
         faculties = request.env["institute.faculty"].sudo().search([('gp_batches_id','=',batch_id)])
         institutes = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
         
+        
+        
+        institute_worksheet = workbook.add_worksheet("Institute")
+        institute_worksheet.set_column('A:B', 60)
+        
+        bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})  # 'border': 1 adds a thin border
+
+        # Create a format with borders.
+        border_format = workbook.add_format({'border': 1,'font_size': 14}) 
+
+        # bold_format = workbook.add_format({'bold': True})
+        
+        # border_format = workbook.add_format({'border': 1})  # 'border': 1 adds a thin border
+
+        
+        headers = ['', '']
+        for col_num, header in enumerate(headers):
+            institute_worksheet.write(0, col_num, header)
+
+        # Add data to the worksheet.
+        data = [
+            ['Name of the Institute', institutes.institute_id.name],
+            ['MTI No. of institute', institutes.institute_id.mti],
+            ['Approved Capacity', institutes.institute_id.computer_lab_pc_count],
+            ['Course Title', institutes.course.name],
+            ['Batch No.', institutes.batch_name],
+            ['Date of commencement and ending of the course', str(institutes.from_date) + ' to ' + str(institutes.to_date)],
+        ]
+        
+        for row_num, row_data in enumerate(data, start=1):
+            for col_num, cell_data in enumerate(row_data):
+                if col_num == 0:  # Check if it's column A
+                    institute_worksheet.write(row_num, col_num, cell_data, bold_format)
+                else:
+                    institute_worksheet.write(row_num, col_num, cell_data, border_format)
+
+        
+        # table_range = 'A1:B{}'.format(len(data))  # No +1 for header row.
+
+        # Add a table to the worksheet.
+        # institute_worksheet.add_table(table_range, {'columns': [{'header': header} for header in headers]})
+
+
+        # institute_worksheet.write('A1','Information of Institute',bold_format)
+        # institute_worksheet.write('A2','Name of the Institute',bold_format)
+        # institute_worksheet.write('A3','MTI No. of institute',bold_format)
+        # institute_worksheet.write('A4','Approved Capacity',bold_format)
+        # institute_worksheet.write('A5','Course Title',bold_format)
+        # institute_worksheet.write('A6','Batch No.',bold_format)
+        # institute_worksheet.write('A7','Date of commencement and ending of the course',bold_format)
+        
+
+        # institute_worksheet.write(1,1,institutes.institute_id.name)
+        # institute_worksheet.write(2,1,institutes.institute_id.mti)
+        # institute_worksheet.write(3,1,institutes.institute_id.computer_lab_pc_count)
+        # institute_worksheet.write(4,1,institutes.course.name)
+        # institute_worksheet.write(5,1,institutes.batch_name)
+        # institute_worksheet.write(6,1,str(institutes.from_date) + ' to ' + str(institutes.to_date))
+        
 
         #Candidate
         
@@ -539,23 +598,7 @@ class InstitutePortal(CustomerPortal):
             faculty_worksheet.write(row,3,faculty.dob)
             row += 1
 
-        institute_worksheet = workbook.add_worksheet("Institute")
-        institute_worksheet.write('A1','Information of Institute')
-        institute_worksheet.write('A2','Name of the Institute')
-        institute_worksheet.write('A3','MTI No. of institute')
-        institute_worksheet.write('A4','Approved Capacity')
-        institute_worksheet.write('A5','Course Title')
-        institute_worksheet.write('A6','Batch No.')
-        institute_worksheet.write('A7','Date of commencement and ending of the course')
         
-        print("Institute",institutes.institute_id.name)
-
-        institute_worksheet.write(1,1,institutes.institute_id.name)
-        institute_worksheet.write(2,1,institutes.institute_id.mti)
-        institute_worksheet.write(3,1,institutes.institute_id.computer_lab_pc_count)
-        institute_worksheet.write(4,1,institutes.course.name)
-        institute_worksheet.write(5,1,institutes.batch_name)
-        institute_worksheet.write(6,1,str(institutes.from_date) + ' to ' + str(institutes.to_date))
 
         
     
