@@ -204,7 +204,7 @@ class CCMCCandidate(models.Model):
     _name = 'ccmc.candidate'
     _description = 'CCMC Candidate'
     
-    institute_batch_id = fields.Many2one("institute.batches","Batch")
+    institute_batch_id = fields.Many2one("institute.ccmc.batches","Batch")
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
     
@@ -263,6 +263,7 @@ class CCMCCandidate(models.Model):
         # Ship Visits
     ship_visits = fields.One2many("ccmc.candidate.ship.visits","candidate_id",string="Ship Visit")
 
+
         # Cookery an Bakery
     cookery_child_line = fields.One2many("ccmc.cookery.bakery.line","cookery_parent",string="Cookery & Bakery")
     
@@ -270,6 +271,7 @@ class CCMCCandidate(models.Model):
         # Start CCMC rating Oral
 
     ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
+
 
     
     
@@ -386,7 +388,10 @@ class CookeryBakeryLine(models.Model):
     cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
     cookery_bekary_start_time = fields.Datetime(string="Start Time")
     cookery_bekary_end_time = fields.Datetime(string="End Time")
+    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
 
+
+    
     
     @api.depends(
         'hygien_grooming', 'appearance', 'taste', 'texture', 'appearance_2', 'taste_2',
@@ -423,19 +428,19 @@ class CookeryBakeryLine(models.Model):
         if self.appearance_2 > 10:
             raise UserError("In Cookery & Bakery, Appearance(Dish 2) marks should not be greater than 10.")
         if self.taste_2 > 10:
-            raise UserError("In Cookery & Bakery, taste_2 marks should not be greater than 10.")
+            raise UserError("In Cookery & Bakery, taste(Dish2) marks should not be greater than 10.")
         if self.texture_2 > 9:
-            raise UserError("In Cookery & Bakery, texture_2 marks should not be greater than 9.")
+            raise UserError("In Cookery & Bakery, Texture(Dish2) marks should not be greater than 9.")
         if self.appearance_3 > 5:
-            raise UserError("In Cookery & Bakery, appearance_3 marks should not be greater than 5.")
+            raise UserError("In Cookery & Bakery, Appearance(Dish3) marks should not be greater than 5.")
         if self.taste_3 > 5:
-            raise UserError("In Cookery & Bakery, taste_3 marks should not be greater than 5.")
+            raise UserError("In Cookery & Bakery, Taste(Dish3) marks should not be greater than 5.")
         if self.texture_3 > 5:
-            raise UserError("In Cookery & Bakery, texture_3 marks should not be greater than 5.")
+            raise UserError("In Cookery & Bakery, Texture(Dish3) marks should not be greater than 5.")
         if self.identification_ingredians > 9:
-            raise UserError("In Cookery & Bakery, identification_ingredians marks should not be greater than 9.")
+            raise UserError("In Cookery & Bakery, Identification of Ingredians marks should not be greater than 9.")
         if self.knowledge_of_menu > 8:
-            raise UserError("In Cookery & Bakery, knowledge_of_menu marks should not be greater than 8.")
+            raise UserError("In Cookery & Bakery, Knowledge Of Menu marks should not be greater than 8.")
 
     
 
@@ -483,6 +488,8 @@ class MekPrcticalLine(models.Model):
     mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
     
     mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+
 
 
     @api.onchange('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
@@ -590,6 +597,8 @@ class MekOralLine(models.Model):
     mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True)
 
     mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak")
+    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+
 
     
 
@@ -665,8 +674,10 @@ class GskPracticallLine(models.Model):
     knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase")
     sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight")
     
-    gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks")
+    gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks",store=True)
     gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+
 
       
     @api.depends('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
@@ -748,6 +759,8 @@ class GskOralLine(models.Model):
     
     gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True)
     gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
+    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+
 
     
 
@@ -817,6 +830,8 @@ class CcmcOralLine(models.Model):
     gsk_ccmc = fields.Integer("GSK")
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+
     
 
     @api.depends(

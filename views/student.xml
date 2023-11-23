@@ -237,6 +237,7 @@
                                         <field name="electrical"/>
                                         <field name="mek_practical_total_marks"/>
                                         <field name="mek_practical_remarks"/>
+                                        <field name="mek_practical_draft_confirm"/>
                                     </tree>
                                 </field>
                             </page>
@@ -253,7 +254,8 @@
                                         <field name="electrical"/>
                                         <field name="journal"/>
                                         <field name="mek_oral_remarks"/>
-                                        <field name="mek_oral_total_marks"/>                                      
+                                        <field name="mek_oral_total_marks"/>
+                                        <field name="mek_oral_draft_confirm"/>                                      
                                     </tree>
                                 </field>
                             </page>
@@ -274,7 +276,8 @@
                                         <field name="knots_bend"/>
                                         <field name="sounding_rod"/>
                                         <field name="gsk_practical_total_marks"/>
-                                        <field name="gsk_practical_remarks"/>                                       
+                                        <field name="gsk_practical_remarks"/>
+                                        <field name="gsk_practical_draft_confirm"/>                                       
                                     </tree>
                                 </field>
                             </page>
@@ -294,6 +297,7 @@
                                         <field name="practical_record_journals"/>
                                         <field name="gsk_oral_total_marks"/>
                                         <field name="gsk_oral_remarks"/>
+                                        <field name="gsk_oral_draft_confirm"/>
                                     </tree>
                                 </field>
                             </page>
@@ -479,7 +483,9 @@
                             
                                         <field name="identification_ingredians"/>
                                         <field name="knowledge_of_menu"/>
-                                        <field name="total_mrks"/>                               
+                                        <field name="total_mrks"/> 
+                                        <field name="cookery_draft_confirm"/>
+
                                     </tree>
                                 </field>
                             </page>
@@ -491,7 +497,8 @@
                                         <field name="ccmc_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
                                         <field name='safety_ccmc'/>
-                                        <field name='toal_ccmc_rating'/>             
+                                        <field name='toal_ccmc_rating'/> 
+                                        <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
                                 </field>
                             </page>
@@ -667,6 +674,11 @@
                                 <span>100 Marks</span>
                             </div>
                         </group>
+                           
+                        <group>
+                            <field name="cookery_draft_confirm"/>
+                        </group>
+                            
                     </sheet>
                 </form>
             </field>
@@ -710,6 +722,9 @@
                                         / 
                                 <span>20 Marks</span>
                             </div>
+                        </group>
+                        <group>
+                            <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
                 </form>
@@ -816,6 +831,9 @@
                         <group style="width:100%;">
                             <field name="mek_practical_remarks"/>
                         </group>
+                        <group style="width:100%;">
+                            <field name="mek_practical_draft_confirm"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -896,6 +914,9 @@
 
                         <group style="width:100%;">
                             <field name="mek_oral_total_marks"/>
+                        </group>
+                        <group style="width:100%;">
+                            <field name="mek_oral_draft_confirm"/>
                         </group>
                     </sheet>
                 </form>
@@ -1002,6 +1023,9 @@
                         <group style="width:100%;">
                             <field name="gsk_practical_remarks"/>
                         </group>
+                        <group style="width:100%;">
+                            <field name="gsk_practical_draft_confirm"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -1088,6 +1112,9 @@
 
                         <group style="width:100%;">
                             <field name="gsk_oral_remarks"/>
+                        </group>
+                        <group style="width:100%;">
+                            <field name="gsk_oral_draft_confirm"/>
                         </group>
 
                     </sheet>

@@ -57,7 +57,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        
                         <div class="oe_button_box" name="button_box">
+                            <button name="ccmc_button" string="CCMC Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                             <button name="batch_button" string="GP Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
@@ -224,7 +227,11 @@
                     <sheet>
                         <group>
                             <field name="faculty_photo" widget="image" options="{'size': (100, 100)}" />
-                            <field name="gp_batches_id"/>
+                            <field name="gp_or_ccmc_batch" invisible="1"/>
+
+                            <field name="gp_batches_id" attrs="{'invisible': [('gp_or_ccmc_batch', '!=', 'gp')]}"/>
+                            <field name="ccmc_batches_id" attrs="{'invisible': [('gp_or_ccmc_batch', '!=', 'ccmc')]}"/>
+                            
                             <field name="course_name"/>
                             <field name="faculty_name"/>
                             <field name="dob"/>
