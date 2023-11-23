@@ -71,6 +71,22 @@ class InstituteGPBatches(models.Model):
         if self.payment_state == 'not_paid':
             raise ValidationError("Invoice is not Paid")
         self.write({"state":'4-invoiced'})
+        
+    
+    def register_for_exam(self):
+        candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.id)])
+        for candidate in candidates:
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
+            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id})
+            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id})
+            
+            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id})
+            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id})
+            
+            gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        
+        self.write({"state":'5-exam_scheduled'})
+        
 
           
     
@@ -152,6 +168,23 @@ class InstituteGPBatches(models.Model):
             'default_gp_or_ccmc_batch': 'gp'   
             }
         } 
+
+    def open_register_for_exam_wizard(self):
+        view_id = self.env.ref('bes.batches_gp_register_exam_wizard').id
+        
+        return {
+            'name': 'Register For Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'batches.gp.register.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_institute_id': self.institute_id.id,
+                'default_batch_id': self.id
+            }
+        }
     
     
 
@@ -302,3 +335,36 @@ class InstituteCcmcBatches(models.Model):
         } 
 
     
+        
+    
+
+        
+        
+        
+        
+class BatchesRegisterExamWizard(models.TransientModel):
+    _name = 'batches.gp.register.exam.wizard'
+    _description = 'Register Exam'
+
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
+    survey_qb = fields.Many2one("survey.survey",string="Question Bank")
+    
+    
+    
+    def register(self):
+        candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
+        for candidate in candidates:
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
+            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id})
+            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id})
+            
+            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id})
+            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id})
+            
+            gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        
+        self.batch_id.write({"state":'5-exam_scheduled'})
+
+
+   
