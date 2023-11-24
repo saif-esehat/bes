@@ -59,7 +59,7 @@
                     <sheet>
                         
                         <div class="oe_button_box" name="button_box">
-                            <button name="ccmc_button" string="CCMC Batches" type="object" class="oe_stat_button" icon="fa-align-justify" invisible="1">
+                            <button name="ccmc_button" string="CCMC Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                             <button name="batch_button" string="GP Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
