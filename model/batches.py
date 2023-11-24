@@ -6,9 +6,6 @@ from datetime import datetime
 
 
 
-    
-
-
 class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
     _rec_name = "batch_name"
