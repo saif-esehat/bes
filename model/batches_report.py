@@ -13,6 +13,8 @@ class BatchesReport(models.AbstractModel):
         institutes = self.env["institute.gp.batches"].sudo().search([('id','=',lines.id)])
         
         candidate_worksheet = workbook.add_worksheet("Candidate")
+        # candidate_worksheet.column_dimensions['A'].bestFit = True
+
         # candidate_worksheet.write('A1', 'Candidate Name')
 
         candidate_worksheet.write('A1', 'SR. NO.')
@@ -39,6 +41,7 @@ class BatchesReport(models.AbstractModel):
         
         
         faculty_worksheet = workbook.add_worksheet("Faculty")
+        # faculty_worksheet.column_dimensions['A'].bestFit = True
         faculty_worksheet.write('A1', 'Qualification')
         faculty_worksheet.write('B1', 'Faculty Name')
         faculty_worksheet.write('C1', 'Specialization')
@@ -53,6 +56,15 @@ class BatchesReport(models.AbstractModel):
             row += 1
         
         institute_worksheet = workbook.add_worksheet("Institute")
+        institute_worksheet.column_dimensions['A1'].bestFit = True
+        institute_worksheet.column_dimensions['A2'].bestFit = True
+        institute_worksheet.column_dimensions['A3'].bestFit = True
+        institute_worksheet.column_dimensions['A4'].bestFit = True
+        institute_worksheet.column_dimensions['A5'].bestFit = True
+        institute_worksheet.column_dimensions['A6'].bestFit = True
+        institute_worksheet.column_dimensions['A7'].bestFit = True
+
+
         institute_worksheet.write('A1','Information of Institute')
         institute_worksheet.write('A2','Name of the Institute')
         institute_worksheet.write('A3','MTI No. of institute')

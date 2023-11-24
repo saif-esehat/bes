@@ -270,6 +270,10 @@ class InstitutePortal(CustomerPortal):
        
         vals = {}
         return request.render("bes.gp_candidate_profile_view", vals)
+
+
+
+
         
     
     @http.route(['/my/institute_document/download/<model("lod.institute"):document_id>'], type="http", auth="user", website=True)

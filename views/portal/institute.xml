@@ -734,6 +734,8 @@
         </t>
     </template>
 
+
+
     <template id="gp_candidate_form_view" name="GP Candidate Form">
         <style>
             body {
@@ -1254,6 +1256,119 @@
         </t>
     </template>
 
+
+     <template id="ccmc_candidate_portal_list" name="GP Candidate">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+
+                                    
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
+
+            <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+
+            <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Candidate</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Modal content goes here -->
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadccmccandidatedata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">CSV Upload</label>
+                                        <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>CCMC Candidate Name</th>
+                        <th>Indos No.</th>
+                        <th>Roll No.</th>
+                        <th>CCMC Candidate Code No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="candidates" t-as="candidate">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="candidate.name" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.indos_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="candidate.candidate_code" />
+                            </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
+                            </td>
+                            <!-- <td class="text-center">
+                                <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
+                            </td> -->
+
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
     <template id="gp_faculty_portal_list" name="Faculty">
         <script>
                                     $(document).ready(function () {
@@ -1609,7 +1724,154 @@
         </t>
     </template>
 
+    <!-- <template id="faculty_profile_view" name="GP Candidate">
+        <t t-call="portal.portal_layout">
+            <script>
+                
+                function displayImage(input) {
+                    const cardImg = document.querySelector('.card-img');
+                    const file = input.files[0];
 
+                    if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        cardImg.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                    }
+                }
+
+                        function openDeleteModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                var candidate_id = button.getAttribute('candidate-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('visit_id').value = dataId;
+                document.getElementById('candidate_id').value = candidate_id;
+
+                }
+
+                
+            </script>
+            <style>
+                    .o_portal_my_doc_table {
+                        width: 60%; /* You can adjust the percentage as needed */
+                        margin: 0 auto; /* Centers the table horizontally */
+                    }
+
+                    /* Optionally, you can set specific widths for individual columns */
+                    .o_portal_my_doc_table th,
+                    .o_portal_my_doc_table td {
+                        width: auto; /* Adjust as needed */
+                    }
+                        .card-img-container {
+                        text-align: left;
+                        margin-bottom: 10px;
+                        }
+
+                        .card-img {
+                        width: 150px; /* Adjust the width as needed */
+                        height: 150px; /* Adjust the height as needed */
+                        object-fit: cover;
+                        border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+                        }
+            </style>
+
+            <div class="container py-5">
+
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateFacultyName" class="btn btn-primary btn_cta">Update Candidate</a>
+
+                <div class="modal fade" id="updateFacultyName" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/updatefaculty" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" class="form-control" id="faculty_id" name="faculty_id" t-attf-value="{{candidate.id}}" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Name and Image</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container mt-5">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="card-img-container">
+                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Faculty Photo" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="faculty_photo" class="form-label">faculty Photo</label>
+                                                    <input type="file" class="form-control" id="faculty_photo" name="faculty_photo" accept="image/*" onchange="displayImage(this)" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="faculty_name">Faculty Name</label>
+                                                    <input type="text" class="form-control" id="faculty_name" name="faculty_name" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <t t-if="faculty.faculty_photo">
+                                    <img t-attf-src="data:image/png; base64, {{faculty.faculty_photo}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                </t>
+                                <t t-else="">
+                                    <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                </t>
+                                <h5 class="my-3">
+                                    <t t-out="faculty.faculty_name" />
+                                </h5>
+                                <p class="text-muted mb-1">
+                                    <t t-out="faculty.dob" />
+                                </p>
+                                <p class="text-muted mb-4">
+                                    <t t-out="faculty.designation"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                               
+                                
+                              
+                                
+                                 
+
+
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+
+
+            </div>
+        </t>
+    </template> -->
 
 
 

@@ -61,8 +61,13 @@
                             <td class="text-left">
                                 <t t-out="assignment.exam_end_time" />
                             </td>
-                            <td class="text-left">
-                                <t t-out="assignment.assigned_to" />
+                            <td class="text-left" t-if="assignment.assigned_to == 'gp_candidate'">
+                                <!-- <t t-out="assignment.assigned_to" /> -->
+                                <span>GP Candidate</span>
+                            </td>
+                            <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'">
+                                <!-- <t t-out="assignment.assigned_to" /> -->
+                                <span>CCMC Candidate</span>
                             </td>
                             <td class="text-left">
                                 <t t-out="assignment.subject_id.name" />
