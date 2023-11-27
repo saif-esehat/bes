@@ -80,27 +80,27 @@ class GPCandidate(models.Model):
     @api.model
     def create(self, values):
         gp_candidate = super(GPCandidate, self).create(values)
-        # group_xml_ids = [
-        #     'bes.group_gp_candidates',
-        #     'base.group_portal'
-        #     # Add more XML IDs as needed
-        # ]
+        group_xml_ids = [
+            'bes.group_gp_candidates',
+            'base.group_portal'
+            # Add more XML IDs as needed
+        ]
         
-        # group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
         
-        # user_values = {
-        #     'name': gp_candidate.name,
-        #     'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
-        #     'password': 12345678,  # Generate a random password
-        #     'sel_groups_1_9_10':9,
-        #     'groups_id':  [(4, group_id, 0) for group_id in group_ids]
-        # }
+        user_values = {
+            'name': gp_candidate.name,
+            'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
+            'password': 12345678,  # Generate a random password
+            'sel_groups_1_9_10':9,
+            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
+        }
 
-        # portal_user = self.env['res.users'].sudo().create(user_values)
-        # gp_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
-        # # import wdb; wdb.set_trace()
-        # candidate_tag = self.env.ref('bes.candidates_tags').id
-        # portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
+        portal_user = self.env['res.users'].sudo().create(user_values)
+        gp_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
+        # import wdb; wdb.set_trace()
+        candidate_tag = self.env.ref('bes.candidates_tags').id
+        portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
         return gp_candidate
 
     @api.depends('fees_paid')
