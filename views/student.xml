@@ -174,7 +174,7 @@
                         </group>
 
                         <group style="width:100%;">
-                            <field name="institute_batch_id"/>
+                            <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
                         </group>
 
 
