@@ -111,6 +111,21 @@
             </field>
         </record>
 
+        <record id="survey_input_form_inherited" model="ir.ui.view">
+            <field name="name">survey.user_input.inherited</field>
+            <field name="model">survey.user_input</field>
+            <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='survey_id']" position="after">
+                    
+                    <field name="gp_candidate" />
+                    <field name="ccmc_candidate" />
+
+                </xpath>
+            </field>
+        </record>
+
+
 
 
     </data>
