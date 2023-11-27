@@ -104,15 +104,33 @@ class ExaminerAssignment(models.Model):
     # exam_date = fields.Date("Exam Date")
     exam_start_time = fields.Datetime("Exam Start Time")
     exam_end_time = fields.Datetime("Exam End Time")
+    gsk_boolean = fields.Boolean("GSK Boolean" ,compute="_compute_boolean")
+    mek_boolean = fields.Boolean("MEK Boolean" ,compute="_compute_boolean")
     assigned_to = fields.Selection([
         ('gp_candidate', 'GP Candidate'),
         ('ccmc_candidate', 'CCMC Candidate'),
     ], string='Assigned to',default="gp_candidate")
+    course = fields.Many2one("course.master","Course")
     subject_id = fields.Many2one("course.master.subject","Subject")
     institute_id = fields.Many2one('bes.institute',string="Institute")
     gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
+    gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment")
+
+    
+    @api.depends('subject_id')
+    def _compute_boolean(self):
+        for record in self:
+            if record.subject_id.name == 'GSK':
+                record.gsk_boolean = True
+            else :
+                record.gsk_boolean = False
+                
+            if record.subject_id.name == 'MEK':
+                record.mek_boolean = True
+            else :
+                record.mek_boolean = False
 
 
     @api.depends('gp_batches')
@@ -144,3 +162,16 @@ class ExaminerAssignment(models.Model):
                 ])
                 if similar_assignments:
                     raise ValidationError(f"{candidate.name} cannot have an exam for the same subject within 90 days.")
+
+
+
+class GPOralPracAssignment(models.Model):
+    _name = "gp.candidate.oral.prac.assignment"
+    _description= 'GP Candidate Oral Practical Assignment'
+    
+    assignment_id = fields.Many2one("examiner.assignment","Assignment ID")
+    gp_candidate = fields.Many2one("gp.candidate","Candidate")
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")

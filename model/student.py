@@ -76,6 +76,42 @@ class GPCandidate(models.Model):
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
     
     
+    ## Mek and GSK Online Exam
+    mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
+    gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+
+    def open_register_for_exam_wizard(self):
+        view_id = self.env.ref('bes.candidate_gp_register_exam_wizard').id
+                
+        last_exam_record = self.env['gp.exam.schedule'].search([('gp_candidate','=',self.id)], order='attempt_number desc', limit=1)
+        
+        if len(last_exam_record) <= 0:
+            raise ValidationError("No previous Exam Found . This Candidate Must be registered through batches")
+
+        # import wdb;wdb.set_trace()
+        
+        return {
+            'name': 'Register For Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'candidate.gp.register.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+            # 'default_batches_id': self.id
+            'default_candidate_id': self.id,
+            'default_gp_exam': last_exam_record.id,
+            'default_previous_attempt': last_exam_record.attempt_number,
+            "default_gsk_oral_prac_status": last_exam_record.gsk_oral_prac_status,
+            "default_mek_oral_prac_status": last_exam_record.mek_oral_prac_status,
+            "default_mek_online_status": last_exam_record.mek_online_status,
+            "default_gsk_online_status":last_exam_record.gsk_online_status
+            }
+        }
+    
+    
+    
     def open_gp_candidate_exams(self):
         
         
@@ -505,6 +541,7 @@ class MekPrcticalLine(models.Model):
 
     mek_parent = fields.Many2one("gp.candidate",string="Parent")
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam Id")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     mek_prcatical_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
     mek_practical_exam_date = fields.Date(string="Exam Date")
     using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
@@ -615,6 +652,7 @@ class MekOralLine(models.Model):
     _description = 'MEK Oral Line'
 
     mek_oral_parent = fields.Many2one("gp.candidate", string="Parent")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
     mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
     mek_oral_exam_date = fields.Date(string="Exam Date")
@@ -692,6 +730,7 @@ class GskPracticallLine(models.Model):
 
     gsk_practical_parent = fields.Many2one("gp.candidate", string="Parent")
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     gsk_practical_exam_date = fields.Date(string="Exam Date")
     climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
@@ -777,6 +816,7 @@ class GskOralLine(models.Model):
 
     gsk_oral_parent = fields.Many2one("gp.candidate", string="Parent")
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True)
     gsk_oral_exam_date = fields.Date(string="Exam Date")
     subject_area_1 = fields.Integer("Subject Area 1")
@@ -907,3 +947,59 @@ class CcmcOralLine(models.Model):
     #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
     #     return super(CcmcOralLine, self - undeletable_records).unlink()
 
+
+
+class CandidateRegisterExamWizard(models.TransientModel):
+    _name = 'candidate.gp.register.exam.wizard'
+    _description = 'Register Exam'
+    
+    exam_region = fields.Many2one("exam.center",string="Exam Region",required=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    candidate_id = fields.Many2one("gp.candidate",string="Candidate",required=True)
+
+    gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True)
+
+    
+    previous_attempt =  fields.Integer("Previous Attempt No.")
+    # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
+    
+    
+    gsk_oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='GSK Oral/Practical Status')
+    
+    
+    mek_total = fields.Float("Mek Total",readonly=True)
+    mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    mek_oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Mek Oral/Practical Status')
+    
+    mek_online_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Mek Online Status')
+    
+    gsk_online_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Gsk Online Status')
+    
+    
+    # def register(self):
+    #     gp_exam = self.env["gp.exam.schedule"].sudo().create({})
+    #     if self.mek_oral_prac_status == 'failed':
+            
+            
+            
+            
+            
+        
+        
+        
+        
+    

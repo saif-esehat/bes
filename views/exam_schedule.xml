@@ -41,6 +41,12 @@
                             <field name="mek_prac"/>
                             <field name="gsk_prac"/>
                         </group>
+                        <group style="width:50%">
+                            <field name="gsk_online"/>
+                        </group>
+                        <group style="width:50%">
+                            <field name="mek_online"/>
+                        </group>
 
                         <group style="width:50%">
                         
@@ -66,6 +72,8 @@
                         <group style="width:33.33%">
                             <field name="gsk_oral_prac_status" readonly="1"/>
                             <field name="mek_oral_prac_status" readonly="1"/>
+                            <field name="mek_online_status" readonly="1"/>
+                            <field name="gsk_online_status" readonly="1"/>
                         </group>
                         
 
@@ -109,6 +117,7 @@
                             <field name="name" />
                             <field name="mek_visiblity" invisible="1" />
                             <field name="gsk_visiblity" invisible="1" />
+                            
                         </group >
                     </sheet>
                 </form>
