@@ -94,12 +94,15 @@ class GPCandidate(models.Model):
                      }
                 }
     
-    @api.model
+    # @api.model
     def unlink(self):
-        users_to_delete = self.mapped('user_id')
+        # users_to_delete = self.mapped('user_id')
+        # print
+        if self.user_id:
+            self.user_id.unlink()
         result = super(GPCandidate, self).unlink()
-        if users_to_delete:
-            users_to_delete.unlink()
+        
+        
         return result
 
 
