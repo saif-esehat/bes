@@ -14,6 +14,9 @@
             <li t-if="page_name == 'gp_batches'" class="breadcrumb-item ">
              GP Batches
             </li>
+            <li t-if="page_name == 'ccmc_batches'" class="breadcrumb-item ">
+             CCMC Batches
+            </li>
             <t t-if="page_name == 'gp_candidate_form'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch">GP Batches</a>
@@ -25,6 +28,20 @@
                 </li>
                 <li class="breadcrumb-item">
                     GP Candidate
+                </li>
+            </t>
+
+            <t t-if="page_name == 'ccmc_candidate_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">CCMC Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmcbatch/candidates/{{candidate.institute_batch_id.id}}">
+                        <t t-out="candidate.institute_batch_id.batch_name"/>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    CCMC Candidate
                 </li>
             </t>
             <!-- <li class="breadcrumb-item ">
@@ -110,6 +127,58 @@
     </template>
 
 
+    <template id="institute_ccmc_batches" name="CCMC Batches">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>Faculties</th>
+                        <th>Report</th>
+                        <th>From Date.</th>
+                        <th>To Date.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="batches" t-as="batch">
+                        <tr>
+                            <td class="text-center">
+                                <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
+                                    <t t-out="batch.ccmc_batch_name"/>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/ccmcbatch/faculties/{{batch.id}}" class="fa">
+                                Faculty
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
+                                Download Report
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <t t-out="batch.ccmc_from_date" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="batch.ccmc_to_date" />
+                            </td>
+                            <!-- <td class="text-center">
+                                <t t-out="candidate.candidate_code" />
+                            </td>
+                            <td class="text-center">
+                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
+                            </td> -->
+
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
             <script>
@@ -128,6 +197,23 @@
                     reader.readAsDataURL(file);
                     }
                 }
+
+                function displaySignImage(input) {
+                    const cardImg = document.querySelector('.sign-img');
+                    const file = input.files[0];
+
+                    if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        cardImg.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                    }
+                }
+
+
 
                         function openDeleteModal(button) {
                 // Retrieve the data-id attribute value from the clicked button
@@ -200,6 +286,17 @@
                                                     <input type="text" class="form-control" id="indos_no" name="indos_no" />
                                                 </div>
                                             </div>
+                                            <div class="col-md-5">
+                                                <div class="card-img-container">
+                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img sign-img" style="width: 150px;" alt="Signature" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="signature_photo" class="form-label">Signature Photo</label>
+                                                    <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*" onchange="displaySignImage(this)" />
+                                                </div>
+                                            </div>
 
                                         </div>
 
@@ -236,6 +333,9 @@
                                 <p class="text-muted mb-4">
                                     <t t-out="candidate.street2"/>
                                 </p>
+                                <t t-if="candidate.candidate_signature">
+                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                </t>
                             </div>
                         </div>
                     </div>
@@ -1153,6 +1253,14 @@
                                         });
                                     });
 
+                                    function openUploadModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('batch_id').value = dataId;
+
+                                    }
+
                                     
         </script>
         <style>
@@ -1179,7 +1287,7 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
 
             <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
 
@@ -1196,6 +1304,7 @@
 
                                 <form method="post" action="/my/uploadgpcandidatedata" enctype="multipart/form-data">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                     <input type="hidden" id="batch_id" name="batch_id" />
                                     <div class="form-group">
                                         <label for="fileUpload">CSV Upload</label>
                                         <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
@@ -1257,7 +1366,7 @@
     </template>
 
 
-     <template id="ccmc_candidate_portal_list" name="GP Candidate">
+    <template id="ccmc_candidate_portal_list" name="CCMC Candidate">
         <script>
                                     $(document).ready(function () {
                                         $('#uploadBtn').on('click', function () {
@@ -1296,7 +1405,7 @@
 
             <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
 
-            <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1304,7 +1413,6 @@
 
                         </div>
                         <div class="modal-body">
-                            <!-- Modal content goes here -->
                             <div class="container mt-5">
 
                                 <form method="post" action="/my/uploadccmccandidatedata" enctype="multipart/form-data">
@@ -1314,12 +1422,7 @@
                                         <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
                                     </div>
                                     <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                                    <!-- <div id="loader-overlay" style="display: none;">
-                                        <div id="loader">
-                                            Uploading
-                                        </div>
-                                    </div> -->
-
+                                    
                                 </form>
                             </div>
                         </div>
@@ -1328,7 +1431,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <t t-call="portal.portal_table">
                 <thead>
@@ -1355,7 +1458,7 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
+                                <a t-attf-href="" class="fa">View</a>
                             </td>
                             <!-- <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
@@ -1404,7 +1507,7 @@
         <t t-call="portal.portal_layout">
             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a> -->
 
-            <!-- <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a> -->
+            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
 
             <!-- <div class="modal fade" id="uploadFacultyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -1539,7 +1642,7 @@
     </template>
 
 
-    <template id="ccmc_candidate_portal_list">
+    <!-- <template id="ccmc_candidate_portal_list">
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_table">
                 <thead>
@@ -1567,7 +1670,7 @@
                 </tbody>
             </t>
         </t>
-    </template>
+    </template> -->
 
 
     <template id="institute_detail_form" name="Institute Detail">

@@ -13,6 +13,8 @@
                         <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-pending_invoice'),]}"/>
                         <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/>
                         <button name="confirm_indos" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-indos_pending')]}"/>
+                        <button name="register_for_exam" string="Register Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
+                        <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('create_invoice_button_invisible', '=', False)]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -123,10 +125,150 @@
 
         </record>
 
+        <!-- CCMC batches -->
+
+        <record id="ccmc_batch_form" model="ir.ui.view">
+            <field name="name">institute.ccmc.batches.form</field>
+            <field name="model">institute.ccmc.batches</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="move_to_invoiced_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '3-pending_invoice'),]}"/>
+                        <button name="confirm_batch_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '1-ongoing')]}"/>
+                        <button name="confirm_indos_ccmc" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '2-indos_pending')]}"/>
+                        <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
+                        <field name="ccmc_state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_ccmc_batch_candidate" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="open_ccmc_batch_faculty" string="Faculties" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
+                        <group style="width:100%;">
+                            <h1>
+                                <field name="ccmc_batch_name" placeholder="Batch Name"/>
+
+                            </h1>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="institute_id" options="{'no_create':True}"/>
+                            <field name="ccmc_from_date"/>
+                            <field name="ccmc_to_date"/>
+                        </group>
+                        <!-- <group style="width:50%;">
+                            <field name="course"/>
+                        </group> -->
+                        <group style="width:50%;">
+                            <field name="ccmc_account_move"/>
+                            <field name="payment_state"/>
+                            <field name="ccmc_invoice_created" invisible="1"/>
+                            <field name="ccmc_create_invoice_button_invisible" invisible="1"/>
+                        </group>
+
+                        <group style="width:50%;">
+                            <field name="ccmc_candidate_count"/>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="ccmc_batch_form_kanban" model="ir.ui.view">
+            <field name="name">institute.ccmc.batches.kanban</field>
+            <field name="model">institute.ccmc.batches</field>
+            <field name="arch" type="xml">
+                <kanban disable_drag_drop_record="true" create="false" default_group_by="state">
+                    <field name="ccmc_state" readonly="1" />
+                    <field name="ccmc_batch_name"/>
+                    <!-- <field name="candidate_count"/> -->
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <b>
+                                    <strong class="o_kanban_record_title">
+                                        <field name="ccmc_batch_name"/>
+                                    </strong>
+                                </b>
+                                <br/>
+                                <field name="institute_id"/>
+                                <br/>
+                                <b>From: </b>
+                                <field name="ccmc_from_date"/>
+                                <br/>
+                                <b>To : </b>
+                                <field name="ccmc_to_date"/>
+                                <br/>
+                                <b>No of Candidate : </b>
+                                <field name="ccmc_candidate_count"/>
+                                <br/>
+                                <t t-if="record.ccmc_state.raw_value === '3-pending_invoice' || record.state.raw_value === '4-invoiced'">
+                                    <b>Invoice Status : </b>
+                                    <field name="payment_state" decoration-success="payment_state == 'paid'" widget="badge" />
+                                </t>
+                                <!-- </t> -->
+                                <!-- <br/>
+                                <div class="o_kanban_record_bottom" t-if="!selection_mode">
+                                  <div class="oe_kanban_bottom_left">
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                  </div>
+                                </div> -->
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="institute_ccmc_batch_tree" model="ir.ui.view">
+            <field name="name">institute.ccmc.batches.tree</field>
+            <field name="model">institute.ccmc.batches</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ccmc_batch_name"/>
+                    <field name="institute_id"/>
+                    <field name="ccmc_from_date"/>
+                    <field name="ccmc_to_date"/>
+                    <!-- <field name="course"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="ccmc_batch_form_kanban_action" model="ir.actions.act_window">
+            <field name="name">Batches</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">institute.ccmc.batches</field>
+            <field name="view_mode">kanban,form,tree</field>
+
+        </record>
+
+
+
+
         <!-- END  Institute Batches -->
+        
 
 
-     
+        <record id="batches_gp_register_exam_wizard" model="ir.ui.view">
+            <field name="name">batches.gp.register.exam.wizard.form</field>
+            <field name="model">batches.gp.register.exam.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="institute_id" invisible="1"/>
+                        <field name="batch_id" invisible="1"/>
+
+                        <field name="survey_qb"  domain="[('institute', '=', institute_id )]" options="{'no_create': True}"/>
+                    </group>
+                    <footer>
+                        <button string="Register" type="object" class="oe_highlight" name="register"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
 
     </data>

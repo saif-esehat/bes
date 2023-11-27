@@ -4,90 +4,82 @@
         <!-- Exam Schedule -->
 
 
-        <record id="bes_institute_exam_action" model="ir.actions.act_window">
-            <field name="name">Schedules</field>
+        <record id="bes_gp_exam_action" model="ir.actions.act_window">
+            <field name="name">GP Exam</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">bes.exam.schedule</field>
+            <field name="res_model">gp.exam.schedule</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">Exam Schedules</p>
+                <p class="o_view_nocontent_smiling_face">GP Exam</p>
             </field>
         </record>
 
 
 
-        <record id="bes_exam_form" model="ir.ui.view">
-            <field name="name">bes.exam.schedule.form</field>
-            <field name="model">bes.exam.schedule</field>
+        <record id="gp_exam_schedule_form" model="ir.ui.view">
+            <field name="name">gp.exam.schedule.form</field>
+            <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="exam_confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-draft'),]}"/>
-                        <button name="open_assign_examiner_wizard" string="Assign Examiners" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirm'),]}"/>
-                        <button name="exam_planned" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),]}" />
-                        <!-- attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),]}" -->
+                        <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="open_exam_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
-                                <field name="candidate_count" string="Candidate"  widget="statinfo"/>
-                            </button>
-                        </div>
-                        <group style="width:100%;">
-                            <h1>
-                                <field name="schedule_name" placeholder="Schedule Name"/>
-                            </h1>
+                        <group>
+                            <field name="exam_id"/>
+                            <field name="gp_candidate"/>
                         </group>
-                        <group style="width:100%;">
-                            <field name="exam_date"/>
+                        <group>
+                            <field name="attempt_number"/>
+                        </group>                        
+                        <group style="width:50%">
+                            <field name="mek_oral"/>
+                             <field name="gsk_oral"/>
                         </group>
-                        <group style="width:50%;">
-                            <field name="course"/>
+                        <group style="width:50%">
+                            <field name="mek_prac"/>
+                            <field name="gsk_prac"/>
                         </group>
-                        <group style="width:50%;">
-                            <field name="exam_center"/>
-                        </group>
-                        <group style="width:100%;">
-                            <field name="examiners" readonly="1" widget="many2many_tags" />
-                        </group>
-                        <span attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}" style="font-weight: bold; font-size: 18px;">Online Exam</span>
-                        <field name="exam_online" attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}">
-                            <tree editable="bottom" >
-                                <field name="exam_schedule_id" invisible="1" />
-                                <field name="examiners" required="1" options="{'no_create': True}"  />
-                                <field name="subject"/>
-                                <field name="start_time_online" required="1" />
-                                <field name="end_time_online" required="1"   />
-                                <field name="candidate_count" readonly="1"   />
-                            </tree>
-                        </field>
-                        <span attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}" style="font-weight: bold; font-size: 18px;">Oral and Practical Exam</span>
-                        <field name="exam_oral_practical" attrs="{'invisible': [('state', '!=', '3-examiner_assigned'),('state', '!=', '4-exam_planned')]}">
-                            <tree editable="bottom">
-                                <field name="exam_schedule_id" invisible="1" />
-                                <field name="examiners" required="1" options="{'no_create': True}"  />
-                                <field name="subject" required="1" />
-                                <field name="start_time_online" required="1" />
-                                <field name="end_time_online" required="1"/>
-                                <field name="candidate_count" readonly="1" />
-                                <field name="state" readonly="1" widget="badge" />
 
-                                <!-- <field name="candidates" readonly="1"   /> -->
+                        <group style="width:50%">
+                        
+                            <label for="gsk_total"/>
+                            <div>
+                                <field name="gsk_total" nolabel="1"/>
+                            / 
+                                <span>175</span>
+                            </div>
+                      
+                            <label for="mek_total"/>
+                            <div>
+                                <field name="mek_total" nolabel="1"/>
+                            / 
+                                <span>175</span>
+                            </div>
+                      
+                        </group>
+                        <group style="width:50%">
+                            <field name="gsk_percentage" readonly="1"/>
+                            <field name="mek_percentage" readonly="1"/>
+                        </group>
+                        <group style="width:33.33%">
+                            <field name="gsk_oral_prac_status" readonly="1"/>
+                            <field name="mek_oral_prac_status" readonly="1"/>
+                        </group>
+                        
 
-                            </tree>
-                        </field>
                     </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="bes_exam_tree" model="ir.ui.view">
-            <field name="name">bes.exam.schedule.tree</field>
-            <field name="model">bes.exam.schedule</field>
+        <record id="gp_exam_schedule_tree" model="ir.ui.view">
+            <field name="name">gp.exam.schedule.tree</field>
+            <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="schedule_name"/>
+                    <field name="exam_id"/>
                 </tree>
             </field>
         </record>

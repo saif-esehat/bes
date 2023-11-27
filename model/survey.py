@@ -99,3 +99,6 @@ class InheritedSurvey(models.Model):
 class SurveyUserInputInherited(models.Model):
     _inherit = "survey.user_input"
     survey_id = fields.Many2one('survey.survey', string='Exam', required=True, readonly=True, ondelete='cascade')
+    gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
+    ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
+

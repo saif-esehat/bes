@@ -24,12 +24,25 @@ class InstitutePortal(CustomerPortal):
         vals = {"batches": batches, "page_name": "gp_batches"}
         return request.render("bes.institute_gp_batches", vals)
 
+
+    @http.route(['/my/ccmcbatch'], type="http", auth="user", website=True)
+    def CCMCBatchList(self, **kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        batches = request.env["institute.ccmc.batches"].sudo().search(
+            [('institute_id', '=', institute_id)])
+
+        vals = {"batches": batches, "page_name": "ccmc_batches"}
+        return request.render("bes.institute_ccmc_batches", vals)
+
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
-
+        
+        batch_id = int(kw.get("batch_id"))
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
         file_content_str = file_content.decode('utf-8')
@@ -77,6 +90,7 @@ class InstitutePortal(CustomerPortal):
                 'indos_no': indos_no,
                 'dob': dob,
                 # Include other fields here with their corresponding data
+                'institute_batch_id':batch_id,
                 'street': address,
                 'city': dist_city,
                 'state_id': state,
@@ -90,7 +104,7 @@ class InstitutePortal(CustomerPortal):
 
             # import wdb; wdb.set_trace()
 
-        return request.redirect("/my/gpcandidate/list")
+        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
     @http.route(['/my/gpcandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
     def GPcandidateProfileView(self, candidate_id, **kw):
@@ -162,6 +176,69 @@ class InstitutePortal(CustomerPortal):
         return request.render("bes.gp_candidate_form_view", vals)
 
 
+
+    @http.route(['/my/ccmccandidateform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
+    def CcmcCandidateFormView(self,batch_id, **kw):
+        states = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN')])
+        
+        user_id = request.env.user.id
+        
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+
+        if request.httprequest.method == 'POST':
+            name = kw.get("name")
+            dob = kw.get("dob")
+            indos_no = kw.get("indos_no")
+            candidate_code = kw.get("candidate_code")
+            roll_no = kw.get("roll_no")
+            street = kw.get("street")
+            street2 = kw.get("street2")
+            city = kw.get("city")
+            zip_code = kw.get("zip")
+            state_id = kw.get("state_id")
+            phone = kw.get("phone")
+            mobile = kw.get("mobile")
+            email = kw.get("email")
+            tenth_percent = kw.get("tenth_percent")
+            twelve_percent = kw.get("twelve_percent")
+            iti_percent = kw.get("iti_percent")
+            sc_st = kw.get("sc_st")
+            
+            candidate_data = {
+                "name": name,
+                "institute_batch_id":batch_id,
+                "institute_id":institute_id,
+                "dob": dob,
+                "indos_no": indos_no,
+                "candidate_code": candidate_code,
+                "roll_no": roll_no,
+                "street": street,
+                "street2": street2,
+                "city": city,
+                "zip": zip_code,
+                "state_id": state_id,  # Assuming state_id is a Many2one field
+                "phone": phone,
+                "mobile": mobile,
+                "email": email,
+                "tenth_percent": tenth_percent,
+                "twelve_percent": twelve_percent,
+                "iti_percent": iti_percent,
+                "sc_st": sc_st,
+            }
+            # import wdb; wdb.set_trace();
+
+            request.env['gp.candidate'].sudo().create(candidate_data)
+            
+            return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
+            
+        
+        
+        vals = {"states" : states,"batch_id":batch_id}
+        return request.render("bes.gp_candidate_form_view", vals)
+
+
     @http.route(['/my/gpfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPFacultiesFormView(self,batch_id, **kw):
 
@@ -224,6 +301,25 @@ class InstitutePortal(CustomerPortal):
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
 
+    
+
+    @http.route(['/my/ccmcbatch/candidates/<int:batch_id>'], type="http", auth="user", website=True)
+    def CcmcCandidateListView(self, batch_id, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        candidates = request.env["ccmc.candidate"].sudo().search(
+            [('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id)])
+        batches = request.env["institute.ccmc.batches"].sudo().search(
+            [('id', '=', batch_id)])
+        vals = {'candidates': candidates, 'page_name': 'ccmc_candidate','batch_id':batch_id,'batches':batches}
+        print("Batch id",batch_id)
+        # self.env["gp.candidate"].sudo().search([('')])
+        return request.render("bes.ccmc_candidate_portal_list", vals)
+
+
     @http.route(['/my/gpbatch/faculties/<int:batch_id>'], type="http", auth="user", website=True)
     def GPFacultyListView(self, batch_id, **kw):
         # import wdb; wdb.set_trace()
@@ -257,10 +353,28 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             candidate_image = kw.get("candidate_photo").read()
             candidate_image_name = kw.get('candidate_photo').filename
-            indos_no = kw.get('indos_no')
-            candidate.write({'candidate_image': base64.b64encode(candidate_image),
+            
+            if candidate_image and candidate_image_name:
+                candidate.write({'candidate_image': base64.b64encode(candidate_image),
                              'candidate_image_name':  candidate_image_name,
-                             'indos_no':indos_no})
+                             })
+                
+            signature_photo = kw.get("signature_photo").read()
+            signature_photo_name = kw.get('signature_photo').filename
+            
+            # print(signature_photo)
+            # print(signature_photo_name)
+            # # import wdb; wdb.set_trace()
+            # print(signature_photo and signature_photo_name)
+            if signature_photo and signature_photo_name:
+                candidate.write({'candidate_signature': base64.b64encode(signature_photo),
+                             'candidate_signature_name':  signature_photo_name,
+                             })
+                
+            indos_no = kw.get('indos_no')
+            
+            if indos_no:
+                candidate.write({'indos_no':indos_no})
             
             # import wdb; wdb.set_trace()
             
@@ -477,6 +591,65 @@ class InstitutePortal(CustomerPortal):
         faculties = request.env["institute.faculty"].sudo().search([('gp_batches_id','=',batch_id)])
         institutes = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
         
+        
+        
+        institute_worksheet = workbook.add_worksheet("Institute")
+        institute_worksheet.set_column('A:B', 60)
+        
+        bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})  # 'border': 1 adds a thin border
+
+        # Create a format with borders.
+        border_format = workbook.add_format({'border': 1,'font_size': 14}) 
+
+        # bold_format = workbook.add_format({'bold': True})
+        
+        # border_format = workbook.add_format({'border': 1})  # 'border': 1 adds a thin border
+
+        
+        headers = ['', '']
+        for col_num, header in enumerate(headers):
+            institute_worksheet.write(0, col_num, header)
+
+        # Add data to the worksheet.
+        data = [
+            ['Name of the Institute', institutes.institute_id.name],
+            ['MTI No. of institute', institutes.institute_id.mti],
+            ['Approved Capacity', institutes.institute_id.computer_lab_pc_count],
+            ['Course Title', institutes.course.name],
+            ['Batch No.', institutes.batch_name],
+            ['Date of commencement and ending of the course', str(institutes.from_date) + ' to ' + str(institutes.to_date)],
+        ]
+        
+        for row_num, row_data in enumerate(data, start=1):
+            for col_num, cell_data in enumerate(row_data):
+                if col_num == 0:  # Check if it's column A
+                    institute_worksheet.write(row_num, col_num, cell_data, bold_format)
+                else:
+                    institute_worksheet.write(row_num, col_num, cell_data, border_format)
+
+        
+        # table_range = 'A1:B{}'.format(len(data))  # No +1 for header row.
+
+        # Add a table to the worksheet.
+        # institute_worksheet.add_table(table_range, {'columns': [{'header': header} for header in headers]})
+
+
+        # institute_worksheet.write('A1','Information of Institute',bold_format)
+        # institute_worksheet.write('A2','Name of the Institute',bold_format)
+        # institute_worksheet.write('A3','MTI No. of institute',bold_format)
+        # institute_worksheet.write('A4','Approved Capacity',bold_format)
+        # institute_worksheet.write('A5','Course Title',bold_format)
+        # institute_worksheet.write('A6','Batch No.',bold_format)
+        # institute_worksheet.write('A7','Date of commencement and ending of the course',bold_format)
+        
+
+        # institute_worksheet.write(1,1,institutes.institute_id.name)
+        # institute_worksheet.write(2,1,institutes.institute_id.mti)
+        # institute_worksheet.write(3,1,institutes.institute_id.computer_lab_pc_count)
+        # institute_worksheet.write(4,1,institutes.course.name)
+        # institute_worksheet.write(5,1,institutes.batch_name)
+        # institute_worksheet.write(6,1,str(institutes.from_date) + ' to ' + str(institutes.to_date))
+        
 
         #Candidate
         
@@ -523,23 +696,7 @@ class InstitutePortal(CustomerPortal):
             faculty_worksheet.write(row,3,faculty.dob)
             row += 1
 
-        institute_worksheet = workbook.add_worksheet("Institute")
-        institute_worksheet.write('A1','Information of Institute')
-        institute_worksheet.write('A2','Name of the Institute')
-        institute_worksheet.write('A3','MTI No. of institute')
-        institute_worksheet.write('A4','Approved Capacity')
-        institute_worksheet.write('A5','Course Title')
-        institute_worksheet.write('A6','Batch No.')
-        institute_worksheet.write('A7','Date of commencement and ending of the course')
         
-        print("Institute",institutes.institute_id.name)
-
-        institute_worksheet.write(1,1,institutes.institute_id.name)
-        institute_worksheet.write(2,1,institutes.institute_id.mti)
-        institute_worksheet.write(3,1,institutes.institute_id.computer_lab_pc_count)
-        institute_worksheet.write(4,1,institutes.course.name)
-        institute_worksheet.write(5,1,institutes.batch_name)
-        institute_worksheet.write(6,1,str(institutes.from_date) + ' to ' + str(institutes.to_date))
 
         
     

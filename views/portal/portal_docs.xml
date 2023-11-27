@@ -50,7 +50,7 @@
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpbatch">
                                 GP Batches
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcbatch">
                                 CCMC Batches
                             </a>
                             <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpcandidate/list">

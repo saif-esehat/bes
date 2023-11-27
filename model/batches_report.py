@@ -3,7 +3,7 @@ from odoo import models
 
 class BatchesReport(models.AbstractModel):
     _name = 'report.bes.report_batches'
-    _inherit = 'report.report_xlsx.abstract'
+    # _inherit = 'report.report_xlsx.abstract'
     
     def generate_xlsx_report(self, workbook, data,lines):
         

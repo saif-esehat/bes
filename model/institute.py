@@ -138,6 +138,20 @@ class Institute(models.Model):
         
         return institute
     
+    def ccmc_button(self):
+        
+        return {
+        'name': 'CCMC Batch',
+        'domain': [('institute_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'institute.ccmc.batches',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_institute_id': self.id    
+            }
+        }
     
     def batch_button(self):
         
@@ -154,7 +168,7 @@ class Institute(models.Model):
             }
         }
     
-    def open_faculty(self):
+    def open_faculty_gp(self):
         
         return {
         'name': 'Faculty',
@@ -165,9 +179,27 @@ class Institute(models.Model):
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
         'context': {
-            'default_gp_batches_id': self.id    
+            'default_gp_batches_id': self.id,
+            # 'default_gp_or_ccmc_batch': 'gp'    
             }
         }
+
+    def open_faculty_ccmc(self):
+        
+        return {
+        'name': 'Faculty',
+        'domain': [('ccmc_batches_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'institute.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_ccmc_batches_id': self.id,
+            # 'default_gp_or_ccmc_batch': 'gp'    
+            }
+        }
+    
 
 
 class ListofDcoument(models.Model):
@@ -203,7 +235,12 @@ class InstituteFaculty(models.Model):
     _rec_name = 'faculty_name'
     
     institute_id = fields.Many2one("bes.institute","Institute ID")
-    gp_batches_id = fields.Many2one('institute.gp.batches')
+    gp_or_ccmc_batch = fields.Selection([('gp','GP'),('ccmc','CCMC')],string="GP / CCMC")
+    gp_batches_id = fields.Many2one('institute.gp.batches',string="Batch")
+
+    ccmc_batches_id = fields.Many2one('institute.ccmc.batches',string="Batch")
+
+
     course_name = fields.Many2one("course.master","Course")
     faculty_name = fields.Char(string='Name of the Faculty', required=True)
     faculty_photo = fields.Binary(string='Faculty Photo')
