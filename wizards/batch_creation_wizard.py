@@ -18,7 +18,7 @@ class BatchWizard(models.TransientModel):
         for institute in institutes:
             institute_id = institute
             for course in institute.courses:
-                self.env['institute.batches'].create({
+                self.env['institute.gp.batches'].create({
                     "institute_id":institute_id.id,
                     "batch_name":str(course.course.course_code)+"/"+self.batch_name,
                     "from_date" : self.from_date,
