@@ -87,6 +87,9 @@ class GPCandidate(models.Model):
         
         if len(last_exam_record) <= 0:
             raise ValidationError("No previous Exam Found . This Candidate Must be registered through batches")
+        
+        if last_exam_record.state == '1-in_process':
+            raise ValidationError("Last Exam Still In Process")
 
         # import wdb;wdb.set_trace()
         
