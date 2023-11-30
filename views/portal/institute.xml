@@ -37,7 +37,7 @@
                 </li>
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch/candidates/{{candidate.institute_batch_id.id}}">
-                        <t t-out="candidate.institute_batch_id.batch_name"/>
+                        <t t-out="candidate.institute_batch_id.ccmc_batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -153,7 +153,7 @@
                                 </a>
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
+                                <a t-attf-href="/my/ccmc_batches/download_report/{{batch.id}}" class="fa">
                                 Download Report
                                 </a>
                             </td>
@@ -497,12 +497,12 @@
 
                                         <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
 
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" class="btn btn-primary btn_cta">Add</a>
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" t-attf-candidate-id="{candidate.id}" class="btn btn-primary btn_cta">Add</a>
 
                                             <div class="modal fade" id="DeleteShipVisitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <form method="post" action="/my/shipvisit/delete" enctype="multipart/form-data">
-                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"  />
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="exampleModalLabel">Delete Ship Visit</h5>
@@ -510,7 +510,7 @@
                                                             <div class="modal-body">
                                                                 Are you sure you want to delete ?
                                                                 <input type="hidden" id="visit_id" name="visit_id"/>
-                                                                <input type="hidden" id="candidate_id" name="candidate_id"/>
+                                                                <input type="hidden" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}"/>
 
                                                             </div>
                                                             <div class="modal-footer">
@@ -1071,6 +1071,241 @@
     </template>
 
 
+    <template id="ccmc_candidate_form_view" name="CCMC Candidate Form">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">CCMC Candidate</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="batch_id" name="batch_id" t-att-value="batch_id"/>
+                                <!-- <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Full Name of Candidate as in INDOS</label>
+                                        <input type="text" class="form-control" id="name" name="name" required="true" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="indos_no">Indos No.</label>
+                                        <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="candidate_code">CCMC Candidate Code No.</label>
+                                        <input type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="roll_no">Roll No.</label>
+                                        <input type="text" class="form-control" id="roll_no" name="roll_no" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dob">DOB</label>
+                                        <input type="date" class="form-control" id="dob" name="dob" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="street">Street</label>
+                                        <input type="text" class="form-control" id="street" name="street"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="street2">Street2</label>
+                                        <input type="text" class="form-control" id="street2" name="street2"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" id="city" name="city"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="zip">Zip</label>
+                                        <input type="text" class="form-control" id="zip" name="zip"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="state_id">State</label>
+                                        <select class="form-control" id="state_id" name="state_id">
+                                            <t t-foreach="states" t-as="state">
+                                                <option t-attf-value="{{state.id}}">
+                                                    <t t-out="state.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="mobile">Mobile</label>
+                                        <input type="text" class="form-control" id="mobile" name="mobile"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tenth_percent">% Xth Std in Eng.</label>
+                                        <input type="number" class="form-control" id="tenth_percent" name="tenth_percent"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="twelve_percent">% 12th Std in Eng.</label>
+                                        <input type="number" class="form-control" id="twelve_percent" name="twelve_percent"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="iti_percent">% ITI</label>
+                                        <input type="number" class="form-control" id="iti_percent" name="iti_percent"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="sc_st" name="sc_st"/>
+                                        <label class="form-check-label" for="sc_st">To be mentioned if Candidate SC/ST</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
     <template id="gp_faculty_form_view" name="Faculty Form">
         <style>
             body {
@@ -1289,7 +1524,8 @@
         <t t-call="portal.portal_layout">
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
 
-            <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -1375,6 +1611,14 @@
                                         });
                                     });
 
+                                     function openUploadModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('ccmc_batch_id').value = dataId;
+
+                                    }
+
                                     
         </script>
         <style>
@@ -1401,11 +1645,11 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Candidate</a>
 
             <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
 
-            <!-- <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1413,16 +1657,23 @@
 
                         </div>
                         <div class="modal-body">
+                            <!-- Modal content goes here -->
                             <div class="container mt-5">
 
                                 <form method="post" action="/my/uploadccmccandidatedata" enctype="multipart/form-data">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                     <input type="hidden" id="ccmc_batch_id" name="ccmc_batch_id" />
                                     <div class="form-group">
-                                        <label for="fileUpload">CSV Upload</label>
-                                        <input type="file" class="form-control-file" accept=".csv" name="fileUpload" id="fileUpload"/>
+                                        <label for="ccmcfileUpload">CSV Upload</label>
+                                        <input type="file" class="form-control-file" accept=".csv" name="ccmcfileUpload" id="ccmcfileUpload"/>
                                     </div>
-                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                                    
+                                    <button id="ccmcuploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
                                 </form>
                             </div>
                         </div>
@@ -1431,7 +1682,8 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
+
 
             <t t-call="portal.portal_table">
                 <thead>
@@ -1458,7 +1710,7 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="" class="fa">View</a>
+                                <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
                             <!-- <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
@@ -1507,7 +1759,11 @@
         <t t-call="portal.portal_layout">
             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a> -->
 
-            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" t-if="page_name == 'gp_faculty'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/ccmcfacultiesform/view/{{batch_id}}" t-if="page_name == 'ccmc_faculty'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            
+            
+            
 
             <!-- <div class="modal fade" id="uploadFacultyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -1579,6 +1835,8 @@
         </t>
     </template>
 
+   
+
     <template id="institute_document_list" name="Document">
         <t t-call="portal.portal_layout">
             <a href="/my/institute_document" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
@@ -1641,36 +1899,6 @@
         </t>
     </template>
 
-
-    <!-- <template id="ccmc_candidate_portal_list">
-        <t t-call="portal.portal_layout">
-            <t t-call="portal.portal_table">
-                <thead>
-                    <tr>
-                        <th>Candidate Name</th>
-                        <th>Roll No.</th>
-                        <th>CCMC Candidate Code No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <t t-foreach="candidates" t-as="candidate">
-                        <tr>
-                            <td class="text-center">
-                                <t t-out="candidate.name" />
-                            </td>
-                            <td class="text-center">
-                                <t t-out="candidate.roll_no" />
-                            </td>
-                            <td class="text-center">
-                                <t t-out="candidate.candidate_code" />
-                            </td>
-                        </tr>
-                    </t>
-
-                </tbody>
-            </t>
-        </t>
-    </template> -->
 
 
     <template id="institute_detail_form" name="Institute Detail">
@@ -1827,7 +2055,11 @@
         </t>
     </template>
 
-    <!-- <template id="faculty_profile_view" name="GP Candidate">
+    
+
+
+
+    <template id="ccmc_candidate_profile_view" name="CCMC Candidate">
         <t t-call="portal.portal_layout">
             <script>
                 
@@ -1845,6 +2077,23 @@
                     reader.readAsDataURL(file);
                     }
                 }
+
+                function displaySignImage(input) {
+                    const cardImg = document.querySelector('.sign-img');
+                    const file = input.files[0];
+
+                    if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        cardImg.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                    }
+                }
+
+
 
                         function openDeleteModal(button) {
                 // Retrieve the data-id attribute value from the clicked button
@@ -1884,35 +2133,48 @@
 
             <div class="container py-5">
 
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateFacultyName" class="btn btn-primary btn_cta">Update Candidate</a>
+                <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
 
-                <div class="modal fade" id="updateFacultyName" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="updateCcmcCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleCcmcModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/updatefaculty" enctype="multipart/form-data">
+                        <form method="post" action="/my/updateccmccandidate" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                            <input type="hidden" class="form-control" id="faculty_id" name="faculty_id" t-attf-value="{{candidate.id}}" />
+                            <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Update Name and Image</h5>
+                                    <h5 class="modal-title" id="exampleCcmcModalLabel">Update Indos and Image</h5>
                                 </div>
                                 <div class="modal-body">
+                                    <!-- Modal content goes here -->
                                     <div class="container mt-5">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
-                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Faculty Photo" />
+                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="faculty_photo" class="form-label">faculty Photo</label>
-                                                    <input type="file" class="form-control" id="faculty_photo" name="faculty_photo" accept="image/*" onchange="displayImage(this)" />
+                                                    <label for="candidate_photo" class="form-label">Candidate Photo</label>
+                                                    <input type="file" class="form-control" id="candidate_photo" name="candidate_photo" accept="image/*" onchange="displayImage(this)" />
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="faculty_name">Faculty Name</label>
-                                                    <input type="text" class="form-control" id="faculty_name" name="faculty_name" />
+                                                    <label for="indos_no">Indos No.</label>
+                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="card-img-container">
+                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img sign-img" style="width: 150px;" alt="Signature" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="signature_photo" class="form-label">Signature Photo</label>
+                                                    <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*" onchange="displaySignImage(this)" />
                                                 </div>
                                             </div>
 
@@ -1936,45 +2198,521 @@
                     <div class="col-lg-4">
                         <div class="card mb-4">
                             <div class="card-body text-center">
-                                <t t-if="faculty.faculty_photo">
-                                    <img t-attf-src="data:image/png; base64, {{faculty.faculty_photo}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                <t t-if="candidate.candidate_image">
+                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
                                 </t>
                                 <t t-else="">
                                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
                                 </t>
                                 <h5 class="my-3">
-                                    <t t-out="faculty.faculty_name" />
+                                    <t t-out="candidate.name" />
                                 </h5>
                                 <p class="text-muted mb-1">
-                                    <t t-out="faculty.dob" />
+                                    <t t-out="candidate.street" />
                                 </p>
                                 <p class="text-muted mb-4">
-                                    <t t-out="faculty.designation"/>
+                                    <t t-out="candidate.street2"/>
                                 </p>
+                                <t t-if="candidate.candidate_signature">
+                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                </t>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-8">
                         <div class="card mb-4">
                             <div class="card-body">
-                               
-                                
-                              
-                                
-                                 
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Full Name</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Indos</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.indos_no"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.phone"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Mobile</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.mobile"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Address</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.street"/>
+                                        </p>
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.street2"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="fees_paid">Fees Paid</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+
+                                        <t t-if="candidate.fees_paid == 'yes'">
+                                            Yes
+                                        </t>
+                                        <t t-else="">
+                                            No
+                                        </t>
+                                        
+                                            
+                                            <!-- <select id="fees_paid" name="fees_paid" t-att-disabled="1">
+                                                <option value="yes">Yes</option>
+                                                <option value="no"  t-att-selected="1" >No</option>
+                                            </select> -->
+                                        </p>
+                                            
+                                        <p class="text-muted mb-0">
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcFeesPaid" class="btn btn-primary btn_cta">Update</a>
+                                        </p>
+                                        <div class="modal fade" id="updateCcmcFeesPaid" tabindex="-1" role="dialog" aria-labelledby="exampleCcmcModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmccandidate/updatefees" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleCcmcModalLabel">Update Fees Paid</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}"  name="candidate_id"/>
+                                                                <label for="fees_paid">Fees Paid:</label>
+    
+                                                                <select id="fees_paid" name="fees_paid">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                 <t t-if="candidate.fees_paid == 'yes'">
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="invoice_no">Invoice No.</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                         <t t-out="candidate.invoice_no"/>
+                                        </div>                                   
+                                    </div>
+                                </t>
 
 
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="container">
+                                    <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                                                <i class="fas fa-chart-pie fa-fw me-2"></i>Ship Visits</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="ex-with-icons-tab-2" data-toggle="tab" href="#ex-with-icons-tabs-2" role="tab" aria-controls="ex-with-icons-tabs-2" aria-selected="false">
+                                                <i class="fas fa-chart-line fa-fw me-2"></i>Attendance</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="ex-with-icons-tab-3" data-toggle="tab" href="#stcw_certificates" role="tab" aria-controls="ex-with-icons-tabs-3" aria-selected="false">
+                                                <i class="fas fa-chart-pie fa-fw me-2"></i>STCW Certificate</a>
+                                        </li>
+                                    </ul>
+
+
+
+
+                                    <div class="tab-content" id="ex-with-icons-content">
+
+                                        <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-candidate-id="{{candidate_id}}" data-target="#AddCcmcShipVisit" class="btn btn-primary btn_cta">Add</a>
+
+                                            <div class="modal fade" id="DeleteCcmcShipVisitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmcshipvisit/delete" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete Ship Visit</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete ?
+                                                                <input type="hidden" id="visit_id" name="visit_id"/>
+                                                                <input type="hidden" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}"/>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal fade" id="AddCcmcShipVisit" tabindex="-1" role="dialog" aria-labelledby="exampleCcmcModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/addccmcshipvisit" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleCcmcModalLabel">Add Ship Visit</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Modal content goes here -->
+                                                                <div class="container mt-5">
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-6">
+                                                                            <input type="hidden" class="form-control" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}" />
+                                                                            <div class="form-group">
+                                                                                <label for="name_of_ships">Name of the Ship Visited / Ship in Campus</label>
+                                                                                <input type="text" class="form-control" id="name_of_ships" name="name_of_ships"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="imo_no">Ship IMO Number</label>
+                                                                                <input type="text" class="form-control" id="imo_no" name="imo_no"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="name_of_ports_visited">Name of the Port Visited / Place of SIC</label>
+                                                                                <input type="text" class="form-control" id="name_of_ports_visited" name="name_of_ports_visited"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="date_of_visits">Date Of Visit</label>
+                                                                                <input type="date" class="form-control" id="date_of_visits" name="date_of_visits"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label for="time_spent_on_ship">Hours Spent on Ship</label>
+                                                                                <input type="number" class="form-control" id="time_spent_on_ship" name="time_spent_on_ship"/>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="bridge" name="bridge"/>
+                                                                                <label class="form-check-label" for="bridge">Bridge</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room"/>
+                                                                                <label class="form-check-label" for="eng_room">Eng. Room</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area"/>
+                                                                                <label class="form-check-label" for="cargo_area">Cargo Area</label>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive border rounded border-top-0 ">
+                                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Action</th>
+                                                            <th>Name of the Ship Visited / Ship in Campus</th>
+                                                            <th>Ship IMO Number</th>
+                                                            <th>Name of Ports</th>
+                                                            <th>Date Of Visit</th>
+                                                            <th>Hours</th>
+                                                            <th>Bridge</th>
+                                                            <th>Eng. Room</th>
+                                                            <th>Cargo Area</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="candidate.ship_visits" t-as="ship_visit">
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-danger" t-attf-data-id="{{ship_visit.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openDeleteModal(this)" data-target="#DeleteCcmcShipVisitModal">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                                        </svg>
+                                                                    </button>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.name_of_ships" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.imo_no" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.name_of_ports_visited" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.date_of_visits" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="ship_visit.time_spent_on_ship" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.bridge == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.eng_room == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="ship_visit.cargo_area == True">Yes</t>
+                                                                    <t t-else="">No</t>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+
+                                        </div>
+                                        <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddCcmcStcw" class="btn btn-primary btn_cta">Add</a>
+                                            <div class="modal fade" id="AddCcmcStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmccandidate/addstcw" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add STCW Certificate</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_name">Course</label>
+                                                                            <select class="form-control" id="course_name" name="course_name">
+                                                                                <option value="pst">PST</option>
+                                                                                <option value="efa">EFA</option>
+                                                                                <option value="fpff">FPFF</option>
+                                                                                <option value="pssr">PSSR</option>
+                                                                                <option value="stsdsd">STSDSD</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="institute_name">Institute Name</label>
+                                                                            <!-- Assuming you have a list of institutes available -->
+                                                                            <select class="form-control" id="institute_name" name="institute_name">
+                                                                                <t t-foreach="institutes" t-as="institute">
+                                                                                    <option t-attf-value="{{institute.id}}">
+                                                                                        <t t-out="institute.name"/>
+                                                                                    </option>
+                                                                                </t>
+                                                                                <!-- Add more options as needed -->
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="marine_training_inst_number">MTI Number</label>
+                                                                            <input type="text" class="form-control" id="marine_training_inst_number" name="marine_training_inst_number"/>
+                                                                            <input type="hidden" class="form-control" t-attf-value="{{candidate.id}}" id="candidate_id" name="candidate_id"/>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="mti_indos_no">Indos No.</label>
+                                                                            <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="candidate_cert_no">Candidate Certificate Number</label>
+                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_start_date">Course Start Date</label>
+                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="course_end_date">Course End Date</label>
+                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="certificate_upload">Certificate Upload</label>
+                                                                            <input type="file" class="form-control" id="certificate_upload" name="certificate_upload"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive border rounded border-top-0 ">
+                                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Course</th>
+                                                            <th>Institute Name</th>
+                                                            <th>MTI Number</th>
+                                                            <th>INDOS No.</th>
+                                                            <th>Candidate Certificate Number</th>
+                                                            <th>Certificate Docs</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                                            <tr>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.institute_name.name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.marine_training_inst_number" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.mti_indos_no" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.candidate_cert_no" />
+                                                                </td>
+                                                                <td>
+                                                                        Download
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_start_date" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.course_end_date" />
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
 
             </div>
         </t>
-    </template> -->
+    </template>
 
 
 

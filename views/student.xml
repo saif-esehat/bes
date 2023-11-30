@@ -390,6 +390,9 @@
                             </h1>
 
                         </div>
+                        <group>
+                            <field name="candidate_signature" widget="image" class="oe_avatar" />
+                        </group>
                         <group style="width:100%;">
                             <field name="candidate_code"/>
                             <field name="roll_no"/>
@@ -433,6 +436,9 @@
                             <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
+                            <field name="fees_paid"/>
+                            <field name="invoice_no"/>
+                            
                         </group>
 
                         <notebook>
