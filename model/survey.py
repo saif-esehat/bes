@@ -12,6 +12,7 @@ class InheritedSurvey(models.Model):
     _inherit = "survey.survey"
     
     title = fields.Char('Exam Title', required=True, translate=True)
+    template = fields.Boolean("Template")
     institute = fields.Many2one("bes.institute",string="Institute")
     course = fields.Many2one("course.master",string="Course")
     examiner = fields.Many2one("bes.examiner",string="Examiner")

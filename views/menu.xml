@@ -3,10 +3,10 @@
     <data>
 
         <record model="ir.actions.act_window" id="survey.action_survey_form">
-            <field name="name">CEMS</field>
+            <field name="name">Examinations</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    CEMS
+                    Examinations
                 </p>
             </field>
         </record>
@@ -79,11 +79,11 @@
 
 
         <record id="survey.menu_surveys" model="ir.ui.menu">
-            <field name="name">CEMS</field>
+            <field name="name">Examinations</field>
         </record>
 
         <record id="survey.menu_survey_form" model="ir.ui.menu">
-            <field name="name">CEMS</field>
+            <field name="name">Examinations</field>
         </record>
 
         <!-- <record id="bes.bes_menu" model="ir.ui.menu">

@@ -61,7 +61,7 @@ class InstituteGPBatches(models.Model):
     @api.depends("candidate_count")
     def _compute_candidate_count(self):
         for rec in self:
-            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', rec.id)])
+            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', rec.id)])
             rec.candidate_count = candidate_count
     
     def move_to_invoiced(self):
@@ -345,21 +345,34 @@ class BatchesRegisterExamWizard(models.TransientModel):
 
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
-    survey_qb = fields.Many2one("survey.survey",string="Question Bank")
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
     
     
     
     def register(self):
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
+        mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
+        gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         for candidate in candidates:
             gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
-            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id})
-            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id})
+            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
+            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             
-            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id})
-            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id})
+            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': self.institute_id.id})
+            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+            
+            mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
+            gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+
+            mek_survey_qb_input.write({'gp_candidate':candidate.id})
+            gsk_survey_qb_input.write({'gp_candidate':candidate.id})
+            
+            gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+                        
+
         
         self.batch_id.write({"state":'5-exam_scheduled'})
 

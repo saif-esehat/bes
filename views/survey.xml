@@ -82,6 +82,7 @@
             <field name="inherit_id" ref="survey.survey_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//field[@name='user_id']" position="after">
+                     <field name="template"/>
                      <field name="survey_start_url" />
                      <field name="examiner" /> 
                      <field name="examiner_token" readonly="1" /> 

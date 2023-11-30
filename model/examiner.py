@@ -104,15 +104,65 @@ class ExaminerAssignment(models.Model):
     # exam_date = fields.Date("Exam Date")
     exam_start_time = fields.Datetime("Exam Start Time")
     exam_end_time = fields.Datetime("Exam End Time")
+    gsk_boolean = fields.Boolean("GSK Boolean" ,compute="_compute_boolean")
+    mek_boolean = fields.Boolean("MEK Boolean" ,compute="_compute_boolean")
     assigned_to = fields.Selection([
         ('gp_candidate', 'GP Candidate'),
         ('ccmc_candidate', 'CCMC Candidate'),
     ], string='Assigned to',default="gp_candidate")
+    course = fields.Many2one("course.master","Course")
     subject_id = fields.Many2one("course.master.subject","Subject")
     institute_id = fields.Many2one('bes.institute',string="Institute")
     gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
+    gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment")
+
+    
+    def update_candidate_from_institute(self):
+        if not self.institute_id:
+            raise ValidationError("Institute Not Selected")
+        
+        if self.subject_id.name == 'GSK':
+            self.gp_oral_prac.unlink()
+            practical_line_candidates = set(self.env["gp.gsk.practical.line"].search([('institute_id','=',self.institute_id.id),('gsk_practical_draft_confirm','=','draft')]).mapped('gsk_practical_parent'))
+            oral_line_candidates = set(self.env["gp.gsk.oral.line"].search([('institute_id','=',self.institute_id.id),('gsk_oral_draft_confirm','=','draft')]).mapped('gsk_oral_parent'))
+            gp_candidates = list(practical_line_candidates.intersection(oral_line_candidates))
+            
+            for candidate in gp_candidates:
+                candidate_id = candidate.id
+                gsk_oral_child_line = candidate.gsk_oral_child_line.filtered(lambda r: r.gsk_oral_draft_confirm == 'draft')
+                gsk_practical_child_line = candidate.gsk_practical_child_line.filtered(lambda r: r.gsk_practical_draft_confirm == 'draft')
+                self.env["gp.candidate.oral.prac.assignment"].create({"assignment_id":self.id,"gsk_oral":gsk_oral_child_line.id,"gsk_prac":gsk_practical_child_line.id,"gp_candidate":candidate_id})
+        
+        elif self.subject_id.name == 'MEK':
+            self.gp_oral_prac.unlink()
+            practical_line_candidates = set(self.env["gp.mek.practical.line"].search([('institute_id','=',self.institute_id.id),('mek_practical_draft_confirm','=','draft')]).mapped('mek_parent'))
+            oral_line_candidates = set(self.env["gp.mek.oral.line"].search([('institute_id','=',self.institute_id.id),('mek_oral_draft_confirm','=','draft')]).mapped('mek_oral_parent'))
+            gp_candidates = list(practical_line_candidates.intersection(oral_line_candidates))
+            
+            for candidate in gp_candidates:
+                candidate_id = candidate.id
+                mek_oral_child_line = candidate.mek_oral_child_line.filtered(lambda r: r.mek_oral_draft_confirm == 'draft')
+                mek_practical_child_line = candidate.mek_practical_child_line.filtered(lambda r: r.mek_practical_draft_confirm == 'draft')
+                self.env["gp.candidate.oral.prac.assignment"].create({"assignment_id":self.id,"mek_oral":mek_oral_child_line.id,"mek_prac":mek_practical_child_line.id,"gp_candidate":candidate_id})
+            
+            
+            
+                            
+            
+    @api.depends('subject_id')
+    def _compute_boolean(self):
+        for record in self:
+            if record.subject_id.name == 'GSK':
+                record.gsk_boolean = True
+            else :
+                record.gsk_boolean = False
+                
+            if record.subject_id.name == 'MEK':
+                record.mek_boolean = True
+            else :
+                record.mek_boolean = False
 
 
     @api.depends('gp_batches')
@@ -124,23 +174,36 @@ class ExaminerAssignment(models.Model):
 
     
     
-    @api.constrains('exam_date', 'subject_id', 'gp_candidates')
-    def _check_duplicate_assignment(self):
-        for record in self:
-            # Check if the same candidate is assigned to the same subject
-            # import wdb;wdb.set_trace()
-            # if len(record.gp_candidates.filtered(lambda c: c in record.subject_id.gp_candidates)) > 1:
-            #     raise ValidationError("A candidate cannot be assigned twice to the same subject.")
+    # @api.constrains('exam_date', 'subject_id', 'gp_candidates')
+    # def _check_duplicate_assignment(self):
+    #     for record in self:
+    #         # Check if the same candidate is assigned to the same subject
+    #         # import wdb;wdb.set_trace()
+    #         # if len(record.gp_candidates.filtered(lambda c: c in record.subject_id.gp_candidates)) > 1:
+    #         #     raise ValidationError("A candidate cannot be assigned twice to the same subject.")
 
-            # Check if the same subject is scheduled within 90 days
-             for candidate in record.gp_candidates:
-                # Check if the same candidate has an exam for the same subject within 90 days
-                similar_assignments = self.search([
-                    ('id', '!=', record.id),
-                    ('subject_id', '=', record.subject_id.id),
-                    ('gp_candidates', 'in', candidate.id),
-                    # ('exam_date', '>=', fields.Date.to_string(fields.Date.from_string(record.exam_date) - timedelta(days=90))),
-                    # ('exam_date', '<=', record.exam_date)
-                ])
-                if similar_assignments:
-                    raise ValidationError(f"{candidate.name} cannot have an exam for the same subject within 90 days.")
+    #         # Check if the same subject is scheduled within 90 days
+    #          for candidate in record.gp_candidates:
+    #             # Check if the same candidate has an exam for the same subject within 90 days
+    #             similar_assignments = self.search([
+    #                 ('id', '!=', record.id),
+    #                 ('subject_id', '=', record.subject_id.id),
+    #                 ('gp_candidates', 'in', candidate.id),
+    #                 # ('exam_date', '>=', fields.Date.to_string(fields.Date.from_string(record.exam_date) - timedelta(days=90))),
+    #                 # ('exam_date', '<=', record.exam_date)
+    #             ])
+    #             if similar_assignments:
+    #                 raise ValidationError(f"{candidate.name} cannot have an exam for the same subject within 90 days.")
+
+
+
+class GPOralPracAssignment(models.Model):
+    _name = "gp.candidate.oral.prac.assignment"
+    _description= 'GP Candidate Oral Practical Assignment'
+    
+    assignment_id = fields.Many2one("examiner.assignment","Assignment ID")
+    gp_candidate = fields.Many2one("gp.candidate","Candidate")
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
