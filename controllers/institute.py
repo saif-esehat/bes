@@ -53,6 +53,8 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN'), ('code', '=', row['State (short)'])]).id
                 # state = row['State (short)']
             pin_code = row['Pin code']
+            roll_no = row['Roll No.']
+            code_no = row['Code No.']
             xth_std_eng = float(row['%  Xth Std in Eng.'])
 
             if not row['%12th Std in Eng.']:
@@ -77,6 +79,8 @@ class InstitutePortal(CustomerPortal):
                 'institute_id': institute_id,
                 'indos_no': indos_no,
                 'dob': dob,
+                'roll_no':roll_no,
+                'candidate_code':code_no,
                 # Include other fields here with their corresponding data
                 'institute_batch_id':batch_id,
                 'street': address,
