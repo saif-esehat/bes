@@ -202,18 +202,36 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <group>
-                            <field name="examiner_id" />
-                            <field name="exam_start_time" />
-                            <field name="assigned_to" />
-                            <field name="subject_id" />
+                        <group style="width:50%">
+                            <field name="examiner_id"/>
+                            <field name="exam_start_time"/>
+                            <field name="assigned_to"/>
+                            <field name="course"/>
+                            <field name="subject_id" domain="[('course_id','=',course)]"/>
+                            <field name="gsk_boolean" invisible="1"/>
+                            <field name="mek_boolean" invisible="1"/>
+
                         </group>
-                        <group>
+                        <group style="width:50%">
                             <field name="assignment_date" />
                             <field name="exam_end_time" />
                             <field name="institute_id" />
-                            <field name="gp_batches" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                            <field name="gp_batches" invisible="1" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
 
+                        </group>
+                        <group>
+                            <button name="update_candidate_from_institute" string="Update Candidate" type="object" class="btn-primary" />
+                        </group>
+                        <group style="width:100%">
+                            <field name="gp_oral_prac">
+                                <tree>
+                                    <field name="gp_candidate"/>
+                                    <field name="gsk_oral" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False )]}"/>
+                                    <field name="gsk_prac" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False)]}"/>
+                                    <field name="mek_oral" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
+                                    <field name="mek_prac" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
+                                </tree>
+                            </field>
                         </group>
 
                         <group style="width:100%">

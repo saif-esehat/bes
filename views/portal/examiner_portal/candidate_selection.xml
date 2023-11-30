@@ -37,9 +37,9 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Institute</th>
-                        <th>Indos No</th>
-                        <th>Roll No</th>
+                        <th style="width: 1;" >Institute</th>
+                        <th style="width: 1;">Indos No</th>
+                        <th style="width: 1;">Roll No</th>
                         
 
 
@@ -60,13 +60,967 @@
                             <td class="text-left">
                                 <t t-out="c.roll_no" />
                             </td>
+                            <td class="text-left">
+                                <a class="btn btn-primary" t-attf-href="/open_gsk_oral_form?rec_id={{ c.indos_no }}">
+                                GSK Oral</a>                            
+                                <a class="btn btn-primary" t-attf-href="/open_gsk_practical_form?rec_id={{ c.indos_no }}">
+                                GSK Practical</a>                            
+                                <a class="btn btn-primary" t-attf-href="/open_mek_oral_form?rec_id={{ c.indos_no }}">
+                                MEK Oral</a> 
+                                <a class="btn btn-primary" t-attf-href="/open_practical_mek_form?rec_id={{ c.indos_no }}">
+                                MEK Practical</a> 
+                                <a class="btn btn-primary" t-attf-href="/open_cookery_bakery_form?rec_id={{ c.indos_no }}">
+                                Cookery and Bakery</a>     
+                                <a class="btn btn-primary" t-attf-href="/open_ccmc_oral_form?rec_id={{ c.indos_no }}">
+                                CCMC Oral</a>                          
+                            </td>
                             
+                           
 
                         </tr>
                     </t>
 
                 </tbody>
             </t>
+        </t>
+    </template>
+
+
+    <template id="gsk_practical_marks_submit" name="GSK Practical Marks Submittion">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">GSK Practical Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                <!-- <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div> -->
+                             </div>
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="climbing_mast">Climb the mast with safe practices ,
+                                         Prepare and throw Heaving Line </label>
+                                        <input type="number" class="form-control" id="climbing_mast" name="climbing_mast" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="buoy_flags_recognition">·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders</label>
+                                        <input type="number" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="bosun_chair">Rigging Bosun's Chair and self lower and hoist</label>
+                                        <input type="number" class="form-control" id="bosun_chair" name="bosun_chair" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="rig_stage">Rig a stage for painting shipside</label>
+                                        <input type="number" class="form-control" id="rig_stage" name="rig_stage" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="rig_pilot">Rig a Pilot Ladder</label>
+                                        <input type="number" class="form-control" id="rig_pilot" name="rig_pilot" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="rig_scoffolding">Rig scaffolding to work at a height</label>
+                                        <input type="number" class="form-control" id="rig_scoffolding" name="rig_scoffolding" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fast_ropes">·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopperl</label>
+                                        <input type="number" class="form-control" id="fast_ropes" name="fast_ropes"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="knots_bend">.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase</label>
+                                        <input type="number" class="form-control" id="knots_bend" name="knots_bend"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sounding_rod">·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight</label>
+                                        <input type="number" class="form-control" id="sounding_rod" name="sounding_rod"/>
+                                    </div>
+                                </div>
+
+                                
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="gsk_practical_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                <div class="form-group" style="display:grid">
+                                    
+                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="gsk_oral_marks_submit" name="GSK Oral Marks Submittion">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">GSK Oral Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                <!-- <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area1">Subject Area 1</label>
+                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area2">Subject Area 2</label>
+                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area3">Subject Area 3</label>
+                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area4">Subject Area 4</label>
+                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area5">Subject Area 5</label>
+                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area6">Subject Area 6</label>
+                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="practical_record_journals">Practical Record Book and Journal</label>
+                                        <input type="number" class="form-control" id="practical_record_journals" name="practical_record_journals"/>
+                                    </div>
+                                </div>
+
+                                
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="remarks_oral_gsk">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                <div class="form-group" style="display:grid">
+                                    
+                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="mek_oral_marks_submit" name="MEK Oral Marks Submittion">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">MEK Oral Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                <!-- <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area1">Uses of Hand/Plumbing/Carpentry Tools</label>
+                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area2">Use of Chipping Tools and Brushes and Paints</label>
+                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area3">Welding</label>
+                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area4">Lathe/Drill/Grinder</label>
+                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area5">Electrical</label>
+                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area6">Journal</label>
+                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" />
+                                    </div>
+                                </div>
+
+
+                               
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="remarks_oral_mek">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                <div class="form-group" style="display:grid">
+                                    
+                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="mek_practical_marks" name="MEK Practical Marks Submittion">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">MEK Practical Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                <!-- <div class="col-md-2">
+                                    <div class="card-img-container">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area1">Using Hand and Plumbing Tools (Task 1)</label>
+                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area2">Using Hand and Plumbing Tools (Task 2)</label>
+                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area3">Using Hand and Plumbing Tools (Task 3)</label>
+                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area4">Use of Chipping Tools and paint Brushes</label>
+                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area5">Use of Carpentry Tools</label>
+                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area6">Use of Measuring Instruments</label>
+                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area7">Welding (1 Task)</label>
+                                        <input type="number" class="form-control" id="subject_area7" name="subject_area7" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area8">Lathe Work (1 Task)</label>
+                                        <input type="number" class="form-control" id="subject_area8" name="subject_area8" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject_area9">Electrical (1 Task)</label>
+                                        <input type="number" class="form-control" id="subject_area9" name="subject_area9" />
+                                    </div>
+                                </div>
+
+
+                               
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="remarks_practical_mek">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                <div class="form-group" style="display:grid">
+                                    
+                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="cookery_bakery_marks_submit" name="Cookery And Bakery Marks Submittion">
+        <style>
+            /* Existing styles remain unchanged */
+
+            .form-group-header {
+                font-weight: bold;
+                margin-top: 10px;
+                margin-bottom: 5px;
+            }
+        </style>
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">Cookery and Bakery Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                <!-- Existing photo section remains commented out -->
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="hygiene_grooming">Hygiene and Grooming</label>
+                                        <input type="number" class="form-control" id="hygiene_grooming" name="hygiene_grooming" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dish 1 Group -->
+                            <div class="form-group-header">Dish 1</div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="appearance_dish1">Appearance</label>
+                                        <input type="number" class="form-control" id="appearance_dish1" name="appearance_dish1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="taste_dish1">Taste</label>
+                                        <input type="number" class="form-control" id="taste_dish1" name="taste_dish1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="texture_dish1">Texture</label>
+                                        <input type="number" class="form-control" id="texture_dish1" name="texture_dish1" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dish 2 Group -->
+                            <div class="form-group-header">Dish 2</div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="appearance_dish2">Appearance</label>
+                                        <input type="number" class="form-control" id="appearance_dish2" name="appearance_dish2" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="taste_dish2">Taste</label>
+                                        <input type="number" class="form-control" id="taste_dish2" name="taste_dish2" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="texture_dish2">Texture</label>
+                                        <input type="number" class="form-control" id="texture_dish2" name="texture_dish2" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dish 3 Group -->
+                            <div class="form-group-header">Dish 3</div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="appearance_dish3">Appearance</label>
+                                        <input type="number" class="form-control" id="appearance_dish3" name="appearance_dish3" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="taste_dish3">Taste</label>
+                                        <input type="number" class="form-control" id="taste_dish3" name="taste_dish3" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="texture_dish3">Texture</label>
+                                        <input type="number" class="form-control" id="texture_dish3" name="texture_dish3" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Groups -->
+                            <div class="form-group-header">Additional Groups</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="identification_of_ingredients">Identification of Ingredients</label>
+                                        <input type="number" class="form-control" id="identification_of_ingredients" name="identification_of_ingredients" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="knowledge_of_menu">Knowledge of Menu</label>
+                                        <input type="number" class="form-control" id="knowledge_of_menu" name="knowledge_of_menu" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group" style="display: grid">
+                                    <button type="submit" class="btn btn-primary" style="align-items: center">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="ccmc_gsk_oral_marks_submit" name="CCMC GSK Oral Marks Submittion">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">CCMC GSK Oral Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                               
+                            </div>
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="ccmc_gsk">GSK</label>
+                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="safety_ccmc">Safety</label>
+                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                <div class="form-group" style="display:grid">
+                                    
+                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
         </t>
     </template>
 </odoo>

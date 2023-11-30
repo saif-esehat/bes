@@ -104,7 +104,9 @@
             <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
                 <form>
-                   
+                   <header>
+                        <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
+                   </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="open_gp_candidate_exams" string="Exams" type="object" class="oe_stat_button" icon="fa-align-justify">
@@ -232,6 +234,7 @@
                                     <tree> 
                                         <field name="mek_prcatical_attempt_no"/>
                                         <field name='mek_practical_exam_date'/>
+                                        <field name='institute_id'/>
                                         <field name='exam_id'/>
                                         <field name='using_hand_plumbing_tools_task_1'/>
                                         <field name="using_hand_plumbing_tools_task_2"/>
@@ -253,7 +256,8 @@
                                 <field name="mek_oral_child_line" nolabel="1">
                                     <tree>
                                         <field name="mek_oral_attempt_no"/>
-                                        <field name='mek_oral_exam_date'/>                              
+                                        <field name='mek_oral_exam_date'/> 
+                                        <field name='institute_id'/>                             
                                         <field name='exam_id'/>
                                         <field name='using_hand_plumbing_carpentry_tools'/>
                                         <field name="use_of_chipping_tools_paints"/>
@@ -274,6 +278,7 @@
                                     <tree>
                                         <field name="gsk_practical_attempt_no"/>
                                         <field name='gsk_practical_exam_date'/> 
+                                         <field name='institute_id'/>
                                         <field name='exam_id'/>
                                         <field name='climbing_mast'/>
                                         <field name="buoy_flags_recognition"/>
@@ -297,8 +302,8 @@
                                     <tree> 
                                          <field name='gsk_oral_attempt_no'/>
                                         <field name='gsk_oral_exam_date'/>
+                                        <field name='institute_id'/>
                                         <field name='exam_id'/>
-
                                         <field name='subject_area_1'/>
                                         <field name="subject_area_2"/>
                                         <field name='subject_area_3'/>
@@ -313,6 +318,23 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="MEK Online">
+                                <field name="mek_online" nolabel="1">
+                                    <tree> 
+                                        <field name="survey_id"/>
+                                        <field name="scoring_percentage"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="GSK Online">
+                                <field name="gsk_online" nolabel="1">
+                                    <tree> 
+                                        <field name="survey_id"/>
+                                        <field name="scoring_percentage"/>
+
+                                    </tree>
+                                </field>
+                            </page>
                             
                         </notebook>
                     </sheet>
@@ -321,7 +343,37 @@
         </record>
 
 
-        <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
+    <record id="gp_candidate_tree" model="ir.ui.view">
+        <field name="name">gp.candidate.tree</field>
+        <field name="model">gp.candidate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"  optional="show"/>
+                <field name="indos_no"  optional="show"/>
+                <field name="age" optional="hide"/>
+                <field name="candidate_code"  optional="hide"/>
+                <field name="roll_no"  optional="hide"/>
+                <field name="dob"  optional="hide"/>
+                <field name="user_id" optional="hide"/>
+                <field name="street" optional="hide"/>
+                <field name="street2" optional="hide"/>
+                <field name="city"  optional="hide"/>
+                <field name="zip" optional="hide"/>
+                <field name="state_id"  optional="hide"/>
+                <field name="phone" optional="hide"/>
+                <field name="mobile" optional="hide"/>
+                <field name="email"  optional="hide"/>
+                <field name="tenth_percent" optional="hide"/>
+                <field name="twelve_percent" optional="hide"/>
+                <field name="iti_percent"  optional="hide"/>
+                <field name="sc_st"  optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
             <field name="name">gp.candidate.ship.visits.form</field>
             <field name="model">gp.candidate.ship.visits</field>
             <field name="arch" type="xml">
@@ -343,7 +395,7 @@
                     </sheet>
                 </form>
             </field>
-        </record>
+    </record>
 
 
         <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
@@ -1135,6 +1187,43 @@
                         </group>
 
                     </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="candidate_gp_register_exam_wizard" model="ir.ui.view">
+            <field name="name">candidate.gp.register.exam.wizard.form</field>
+            <field name="model">candidate.gp.register.exam.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                   
+                    <group>
+                        <field name="gp_exam" readonly="1" />
+                        <field name="previous_attempt" readonly="1" />
+                    </group>
+                    <group style="width:50%">
+                            <field name="gsk_oral_prac_status" readonly="1"/>
+                            <field name="mek_oral_prac_status" readonly="1"/>
+                    </group>
+                     <group style="width:50%">
+                            <field name="mek_online_status" readonly="1"/>
+                            <field name="gsk_online_status" readonly="1"/>
+                    </group>
+                     <group>
+                        <field name="exam_region" />
+                        <field name="institute_id" domain="[('exam_center','=',exam_region)]" />
+                        <field name="candidate_id" invisible="1" />
+                      
+
+                        <!-- <field name="mek_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','MEK')]" options="{'no_create': True}"/>
+                        <field name="gsk_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','GSK')]" options="{'no_create': True}"/> -->
+
+                    </group>
+                    <footer>
+                        <!-- <button string="Register" type="object" class="oe_highlight" name="register"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/> -->
+                    </footer>
                 </form>
             </field>
         </record>
