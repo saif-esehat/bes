@@ -80,25 +80,29 @@ class ExaminerPortal(CustomerPortal):
     #     ​	​return wrapper
     #     ​return decorator
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
-    def open_candidate_form(self, **kw):
-        rec_id = kw.get('rec_id')
-        # print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec_id)
-        assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
+    def open_candidate_form(self, **rec):
+        if 'rec_id' in rec:
+            rec_id =rec['rec_id']
+            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
 
-        # Check if gp_candidate is set
-        if assignment.assigned_to == "gp_candidate":
-            candidate = assignment.gp_candidates
-        # Check if ccmc_candidate is set
-        elif assignment.assigned_to == "ccmc_candidate":
-            candidate = assignment.ccmc_candidates
-        else:
-            # Handle the case when both gp_candidate and ccmc_candidate are not set
-            candidate = False
+            # Check if gp_candidate is set
+            if assignment.assigned_to == "gp_candidate":
+                candidate = assignment.gp_candidates
+            # Check if ccmc_candidate is set
+            elif assignment.assigned_to == "ccmc_candidate":
+                candidate = assignment.ccmc_candidates
+            else:
+                # Handle the case when both gp_candidate and ccmc_candidate are not set
+                candidate = False
 
-        return request.render("bes.examiner_candidate_list", {'candidate': candidate})
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate})
+        
+
 
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True)
     def open_gsk_oral_form(self, **rec):
+        candidate = request.env['gp.candidate'].sudo()
         if 'indos' in rec:
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
@@ -110,22 +114,25 @@ class ExaminerPortal(CustomerPortal):
             subject_area4 = int(rec['subject_area4'])
             subject_area5 = int(rec['subject_area5'])
             subject_area6 = int(rec['subject_area6'])
+            state=rec['state']
 
             practical_record_journals = int(rec['practical_record_journals'])
        
             remarks_oral_gsk = rec['remarks_oral_gsk']
 
-            candidate = request.env['gp.candidate'].sudo()
             candidate_rec = candidate.search([('indos_no', '=', indos)])
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
 
             # Construct the dictionary with integer values
             vals = {
-                'subject_area_1': subject_area1,                'subject_area_2': subject_area2,
+                'subject_area_1': subject_area1,                
+                'subject_area_2': subject_area2,
                 'subject_area_3': subject_area3,
                 'subject_area_4': subject_area4,
                 'subject_area_5': subject_area5,
                 'subject_area_6': subject_area6,
                 'practical_record_journals': practical_record_journals,
+                'gsk_oral_draft_confirm': state,
                
                 'gsk_oral_remarks': remarks_oral_gsk
             }
@@ -133,18 +140,23 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'gsk_oral_child_line': [(0, 0, vals)]
-            })
+            draft_records.write(vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            return request.render("bes.gsk_oral_marks_submit", {'indos': rec_id})
+            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+
+            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            print('dateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',draft_records.gsk_oral_exam_date)
+            exam_date = draft_records.gsk_oral_exam_date
+            return request.render("bes.gsk_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date})
                 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True)
     def open_gsk_practical_form(self, **rec):
+        candidate = request.env['gp.candidate'].sudo()
         if 'indos' in rec:
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
@@ -159,11 +171,11 @@ class ExaminerPortal(CustomerPortal):
             subject_area7 = int(rec['fast_ropes'])
             subject_area8 = int(rec['knots_bend'])
             subject_area9 = int(rec['sounding_rod'])
-           
+            state = rec['state']
             remarks_oral_gsk = rec['gsk_practical_remarks']
 
-            candidate = request.env['gp.candidate'].sudo()
             candidate_rec = candidate.search([('indos_no', '=', indos)])
+            draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
 
             # Construct the dictionary with integer values
             vals = {
@@ -176,6 +188,7 @@ class ExaminerPortal(CustomerPortal):
                 'fast_ropes': subject_area7,
                 'knots_bend': subject_area8,
                 'sounding_rod': subject_area9,
+                'gsk_practical_draft_confirm': state,
                
                 'gsk_practical_remarks': remarks_oral_gsk
             }
@@ -183,18 +196,23 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'gsk_practical_child_line': [(0, 0, vals)]
-            })
+            draft_records.write(vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id})       
+            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
+
+            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            
+            exam_date = draft_records.gsk_practical_exam_date
+            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id,'exam_date':exam_date})       
             
 
     @http.route('/open_mek_oral_form', type='http', auth="user", website=True)
     def open_mek_oral_form(self, **rec):
+        candidate = request.env['gp.candidate'].sudo()
         if 'indos' in rec:
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
@@ -207,9 +225,11 @@ class ExaminerPortal(CustomerPortal):
             subject_area5 = int(rec['subject_area5'])
             subject_area6 = int(rec['subject_area6'])
             mek_oral_remarks = rec['remarks_oral_mek']
+            state = rec['state']
 
-            candidate = request.env['gp.candidate'].sudo()
             candidate_rec = candidate.search([('indos_no', '=', indos)])
+            draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
+
 
             # Construct the dictionary with integer values
             vals = {
@@ -220,6 +240,7 @@ class ExaminerPortal(CustomerPortal):
                 'electrical': subject_area5,
                 'journal': subject_area6,
                 'mek_oral_remarks': mek_oral_remarks,
+                'mek_oral_draft_confirm': state,
                 
                 
             }
@@ -227,18 +248,23 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'mek_oral_child_line': [(0, 0, vals)]
-            })
+            draft_records.write(vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id})
+            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
+
+            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            
+            exam_date = draft_records.mek_oral_exam_date
+            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date})
 
     @http.route('/open_practical_mek_form', type='http', auth="user", website=True)
     def open_practical_mek_form(self, **rec):
         print("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        candidate = request.env['gp.candidate'].sudo()
         if 'indos' in rec:
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
@@ -256,15 +282,17 @@ class ExaminerPortal(CustomerPortal):
             subject_area9 = int(rec['subject_area9'])
            
             mek_practical_remarks = rec['remarks_practical_mek']
+            state = rec['state']
 
-            candidate = request.env['gp.candidate'].sudo()
             candidate_rec = candidate.search([('indos_no', '=', indos)])
+            draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
+
 
             # Construct the dictionary with integer values
             vals = {
-                'using_hand_plumbing__tools_task1': subject_area1,
-                'using_hand_plumbing__tools_task2': subject_area2,
-                'using_hand_plumbing__tools_task3': subject_area3,
+                'using_hand_plumbing_tools_task_1': subject_area1,
+                'using_hand_plumbing_tools_task_2': subject_area2,
+                'using_hand_plumbing_tools_task_3': subject_area3,
                 'use_of_chipping_tools_paint_brushes': subject_area4,
                 'use_of_carpentry': subject_area5,
                 'use_of_measuring_instruments': subject_area6,
@@ -272,24 +300,31 @@ class ExaminerPortal(CustomerPortal):
                 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
+                'mek_practical_draft_confirm': state,
                 
             }
 
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'mek_practical_child_line': [(0, 0, vals)]
-            })
+            draft_records.write(
+                 vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            return request.render("bes.mek_practical_marks", {'indos': rec_id})
+            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
+
+            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            
+            exam_date = draft_records.mek_practical_exam_date
+            return request.render("bes.mek_practical_marks", {'indos': rec_id,'exam_date':exam_date})
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True)
     def open_cookery_bakery_form(self, **rec):
 
+        candidate = request.env['ccmc.candidate'].sudo()
         if 'indos' in rec:
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
@@ -310,7 +345,6 @@ class ExaminerPortal(CustomerPortal):
             subject_area12 = int(rec['knowledge_of_menu'])
            
 
-            candidate = request.env['ccmc.candidate'].sudo()
             candidate_rec = candidate.search([('indos_no', '=', indos)])
 
             # Construct the dictionary with integer values
@@ -340,6 +374,12 @@ class ExaminerPortal(CustomerPortal):
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
+            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            draft_records = candidate_rec.cookery_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
+
+            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            
+            exam_date = draft_records.mek_practical_exam_date
             return request.render("bes.cookery_bakery_marks_submit", {'indos': rec_id})
 
     @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True)

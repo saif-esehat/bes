@@ -1,12 +1,18 @@
 <odoo>
     <template id="examiner_candidate_list" name="Candidates">
         <script>
-                                    $(document).ready(function () {
-                                        $('#uploadBtn').on('click', function () {
-                                            // Show the overlay and loader when the upload button is clicked
-                                            $('#loader-overlay').show();
-                                        });
-                                    });
+            <!-- $('.oe_searchview_button').on('click', function () {
+                // Get the selected value from the dropdown
+                var selectedFilter = $('#searchFilter').val();
+
+                // Get the input value for search
+                var inputValue = $('.oe_searchview_input input').val();
+
+                // Construct the URL based on the selected filter and input value
+                var url = '/open_candidate_form?' + selectedFilter + '=' + inputValue;
+                 window.location.href = url;
+            }); -->
+        
         </script>
         <style>
                                 /* CSS to style the loader and overlay */
@@ -32,8 +38,9 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            
+        
             <t t-call="portal.portal_table">
+            
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -52,7 +59,7 @@
                                 <t t-out="c.name" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.institute_id.name" />
+                                <t t-out="c.institute_id.name" style="white-space:pre-line;" />
                             </td>
                             <td class="text-left">
                                 <t t-out="c.indos_no" />
@@ -82,6 +89,7 @@
 
                 </tbody>
             </t>
+           
         </t>
     </template>
 
@@ -180,6 +188,14 @@
                                 </div> -->
                              </div>
                             <div class="row">
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -249,6 +265,16 @@
                                         <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks"/>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                            </div>
 
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
@@ -363,7 +389,14 @@
                                 </div> -->
                             </div>
                             <div class="row">
-                               
+
+                               <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>                               
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Subject Area 1</label>
@@ -417,6 +450,16 @@
                                         <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
                                     </div>
                                 </div>
+                                 <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                            </div>
 
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
@@ -530,6 +573,13 @@
                                 </div> -->
                             </div>
                             <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -577,6 +627,16 @@
                                         <label for="remarks_oral_mek">Remarks Mention If Absent/Good/Average/Weak</label>
                                         <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek"/>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
                                 </div>
 
                                 <div class="col-md-12">
@@ -691,6 +751,13 @@
                                 </div> -->
                             </div>
                             <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -760,6 +827,16 @@
                                         <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek"/>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                                </div>
 
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
@@ -803,6 +880,13 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="hygiene_grooming">Hygiene and Grooming</label>
@@ -894,6 +978,16 @@
                                         <label for="knowledge_of_menu">Knowledge of Menu</label>
                                         <input type="number" class="form-control" id="knowledge_of_menu" name="knowledge_of_menu" />
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
                                 </div>
                             </div>
 
@@ -992,6 +1086,13 @@
                                
                             </div>
                             <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -1005,12 +1106,23 @@
                                         <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" />
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                                </div>
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
                                     
                                         <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
                                     </div>
                                 </div>
+
 
 
                             </div>
