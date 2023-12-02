@@ -2,6 +2,8 @@ from odoo import api, fields, models , _, exceptions
 from odoo.exceptions import UserError,ValidationError
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
+import datetime
+
 
 class GPCandidate(models.Model):
     _name = 'gp.candidate'
@@ -93,6 +95,14 @@ class GPCandidate(models.Model):
 
         # import wdb;wdb.set_trace()
         
+        exam_month = self.detect_current_month()
+        
+        if exam_month == 'dec_feb' or exam_month== 'jul_aug':
+            institute_ids = self.env["bes.institute"].search([('institute_repeater','=',True)]).ids
+        else:
+            institute_ids = []
+        
+        
         return {
             'name': 'Register For Exam',
             'view_type': 'form',
@@ -109,9 +119,35 @@ class GPCandidate(models.Model):
             "default_gsk_oral_prac_status": last_exam_record.gsk_oral_prac_status,
             "default_mek_oral_prac_status": last_exam_record.mek_oral_prac_status,
             "default_mek_online_status": last_exam_record.mek_online_status,
-            "default_gsk_online_status":last_exam_record.gsk_online_status
+            "default_gsk_online_status":last_exam_record.gsk_online_status,
+            "default_exam_month" : self.detect_current_month(),
+            "default_institute_ids" : institute_ids
             }
         }
+    
+    
+    def detect_current_month(self):
+    # Get the current month as an integer (1 for January, 2 for February, etc.)
+        current_month = datetime.datetime.now().month
+        
+        # Define the month ranges
+        winter_months = [12, 1, 2]
+        spring_months = [3, 4, 5, 6]
+        summer_months = [7, 8]
+        fall_months = [9, 10, 11]
+
+        # Check which range the current month falls into
+        if current_month in winter_months:
+            return "dec_feb"
+        elif current_month in spring_months:
+            return "mar_jun"
+        elif current_month in summer_months:
+            return "jul_aug"
+        elif current_month in fall_months:
+            return "sep_nov"
+        else:
+            return "Invalid month."
+
     
     
     
@@ -977,17 +1013,28 @@ class CandidateRegisterExamWizard(models.TransientModel):
     _name = 'candidate.gp.register.exam.wizard'
     _description = 'Register Exam'
     
-    exam_region = fields.Many2one("exam.center",string="Exam Region",required=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    exam_region = fields.Many2one("exam.center",string="Exam Region")
+    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     candidate_id = fields.Many2one("gp.candidate",string="Candidate",required=True)
+    
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
+
 
     gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True)
-
+    
     
     previous_attempt =  fields.Integer("Previous Attempt No.")
     # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
-    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
-    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
+
+    
+    exam_month = fields.Selection([
+        ('dec_feb', 'Dec - Feb'),
+        ('mar_jun', 'Mar - Jun'),
+        ('jul_aug', 'Jul - Aug'),
+        ('sep_nov', 'Sep - Nov'),
+    ], string='Exam Month')
     
     
     gsk_oral_prac_status = fields.Selection([
@@ -1012,6 +1059,28 @@ class CandidateRegisterExamWizard(models.TransientModel):
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='Gsk Online Status')
+    
+    
+    @api.depends('exam_region')
+    def _compute_institute_ids(self):
+        for record in self:
+            
+            exam_region = record.exam_region.id
+            record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
+    
+    # @api.onchange('exam_month')
+    # def _onchange_exam_month(self):
+    #     # Example: Set a domain to only allow child records with age greater than 5
+    #     # import wdb; wdb.set_trace(); 
+    #     if self.exam_month == 'dec_feb' or self.exam_month== 'jul_aug':
+            
+    #         return {
+    #             'domain': {
+    #                 'institute_id': [('institute_repeater', '=', True)]
+    #             }
+    #         }
+    #     else:
+    #         return {}
     
     
     # def register(self):
