@@ -1146,11 +1146,11 @@ class SEPCertificateReport(models.AbstractModel):
     _description = 'SEP Certificate Report'
 
     @api.model
-   def _get_report_values(self, docids, data=None):
-    records = self.env['sep.candidate.line'].browse(docids)
-    if not records:
-        raise ValueError("No records found for docids: %s" % docids)
-    return {
-        'records': records,
-        'data': data,
-    }
+    def _get_report_values(self, docids, data=None):
+        records = self.env['sep.candidate.line'].browse(docids)
+        if not records:
+            raise ValueError("No records found for docids: %s" % docids)
+        return {
+            'records': records,
+            'data': data,
+        }
