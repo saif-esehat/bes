@@ -52,6 +52,12 @@
                   action="candidate_ccmc_action"
                   sequence="4" />
 
+        <menuitem id="sep_reg_menu" 
+                  parent="candidate_menus" 
+                  name="SEP Registration"
+                  action="sep_reg_action"
+                  sequence="5" />
+
 
         <menuitem id="bes_exams_menu" 
                   parent="bes_menu" 

@@ -1020,10 +1020,68 @@ class CandidateRegisterExamWizard(models.TransientModel):
             
             
             
-            
-            
-        
-        
-        
-        
+class SEPCandidate(models.Model):
+    _name = 'sep.candidate'
+    _description = 'GP Candidate'
     
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
+
+    gsk_candidate_child_line = fields.One2many("sep.candidate.line","sep_candidate_parent",string="SEP Registration")
+    def name_get(self):
+        result = []
+        for record in self:
+            name = f"{record.institute_batch_id.batch_name} "  # Customize the display name as needed
+            result.append((record.id, name))
+        return result
+        
+        
+        
+        
+class SEPCandidateLine(models.Model):
+    _name = 'sep.candidate.line'
+    _description = 'GP Candidate Line'
+    rec_name = 'institute_batch_id'
+    
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
+
+    sep_candidate_parent = fields.Many2one("sep.candidate",string="SEP Registration Line")
+    name = fields.Char("Name of the Rating's")
+    dob = fields.Date("DOB")
+    indos_no= fields.Char("Indos No")
+    cdc_no= fields.Char("CDC No")
+    contact= fields.Char("Contact No")
+    email= fields.Char("Email ID")
+    attendance1= fields.Boolean("1st Day Attendance")
+    attendance2= fields.Boolean("2nd Day Attendance")
+    vaccination= fields.Boolean("Vaccination/RTPCR")
+    remarks= fields.Char("Remark")
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+    ],compute='_compute_state', string='Status', default='draft' )
+
+    @api.depends('attendance1', 'attendance2')
+    def _compute_state(self):
+        for record in self:
+            if record.attendance1 and record.attendance2:
+                record.state = 'confirmed'
+            else:
+                record.state = 'draft'
+
+    def print_certificate(self):
+        return self.env.ref('bes.action_report_certificate').report_action(self)
+        
+
+class SEPCertificateReport(models.AbstractModel):
+    _name = 'report.bes.sep_certificate'
+    _description = 'SEP Certificate Report'
+
+    @api.model
+   def _get_report_values(self, docids, data=None):
+    records = self.env['sep.candidate.line'].browse(docids)
+    if not records:
+        raise ValueError("No records found for docids: %s" % docids)
+    return {
+        'records': records,
+        'data': data,
+    }
