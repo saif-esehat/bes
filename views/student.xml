@@ -1204,9 +1204,12 @@
             <field name="arch" type="xml">
                 <form>
                    
-                    <group>
+                    <group style="width:50%">
                         <field name="gp_exam" readonly="1" />
                         <field name="previous_attempt" readonly="1" />
+                    </group>
+                     <group style="width:50%">
+                        <field name="exam_month" />
                     </group>
                     <group style="width:50%">
                             <field name="gsk_oral_prac_status" readonly="1"/>
@@ -1214,11 +1217,14 @@
                     </group>
                      <group style="width:50%">
                             <field name="mek_online_status" readonly="1"/>
-                            <field name="gsk_online_status" readonly="1"/>
+                            <field name="gsk_online_status"  readonly="1"/>
                     </group>
                      <group>
-                        <field name="exam_region" />
-                        <field name="institute_id" domain="[('exam_center','=',exam_region)]" />
+                        <field name="exam_region" attrs="{'invisible': [('exam_month', 'in', ('dec_feb','jul_aug'))]}" />
+                        <field name="institute_ids" invisible="1" />
+                        <field name="institute_id" domain="[('id','in',institute_ids)]" />
+                        <field name="mek_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','MEK')]" attrs="{'invisible': [('mek_online_status', '=', 'passed')]}" />
+                        <field name="gsk_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','GSK')]"  attrs="{'invisible': [('gsk_online_status', '=', 'passed')]}" />
                         <field name="candidate_id" invisible="1" />
                       
 

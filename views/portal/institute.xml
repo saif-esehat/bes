@@ -1498,7 +1498,7 @@
 
                                     
         </script>
-        <style>
+        <!-- <style>
                                 /* CSS to style the loader and overlay */
                                     #loader-overlay {
                                         display: none;
@@ -1519,9 +1519,13 @@
                                         /* Additional styling for the loader itself */
                                         /* Adjust as needed */
                                     }
-        </style>
+        </style> -->
 
         <t t-call="portal.portal_layout">
+            
+            
+            
+
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
 
             <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
@@ -1561,6 +1565,16 @@
                     </div>
                 </div>
             </div>
+
+
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">GP Candidate</t>
+            </t>
+
+            <!-- <t t-call="portal.portal_searchbar">
+                <t t-set="title">GP Candidate</t>
+            </t> -->
 
             <t t-call="portal.portal_table">
                 <thead>
