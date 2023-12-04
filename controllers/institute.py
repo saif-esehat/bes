@@ -374,7 +374,6 @@ class InstitutePortal(CustomerPortal):
         vals = {"states" : states,"batch_id":batch_id}
         return request.render("bes.gp_faculty_form_view", vals)
 
-<<<<<<< HEAD
     @http.route(['/my/ccmcfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def CcmcFacultiesFormView(self,batch_id, **kw):
 
@@ -422,12 +421,9 @@ class InstitutePortal(CustomerPortal):
         vals = {"states" : states,"batch_id":batch_id}
         return request.render("bes.gp_faculty_form_view", vals)
 
-    @http.route(['/my/gpbatch/candidates/<int:batch_id>'], type="http", auth="user", website=True)
-    def GPcandidateListView(self, batch_id, **kw):
-=======
+   
     @http.route(['/my/gpbatch/candidates/<int:batch_id>','/my/gpbatch/candidates/<int:batch_id>/page/<int:page>'], type="http", auth="user", website=True)
     def GPcandidateListView(self, batch_id,page=1,sortby="id",search="",search_in="All", **kw,):
->>>>>>> 19695d5 (Data)
         # import wdb; wdb.set_trace()
         
         
@@ -485,18 +481,47 @@ class InstitutePortal(CustomerPortal):
 
     
 
-    @http.route(['/my/ccmcbatch/candidates/<int:batch_id>'], type="http", auth="user", website=True)
-    def CcmcCandidateListView(self, batch_id, **kw):
+    @http.route(['/my/ccmcbatch/candidates/<int:batch_id>','/my/ccmcbatch/candidates/<int:batch_id>/page/<int:page>'], type="http", auth="user", website=True)
+    def CcmcCandidateListView(self, batch_id,page=1, search="",search_in="All",**kw):
         # import wdb; wdb.set_trace()
+
+        
 
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
-        candidates = request.env["ccmc.candidate"].sudo().search(
-            [('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id)])
+
+        search_list = {
+            'All':{'label':'All','input':'All','domain':[]},
+            'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
+            'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
+            'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
+            'Roll_No':{'label':'Roll No.','input':'Roll_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('roll_no','ilike',search)]}
+
+        }
+
+        search_domain = search_list[search_in]["domain"]
+
+        candidates_count = request.env["ccmc.candidate"].sudo().search_count(search_domain)
+        page_detail = pager(url="/my/ccmcbatch/candidates/"+str(batch_id),
+                            total=candidates_count,
+                            url_args={'search_in':search_in,'search':search},
+                            page=page,
+                            step=10
+                            )
+        
+        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 10,offset=page_detail['offset'])
         batches = request.env["institute.ccmc.batches"].sudo().search(
             [('id', '=', batch_id)])
-        vals = {'candidates': candidates, 'page_name': 'ccmc_candidate','batch_id':batch_id,'batches':batches}
+        vals = {'candidates': candidates,
+                'page_name': 'ccmc_candidate',
+                'batch_id':batch_id,
+                'batches':batches,
+                'pager':page_detail,
+                'search_in':search_in,
+                'search':search,
+                'searchbar_inputs':search_list
+                }
         print("Batch id",batch_id)
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.ccmc_candidate_portal_list", vals)
