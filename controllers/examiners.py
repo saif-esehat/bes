@@ -97,7 +97,13 @@ class ExaminerPortal(CustomerPortal):
                 candidate = False
 
             return request.render("bes.examiner_candidate_list", {'candidate': candidate})
-        
+        else:
+            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            search_filter = rec.get('search_filter') or request.params.get('search_filter')
+            search_value = rec.get('search_value') or request.params.get('search_value')
+            print('filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',search_filter)
+            print('valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',search_value)
+
 
 
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True)
@@ -146,12 +152,14 @@ class ExaminerPortal(CustomerPortal):
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
             candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            name=candidate_rec.name
+            candidate_image = candidate_rec.candidate_image
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             print('dateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',draft_records.gsk_oral_exam_date)
             exam_date = draft_records.gsk_oral_exam_date
-            return request.render("bes.gsk_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date})
+            return request.render("bes.gsk_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
                 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True)
@@ -202,12 +210,14 @@ class ExaminerPortal(CustomerPortal):
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
             candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            name=candidate_rec.name
+            candidate_image = candidate_rec.candidate_image
             draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = draft_records.gsk_practical_exam_date
-            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id,'exam_date':exam_date})       
+            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})       
             
 
     @http.route('/open_mek_oral_form', type='http', auth="user", website=True)
@@ -254,12 +264,14 @@ class ExaminerPortal(CustomerPortal):
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
             candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            name=candidate_rec.name
+            candidate_image = candidate_rec.candidate_image
             draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = draft_records.mek_oral_exam_date
-            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date})
+            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
 
     @http.route('/open_practical_mek_form', type='http', auth="user", website=True)
     def open_practical_mek_form(self, **rec):
@@ -314,12 +326,14 @@ class ExaminerPortal(CustomerPortal):
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
             candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            name=candidate_rec.name
+            candidate_image = candidate_rec.candidate_image
             draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = draft_records.mek_practical_exam_date
-            return request.render("bes.mek_practical_marks", {'indos': rec_id,'exam_date':exam_date})
+            return request.render("bes.mek_practical_marks", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True)
     def open_cookery_bakery_form(self, **rec):
@@ -374,12 +388,6 @@ class ExaminerPortal(CustomerPortal):
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
-            draft_records = candidate_rec.cookery_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
-
-            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
-            
-            exam_date = draft_records.mek_practical_exam_date
             return request.render("bes.cookery_bakery_marks_submit", {'indos': rec_id})
 
     @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True)

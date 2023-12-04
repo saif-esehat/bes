@@ -1,0 +1,15 @@
+<odoo>
+   <template id="sep_certificate" >
+        
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- Your custom content here -->
+                   
+                    <p>This is to certify that: <span t-esc="record.name"/></p>
+                    <p>CDC No: <span t-esc="record.cdc_no"/> INDOS No: <span t-esc="record.indos_no"/> Date of Birth: <span t-esc="record.dob"/></p>
+                    <!-- Add other details as needed -->
+                </div>
+            </div>
+       
+    </template>
+</odoo>

@@ -19,6 +19,11 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <record id="group_sep_candidates" model="res.groups">
+        <field name="name">SEP Candidate</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <record id="group_ccmc_candidates" model="res.groups">
         <field name="name">CCMC Candidate</field>
         <field name="category_id" ref="bes_access_category"/>

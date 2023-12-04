@@ -43,6 +43,66 @@
             </field>
         </record>
 
+        <record id="sep_reg_action" model="ir.actions.act_window">
+            <field name="name">SEP Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sep.candidate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Candidate</p>
+            </field>
+        </record>
+
+        <record id="action_report_certificate" model="ir.actions.report">
+            <field name="name">Certificate Report</field>
+            <field name="model">sep.candidate.line</field>
+            <field name="report_name">bes.sep_certificate</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="binding_model_id" ref="bes.model_sep_candidate_line"/>
+        </record>
+
+        <record id="sep_candidate_forms" model="ir.ui.view">
+            <field name="name">sep.candidate.form</field>
+            <field name="model">sep.candidate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="institute_batch_id"/>
+                    </group>
+                    <notebook>
+                        <page string="SEP Registration">
+                            <field name="gsk_candidate_child_line">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="dob"/>
+                                    <field name="indos_no"/>
+                                    <field name="cdc_no"/>
+                                    <field name="contact"/>
+                                    <field name="email"/>
+                                    <field name="attendance1"/>
+                                    <field name="attendance2"/>
+                                    <field name="vaccination"/>
+                                    <field name="remarks"/>
+                                    <field name="state" invisible="1"/>
+                                    <button string="Print Certificate" type="object" name="print_certificate" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="sep_candidate_tree" model="ir.ui.view">
+        <field name="name">sep.candidate.tree</field>
+        <field name="model">sep.candidate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="institute_batch_id"/>
+            </tree>
+        </field>
+        </record>
+
 
 
         <record id="gp_candidate_kanban" model="ir.ui.view">

@@ -26,6 +26,7 @@
         'views/institution.xml',
         'views/survey.xml',
         'views/invoice.xml',
+        
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
         'views/exam_schedule.xml',
@@ -34,12 +35,14 @@
         'views/menu.xml',
         'views/template.xml',
         'reports/admit_card_template.xml',
-        'reports/report_action.xml'
+        'reports/report_action.xml',
+        'reports/sep_certificate.xml'
 ],
 'assets': {
 		'web.assets_frontend': [
-			'bes/static/src/js/candidate.js',
+			'bes/static/src/js/custom_validation.js',
 		],
+                
 	},
 'web.report_assets_common': [
             '/bes/static/src/css/report_css.scss',
