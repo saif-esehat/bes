@@ -71,6 +71,14 @@
                   action="bes_gp_exam_action"
                   sequence="1" />
 
+        <menuitem id="bes_ccmc_exam" 
+                  parent="bes_exams_menu" 
+                  name="CCMC Exam"
+                  groups=""
+                  action="bes_ccmc_exam_action"
+                  sequence="2" />
+
+
         <!-- <menuitem id="bes_batch_examiner_duty_menu" 
                   parent="bes_batch_menu" 
                   name="Examiner Practical/Oral Duty" 

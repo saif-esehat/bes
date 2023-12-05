@@ -552,6 +552,60 @@ class GPExam(models.Model):
         
         else:
              raise ValidationError("Not All exam are Confirmed")
+
+
+class CCMCExam(models.Model):
+    _name = "ccmc.exam.schedule"
+    _rec_name = "exam_id"
+    _description= 'Schedule'
+    
+    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
+                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
+    
+    ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
+    
+    cookery_bakery_total = fields.Float("Cookery And Bakery Total",readonly=True)
+    cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
+    cookery_bakery_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Cookery And Bakery Status')
+    
+    
+    ccmc_oral_total = fields.Float("CCMC Oral Total",readonly=True)
+    ccmc_oral_percentage = fields.Float("CCMC Oral Percentage",readonly=True)
+    ccmc_oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='CCMC Oral Status')
+    
+    
+
+    
+    
+    
+    
+    state = fields.Selection([
+        ('1-in_process', 'In Process'),
+        ('2-done', 'Done'),
+    ], string='State', default='1-in_process')
+    
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('ccmc_candidate'):
+            candidate_id = vals['ccmc_candidate']
+            last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
+            vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
+
+        return super(CCMCExam, self).create(vals)
+    
+    
+    
+    
         
         
         

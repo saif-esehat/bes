@@ -1,21 +1,8 @@
 <odoo>
     <template id="examiner_candidate_list" name="Candidates">
         <script>
-            <!-- $('.oe_searchview_button').on('click', function () {
-                // Get the selected value from the dropdown
-                var selectedFilter = $('#searchFilter').val();
-
-                // Get the input value for search
-                var inputValue = $('.oe_searchview_input input').val();
-
-                // Construct the URL based on the selected filter and input value
-                var url = '/open_candidate_form?' + selectedFilter + '=' + inputValue;
-                 window.location.href = url;
-            }); -->
-        
         </script>
         <style>
-                                /* CSS to style the loader and overlay */
                                     #loader-overlay {
                                         display: none;
                                         position: fixed;
