@@ -1269,7 +1269,7 @@
                         <field name="previous_attempt" readonly="1" />
                     </group>
                      <group style="width:50%">
-                        <field name="exam_month" />
+                        <field name="exam_month" readonly="1" />
                     </group>
                     <group style="width:50%">
                             <field name="gsk_oral_prac_status" readonly="1"/>
@@ -1283,8 +1283,8 @@
                         <field name="exam_region" attrs="{'invisible': [('exam_month', 'in', ('dec_feb','jul_aug'))]}" />
                         <field name="institute_ids" invisible="1" />
                         <field name="institute_id" domain="[('id','in',institute_ids)]" />
-                        <field name="mek_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','MEK')]" attrs="{'invisible': [('mek_online_status', '=', 'passed')]}" />
-                        <field name="gsk_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','GSK')]"  attrs="{'invisible': [('gsk_online_status', '=', 'passed')]}" />
+                        <field name="mek_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','MEK')]" attrs="{'invisible': [('mek_online_status', '=', 'passed')] , 'required' : [('mek_online_status','=', 'failed')]  }" />
+                        <field name="gsk_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','GSK')]"  attrs="{'invisible': [('gsk_online_status', '=', 'passed')] , 'required' : [('gsk_online_status','=', 'failed')] }" />
                         <field name="candidate_id" invisible="1" />
                       
 
@@ -1293,8 +1293,8 @@
 
                     </group>
                     <footer>
-                        <!-- <button string="Register" type="object" class="oe_highlight" name="register"/>
-                        <button string="Cancel" class="oe_link" special="cancel"/> -->
+                        <button string="Register" type="object" class="oe_highlight" name="register_exam"/>
+                        <!-- <button string="Cancel" class="oe_link" special="cancel"/> -->
                     </footer>
                 </form>
             </field>
