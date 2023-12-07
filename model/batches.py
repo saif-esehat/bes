@@ -255,18 +255,18 @@ class InstituteCcmcBatches(models.Model):
         
         # import wdb; wdb.set_trace()
 
-        ccmc_partner_id = self.institute_id.user_id.ccmc_partner_id.id
+        ccmc_partner_id = self.institute_id.user_id.partner_id.id
         product_id_ccmc = self.ccmc_course.exam_fees.id
         product_price = self.ccmc_course.exam_fees.lst_price
         qty = self.ccmc_candidate_count
         line_items = [(0, 0, {
-        'product_id_ccmc': product_id_ccmc,
+        'product_id': product_id_ccmc,
         'price_unit':product_price,
         'quantity':qty
         })]
         
         invoice_vals = {
-            'ccmc_partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
+            'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
             'batch_ok':True,
