@@ -1067,6 +1067,62 @@ class CandidateRegisterExamWizard(models.TransientModel):
             
             exam_region = record.exam_region.id
             record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
+            
+    
+    def register_exam(self):
+        
+        gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':self.candidate_id.id})
+
+        
+        if self.gsk_oral_prac_status == 'failed':
+            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        else:
+            gsk_practical = self.gp_exam.gsk_prac
+            gsk_oral =self.gp_exam.gsk_oral
+        
+        
+        if self.mek_oral_prac_status == 'failed':
+            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        else:
+            mek_practical = self.gp_exam.mek_prac
+            mek_oral =self.gp_exam.mek_oral
+        
+        
+        if self.mek_online_status == 'failed':
+            mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        else:
+            mek_survey_qb_input = self.gp_exam.mek_online
+        
+        
+        if self.gsk_online_status == 'failed':
+            gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        else:
+            gsk_survey_qb_input = self.gp_exam.gsk_online
+            
+        
+        gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        
+        gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+
+        
+        
+        # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+
+
+            
+            # gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            
+            
+            
+        
+        
+        
+        # xw("ok")
+        
     
     # @api.onchange('exam_month')
     # def _onchange_exam_month(self):

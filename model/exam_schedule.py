@@ -440,14 +440,15 @@ class GPExam(models.Model):
     
     gsk_total = fields.Float("GSK Total",readonly=True)
     gsk_percentage = fields.Float("GSK Precentage",readonly=True)
-    gsk_oral_prac_status = fields.Selection([
-        ('failed', 'Failed'),
-        ('passed', 'Passed'),
-    ], string='GSK Oral/Practical Status')
+   
     
     
     mek_total = fields.Float("Mek Total",readonly=True)
     mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    gsk_oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='GSK Oral/Practical Status')
     mek_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
@@ -462,16 +463,86 @@ class GPExam(models.Model):
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='Gsk Online Status')
+    
+    exam_criteria = fields.Selection([
+        ('', ''),
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Exam Criteria' , compute="compute_certificate_criteria")
+    
+    certificate_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Certificate Criteria')
 
     
+    stcw_criteria = fields.Selection([
+        ('', ''),
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='STCW Criteria' , compute="compute_certificate_criteria")
+    
+    ship_visit_criteria = fields.Selection([
+        ('', ''),
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Ship Visit Criteria' , compute="compute_certificate_criteria")
     
     
+    attendance_criteria = fields.Selection([
+        ('', ''),
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Attendance Criteria' , compute="compute_certificate_criteria")
+
     
     state = fields.Selection([
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
     ], string='State', default='1-in_process')
     
+    @api.depends('gsk_online_status','mek_online_status','mek_oral_prac_status','gsk_oral_prac_status')
+    def compute_certificate_criteria(self):
+        for record in self:
+            all_passed = all(field == 'passed' for field in [record.gsk_online_status, record.mek_online_status, record.mek_oral_prac_status , record.gsk_oral_prac_status])
+            all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
+            course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
+            all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            
+            if all_passed:
+                # import wdb; wdb.set_trace();
+                record.exam_criteria = 'passed'
+            else:
+                record.exam_criteria = 'pending'
+                
+            if all_types_exist:
+                # import wdb; wdb.set_trace();
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
+                
+            if record.gp_candidate.attendance_compliance_1 == 'yes' or record.gp_candidate.attendance_compliance_2 == 'yes':
+                record.attendance_criteria = 'passed'
+            else:
+                record.attendance_criteria = 'pending'
+            
+            if len(record.gp_candidate.ship_visits) > 0:
+                
+                record.ship_visit_criteria = 'passed'
+                
+            else:
+
+                record.ship_visit_criteria = 'pending'
+        
+    
+    
+    
+            
+            
+                
+            
+            
+
     
     @api.model
     def create(self, vals):
@@ -498,6 +569,8 @@ class GPExam(models.Model):
 
     def move_done(self):
         
+        # import wdb; wdb.set_trace();
+
         mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
         mek_practical_draft_confirm = self.mek_prac.mek_practical_draft_confirm == 'confirm'
         gsk_oral_draft_confirm = self.gsk_oral.gsk_oral_draft_confirm == 'confirm'
@@ -548,6 +621,19 @@ class GPExam(models.Model):
                 self.mek_online_status = 'passed'
             else:
                 self.mek_online_status = 'failed'
+            
+            all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+
+            # import wdb; wdb.set_trace();
+            if all_passed:
+                
+                self.write({'certificate_criteria':'passed'})
+                # self.certificate_criteria = 'passed'
+            else:
+                self.write({'certificate_criteria':'failed'})
+
+                # self.certificate_criteria = 'failed'
+                
                 
         
         else:
