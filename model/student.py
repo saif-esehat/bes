@@ -2,7 +2,7 @@ from odoo import api, fields, models , _, exceptions
 from odoo.exceptions import UserError,ValidationError
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
-import datetime
+import datetime 
 
 
 class GPCandidate(models.Model):
@@ -17,7 +17,7 @@ class GPCandidate(models.Model):
     candidate_signature_name = fields.Char("Candidate Signature")
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
-    age = fields.Char("Age")
+    age = fields.Float("Age",compute="_compute_age")
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
@@ -124,6 +124,17 @@ class GPCandidate(models.Model):
             "default_institute_ids" : institute_ids
             }
         }
+        
+    @api.depends('dob')
+    def _compute_age(self):
+        for record in self:
+            if record.dob:
+                birthdate = datetime.datetime.strptime(str(record.dob), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                record.age = delta.days // 365
+            else:
+                record.age = 0
     
     
     def detect_current_month(self):
