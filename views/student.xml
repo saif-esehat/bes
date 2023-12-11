@@ -482,6 +482,9 @@
             <field name="model">ccmc.candidate</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
+                   </header>
                     <sheet>
                         <field name="elligiblity_criteria" invisible="1"/>
                         <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
@@ -1285,6 +1288,44 @@
                         <field name="institute_id" domain="[('id','in',institute_ids)]" />
                         <field name="mek_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','MEK')]" attrs="{'invisible': [('mek_online_status', '=', 'passed')] , 'required' : [('mek_online_status','=', 'failed')]  }" />
                         <field name="gsk_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','GSK')]"  attrs="{'invisible': [('gsk_online_status', '=', 'passed')] , 'required' : [('gsk_online_status','=', 'failed')] }" />
+                        <field name="candidate_id" invisible="1" />
+                      
+
+                        <!-- <field name="mek_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','MEK')]" options="{'no_create': True}"/>
+                        <field name="gsk_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','GSK')]" options="{'no_create': True}"/> -->
+
+                    </group>
+                    <footer>
+                        <button string="Register" type="object" class="oe_highlight" name="register_exam"/>
+                        <!-- <button string="Cancel" class="oe_link" special="cancel"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="candidate_ccmc_register_exam_wizard" model="ir.ui.view">
+            <field name="name">candidate.ccmc.register.exam.wizard.form</field>
+            <field name="model">candidate.ccmc.register.exam.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                   
+                    <group style="width:50%">
+                        <field name="ccmc_exam" readonly="1" />
+                        <field name="previous_attempt" readonly="1" />
+                    </group>
+                     <group style="width:50%">
+                        <field name="exam_month" readonly="1" />
+                    </group>
+                    <group style="width:50%">
+                            <field name="cookery_bakery_status" readonly="1"/>
+                           
+                    </group>
+                     
+                     <group>
+                        <field name="exam_region" attrs="{'invisible': [('exam_month', 'in', ('dec_feb','jul_aug'))]}" />
+                        <field name="institute_ids" invisible="1" />
+                        <field name="institute_id" domain="[('id','in',institute_ids)]" />
+                        <field name="cookery_bakery_qb" domain="[('institute','=',institute_id),('subject.name','=','CCMC')]" />
+                        
                         <field name="candidate_id" invisible="1" />
                       
 

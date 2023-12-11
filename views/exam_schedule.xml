@@ -84,7 +84,13 @@
                             <field name="mek_oral_prac_status" readonly="1"/>
                             <field name="mek_online_status" readonly="1"/>
                             <field name="gsk_online_status" readonly="1"/>
+                            <field name="exam_criteria" readonly="1"/>
+                            <field name="stcw_criteria" readonly="1"/>
+                            <field name="attendance_criteria" readonly="1"/>
+                            <field name="ship_visit_criteria" readonly="1"/>
+                            <field name="certificate_criteria" readonly="1"/>
                         </group>
+               
                         
 
                     </sheet>

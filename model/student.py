@@ -451,7 +451,46 @@ class CCMCCandidate(models.Model):
                 else:
                    candidate.elligiblity_criteria = 'not_elligible'
             else:
-                candidate.elligiblity_criteria = 'not_elligible'        
+                candidate.elligiblity_criteria = 'not_elligible' 
+
+    def open_register_for_exam_wizard(self):
+        view_id = self.env.ref('bes.candidate_ccmc_register_exam_wizard').id
+                
+        last_exam_record = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',self.id)], order='attempt_number desc', limit=1)
+        
+        if len(last_exam_record) <= 0:
+            raise ValidationError("No previous Exam Found . This Candidate Must be registered through batches")
+        
+        if last_exam_record.state == '1-in_process':
+            raise ValidationError("Last Exam Still In Process")
+
+        # import wdb;wdb.set_trace()
+        
+        exam_month = self.detect_current_month()
+        
+        if exam_month == 'dec_feb' or exam_month== 'jul_aug':
+            institute_ids = self.env["bes.institute"].search([('institute_repeater','=',True)]).ids
+        else:
+            institute_ids = []
+        
+        
+        return {
+            'name': 'Register For Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'candidate.ccmc.register.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+            # 'default_batches_id': self.id
+            'default_candidate_id': self.id,
+            'default_gp_exam': last_exam_record.id,
+            'default_previous_attempt': last_exam_record.attempt_number,
+            "default_exam_month" : self.detect_current_month(),
+            "default_institute_ids" : institute_ids
+            }
+        }       
 
     
 class CCMCSTCWCandidate(models.Model):
@@ -1107,6 +1146,96 @@ class CandidateRegisterExamWizard(models.TransientModel):
         gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
         
         gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+
+
+class CandidateCCMCRegisterExamWizard(models.TransientModel):
+    _name = 'candidate.ccmc.register.exam.wizard'
+    _description = 'Register Exam'
+    
+    exam_region = fields.Many2one("exam.center",string="Exam Region")
+    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
+    candidate_id = fields.Many2one("ccmc.candidate",string="Candidate",required=True)
+    
+    cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template")
+
+
+    ccmc_exam = fields.Many2one("ccmc.exam.schedule",string="CCMC Exam",required=True)
+    
+    
+    previous_attempt =  fields.Integer("Previous Attempt No.")
+    # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
+
+    
+    exam_month = fields.Selection([
+        ('dec_feb', 'Dec - Feb'),
+        ('mar_jun', 'Mar - Jun'),
+        ('jul_aug', 'Jul - Aug'),
+        ('sep_nov', 'Sep - Nov'),
+    ], string='Exam Month')
+    
+    
+    cookery_bakery_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Cookery Bakery Oral/Practical Status')
+    
+    
+    
+    ccmc_oral_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='CCMC Oral Status')
+    
+    
+    
+    
+    @api.depends('exam_region')
+    def _compute_institute_ids(self):
+        for record in self:
+            
+            exam_region = record.exam_region.id
+            record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
+            
+    
+    def register_exam(self):
+        
+        gp_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':self.candidate_id.id})
+
+        
+        # if self.coookery_bakery_status == 'failed':
+        #     gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        #     gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        # else:
+        #     gsk_practical = self.gp_exam.gsk_prac
+        #     gsk_oral =self.gp_exam.gsk_oral
+        
+        
+        # if self.mek_oral_prac_status == 'failed':
+        #     mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        #     mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        # else:
+        #     mek_practical = self.gp_exam.mek_prac
+        #     mek_oral =self.gp_exam.mek_oral
+        
+        
+        # if self.mek_online_status == 'failed':
+        #     mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+        #     mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        # else:
+        #     mek_survey_qb_input = self.gp_exam.mek_online
+        
+        
+        # if self.gsk_online_status == 'failed':
+        #     gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+        #     gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        # else:
+        #     gsk_survey_qb_input = self.gp_exam.gsk_online
+            
+        
+        # gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        
+        # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
 
         
         
