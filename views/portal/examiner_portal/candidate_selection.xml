@@ -26,21 +26,7 @@
 
         <t t-call="portal.portal_layout">
         <form t-attf-action="/open_candidate_form" method="get">
-            <div class="oe_searchview">
-                <div class="oe_searchview_input">
-                <label for="searchFilter" >Search By:</label>
-                <select id="searchFilter" name="search_filter">
-                    <option value="">-- Select --</option>
-                    <option value="name">Name</option>
-                    <option value="institute">Institute</option>
-                    <option value="indos">Indos</option>
-                </select>
-                    <input class="oe_searchview_input" name="search_value" placeholder="Search..." />
-                    <button type="submit" class="oe_searchview_button" >Submit</button>
-
-                    
-                </div>
-            </div>
+            
             </form>
             <t t-call="portal.portal_table">
             
@@ -56,34 +42,48 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="candidate" t-as="c">
+                    <t t-foreach="gp_oral_prac" t-as="c">
                         <tr>
                             <td class="text-left">
-                                <t t-out="c.name" />
+                                <t t-out="c.gp_candidate.name" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.institute_id.name" style="white-space:pre-line;" />
+                                <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.indos_no" />
+                                <t t-out="c.gp_candidate.indos_no" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.roll_no" />
+                                <t t-out="c.gp_candidate.roll_no" />
                             </td>
-                            <td class="text-left">
-                                <a class="btn btn-primary" t-attf-href="/open_gsk_oral_form?rec_id={{ c.indos_no }}">
+                             <t t-if="subject == 'GSK'" >
+                                <td class="text-left">
+                                 <a  t-attf-href="/open_gsk_oral_form?rec_id={{ c.gp_candidate.indos_no }}">
                                 GSK Oral</a>                            
-                                <a class="btn btn-primary" t-attf-href="/open_gsk_practical_form?rec_id={{ c.indos_no }}">
-                                GSK Practical</a>                            
-                                <a class="btn btn-primary" t-attf-href="/open_mek_oral_form?rec_id={{ c.indos_no }}">
-                                MEK Oral</a> 
-                                <a class="btn btn-primary" t-attf-href="/open_practical_mek_form?rec_id={{ c.indos_no }}">
-                                MEK Practical</a> 
-                                <a class="btn btn-primary" t-attf-href="/open_cookery_bakery_form?rec_id={{ c.indos_no }}">
-                                Cookery and Bakery</a>     
-                                <a class="btn btn-primary" t-attf-href="/open_ccmc_oral_form?rec_id={{ c.indos_no }}">
-                                CCMC Oral</a>                          
-                            </td>
+                                </td>
+                             </t>
+                             <t t-if="subject == 'GSK'" >
+                                <td class="text-left">
+                                 <a  t-attf-href="/open_gsk_practical_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                GSK Practical</a>
+                                </td>
+                             </t>
+                            <t t-if="subject == 'MEK'" >       
+                                <td class="text-left">
+                                    <a t-attf-href="/open_mek_oral_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                    MEK Oral
+                                    </a> 
+                                    
+                                </td>
+                            </t>
+                             <t t-if="subject == 'MEK'" >
+                                <td class="text-left">
+                                    <a  t-attf-href="/open_practical_mek_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                        MEK Practical
+                                    </a> 
+                                </td>
+
+                              </t>       
                             
                            
 
