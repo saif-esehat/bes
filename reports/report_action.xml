@@ -31,7 +31,7 @@
     <report
         id="report_ccmc_certificate"
         string= "CCMC Ceritificate"
-        model="gp.exam.schedule"
+        model="ccmc.exam.schedule"
         report_type="qweb-html"
         name="bes.course_certificate"
         file="bes.course_certificate"/>
