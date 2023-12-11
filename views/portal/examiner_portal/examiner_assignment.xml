@@ -41,6 +41,7 @@
                         <th>Exam Start Time</th>
                         <th>Exam End Time</th>
                         <th>Assigned To</th>
+                        <th>Course</th>
                         <th>Subject</th>
                         
                         <th>Action</th>
@@ -70,6 +71,9 @@
                             <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'">
                                 <!-- <t t-out="assignment.assigned_to" /> -->
                                 <span>CCMC Candidate</span>
+                            </td>
+                            <td class="text-left">
+                                <t t-out="examiner.subject_id.course_id.name" />
                             </td>
                             <td class="text-left">
                                 <t t-out="assignment.subject_id.name" />

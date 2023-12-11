@@ -63,9 +63,9 @@ class ExaminerPortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
-        
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
-        vals = {'assignments':examiner_assignments}
+        vals = {'assignments':examiner_assignments, 'examiner':examiner}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
 
@@ -88,7 +88,9 @@ class ExaminerPortal(CustomerPortal):
 
             # Check if gp_candidate is set
             if assignment.assigned_to == "gp_candidate":
-                candidate = assignment.gp_candidates
+                gp_oral_prac = assignment.gp_oral_prac
+                candidate = assignment.gp_oral_prac.gp_candidate
+                subject = assignment.subject_id.name
             # Check if ccmc_candidate is set
             elif assignment.assigned_to == "ccmc_candidate":
                 candidate = assignment.ccmc_candidates
@@ -96,7 +98,7 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
 
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate})
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
@@ -108,6 +110,7 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True)
     def open_gsk_oral_form(self, **rec):
+        # import wdb;wdb.set_trace();
         candidate = request.env['gp.candidate'].sudo()
         if 'indos' in rec:
             print('exittttttttttttttttttttttttttttttt')
