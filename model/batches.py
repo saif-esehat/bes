@@ -331,6 +331,23 @@ class InstituteCcmcBatches(models.Model):
             }
         } 
 
+    def open_register_for_exam_wizard(self):
+        view_id = self.env.ref('bes.batches_gp_register_exam_wizard').id
+        
+        return {
+            'name': 'Register For Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'batches.gp.register.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_institute_id': self.institute_id.id,
+                'default_batch_id': self.id
+            }
+        }
+
     
         
     
@@ -351,6 +368,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     def register(self):
+
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
@@ -371,6 +389,33 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gsk_survey_qb_input.write({'gp_candidate':candidate.id})
             
             gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+                        
+
+        
+        self.batch_id.write({"state":'5-exam_scheduled'})
+
+class CCMCBatchesRegisterExamWizard(models.TransientModel):
+    _name = 'batches.ccmc.register.exam.wizard'
+    _description = 'Register Exam'
+
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    batch_id = fields.Many2one("institute.ccmc.batches",string="Batches",required=True)
+    cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template")
+    
+    
+    
+    def register(self):
+
+        candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
+        cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
+        
+        for candidate in candidates:
+            gp_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id})
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":gp_exam_schedule.id,'cookery_child_line':candidate.id,'institute_id': self.institute_id.id})
+           
+           
+            
+            
                         
 
         
