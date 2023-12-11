@@ -36,7 +36,10 @@
         'views/template.xml',
         'reports/admit_card_template.xml',
         'reports/report_action.xml',
-        'reports/sep_certificate.xml'
+        'reports/sep_certificate.xml',
+        'reports/report_gp_certificate.xml',
+        'reports/report_ccmc_certificate.xml',
+        
 ],
 'assets': {
 		'web.assets_frontend': [
@@ -46,6 +49,8 @@
 	},
 'web.report_assets_common': [
             '/bes/static/src/css/report_css.scss',
+            '/bes/static/src/css/style_gp.css',
+            '/bes/static/src/css/style_ccmc.css',
 
         ],
 }

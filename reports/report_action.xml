@@ -10,6 +10,32 @@
         <field name="binding_type">report</field>
     </record>
 
+    <!-- <record id="candidate_gp_certificate_action" model="ir.actions.report">
+        <field name="name">GP Ceritificate</field>
+        <field name="model">gp.exam.schedule</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.report_general_certificate</field>
+        <field name="report_file">bes.report_general_certificate</field>
+        <field name="binding_model_id" ref="model_gp_candidate"/>
+        <field name="binding_type">report</field>
+    </record> -->
+
+    <report
+        id="report_gp_certificate"
+        string= "GP Ceritificate"
+        model="gp.exam.schedule"
+        report_type="qweb-html"
+        name="bes.report_general_certificate"
+        file="bes.report_general_certificate"/>
+   
+    <report
+        id="report_ccmc_certificate"
+        string= "CCMC Ceritificate"
+        model="gp.exam.schedule"
+        report_type="qweb-html"
+        name="bes.course_certificate"
+        file="bes.course_certificate"/>
+
     <report
             id="batches_report_xlsx"
             model="institute.gp.batches"

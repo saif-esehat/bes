@@ -421,11 +421,8 @@ class InstitutePortal(CustomerPortal):
         vals = {"states" : states,"batch_id":batch_id}
         return request.render("bes.gp_faculty_form_view", vals)
 
-<<<<<<< HEAD
    
-=======
 
->>>>>>> fc8db55 (Data)
     @http.route(['/my/gpbatch/candidates/<int:batch_id>','/my/gpbatch/candidates/<int:batch_id>/page/<int:page>'], type="http", auth="user", website=True)
     def GPcandidateListView(self, batch_id,page=1,sortby="id",search="",search_in="All", **kw,):
         # import wdb; wdb.set_trace()

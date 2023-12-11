@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_general_certificate">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+                <div class="o_report" >
+                    <div id="header" style="width:90%; margin:auto;">
+                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem"/>
+                        <br/>
+                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
+                        <br/>
+                        <div style="width:100%; display:block;">
+                            <span style="font-size:1rem;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
+                        </div>
+                        <div style="width:100% display:block;">
+                        <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
+                            Awards this</span>
+                        </div>
+                        <img class="img img-responsive" t-attf-src="bes/static/src/img/Picture3.jpg" alt="" style="margin-top:0;"/>
+                    </div>
+                    <div id="main">
+                        <div class="left">
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">Certificate No.: </label><span style="font-size:1.2rem;"></span>
+                        </div>
+                        <div class="left">
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">This is to certify that: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.name"/></span>
+                        </div>
+                        <div class="line" style="display: flex; width: 100%; font-size: 1rem;">
+                            <div style="flex: 1; margin-right: 0;">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; ">Roll No: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.roll_no"/></span>
+                            </div>
+                            <div style="flex: 1; text-align: center; margin-left:8rem; margin-right:5rem;">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">INDOS No: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.indos_no"/></span>
+                            </div>
+                            <div style="flex: 1; margin-left: 0;">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">Date of Birth: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.dob"/></span>
+                            </div>
+                        </div>
+                        <div>
+                        <span  style="color:#4c2d8b; text-align:left; font-size:1.2rem" >has undergone an approved 25 weeks Pre-sea training course for</span>
+                        </div>
+                        <h1>General Purpose Rating</h1>
+                        <div class="left" style="font-size:1.2rem;">
+                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.gp_candidate.institute_id.name"/></span></p>
+
+                            <p style="color:#4c2d8b; margin:0;">From <span style="color:#000;">Demo</span> and has successfully passed the All India Exit Examination
+                                held in <span></span></p>
+                    
+                            <p style="color:#4c2d8b; margin:0; text-align:left;">Position in the merit list of first 25% - <span style="color:#000;">N/A</span></p>
+                            <div class="line" style="display: flex; justify-content: space-between; width: 100%;">
+                                <div id="split" style="margin-right: 10rem; display: flex; align-items: center; position:relative;">
+                                    <div style="color: #4c2d8b; text-align:left; position:absolute; left:0; ">Date <span style="color: #000; font-size:1.2rem;"></span></div>
+                                </div>
+                                <div id="sign" style="text-align:right; margin-left:15rem; position:relative;">
+                                    <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" id="img-sign"/>
+                                    <span style="display: block; postition:absolute; top;20%; right:0;">Signature of the Candidate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="footer">
+                        <span style="text-align:center; display:block;">Ravindra Nath Tripathi</span>
+                        <span style="color:#4c2d8b;">Marine Engineering Officer</span>
+                        <p style="color:#4c2d8b;">Board of Examinations for Seafarers Trust <br/>
+                            NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614. <br/>
+                            E-mail: bestexam@bestrust.in / ivexams@bestrust.in
+                        </p>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

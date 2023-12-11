@@ -604,7 +604,23 @@ class CCMCExam(models.Model):
         return super(CCMCExam, self).create(vals)
     
     
+# class CandidateGPCertificate(models.AbstractModel):
+#     _name = 'report.bes.report_general_certificate'
+#     _description = 'GP Certificate'
     
+    
+        
+#     @api.model
+#     def _get_report_values(self, docids, data=None):
+#         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        
+        
+#         return {
+#             'doc_ids': docids,
+#             'doc_model': 'gp.exam.schedule',
+#             'docs': docs1
+#             }
+
     
         
         

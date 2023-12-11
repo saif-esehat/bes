@@ -1,0 +1,137 @@
+body {
+    margin: 0;
+    padding: 0;
+    color: #4c2d8b;
+    text-align: center;
+    /* border: 4px solid #4c2d8b; */
+}
+
+.o_report{
+    border: 5px solid #4c2d8b;
+}
+#body {
+    width: 70%;
+    margin: auto;
+    border: 2px solid #4c2d8b;
+    font-size: 1.2rem;
+    font: 600;
+}
+
+#header {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    color: #4c2d8b;
+    position: relative;
+}
+
+#photo {
+    width: 15%;
+    height: 25%;
+    position: absolute;
+    top: 5%;
+    right: 0;
+    border: 2px solid black;
+}
+
+#header img {
+    max-width: 100%;
+    height: auto;
+    /* margin: 1rem; */
+}
+
+#header span {
+    display: block;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    max-width: 80%;
+    font-weight: 600;
+    text-align: center;
+}
+
+input {
+    outline: none;
+    margin: 0.5rem;
+}
+
+#main {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+h1 {
+    display: inline-block;
+    color: #4c2d8b;
+    background-color:#c0c0c0;
+    font-size: 2rem;
+    text-align: center;
+    padding: 0.5rem;
+    margin: 1rem 0;
+}
+
+.text {
+    width: max-content;
+    text-align: left;
+    display: flex;
+    gap: 5rem;
+}
+
+.left {
+    text-align: left;
+    margin: 1rem 0;
+}
+
+span {
+    margin: 1rem 0;
+}
+
+.line {
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    display: -webkit-box; /* wkhtmltopdf uses this one */
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center; /* wkhtmltopdf uses this one */
+    -webkit-justify-content: center;
+            justify-content: center;
+}
+
+.center {
+    width: 100%;
+    margin: auto;
+}
+
+#center {
+    text-align: center;
+}
+
+#footer {
+    width: 80%;
+    margin: auto;
+}
+
+#footer .left {
+    text-align: left;
+}
+
+#split{
+    display: -webkit-box; /* wkhtmltopdf uses this one */
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center; /* wkhtmltopdf uses this one */
+    -webkit-justify-content: space-between;
+            justify-content: space-between;
+    gap: 15rem;
+}
+
+#sign input{
+    display: block;
+    text-align: center;
+}
+
+#img-sign{
+    width: 8rem;
+    height: 3rem;
+}
