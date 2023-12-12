@@ -39,6 +39,8 @@
         'reports/sep_certificate.xml',
         'reports/report_gp_certificate.xml',
         'reports/report_ccmc_certificate.xml',
+        'reports/admit_card_template_gp.xml',
+        'reports/admit_card_template_ccmc.xml',
         
 ],
 'assets': {
