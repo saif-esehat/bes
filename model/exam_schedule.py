@@ -429,6 +429,7 @@ class GPExam(models.Model):
     exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
     
+    certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
@@ -534,15 +535,13 @@ class GPExam(models.Model):
 
                 record.ship_visit_criteria = 'pending'
         
+        def move_done(self):
+            if(self.certificate_criteria == 'passed'):
+                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+            self.state = '2-done'
+            
+            
     
-    
-    
-            
-            
-                
-            
-            
-
     
     @api.model
     def create(self, vals):
@@ -645,8 +644,9 @@ class CCMCExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
+    certificate_id = fields.Char(string="Certificate ID")
     exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
+                                default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
@@ -679,6 +679,11 @@ class CCMCExam(models.Model):
         ('2-done', 'Done'),
     ], string='State', default='1-in_process')
     
+    certificate_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Certificate Criteria')
+    
     
     @api.model
     def create(self, vals):
@@ -689,6 +694,12 @@ class CCMCExam(models.Model):
 
         return super(CCMCExam, self).create(vals)
     
+
+    def move_done(self):
+        if(self.certificate_criteria == 'passed'):
+            self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
+        self.state = '2-done'
+            
     
 # class CandidateGPCertificate(models.AbstractModel):
 #     _name = 'report.bes.report_general_certificate'

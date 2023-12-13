@@ -16,55 +16,56 @@
                     </div>
                     <!-- <div class="card-img-container"  t-if="o.candidate_image"> -->
                     <t t-if="o.gp_candidate.candidate_image">
-                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 150px;height:150px; position:absolute;top:26px;right:8px;" />
+                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 150px;height:150px; position:absolute;top:10%;right:8px;" />
                     </t>
                         <!-- <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.encode('utf-8')" class="card-img-top card-img" style="width: 150px; position:absolute;top:26px;right:8px;" alt="Candidate Photo" /> -->
                     <!-- </div> -->
                     
-                    
-                    <table style="width: 100%; text-align: left;">
-                    <tr>
-                        <td colspan="6">
-                            <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px">
-                                <strong>Examination: June 2022</strong>
-                            </div>
-                        </td>
+                    <div style="position:absolute; top:10%; left:3%;">
+                        <table style="width: 100%; text-align:left;">
+                            <tr>
+                                <td colspan="6">
+                                    <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:10px;">
+                                        <strong>Examination: June 2022</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
-                        <td colspan="6">
-                            <div style="font-size:18px; font-weight: bold; margin-bottom:8px; text-align:left;margin-right:10px;">
-                                <strong>Roll No: <span><t t-esc="o.gp_candidate.roll_no"/></span></strong>
-                            </div>
-                        </td>
-                    </tr>
-                    </table>
-                    
-                    
-                    <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px">
-                        <strong>Name as in INDOS:<span><t t-esc="o.gp_candidate.name"/></span></strong>
-                    </div>
-                    <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px">
-                        <strong>DOB as in INDOS: <span><t t-esc="o.gp_candidate.dob"/></span></strong>
+                        <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:5px; margin-right:10px;">
+                            <strong>Roll No: <span><t t-esc="o.gp_candidate.roll_no"/></span></strong>
+                        </div>
+
+                        <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:10px;">
+                            <strong>Name as in INDOS:<span><t t-esc="o.gp_candidate.name"/></span></strong>
+                        </div>
+
+                        <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:5px; margin-right:10px;">
+                            <strong>DOB as in INDOS: <span><t t-esc="o.gp_candidate.dob"/></span></strong>
+                        </div>
+
+                        <table style="width: 100%; text-align: left;">
+                            <tr>
+                                <td colspan="6" style="font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:10px;">
+                                    <span>INDOs No: <span><t t-esc="o.gp_candidate.indos_no"/></span></span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="font-size:20px; font-weight: bold; margin-bottom:8px; text-align:left; margin-right:10px;">
+                            <span>Code No: <span t-esc="o.gp_candidate.candidate_code"/></span>
+                        </div>
                     </div>
                     <table style="width: 100%; text-align: left;">
                         <tr>
-                            <td colspan="6" style="font-size:20px; font-weight: bold; margin-bottom:8px;">
-                                <span><strong>INDOs No: <span><t t-esc="o.gp_candidate.indos_no"/></span></strong></span>
-                            </td>
-                            <td colspan="6" style="font-size:18px; font-weight: bold; margin-bottom:8px; text-align:right;">
-                                <span><strong>Code No: <span t-esc="o.gp_candidate.candidate_code"/></strong></span>
-                            </td>
-                        </tr>
-                    </table>
-                    <table style="width: 100%; text-align: left;">
-                        <tr>
-                            <td style="font-size:20px; font-weight: bold; ">
+                            <td style="font-size:20px; font-weight: bold; position:absolute; top:23%; right:8px; ">
                                 <strong>Signature of the Candidate</strong>
                             </td>
                             
                             <td>
                                 <!-- <div style="display: block; width: 270px; height: 55px; border: 2px dotted #000;text-align:left;margin-top: 8px;margin-left:25px;"></div> -->
                                 <t t-if="o.gp_candidate.candidate_signature">
-                                <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 270px;height:55px;border: 2px dotted #000;" />
+                                <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 270px;height:55px;border: 2px dotted #000; position:absolute; top:25%; right:8px; text-align:right" />
                                 </t>
                             </td>
                         </tr>
@@ -73,19 +74,20 @@
                         </tr>
                     </table>
 
-                    <div style="text-align:left; font-size:17px; font-weight: bold; margin-top:-32px">
-                        <h4>Please Sign within the box</h4>
-                    </div>
+                        <div style="text-align:right; font-size:17px; font-weight: bold; position:absolute; top:31%; right:8px; margin-top:-32px">
+                            <h4>Please Sign within the box</h4>
+                        </div>
+                    
                     
                     <!-- <div t-if="docs.candidate_image" style="margin-top: 20px;">
                         <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.decode('utf-8')" style="max-width: 100%;"/>
                     </div> -->
                     <div style="margin-top:50px">
 						
-						<div style="position:absolute;top:40%;right:0;width:42%">
+						<div style="position:absolute;top:40%; left:30%; width:42%">
 							<div>
 								<b>
-									Capt Pranab Kumar Mishra
+									Capt Harsh Khatri
 								</b>
 							</div>
 							<div style="height:20px">
