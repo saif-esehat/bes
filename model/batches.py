@@ -332,14 +332,14 @@ class InstituteCcmcBatches(models.Model):
         } 
 
     def open_register_for_exam_wizard(self):
-        view_id = self.env.ref('bes.batches_gp_register_exam_wizard').id
+        view_id = self.env.ref('bes.batches_ccmc_register_exam_wizard').id
         
         return {
             'name': 'Register For Exam',
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': view_id,
-            'res_model': 'batches.gp.register.exam.wizard',
+            'res_model': 'batches.ccmc.register.exam.wizard',
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
@@ -407,19 +407,25 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     def register(self):
 
         candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
-        cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
+        cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.ccmc_batch_name , 'template' :False })
         
         for candidate in candidates:
-            gp_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id})
-            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":gp_exam_schedule.id,'cookery_child_line':candidate.id,'institute_id': self.institute_id.id})
-           
-           
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id})
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
+            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
+            ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})
+            cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
             
+            cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
+
+            
+            ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
+
             
                         
 
         
-        self.batch_id.write({"state":'5-exam_scheduled'})
+        self.batch_id.write({"ccmc_state":'5-exam_scheduled'})
 
 
    

@@ -58,7 +58,7 @@
                             </td>
                              <t t-if="subject == 'GSK'" >
                                 <td class="text-left">
-                                 <a  t-attf-href="/open_gsk_oral_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                 <a  t-attf-href="/open_gsk_oral_form?rec_id={{ c.gp_candidate.id }}&amp;gsk_oral={{ c.gsk_oral.id }}">
                                 GSK Oral</a>                            
                                 </td>
                              </t>

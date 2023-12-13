@@ -19,11 +19,11 @@ class Examiner(models.Model):
     city = fields.Char("City",required=True)
     zip = fields.Char("Zip",required=True)
     state_id = fields.Many2one("res.country.state","State",required=True,domain=[('country_id.code','=','IN')])
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile",required=True)
+    phone = fields.Char("Phone", validators=[api.constrains('phone')])
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],required=True )
+    email = fields.Char("Email", validators=[api.constrains('email')],required=True)
     
     pan_no = fields.Char("Pan No .",required=True)
-    email = fields.Char("Email .",required=True)
     dob = fields.Date("DOB",required=True)
     present_designation = fields.Text("Present Designation",required=True)
     name_address_present_employer = fields.Text("Name and address of present employer",required=True)
@@ -45,7 +45,28 @@ class Examiner(models.Model):
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
     exam_coordinator = fields.Boolean("Exam Coordinator")
 
-    
+
+    @api.constrains('phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
+                raise ValidationError("Phone number must be 8 digits.")
+
+    @api.constrains('mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+                raise ValidationError("Mobile number must be 10 digits.")
+
+    @api.constrains('email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.email and '@' not in record.email:
+                raise ValidationError("Invalid email address. Must contain @ symbol.")  
+                  
     @api.onchange('designation')
     def _onchange_compute_subject_id(self):
         if self.designation == 'master':

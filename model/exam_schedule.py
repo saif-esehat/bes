@@ -651,6 +651,8 @@ class CCMCExam(models.Model):
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+    ccmc_online = fields.Many2one("survey.user_input","CCMC Online")
+
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
     cookery_bakery_total = fields.Float("Cookery And Bakery Total",readonly=True)
@@ -683,6 +685,7 @@ class CCMCExam(models.Model):
         ('pending', 'Pending'),
         ('passed', 'Passed'),
     ], string='Certificate Criteria')
+    
     
     
     @api.model

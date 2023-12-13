@@ -28,9 +28,9 @@ class GPCandidate(models.Model):
     city = fields.Char("City")
     zip = fields.Char("Zip")
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile")
-    email = fields.Char("Email")
+    phone = fields.Char("Phone", validators=[api.constrains('phone')])
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
+    email = fields.Char("Email", validators=[api.constrains('email')])
     tenth_percent = fields.Integer("% Xth Std in Eng.")
     twelve_percent = fields.Integer("% 12th Std in Eng.")
     iti_percent = fields.Integer("% ITI")
@@ -81,6 +81,27 @@ class GPCandidate(models.Model):
     ## Mek and GSK Online Exam
     mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
     gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+
+    @api.constrains('phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
+                raise ValidationError("Phone number must be 8 digits.")
+
+    @api.constrains('mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+                raise ValidationError("Mobile number must be 10 digits.")
+
+    @api.constrains('email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.email and '@' not in record.email:
+                raise ValidationError("Invalid email address. Must contain @ symbol.")
 
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.candidate_gp_register_exam_wizard').id
@@ -341,9 +362,9 @@ class CCMCCandidate(models.Model):
     city = fields.Char("City",required=True)
     zip = fields.Char("Zip",required=True)
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile")
-    email = fields.Char("Email")
+    phone = fields.Char("Phone", validators=[api.constrains('phone')])
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
+    email = fields.Char("Email", validators=[api.constrains('email')])
     tenth_percent = fields.Char("% Xth Std in Eng.")
     twelve_percent = fields.Char("% 12th Std in Eng.")
     iti_percent = fields.Char("% ITI")
@@ -393,6 +414,8 @@ class CCMCCandidate(models.Model):
 
     ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
 
+    ccmc_online = fields.One2many("survey.user_input","ccmc_candidate",domain=[("survey_id.subject.name", "=", 'CCMC')],string="CCMC Online")
+
 
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
@@ -401,6 +424,27 @@ class CCMCCandidate(models.Model):
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
 
+
+    @api.constrains('phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
+                raise ValidationError("Phone number must be 8 digits.")
+
+    @api.constrains('mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+                raise ValidationError("Mobile number must be 10 digits.")
+
+    @api.constrains('email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.email and '@' not in record.email:
+                raise ValidationError("Invalid email address. Must contain @ symbol.")
 
 
     @api.depends('fees_paid')
@@ -546,7 +590,8 @@ class CookeryBakeryLine(models.Model):
     _description = 'Cookery and Bakery Line'
 
     cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
-
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id")
     # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
     exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True)
     cookery_exam_date = fields.Date(string="Exam Date")
@@ -1004,8 +1049,10 @@ class CcmcOralLine(models.Model):
     _name = 'ccmc.oral.line'
     _description = 'CCMC Oral Line'
 
-    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
 
+    institute_id = fields.Many2one("bes.institute",string="Institute")
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
     ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     ccmc_oral_exam_date = fields.Date(string="Exam Date")
     gsk_ccmc = fields.Integer("GSK")
