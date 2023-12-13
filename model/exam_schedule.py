@@ -629,7 +629,7 @@ class GPExam(models.Model):
                 self.write({'certificate_criteria':'passed'})
                 # self.certificate_criteria = 'passed'
             else:
-                self.write({'certificate_criteria':'failed'})
+                self.write({'certificate_criteria':'pending'})
 
                 # self.certificate_criteria = 'failed'
                 
