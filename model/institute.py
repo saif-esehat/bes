@@ -28,14 +28,14 @@ class Institute(models.Model):
     zip = fields.Char("Zip",required=True)
     
     principal_name = fields.Char("Name of Principal / Trustee of Training Institute")
-    principal_phone = fields.Char("Phone No. of Principal / Trustee of Training Institute")
-    principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute")
-    principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute")
+    principal_phone = fields.Char("Phone No. of Principal / Trustee of Training Institute",  validators=[api.constrains('principal_phone')] )
+    principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute", validators=[api.constrains('principal_mobile')])
+    principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute", validators=[api.constrains('principal_email')])
     
     
-    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute")
-    admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute")
-    admin_email= fields.Char("E-mail of Admin Officer of Training Institute")
+    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_phone')])
+    admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')])
+    admin_email= fields.Char("E-mail of Admin Officer of Training Institute",  validators=[api.constrains('admin_email')])
     
     name_of_second_authorized_person = fields.Char("Name of the second authorised person representing the Institute")
     
@@ -53,6 +53,47 @@ class Institute(models.Model):
     payment_slip_ids= fields.One2many('institute.payment.slip.line','payment_slip_id',string="Payment Slip")
 
 
+    @api.constrains('principal_phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.principal_phone and not record.principal_phone.isdigit() or len(record.principal_phone) != 8:
+                raise ValidationError("Principal Phone number must be 8 digits.")
+
+    @api.constrains('principal_mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.principal_mobile and not record.principal_mobile.isdigit() or len(record.principal_mobile) != 10:
+                raise ValidationError("Principal Mobile number must be 10 digits.")
+
+    @api.constrains('principal_email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.principal_email and '@' not in record.principal_email:
+                raise ValidationError("Invalid Principal email address. Must contain @ symbol.")
+
+    @api.constrains('admin_phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.admin_phone and not record.admin_phone.isdigit() or len(record.admin_phone) != 8:
+                raise ValidationError("Admin Phone number must be 8 digits.")
+
+    @api.constrains('admin_mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.admin_mobile and not record.admin_mobile.isdigit() or len(record.admin_mobile) != 10:
+                raise ValidationError("Admin Mobile number must be 10 digits.")
+
+    @api.constrains('admin_email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.admin_email and '@' not in record.admin_email:
+                raise ValidationError("Invalid Admin email address. Must contain @ symbol.")
 
     def open_create_institute_batches_wizard(self):
         # Create a new instance of the wizard
