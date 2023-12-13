@@ -393,6 +393,8 @@ class CCMCCandidate(models.Model):
 
     ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
 
+    ccmc_online = fields.One2many("survey.user_input","ccmc_candidate",domain=[("survey_id.subject.name", "=", 'CCMC')],string="CCMC Online")
+
 
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
@@ -546,7 +548,8 @@ class CookeryBakeryLine(models.Model):
     _description = 'Cookery and Bakery Line'
 
     cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
-
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id")
     # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
     exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True)
     cookery_exam_date = fields.Date(string="Exam Date")
@@ -1004,8 +1007,10 @@ class CcmcOralLine(models.Model):
     _name = 'ccmc.oral.line'
     _description = 'CCMC Oral Line'
 
-    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
 
+    institute_id = fields.Many2one("bes.institute",string="Institute")
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
     ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     ccmc_oral_exam_date = fields.Date(string="Exam Date")
     gsk_ccmc = fields.Integer("GSK")

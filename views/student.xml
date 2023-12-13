@@ -592,9 +592,11 @@
                             </page>
                             
 
-                            <page string="Cooker And bakery">
+                            <page string="Cookery And bakery">
                                 <field name="cookery_child_line" nolabel="1" >
                                     <tree>
+                                        <field name='exam_id'/>
+                                        <field name='institute_id'/>
                                         <field name='exam_attempt_number'/>
                                         <field name='cookery_exam_date'/>
                                         <field name='cookery_examiner'/>
@@ -625,7 +627,8 @@
                             <page string="CCMC Oral">
                                 <field name="ccmc_oral_child_line" nolabel="1" >
                                     <tree>
-                                       
+                                        <field name='exam_id'/>                                       
+                                        <field name='institute_id'/>                                       
                                         <field name="ccmc_oral_attempt_no"/>
                                         <field name="ccmc_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
@@ -633,6 +636,14 @@
                                         <field name='toal_ccmc_rating'/> 
                                         <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
+                                </field>
+                            </page>
+                            <page string="CCMC Online">
+                                <field name="ccmc_online" nolabel="1" >
+                                    <tree> 
+                                        <field name="survey_id"/>
+                                        <field name="scoring_percentage"/>
+                                    </tree>                                         
                                 </field>
                             </page>
                         </notebook>
