@@ -651,7 +651,7 @@ class CCMCExam(models.Model):
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
-    ccmc_online = fields.Many2one("survey.user_input","CCMC Online")
+    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online")
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
@@ -669,6 +669,12 @@ class CCMCExam(models.Model):
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='CCMC Oral Status')
+    
+    
+    ccmc_online_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='CCMC Online Status')
     
     
 
