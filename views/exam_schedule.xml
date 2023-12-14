@@ -138,26 +138,31 @@
                             <div>
                                 <field name="cookery_bakery_total" nolabel="1"/>
                             / 
-                                <span>100</span>
+                                <span>120</span>
                             </div>
                       
-                            <label for="ccmc_oral_total"/>
+                            <!-- <label for="ccmc_oral_total"/>
                             <div>
                                 <field name="ccmc_oral_total" nolabel="1"/>
                             / 
                                 <span>20</span>
-                            </div>
+                            </div> -->
                       
                         </group>
                         <group style="width:50%">
                             <field name="cookery_bakery_percentage" readonly="1"/>
-                            <field name="ccmc_oral_percentage" readonly="1"/>
                         </group>
 
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" readonly="1"/>
-                            <field name="ccmc_oral_prac_status" readonly="1"/>
+                            <!-- <field name="ccmc_oral_prac_status" readonly="1"/> -->
+
+                            
                             <field name="ccmc_online_status" readonly="1"/>
+                            <field name="stcw_criteria" readonly="1"/>
+                            <field name="ship_visit_criteria" readonly="1"/>
+                            <field name="attendance_criteria" readonly="1"/>
+                            <field name="exam_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                         </group>
