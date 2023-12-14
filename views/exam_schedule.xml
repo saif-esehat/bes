@@ -89,6 +89,7 @@
                             <field name="attendance_criteria" readonly="1"/>
                             <field name="ship_visit_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
+                            <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                         </group>
                
                         
@@ -114,7 +115,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        
+                        <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -155,7 +156,8 @@
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" readonly="1"/>
                             <field name="ccmc_oral_prac_status" readonly="1"/>
-                            
+                            <field name="certificate_criteria" readonly="1"/>
+                            <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                         </group>
                         
 

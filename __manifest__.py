@@ -9,6 +9,7 @@
  'depends':['product','portal','survey','website','sale','odoo_website_helpdesk'],
  'data': [
         'data/exam_sequence.xml',
+        'data/certificate_sequence.xml',
         'data/tags.xml',
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
