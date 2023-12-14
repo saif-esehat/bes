@@ -17,7 +17,7 @@ class Examiner(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",required=True,domain=[('country_id.code','=','IN')])
     phone = fields.Char("Phone", validators=[api.constrains('phone')])
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],required=True )
@@ -44,6 +44,12 @@ class Examiner(models.Model):
     subject_id = fields.Many2one("course.master.subject","Subject")
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
     exam_coordinator = fields.Boolean("Exam Coordinator")
+
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
 
 
     @api.constrains('phone')

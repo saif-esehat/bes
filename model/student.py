@@ -26,7 +26,7 @@ class GPCandidate(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")
-    zip = fields.Char("Zip")
+    zip = fields.Char("Zip", validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
     phone = fields.Char("Phone", validators=[api.constrains('phone')])
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
@@ -81,6 +81,12 @@ class GPCandidate(models.Model):
     ## Mek and GSK Online Exam
     mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
     gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+    
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
 
     @api.constrains('phone')
     def _check_valid_phone(self):
@@ -360,7 +366,7 @@ class CCMCCandidate(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
     phone = fields.Char("Phone", validators=[api.constrains('phone')])
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
@@ -424,6 +430,11 @@ class CCMCCandidate(models.Model):
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
 
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
 
     @api.constrains('phone')
     def _check_valid_phone(self):

@@ -25,7 +25,7 @@ class Institute(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
     
     principal_name = fields.Char("Name of Principal / Trustee of Training Institute")
     principal_phone = fields.Char("Phone No. of Principal / Trustee of Training Institute",  validators=[api.constrains('principal_phone')] )
@@ -59,6 +59,12 @@ class Institute(models.Model):
             # Check if phone has 8 digits
             if record.principal_phone and not record.principal_phone.isdigit() or len(record.principal_phone) != 8:
                 raise ValidationError("Principal Phone number must be 8 digits.")
+
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
 
     @api.constrains('principal_mobile')
     def _check_valid_mobile(self):
