@@ -2,6 +2,8 @@ from odoo import api, fields, models , _, exceptions
 from odoo.exceptions import UserError,ValidationError
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
+import datetime 
+
 
 class GPCandidate(models.Model):
     _name = 'gp.candidate'
@@ -15,7 +17,7 @@ class GPCandidate(models.Model):
     candidate_signature_name = fields.Char("Candidate Signature")
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
-    age = fields.Char("Age")
+    age = fields.Float("Age",compute="_compute_age")
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
@@ -24,11 +26,11 @@ class GPCandidate(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")
-    zip = fields.Char("Zip")
+    zip = fields.Char("Zip", validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile")
-    email = fields.Char("Email")
+    phone = fields.Char("Phone", validators=[api.constrains('phone')])
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
+    email = fields.Char("Email", validators=[api.constrains('email')])
     tenth_percent = fields.Integer("% Xth Std in Eng.")
     twelve_percent = fields.Integer("% 12th Std in Eng.")
     iti_percent = fields.Integer("% ITI")
@@ -79,6 +81,33 @@ class GPCandidate(models.Model):
     ## Mek and GSK Online Exam
     mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
     gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+    
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
+
+    @api.constrains('phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
+                raise ValidationError("Phone number must be 8 digits.")
+
+    @api.constrains('mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+                raise ValidationError("Mobile number must be 10 digits.")
+
+    @api.constrains('email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.email and '@' not in record.email:
+                raise ValidationError("Invalid email address. Must contain @ symbol.")
 
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.candidate_gp_register_exam_wizard').id
@@ -92,6 +121,14 @@ class GPCandidate(models.Model):
             raise ValidationError("Last Exam Still In Process")
 
         # import wdb;wdb.set_trace()
+        
+        exam_month = self.detect_current_month()
+        
+        if exam_month == 'dec_feb' or exam_month== 'jul_aug':
+            institute_ids = self.env["bes.institute"].search([('institute_repeater','=',True)]).ids
+        else:
+            institute_ids = []
+        
         
         return {
             'name': 'Register For Exam',
@@ -109,9 +146,46 @@ class GPCandidate(models.Model):
             "default_gsk_oral_prac_status": last_exam_record.gsk_oral_prac_status,
             "default_mek_oral_prac_status": last_exam_record.mek_oral_prac_status,
             "default_mek_online_status": last_exam_record.mek_online_status,
-            "default_gsk_online_status":last_exam_record.gsk_online_status
+            "default_gsk_online_status":last_exam_record.gsk_online_status,
+            "default_exam_month" : self.detect_current_month(),
+            "default_institute_ids" : institute_ids
             }
         }
+        
+    @api.depends('dob')
+    def _compute_age(self):
+        for record in self:
+            if record.dob:
+                birthdate = datetime.datetime.strptime(str(record.dob), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                record.age = delta.days // 365
+            else:
+                record.age = 0
+    
+    
+    def detect_current_month(self):
+    # Get the current month as an integer (1 for January, 2 for February, etc.)
+        current_month = datetime.datetime.now().month
+        
+        # Define the month ranges
+        winter_months = [12, 1, 2]
+        spring_months = [3, 4, 5, 6]
+        summer_months = [7, 8]
+        fall_months = [9, 10, 11]
+
+        # Check which range the current month falls into
+        if current_month in winter_months:
+            return "dec_feb"
+        elif current_month in spring_months:
+            return "mar_jun"
+        elif current_month in summer_months:
+            return "jul_aug"
+        elif current_month in fall_months:
+            return "sep_nov"
+        else:
+            return "Invalid month."
+
     
     
     
@@ -292,11 +366,11 @@ class CCMCCandidate(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile")
-    email = fields.Char("Email")
+    phone = fields.Char("Phone", validators=[api.constrains('phone')])
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
+    email = fields.Char("Email", validators=[api.constrains('email')])
     tenth_percent = fields.Char("% Xth Std in Eng.")
     twelve_percent = fields.Char("% 12th Std in Eng.")
     iti_percent = fields.Char("% ITI")
@@ -346,6 +420,8 @@ class CCMCCandidate(models.Model):
 
     ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
 
+    ccmc_online = fields.One2many("survey.user_input","ccmc_candidate",domain=[("survey_id.subject.name", "=", 'CCMC')],string="CCMC Online")
+
 
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
@@ -353,7 +429,55 @@ class CCMCCandidate(models.Model):
     ],string="Fees Paid", default='no')
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
+    
+    def detect_current_month(self):
+    # Get the current month as an integer (1 for January, 2 for February, etc.)
+        current_month = datetime.datetime.now().month
+        
+        # Define the month ranges
+        winter_months = [12, 1, 2]
+        spring_months = [3, 4, 5, 6]
+        summer_months = [7, 8]
+        fall_months = [9, 10, 11]
 
+        # Check which range the current month falls into
+        if current_month in winter_months:
+            return "dec_feb"
+        elif current_month in spring_months:
+            return "mar_jun"
+        elif current_month in summer_months:
+            return "jul_aug"
+        elif current_month in fall_months:
+            return "sep_nov"
+        else:
+            return "Invalid month."
+
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
+
+    @api.constrains('phone')
+    def _check_valid_phone(self):
+        for record in self:
+            # Check if phone has 8 digits
+            if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
+                raise ValidationError("Phone number must be 8 digits.")
+
+    @api.constrains('mobile')
+    def _check_valid_mobile(self):
+        for record in self:
+            # Check if mobile has 10 digits
+            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+                raise ValidationError("Mobile number must be 10 digits.")
+
+    @api.constrains('email')
+    def _check_valid_email(self):
+        for record in self:
+            # Check if email has @ symbol
+            if record.email and '@' not in record.email:
+                raise ValidationError("Invalid email address. Must contain @ symbol.")
 
 
     @api.depends('fees_paid')
@@ -415,7 +539,46 @@ class CCMCCandidate(models.Model):
                 else:
                    candidate.elligiblity_criteria = 'not_elligible'
             else:
-                candidate.elligiblity_criteria = 'not_elligible'        
+                candidate.elligiblity_criteria = 'not_elligible' 
+
+    def open_register_for_exam_wizard(self):
+        view_id = self.env.ref('bes.candidate_ccmc_register_exam_wizard').id
+                
+        last_exam_record = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',self.id)], order='attempt_number desc', limit=1)
+        
+        if len(last_exam_record) <= 0:
+            raise ValidationError("No previous Exam Found . This Candidate Must be registered through batches")
+        
+        if last_exam_record.state == '1-in_process':
+            raise ValidationError("Last Exam Still In Process")
+
+        # import wdb;wdb.set_trace()
+        
+        exam_month = self.detect_current_month()
+        
+        if exam_month == 'dec_feb' or exam_month== 'jul_aug':
+            institute_ids = self.env["bes.institute"].search([('institute_repeater','=',True)]).ids
+        else:
+            institute_ids = []
+        
+        
+        return {
+            'name': 'Register For Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'candidate.ccmc.register.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+            # 'default_batches_id': self.id
+            'default_candidate_id': self.id,
+            'default_ccmc_exam': last_exam_record.id,
+            'default_previous_attempt': last_exam_record.attempt_number,
+            "default_exam_month" : self.detect_current_month(),
+            "default_institute_ids" : institute_ids
+            }
+        }       
 
     
 class CCMCSTCWCandidate(models.Model):
@@ -460,7 +623,8 @@ class CookeryBakeryLine(models.Model):
     _description = 'Cookery and Bakery Line'
 
     cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
-
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id")
     # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
     exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True)
     cookery_exam_date = fields.Date(string="Exam Date")
@@ -918,8 +1082,10 @@ class CcmcOralLine(models.Model):
     _name = 'ccmc.oral.line'
     _description = 'CCMC Oral Line'
 
-    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
 
+    institute_id = fields.Many2one("bes.institute",string="Institute")
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
     ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     ccmc_oral_exam_date = fields.Date(string="Exam Date")
     gsk_ccmc = fields.Integer("GSK")
@@ -977,17 +1143,28 @@ class CandidateRegisterExamWizard(models.TransientModel):
     _name = 'candidate.gp.register.exam.wizard'
     _description = 'Register Exam'
     
-    exam_region = fields.Many2one("exam.center",string="Exam Region",required=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    exam_region = fields.Many2one("exam.center",string="Exam Region")
+    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     candidate_id = fields.Many2one("gp.candidate",string="Candidate",required=True)
+    
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
+
 
     gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True)
-
+    
     
     previous_attempt =  fields.Integer("Previous Attempt No.")
     # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
-    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
-    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
+
+    
+    exam_month = fields.Selection([
+        ('dec_feb', 'Dec - Feb'),
+        ('mar_jun', 'Mar - Jun'),
+        ('jul_aug', 'Jul - Aug'),
+        ('sep_nov', 'Sep - Nov'),
+    ], string='Exam Month')
     
     
     gsk_oral_prac_status = fields.Selection([
@@ -1014,16 +1191,262 @@ class CandidateRegisterExamWizard(models.TransientModel):
     ], string='Gsk Online Status')
     
     
+    @api.depends('exam_region')
+    def _compute_institute_ids(self):
+        for record in self:
+            
+            exam_region = record.exam_region.id
+            record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
+            
+    
+    def register_exam(self):
+        
+        gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':self.candidate_id.id})
+
+        
+        if self.gsk_oral_prac_status == 'failed':
+            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        else:
+            gsk_practical = self.gp_exam.gsk_prac
+            gsk_oral =self.gp_exam.gsk_oral
+        
+        
+        if self.mek_oral_prac_status == 'failed':
+            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        else:
+            mek_practical = self.gp_exam.mek_prac
+            mek_oral =self.gp_exam.mek_oral
+        
+        
+        if self.mek_online_status == 'failed':
+            mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        else:
+            mek_survey_qb_input = self.gp_exam.mek_online
+        
+        
+        if self.gsk_online_status == 'failed':
+            gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        else:
+            gsk_survey_qb_input = self.gp_exam.gsk_online
+            
+        
+        gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        
+        gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+
+
+class CandidateCCMCRegisterExamWizard(models.TransientModel):
+    _name = 'candidate.ccmc.register.exam.wizard'
+    _description = 'Register Exam'
+    
+    exam_region = fields.Many2one("exam.center",string="Exam Region")
+    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
+    institute_id = fields.Many2one("bes.institute",string="Institute")
+    candidate_id = fields.Many2one("ccmc.candidate",string="Candidate",required=True)
+    
+    cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template")
+
+
+    ccmc_exam = fields.Many2one("ccmc.exam.schedule",string="CCMC Exam",required=True)
+    
+    
+    previous_attempt =  fields.Integer("Previous Attempt No.")
+    # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
+
+    
+    exam_month = fields.Selection([
+        ('dec_feb', 'Dec - Feb'),
+        ('mar_jun', 'Mar - Jun'),
+        ('jul_aug', 'Jul - Aug'),
+        ('sep_nov', 'Sep - Nov'),
+    ], string='Exam Month')
+    
+    
+    cookery_bakery_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Cookery Bakery Oral/Prac Status',compute="_compute_cookery_bakery_status")
+    
+    
+    
+    # ccmc_oral_status = fields.Selection([
+    #     ('failed', 'Failed'),
+    #     ('passed', 'Passed'),
+    # ], string='CCMC Oral Status',compute="_compute_ccmc_oral_status")
+    
+    
+    ccmc_online = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='CCMC Online',compute="_compute_ccmc_online")
+    
+
+    @api.depends('ccmc_exam')
+    def _compute_cookery_bakery_status(self):
+         for record in self:
+             record.cookery_bakery_status = record.ccmc_exam.cookery_bakery_prac_status
+    
+    @api.depends('ccmc_exam')
+    def _compute_ccmc_online(self):
+         for record in self:
+             record.ccmc_online = record.ccmc_exam.ccmc_online_status
+    
+    # @api.depends('ccmc_exam')
+    # def _compute_ccmc_oral_status(self):
+    #      for record in self:
+    #          record.ccmc_oral_status = record.ccmc_exam.ccmc_oral_prac_status
+    
+    
+    @api.depends('exam_region')
+    def _compute_institute_ids(self):
+        for record in self:
+            
+            exam_region = record.exam_region.id
+            record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
+            
+    
+    def register_exam(self):
+        
+        ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':self.candidate_id.id})
+
+        
+        if self.cookery_bakery_status == 'failed':
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        else:
+            cookery_bakery = self.ccmc_exam.cookery_bakery
+            ccmc_oral =self.ccmc_exam.ccmc_oral
+        
+        
+        # if self.mek_oral_prac_status == 'failed':
+        #     mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        #     mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        # else:
+        #     mek_practical = self.gp_exam.mek_prac
+        #     mek_oral =self.gp_exam.mek_oral
+        
+        
+        if self.ccmc_online == 'failed':
+            cookery_bakery_qb_input = self.cookery_bakery_qb._create_answer(user=self.candidate_id.user_id)
+            cookery_bakery_qb_input.write({'ccmc_candidate':self.candidate_id.id})
+        else:
+            cookery_bakery_qb_input = self.ccmc_exam.ccmc_online
+        
+        
+        # if self.gsk_online_status == 'failed':
+        #     gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+        #     gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+        # else:
+        #     gsk_survey_qb_input = self.gp_exam.gsk_online
+            
+        
+        ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id})
+        
+        ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
+
+        
+        
+        # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+
+
+            
+        # gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            
+            
+            
+        
+        
+        
+        # xw("ok")
+        
+    
+    # @api.onchange('exam_month')
+    # def _onchange_exam_month(self):
+    #     # Example: Set a domain to only allow child records with age greater than 5
+    #     # import wdb; wdb.set_trace(); 
+    #     if self.exam_month == 'dec_feb' or self.exam_month== 'jul_aug':
+            
+    #         return {
+    #             'domain': {
+    #                 'institute_id': [('institute_repeater', '=', True)]
+    #             }
+    #         }
+    #     else:
+    #         return {}
+    
+    
     # def register(self):
     #     gp_exam = self.env["gp.exam.schedule"].sudo().create({})
     #     if self.mek_oral_prac_status == 'failed':
             
             
             
-            
-            
-        
-        
-        
-        
+class SEPCandidate(models.Model):
+    _name = 'sep.candidate'
+    _description = 'GP Candidate'
     
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
+
+    gsk_candidate_child_line = fields.One2many("sep.candidate.line","sep_candidate_parent",string="SEP Registration")
+    def name_get(self):
+        result = []
+        for record in self:
+            name = f"{record.institute_batch_id.batch_name} "  # Customize the display name as needed
+            result.append((record.id, name))
+        return result
+        
+        
+        
+        
+class SEPCandidateLine(models.Model):
+    _name = 'sep.candidate.line'
+    _description = 'GP Candidate Line'
+    rec_name = 'institute_batch_id'
+    
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
+
+    sep_candidate_parent = fields.Many2one("sep.candidate",string="SEP Registration Line")
+    name = fields.Char("Name of the Rating's")
+    dob = fields.Date("DOB")
+    indos_no= fields.Char("Indos No")
+    cdc_no= fields.Char("CDC No")
+    contact= fields.Char("Contact No")
+    email= fields.Char("Email ID")
+    attendance1= fields.Boolean("1st Day Attendance")
+    attendance2= fields.Boolean("2nd Day Attendance")
+    vaccination= fields.Boolean("Vaccination/RTPCR")
+    remarks= fields.Char("Remark")
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+    ],compute='_compute_state', string='Status', default='draft' )
+
+    @api.depends('attendance1', 'attendance2')
+    def _compute_state(self):
+        for record in self:
+            if record.attendance1 and record.attendance2:
+                record.state = 'confirmed'
+            else:
+                record.state = 'draft'
+
+    def print_certificate(self):
+        return self.env.ref('bes.action_report_certificate').report_action(self)
+        
+
+class SEPCertificateReport(models.AbstractModel):
+    _name = 'report.bes.sep_certificate'
+    _description = 'SEP Certificate Report'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        records = self.env['sep.candidate.line'].browse(docids)
+        if not records:
+            raise ValueError("No records found for docids: %s" % docids)
+        return {
+            'records': records,
+            'data': data,
+        }

@@ -74,6 +74,7 @@
                         </group>
                         <group style="width:50%;">
                             <field name="code" required="1"/>
+                            <field name="institute_repeater"/>
                         </group>
                         <group>
 

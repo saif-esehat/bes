@@ -43,6 +43,66 @@
             </field>
         </record>
 
+        <record id="sep_reg_action" model="ir.actions.act_window">
+            <field name="name">SEP Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sep.candidate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Candidate</p>
+            </field>
+        </record>
+
+        <record id="action_report_certificate" model="ir.actions.report">
+            <field name="name">Certificate Report</field>
+            <field name="model">sep.candidate.line</field>
+            <field name="report_name">bes.sep_certificate</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="binding_model_id" ref="bes.model_sep_candidate_line"/>
+        </record>
+
+        <record id="sep_candidate_forms" model="ir.ui.view">
+            <field name="name">sep.candidate.form</field>
+            <field name="model">sep.candidate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="institute_batch_id"/>
+                    </group>
+                    <notebook>
+                        <page string="SEP Registration">
+                            <field name="gsk_candidate_child_line">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="dob"/>
+                                    <field name="indos_no"/>
+                                    <field name="cdc_no"/>
+                                    <field name="contact"/>
+                                    <field name="email"/>
+                                    <field name="attendance1"/>
+                                    <field name="attendance2"/>
+                                    <field name="vaccination"/>
+                                    <field name="remarks"/>
+                                    <field name="state" invisible="1"/>
+                                    <button string="Print Certificate" type="object" name="print_certificate" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="sep_candidate_tree" model="ir.ui.view">
+        <field name="name">sep.candidate.tree</field>
+        <field name="model">sep.candidate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="institute_batch_id"/>
+            </tree>
+        </field>
+        </record>
+
 
 
         <record id="gp_candidate_kanban" model="ir.ui.view">
@@ -422,6 +482,9 @@
             <field name="model">ccmc.candidate</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
+                   </header>
                     <sheet>
                         <field name="elligiblity_criteria" invisible="1"/>
                         <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
@@ -529,9 +592,11 @@
                             </page>
                             
 
-                            <page string="Cooker And bakery">
+                            <page string="Cookery And bakery">
                                 <field name="cookery_child_line" nolabel="1" >
                                     <tree>
+                                        <field name='exam_id'/>
+                                        <field name='institute_id'/>
                                         <field name='exam_attempt_number'/>
                                         <field name='cookery_exam_date'/>
                                         <field name='cookery_examiner'/>
@@ -562,7 +627,8 @@
                             <page string="CCMC Oral">
                                 <field name="ccmc_oral_child_line" nolabel="1" >
                                     <tree>
-                                       
+                                        <field name='exam_id'/>                                       
+                                        <field name='institute_id'/>                                       
                                         <field name="ccmc_oral_attempt_no"/>
                                         <field name="ccmc_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
@@ -570,6 +636,14 @@
                                         <field name='toal_ccmc_rating'/> 
                                         <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
+                                </field>
+                            </page>
+                            <page string="CCMC Online">
+                                <field name="ccmc_online" nolabel="1" >
+                                    <tree> 
+                                        <field name="survey_id"/>
+                                        <field name="scoring_percentage"/>
+                                    </tree>                                         
                                 </field>
                             </page>
                         </notebook>
@@ -1204,9 +1278,12 @@
             <field name="arch" type="xml">
                 <form>
                    
-                    <group>
+                    <group style="width:50%">
                         <field name="gp_exam" readonly="1" />
                         <field name="previous_attempt" readonly="1" />
+                    </group>
+                     <group style="width:50%">
+                        <field name="exam_month" readonly="1" />
                     </group>
                     <group style="width:50%">
                             <field name="gsk_oral_prac_status" readonly="1"/>
@@ -1214,11 +1291,14 @@
                     </group>
                      <group style="width:50%">
                             <field name="mek_online_status" readonly="1"/>
-                            <field name="gsk_online_status" readonly="1"/>
+                            <field name="gsk_online_status"  readonly="1"/>
                     </group>
                      <group>
-                        <field name="exam_region" />
-                        <field name="institute_id" domain="[('exam_center','=',exam_region)]" />
+                        <field name="exam_region" attrs="{'invisible': [('exam_month', 'in', ('dec_feb','jul_aug'))]}" />
+                        <field name="institute_ids" invisible="1" />
+                        <field name="institute_id" domain="[('id','in',institute_ids)]" />
+                        <field name="mek_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','MEK')]" attrs="{'invisible': [('mek_online_status', '=', 'passed')] , 'required' : [('mek_online_status','=', 'failed')]  }" />
+                        <field name="gsk_survey_qb" domain="[('institute','=',institute_id),('subject.name','=','GSK')]"  attrs="{'invisible': [('gsk_online_status', '=', 'passed')] , 'required' : [('gsk_online_status','=', 'failed')] }" />
                         <field name="candidate_id" invisible="1" />
                       
 
@@ -1227,8 +1307,49 @@
 
                     </group>
                     <footer>
-                        <!-- <button string="Register" type="object" class="oe_highlight" name="register"/>
-                        <button string="Cancel" class="oe_link" special="cancel"/> -->
+                        <button string="Register" type="object" class="oe_highlight" name="register_exam"/>
+                        <!-- <button string="Cancel" class="oe_link" special="cancel"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="candidate_ccmc_register_exam_wizard" model="ir.ui.view">
+            <field name="name">candidate.ccmc.register.exam.wizard.form</field>
+            <field name="model">candidate.ccmc.register.exam.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                   
+                    <group style="width:50%">
+                        <field name="ccmc_exam" readonly="1" />
+                        <field name="previous_attempt" readonly="1" />
+                    </group>
+                     <group style="width:50%">
+                        <field name="exam_month" readonly="1" />
+                    </group>
+                    <group style="width:50%">
+
+                        <field name="cookery_bakery_status" readonly="1"/>
+                        <!-- <field name="ccmc_oral_status" readonly="1"/> -->
+                        <field name="ccmc_online" readonly="1"/>
+                           
+                    </group>
+                     
+                     <group>
+                        <field name="exam_region" attrs="{'invisible': [('exam_month', 'in', ('dec_feb','jul_aug'))]}" />
+                        <field name="institute_ids" invisible="1" />
+                        <field name="institute_id" domain="[('id','in',institute_ids)]" />
+                        <field name="cookery_bakery_qb" domain="[('institute','=',institute_id),('subject.name','=','CCMC')]" attrs="{'invisible': [('ccmc_online', '=', 'passed')] , 'required' : [('ccmc_online','=', 'failed')] }" />
+                        
+                        <field name="candidate_id" invisible="1" />
+                      
+
+                        <!-- <field name="mek_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','MEK')]" options="{'no_create': True}"/>
+                        <field name="gsk_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','GSK')]" options="{'no_create': True}"/> -->
+
+                    </group>
+                    <footer>
+                        <button string="Register" type="object" class="oe_highlight" name="register_exam"/>
+                        <!-- <button string="Cancel" class="oe_link" special="cancel"/> -->
                     </footer>
                 </form>
             </field>

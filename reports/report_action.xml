@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="candidate_admit_card_action" model="ir.actions.report">
+    <!-- <record id="candidate_admit_card_action" model="ir.actions.report">
         <field name="name">Admit Card</field>
         <field name="model">gp.candidate</field>
         <field name="report_type">qweb-pdf</field>
@@ -8,7 +8,39 @@
         <field name="report_file">bes.candidate_admit_card</field>
         <field name="binding_model_id" ref="model_gp_candidate"/>
         <field name="binding_type">report</field>
-    </record>
+    </record> -->
+    
+    <report
+        id="candidate_gp_admit_card_action"
+        string= "GP Admit Card"
+        model="gp.exam.schedule"
+        report_type="qweb-pdf"
+        name="bes.candidate_admit_card_gp"
+        file="bes.candidate_admit_card_gp"/>
+        
+    <report
+        id="candidate_ccmc_admit_card_action"
+        string= "CCMC Admit Card"
+        model="ccmc.exam.schedule"
+        report_type="qweb-pdf"
+        name="bes.candidate_admit_card_ccmc"
+        file="bes.candidate_admit_card_ccmc"/>
+
+    <report
+        id="report_gp_certificate"
+        string= "GP Ceritificate"
+        model="gp.exam.schedule"
+        report_type="qweb-pdf"
+        name="bes.report_general_certificate"
+        file="bes.report_general_certificate"/>
+   
+    <report
+        id="report_ccmc_certificate"
+        string= "CCMC Ceritificate"
+        model="ccmc.exam.schedule"
+        report_type="qweb-pdf"
+        name="bes.course_certificate"
+        file="bes.course_certificate"/>
 
     <report
             id="batches_report_xlsx"

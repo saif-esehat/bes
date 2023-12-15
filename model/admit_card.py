@@ -10,6 +10,9 @@ class CandidateAdmitCard(models.AbstractModel):
     _description = 'Candidate Admit Card'
     
 
+    
+    
+    
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.candidate'].sudo().browse(docids)

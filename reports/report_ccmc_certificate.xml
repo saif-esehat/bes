@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="course_certificate">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
+                <div class="o_report">
+                    <div id="header">
+                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem"/>
+                        <br/>
+                        <img t-attf-src="data:image/png;ccmc_candidate.candidate_image}}" alt="Image" id="photo"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
+                        <br/>
+                        <div style="width:100%; display:block;">
+                            <span style="font-size:1rem;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
+                        </div>
+                        <div style="width:100% display:block;">
+                        <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
+                            Awards this</span>
+                        </div>
+                        <img class="img img-responsive" t-attf-src="bes/static/src/img/Picture3.jpg" alt="" style="margin-top:0;"/>
+                    </div>
+                    <div id="main">
+                        <div class="left">
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">Certificate No.: </label><span style="font-size:1.5rem;"></span>
+                        </div>
+                        <div class="left">
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">This is to certify that: </label><span style="font-size:1.5rem;"><t t-esc="doc.ccmc_candidate.name"/></span>
+                        </div>
+                        <div class="line" style="display: flex; width: 100%; font-size: 1rem;">
+                            <div style="flex: 1; margin-right: 0;">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; ">Roll No: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.roll_no"/></span>
+                            </div>
+                            <div style="flex: 1; text-align: center; margin-left:8rem; margin-right:5rem;">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">INDOS No: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.indos_no"/></span>
+                            </div>
+                            <div style="flex: 1; margin-left: 0;">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">Date of Birth: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.dob"/></span>
+                            </div>
+                        </div>
+                        <span style="color:#4c2d8b; text-align:left; font-size:1.2rem" >has undergone an approved six months Pre-sea training for</span>
+                        <h1>Certificate Course in Maritime Catering</h1>
+                        <div class="left">
+                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.institute_id.name"/></span></p>
+                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">From <span style="color:#000; font-size:1.2rem;">Demo</span> and has successfully passed the All India Exit Examination
+                                held in <span style="font-size:1.2rem; color:#000;">Demo</span> and has been awarded grade <span style="font-size:1.2rem; color:#000;">Demo </span> on the basis shown below:    
+                            </p>
+                            <p style="color:#4c2d8b; text-align:left; font-size:1.2rem; margin:0;">Position in the merit list of first 25% - <span style="color:#000;">Demo</span></p>
+                            <div class="line" style="display: flex; justify-content: space-between; width: 100%;">
+                                <div id="split" style="margin-right: 10rem; display: flex; align-items: center;">
+                                    <div style="color: #4c2d8b; text-align: left; ">Date <span style="color: #000;">demo</span></div>
+                                </div>
+                                <div id="sign" style="text-align: right; margin-left:15rem;">
+                                    <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" id="img-sign"/>
+                                    <span style="display: block;">Signature of the Candidate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="footer">
+                        <div style="text-align:center; display:block;">Ravindra Nath Tripathi</div>
+                        <div style="color:#4c2d8b;">Marine Engineering Officer</div>
+                        <p style="color:#4c2d8b;">Board of Examinations for Seafarers Trust <br/>
+                            NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614. <br/>
+                            E-mail: bestexam@bestrust.in / ivexams@bestrust.in
+                        </p>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

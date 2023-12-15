@@ -1,15 +1,8 @@
 <odoo>
     <template id="examiner_candidate_list" name="Candidates">
         <script>
-                                    $(document).ready(function () {
-                                        $('#uploadBtn').on('click', function () {
-                                            // Show the overlay and loader when the upload button is clicked
-                                            $('#loader-overlay').show();
-                                        });
-                                    });
         </script>
         <style>
-                                /* CSS to style the loader and overlay */
                                     #loader-overlay {
                                         display: none;
                                         position: fixed;
@@ -32,8 +25,11 @@
         </style>
 
         <t t-call="portal.portal_layout">
+        <form t-attf-action="/open_candidate_form" method="get">
             
+            </form>
             <t t-call="portal.portal_table">
+            
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -46,34 +42,48 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="candidate" t-as="c">
+                    <t t-foreach="gp_oral_prac" t-as="c">
                         <tr>
                             <td class="text-left">
-                                <t t-out="c.name" />
+                                <t t-out="c.gp_candidate.name" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.institute_id.name" />
+                                <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.indos_no" />
+                                <t t-out="c.gp_candidate.indos_no" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.roll_no" />
+                                <t t-out="c.gp_candidate.roll_no" />
                             </td>
-                            <td class="text-left">
-                                <a class="btn btn-primary" t-attf-href="/open_gsk_oral_form?rec_id={{ c.indos_no }}">
+                             <t t-if="subject == 'GSK'" >
+                                <td class="text-left">
+                                 <a  t-attf-href="/open_gsk_oral_form?rec_id={{ c.gp_candidate.id }}&amp;gsk_oral={{ c.gsk_oral.id }}">
                                 GSK Oral</a>                            
-                                <a class="btn btn-primary" t-attf-href="/open_gsk_practical_form?rec_id={{ c.indos_no }}">
-                                GSK Practical</a>                            
-                                <a class="btn btn-primary" t-attf-href="/open_mek_oral_form?rec_id={{ c.indos_no }}">
-                                MEK Oral</a> 
-                                <a class="btn btn-primary" t-attf-href="/open_practical_mek_form?rec_id={{ c.indos_no }}">
-                                MEK Practical</a> 
-                                <a class="btn btn-primary" t-attf-href="/open_cookery_bakery_form?rec_id={{ c.indos_no }}">
-                                Cookery and Bakery</a>     
-                                <a class="btn btn-primary" t-attf-href="/open_ccmc_oral_form?rec_id={{ c.indos_no }}">
-                                CCMC Oral</a>                          
-                            </td>
+                                </td>
+                             </t>
+                             <t t-if="subject == 'GSK'" >
+                                <td class="text-left">
+                                 <a  t-attf-href="/open_gsk_practical_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                GSK Practical</a>
+                                </td>
+                             </t>
+                            <t t-if="subject == 'MEK'" >       
+                                <td class="text-left">
+                                    <a t-attf-href="/open_mek_oral_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                    MEK Oral
+                                    </a> 
+                                    
+                                </td>
+                            </t>
+                             <t t-if="subject == 'MEK'" >
+                                <td class="text-left">
+                                    <a  t-attf-href="/open_practical_mek_form?rec_id={{ c.gp_candidate.indos_no }}">
+                                        MEK Practical
+                                    </a> 
+                                </td>
+
+                              </t>       
                             
                            
 
@@ -82,11 +92,12 @@
 
                 </tbody>
             </t>
+           
         </t>
     </template>
 
 
-    <template id="gsk_practical_marks_submit" name="GSK Practical Marks Submittion">
+    <template id="gsk_practical_marks_submit" name="GSK Practical Marks Submittion" >
         <style>
             body {
             background-color: #f8f9fa;
@@ -140,6 +151,7 @@
             }
         </style>
         <script>
+                                    
             function displayImage(input) {
                 const cardImg = document.querySelector('.card-img');
                 const file = input.files[0];
@@ -180,13 +192,52 @@
                                 </div> -->
                              </div>
                             <div class="row">
+                             <div class="col-md-12">
+                                <div class="text-right">
+                                <div class="form-group">
+                                    <label for="candidate_image"></label>
+                                   <t t-if="candidate_image">
+                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="candidate_name">Candidate Name</label>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="indos">Indos No</label>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
+                                    
                                     <div class="form-group">
-                                        <label for="climbing_mast">Climb the mast with safe practices ,
-                                         Prepare and throw Heaving Line </label>
-                                        <input type="number" class="form-control" id="climbing_mast" name="climbing_mast" />
+                                        <label for="climbing_mast">Climb the mast with safe practices, Prepare and throw Heaving Line </label>
+                                        <input type="number" class="form-control" id="climbing_mast" name="climbing_mast" onchange="validateClimbingMast(this)" />
+                                        <small id="marks_error" style="color: red;"></small>
                                     </div>
+
+
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -249,6 +300,16 @@
                                         <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks"/>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">Status</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                            </div>
 
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
@@ -363,7 +424,42 @@
                                 </div> -->
                             </div>
                             <div class="row">
-                               
+                           <div class="col-md-12">
+                                <div class="text-right">
+                                <div class="form-group">
+                                    <label for="candidate_image"></label>
+                                   <t t-if="candidate_image">
+                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="candidate_name">Candidate Name</label>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="indos">Indos No</label>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                </div>
+                                </div>
+
+
+                               <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>                               
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Subject Area 1</label>
@@ -417,6 +513,16 @@
                                         <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
                                     </div>
                                 </div>
+                                 <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">Status</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                            </div>
 
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
@@ -530,6 +636,41 @@
                                 </div> -->
                             </div>
                             <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-right">
+                                <div class="form-group">
+                                    <label for="candidate_image"></label>
+                                   <t t-if="candidate_image">
+                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="candidate_name">Candidate Name</label>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="indos">Indos No</label>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -577,6 +718,16 @@
                                         <label for="remarks_oral_mek">Remarks Mention If Absent/Good/Average/Weak</label>
                                         <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek"/>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">Status</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
                                 </div>
 
                                 <div class="col-md-12">
@@ -691,6 +842,41 @@
                                 </div> -->
                             </div>
                             <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-right">
+                                <div class="form-group">
+                                    <label for="candidate_image"></label>
+                                   <t t-if="candidate_image">
+                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="candidate_name">Candidate Name</label>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="indos">Indos No</label>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -760,6 +946,16 @@
                                         <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek"/>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">Status</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                                </div>
 
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
@@ -803,13 +999,49 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                               <div class="col-md-12">
+                                <div class="text-right">
+                                <div class="form-group">
+                                    <label for="candidate_image"></label>
+                                   <t t-if="candidate_image">
+                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                </div>
+                                </div>
+                                </div>
+                               
+                                <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="candidate_name">Candidate Name</label>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                </div>
+                                </div>
+                                
+
+                                <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="indos">Indos No</label>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                </div>
+                                </div>
+                           
+                                </div>   
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="hygiene_grooming">Hygiene and Grooming</label>
                                         <input type="number" class="form-control" id="hygiene_grooming" name="hygiene_grooming" />
                                     </div>
                                 </div>
-                            </div>
+                                <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                                </div>
+                           
 
                             <!-- Dish 1 Group -->
                             <div class="form-group-header">Dish 1</div>
@@ -894,6 +1126,16 @@
                                         <label for="knowledge_of_menu">Knowledge of Menu</label>
                                         <input type="number" class="form-control" id="knowledge_of_menu" name="knowledge_of_menu" />
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">Status</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
                                 </div>
                             </div>
 
@@ -992,6 +1234,41 @@
                                
                             </div>
                             <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-right">
+                                <div class="form-group">
+                                    <label for="candidate_image"></label>
+                                   <t t-if="candidate_image">
+                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                    </t>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="candidate_name">Candidate Name</label>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                </div>
+                                </div>
+                                
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="indos">Indos No</label>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>
+                           
+                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -1005,12 +1282,23 @@
                                         <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" />
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="state">Status</label>
+                                    <select class="form-control" id="state" name="state">
+                                        <option value="draft">Draft</option>
+                                        <option value="confirm">Confirm</option>
+                                       
+                                    </select>
+                                </div>
+                                </div>
                                 <div class="col-md-12">
                                 <div class="form-group" style="display:grid">
                                     
                                         <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
                                     </div>
                                 </div>
+
 
 
                             </div>

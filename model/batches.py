@@ -255,18 +255,18 @@ class InstituteCcmcBatches(models.Model):
         
         # import wdb; wdb.set_trace()
 
-        ccmc_partner_id = self.institute_id.user_id.ccmc_partner_id.id
+        ccmc_partner_id = self.institute_id.user_id.partner_id.id
         product_id_ccmc = self.ccmc_course.exam_fees.id
         product_price = self.ccmc_course.exam_fees.lst_price
         qty = self.ccmc_candidate_count
         line_items = [(0, 0, {
-        'product_id_ccmc': product_id_ccmc,
+        'product_id': product_id_ccmc,
         'price_unit':product_price,
         'quantity':qty
         })]
         
         invoice_vals = {
-            'ccmc_partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
+            'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
             'batch_ok':True,
@@ -331,6 +331,23 @@ class InstituteCcmcBatches(models.Model):
             }
         } 
 
+    def open_register_for_exam_wizard(self):
+        view_id = self.env.ref('bes.batches_ccmc_register_exam_wizard').id
+        
+        return {
+            'name': 'Register For Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'batches.ccmc.register.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_institute_id': self.institute_id.id,
+                'default_batch_id': self.id
+            }
+        }
+
     
         
     
@@ -351,6 +368,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     def register(self):
+
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
@@ -375,6 +393,39 @@ class BatchesRegisterExamWizard(models.TransientModel):
 
         
         self.batch_id.write({"state":'5-exam_scheduled'})
+
+class CCMCBatchesRegisterExamWizard(models.TransientModel):
+    _name = 'batches.ccmc.register.exam.wizard'
+    _description = 'Register Exam'
+
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    batch_id = fields.Many2one("institute.ccmc.batches",string="Batches",required=True)
+    cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template")
+    
+    
+    
+    def register(self):
+
+        candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
+        cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.ccmc_batch_name , 'template' :False })
+        
+        for candidate in candidates:
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id})
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
+            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
+            ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})
+            cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
+            
+            cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
+
+            
+            ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
+
+            
+                        
+
+        
+        self.batch_id.write({"ccmc_state":'5-exam_scheduled'})
 
 
    

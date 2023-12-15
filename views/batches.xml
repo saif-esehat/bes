@@ -136,6 +136,7 @@
                         <button name="move_to_invoiced_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '3-pending_invoice'),]}"/>
                         <button name="confirm_batch_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '1-ongoing')]}"/>
                         <button name="confirm_indos_ccmc" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '2-indos_pending')]}"/>
+                        <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
                         <field name="ccmc_state" widget="statusbar"/>
                     </header>
@@ -267,6 +268,25 @@
                     <footer>
                         <button string="Register" type="object" class="oe_highlight" name="register"/>
                         <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="batches_ccmc_register_exam_wizard" model="ir.ui.view">
+            <field name="name">batches.ccmc.register.exam.wizard.form</field>
+            <field name="model">batches.ccmc.register.exam.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="institute_id" invisible="1"/>
+                        <field name="batch_id" invisible="1"/>
+                        <field name="cookery_bakery_qb" required="1" domain="[('template', '=', True ),('subject.name','=','CCMC')]" options="{'no_create': True}"/>
+                    </group>
+                    <footer>
+                        <button string="Register" type="object" class="oe_highlight" name="register"/>
+                        <!-- <button string="Cancel" class="oe_link" special="cancel"/> -->
                     </footer>
                 </form>
             </field>

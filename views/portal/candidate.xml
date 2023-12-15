@@ -92,6 +92,61 @@
         </t>
     </template>
 
+    <template id="gp_exam_candidate" name="GP Exam Candidate List" >
+       <script>
+
+                function openTokenModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('survey_input_id').value = dataId;
+
+                }
+        
+       </script>
+
+
+       <t t-call="portal.portal_layout">
+            
+            <t t-call="portal.portal_table">
+               
+                           
+
+                                       
+
+                                        
+
+
+                <thead>
+                    <tr>
+                        <th>Exam ID</th>
+                        <th>Candidate Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="registered_exams" t-as="rec">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="rec.exam_id" />
+                            </td>
+                            <td class="text-center">
+                                <t t-out="rec.gp_candidate.name" />
+                            </td>
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpcandidates/download_admit_card_from_url/{{rec.id}}" class="fa">Download Admit Card</a>
+
+
+                            </td>
+                             
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
    
 
 

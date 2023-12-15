@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="candidate_admit_card_ccmc">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.html_container">
+                    <!-- Your content here -->
+                    <div style="text-align:center; font-size:24px">
+                        <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
+                    </div>
+                    <div style="text-align:center; font-size:22px">
+                        <strong>ADMIT CARD - CCMC Fresh</strong>
+                    </div>
+                    <div style="font-size:20px;text-align:center;">
+                        <strong>Exam Center: <span><t t-esc="o.ccmc_candidate.city"/></span></strong>
+                    </div>
+                    <!-- <div class="card-img-container"  t-if="o.candidate_image"> -->
+                    <t t-if="o.ccmc_candidate.candidate_image">
+                        <img t-attf-src="data:image/png;base64,{{o.ccmc_candidate.candidate_image}}" style="width: 150px;height:150px; position:absolute;top:10%;right:8px;" />
+                    </t>
+                        <!-- <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.encode('utf-8')" class="card-img-top card-img" style="width: 150px; position:absolute;top:26px;right:8px;" alt="Candidate Photo" /> -->
+                    <!-- </div> -->
+                    
+                    
+                    <div style="position:absolute; top:10%; left:3%;">
+                        <table style="width: 100%; text-align:left;">
+                            <tr>
+                                <td colspan="6">
+                                    <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:8px;">
+                                        <strong>Examination: June 2022</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:5px; margin-right:1px;">
+                            <strong>Roll No: <span><t t-esc="o.ccmc_candidate.roll_no"/></span></strong>
+                        </div>
+
+                        <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:10px;">
+                            <strong>Name as in INDOS:<span><t t-esc="o.ccmc_candidate.name"/></span></strong>
+                        </div>
+
+                        <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:5px; margin-right:10px;">
+                            <strong>DOB as in INDOS: <span><t t-esc="o.ccmc_candidate.dob"/></span></strong>
+                        </div>
+
+                        <table style="width: 100%; text-align: left;">
+                            <tr>
+                                <td colspan="6" style="font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:10px;">
+                                    <span>INDOs No: <span><t t-esc="o.ccmc_candidate.indos_no"/></span></span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="font-size:20px; font-weight: bold; margin-bottom:8px; text-align:left; margin-right:10px;">
+                            <span>Code No: <span t-esc="o.ccmc_candidate.candidate_code"/></span>
+                        </div>
+                    </div>                    
+                    <table style="width: 100%; text-align: left;">
+                        <tr>
+                            <td style="font-size:20px; font-weight: bold; position:absolute; top:23%; right:8px; ">
+                                <strong>Signature of the Candidate</strong>
+                            </td>
+                            <td style="text-align: center;">
+                                <t t-if="o.ccmc_candidate.candidate_signature">
+                                    <img t-attf-src="data:image/png;base64,{{o.ccmc_candidate.candidate_signature}}" style="width: 270px;height:55px;border: 2px dotted #000; position:absolute; top:25%; right:8px; text-align:right"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                        </tr>
+                    </table>
+
+                    <div style="text-align:left; font-size:17px; font-weight: bold; position:absolute; top:31%; right:8px; margin-top:-32px">
+                        <h4>Please Sign within the box</h4>
+                    </div>
+                    
+                    <!-- <div t-if="docs.candidate_image" style="margin-top: 20px;">
+                        <img t-att-src="'docs:image/png;base64,' + docs.candidate_image.decode('utf-8')" style="max-width: 100%;"/>
+                    </div> -->
+                    <div style="margin-top:50px">
+						
+						<div style="position:absolute;top:40%; left:30%; width:42%">
+							<div>
+								<b>
+									Capt Harsh Khatri
+								</b>
+							</div>
+							<div style="height:20px">
+								
+							</div>
+							<div>
+								<b style="text-align:center">
+									Chief Executive Officer
+								</b>
+							</div>
+							<div>
+								<b style="text-align:left">
+									For Board of Examinations for Seafarers Trust
+								</b>
+							</div>
+						</div>
+					</div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
