@@ -11,6 +11,9 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpexam/list">
                                 Exams
                         </a>
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpexam/list?gpexamcand=parameter_value">
+                                Download Admit Card
+                        </a>
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
                                 Raise a Ticket
                         </a>
