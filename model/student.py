@@ -430,6 +430,16 @@ class CCMCCandidate(models.Model):
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
     
+    def unlink(self):
+        # users_to_delete = self.mapped('user_id')
+        # print
+        if self.user_id:
+            self.user_id.unlink()
+        result = super(CCMCCandidate, self).unlink()
+        
+        
+        return result
+    
     def detect_current_month(self):
     # Get the current month as an integer (1 for January, 2 for February, etc.)
         current_month = datetime.datetime.now().month
@@ -539,7 +549,8 @@ class CCMCCandidate(models.Model):
                 else:
                    candidate.elligiblity_criteria = 'not_elligible'
             else:
-                candidate.elligiblity_criteria = 'not_elligible' 
+                candidate.elligiblity_criteria = 'not_elligible'
+     
 
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.candidate_ccmc_register_exam_wizard').id
