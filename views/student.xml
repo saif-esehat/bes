@@ -1327,7 +1327,10 @@
                         <field name="exam_month" readonly="1" />
                     </group>
                     <group style="width:50%">
-                            <field name="cookery_bakery_status" readonly="1"/>
+
+                        <field name="cookery_bakery_status" readonly="1"/>
+                        <!-- <field name="ccmc_oral_status" readonly="1"/> -->
+                        <field name="ccmc_online" readonly="1"/>
                            
                     </group>
                      
@@ -1335,7 +1338,7 @@
                         <field name="exam_region" attrs="{'invisible': [('exam_month', 'in', ('dec_feb','jul_aug'))]}" />
                         <field name="institute_ids" invisible="1" />
                         <field name="institute_id" domain="[('id','in',institute_ids)]" />
-                        <field name="cookery_bakery_qb" domain="[('institute','=',institute_id),('subject.name','=','CCMC')]" />
+                        <field name="cookery_bakery_qb" domain="[('institute','=',institute_id),('subject.name','=','CCMC')]" attrs="{'invisible': [('ccmc_online', '=', 'passed')] , 'required' : [('ccmc_online','=', 'failed')] }" />
                         
                         <field name="candidate_id" invisible="1" />
                       
