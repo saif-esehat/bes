@@ -143,6 +143,8 @@ class InstitutePortal(CustomerPortal):
                 # state = row['State (short)']
             pin_code = row['Pin code']
             xth_std_eng = float(row['%  Xth Std in Eng.'])
+            roll_no = row['Roll No.']
+            code_no = row['Code No.']
 
             if not row['%12th Std in Eng.']:
                 twelfth_std_eng = 0
@@ -169,6 +171,8 @@ class InstitutePortal(CustomerPortal):
                 # Include other fields here with their corresponding data
                 'institute_batch_id':batch_id,
                 'street': address,
+                'roll_no':roll_no,
+                'candidate_code':code_no,
                 'city': dist_city,
                 'state_id': state,
                 'zip': pin_code,

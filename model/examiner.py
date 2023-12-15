@@ -144,6 +144,7 @@ class ExaminerAssignment(models.Model):
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
     gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment")
+    ccmc_assignment = fields.One2many("ccmc.candidate.assignment","assignment_id",string="CCMC Assignment")
 
     
     def update_candidate_from_institute(self):
@@ -234,3 +235,17 @@ class GPOralPracAssignment(models.Model):
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
+
+class GPOralPracAssignment(models.Model):
+    _name = "ccmc.candidate.assignment"
+    _description= 'CCMC Candidate Assignment'
+    
+    assignment_id = fields.Many2one("examiner.assignment","Assignment ID")
+    ccmc_candidate = fields.Many2one("ccmc.candidate","Candidate")
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery Bakery")
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+    
+    
+    
+    
+    
