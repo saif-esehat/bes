@@ -1235,12 +1235,28 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/gpcandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadAdmitCard(self,candidate_id,**kw ):
+        print('candidateeeeeeeeeeeeeeeeeeeeeee',candidate_id)
         # import wdb; wdb.set_trace()
         pdf, _ = request.env.ref('bes.candidate_admit_card_action').sudo()._render_qweb_pdf(int(candidate_id))
         # print(pdf ,"Tbis is PDF")
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
+    @http.route(['/my/gpcandidates/download_admit_card_from_url/<int:rec_id>'], type='http', auth="user", website=True)
+    def download_admit_card_from_url(self, rec_id, **kw):
+        # Retrieve the record
+        report_action = request.env.ref('bes.candidate_gp_admit_card_action')
+
+        # Check if the user has access to the record
+        if report_action.check_access_rights('read', raise_exception=False):
+            # Perform operations
+            pdf_content, _ = report_action.sudo()._render_qweb_pdf(rec_id)
+
+            # Set PDF headers
+            pdf_http_headers = [('Content-Type', 'application/pdf'), ('Content-Length', str(len(pdf_content)))]
+
+         
+    
 
     @http.route(['/my/ccmccandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCcmcAdmitCard(self,candidate_id,**kw ):

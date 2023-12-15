@@ -133,9 +133,10 @@
                             <td class="text-center">
                                 <t t-out="rec.gp_candidate.name" />
                             </td>
-                            <td class="text-left">
-                                <a class="btn btn-primary" t-attf-href="/my/gpcandidates/download_admit_card/{{ rec.gp_candidate.id }}">
-                                Download Admit Card</a>                            
+                            <td class="text-center">
+                                <a t-attf-href="/my/gpcandidates/download_admit_card_from_url/{{rec.id}}" class="fa">Download Admit Card</a>
+
+
                             </td>
                              
                         </tr>
