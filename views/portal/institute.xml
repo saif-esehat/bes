@@ -13,10 +13,12 @@
 
             <t t-if="page_name == 'ccmc_candidate'">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch">CCMC Batches</a>
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <t t-out="batches.ccmc_batch_name"/>
+                    <a t-attf-href="/my/ccmcbatch/candidates/{{batches.id}}">
+                        <t t-out="batches.ccmc_batch_name"/>
+                    </a>
                 </li>
             </t>
 
@@ -42,7 +44,7 @@
 
             <t t-if="page_name == 'ccmc_candidate_form'">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch">CCMC Batches</a>
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch/candidates/{{candidate.institute_batch_id.id}}">

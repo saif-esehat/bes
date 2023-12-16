@@ -536,10 +536,10 @@ class GPExam(models.Model):
 
                 record.ship_visit_criteria = 'pending'
         
-        def move_done(self):
-            if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
-            self.state = '2-done'
+    # def move_done(self):
+    #         if(self.certificate_criteria == 'passed'):
+    #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+    #         self.state = '2-done'
             
     class GPCertificate(models.AbstractModel):
         _name = 'report.bes.report_general_certificate'
@@ -584,6 +584,8 @@ class GPExam(models.Model):
     def move_done(self):
         
         # import wdb; wdb.set_trace();
+        
+        
 
         mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
         mek_practical_draft_confirm = self.mek_prac.mek_practical_draft_confirm == 'confirm'
@@ -644,9 +646,14 @@ class GPExam(models.Model):
                 self.write({'certificate_criteria':'passed'})
                 # self.certificate_criteria = 'passed'
             else:
-                self.write({'certificate_criteria':'failed'})
+                self.write({'certificate_criteria':'pending'})
 
                 # self.certificate_criteria = 'failed'
+            
+            if(self.certificate_criteria == 'passed'):
+                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+            
+            self.state = '2-done'
                 
                 
         
@@ -666,16 +673,16 @@ class CCMCExam(models.Model):
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
-    ccmc_online = fields.Many2one("survey.user_input","CCMC Online")
+    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online")
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
-    cookery_bakery_total = fields.Float("Cookery And Bakery Total",readonly=True)
+    cookery_bakery_total = fields.Float("Cookery And Bakery / CCMC Oral Total",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
     cookery_bakery_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Cookery And Bakery Status')
+    ], string='Cookery And Bakery / Oral Status')
     
     
     ccmc_oral_total = fields.Float("CCMC Oral Total",readonly=True)
@@ -686,7 +693,36 @@ class CCMCExam(models.Model):
     ], string='CCMC Oral Status')
     
     
+    
+    attendance_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Attendance Criteria' , compute="compute_certificate_criteria")
 
+    
+    
+    exam_criteria = fields.Selection([
+        ('', ''),
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Exam Criteria' , compute="compute_certificate_criteria")
+    
+    ccmc_online_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='CCMC Online Status')
+    
+    
+    
+    stcw_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='STCW Criteria',compute="compute_certificate_criteria")
+
+    ship_visit_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Passed'),
+    ], string='Ship Visit Criteria',compute="compute_certificate_criteria")
     
     
     
@@ -701,7 +737,45 @@ class CCMCExam(models.Model):
         ('passed', 'Passed'),
     ], string='Certificate Criteria')
     
+    # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
+    # def compute_certificate_criteria(self):
     
+    @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status')
+    def compute_certificate_criteria(self):
+        for record in self:
+            # all_passed = all(field == 'passed' for field in [record.gsk_online_status, record.mek_online_status, record.mek_oral_prac_status , record.gsk_oral_prac_status])
+            all_passed = all(field == 'passed' for field in [record.cookery_bakery_prac_status , record.ccmc_online_status])
+            all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
+            course_type_already  = [course.course_name for course in record.ccmc_candidate.stcw_certificate]
+            all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+
+            # course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
+
+            if all_types_exist:
+                # import wdb; wdb.set_trace();
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
+            
+            if record.ccmc_candidate.attendance_compliance_1 == 'yes' or record.ccmc_candidate.attendance_compliance_2 == 'yes':
+                record.attendance_criteria = 'passed'
+            else:
+                record.attendance_criteria = 'pending'
+
+            if all_passed:
+                # import wdb; wdb.set_trace();
+                record.exam_criteria = 'passed'
+            else:
+                record.exam_criteria = 'pending'
+            
+            if len(record.ccmc_candidate.ship_visits) > 0:
+                record.ship_visit_criteria = 'passed'
+            else:
+                record.ship_visit_criteria = 'pending'
+                
+                
+            
+
     
     @api.model
     def create(self, vals):
@@ -715,6 +789,7 @@ class CCMCExam(models.Model):
     
     
     def move_done(self):
+<<<<<<< HEAD
         if(self.certificate_criteria == 'passed'):
             self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
         self.state = '2-done'
@@ -735,6 +810,57 @@ class CcmcCertificate(models.AbstractModel):
             else:
                 raise ValidationError("Certificate criteria not met. Report cannot be generated.")
     
+=======
+        
+        cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
+        ccmc_oral = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
+        ccmc_online = self.ccmc_online.state == 'done'
+        
+        # import wdb; wdb.set_trace(); 
+        if cookery_draft_confirm and ccmc_oral and ccmc_online:
+            cookery_bakery_marks = self.cookery_bakery.total_mrks
+            ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+            ccmc_total_marks = cookery_bakery_marks + ccmc_oral_marks
+            self.cookery_bakery_total = ccmc_total_marks
+            self.cookery_bakery_percentage = (ccmc_total_marks/120) * 100
+            
+            
+            if self.cookery_bakery_percentage >= 60:
+                self.cookery_bakery_prac_status = 'passed'
+            else:
+                self.cookery_bakery_prac_status = 'failed'
+            
+            
+            if self.ccmc_online.scoring_success:
+                self.ccmc_online_status = 'passed'
+            else:
+                self.ccmc_online_status = 'failed'
+                
+            all_passed = all(field == 'passed' for field in [self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+
+            if all_passed:
+                self.write({'certificate_criteria':'passed'})
+            else:
+                self.write({'certificate_criteria':'pending'})
+                
+            
+            
+            if(self.certificate_criteria == 'passed'):
+                self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
+            self.state = '2-done'
+            # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+
+                
+            
+            
+        else:
+            raise ValidationError("Not All exam are Confirmed")
+
+            
+        
+        
+            
+>>>>>>> 50f5070055c13fbcecef0fab3a6842edbd151636
     
 # class CandidateGPCertificate(models.AbstractModel):
 #     _name = 'report.bes.report_general_certificate'

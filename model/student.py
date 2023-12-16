@@ -26,7 +26,7 @@ class GPCandidate(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")
-    zip = fields.Char("Zip")
+    zip = fields.Char("Zip", validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
     phone = fields.Char("Phone", validators=[api.constrains('phone')])
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
@@ -81,6 +81,12 @@ class GPCandidate(models.Model):
     ## Mek and GSK Online Exam
     mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
     gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+    
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
 
     @api.constrains('phone')
     def _check_valid_phone(self):
@@ -360,7 +366,7 @@ class CCMCCandidate(models.Model):
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
     phone = fields.Char("Phone", validators=[api.constrains('phone')])
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
@@ -423,7 +429,44 @@ class CCMCCandidate(models.Model):
     ],string="Fees Paid", default='no')
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
+    
+    def unlink(self):
+        # users_to_delete = self.mapped('user_id')
+        # print
+        if self.user_id:
+            self.user_id.unlink()
+        result = super(CCMCCandidate, self).unlink()
+        
+        
+        return result
+    
+    def detect_current_month(self):
+    # Get the current month as an integer (1 for January, 2 for February, etc.)
+        current_month = datetime.datetime.now().month
+        
+        # Define the month ranges
+        winter_months = [12, 1, 2]
+        spring_months = [3, 4, 5, 6]
+        summer_months = [7, 8]
+        fall_months = [9, 10, 11]
 
+        # Check which range the current month falls into
+        if current_month in winter_months:
+            return "dec_feb"
+        elif current_month in spring_months:
+            return "mar_jun"
+        elif current_month in summer_months:
+            return "jul_aug"
+        elif current_month in fall_months:
+            return "sep_nov"
+        else:
+            return "Invalid month."
+
+    @api.constrains('zip')
+    def _check_valid_zip(self):
+        for record in self:
+            if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
+                raise ValidationError("Zip code must be 6 digits.")
 
     @api.constrains('phone')
     def _check_valid_phone(self):
@@ -506,7 +549,8 @@ class CCMCCandidate(models.Model):
                 else:
                    candidate.elligiblity_criteria = 'not_elligible'
             else:
-                candidate.elligiblity_criteria = 'not_elligible' 
+                candidate.elligiblity_criteria = 'not_elligible'
+     
 
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.candidate_ccmc_register_exam_wizard').id
@@ -540,7 +584,7 @@ class CCMCCandidate(models.Model):
             'context': {
             # 'default_batches_id': self.id
             'default_candidate_id': self.id,
-            'default_gp_exam': last_exam_record.id,
+            'default_ccmc_exam': last_exam_record.id,
             'default_previous_attempt': last_exam_record.attempt_number,
             "default_exam_month" : self.detect_current_month(),
             "default_institute_ids" : institute_ids
@@ -1236,16 +1280,36 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     cookery_bakery_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Cookery Bakery Oral/Practical Status')
+    ], string='Cookery Bakery Oral/Prac Status',compute="_compute_cookery_bakery_status")
     
     
     
-    ccmc_oral_status = fields.Selection([
+    # ccmc_oral_status = fields.Selection([
+    #     ('failed', 'Failed'),
+    #     ('passed', 'Passed'),
+    # ], string='CCMC Oral Status',compute="_compute_ccmc_oral_status")
+    
+    
+    ccmc_online = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='CCMC Oral Status')
+    ], string='CCMC Online',compute="_compute_ccmc_online")
     
+
+    @api.depends('ccmc_exam')
+    def _compute_cookery_bakery_status(self):
+         for record in self:
+             record.cookery_bakery_status = record.ccmc_exam.cookery_bakery_prac_status
     
+    @api.depends('ccmc_exam')
+    def _compute_ccmc_online(self):
+         for record in self:
+             record.ccmc_online = record.ccmc_exam.ccmc_online_status
+    
+    # @api.depends('ccmc_exam')
+    # def _compute_ccmc_oral_status(self):
+    #      for record in self:
+    #          record.ccmc_oral_status = record.ccmc_exam.ccmc_oral_prac_status
     
     
     @api.depends('exam_region')
@@ -1258,15 +1322,15 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     
     def register_exam(self):
         
-        gp_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':self.candidate_id.id})
+        ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':self.candidate_id.id})
 
         
-        # if self.coookery_bakery_status == 'failed':
-        #     gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        #     gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        # else:
-        #     gsk_practical = self.gp_exam.gsk_prac
-        #     gsk_oral =self.gp_exam.gsk_oral
+        if self.cookery_bakery_status == 'failed':
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        else:
+            cookery_bakery = self.ccmc_exam.cookery_bakery
+            ccmc_oral =self.ccmc_exam.ccmc_oral
         
         
         # if self.mek_oral_prac_status == 'failed':
@@ -1277,11 +1341,11 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         #     mek_oral =self.gp_exam.mek_oral
         
         
-        # if self.mek_online_status == 'failed':
-        #     mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
-        #     mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
-        # else:
-        #     mek_survey_qb_input = self.gp_exam.mek_online
+        if self.ccmc_online == 'failed':
+            cookery_bakery_qb_input = self.cookery_bakery_qb._create_answer(user=self.candidate_id.user_id)
+            cookery_bakery_qb_input.write({'ccmc_candidate':self.candidate_id.id})
+        else:
+            cookery_bakery_qb_input = self.ccmc_exam.ccmc_online
         
         
         # if self.gsk_online_status == 'failed':
@@ -1291,9 +1355,9 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         #     gsk_survey_qb_input = self.gp_exam.gsk_online
             
         
-        # gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id})
         
-        # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+        ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
 
         
         
@@ -1301,7 +1365,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
 
 
             
-            # gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+        # gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
             
             
             

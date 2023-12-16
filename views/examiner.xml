@@ -223,7 +223,7 @@
                             <button name="update_candidate_from_institute" string="Update Candidate" type="object" class="btn-primary" />
                         </group>
                         <group style="width:100%">
-                            <field name="gp_oral_prac">
+                            <field name="gp_oral_prac" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}">
                                 <tree>
                                     <field name="gp_candidate"/>
                                     <field name="gsk_oral" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False )]}"/>
@@ -233,13 +233,22 @@
                                 </tree>
                             </field>
                         </group>
+                        <group style="width:100%">
+                            <field name="ccmc_assignment" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}">
+                                <tree>
+                                    <field name="ccmc_candidate"/>
+                                    <field name="cookery_bakery" />                                    
+                                    <field name="ccmc_oral" />
+                                </tree>
+                            </field>
+                        </group>
 
-                        <group style="width:100%">
+                        <!-- <group style="width:100%">
                             <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
-                        </group>
-                        <group style="width:100%">
+                        </group> -->
+                        <!-- <group style="width:100%">
                             <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
-                        </group>
+                        </group> -->
                     </group>
 
                 </form>
