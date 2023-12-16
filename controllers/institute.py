@@ -444,7 +444,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         
         search_list = {
-            'All':{'label':'All','input':'All','domain':[]},
+            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id)]},
             'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
             'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
             'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
@@ -499,7 +499,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
 
         search_list = {
-            'All':{'label':'All','input':'All','domain':[]},
+            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id)]},
             'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
             'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
             'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
