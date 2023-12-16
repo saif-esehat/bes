@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="course_certificate">
+        <t t-debug="context"/>
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="doc">
                 <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
