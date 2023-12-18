@@ -1,0 +1,47 @@
+<?xml version="1.8" encoding= "UTF-8" ?>
+<odoo>
+
+    <template id= "portal_my_home" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="url">/my/student</t>
+                <t t-set="title">Students</t>
+                <t t-set="placeholder_count" t-value="'student_counts'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="students_list_view_ports">
+        <t t-call="portal.portal_layout">
+            <table>
+                <thead>
+                    <tr class = "active">
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Scholl</th>
+                        <th class="text-center">Roll No</th>
+                        <th class="text-center">Fees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="students" t-as="student">
+                        <tr>
+                            <td class="text-center">
+                                <t t-out="student.student.name"/>
+                            </td>
+                            <td class="text-center">
+                                <t t-out="student.school_id.name"/>
+                            </td>
+                            <td class="text-center">
+                                <t t-out="student.roll_number"/>
+                            </td>
+                            <td class="text-center">
+                                <t t-out="student.total_fees"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+
+</odoo>

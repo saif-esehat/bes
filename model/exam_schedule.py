@@ -789,7 +789,6 @@ class CCMCExam(models.Model):
     
     
     def move_done(self):
-<<<<<<< HEAD
         if(self.certificate_criteria == 'passed'):
             self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
         self.state = '2-done'
@@ -810,7 +809,6 @@ class CcmcCertificate(models.AbstractModel):
             else:
                 raise ValidationError("Certificate criteria not met. Report cannot be generated.")
     
-=======
         
         cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
         ccmc_oral = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
@@ -860,7 +858,6 @@ class CcmcCertificate(models.AbstractModel):
         
         
             
->>>>>>> 50f5070055c13fbcecef0fab3a6842edbd151636
     
 # class CandidateGPCertificate(models.AbstractModel):
 #     _name = 'report.bes.report_general_certificate'

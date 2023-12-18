@@ -6,7 +6,7 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','portal','survey','website','sale','odoo_website_helpdesk'],
+ 'depends':['product','portal','survey','website','sale'],
  'data': [
         'data/exam_sequence.xml',
         'data/certificate_sequence.xml',
@@ -27,6 +27,7 @@
         'views/institution.xml',
         'views/survey.xml',
         'views/invoice.xml',
+        'views/portal_template.xml',
         
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
