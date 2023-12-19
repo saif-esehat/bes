@@ -44,7 +44,7 @@ class InstituteGPBatches(models.Model):
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
     
-    # if dgs_approval_state and candidate_count <= dgs_approved_capacity:
+    # if (dgs_approval_state) and candidate_count <= dgs_approved_capacity:
         # 
     
     

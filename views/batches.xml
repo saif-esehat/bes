@@ -52,7 +52,7 @@
                         </group>
 
                         <group style="width:50%">
-                            <field name="dgs_approval_state" readonly="1"/>
+                            <field name="dgs_approval_state" readonly="0"/>
                             <field name="dgs_document"/>
                         </group>
 

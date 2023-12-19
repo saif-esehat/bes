@@ -102,10 +102,18 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-center">
-                                <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
-                                    <t t-out="batch.batch_name"/>
-                                </a>
+                                <t t-if="batch.dgs_approval_state">
+                                    <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
+                                        <t t-out="batch.batch_name"/> 
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <span class="fa disabled">
+                                        <t t-out="batch.batch_name"/>
+                                    </span>
+                                </t>
                             </td>
+
                             <td class="text-center">
                                 <a t-attf-href="/my/gpbatch/faculties/{{batch.id}}" class="fa">
                                 Faculty
