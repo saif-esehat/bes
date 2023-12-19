@@ -108,13 +108,16 @@ class ExaminerPortal(CustomerPortal):
 
 
 
-    @http.route('/open_gsk_oral_form', type='http', auth="user", website=True)
+    @http.route('/open_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_oral_form(self, **rec):
         # import wdb;wdb.set_trace();
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
-            print('exittttttttttttttttttttttttttttttt')
-            indos = rec['indos']
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
+            print('exittttttttttttttttttttttttttttttt==============================================')
+            print(rec)
+            rec_id = rec['rec_id']
 
             # Convert string values to integers
             subject_area1 = int(rec['subject_area1'])
@@ -125,11 +128,12 @@ class ExaminerPortal(CustomerPortal):
             subject_area6 = int(rec['subject_area6'])
             state=rec['state']
 
+            exam_date = rec['exam_date']
             practical_record_journals = int(rec['practical_record_journals'])
        
             remarks_oral_gsk = rec['remarks_oral_gsk']
 
-            candidate_rec = candidate.search([('id', '=', indos)])
+            candidate_rec = candidate.search([('id', '=', rec_id)])
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
 
             # Construct the dictionary with integer values
@@ -138,21 +142,31 @@ class ExaminerPortal(CustomerPortal):
                 'subject_area_2': subject_area2,
                 'subject_area_3': subject_area3,
                 'subject_area_4': subject_area4,
-                'subject_area_5': subject_area5,
+                'subject_area_5': subject_area5, 
                 'subject_area_6': subject_area6,
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
-               
+                'gsk_oral_exam_date': exam_date,
                 'gsk_oral_remarks': remarks_oral_gsk
             }
+            
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",exam_date)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area1)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area2)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area3)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area4)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area5)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area6)
+            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",practical_record_journals)
 
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
-
+            print('valssssssssssssssssssssssssssssssssssssssssssssssss=============================', vals)
+            return {}
+            request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
             # Write to the One2many field using the constructed dictionary
             # draft_records.write(vals)
 
         else:
-            print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
+            print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr======================', rec)
             rec_id = rec['rec_id']
             candidate_rec = candidate.search([('id', '=', rec_id)])
             candidate_indos = candidate_rec.indos_no

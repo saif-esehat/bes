@@ -69,6 +69,7 @@ class GPCandidate(models.Model):
 
     stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate")
     
+    
     # attendance_compliance_2 = fields.Boolean([
     #     ('yes', 'Yes'),
     #     ('no', 'No')

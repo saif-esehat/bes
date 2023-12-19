@@ -48,6 +48,12 @@
 
                         <group style="width:50%;">
                             <field name="candidate_count"/>
+                            <field name="dgs_approved_capacity" readonly="1"/>
+                        </group>
+
+                        <group style="width:50%">
+                            <field name="dgs_approval_state" readonly="1"/>
+                            <field name="dgs_document"/>
                         </group>
 
                     </sheet>

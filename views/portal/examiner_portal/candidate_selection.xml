@@ -45,13 +45,13 @@
                     <t t-foreach="gp_oral_prac" t-as="c">
                         <tr>
                             <td class="text-left">
-                                <t t-out="c.gp_candidate.name" />
+                                <t t-out="c.gp_candidate.name" readonly="1"/>
                             </td>
                             <td class="text-left">
                                 <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
                             </td>
                             <td class="text-left">
-                                <t t-out="c.gp_candidate.indos_no" />
+                                <t t-out="c.gp_candidate.indos_no" readonly="1"/>
                             </td>
                             <td class="text-left">
                                 <t t-out="c.gp_candidate.roll_no" />
@@ -440,7 +440,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
@@ -448,7 +448,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
 

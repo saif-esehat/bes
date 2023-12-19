@@ -40,6 +40,14 @@ class InstituteGPBatches(models.Model):
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
     
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
+    dgs_approval_state = fields.Boolean(string="DGS Approval Status")
+    dgs_document = fields.Binary(string="DGS Document")
+    
+    # if dgs_approval_state and candidate_count <= dgs_approved_capacity:
+        # 
+    
+    
     @api.depends('account_move')
     def _compute_payment_state(self):
         for rec in self:
