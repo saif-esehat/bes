@@ -793,23 +793,6 @@ class CCMCExam(models.Model):
             self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
         self.state = '2-done'
         
-class CcmcCertificate(models.AbstractModel):
-        _name = 'report.bes.course_certificate'
-
-        @api.model
-        def _get_report_values(self, docids, data=None):
-            docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
-            if docs1.certificate_criteria == 'passed':
-                return {
-                    'docids': docids,
-                    'doc_model': 'ccmc.exam.schedule',
-                    'data': data,
-                    'docs': docs1
-                }
-            else:
-                raise ValidationError("Certificate criteria not met. Report cannot be generated.")
-    
-        
         cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
         ccmc_oral = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
         ccmc_online = self.ccmc_online.state == 'done'
@@ -853,11 +836,24 @@ class CcmcCertificate(models.AbstractModel):
             
         else:
             raise ValidationError("Not All exam are Confirmed")
+        
+        
+        # Certificate Logic
+class CcmcCertificate(models.AbstractModel):
+    _name = 'report.bes.course_certificate'
 
-            
-        
-        
-            
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
+        if docs1.certificate_criteria == 'passed':
+            return {
+                'docids': docids,
+                'doc_model': 'ccmc.exam.schedule',
+                'data': data,
+                'docs': docs1
+            }
+        else:
+            raise ValidationError("Certificate criteria not met. Report cannot be generated.")
     
 # class CandidateGPCertificate(models.AbstractModel):
 #     _name = 'report.bes.report_general_certificate'
