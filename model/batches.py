@@ -40,6 +40,14 @@ class InstituteGPBatches(models.Model):
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
     
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
+    dgs_approval_state = fields.Boolean(string="DGS Approval Status")
+    dgs_document = fields.Binary(string="DGS Document")
+    
+    # if (dgs_approval_state) and candidate_count <= dgs_approved_capacity:
+        # 
+    
+    
     @api.depends('account_move')
     def _compute_payment_state(self):
         for rec in self:
@@ -382,8 +390,17 @@ class BatchesRegisterExamWizard(models.TransientModel):
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
             
+            # import wdb; wdb.set_trace(); 
+            
+            mek_predefined_questions = self.mek_survey_qb._prepare_user_input_predefined_questions()
+            gsk_predefined_questions = self.gsk_survey_qb._prepare_user_input_predefined_questions()
+            
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
+            mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
+            
             gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
+
 
             mek_survey_qb_input.write({'gp_candidate':candidate.id})
             gsk_survey_qb_input.write({'gp_candidate':candidate.id})

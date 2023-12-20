@@ -87,8 +87,56 @@
 
 
     <template id="institute_gp_batches" name="GP Batches">
+        <script>
+
+                function openTokenModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('modal_batch_id').value = dataId;
+
+                }
+        
+       </script>
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_table">
+            <div class="modal fade" id="dgs_approval_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/gpbatch/updatebatchcapacity" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Upload Batch Approval Capacity</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Modal content goes here -->
+                                    <div class="container mt-5">
+
+                                        <input type="hidden" id="modal_batch_id" name="batch_id"/>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="capacity">Approval Capacity</label>
+                                                <input type="number" class="form-control" id="capacity" name="capacity" min="0" />
+                                            </div>
+                                             <div class="form-group">
+                                                <label for="approvaldocument">Approval Document</label>
+                                                <input type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
+                                            </div>
+                                        </div>
+
+                                        
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <thead>
                     <tr>
                         <th>Batch Name</th>
@@ -102,10 +150,18 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-center">
-                                <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
-                                    <t t-out="batch.batch_name"/>
-                                </a>
+                                <t t-if="batch.dgs_approval_state">
+                                    <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
+                                        <t t-out="batch.batch_name"/> 
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <span class="fa disabled">
+                                        <t t-out="batch.batch_name"/>
+                                    </span>
+                                </t>
                             </td>
+
                             <td class="text-center">
                                 <a t-attf-href="/my/gpbatch/faculties/{{batch.id}}" class="fa">
                                 Faculty
@@ -121,6 +177,9 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="batch.to_date" />
+                            </td>
+                            <td class="text-center">
+                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
                             </td>
                             <!-- <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
@@ -1549,6 +1608,10 @@
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
 
             <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+
+            <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
+
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Sample Format With instruction</a>
             
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1860,8 +1923,12 @@
                             <td class="text-left">
                                 <t t-out="faculty.contract_terms" />
                             </td>
+                            <t t-set="courses" t-value="faculty.courses_taught"/>
+
                             <td class="text-left">
-                                <t t-out="faculty.courses_taught.name" />
+                                <t t-foreach="courses" t-as="course">
+                                    <span class="badge badge-primary"><t t-out="course.name" /></span>
+                                </t>
                             </td>
 
                             <!-- <td class="text-center">

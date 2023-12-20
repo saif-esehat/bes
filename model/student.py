@@ -69,6 +69,7 @@ class GPCandidate(models.Model):
 
     stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate")
     
+    
     # attendance_compliance_2 = fields.Boolean([
     #     ('yes', 'Yes'),
     #     ('no', 'No')
@@ -81,6 +82,14 @@ class GPCandidate(models.Model):
     ## Mek and GSK Online Exam
     mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
     gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+    
+    # @api.constrains('institute_batch_id')
+    # def _check_record_number_constraint(self):
+    #     for record in self:
+    #         capacity = record.institute_batch_id.dgs_approved_capacity
+    #         self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',)])
+           
+
     
     @api.constrains('zip')
     def _check_valid_zip(self):
@@ -224,6 +233,14 @@ class GPCandidate(models.Model):
     
     @api.model
     def create(self, values):
+        institute_batch_id  = values['institute_batch_id']
+        gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
+        
+        capacity = gp_batches.dgs_approved_capacity
+        candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
+        if candidate_count > capacity:
+            raise ValidationError("DGS approved Capacity Exceeded")
+        # import wdb;wdb.set_trace()
         gp_candidate = super(GPCandidate, self).create(values)
         group_xml_ids = [
             'bes.group_gp_candidates',

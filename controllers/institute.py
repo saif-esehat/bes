@@ -24,6 +24,22 @@ class InstitutePortal(CustomerPortal):
         vals = {"batches": batches, "page_name": "gp_batches"}
         return request.render("bes.institute_gp_batches", vals)
 
+    @http.route(['/my/gpbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
+    def UpdateBatchApprovalCapacity(self, **kw):
+        
+        batch_id = int(kw.get('batch_id'))
+        capacity = int(kw.get('capacity'))
+        
+        file_content = kw.get("approvaldocument").read()
+        filename = kw.get('approvaldocument').filename
+        batch = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
+        batch.write({ "dgs_approved_capacity": capacity,
+                     "dgs_approval_state":True,
+                     "dgs_document":base64.b64encode(file_content)
+                     })
+        
+        return request.redirect("/my/gpbatch")
+
 
     @http.route(['/my/ccmcbatch'], type="http", auth="user", website=True)
     def CCMCBatchList(self, **kw):
@@ -429,7 +445,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/gpbatch/candidates/<int:batch_id>','/my/gpbatch/candidates/<int:batch_id>/page/<int:page>'], type="http", auth="user", website=True)
     def GPcandidateListView(self, batch_id,page=1,sortby="id",search="",search_in="All", **kw,):
-        # import wdb; wdb.set_trace()
+        
         
         
         
@@ -444,7 +460,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         
         search_list = {
-            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id)]},
+            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id),('institute_batch_id', '=', batch_id)]},
             'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
             'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
             'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
@@ -465,7 +481,7 @@ class InstitutePortal(CustomerPortal):
                             page=page,
                             step=10
                             )
-        
+        # import wdb; wdb.set_trace()
         candidates = request.env["gp.candidate"].sudo().search(
             search_domain, limit= 10,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
@@ -499,7 +515,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
 
         search_list = {
-            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id)]},
+            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id),('institute_batch_id', '=', batch_id)]},
             'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
             'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
             'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
@@ -696,6 +712,8 @@ class InstitutePortal(CustomerPortal):
             file_content = kw.get("fileUpload").read()
             filename = kw.get('fileUpload').filename
             # attachment = uploaded_file.read()
+            
+            
 
             data = request.env["lod.institute"].sudo().create({'institute_id': institute_id,
                                                                'document_name': kw.get('documentName'),

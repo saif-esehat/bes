@@ -27,6 +27,7 @@
         'views/institution.xml',
         'views/survey.xml',
         'views/invoice.xml',
+        # 'views/portal_template.xml',
         
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
