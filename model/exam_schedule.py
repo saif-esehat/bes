@@ -845,9 +845,7 @@ class CCMCExam(models.Model):
             raise ValidationError("Not All exam are Confirmed")
         
         
-<<<<<<< HEAD
             
-=======
         # Certificate Logic
 class CcmcCertificate(models.AbstractModel):
     _name = 'report.bes.course_certificate'
@@ -864,7 +862,6 @@ class CcmcCertificate(models.AbstractModel):
             }
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
->>>>>>> 7e1b0def2b648ab3ae778b3085bd5a8fda94567c
     
 # class CandidateGPCertificate(models.AbstractModel):
 #     _name = 'report.bes.report_general_certificate'
