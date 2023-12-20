@@ -1328,6 +1328,20 @@ class InstitutePortal(CustomerPortal):
         # print(pdf ,"Tbis is PDF")
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+    
+    
+    
+    @http.route(['/my/ccmccandidates/download_ccmc_certificate/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadCCMCCertificate(self,candidate_id,**kw ):
+        # import wdb; wdb.set_trace()
+        try:
+            exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id),('certificate_criteria','=','passed')])
+        except:
+            raise ValidationError("Certificate Not Generated")
+        report_action = request.env.ref('bes.report_ccmc_certificate')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id.id))
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
 
 
         
