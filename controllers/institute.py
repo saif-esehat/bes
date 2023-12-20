@@ -1305,7 +1305,10 @@ class InstitutePortal(CustomerPortal):
     @http.route(['/my/ccmccandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCcmcAdmitCard(self,candidate_id,**kw ):
         # import wdb; wdb.set_trace()
-        exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
+        try:
+            exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
+        except:
+            raise ValidationError("Admit card not found or not generated")
         report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
