@@ -8,6 +8,8 @@ import io
 from io import StringIO
 from datetime import datetime
 import xlsxwriter
+from odoo.exceptions import UserError,ValidationError
+
 
 
 
@@ -1273,9 +1275,12 @@ class InstitutePortal(CustomerPortal):
     
     
     @http.route(['/my/gpcandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadAdmitCard(self,candidate_id,**kw ):
-        exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+    def DownloadsAdmitCard(self,candidate_id,**kw ):
         # import wdb; wdb.set_trace()
+        try:
+            exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        except:
+            raise ValidationError("Admit Card Not Found or Not Generated")
         report_action = request.env.ref('bes.candidate_gp_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
