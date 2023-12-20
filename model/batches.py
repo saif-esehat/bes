@@ -203,6 +203,7 @@ class InstituteCcmcBatches(models.Model):
     ccmc_batch_name = fields.Char("Batch Name",required=True)
     ccmc_faculty_name = fields.Char("Faculty name")
     ccmc_candidate_count = fields.Integer("Candidate Count",compute="ccmc_compute_candidate_count")
+    candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     ccmc_from_date = fields.Date("From Date")
     ccmc_to_date = fields.Date("To Date")
     ccmc_course = fields.Many2one("course.master","Course")
@@ -227,6 +228,18 @@ class InstituteCcmcBatches(models.Model):
         ('paid', 'Paid'),
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
+    
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
+    dgs_approval_state = fields.Boolean(string="DGS Approval Status")
+    dgs_document = fields.Binary(string="DGS Document")
+    
+    
+    
+    @api.depends("candidate_count")
+    def _compute_candidate_count(self):
+        for rec in self:
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', rec.id)])
+            rec.candidate_count = candidate_count
     
     @api.depends('ccmc_account_move')
     def _compute_payment_state(self):

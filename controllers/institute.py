@@ -39,6 +39,23 @@ class InstitutePortal(CustomerPortal):
                      })
         
         return request.redirect("/my/gpbatch")
+    
+    
+    @http.route(['/my/ccmcbatchbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
+    def UpdateCCMCBatchApprovalCapacity(self, **kw):
+        
+        batch_id = int(kw.get('batch_id'))
+        capacity = int(kw.get('capacity'))
+        
+        file_content = kw.get("approvaldocument").read()
+        filename = kw.get('approvaldocument').filename
+        batch = request.env["institute.ccmc.batches"].sudo().search([('id','=',batch_id)])
+        batch.write({ "dgs_approved_capacity": capacity,
+                     "dgs_approval_state":True,
+                     "dgs_document":base64.b64encode(file_content)
+                     })
+        
+        return request.redirect("/my/ccmcbatch")
 
 
     @http.route(['/my/ccmcbatch'], type="http", auth="user", website=True)
