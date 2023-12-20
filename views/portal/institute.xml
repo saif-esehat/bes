@@ -104,7 +104,7 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Upload Batch Approval Capacity</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Update GP Batch Approval Capacity</h5>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Modal content goes here -->
@@ -114,12 +114,12 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="capacity">Approval Capacity</label>
-                                                <input type="text" class="form-control" id="capacity" name="capacity" min="0" />
+                                                <label for="capacity">DGS Approved Capacity</label>
+                                                <input required="" type="text" class="form-control" id="capacity" name="capacity" min="0" />
                                             </div>
                                              <div class="form-group">
-                                                <label for="approvaldocument">Approval Document</label>
-                                                <input type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
+                                                <label for="approvaldocument">Upload Approval Document</label>
+                                                <input required="" type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
                                             </div>
                                         </div>
 
@@ -214,10 +214,10 @@
                 <div class="modal fade" id="dgs_approval_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/ccmcbatchbatch/updatebatchcapacity" enctype="multipart/form-data">
-                            <input type="text" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Upload Batch Approval Capacity</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Update CCMC Batch Approval Capacity</h5>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Modal content goes here -->
@@ -227,12 +227,12 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="capacity">Approval Capacity</label>
-                                                <input type="number" class="form-control" id="capacity" name="capacity" min="0" />
+                                                <label for="capacity">DGS Approved Capacity</label>
+                                                <input required=""  type="number" class="form-control" id="capacity" name="capacity" min="0" />
                                             </div>
                                              <div class="form-group">
-                                                <label for="approvaldocument">Approval Document</label>
-                                                <input type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
+                                                <label for="approvaldocument">Upload Approval Document</label>
+                                                <input required=""  type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
                                             </div>
                                         </div>
 
@@ -1079,19 +1079,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="indos_no">Indos No.</label>
-                                        <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="candidate_code">GP Candidate Code No.</label>
-                                        <input type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="candidate_code" name="candidate_code" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="roll_no">Roll No.</label>
-                                        <input type="text" class="form-control" id="roll_no" name="roll_no" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="roll_no" name="roll_no" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1308,19 +1308,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Full Name of Candidate as in INDOS</label>
-                                        <input type="text" class="form-control" id="name" name="name" required="true" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="name" name="name" required="true" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="indos_no">Indos No.</label>
-                                        <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="candidate_code">CCMC Candidate Code No.</label>
-                                        <input type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="candidate_code" name="candidate_code" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">

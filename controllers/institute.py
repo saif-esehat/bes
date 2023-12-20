@@ -1308,7 +1308,7 @@ class InstitutePortal(CustomerPortal):
         try:
             exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
         except:
-            raise ValidationError("Admit card not found or not generated")
+            raise ValidationError("Admit Card Not Found or Not Generated")
         report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
