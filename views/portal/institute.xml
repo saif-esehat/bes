@@ -110,7 +110,7 @@
                                     <!-- Modal content goes here -->
                                     <div class="container mt-5">
 
-                                        <input type="text" id="modal_batch_id" name="batch_id"/>
+                                        <input type="hidden" id="modal_batch_id" name="batch_id"/>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -223,7 +223,7 @@
                                     <!-- Modal content goes here -->
                                     <div class="container mt-5">
 
-                                        <input type="text" id="modal_batch_id" name="batch_id"/>
+                                        <input type="hidden" id="modal_batch_id" name="batch_id"/>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -1672,7 +1672,7 @@
 
             <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
 
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Sample Format With instruction</a>
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a>
             
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
