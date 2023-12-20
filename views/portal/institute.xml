@@ -680,7 +680,16 @@
                                         </div>
 
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
-
+                                                <!-- <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:</label>
+                                                <select id="attendance1" name="attendance1">
+                                                    <option value="yes">Yes</option>
+                                                    <option value="no" t-att-selected="1">No</option>
+                                                </select>
+                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:</label>
+                                                <select id="attendance2" name="attendance2">
+                                                    <option value="yes">Yes</option>
+                                                    <option value="no" t-att-selected="1">No</option>
+                                                </select> -->
                                         </div>
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
 
@@ -1743,9 +1752,9 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
-                            <!-- <td class="text-center">
+                            <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
-                            </td> -->
+                            </td>
 
                         </tr>
                     </t>
@@ -2580,7 +2589,16 @@
                                         </div>
 
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
-
+                                            <!-- <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:</label>
+                                                <select id="attendance1" name="attendance1">
+                                                    <option value="yes">Yes</option>
+                                                    <option value="no" t-att-selected="1">No</option>
+                                                </select>
+                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:</label>
+                                                <select id="attendance2" name="attendance2">
+                                                    <option value="yes">Yes</option>
+                                                    <option value="no" t-att-selected="1">No</option>
+                                                </select> -->
                                         </div>
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
 

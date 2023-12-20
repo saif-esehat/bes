@@ -69,4 +69,15 @@ class GPCandidatePortal(CustomerPortal):
             
             return request.render("bes.gp_exam_list_view", vals)
             
+
+    @http.route(['/my/gpexam/list/download_admit_card/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadAdmitCard(self,exam_id,**kw ):
+        # import wdb; wdb.set_trace()
+        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        print("INSIDE DOWNLOAD ADMITCARD")
+        report_action = request.env.ref('bes.candidate_gp_admit_card_action')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
+        # print(pdf ,"Tbis is PDF")
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
             

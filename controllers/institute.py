@@ -1239,10 +1239,10 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/gpcandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadAdmitCard(self,candidate_id,**kw ):
-        print('candidateeeeeeeeeeeeeeeeeeeeeee',candidate_id)
+        exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         # import wdb; wdb.set_trace()
-        pdf, _ = request.env.ref('bes.candidate_admit_card_action').sudo()._render_qweb_pdf(int(candidate_id))
-        # print(pdf ,"Tbis is PDF")
+        report_action = request.env.ref('bes.candidate_gp_admit_card_action')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
@@ -1265,7 +1265,9 @@ class InstitutePortal(CustomerPortal):
     @http.route(['/my/ccmccandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCcmcAdmitCard(self,candidate_id,**kw ):
         # import wdb; wdb.set_trace()
-        pdf, _ = request.env.ref('bes.candidate_admit_card_action').sudo()._render_qweb_pdf(int(candidate_id))
+        exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
+        report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
