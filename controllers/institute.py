@@ -969,6 +969,41 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
 
+
+    @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateGpAttendance(self, **kw):
+        candidate_id = kw.get('candidate_id')
+        attendance1 = kw.get('attendance1')
+        attendance2 = kw.get('attendance2')
+
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'attendance_compliance_1':attendance1})
+        candidate.write({'attendance_compliance_2':attendance2})
+
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+
+    @http.route(['/my/ccmccandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateCcmcAttendance(self, **kw):
+        candidate_id = kw.get('candidate_id')
+        attendance1 = kw.get('attendance1')
+        attendance2 = kw.get('attendance2')
+
+        
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'attendance_compliance_1':attendance1})
+        candidate.write({'attendance_compliance_2':attendance2})
+
+        
+        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
+
     @http.route(['/my/ccmccandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCcmcFees(self, **kw):
         candidate_id = kw.get('candidate_id')

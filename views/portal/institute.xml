@@ -385,8 +385,9 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
-
+                <t t-if="not candidate.candidate_image or not candidate.indos_no or not candidate.candidate_signature" >
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                </t>
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
@@ -799,18 +800,61 @@
                                             </div>
                                         </div>
 
+                                        <!-- Attendance  -->
+
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
-                                                <!-- <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:</label>
-                                                <select id="attendance1" name="attendance1">
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no" t-att-selected="1">No</option>
-                                                </select>
-                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:</label>
-                                                <select id="attendance2" name="attendance2">
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no" t-att-selected="1">No</option>
-                                                </select> -->
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
+                                            <div>
+                                                <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
+
+                                                    <t t-out="candidate.attendance_compliance_1" />
+                                                </h5>
+                                            </div>
+                                            <div>
+                                                <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS :
+                                                    <t t-out="candidate.attendance_compliance_2" />
+                                                </h5>
+                                            </div>
+                                            <div class="modal fade" id="AddAttendance" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/gpcandidate/addattendance" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add Attendance</h5>
+                                                            </div>
+                                                            
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}"  name="candidate_id"/>
+                                                                <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO):</label>
+    
+                                                                <select id="attendance1" name="attendance1">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO):</label>
+
+                                                                <select id="attendance2" name="attendance2">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        
                                         </div>
+                                        
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
 
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
@@ -1665,9 +1709,7 @@
             
             
             
-
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
-
             <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
 
             <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
@@ -2317,8 +2359,9 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
 
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                
                 <div class="modal fade" id="updateCcmcCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleCcmcModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/updateccmccandidate" enctype="multipart/form-data">
@@ -2731,17 +2774,60 @@
                                             </div>
                                         </div>
 
+                                        <!-- Attendance  -->
+
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
-                                            <!-- <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:</label>
-                                                <select id="attendance1" name="attendance1">
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no" t-att-selected="1">No</option>
-                                                </select>
-                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:</label>
-                                                <select id="attendance2" name="attendance2">
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no" t-att-selected="1">No</option>
-                                                </select> -->
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
+                                            <div>
+                                                <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
+
+                                                    <t t-out="candidate.attendance_compliance_1" />
+                                                </h5>
+                                            </div>
+                                            <div>
+                                                <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS :
+                                                    <t t-out="candidate.attendance_compliance_2" />
+                                                </h5>
+                                            </div>
+                                            <div class="modal fade" id="AddAttendance" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmccandidate/addattendance" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add Attendance</h5>
+                                                            </div>
+                                                            
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}"  name="candidate_id"/>
+                                                                <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO):</label>
+    
+                                                                <select id="attendance1" name="attendance1">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO):</label>
+
+                                                                <select id="attendance2" name="attendance2">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                           
+
+
                                         </div>
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
 
