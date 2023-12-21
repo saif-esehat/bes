@@ -995,7 +995,7 @@ class InstitutePortal(CustomerPortal):
 
         
         
-        candidate = request.env["gp.candidate"].sudo().search(
+        candidate = request.env["ccmc.candidate"].sudo().search(
             [('id', '=', int(candidate_id))])
         
         candidate.write({'attendance_compliance_1':attendance1})
