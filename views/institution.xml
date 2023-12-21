@@ -110,11 +110,11 @@
                             </group>
                             <group style="width:50%;">
                                 <label for="admin_phone" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="admin_phone" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="admin_phone" optional="hide"/>
                                 <label for="admin_mobile" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="admin_mobile" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="admin_mobile" optional="hide"/>
                                 <label for="admin_email" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="admin_email" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="admin_email" optional="hide"/>
                             </group>
                             <group style="width:100%;">
                                 <field name="name_of_second_authorized_person"/>
@@ -123,28 +123,28 @@
                             <group style="width:50%;">
                                 <label for="institute_computer_lab" style="margin-bottom:10px; margin-top: 15px;"/>
 
-                                <field name="institute_computer_lab" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="institute_computer_lab" optional="hide"/>
 
                             </group>
 
                             <group style="width:50%;">
                                 <label for="computer_lab_pc_count" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="computer_lab_pc_count" nolabel="1" style="margin-bottom:10px; margin-top: 15px;" attrs="{'required': [('institute_computer_lab', '=', True)]}" />
+                                <field name="computer_lab_pc_count" optional="hide" attrs="{'required': [('institute_computer_lab', '=', True)]}" />
                             </group>
 
                             <group style="width:100%;">
                                 <label for="internet_strength" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="internet_strength" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="internet_strength" optional="hide"/>
                             </group>
 
                             <group style="width:100%;">
                                 <label for="institute_approved_conduct_stcw" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="institute_approved_conduct_stcw" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="institute_approved_conduct_stcw" optional="hide"/>
                             </group>
 
                             <group style="width:100%;">
                                 <label for="is_lab_used_for_stcw_exit_exam" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="is_lab_used_for_stcw_exit_exam" nolabel="1" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <field name="is_lab_used_for_stcw_exit_exam" optional="hide"/>
                             </group>
                         </group>
                         <notebook>
@@ -212,8 +212,31 @@
                     </header>
 
                     <field name="name"/>
-                    <field name="email"/>
-                    <field name="code" />
+                    <field name="email" optional="hide"/>
+                    <field name="code" optional="hide"/>
+                    <field name="street" optional="hide"/>
+                    <field name="street2" optional="hide"/>
+                    <field name="city" optional="hide" />
+                    <field name="state" optional="hide"/>
+                    <field name="zip" optional="hide" />
+                    <field name="mti" optional="hide"  />
+                    <field name="exam_center" optional="hide" />
+                    <field name="principal_name" optional="hide" />
+                    <field name="principal_phone" optional="hide"/>
+                    <field name="principal_mobile" optional="hide"/>
+                    <field name="principal_email" optional="hide"/>
+                    <field name="admin_phone"  optional="hide"/>
+                    <field name="admin_mobile" optional="hide"/>
+                    <field name="admin_email" optional="hide"/>
+                    <field name="name_of_second_authorized_person" optional="hide"/>
+                    <field name="institute_computer_lab" optional="hide"/>
+                    <field name="computer_lab_pc_count" optional="hide"  />
+                    <field name="internet_strength" optional="hide"/>
+                    <field name="institute_approved_conduct_stcw" optional="hide"/>
+                    <field name="is_lab_used_for_stcw_exit_exam" optional="hide"/>
+
+
+
                 </tree>
             </field>
         </record>
