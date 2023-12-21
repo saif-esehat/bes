@@ -235,9 +235,10 @@ class GPCandidate(models.Model):
     def create(self, values):
         institute_batch_id  = values['institute_batch_id']
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
-        
-        capacity = gp_batches.dgs_approved_capacity
-        candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
+        capacity = gp_batches.dgs_approved_capacity - 1
+        candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)]) 
+        # print("capacity, " , capacity)
+        # print("candidate_count, ",candidate_count)
         if candidate_count > capacity:
             raise ValidationError("DGS approved Capacity Exceeded")
         # import wdb;wdb.set_trace()
