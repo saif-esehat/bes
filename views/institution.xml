@@ -152,8 +152,8 @@
                                 <field name="courses"  nolabel="1">
                                     <tree editable="bottom">
                                         <field name="course" options="{'no_create': True}" />
-                                        <field name="approved_capacity" />
-                                        <field name="approved_date" />
+                                        <!-- <field name="approved_capacity" />
+                                        <field name="approved_date" /> -->
                                     </tree>
                                 </field>
                             </page>
