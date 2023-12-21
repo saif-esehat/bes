@@ -17,12 +17,27 @@ class BatchWizard(models.TransientModel):
 
         for institute in institutes:
             institute_id = institute
+            
+            # import wdb; wdb.set_trace()
             for course in institute.courses:
-                self.env['institute.gp.batches'].create({
-                    "institute_id":institute_id.id,
-                    "batch_name":str(course.course.course_code)+"/"+self.batch_name,
-                    "from_date" : self.from_date,
-                    "to_date":self.to_date,
-                    "course":course.course.id
-                })
+                if course.course.course_code == 'GP':
+                    self.env['institute.gp.batches'].create({
+                        "institute_id":institute_id.id,
+                        "batch_name":str(course.course.course_code)+"/"+self.batch_name,
+                        "from_date" : self.from_date,
+                        "to_date":self.to_date,
+                        "course":course.course.id
+                    })
                 
+                elif course.course.course_code == 'CCMC':
+                    
+                    self.env['institute.ccmc.batches'].create({
+                        "institute_id":institute_id.id,
+                        "ccmc_batch_name":str(course.course.course_code)+"/"+self.batch_name,
+                        "ccmc_from_date" : self.from_date,
+                        "ccmc_to_date":self.to_date,
+                        "ccmc_course":course.course.id
+                    })
+                    
+                    
+                    

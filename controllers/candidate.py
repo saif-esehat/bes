@@ -14,8 +14,9 @@ class GPCandidatePortal(CustomerPortal):
         print(parameter_value)
 
         if parameter_value:
-            partner_id = request.env.user.partner_id.id
-            registered_exams = request.env["gp.exam.schedule"].sudo().search([])
+            partner_id = request.env.user.id
+            candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).id
+            registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate)])
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
             # import wdb; wdb.set_trace(); 

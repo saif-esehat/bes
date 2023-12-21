@@ -521,6 +521,13 @@ class CCMCCandidate(models.Model):
     
     @api.model
     def create(self, values):
+        institute_batch_id  = values['institute_batch_id']
+        gp_batches = self.env["institute.ccmc.batches"].search([('id','=',institute_batch_id)])
+        
+        capacity = gp_batches.dgs_approved_capacity
+        candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
+        if candidate_count > capacity:
+            raise ValidationError("DGS approved Capacity Exceeded")
         ccmc_candidate = super(CCMCCandidate, self).create(values)
         group_xml_ids = [
             'bes.group_ccmc_candidates',
