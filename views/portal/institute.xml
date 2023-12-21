@@ -24,21 +24,25 @@
 
             <li t-if="page_name == 'gp_batches'" class="breadcrumb-item ">
              GP Batches
+                
             </li>
             <li t-if="page_name == 'ccmc_batches'" class="breadcrumb-item ">
              CCMC Batches
             </li>
+            
             <t t-if="page_name == 'gp_candidate_form'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch">GP Batches</a>
                 </li>
+                
+               
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch/candidates/{{candidate.institute_batch_id.id}}">
-                        <t t-out="candidate.institute_batch_id.batch_name"/>
+                    <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
+                        <t t-out="batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    GP Candidate
+                    Create Candidate
                 </li>
             </t>
 
@@ -46,17 +50,52 @@
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
+                
+               
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/ccmcbatch/candidates/{{candidate.institute_batch_id.id}}">
-                        <t t-out="candidate.institute_batch_id.ccmc_batch_name"/>
+                    <a t-attf-href="/my/ccmcbatch/candidates/{{batch_id}}">
+                        <t t-out="batch_name"/>
                     </a>
                 </li>
-                <!-- <li class="breadcrumb-item">
-                    CCMC Candidate
-                </li> -->
+                <li class="breadcrumb-item">
+                    Create Candidate
+                </li>
             </t>
+            <t t-if="page_name == 'gp_faculty_list'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <!-- <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="faculties.gp_batches_id.batch_name"/>
+                    </a>
+                </li> -->
+                
+                <li class="breadcrumb-item">
+                    Faculties
+                </li>
+            </t>
+
+            <t t-if="page_name == 'ccmc_faculty_list'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
+                </li>
+                <!-- <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="faculties.gp_batches_id.batch_name"/>
+                    </a>
+                </li> -->
+                
+                <li class="breadcrumb-item">
+                    Faculties
+                </li>
+            </t>
+
+           
+            
             <!-- <li class="breadcrumb-item ">
                 <a t-attf-href="/my/gpbatch/candidates/{{candidate.institute_batch_id.id}}">GP Batches</a>
+                
             </li> -->
             <!-- <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
              CCMC Candidate
