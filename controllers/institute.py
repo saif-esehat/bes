@@ -378,6 +378,9 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+
+        batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
+
         
         print("BATCH id",batch_id)
 
@@ -415,7 +418,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id,"page_name":"gp_faculty_form"}
+        vals = {"states" : states,"batch_id":batch_id,"page_name":"gp_faculty_form","batch_name":batch_name}
         return request.render("bes.gp_faculty_form_view", vals)
 
     @http.route(['/my/ccmcfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
@@ -425,6 +428,8 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+        batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
+
         
         print("BATCH id",batch_id)
 
@@ -462,7 +467,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id,"page_name":"ccmc_faculty_form"}
+        vals = {"states" : states,"batch_id":batch_id,"page_name":"ccmc_faculty_form","batch_name":batch_name}
         return request.render("bes.gp_faculty_form_view", vals)
 
    

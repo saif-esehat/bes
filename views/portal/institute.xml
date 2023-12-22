@@ -91,6 +91,37 @@
                 </li>
             </t>
 
+            <t t-if="page_name == 'gp_faculty_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="batch_name"/>
+                    </a>
+                </li>
+                
+                <li class="breadcrumb-item">
+                    Create Faculty
+                </li>
+            </t>
+
+
+            <t t-if="page_name == 'ccmc_faculty_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">CCMC Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="batch_name"/>
+                    </a>
+                </li>
+                
+                <li class="breadcrumb-item">
+                    Create Faculty
+                </li>
+            </t>
+
            
             
             <!-- <li class="breadcrumb-item ">
@@ -2019,8 +2050,8 @@
         <t t-call="portal.portal_layout">
             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a> -->
 
-            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" t-if="page_name == 'gp_faculty'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
-            <a t-attf-href="/my/ccmcfacultiesform/view/{{batch_id}}" t-if="page_name == 'ccmc_faculty'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" t-if="page_name == 'gp_faculty_list'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/ccmcfacultiesform/view/{{batch_id}}" t-if="page_name == 'ccmc_faculty_list'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
             
             
             
