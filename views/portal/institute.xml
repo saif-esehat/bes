@@ -109,10 +109,10 @@
 
             <t t-if="page_name == 'ccmc_faculty_form'">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch">CCMC Batches</a>
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                    <a t-attf-href="/my/ccmcbatch/faculties/{{batch_id}}">
                         <t t-out="batch_name"/>
                     </a>
                 </li>
