@@ -244,6 +244,8 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+
+        batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
@@ -296,7 +298,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"batch_name":batch_name,"page_name":"gp_candidate_form"}
         return request.render("bes.gp_candidate_form_view", vals)
 
 
@@ -308,6 +310,9 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+
+        batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
+
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
@@ -360,7 +365,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"batch_name":batch_name,"page_name":"ccmc_candidate_form"}
         return request.render("bes.ccmc_candidate_form_view", vals)
 
         
@@ -410,7 +415,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"page_name":"gp_faculty_form"}
         return request.render("bes.gp_faculty_form_view", vals)
 
     @http.route(['/my/ccmcfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
@@ -457,7 +462,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"page_name":"ccmc_faculty_form"}
         return request.render("bes.gp_faculty_form_view", vals)
 
    
@@ -578,7 +583,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         faculties = request.env["institute.faculty"].sudo().search(
             [('gp_batches_id', '=', batch_id)])
-        vals = {'faculties': faculties, 'page_name': 'gp_faculty','batch_id':batch_id}
+        vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
 
@@ -592,7 +597,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         faculties = request.env["institute.faculty"].sudo().search(
             [('ccmc_batches_id', '=', batch_id)])
-        vals = {'faculties': faculties, 'page_name': 'ccmc_faculty','batch_id':batch_id}
+        vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
 
