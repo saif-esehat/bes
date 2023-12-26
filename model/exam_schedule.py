@@ -3,7 +3,9 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError,ValidationError
 import random
 import logging
-
+import qrcode
+import io
+import base64
 from datetime import datetime
 
 
@@ -503,6 +505,29 @@ class GPExam(models.Model):
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
     ], string='State', default='1-in_process')
+
+    url = fields.Char("URL",compute="_compute_url")
+    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+
+
+
+    def _compute_url(self):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        current_url = base_url + "/verification/gpadmitcard/" + str(self.id)
+        self.url = current_url
+        print("Current URL:", current_url)
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+        qr.add_data(current_url)
+        qr.make(fit=True)
+        qr_image = qr.make_image()
+
+        # Convert the QR code image to base64 string
+        buffered = io.BytesIO()
+        qr_image.save(buffered, format="PNG")
+        qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+        # Assign the base64 string to a field in the 'srf' object
+        self.qr_code = qr_image_base64
     
     @api.depends('gsk_online_status','mek_online_status','mek_oral_prac_status','gsk_oral_prac_status')
     def compute_certificate_criteria(self):

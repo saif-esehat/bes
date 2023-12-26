@@ -1331,6 +1331,7 @@ class InstitutePortal(CustomerPortal):
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
     
+
     @http.route(['/my/gpcandidates/download_gp_certificate/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadGPCertificate(self,candidate_id,**kw ):
         # import wdb; wdb.set_trace()

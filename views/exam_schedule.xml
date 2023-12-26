@@ -57,6 +57,7 @@
                         <group style="width:50%">
                             <field name="mek_online"/>
                         </group>
+                       
 
                         <group style="width:50%">
                         
@@ -79,7 +80,7 @@
                             <field name="gsk_percentage" readonly="1"/>
                             <field name="mek_percentage" readonly="1"/>
                         </group>
-                        <group style="width:33.33%">
+                        <group style="width:50%">
                             <field name="gsk_oral_prac_status" readonly="1"/>
                             <field name="mek_oral_prac_status" readonly="1"/>
                             <field name="mek_online_status" readonly="1"/>
@@ -90,6 +91,10 @@
                             <field name="ship_visit_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
+                        </group>
+                         <group style="width:50%">
+                            <field name="url" invisible="1"/>
+                            <field name="qr_code" widget="image"  style="width:100px; height:100px;"/>
                         </group>
                
                         
