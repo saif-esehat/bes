@@ -158,6 +158,16 @@
         </record>
 
 
+        <record id="gp_candidate_search" model="ir.ui.view">
+        <field name="name">gp.candidate.search</field>
+        <field name="model">gp.candidate</field>
+            <field name="arch" type="xml">
+            <search string="GP Candidate Search">
+                <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+            </search>
+            </field>
+        </record>
+
 
         <record id="gp_candidate_forms" model="ir.ui.view">
             <field name="name">gp.candidate.form</field>

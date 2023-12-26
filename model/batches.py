@@ -200,6 +200,7 @@ class InstituteCcmcBatches(models.Model):
     ccmc_batch_name = fields.Char("Batch Name",required=True)
     ccmc_faculty_name = fields.Char("Faculty name")
     ccmc_candidate_count = fields.Integer("Candidate Count",compute="ccmc_compute_candidate_count")
+    candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     ccmc_from_date = fields.Date("From Date")
     ccmc_to_date = fields.Date("To Date")
     ccmc_course = fields.Many2one("course.master","Course")
@@ -224,6 +225,18 @@ class InstituteCcmcBatches(models.Model):
         ('paid', 'Paid'),
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
+    
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
+    dgs_approval_state = fields.Boolean(string="DGS Approval Status")
+    dgs_document = fields.Binary(string="DGS Document")
+    
+    
+    
+    @api.depends("candidate_count")
+    def _compute_candidate_count(self):
+        for rec in self:
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', rec.id)])
+            rec.candidate_count = candidate_count
     
     @api.depends('ccmc_account_move')
     def _compute_payment_state(self):
@@ -387,8 +400,17 @@ class BatchesRegisterExamWizard(models.TransientModel):
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
             
+            # import wdb; wdb.set_trace(); 
+            
+            mek_predefined_questions = self.mek_survey_qb._prepare_user_input_predefined_questions()
+            gsk_predefined_questions = self.gsk_survey_qb._prepare_user_input_predefined_questions()
+            
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
+            mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
+            
             gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
+
 
             mek_survey_qb_input.write({'gp_candidate':candidate.id})
             gsk_survey_qb_input.write({'gp_candidate':candidate.id})

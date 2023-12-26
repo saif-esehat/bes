@@ -24,21 +24,25 @@
 
             <li t-if="page_name == 'gp_batches'" class="breadcrumb-item ">
              GP Batches
+                
             </li>
             <li t-if="page_name == 'ccmc_batches'" class="breadcrumb-item ">
              CCMC Batches
             </li>
+            
             <t t-if="page_name == 'gp_candidate_form'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch">GP Batches</a>
                 </li>
+                
+               
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch/candidates/{{candidate.institute_batch_id.id}}">
-                        <t t-out="candidate.institute_batch_id.batch_name"/>
+                    <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
+                        <t t-out="batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    GP Candidate
+                    Create Candidate
                 </li>
             </t>
 
@@ -46,21 +50,87 @@
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
+                
+               
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/ccmcbatch/candidates/{{candidate.institute_batch_id.id}}">
-                        <t t-out="candidate.institute_batch_id.ccmc_batch_name"/>
+                    <a t-attf-href="/my/ccmcbatch/candidates/{{batch_id}}">
+                        <t t-out="batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    CCMC Candidate
+                    Create Candidate
                 </li>
             </t>
+            <t t-if="page_name == 'gp_faculty_list'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <!-- <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="faculties.gp_batches_id.batch_name"/>
+                    </a>
+                </li> -->
+                
+                <li class="breadcrumb-item">
+                    Faculties
+                </li>
+            </t>
+
+            <t t-if="page_name == 'ccmc_faculty_list'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
+                </li>
+                <!-- <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="faculties.gp_batches_id.batch_name"/>
+                    </a>
+                </li> -->
+                
+                <li class="breadcrumb-item">
+                    Faculties
+                </li>
+            </t>
+
+            <t t-if="page_name == 'gp_faculty_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="batch_name"/>
+                    </a>
+                </li>
+                
+                <li class="breadcrumb-item">
+                    Create Faculty
+                </li>
+            </t>
+
+
+            <t t-if="page_name == 'ccmc_faculty_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmcbatch/faculties/{{batch_id}}">
+                        <t t-out="batch_name"/>
+                    </a>
+                </li>
+                
+                <li class="breadcrumb-item">
+                    Create Faculty
+                </li>
+            </t>
+
+           
+            
             <!-- <li class="breadcrumb-item ">
                 <a t-attf-href="/my/gpbatch/candidates/{{candidate.institute_batch_id.id}}">GP Batches</a>
+                
             </li> -->
-            <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
+            <!-- <li t-if="page_name == 'ccmc_candidate'" class="breadcrumb-item active">
              CCMC Candidate
-            </li>
+            </li> -->
             <li t-if="page_name == 'institute_page'" class="breadcrumb-item active">
              Institute Detail
             </li>
@@ -87,8 +157,54 @@
 
 
     <template id="institute_gp_batches" name="GP Batches">
+        <script>
+                function openTokenModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('modal_batch_id').value = dataId;
+
+                }
+        </script>
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_table">
+            <div class="modal fade" id="dgs_approval_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/gpbatch/updatebatchcapacity" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update GP Batch Approval Capacity</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Modal content goes here -->
+                                    <div class="container mt-5">
+
+                                        <input type="hidden" id="modal_batch_id" name="batch_id"/>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="capacity">DGS Approved Capacity</label>
+                                                <input required="" type="text" class="form-control" id="capacity" name="capacity" min="0" />
+                                            </div>
+                                             <div class="form-group">
+                                                <label for="approvaldocument">Upload Approval Document</label>
+                                                <input required="" type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
+                                            </div>
+                                        </div>
+
+                                        
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <thead>
                     <tr>
                         <th>Batch Name</th>
@@ -130,6 +246,11 @@
                             <td class="text-center">
                                 <t t-out="batch.to_date" />
                             </td>
+                             <t t-if="batch.dgs_approval_state != True">
+                            <td class="text-center">
+                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
+                            </td>
+                            </t>
                             <!-- <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
@@ -147,8 +268,57 @@
 
 
     <template id="institute_ccmc_batches" name="CCMC Batches">
+        <script>
+
+                function openTokenModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('modal_batch_id').value = dataId;
+
+                }
+        
+       </script>
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_table">
+                <div class="modal fade" id="dgs_approval_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/ccmcbatchbatch/updatebatchcapacity" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update CCMC Batch Approval Capacity</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Modal content goes here -->
+                                    <div class="container mt-5">
+
+                                        <input type="hidden" id="modal_batch_id" name="batch_id"/>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="capacity">DGS Approved Capacity</label>
+                                                <input required=""  type="number" class="form-control" id="capacity" name="capacity" min="0" />
+                                            </div>
+                                             <div class="form-group">
+                                                <label for="approvaldocument">Upload Approval Document</label>
+                                                <input required=""  type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
+                                            </div>
+                                        </div>
+
+                                        
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            
                 <thead>
                     <tr>
                         <th>Batch Name</th>
@@ -162,9 +332,16 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-center">
-                                <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
-                                    <t t-out="batch.ccmc_batch_name"/>
-                                </a>
+                                <t t-if="batch.dgs_approval_state">
+                                    <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
+                                        <t t-out="batch.ccmc_batch_name"/>
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <span class="fa disabled">
+                                        <t t-out="batch.ccmc_batch_name"/>
+                                    </span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmcbatch/faculties/{{batch.id}}" class="fa">
@@ -182,6 +359,11 @@
                             <td class="text-center">
                                 <t t-out="batch.ccmc_to_date" />
                             </td>
+                            <t t-if="batch.dgs_approval_state != True">
+                                <td class="text-center">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
+                                </td>
+                            </t>
                             <!-- <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
@@ -273,8 +455,9 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
-
+                <t t-if="not candidate.candidate_image or not candidate.indos_no or not candidate.candidate_signature" >
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                </t>
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
@@ -687,9 +870,61 @@
                                             </div>
                                         </div>
 
+                                        <!-- Attendance  -->
+
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
 
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
+                                            <div>
+                                                <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
+
+                                                    <t t-out="candidate.attendance_compliance_1" />
+                                                </h5>
+                                            </div>
+                                            <div>
+                                                <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS :
+                                                    <t t-out="candidate.attendance_compliance_2" />
+                                                </h5>
+                                            </div>
+                                            <div class="modal fade" id="AddAttendance" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/gpcandidate/addattendance" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add Attendance</h5>
+                                                            </div>
+                                                            
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}"  name="candidate_id"/>
+                                                                <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO):</label>
+    
+                                                                <select id="attendance1" name="attendance1">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO):</label>
+
+                                                                <select id="attendance2" name="attendance2">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        
                                         </div>
+                                        
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
 
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
@@ -958,19 +1193,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="indos_no">Indos No.</label>
-                                        <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="candidate_code">GP Candidate Code No.</label>
-                                        <input type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="candidate_code" name="candidate_code" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="roll_no">Roll No.</label>
-                                        <input type="text" class="form-control" id="roll_no" name="roll_no" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="roll_no" name="roll_no" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1187,19 +1422,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Full Name of Candidate as in INDOS</label>
-                                        <input type="text" class="form-control" id="name" name="name" required="true" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="name" name="name" required="true" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="indos_no">Indos No.</label>
-                                        <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="candidate_code">CCMC Candidate Code No.</label>
-                                        <input type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                        <input t-att-disabled="1" type="text" class="form-control" id="candidate_code" name="candidate_code" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1544,10 +1779,12 @@
             
             
             
-
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
-
             <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+
+            <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
+
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a>
             
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1625,6 +1862,14 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                             </td>
+                            <t t-set="exams_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('certificate_criteria','=','passed')])"/>
+
+                            <t t-if='exams_certificate'>
+                                <td class="text-center">
+                                    <a t-attf-href="/my/gpcandidates/download_gp_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
+                                </td>
+                            </t>
+
 
                         </tr>
                     </t>
@@ -1751,9 +1996,16 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View</a>
                             </td>
-                            <!-- <td class="text-center">
+                            <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
-                            </td> -->
+                            </td>
+                            <t t-set="exams_certificate" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('certificate_criteria','=','passed')])"/>
+
+                            <t t-if='exams_certificate'>
+                                <td class="text-center">
+                                    <a t-attf-href="/my/ccmccandidates/download_ccmc_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
+                                </td>
+                            </t>
 
                         </tr>
                     </t>
@@ -1798,8 +2050,8 @@
         <t t-call="portal.portal_layout">
             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Faculty</a> -->
 
-            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" t-if="page_name == 'gp_faculty'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
-            <a t-attf-href="/my/ccmcfacultiesform/view/{{batch_id}}" t-if="page_name == 'ccmc_faculty'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/gpfacultiesform/view/{{batch_id}}" t-if="page_name == 'gp_faculty_list'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/ccmcfacultiesform/view/{{batch_id}}" t-if="page_name == 'ccmc_faculty_list'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
             
             
             
@@ -1859,8 +2111,12 @@
                             <td class="text-left">
                                 <t t-out="faculty.contract_terms" />
                             </td>
+                            <t t-set="courses" t-value="faculty.courses_taught"/>
+
                             <td class="text-left">
-                                <t t-out="faculty.courses_taught.name" />
+                                <t t-foreach="courses" t-as="course">
+                                    <span class="badge badge-primary"><t t-out="course.name" /></span>
+                                </t>
                             </td>
 
                             <!-- <td class="text-center">
@@ -2173,8 +2429,9 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
 
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                
                 <div class="modal fade" id="updateCcmcCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleCcmcModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/updateccmccandidate" enctype="multipart/form-data">
@@ -2587,7 +2844,59 @@
                                             </div>
                                         </div>
 
+                                        <!-- Attendance  -->
+
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
+                                            <div>
+                                                <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
+
+                                                    <t t-out="candidate.attendance_compliance_1" />
+                                                </h5>
+                                            </div>
+                                            <div>
+                                                <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS :
+                                                    <t t-out="candidate.attendance_compliance_2" />
+                                                </h5>
+                                            </div>
+                                            <div class="modal fade" id="AddAttendance" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmccandidate/addattendance" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Add Attendance</h5>
+                                                            </div>
+                                                            
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}"  name="candidate_id"/>
+                                                                <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO):</label>
+    
+                                                                <select id="attendance1" name="attendance1">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO):</label>
+
+                                                                <select id="attendance2" name="attendance2">
+                                                                    <option value="yes">Yes</option>
+                                                                    <option value="no" t-att-selected="1">No</option>
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                           
+
 
                                         </div>
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">

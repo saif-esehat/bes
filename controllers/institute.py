@@ -8,6 +8,8 @@ import io
 from io import StringIO
 from datetime import datetime
 import xlsxwriter
+from odoo.exceptions import UserError,ValidationError
+
 
 
 
@@ -23,6 +25,39 @@ class InstitutePortal(CustomerPortal):
 
         vals = {"batches": batches, "page_name": "gp_batches"}
         return request.render("bes.institute_gp_batches", vals)
+
+    @http.route(['/my/gpbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
+    def UpdateBatchApprovalCapacity(self, **kw):
+        
+        batch_id = int(kw.get('batch_id'))
+        capacity = int(kw.get('capacity'))
+        
+        file_content = kw.get("approvaldocument").read()
+        filename = kw.get('approvaldocument').filename
+        batch = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
+        batch.write({ "dgs_approved_capacity": capacity,
+                     "dgs_approval_state":True,
+                     "dgs_document":base64.b64encode(file_content)
+                     })
+        
+        return request.redirect("/my/gpbatch")
+    
+    
+    @http.route(['/my/ccmcbatchbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
+    def UpdateCCMCBatchApprovalCapacity(self, **kw):
+        
+        batch_id = int(kw.get('batch_id'))
+        capacity = int(kw.get('capacity'))
+        
+        file_content = kw.get("approvaldocument").read()
+        filename = kw.get('approvaldocument').filename
+        batch = request.env["institute.ccmc.batches"].sudo().search([('id','=',batch_id)])
+        batch.write({ "dgs_approved_capacity": capacity,
+                     "dgs_approval_state":True,
+                     "dgs_document":base64.b64encode(file_content)
+                     })
+        
+        return request.redirect("/my/ccmcbatch")
 
 
     @http.route(['/my/ccmcbatch'], type="http", auth="user", website=True)
@@ -209,6 +244,8 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+
+        batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
@@ -261,7 +298,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"batch_name":batch_name,"page_name":"gp_candidate_form"}
         return request.render("bes.gp_candidate_form_view", vals)
 
 
@@ -273,6 +310,9 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+
+        batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
+
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
@@ -325,7 +365,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"batch_name":batch_name,"page_name":"ccmc_candidate_form"}
         return request.render("bes.ccmc_candidate_form_view", vals)
 
         
@@ -338,6 +378,9 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+
+        batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
+
         
         print("BATCH id",batch_id)
 
@@ -375,7 +418,7 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"page_name":"gp_faculty_form","batch_name":batch_name}
         return request.render("bes.gp_faculty_form_view", vals)
 
     @http.route(['/my/ccmcfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
@@ -385,6 +428,8 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         
         user_id = request.env.user.id
+        batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
+
         
         print("BATCH id",batch_id)
 
@@ -422,14 +467,14 @@ class InstitutePortal(CustomerPortal):
             
         
         
-        vals = {"states" : states,"batch_id":batch_id}
+        vals = {"states" : states,"batch_id":batch_id,"page_name":"ccmc_faculty_form","batch_name":batch_name}
         return request.render("bes.gp_faculty_form_view", vals)
 
    
 
     @http.route(['/my/gpbatch/candidates/<int:batch_id>','/my/gpbatch/candidates/<int:batch_id>/page/<int:page>'], type="http", auth="user", website=True)
     def GPcandidateListView(self, batch_id,page=1,sortby="id",search="",search_in="All", **kw,):
-        # import wdb; wdb.set_trace()
+        
         
         
         
@@ -444,7 +489,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         
         search_list = {
-            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id)]},
+            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id),('institute_batch_id', '=', batch_id)]},
             'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
             'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
             'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
@@ -465,7 +510,7 @@ class InstitutePortal(CustomerPortal):
                             page=page,
                             step=10
                             )
-        
+        # import wdb; wdb.set_trace()
         candidates = request.env["gp.candidate"].sudo().search(
             search_domain, limit= 10,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
@@ -499,7 +544,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
 
         search_list = {
-            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id)]},
+            'All':{'label':'All','input':'All','domain':[('institute_id', '=', institute_id),('institute_batch_id', '=', batch_id)]},
             'Name':{'label':'Candidate Name','input':'Name','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('name','ilike',search)]},
             'Indos_No':{'label':'Indos No','input':'Indos_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('indos_no','ilike',search)]},
             'Candidate_Code_No':{'label':'Candidate Code No','input':'Candidate_Code_No','domain':[('institute_id', '=', institute_id), ('institute_batch_id', '=', batch_id),('candidate_code','ilike',search)]},
@@ -543,7 +588,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         faculties = request.env["institute.faculty"].sudo().search(
             [('gp_batches_id', '=', batch_id)])
-        vals = {'faculties': faculties, 'page_name': 'gp_faculty','batch_id':batch_id}
+        vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
 
@@ -557,7 +602,7 @@ class InstitutePortal(CustomerPortal):
             [('user_id', '=', user_id)]).id
         faculties = request.env["institute.faculty"].sudo().search(
             [('ccmc_batches_id', '=', batch_id)])
-        vals = {'faculties': faculties, 'page_name': 'ccmc_faculty','batch_id':batch_id}
+        vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
 
@@ -696,6 +741,8 @@ class InstitutePortal(CustomerPortal):
             file_content = kw.get("fileUpload").read()
             filename = kw.get('fileUpload').filename
             # attachment = uploaded_file.read()
+            
+            
 
             data = request.env["lod.institute"].sudo().create({'institute_id': institute_id,
                                                                'document_name': kw.get('documentName'),
@@ -931,6 +978,41 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'fees_paid':fees_paid})
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+
+
+    @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateGpAttendance(self, **kw):
+        candidate_id = kw.get('candidate_id')
+        attendance1 = kw.get('attendance1')
+        attendance2 = kw.get('attendance2')
+
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'attendance_compliance_1':attendance1})
+        candidate.write({'attendance_compliance_2':attendance2})
+
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+
+    @http.route(['/my/ccmccandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateCcmcAttendance(self, **kw):
+        candidate_id = kw.get('candidate_id')
+        attendance1 = kw.get('attendance1')
+        attendance2 = kw.get('attendance2')
+
+        
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'attendance_compliance_1':attendance1})
+        candidate.write({'attendance_compliance_2':attendance2})
+
+        
+        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
 
     @http.route(['/my/ccmccandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCcmcFees(self, **kw):
@@ -1238,11 +1320,27 @@ class InstitutePortal(CustomerPortal):
     
     
     @http.route(['/my/gpcandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadAdmitCard(self,candidate_id,**kw ):
-        print('candidateeeeeeeeeeeeeeeeeeeeeee',candidate_id)
+    def DownloadsAdmitCard(self,candidate_id,**kw ):
         # import wdb; wdb.set_trace()
-        pdf, _ = request.env.ref('bes.candidate_admit_card_action').sudo()._render_qweb_pdf(int(candidate_id))
-        # print(pdf ,"Tbis is PDF")
+        try:
+            exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        except:
+            raise ValidationError("Admit Card Not Found or Not Generated")
+        report_action = request.env.ref('bes.candidate_gp_admit_card_action')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+    
+
+    @http.route(['/my/gpcandidates/download_gp_certificate/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadGPCertificate(self,candidate_id,**kw ):
+        # import wdb; wdb.set_trace()
+        try:
+            exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id),('certificate_criteria','=','passed')])
+        except:
+            raise ValidationError("Certificate Not Generated")
+        report_action = request.env.ref('bes.report_gp_certificate')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id.id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
@@ -1259,14 +1357,35 @@ class InstitutePortal(CustomerPortal):
             # Set PDF headers
             pdf_http_headers = [('Content-Type', 'application/pdf'), ('Content-Length', str(len(pdf_content)))]
 
+    
+ 
          
     
 
     @http.route(['/my/ccmccandidates/download_admit_card/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCcmcAdmitCard(self,candidate_id,**kw ):
         # import wdb; wdb.set_trace()
-        pdf, _ = request.env.ref('bes.candidate_admit_card_action').sudo()._render_qweb_pdf(int(candidate_id))
+        try:
+            exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
+        except:
+            raise ValidationError("Admit Card Not Found or Not Generated")
+        report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+    
+    
+    
+    @http.route(['/my/ccmccandidates/download_ccmc_certificate/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadCCMCCertificate(self,candidate_id,**kw ):
+        # import wdb; wdb.set_trace()
+        try:
+            exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id),('certificate_criteria','=','passed')])
+        except:
+            raise ValidationError("Certificate Not Generated")
+        report_action = request.env.ref('bes.report_ccmc_certificate')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id.id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
