@@ -9,10 +9,6 @@ class CandidateAdmitCard(models.AbstractModel):
     _name = 'report.bes.candidate_admit_card'
     _description = 'Candidate Admit Card'
     
-
-    
-    
-    
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.candidate'].sudo().browse(docids)
@@ -30,3 +26,4 @@ class CandidateAdmitCard(models.AbstractModel):
             'doc_model': 'gp.candidate',
             'docs': docs1
             }
+

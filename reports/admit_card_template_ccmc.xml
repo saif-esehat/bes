@@ -12,7 +12,7 @@
                         <strong>ADMIT CARD - CCMC Fresh</strong>
                     </div>
                     <div style="font-size:20px;text-align:center;">
-                        <strong>Exam Center: <span><t t-esc="o.ccmc_candidate.city"/></span></strong>
+                        <strong>Exam Center: <span><t t-esc="o.institute_name.name"/></span></strong>
                     </div>
                     <!-- <div class="card-img-container"  t-if="o.candidate_image"> -->
                     <t t-if="o.ccmc_candidate.candidate_image">

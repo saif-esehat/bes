@@ -432,6 +432,7 @@ class GPExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
+    institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
@@ -448,23 +449,28 @@ class GPExam(models.Model):
     mek_total = fields.Float("Mek Total",readonly=True)
     mek_percentage = fields.Float("Mek Percentage",readonly=True)
     gsk_oral_prac_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='GSK Oral/Practical Status')
+    ], string='GSK Oral/Practical Status', default='pending')
+    
     mek_oral_prac_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Oral/Practical Status')
+    ], string='Mek Oral/Practical Status', default='pending')
     
     mek_online_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Online Status')
+    ], string='Mek Online Status', default='pending')
     
     gsk_online_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Gsk Online Status')
+    ], string='Gsk Online Status', default='pending')
     
     exam_criteria = fields.Selection([
         ('', ''),
@@ -535,6 +541,7 @@ class GPExam(models.Model):
             else:
 
                 record.ship_visit_criteria = 'pending'
+                
         
     # def move_done(self):
     #         if(self.certificate_criteria == 'passed'):
@@ -660,6 +667,9 @@ class GPExam(models.Model):
         else:
              raise ValidationError("Not All exam are Confirmed")
 
+    attempting_exam_list= fields.One2many("gp.exam.schedule",'gp_candidate')
+
+    
 
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
@@ -667,6 +677,7 @@ class CCMCExam(models.Model):
     _description= 'Schedule'
     
     certificate_id = fields.Char(string="Certificate ID")
+    institute_name = fields.Many2one("bes.institute","Institute Name")
     exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     

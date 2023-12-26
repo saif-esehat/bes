@@ -39,6 +39,7 @@
                         <group>
                             <field name="exam_id"/>
                             <field name="gp_candidate"/>
+                            <field name="institute_name"/>
                         </group>
                         <group>
                             <field name="attempt_number"/>
@@ -91,9 +92,20 @@
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                         </group>
-               
-                        
 
+                        <notebook>
+                            <page string="Attempting Exam List">
+                                <field name="attempting_exam_list">
+                                    <tree editable="bottom">
+                                        <!-- <field name="gsk_oral_prac_status"/>
+                                        <field name="mek_oral_prac_status" />
+                                        <field name="mek_online_status" />
+                                        <field name="gsk_online_status" /> -->
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        
                     </sheet>
                 </form>
             </field>
@@ -109,6 +121,17 @@
             </field>
         </record>
 
+        <!-- <record id="exam_extend_form" model="ir.ui.view">
+            <field name="name">exam_extend form</field>
+            <field name="model">exam.admit.card</field>
+            <field name="inherit_id">gp.exam.schedule.gp_exam_schedule_form</field>
+            <field name="arch" type="xml">
+                <field name="certificate_id" position="after">
+                    <field name="exam_list"></field>
+                </field>
+            </field>
+        </record> -->
+
         <record id="ccmc_exam_schedule_form" model="ir.ui.view">
             <field name="name">ccmc.exam.schedule.form</field>
             <field name="model">ccmc.exam.schedule</field>
@@ -122,6 +145,7 @@
                         <group>
                             <field name="exam_id"/>
                             <field name="ccmc_candidate"/>
+                            <field name="institute_name"/>
                         </group>
                         <group>
                             <field name="attempt_number"/>
