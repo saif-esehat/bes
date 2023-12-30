@@ -370,7 +370,7 @@
                             <page string="GSK Oral">
                                 <field name="gsk_oral_child_line" nolabel="1">
                                     <tree> 
-                                         <field name='gsk_oral_attempt_no'/>
+                                        <field name='gsk_oral_attempt_no'/>
                                         <field name='gsk_oral_exam_date'/>
                                         <field name='institute_id'/>
                                         <field name='exam_id'/>
@@ -378,7 +378,6 @@
                                         <field name="subject_area_2"/>
                                         <field name='subject_area_3'/>
                                         <field name="subject_area_4"/>
-
                                         <field name="subject_area_5"/>
                                         <field name="subject_area_6"/>
                                         <field name="practical_record_journals"/>

@@ -150,14 +150,7 @@ class ExaminerPortal(CustomerPortal):
                 'gsk_oral_remarks': remarks_oral_gsk
             }
             
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",exam_date)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area1)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area2)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area3)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area4)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area5)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",subject_area6)
-            # print("EXAMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",practical_record_journals)
+            
 
             print('valssssssssssssssssssssssssssssssssssssssssssssssss=============================', vals)
             return {}

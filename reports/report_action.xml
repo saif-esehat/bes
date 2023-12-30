@@ -14,7 +14,7 @@
         id="candidate_gp_admit_card_action"
         string="GP Admit Card"
         model="gp.exam.schedule"
-        report_type="qweb-pdf"
+        report_type="qweb-html"
         name="bes.candidate_admit_card_gp"
         file="bes.candidate_admit_card_gp"/>
         
@@ -45,12 +45,14 @@
         />
 
     <report
-            id="batches_report_xlsx"
-            model="institute.gp.batches"
-            string="Print Report"
-            report_type="xlsx"
-            name="bes.report_batches"
-            file="bes.report_batches"
+        id="batches_report_xlsx"
+        model="institute.gp.batches"
+        string="Print Report"
+        report_type="xlsx"
+        name="bes.report_batches"
+        file="bes.report_batches"
     />
+
+
 
 </odoo>

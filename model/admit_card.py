@@ -9,10 +9,6 @@ class CandidateAdmitCardGp(models.AbstractModel):
     _name = 'report.bes.candidate_admit_card_gp'
     _description = 'Candidate Admit Card'
     
-
-    
-    
-    
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
@@ -59,3 +55,4 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
             'doc_model': 'ccmc.exam.schedule',
             'docs': docs1
             }
+
