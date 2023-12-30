@@ -52,6 +52,32 @@ class Institute(models.Model):
     # -------- Payement Slip
     payment_slip_ids= fields.One2many('institute.payment.slip.line','payment_slip_id',string="Payment Slip")
 
+    ccmc_present = fields.Boolean(string='CCMC',compute="_compute_ccmc_present")
+    gp_present = fields.Boolean(string='GP',compute="_compute_gp_present")
+
+    @api.depends('courses')
+    def _compute_ccmc_present(self):
+        for record in self:
+            record.ccmc_present = False
+            for course in self.courses:
+                if course.course.course_code == "CCMC" or course.course.course_code == "ccmc":
+                    record.ccmc_present = True
+                
+
+
+    @api.depends('courses')
+    def _compute_gp_present(self):
+        for record in self:
+            record.gp_present = False
+            for course in self.courses:
+                if course.course.course_code == "GP" or course.course.course_code == "gp":
+                    record.gp_present = True
+                
+
+
+            
+
+
 
     @api.constrains('principal_phone')
     def _check_valid_phone(self):
