@@ -32,8 +32,9 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-done'),('state', '!=', 'passed')]}"/>
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
                     </header>
                     <sheet>
                         <group>
@@ -76,11 +77,25 @@
                             / 
                                 <span>175</span>
                             </div>
+                            <label for="mek_online_marks"/>
+                            <div>
+                                <field name="mek_online_marks" nolabel="1"/>
+                            / 
+                                <span>75</span>
+                            </div>
+                            <label for="gsk_online_marks"/>
+                            <div>
+                                <field name="gsk_online_marks" nolabel="1"/>
+                            / 
+                                <span>75</span>
+                            </div>
                       
                         </group>
                         <group style="width:50%">
                             <field name="gsk_percentage" readonly="1"/>
                             <field name="mek_percentage" readonly="1"/>
+                            <field name="gsk_online_percentage" readonly="1"/>
+                            <field name="mek_online_percentage" readonly="1"/>
                         </group>
                         <group style="width:50%">
                             <field name="gsk_oral_prac_status" readonly="1"/>

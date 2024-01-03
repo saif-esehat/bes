@@ -435,8 +435,7 @@ class GPExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: _('New'))
+    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
@@ -446,10 +445,14 @@ class GPExam(models.Model):
     mek_online = fields.Many2one("survey.user_input","MEK Online")
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
-    gsk_total = fields.Float("GSK Total",readonly=True)
-    gsk_percentage = fields.Float("GSK Precentage",readonly=True)
+    gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
+    gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
    
     
+    mek_online_marks = fields.Float("MEK Online",readonly=True)
+    gsk_online_marks = fields.Float("GSK Online",readonly=True)
+    mek_online_percentage = fields.Float("MEK Online (%)",readonly=True)
+    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)
     
     mek_total = fields.Float("Mek Total",readonly=True)
     mek_percentage = fields.Float("Mek Percentage",readonly=True)
@@ -486,7 +489,7 @@ class GPExam(models.Model):
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Certificate Criteria')
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
 
     
     stcw_criteria = fields.Selection([
@@ -512,6 +515,7 @@ class GPExam(models.Model):
     state = fields.Selection([
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
+        ('3-certified', 'Certified'),
     ], string='State', default='1-in_process')
 
     url = fields.Char("URL",compute="_compute_url")
@@ -536,6 +540,8 @@ class GPExam(models.Model):
 
         # Assign the base64 string to a field in the 'srf' object
         self.qr_code = qr_image_base64
+        
+    
     
     @api.depends('gsk_online_status','mek_online_status','mek_oral_prac_status','gsk_oral_prac_status')
     def compute_certificate_criteria(self):
@@ -569,12 +575,21 @@ class GPExam(models.Model):
             else:
 
                 record.ship_visit_criteria = 'pending'
+    
+    @api.depends('exam_criteria','stcw_criteria','attendance_criteria','ship_visit_criteria')
+    def compute_pending_certificate_criteria(self):
+        for record in self:
+            if record.exam_criteria == record.stcw_criteria == record.attendance_criteria == record.ship_visit_criteria == 'passed':
+                record.certificate_criteria = 'passed'
+            else:
+                record.certificate_criteria = 'pending'
+
                 
         
-    # def move_done(self):
-    #         if(self.certificate_criteria == 'passed'):
-    #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
-    #         self.state = '2-done'
+    def dgs_approval(self):
+            if(self.certificate_criteria == 'passed'):
+                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
+                self.state = '3-certified'
             
     
     
@@ -634,6 +649,7 @@ class GPExam(models.Model):
     #     return super(, self).create(vals)
     
     
+    
     @api.constrains('gp_candidate')
     def _check_exam_count(self):
         max_exams = 7
@@ -644,8 +660,12 @@ class GPExam(models.Model):
             if exams_count > max_exams:
                 raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
                                       f"You cannot schedule more than {max_exams} exams for a candidate.")
-                
+    
+    # def dgs_approval(self):                
 
+    #     print("work")
+        
+        
     def move_done(self):
         
         # import wdb; wdb.set_trace();
@@ -668,6 +688,9 @@ class GPExam(models.Model):
             mek_total_marks = mek_oral_marks + mek_practical_marks
             self.mek_total = mek_total_marks
             self.mek_percentage = (mek_total_marks/175) * 100
+            self.mek_online_marks = self.mek_online.scoring_total
+            self.mek_online_percentage = self.mek_online.scoring_percentage
+            
             
             
             if self.mek_percentage >= 60:
@@ -681,6 +704,8 @@ class GPExam(models.Model):
             gsk_total_marks = gsk_oral_marks + gsk_practical_marks
             self.gsk_total = gsk_total_marks
             self.gsk_percentage = (gsk_total_marks/175) * 100
+            self.gsk_online_marks = self.gsk_online.scoring_total
+            self.gsk_online_percentage = self.gsk_online.scoring_percentage
             
             
             if self.gsk_percentage >= 60:
@@ -692,31 +717,36 @@ class GPExam(models.Model):
             self.state = '2-done'
             
             
-            if self.gsk_online.scoring_success:
+            
+            
+            if self.gsk_online_percentage >= 60 :
                 self.gsk_online_status = 'passed'
             else:
                 self.gsk_online_status = 'failed'
                 
             
-            if self.mek_online.scoring_success:
+            if self.mek_online_percentage >= 60 :
                 self.mek_online_status = 'passed'
             else:
                 self.mek_online_status = 'failed'
             
+            
+            
+            
             all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
             # import wdb; wdb.set_trace();
-            if all_passed:
+            # if all_passed:
                 
-                self.write({'certificate_criteria':'passed'})
-                # self.certificate_criteria = 'passed'
-            else:
-                self.write({'certificate_criteria':'pending'})
+            #     self.write({'certificate_criteria':'passed'})
+            #     # self.certificate_criteria = 'passed'
+            # else:
+            #     self.write({'certificate_criteria':'pending'})
 
                 # self.certificate_criteria = 'failed'
             
-            if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+            # if(self.certificate_criteria == 'passed'):
+            #     self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
             
             self.state = '2-done'
                 
