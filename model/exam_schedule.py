@@ -435,8 +435,12 @@ class GPExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
+<<<<<<< HEAD
     roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: _('New'))
+=======
+    roll_no = fields.Char(string="Roll No")
+>>>>>>> b70c210ed2f30ccd0e86f9476d269520928c75a8
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
