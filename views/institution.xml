@@ -59,9 +59,9 @@
                     <sheet>
                         
                         <div class="oe_button_box" name="button_box">
-                            <button name="ccmc_button" string="CCMC Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            <button name="ccmc_button" string="CCMC Batches" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible':[('ccmc_present','=',False)]}">
                             </button>
-                            <button name="batch_button" string="GP Batches" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            <button name="batch_button" string="GP Batches" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible':[('gp_present','=',False)]}">
                             </button>
                         </div>
                         <group style="width:100%;">
@@ -135,6 +135,10 @@
                             <group style="width:100%;">
                                 <label for="internet_strength" style="margin-bottom:10px; margin-top: 15px;"/>
                                 <field name="internet_strength" optional="hide"/>
+                            </group>
+                            <group>
+                                <field name="ccmc_present" invisible="1"/>
+                                <field name="gp_present" invisible="1"/>
                             </group>
 
                             <group style="width:100%;">

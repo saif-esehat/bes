@@ -1779,8 +1779,8 @@
             
             
             
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Candidate</a>
-            <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  t-attf-batch-id="{{batch_id}}"  onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+            <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a>
 
             <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
 
@@ -1857,7 +1857,7 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View</a>
+                                <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
@@ -1929,9 +1929,9 @@
                 <t t-set="title">CCMC Candidate</t>
             </t>
 
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Candidate</a>
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
 
-            <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Create</a>
+            <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a>
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -1994,7 +1994,7 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View</a>
+                                <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>

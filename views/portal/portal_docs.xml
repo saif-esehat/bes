@@ -15,7 +15,7 @@
                                 Download Admit Card
                         </a>
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
-                                Raise a Ticket
+                                Raise a Query
                         </a>
                     </div>
                    
@@ -74,7 +74,7 @@
                             </a> -->
                             <!-- </t> -->
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
-                                Raise a Ticket
+                                Raise a Query
                             </a>
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/institute_document/list">
                                 Upload Documents
