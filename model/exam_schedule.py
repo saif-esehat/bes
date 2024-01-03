@@ -435,7 +435,7 @@ class GPExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
-    roll_no = fields.Integer(string="Roll No")
+    roll_no = fields.Char(string="Roll No")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
