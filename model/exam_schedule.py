@@ -1,5 +1,5 @@
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import random
 import logging
@@ -435,6 +435,7 @@ class GPExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
+    roll_no = fields.Integer(string="Roll No")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
@@ -574,21 +575,6 @@ class GPExam(models.Model):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
             
-    class GPCertificate(models.AbstractModel):
-        _name = 'report.bes.report_general_certificate'
-
-        @api.model
-        def _get_report_values(self, docids, data=None):
-            docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-            if docs1.certificate_criteria == 'passed':
-                return {
-                    'docids': docids,
-                    'doc_model': 'gp.exam.schedule',
-                    'data': data,
-                    'docs': docs1
-                }
-            else:
-                raise ValidationError("Certificate criteria not met. Report cannot be generated.")
     
     
     @api.model
@@ -598,8 +584,50 @@ class GPExam(models.Model):
             last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
             vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
 
-        return super(GPExam, self).create(vals)
+            a = super(GPExam, self).create(vals)   
+            print(a,"==============================================================================================")
+            if a.gsk_oral_prac_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'Gsk Oral/Practical'
+                    }
+                )    
+                
+            if a.mek_oral_prac_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'Mek Oral/Practical'
+                    }
+                )  
+                
+            if a.gsk_online_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'Gsk Online'
+                    }
+                )
+                  
+            if a.mek_online_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'Mek Online'
+                    }
+                )  
+                
+            return a 
+            
+        print("Roll No==============================================================",vals)
+        vals['roll_no'] = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+        return a
     
+    # @api.model
+    # def create(self,vals):
+       
+    #     return super(, self).create(vals)
     
     
     @api.constrains('gp_candidate')
@@ -693,9 +721,34 @@ class GPExam(models.Model):
         else:
              raise ValidationError("Not All exam are Confirmed")
 
-    attempting_exam_list= fields.One2many("gp.exam.schedule",'gp_candidate')
-
+    attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
+class GPAppearingExam(models.Model):
+    _name = 'gp.exam.appear'
+    
+    gp_exam_schedule_id = fields.Many2one('gp.exam.schedule',string="GP Exam ID")
+    subject_name = fields.Char(string="Appearing Exam Lists")
+    
+    
+    
+    
+    
+
+class GPCertificate(models.AbstractModel):
+    _name = 'report.bes.report_general_certificate'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        if docs1.certificate_criteria == 'passed':
+            return {
+                'docids': docids,
+                'doc_model': 'gp.exam.schedule',
+                'data': data,
+                'docs': docs1
+            }
+        else:
+            raise ValidationError("Certificate criteria not met. Report cannot be generated.")
 
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
@@ -704,9 +757,11 @@ class CCMCExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
+    exam_id = fields.Char(string="Exam ID",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
+    roll_no = fields.Integer(string="Roll No",required=True, copy=False, readonly=True,
+                                default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
@@ -777,6 +832,28 @@ class CCMCExam(models.Model):
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
     
+    url = fields.Char("URL",compute="_compute_url")
+    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+
+    def _compute_url(self):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        current_url = base_url + "/verification/ccmcadmitcard/" + str(self.id)
+        self.url = current_url
+        print("Current URL:", current_url)
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+        qr.add_data(current_url)
+        qr.make(fit=True)
+        qr_image = qr.make_image()
+
+        # Convert the QR code image to base64 string
+        buffered = io.BytesIO()
+        qr_image.save(buffered, format="PNG")
+        qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+        # Assign the base64 string to a field in the 'srf' object
+        self.qr_code = qr_image_base64
+
+    
     @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status')
     def compute_certificate_criteria(self):
         for record in self:
@@ -820,8 +897,10 @@ class CCMCExam(models.Model):
             candidate_id = vals['ccmc_candidate']
             last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
             vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
-
+        
         return super(CCMCExam, self).create(vals)
+
+        
     
     
     

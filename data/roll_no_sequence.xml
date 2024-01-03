@@ -1,0 +1,16 @@
+<?xml version="1.6" encoding="utf-8"?>
+<odoo>
+    <record id="gp_roll_no_sequence" model="ir.sequence">
+        <field name="name">GP Roll No</field>
+        <field name="code">gp.exam.schedule</field>
+        <field name="prefix">6666</field>
+        <field name="number_increment" eval="1"/>
+    </record>
+   
+    <record id="ccmc_roll_no_sequence" model="ir.sequence">
+        <field name="name">CCMC Roll No</field>
+        <field name="code">ccmc.exam.schedule</field>
+        <field name="prefix">999</field>
+        <field name="number_increment" eval="1"/>
+    </record>
+</odoo>

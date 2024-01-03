@@ -8,6 +8,7 @@
  'version': '13.0.1', 
  'depends':['product','portal','survey','website','sale','odoo_website_helpdesk'],
  'data': [
+        'data/roll_no_sequence.xml',
         'data/exam_sequence.xml',
         'data/certificate_sequence.xml',
         'data/tags.xml',

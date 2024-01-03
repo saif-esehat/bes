@@ -6,29 +6,31 @@
             <t t-foreach="docs" t-as="doc">
                 <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
                 <div class="o_report">
-                    <div id="header">
-                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem"/>
+                    <div id="header" style="width:100%; text-align: center;">
+                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem; max-width: 100%;"/>
                         <br/>
-                        <img t-attf-src="data:image/png;ccmc_candidate.candidate_image}}" alt="Image" id="photo"/>
-                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture3.png" alt="" style="margin-top:0; width:80%; max-height:250px;"/>
+                        <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" style="width: 150px; height: 150px; position: absolute; top: 10%; right: 10%;"/>
+                        
                         <br/>
-                        <div style="width:100%; display:block;">
+                        <div style="width:100%; ">
                             <span style="font-size:1rem;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
                         </div>
-                        <div style="width:100% display:block;">
-                        <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
+                        <div style="width:100%">
+                            <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
                             Awards this</span>
                         </div>
-                        <img class="img img-responsive" t-attf-src="bes/static/src/img/Picture3.jpg" alt="" style="margin-top:0;"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
                     </div>
-                    <div id="main">
+                    <div id="main" style="padding: 20px;">
                         <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">Certificate No.: </label><span style="font-size:1.5rem;"></span>
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">Certificate No.: </label><span style="font-size:1.2rem;"></span>
                         </div>
                         <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">This is to certify that: </label><span style="font-size:1.5rem;"><t t-esc="doc.ccmc_candidate.name"/></span>
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">This is to certify that: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.name"/></span>
                         </div>
-                        <div class="line" style="display: flex; width: 100%; font-size: 1rem;">
+                        
+                         <div class="line" style="display: flex; width: 100%; font-size: 1rem;">
                             <div style="flex: 1; margin-right: 0;">
                                 <label for="" style="color: #4c2d8b; font-size: 1.2rem; ">Roll No: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.roll_no"/></span>
                             </div>
@@ -39,23 +41,54 @@
                                 <label for="" style="color: #4c2d8b; font-size: 1.2rem;">Date of Birth: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.dob"/></span>
                             </div>
                         </div>
-                        <span style="color:#4c2d8b; text-align:left; font-size:1.2rem" >has undergone an approved six months Pre-sea training for</span>
-                        <h1>Certificate Course in Maritime Catering</h1>
-                        <div class="left">
+
+                        <div>
+                            <span style="color:#4c2d8b; text-align:left; font-size:1.2rem" >has undergone an approved six months Pre-sea training for</span>
+                        </div>
+                        <h1 style="">Certificate Course in Maritime Catering</h1>
+
+                        <div class="left" style="font-size:1.2rem;">
                             <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.institute_id.name"/></span></p>
-                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">From <span style="color:#000; font-size:1.2rem;">Demo</span> and has successfully passed the All India Exit Examination
-                                held in <span style="font-size:1.2rem; color:#000;">Demo</span> and has been awarded grade <span style="font-size:1.2rem; color:#000;">Demo </span> on the basis shown below:    
-                            </p>
-                            <p style="color:#4c2d8b; text-align:left; font-size:1.2rem; margin:0;">Position in the merit list of first 25% - <span style="color:#000;">Demo</span></p>
-                            <div class="line" style="display: flex; justify-content: space-between; width: 100%;">
-                                <div id="split" style="margin-right: 10rem; display: flex; align-items: center;">
-                                    <div style="color: #4c2d8b; text-align: left; ">Date <span style="color: #000;">demo</span></div>
+
+                            <p style="color:#4c2d8b; margin:0;  margin-top:10px;">From <span style="color:#000;">Demo</span> and has successfully passed the All India Exit Examination
+                                held in <span></span></p>
+                    
+                            <div style="width: 100%; margin-top: 0rem; text-align:center;">
+                        
+                        <table style="width: 80%; margin: 0 auto; text-align:center; border-collapse: collapse; border: 1px solid #ddd;">
+                            <thead>
+                                <tr style="">
+                                    <th style=" padding: 10px;"><strong>A</strong></th>
+                                    <th style="padding: 10px;"><strong>B</strong></th>
+                                    <th style="padding: 10px;"><strong>C</strong></th>
+                                    <!-- <th style="width: 50%; padding: 10px;"><strong>Status</strong></th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr >
+                                    <td style=" padding: 10px; border: 1px solid #ddd;">Above 80% marks</td>
+                                    <td style=" padding: 10px; border: 1px solid #ddd;">71-80 % marks</td>
+                                    <td style=" padding: 10px; border: 1px solid #ddd;">60-70 % marks</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                            <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Position in the merit list of first 25% - <span style="color:#000;">N/A</span></p>
+                            <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Date of Examination Passed: <span style="color:#000;">16-Aug-2023</span></p>
+                            
+                            <div style="display: flex; justify-content: space-between; width: 100%; position: relative; margin-top: 10px;">
+                                <div id="split" style="">
+                                    <div style="color: #4c2d8b;">Date of Issue of Certificate: <span style="color: #000; font-size: 1.2rem;">16-Aug-2023</span></div>
                                 </div>
-                                <div id="sign" style="text-align: right; margin-left:15rem;">
-                                    <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" id="img-sign"/>
-                                    <span style="display: block;">Signature of the Candidate</span>
+                                <div id="sign" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                                    <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" id="img-sign" 
+                                    style="width: 250px; height: 55px; border: 2px dotted #000;  position: absolute; top: -30px; right:0;" />
+                                    <span style="display: block; position: absolute; top: 30%; right:0;">Signature of the Candidate</span>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div id="footer">

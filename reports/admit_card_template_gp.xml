@@ -8,7 +8,12 @@
                         <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
                     </div>
                     <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
-                        <strong>ADMIT CARD - GP Fresh</strong>
+                        <t t-if="attempt_number == 1">
+                            <strong>ADMIT CARD - GP Fresh</strong>
+                        </t>
+                        <t t-else="">
+                            <strong>ADMIT CARD - GP Repeater</strong>
+                        </t>
                     </div>
                     <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
                         <strong>Exam Center: <span><t t-esc="o.institute_name.name"/></span></strong>
@@ -18,9 +23,9 @@
                         <t t-if="o.gp_candidate.candidate_image">
                             <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 150px; height: 150px; position: absolute; top: 10%; right: 8px;" />
                         </t>
-                        <!-- Candidate Details  position: absolute; top: 10%; left: 3%; -->
+                        <!-- Candidate Details  position: absolute; top: 10%; left: 3%; border-collapse: collapse; border: 1px solid #ddd; -->
                         <div style="margin-top:2rem">
-                            <table style="width: 100%; text-align: left;">
+                            <table style="width: 50%; text-align: left; ">
                                 <!-- Exam Information -->
                                 <tr>
                                     <td colspan="6">
@@ -32,14 +37,14 @@
                                 <!-- Roll No, Name, DOB -->
                                 <tr>
                                     <td colspan="6">
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">
+                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px; width:100%;">
                                             <strong>Roll No: <span t-esc="o.gp_candidate.roll_no"/></strong>
                                         </div>
                                         <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
-                                            <strong>Name as in INDOS: <span t-esc="o.gp_candidate.name"/></strong>
+                                            <strong style=" text-align: right;">Name as in INDOS: <span t-esc="o.gp_candidate.name"/></strong>
                                         </div>
                                         <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">
-                                            <strong>DOB as in INDOS: <span t-esc="o.gp_candidate.dob"/></strong>
+                                            <strong style="margin-right: 30px;">DOB as in INDOS: <span t-esc="o.gp_candidate.dob"/></strong>
                                         </div>
                                     </td>
                                 </tr>
@@ -58,32 +63,38 @@
                         </div>
                     </div>
 
+                    <div>
+                        <t t-if="o.qr_code">
+                            <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 150px; height: 150px; position:absolute; right:0%;" />
+                        </t>
+                    </div>
+
                     <!-- Table for Attempting Exams and Status -->
-                   <div style="width: 100%; margin-top: 0; text-align:center;">
-                        <table style="width: 60%; margin: 0 auto; text-align:center; border-collapse: collapse; border: 1px solid #ddd;">
+                   <div style="width: 100%; margin-top: 0rem; text-align:center;">
+                        <table style="width: 35%; margin: 0 0; text-align:center; border-collapse: collapse; border: 1px solid #ddd;">
                             <thead>
-                                <tr style="background-color: #f2f2f2;">
+                                <tr style="">
                                     <th style="width: 50%; padding: 10px;"><strong>Attempting Exam</strong></th>
-                                    <th style="width: 50%; padding: 10px;"><strong>Status</strong></th>
+                                    <!-- <th style="width: 50%; padding: 10px;"><strong>Status</strong></th> -->
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Rows for each exam and status -->
                                 <tr t-if="o.gsk_oral_prac_status == 'pending'">
                                     <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Oral/Practical</td>
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.gsk_oral_prac_status"/>
+                                    <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.gsk_oral_prac_status"/> -->
                                 </tr>
                                 <tr t-if="o.gsk_online_status == 'pending'">
                                     <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Online Status</td>
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.gsk_online_status"/>
+                                    <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.gsk_online_status"/> -->
                                 </tr>
                                 <tr t-if="o.mek_oral_prac_status == 'pending'">
                                     <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Mek Oral/Practical</td>
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.mek_oral_prac_status"/>
+                                    <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.mek_oral_prac_status"/> -->
                                 </tr>
                                 <tr t-if="o.mek_online_status == 'pending'">
                                     <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">MeK Online Status</td>
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.mek_online_status"/>
+                                    <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.mek_online_status"/> -->
                                 </tr>
                             </tbody>
                         </table>

@@ -8,7 +8,14 @@ body {
 
 .o_report{
     border: 5px solid #4c2d8b;
+    background-image: url("/bes/static/src/img/watermark.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    /* or 'no-repeat' for a single instance */
+        /* Other background properties can be adjusted based on your requirements */
+    
 }
+
 #body {
     width: 70%;
     margin: auto;
@@ -18,7 +25,6 @@ body {
 }
 
 #header {
-    width: 80%;
     margin: auto;
     text-align: center;
     color: #4c2d8b;
@@ -44,7 +50,6 @@ body {
     display: block;
     margin: 0 auto;
     font-size: 0.9rem;
-    max-width: 80%;
     font-weight: 600;
     text-align: center;
 }
@@ -55,8 +60,8 @@ input {
 }
 
 #main {
-    width: 80%;
-    margin: auto;
+    width: 100%;
+    /* margin: auto; */
     text-align: center;
 }
 
@@ -67,7 +72,7 @@ h1 {
     font-size: 2rem;
     text-align: center;
     padding: 0.5rem;
-    margin: 1rem 0;
+    margin: 0;
 }
 
 .text {
@@ -79,7 +84,7 @@ h1 {
 
 .left {
     text-align: left;
-    margin: 1rem 0;
+    margin: 0;
 }
 
 span {
@@ -87,13 +92,10 @@ span {
 }
 
 .line {
-    /* display: flex;
-    justify-content: space-between;
-    align-items: center; */
-    display: -webkit-box; /* wkhtmltopdf uses this one */
+    display: -webkit-box; 
     display: -webkit-flex;
     display: flex;
-    -webkit-box-pack: center; /* wkhtmltopdf uses this one */
+    -webkit-box-pack: center; 
     -webkit-justify-content: center;
             justify-content: center;
 }
@@ -107,31 +109,23 @@ span {
     text-align: center;
 }
 
-#footer {
-    width: 80%;
-    margin: auto;
-}
 
-#footer .left {
-    text-align: left;
-}
-
-#split{
-    display: -webkit-box; /* wkhtmltopdf uses this one */
+/* #split{
+    display: -webkit-box; 
     display: -webkit-flex;
     display: flex;
-    -webkit-box-pack: center; /* wkhtmltopdf uses this one */
+    -webkit-box-pack: center; 
     -webkit-justify-content: space-between;
             justify-content: space-between;
     gap: 15rem;
-}
+} */
 
-#sign input{
+/* #sign input{
     display: block;
     text-align: center;
-}
+} */
 
-#img-sign{
+/* #img-sign{
     width: 8rem;
     height: 3rem;
-}
+} */
