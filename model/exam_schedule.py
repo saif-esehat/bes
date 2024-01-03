@@ -435,7 +435,8 @@ class GPExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
-    roll_no = fields.Integer(string="Roll No")
+    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+                                default=lambda self: _('New'))
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
@@ -620,8 +621,11 @@ class GPExam(models.Model):
                 
             return a 
             
-        print("Roll No==============================================================",vals)
-        vals['roll_no'] = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+        if vals.get('roll_no',_('New')) == _('New'):
+            vals['roll_no'] = self.env['ir.sequence'].next_by_code('gp.exam.schedule') or _('New')
+
+        # print("Roll No==============================================================",vals)
+        # vals['roll_no'] = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
         return a
     
     # @api.model
@@ -760,7 +764,7 @@ class CCMCExam(models.Model):
     exam_id = fields.Char(string="Exam ID",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
-    roll_no = fields.Integer(string="Roll No",required=True, copy=False, readonly=True,
+    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
