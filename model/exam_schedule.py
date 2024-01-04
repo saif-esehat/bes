@@ -430,12 +430,12 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
+    exam_id = fields.Char("Exam ID", copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
+    roll_no = fields.Char(string="Roll No" ,copy=False, readonly=True)
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
