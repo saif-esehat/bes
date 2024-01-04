@@ -690,7 +690,7 @@ class GPExam(models.Model):
             self.mek_total = mek_total_marks
             self.mek_percentage = (mek_total_marks/175) * 100
             self.mek_online_marks = self.mek_online.scoring_total
-            self.mek_online_percentage = self.mek_online.scoring_percentage
+            self.mek_online_percentage = (self.mek_online_marks/75)*100
             
             
             
@@ -706,10 +706,11 @@ class GPExam(models.Model):
             self.gsk_total = gsk_total_marks
             self.gsk_percentage = (gsk_total_marks/175) * 100
             self.gsk_online_marks = self.gsk_online.scoring_total
-            self.gsk_online_percentage = self.gsk_online.scoring_percentage
+            self.gsk_online_percentage = (self.gsk_online_marks/75)*100
             
             overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
-            
+            self.overall_marks = overall_marks
+            self.overall_percentage = (overall_marks/500) * 100
             
             if self.gsk_percentage >= 60:
                 self.gsk_oral_prac_status = 'passed'
@@ -717,7 +718,7 @@ class GPExam(models.Model):
                 self.gsk_oral_prac_status = 'failed'
 
             
-            self.state = '2-done'
+            # self.state = '2-done'
             
             
             

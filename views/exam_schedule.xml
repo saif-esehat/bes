@@ -100,9 +100,8 @@
                         <group style="width:50%">
                             <field name="gsk_percentage" readonly="1"/>
                             <field name="mek_percentage" readonly="1"/>
-                            <field name="gsk_online_percentage" readonly="1"/>
                             <field name="mek_online_percentage" readonly="1"/>
-                            <field name="mek_online_marks" readonly="1"/>
+                            <field name="gsk_online_percentage" readonly="1"/>
                             <field name="overall_percentage" readonly="1"/>
                         </group>
                         <group style="width:50%">
