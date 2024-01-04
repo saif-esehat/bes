@@ -430,22 +430,12 @@ class GPExam(models.Model):
     _rec_name = "roll_no"
     _description= 'Schedule'
     
-<<<<<<< HEAD
-    roll_no = fields.Char("Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
-    
-    certificate_id = fields.Char(string="Certificate ID")
-    gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
-    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-    #                             default=lambda self: _('New'))
-=======
-    exam_id = fields.Char("Exam ID", copy=False, readonly=True,
+    exam_id = fields.Char("Roll No", copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
     roll_no = fields.Char(string="Roll No" ,copy=False, readonly=True)
->>>>>>> b4535486faa639061322190ed203be292c58d77a
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
@@ -459,20 +449,14 @@ class GPExam(models.Model):
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
    
     
-<<<<<<< HEAD
-    
-    mek_total = fields.Float("MEK Total",readonly=True)
-    mek_percentage = fields.Float("MEK Percentage",readonly=True)
-=======
     mek_online_marks = fields.Float("MEK Online",readonly=True)
     gsk_online_marks = fields.Float("GSK Online",readonly=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True)
     gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)    
     mek_total = fields.Float("Mek Oral/Practical",readonly=True)
-    mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    mek_percentage = fields.Float("Mek Oral/Practical Percentage",readonly=True)
     overall_marks = fields.Float("Overall Marks",readonly=True)
     overall_percentage = fields.Float("Overall (%)",readonly=True)
->>>>>>> b4535486faa639061322190ed203be292c58d77a
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -603,18 +587,15 @@ class GPExam(models.Model):
 
                 
         
-<<<<<<< HEAD
     # def move_done(self):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
-=======
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
                 self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
                 self.state = '3-certified'
             
->>>>>>> b4535486faa639061322190ed203be292c58d77a
     
     
     @api.model
