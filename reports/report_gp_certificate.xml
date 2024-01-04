@@ -5,7 +5,7 @@
             <t t-foreach="docs" t-as="doc">
                 <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
                 <div class="o_report" style="">
-                    <div id="header" style="width:100%; text-align: center;">
+                    <div id="header" style="width:100%; text-align: center; font-family: 'Times New Roman';">
                         <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem; max-width: 100%;"/>
                         <br/>
                         <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture3.png" alt="" style="margin-top:0; width:80%; max-height:250px;"/>
@@ -24,31 +24,31 @@
                     
                     <div id="main" style="padding: 20px;">
                         <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">Certificate No.: </label><span style="font-size:1.2rem;"></span>
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">Certificate No.: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"></span>
                         </div>
                         <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">This is to certify that: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.name"/></span>
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">This is to certify that: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.name"/></span>
                         </div>
                         
-                         <div class="line" style="display: flex; width: 100%; font-size: 1rem;">
+                         <div class="line" style="display: flex; width: 100%; font-size: 1rem; font-family: 'Times New Roman';">
                             <div style="flex: 1; margin-right: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; ">Roll No: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.roll_no"/></span>
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Roll No: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.roll_no"/></span>
                             </div>
-                            <div style="flex: 1; text-align: center; margin-left:8rem; margin-right:5rem;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">INDOS No: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.indos_no"/></span>
+                            <div style="flex: 1; text-align: center; margin-left:8rem; margin-right:5rem; font-family: 'Times New Roman';">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">INDOS No: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.indos_no"/></span>
                             </div>
                             <div style="flex: 1; margin-left: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">Date of Birth: </label><span style="font-size:1.2rem;"><t t-esc="doc.gp_candidate.dob"/></span>
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Date of Birth: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.dob"/></span>
                             </div>
                         </div>
 
 
                         
                         <div>
-                            <span style="color:#4c2d8b; text-align:left; font-size:1.2rem" >has undergone an approved 25 weeks Pre-sea training course for</span>
+                            <span style="color:#4c2d8b; text-align:left; font-size:1.2rem; font-family: 'Times New Roman';" >has undergone an approved 25 weeks Pre-sea training course for</span>
                         </div>
-                        <h1 style="text-align: center;">General Purpose Rating</h1>
-                        <div class="left" style="font-size:1.2rem;">
+                        <h1 style="text-align: center; font-family: 'Times New Roman';">General Purpose Rating</h1>
+                        <div class="left" style="font-size:1.2rem; font-family: 'Times New Roman';">
                             <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.gp_candidate.institute_id.name"/></span></p>
 
                             <p style="color:#4c2d8b; margin:0;  margin-top:10px;">From <span style="color:#000;">Demo</span> and has successfully passed the All India Exit Examination
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     
-                    <div id="footer" style="margin-top:2rem;">
+                    <div id="footer" style="margin-top:2rem; font-family: 'Times New Roman';">
                         <p style="text-align:center; ">Ravindra Nath Tripathi</p>
                         <span style="color:#4c2d8b;">Marine Engineering Officer</span>
                         <p style="color:#4c2d8b;">Board of Examinations for Seafarers Trust <br/>
@@ -80,7 +80,143 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Page break for the next page -->
+                <div style="page-break-before: always;"></div>
+
+                <div class="o_report" style="font-family: 'Times New Roman';">
+                    <div id="main" style="padding: 20px; font-size:1rem;">
+                        <p>The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
+
+                        <!-- Add the curriculum components -->
+                        <p>The curriculum for pre-sea training programme includes the following components:</p>
+                        <table style="width: 95%; margin: 0 auto; text-align: center; border-collapse: collapse; border: 1px solid #000;" >
+                            <tbody>
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 1</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Maritime English and General Ship Knowledge</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 2</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Navigation at Support Level</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 3</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Cargo Handling and stowage at Support Level</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 4</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Marine Engineering at Support Level</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 5</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Electrical, electronic and control engineering at Support level</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 6</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Controlling the Operation of Ship and Care for persons on board at Support Level</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 7</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Maintenance and Repair at Support Level</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: 1px solid #000; padding: 8px;">Part 8</td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">Mandatory STCW Courses and Ship Visit</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">A. Proficiency in Survival Techniques *</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">B. Elementary First Aid *</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">C. Fire Prevention and Fire Fighting *</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">D. Personal Safety and Social Responsibility *</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">E. Security Training for Seafarers with Designated Security Duties *</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="border: 1px solid #000; padding: 8px; text-align: left;">F. Ship Visit / Harbour Visit *</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <!-- Add the mandatory STCW courses -->
+                        <p>*Mandatory courses for General Purpose Rating pre-sea training:</p>
+                        
+
+                        <p>Under the All India Exit Examination, conducted by the Board of Examinations for Seafarers
+                        Trust, each candidate is evaluated through an online examination, practical skill assessment
+                        with oral test for parts 1 to 7. To pass the examination, a candidate must obtain the minimum
+                        marks as prescribed for each component. Results are evaluated by the Directorate General of
+                        Shipping prior to issue of this certificate to successful candidates.</p>
+
+                        <!-- Add the mark sheet of the candidate -->
+                        <p style="text-align:center;">Mark Sheet of the Candidate:</p>
+                        <table style="width: 80%; margin: 0 auto;  border-collapse: collapse; border: 1px solid #000;" >
+                            <thead style="border: 1px solid #000; padding: 8px;">
+                                <tr>
+                                    <th style="border: 1px solid #000;">S. No</th>
+                                    <th style="border: 1px solid #000;"></th>
+                                    <th style="border: 1px solid #000;">Full Mark</th>
+                                    <th style="border: 1px solid #000;">Pass Mark</th>
+                                    <th style="border: 1px solid #000;">Marks obtained</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border: 1px solid #000;">
+                                <tr >
+                                    <td style="border: 1px solid #000;">1.</td>
+                                    <td style="border: 1px solid #000;">Part 1+2+3+6</td>
+                                    <td style="border: 1px solid #000;">75</td>
+                                    <td style="border: 1px solid #000;">45</td>
+                                    <td style="border: 1px solid #000;">66.80</td>
+                                </tr>
+                                <tr >
+                                    <td style="border: 1px solid #000;">2.</td>
+                                    <td style="border: 1px solid #000;">Part 4+5+7</td>
+                                    <td style="border: 1px solid #000;">75</td>
+                                    <td style="border: 1px solid #000;">45</td>
+                                    <td style="border: 1px solid #000;">66.00</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #000;">3.</td>
+                                    <td style="border: 1px solid #000;">Part 1+2+3+6 Practical with Oral</td>
+                                    <td style="border: 1px solid #000;">175</td>
+                                    <td style="border: 1px solid #000;">105</td>
+                                    <td style="border: 1px solid #000;">126</td>
+                                </tr>
+                                <tr >
+                                    <td style="border: 1px solid #000;">4.</td>
+                                    <td style="border: 1px solid #000;">Part 4+5+7 Practical with Oral</td>
+                                    <td style="border: 1px solid #000;">175</td>
+                                    <td style="border: 1px solid #000;">105</td>
+                                    <td style="border: 1px solid #000;">120</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </t>
+
         </t>
     </template>
 </odoo>
