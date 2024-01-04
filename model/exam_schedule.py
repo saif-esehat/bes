@@ -166,7 +166,7 @@ class ExamCandidate(models.Model):
     mobile = fields.Char("Mobile")
     email = fields.Char("Email")
     
-    mek_practical_id = fields.Many2one("practical.mek","Mek Practical")
+    mek_practical_id = fields.Many2one("practical.mek","MEK Practical")
     mek_oral_id = fields.Many2one("oral.mek","MEK Oral Practical")
     gsk_practical_id = fields.Many2one("practical.gsk","GSK Practical")
     gsk_oral_id = fields.Many2one("oral.gsk","GSK Oral")
@@ -427,19 +427,19 @@ class ExamOralPractical(models.Model):
     
 class GPExam(models.Model):
     _name = "gp.exam.schedule"
-    _rec_name = "exam_id"
+    _rec_name = "roll_no"
     _description= 'Schedule'
     
-    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
+    roll_no = fields.Char("Roll No",required=True, copy=False, readonly=True,
+                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: _('New'))
+    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    #                             default=lambda self: _('New'))
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
-    mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
     gsk_online = fields.Many2one("survey.user_input","GSK Online")
@@ -451,8 +451,8 @@ class GPExam(models.Model):
    
     
     
-    mek_total = fields.Float("Mek Total",readonly=True)
-    mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    mek_total = fields.Float("MEK Total",readonly=True)
+    mek_percentage = fields.Float("MEK Percentage",readonly=True)
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -463,19 +463,19 @@ class GPExam(models.Model):
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Oral/Practical Status', default='pending')
+    ], string='MEK Oral/Practical Status', default='pending')
     
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Online Status', default='pending')
+    ], string='MEK Online Status', default='pending')
     
     gsk_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Gsk Online Status', default='pending')
+    ], string='GSK Online Status', default='pending')
     
     exam_criteria = fields.Selection([
         ('', ''),
@@ -575,7 +575,6 @@ class GPExam(models.Model):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
-            
     
     
     @api.model
@@ -591,7 +590,7 @@ class GPExam(models.Model):
                 self.env['gp.exam.appear'].create(
                     {
                         'gp_exam_schedule_id': a.id,
-                        'subject_name': 'Gsk Oral/Practical'
+                        'subject_name': 'GSK Oral/Practical'
                     }
                 )    
                 
@@ -607,7 +606,7 @@ class GPExam(models.Model):
                 self.env['gp.exam.appear'].create(
                     {
                         'gp_exam_schedule_id': a.id,
-                        'subject_name': 'Gsk Online'
+                        'subject_name': 'GSK Online'
                     }
                 )
                   
@@ -621,17 +620,26 @@ class GPExam(models.Model):
                 
             return a 
             
-        if vals.get('roll_no',_('New')) == _('New'):
-            vals['roll_no'] = self.env['ir.sequence'].next_by_code('gp.exam.schedule') or _('New')
-
-        # print("Roll No==============================================================",vals)
-        # vals['roll_no'] = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
         return a
     
     # @api.model
     # def create(self,vals):
        
     #     return super(, self).create(vals)
+    
+    # def apply_unique_sequence_to_existing_data(self):
+    #     records_without_sequence = self.search([('roll_no', '=', 'New')])
+
+    #     for record in records_without_sequence:
+    #         new_roll_no = self.env['ir.sequence'].next_by_code('gp.exam.schedule')
+    #         record.write({'roll_no': new_roll_no})
+
+    # # Run this method to apply the unique sequence to existing records
+    # def apply_unique_sequence_to_existing_records(self):
+    #     existing_records = self.search([('roll_no', '=', 'New')])
+    #     for record in existing_records:
+    #         new_roll_no = self.env['ir.sequence'].next_by_code('gp.exam.schedule')
+    #         record.write({'roll_no': new_roll_no})
     
     
     @api.constrains('gp_candidate')
@@ -756,16 +764,16 @@ class GPCertificate(models.AbstractModel):
 
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
-    _rec_name = "exam_id"
+    _rec_name = "roll_no"
     _description= 'Schedule'
     
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    exam_id = fields.Char(string="Exam ID",required=True, copy=False, readonly=True,
+    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
+    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")

@@ -3,7 +3,7 @@
     <record id="gp_roll_no_sequence" model="ir.sequence">
         <field name="name">GP Roll No</field>
         <field name="code">gp.exam.schedule</field>
-        <field name="prefix">6666</field>
+        <field name="prefix">GP/</field>
         <field name="number_increment" eval="1"/>
     </record>
    
