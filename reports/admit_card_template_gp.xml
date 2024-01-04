@@ -21,7 +21,7 @@
                     <div style="position: relative;">
                         <!-- Candidate Image -->
                         <t t-if="o.gp_candidate.candidate_image">
-                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 150px; height: 150px; position: absolute; top: 10%; right: 8px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 120px; height: 120px; position: absolute; top: 0%; right: 8px;" />
                         </t>
                         <!-- Candidate Details  position: absolute; top: 10%; left: 3%; border-collapse: collapse; border: 1px solid #ddd; -->
                         <div style="margin-top:2rem">
@@ -65,7 +65,7 @@
 
                     <div>
                         <t t-if="o.qr_code">
-                            <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 150px; height: 150px; position:absolute; right:0%;" />
+                            <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 32%; right:0%;" />
                         </t>
                     </div>
 
@@ -108,7 +108,7 @@
                             </td>
                             <td>
                                 <t t-if="o.gp_candidate.candidate_signature">
-                                    <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 270px; height: 55px; border: 2px dotted #000; position: absolute; top: 25%; right: 8px;" />
+                                    <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; border: 2px dotted #000; position: absolute; top: 25%; right: 8px;" />
                                 </t>
                             </td>
                         </tr>
@@ -116,14 +116,14 @@
                             <!-- Empty row for spacing -->
                         </tr>
                         <tr>
-                            <td style="font-size: 17px; font-weight: bold; position: absolute; top: 31%; right: 8px;">
+                            <td style="font-size: 17px; font-weight: bold; position: absolute; top: 30%; right: 8px;">
                                 <strong>Please Sign within the box</strong>
                             </td>
                         </tr>
                     </table>
 
                     <div style="margin-top: 50px; position: relative;">
-                        <div style="position: absolute; top: 40%; left: 30%; width: 42%;">
+                        <div style="position: absolute; top: 45%; left: 30%; width: 42%;">
                             <div>
                                 <b>Capt Harsh Khatri</b>
                             </div>
