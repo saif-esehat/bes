@@ -452,10 +452,11 @@ class GPExam(models.Model):
     mek_online_marks = fields.Float("MEK Online",readonly=True)
     gsk_online_marks = fields.Float("GSK Online",readonly=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True)
-    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)
-    
-    mek_total = fields.Float("Mek Total",readonly=True)
+    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)    
+    mek_total = fields.Float("Mek Oral/Practical",readonly=True)
     mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    overall_marks = fields.Float("Overall Marks",readonly=True)
+    overall_percentage = fields.Float("Overall (%)",readonly=True)
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -520,7 +521,7 @@ class GPExam(models.Model):
 
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
-
+    
 
 
     def _compute_url(self):
@@ -706,6 +707,8 @@ class GPExam(models.Model):
             self.gsk_percentage = (gsk_total_marks/175) * 100
             self.gsk_online_marks = self.gsk_online.scoring_total
             self.gsk_online_percentage = self.gsk_online.scoring_percentage
+            
+            overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
             
             
             if self.gsk_percentage >= 60:
