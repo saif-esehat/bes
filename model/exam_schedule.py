@@ -453,8 +453,8 @@ class GPExam(models.Model):
     gsk_online_marks = fields.Float("GSK Online",readonly=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True)
     gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)    
-    mek_total = fields.Float("Mek Oral/Practical",readonly=True)
-    mek_percentage = fields.Float("Mek Oral/Practical Percentage",readonly=True)
+    mek_total = fields.Float("MEK Oral/Practical",readonly=True)
+    mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True)
     overall_marks = fields.Float("Overall Marks",readonly=True)
     overall_percentage = fields.Float("Overall (%)",readonly=True)
     gsk_oral_prac_status = fields.Selection([
