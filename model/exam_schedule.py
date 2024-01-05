@@ -436,7 +436,8 @@ class GPExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-    #                             default=lambda self: _('New'))
+    #                             default=lambda self: _('New')) 
+    
     institute_name = fields.Many2one("bes.institute","Institute Name")
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
@@ -623,7 +624,7 @@ class GPExam(models.Model):
                 self.env['gp.exam.appear'].create(
                     {
                         'gp_exam_schedule_id': a.id,
-                        'subject_name': 'Mek Oral/Practical'
+                        'subject_name': 'MEK Oral/Practical'
                     }
                 )  
                 
@@ -639,7 +640,7 @@ class GPExam(models.Model):
                 self.env['gp.exam.appear'].create(
                     {
                         'gp_exam_schedule_id': a.id,
-                        'subject_name': 'Mek Online'
+                        'subject_name': 'MEK Online'
                     }
                 )  
                 

@@ -440,79 +440,92 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
+                                    
                                     <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
 
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="indos">Indos No</label>
+                                        <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
+                                    </div>
                                 </div>
 
-
-                               <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="exam_date">Exam Date</label>
-                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exam_date">Exam Date</label>
+                                        <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                    </div>
                                 </div>
-                           
-                                </div>                               
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Subject Area 1</label>
-                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" />
+                                        <!-- <t t-foreach="candidate.gsk_oral_child_line" t-as="record"> -->
+                                            <input type="number" class="form-control" id="subject_area1" name="subject_area1" t-att-value="candidate.gsk_oral_child_line.subject_area_1"/>
+                                        <!-- </t> -->
+
+                                        <!-- <input type="number" class="form-control" id="subject_area1" name="subject_area1" t-att-value="gp_candidate.gsk_oral_child_line.subject_area_1"/> -->
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area2">Subject Area 2</label>
-                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" />
+                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" t-att-value="candidate.gsk_oral_child_line.subject_area_2"/>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area3">Subject Area 3</label>
-                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" />
+                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" t-att-value="candidate.gsk_oral_child_line.subject_area_3"/>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area4">Subject Area 4</label>
-                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" />
+                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" t-att-value="candidate.gsk_oral_child_line.subject_area_4"/>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area5">Subject Area 5</label>
-                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" />
+                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" t-att-value="candidate.gsk_oral_child_line.subject_area_5"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area6">Subject Area 6</label>
-                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" />
+                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" t-att-value="candidate.gsk_oral_child_line.subject_area_6"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="practical_record_journals">Practical Record Book and Journal</label>
-                                        <input type="number" class="form-control" id="practical_record_journals" name="practical_record_journals"/>
+                                        <input type="number" class="form-control" id="practical_record_journals" name="practical_record_journals" t-att-value="candidate.gsk_oral_child_line.practical_record_journals"/>
                                     </div>
                                 </div>
-
-                                
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_oral_gsk">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
+                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-value="candidate.gsk_oral_child_line.gsk_oral_remarks"/>
                                     </div>
                                 </div>
+
+                                <!-- <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="remarks_oral_gsk">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
+                                    </div>
+                                </div> -->
                                  <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="state">Status</label>

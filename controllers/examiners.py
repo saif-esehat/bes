@@ -134,7 +134,7 @@ class ExaminerPortal(CustomerPortal):
             remarks_oral_gsk = rec['remarks_oral_gsk']
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
-            # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
 
             # Construct the dictionary with integer values
             vals = {
@@ -153,10 +153,18 @@ class ExaminerPortal(CustomerPortal):
             
 
             print('valssssssssssssssssssssssssssssssssssssssssssssssss=============================', vals)
+
+
+            if draft_records:
+                draft_records.write(vals)
+                print("++++==============================+++++++++++++++++++ data is entered",draft_records)
+            else:
+                print("Record not found for updating.========================================================================")
+        
             return {}
-            request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
+            
             # Write to the One2many field using the constructed dictionary
-            # draft_records.write(vals)
+            # 
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr======================', rec)
@@ -168,13 +176,12 @@ class ExaminerPortal(CustomerPortal):
             
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
-            # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
-            # print('dateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',draft_records.gsk_oral_exam_date)
-            # exam_date = draft_records.gsk_oral_exam_date
-            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
-                
+            # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
+            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec})
+
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True)
     def open_gsk_practical_form(self, **rec):
