@@ -208,7 +208,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
@@ -216,7 +216,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
 
@@ -230,10 +230,10 @@
                                 </div>   
                                
                                 <div class="col-md-6">
-                                    
+                                    <!-- onchange="validateClimbingMast(this)" -->
                                     <div class="form-group">
                                         <label for="climbing_mast">Climb the mast with safe practices, Prepare and throw Heaving Line </label>
-                                        <input type="number" class="form-control" id="climbing_mast" name="climbing_mast" onchange="validateClimbingMast(this)" />
+                                        <input type="number" class="form-control" id="climbing_mast" name="climbing_mast" t-att-value="candidate.gsk_practical_child_line.climbing_mast"/>
                                         <small id="marks_error" style="color: red;"></small>
                                     </div>
 
@@ -242,53 +242,53 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="buoy_flags_recognition">·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders</label>
-                                        <input type="number" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" />
+                                        <input type="number" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-value="candidate.gsk_practical_child_line.buoy_flags_recognition"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="bosun_chair">Rigging Bosun's Chair and self lower and hoist</label>
-                                        <input type="number" class="form-control" id="bosun_chair" name="bosun_chair" />
+                                        <input type="number" class="form-control" id="bosun_chair" name="bosun_chair" t-att-value="candidate.gsk_practical_child_line.bosun_chair"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rig_stage">Rig a stage for painting shipside</label>
-                                        <input type="number" class="form-control" id="rig_stage" name="rig_stage" />
+                                        <input type="number" class="form-control" id="rig_stage" name="rig_stage" t-att-value="candidate.gsk_practical_child_line.rig_stage"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rig_pilot">Rig a Pilot Ladder</label>
-                                        <input type="number" class="form-control" id="rig_pilot" name="rig_pilot" />
+                                        <input type="number" class="form-control" id="rig_pilot" name="rig_pilot" t-att-value="candidate.gsk_practical_child_line.rig_pilot"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rig_scoffolding">Rig scaffolding to work at a height</label>
-                                        <input type="number" class="form-control" id="rig_scoffolding" name="rig_scoffolding" />
+                                        <input type="number" class="form-control" id="rig_scoffolding" name="rig_scoffolding" t-att-value="candidate.gsk_practical_child_line.rig_scaffolding"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fast_ropes">·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopperl</label>
-                                        <input type="number" class="form-control" id="fast_ropes" name="fast_ropes"/>
+                                        <input type="number" class="form-control" id="fast_ropes" name="fast_ropes" t-att-value="candidate.gsk_practical_child_line.fast_ropes"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="knots_bend">.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase</label>
-                                        <input type="number" class="form-control" id="knots_bend" name="knots_bend"/>
+                                        <input type="number" class="form-control" id="knots_bend" name="knots_bend" t-att-value="candidate.gsk_practical_child_line.knots_bend"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="sounding_rod">·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight</label>
-                                        <input type="number" class="form-control" id="sounding_rod" name="sounding_rod"/>
+                                        <input type="number" class="form-control" id="sounding_rod" name="sounding_rod" t-att-value="candidate.gsk_practical_child_line.sounding_rod"/>
                                     </div>
                                 </div>
 
@@ -297,7 +297,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="gsk_practical_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks"/>
+                                        <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks" t-att-value="candidate.gsk_practical_child_line.gsk_practical_remarks"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -456,18 +456,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exam_date">Exam Date</label>
-                                        <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                        <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="candidate.gsk_oral_child_line.exam_date"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Subject Area 1</label>
-                                        <!-- <t t-foreach="candidate.gsk_oral_child_line" t-as="record"> -->
                                             <input type="number" class="form-control" id="subject_area1" name="subject_area1" t-att-value="candidate.gsk_oral_child_line.subject_area_1"/>
-                                        <!-- </t> -->
-
-                                        <!-- <input type="number" class="form-control" id="subject_area1" name="subject_area1" t-att-value="gp_candidate.gsk_oral_child_line.subject_area_1"/> -->
                                     </div>
                                 </div>
 
@@ -665,7 +661,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
@@ -673,7 +669,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
 
@@ -688,38 +684,38 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Uses of Hand/Plumbing/Carpentry Tools</label>
-                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" />
+                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" t-att-value="candidate.mek_oral_child_line.using_hand_plumbing_carpentry_tools"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area2">Use of Chipping Tools and Brushes and Paints</label>
-                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" />
+                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" t-att-value="candidate.mek_oral_child_line.use_of_chipping_tools_paints"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area3">Welding</label>
-                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" />
+                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" t-att-value="candidate.mek_oral_child_line.welding"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area4">Lathe/Drill/Grinder</label>
-                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" />
+                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" t-att-value="candidate.mek_oral_child_line.lathe_drill_grinder"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area5">Electrical</label>
-                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" />
+                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" t-att-value="candidate.mek_oral_child_line.electrical"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area6">Journal</label>
-                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" />
+                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" t-att-value="candidate.mek_oral_child_line.journal"/>
                                     </div>
                                 </div>
 
@@ -729,7 +725,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_oral_mek">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek"/>
+                                        <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek" t-att-value="candidate.mek_oral_child_line.mek_oral_remarks"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -871,7 +867,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
@@ -879,7 +875,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
 
@@ -894,59 +890,59 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Using Hand and Plumbing Tools (Task 1)</label>
-                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1" />
+                                        <input type="number" class="form-control" id="subject_area1" name="subject_area1"  t-att-value="candidate.mek_practical_child_line.using_hand_plumbing_tools_task_1"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area2">Using Hand and Plumbing Tools (Task 2)</label>
-                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2" />
+                                        <input type="number" class="form-control" id="subject_area2" name="subject_area2"  t-att-value="candidate.mek_practical_child_line.using_hand_plumbing_tools_task_2"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area3">Using Hand and Plumbing Tools (Task 3)</label>
-                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3" />
+                                        <input type="number" class="form-control" id="subject_area3" name="subject_area3"  t-att-value="candidate.mek_practical_child_line.using_hand_plumbing_tools_task_3"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area4">Use of Chipping Tools and paint Brushes</label>
-                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4" />
+                                        <input type="number" class="form-control" id="subject_area4" name="subject_area4"  t-att-value="candidate.mek_practical_child_line.use_of_chipping_tools_paint_brushes"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area5">Use of Carpentry Tools</label>
-                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5" />
+                                        <input type="number" class="form-control" id="subject_area5" name="subject_area5"  t-att-value="candidate.mek_practical_child_line.use_of_carpentry"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area6">Use of Measuring Instruments</label>
-                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6" />
+                                        <input type="number" class="form-control" id="subject_area6" name="subject_area6"  t-att-value="candidate.mek_practical_child_line.use_of_measuring_instruments"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area7">Welding (1 Task)</label>
-                                        <input type="number" class="form-control" id="subject_area7" name="subject_area7" />
+                                        <input type="number" class="form-control" id="subject_area7" name="subject_area7"  t-att-value="candidate.mek_practical_child_line.welding"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area8">Lathe Work (1 Task)</label>
-                                        <input type="number" class="form-control" id="subject_area8" name="subject_area8" />
+                                        <input type="number" class="form-control" id="subject_area8" name="subject_area8"  t-att-value="candidate.mek_practical_child_line.lathe"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area9">Electrical (1 Task)</label>
-                                        <input type="number" class="form-control" id="subject_area9" name="subject_area9" />
+                                        <input type="number" class="form-control" id="subject_area9" name="subject_area9"  t-att-value="candidate.mek_practical_child_line.electrical"/>
                                     </div>
                                 </div>
 
@@ -956,7 +952,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_practical_mek">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek"/>
+                                        <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek" t-att-value="candidate.mek_practical_child_line.mek_practical_remarks"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1029,7 +1025,7 @@
                                 <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
@@ -1037,7 +1033,7 @@
                                 <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
                            
@@ -1263,7 +1259,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name"/>
+                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
                                 </div>
                                 </div>
                                 
@@ -1271,7 +1267,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
 
