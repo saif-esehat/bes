@@ -427,7 +427,7 @@ class ExamOralPractical(models.Model):
     
 class GPExam(models.Model):
     _name = "gp.exam.schedule"
-    _rec_name = "roll_no"
+    _rec_name = "exam_id"
     _description= 'Schedule'
     
     exam_id = fields.Char("Roll No", copy=False, readonly=True,
@@ -791,7 +791,7 @@ class GPCertificate(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-        if docs1.certificate_criteria == 'passed':
+        if docs1.certificate_criteria == 'passed' and len(docs1.certificate_id) > 0:
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
@@ -1020,7 +1020,7 @@ class CcmcCertificate(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
-        if docs1.certificate_criteria == 'passed':
+        if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,
                 'doc_model': 'ccmc.exam.schedule',

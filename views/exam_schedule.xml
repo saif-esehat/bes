@@ -144,6 +144,18 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="exam_id"/>
+                    <field name="attempt_number"/>
+                    <field name="gsk_total"/>
+                    <field name="mek_total"/>
+                    <field name="gsk_online_marks" />
+                    <field name="mek_online_marks" />
+                    <field name="overall_marks"/>
+                    <field name="exam_criteria"/>
+                    <field name="stcw_criteria" />
+                    <field name="attendance_criteria" />
+                    <field name="ship_visit_criteria" />
+                    <field name="certificate_criteria"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
