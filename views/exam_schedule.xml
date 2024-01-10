@@ -38,7 +38,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="exam_id" readonly="1"/>
+                            <field name="roll_no" readonly="1"/>
                             <field name="gp_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
                             <field name="institute_name"/>
@@ -143,6 +143,7 @@
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
                 <tree>
+<<<<<<< HEAD
                     <field name="exam_id"/>
                     <field name="attempt_number"/>
                     <field name="gsk_total"/>
@@ -156,6 +157,9 @@
                     <field name="ship_visit_criteria" />
                     <field name="certificate_criteria"/>
                     <field name="state"/>
+=======
+                    <field name="roll_no"/>
+>>>>>>> cc37cad47ca91184f505e84b43545ae99ed25050
                 </tree>
             </field>
         </record>

@@ -134,7 +134,7 @@ class ExaminerPortal(CustomerPortal):
             remarks_oral_gsk = rec['remarks_oral_gsk']
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
-            # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
 
             # Construct the dictionary with integer values
             vals = {
@@ -153,10 +153,18 @@ class ExaminerPortal(CustomerPortal):
             
 
             print('valssssssssssssssssssssssssssssssssssssssssssssssss=============================', vals)
+
+
+            if draft_records:
+                draft_records.write(vals)
+                print("++++==============================+++++++++++++++++++ data is entered",draft_records)
+            else:
+                print("Record not found for updating.========================================================================")
+        
             return {}
-            request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
+            
             # Write to the One2many field using the constructed dictionary
-            # draft_records.write(vals)
+            # 
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr======================', rec)
@@ -168,18 +176,19 @@ class ExaminerPortal(CustomerPortal):
             
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
-            # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
-            # print('dateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',draft_records.gsk_oral_exam_date)
-            # exam_date = draft_records.gsk_oral_exam_date
-            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
-                
+            # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
+            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec})
 
-    @http.route('/open_gsk_practical_form', type='http', auth="user", website=True)
+
+    @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_practical_form(self, **rec):
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
 
@@ -231,13 +240,15 @@ class ExaminerPortal(CustomerPortal):
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = draft_records.gsk_practical_exam_date
-            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})       
+            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec})       
             
 
-    @http.route('/open_mek_oral_form', type='http', auth="user", website=True)
+    @http.route('/open_mek_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_mek_oral_form(self, **rec):
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
 
@@ -272,7 +283,13 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            draft_records.write(vals)
+            if draft_records:
+                draft_records.write(vals)
+                print("++++==============================+++++++++++++++++++ data is entered",draft_records)
+            else:
+                print("Record not found for updating.========================================================================")
+        
+            return {}
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
@@ -285,13 +302,15 @@ class ExaminerPortal(CustomerPortal):
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = draft_records.mek_oral_exam_date
-            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
+            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec})
 
-    @http.route('/open_practical_mek_form', type='http', auth="user", website=True)
+    @http.route('/open_practical_mek_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_practical_mek_form(self, **rec):
         print("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
            
@@ -333,8 +352,7 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            draft_records.write(
-                 vals)
+            draft_records.write(vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
@@ -347,7 +365,7 @@ class ExaminerPortal(CustomerPortal):
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = draft_records.mek_practical_exam_date
-            return request.render("bes.mek_practical_marks", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
+            return request.render("bes.mek_practical_marks", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec})
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True)
     def open_cookery_bakery_form(self, **rec):

@@ -315,7 +315,7 @@ class GPCandidate(models.Model):
     
     # GSK Oral
 
-    gsk_oral_child_line = fields.One2many("gp.gsk.oral.line","gsk_oral_parent",string="GSK Practical")
+    gsk_oral_child_line = fields.One2many("gp.gsk.oral.line","gsk_oral_parent",string="GSK Oral")
         
 
 class GPSTCWCandidate(models.Model):
@@ -1209,8 +1209,8 @@ class CandidateRegisterExamWizard(models.TransientModel):
     ], string='GSK Oral/Practical Status')
     
     
-    mek_total = fields.Float("Mek Total",readonly=True)
-    mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    mek_total = fields.Float("MEK Total",readonly=True)
+    mek_percentage = fields.Float("MEK Percentage",readonly=True)
     mek_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
