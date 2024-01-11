@@ -9,6 +9,8 @@ from io import StringIO
 from datetime import datetime
 import xlsxwriter
 from odoo.exceptions import UserError,ValidationError
+import json
+
 
 
 
@@ -237,6 +239,108 @@ class InstitutePortal(CustomerPortal):
             [('id', '=', candidate_id)])
         vals = {'candidate': candidate, "page_name": "ccmc_candidate_form"}
         return request.render("bes.ccmc_candidate_profile_view", vals)
+    
+    @http.route(['/getcountrystate'],method=["GET"], type="http", auth="user", website=True)
+    def GetCountryState(self):
+        states = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN')])
+        state_data = [{'id': state.id, 'name': state.name} for state in states]
+        return json.dumps(state_data)
+
+    @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
+    def CreateGPinvoice(self, **kw):
+        # import wdb; wdb.set_trace();
+        user_id = request.env.user.id
+        batch_id = kw.get("invoice_batch_id")
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)])
+        
+        partner_id = institute_id.user_id.partner_id.id
+        
+        product_id = batch.course.exam_fees.id
+        
+        product_price = batch.course.exam_fees.lst_price
+        qty = batch.candidate_count
+        
+        line_items = [(0, 0, {
+        'product_id': product_id,
+        'price_unit':product_price,
+        'quantity':qty
+        })]
+        
+        # import wdb; wdb.set_trace();
+        
+        invoice_vals = {
+            'partner_id': partner_id,  # Replace with the partner ID for the customer
+            'move_type': 'out_invoice',
+            'invoice_line_ids':line_items,
+            'batch_ok':True,
+            'batch':batch.id
+            # Add other invoice fields as needed
+        }
+        
+        
+        
+        new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        new_invoice.action_post()
+        # import wdb; wdb.set_trace();
+        batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
+        
+        return request.redirect("/my/invoices/")
+
+
+    
+    @http.route(['/my/creategpcandidateform'],method=["POST"], type="http", auth="user", website=True)
+    def CreateGPcandidate(self, **kw):
+        user_id = request.env.user.id
+        batch_id = kw.get("batch_id")
+        batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
+        
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        if request.httprequest.method == 'POST':
+            name = kw.get("name")
+            dob = kw.get("dob")
+            street = kw.get("street")
+            street2 = kw.get("street2")
+            city = kw.get("city")
+            zip_code = kw.get("zip")
+            state_id = kw.get("state_id")
+            phone = kw.get("phone")
+            mobile = kw.get("mobile")
+            email = kw.get("email")
+            tenth_percent = kw.get("tenth_percent")
+            twelve_percent = kw.get("twelve_percent")
+            iti_percent = kw.get("iti_percent")
+            sc_st = kw.get("sc_st")
+            
+            candidate_data = {
+                "name": name,
+                "institute_batch_id":batch_id,
+                "institute_id":institute_id,
+                "dob": dob,
+                "street": street,
+                "street2": street2,
+                "city": city,
+                "zip": zip_code,
+                "state_id": state_id,  # Assuming state_id is a Many2one field
+                "phone": phone,
+                "mobile": mobile,
+                "email": email,
+                "tenth_percent": tenth_percent,
+                "twelve_percent": twelve_percent,
+                "iti_percent": iti_percent,
+                "sc_st": sc_st,
+            }
+            
+            
+            request.env['gp.candidate'].sudo().create(candidate_data)
+            
+            return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
+        
+        
 
     @http.route(['/my/gpcandidateform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPcandidateFormView(self,batch_id, **kw):
@@ -249,6 +353,7 @@ class InstitutePortal(CustomerPortal):
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        
 
         if request.httprequest.method == 'POST':
             name = kw.get("name")

@@ -13,7 +13,7 @@
                         
                         <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-pending_invoice'),]}"/>
                         <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/>
-                        <button name="confirm_indos" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-indos_pending')]}"/>
+                        <!-- <button name="confirm_indos" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-indos_pending')]}"/> -->
                         <!-- <button name="register_for_exam" string="Register Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('create_invoice_button_invisible', '=', False)]}"/>
@@ -58,6 +58,11 @@
                         </group>
 
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                </div>
                 </form>
             </field>
         </record>

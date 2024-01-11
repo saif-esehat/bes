@@ -9,6 +9,7 @@ from datetime import datetime
 class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
     _rec_name = "batch_name"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
@@ -27,7 +28,7 @@ class InstituteGPBatches(models.Model):
 
     state = fields.Selection([
         ('1-ongoing', 'On-Going'),
-        ('2-indos_pending', 'Indos Pending'),
+        ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Pending'),
         ('4-invoiced', 'Invoiced'),
         ('5-exam_scheduled', 'Exam Scheduled'),
@@ -44,6 +45,13 @@ class InstituteGPBatches(models.Model):
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
     
+    
+    @api.model
+    def create(self, values):
+        record = super(InstituteGPBatches, self).create(values)
+        course_id = self.env["course_master"].sudo().search([('course_code','=','GP')]).id
+        record.write({'course': course_id})
+        return record
     
     @api.depends('account_move')
     def _compute_payment_state(self):
@@ -131,7 +139,86 @@ class InstituteGPBatches(models.Model):
     
     def confirm_batch(self):
         
-        self.write({"state":"2-indos_pending"})
+        
+        canidate_list_no_indos = []
+        for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
+            if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
+                
+                missing_data=""
+                if not candidate.indos_no:
+                    missing_data +="Indos No,"  
+                
+                if not candidate.candidate_image:
+                    missing_data +="Candidate Image,"  
+                
+                if not candidate.candidate_signature:
+                    missing_data +="Candidate Signature,"
+                
+                missing_data = missing_data.rstrip(',')    
+                
+                candidate_data = {"candidate_name" : candidate.name , "candidate_mobile":candidate.mobile , "missing_data": missing_data }
+                canidate_list_no_indos.append(candidate_data)
+        
+        # import wdb; wdb.set_trace()
+        
+        if len(canidate_list_no_indos) > 0:
+        
+            
+            template_id = self.env.ref('bes.indos_check_mail').id
+            official_institute_mail_id = self.institute_id.user_id.partner_id.ids
+            # import wdb; wdb.set_trace()
+
+            ctx = {
+                'default_res_id': self.id,
+                'default_template_id': template_id,
+                'default_use_template': bool(template_id),
+                'default_composition_mode': 'comment',
+                'default_partner_ids': official_institute_mail_id,
+                "default_candidate_lists": canidate_list_no_indos
+            }
+
+            
+            return {
+            'name': 'Email Compose Wizard',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(False, 'form')],
+            'view_id': False,
+            'target': 'new',
+            'context': ctx
+            }
+        else:
+            
+            gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)])
+            
+            group_xml_ids = [
+            'bes.group_gp_candidates',
+            'base.group_portal'
+            ]
+            # import wdb; wdb.set_trace()
+            group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+            
+            for gp_candidate in gp_candidates:
+                user_values = {
+                'name': gp_candidate.name,
+                'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
+                'password': str(gp_candidate.indos_no)+"1",  # Generate a random password
+                'sel_groups_1_9_10':9,
+                'groups_id':  [(4, group_id, 0) for group_id in group_ids]
+                }
+            
+                portal_user = self.env['res.users'].sudo().create(user_values)
+                gp_candidate.write({'user_id': portal_user.id})
+                candidate_tag = self.env.ref('bes.candidates_tags').id
+                portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
+
+
+            
+            mail_template = self.env.ref('bes.candidate_confirmtion_mail')
+            mail_template.send_mail(self.id, force_send=True)
+             
+            self.write({"state":"2-indos_pending"})
         
     
     def confirm_indos(self):
