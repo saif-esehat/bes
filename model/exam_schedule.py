@@ -430,7 +430,7 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    roll_no = fields.Char("Roll No",required=True, copy=False, readonly=True,
+    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
     certificate_id = fields.Char(string="Certificate ID")
