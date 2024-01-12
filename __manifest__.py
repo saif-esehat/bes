@@ -6,7 +6,7 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','portal','survey','website','sale','odoo_website_helpdesk','mail'],
+ 'depends':['product','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
  'data': [
         'data/roll_no_sequence.xml',
         'data/exam_sequence.xml',

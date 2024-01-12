@@ -261,7 +261,10 @@ class InstitutePortal(CustomerPortal):
         product_id = batch.course.exam_fees.id
         
         product_price = batch.course.exam_fees.lst_price
-        qty = batch.candidate_count
+        
+        qty = request.env['gp.candididate'].sudo().search_count([('institute_batch_id','=',batch_id),('fees_paid','=','yes')])
+        
+        # qty = batch.candidate_count
         
         line_items = [(0, 0, {
         'product_id': product_id,
@@ -276,7 +279,8 @@ class InstitutePortal(CustomerPortal):
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
             'batch_ok':True,
-            'batch':batch.id
+            'batch':batch.id,
+            'l10n_in_gst_treatment':'unregistered'
             # Add other invoice fields as needed
         }
         
