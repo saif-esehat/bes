@@ -46,6 +46,10 @@ class InstituteGPBatches(models.Model):
     dgs_document = fields.Binary(string="DGS Document")
     
     
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
+    
+    
     @api.model
     def create(self, values):
         record = super(InstituteGPBatches, self).create(values)
@@ -473,11 +477,12 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     def register(self):
-
-        candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
+        # import wdb; wdb.set_trace(); 
+        candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         for candidate in candidates:
+            
             gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
@@ -501,12 +506,12 @@ class BatchesRegisterExamWizard(models.TransientModel):
 
             mek_survey_qb_input.write({'gp_candidate':candidate.id})
             gsk_survey_qb_input.write({'gp_candidate':candidate.id})
-            
+            candidate.write({'batch_exam_registered':True})
             gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
                         
 
         
-        self.batch_id.write({"state":'5-exam_scheduled'})
+        self.batch_id.write({"state":'5-exam_scheduled',"mek_survey_qb":mek_survey_qb.id,"gsk_survey_qb":gsk_survey_qb.id})
 
 class CCMCBatchesRegisterExamWizard(models.TransientModel):
     _name = 'batches.ccmc.register.exam.wizard'

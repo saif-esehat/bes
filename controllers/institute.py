@@ -147,6 +147,8 @@ class InstitutePortal(CustomerPortal):
 
         return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
+    
+    
 
 
     @http.route(['/my/uploadccmccandidatedata'], type="http", auth="user", website=True)
@@ -262,10 +264,10 @@ class InstitutePortal(CustomerPortal):
         
         product_price = batch.course.exam_fees.lst_price
         
-        qty = request.env['gp.candididate'].sudo().search_count([('institute_batch_id','=',batch_id),('fees_paid','=','yes')])
+        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
         # qty = batch.candidate_count
-        
+        # import wdb; wdb.set_trace();
         line_items = [(0, 0, {
         'product_id': product_id,
         'price_unit':product_price,
@@ -294,6 +296,19 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/invoices/")
 
 
+    @http.route(['/my/deletegpcandidate'], type="http", auth="user", website=True)
+    def DeleteGPcandidate(self, **kw):
+        user_id = request.env.user.id
+        candidate_id = kw.get("candidate_id")
+        
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))])
+        if batch.state == '1-ongoing':
+            request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).unlink()
+            
+            return request.redirect("/my/gpbatch/candidates/"+str(batch.id))
+        else:
+            raise ValidationError("Not Allowed")
+        # import wdb; wdb.set_trace();
     
     @http.route(['/my/creategpcandidateform'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPcandidate(self, **kw):

@@ -47,7 +47,7 @@ class GPCandidate(models.Model):
     ],string="Fees Paid", default='no')
     
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
-    
+    batch_exam_registered = fields.Boolean("Batch Registered")
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
