@@ -294,6 +294,9 @@ class InstitutePortal(CustomerPortal):
         batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
         
         return request.redirect("/my/invoices/")
+    
+    # @http.route(['/my/deletegpcandidate'], type="http", auth="user", website=True)
+    # def DeleteGPcandidate(self, **kw):
 
 
     @http.route(['/my/deletegpcandidate'], type="http", auth="user", website=True)
@@ -309,6 +312,8 @@ class InstitutePortal(CustomerPortal):
         else:
             raise ValidationError("Not Allowed")
         # import wdb; wdb.set_trace();
+    
+    
     
     @http.route(['/my/creategpcandidateform'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPcandidate(self, **kw):
