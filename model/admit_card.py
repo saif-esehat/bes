@@ -3,6 +3,7 @@ import json
 import base64
 from io import BytesIO
 from lxml import etree
+from odoo.exceptions import UserError,ValidationError
 
 
 class CandidateAdmitCardGp(models.AbstractModel):
@@ -15,6 +16,8 @@ class CandidateAdmitCardGp(models.AbstractModel):
         print("doc_idsss",docids)
         
         # import wdb; wdb.set_trace();
+        if docs1.attendance_criteria == 'pending' and docs1.ship_visit_criteria == 'pending' :
+            raise ValidationError("Admit Card Not Generated Due to Attendance criteria not Complied")
         
         # candidate_image = base64.b64encode(docs1.candidate_image).decode()
         

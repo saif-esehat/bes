@@ -430,7 +430,7 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    roll_no = fields.Char("Roll No",required=True, copy=False, readonly=True,
+    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
     certificate_id = fields.Char(string="Certificate ID")
@@ -447,6 +447,11 @@ class GPExam(models.Model):
     mek_online = fields.Many2one("survey.user_input","MEK Online")
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
+    
+    gsk_oral_marks = fields.Float("GSK Oral/Journal",readonly=True)
+    mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True)
+    gsk_practical_marks = fields.Float("GSK Practical",readonly=True)
+    mek_practical_marks = fields.Float("MEK Practical",readonly=True)
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
    
@@ -489,32 +494,32 @@ class GPExam(models.Model):
     exam_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Exam Criteria' , compute="compute_certificate_criteria")
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
 
     
     stcw_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='STCW Criteria' , compute="compute_certificate_criteria")
     
     ship_visit_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Ship Visit Criteria' , compute="compute_certificate_criteria")
     
     
     attendance_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Attendance Criteria' , compute="compute_certificate_criteria")
 
     
@@ -527,6 +532,16 @@ class GPExam(models.Model):
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
     
+    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    
+    @api.depends('certificate_criteria','state')
+    def compute_dgs_visible(self):
+        for record in self:
+            if record.certificate_criteria == 'passed' and record.state == '2-done':
+                record.dgs_visible = True
+            else:
+                record.dgs_visible = False
+                
 
 
     def _compute_url(self):
@@ -703,7 +718,9 @@ class GPExam(models.Model):
         if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
         
             mek_oral_marks = self.mek_oral.mek_oral_total_marks
+            self.mek_oral_marks = mek_oral_marks
             mek_practical_marks = self.mek_prac.mek_practical_total_marks
+            self.mek_practical_marks = mek_practical_marks
             mek_total_marks = mek_oral_marks + mek_practical_marks
             self.mek_total = mek_total_marks
             self.mek_percentage = (mek_total_marks/175) * 100
@@ -719,7 +736,9 @@ class GPExam(models.Model):
 
 
             gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
+            self.gsk_oral_marks = gsk_oral_marks
             gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
+            self.gsk_practical_marks = gsk_practical_marks
             gsk_total_marks = gsk_oral_marks + gsk_practical_marks
             self.gsk_total = gsk_total_marks
             self.gsk_percentage = (gsk_total_marks/175) * 100
