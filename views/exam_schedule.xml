@@ -215,7 +215,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="roll_no" readonly="1"/>
+                            <field name="exam_id" readonly="1"/>
                             <field name="ccmc_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
                             <field name="institute_name"/>
@@ -279,7 +279,7 @@
             <field name="model">ccmc.exam.schedule</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="roll_no"/>
+                    <field name="exam_id"/>
                 </tree>
             </field>
         </record>

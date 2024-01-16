@@ -827,12 +827,12 @@ class GPCertificate(models.AbstractModel):
 
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
-    _rec_name = "roll_no"
+    _rec_name = "exam_id"
     _description= 'Schedule'
     
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
