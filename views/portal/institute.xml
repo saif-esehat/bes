@@ -1435,7 +1435,7 @@
         </script>
         <t t-call="portal.portal_layout">
 
-            <div class="container">
+            <!-- <div class="container">
                 <div class="card">
 
                     <div class="card-body">
@@ -1445,17 +1445,6 @@
                             <div class="row">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <input type="hidden" class="form-control" id="batch_id" name="batch_id" t-att-value="batch_id"/>
-                                <!-- <div class="col-md-2">
-                                    <div class="card-img-container">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
-                                    </div>
-                                </div>
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <label for="photo" class="form-label">Candidate Photo</label>
-                                        <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -1594,7 +1583,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </t>
     </template>
 
@@ -2178,19 +2167,53 @@
 
     <template id="ccmc_candidate_portal_list" name="CCMC Candidate">
         <script>
-                                    $(document).ready(function () {
+                                    <!-- $(document).ready(function () {
                                         $('#uploadBtn').on('click', function () {
                                             // Show the overlay and loader when the upload button is clicked
                                             $('#loader-overlay').show();
                                         });
-                                    });
+                                    }); -->
 
-                                     function openUploadModal(button) {
+                                    function openUploadModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('batch-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('ccmc_batch_id').value = dataId;
 
+                                    }
+
+                                    function onOpenAddCandidateModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    console.log(dataId)
+                                    // Update the content of the modal with the retrieved data
+                                    
+                                    document.getElementById('ccmc_candidate_batch_id').value = dataId;
+
+                                     $.ajax({
+                                            url: "/getcountrystate", // Update the URL with your actual route
+                                            method: "GET",
+                                            dataType: "json",
+                                            success: function(data) {
+                                            // Handle the successful response
+                                            var selectField = $("#state_id");
+
+                                            // Clear existing options
+                                            selectField.empty();
+
+                                            // Append new options based on the response
+                                            $.each(data, function(index, state) {
+                                                selectField.append(`<option value="${state.id}">${state.name}</option>`);
+                                            });
+
+                                            },
+                                            error: function(xhr, status, error) {
+                                            // Handle errors
+                                            console.error("Error loading data:", status, error);
+                                            }
+                                        });
+
+                                    
                                     }
 
                                     
@@ -2227,7 +2250,8 @@
 
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
 
-            <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a>
+            <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -2264,6 +2288,165 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="addCandidateModal" tabindex="-1" role="dailog" aria-labelledby="examplpeModalLabela" aria-hidden="true">
+                <form method="post" action="/my/createccmccandidateform" enctype="multipart/form-data">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="examplpeModalLabela">Add Candidate</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+                                    <div class="row">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" class="form-control" id="ccmc_candidate_batch_id" name="ccmc_candidate_batch_id" t-att-value="batch_id"/>
+                                        <!-- <div class="col-md-2">
+                                            <div class="card-img-container">
+                                                <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="form-group">
+                                                <label for="photo" class="form-label">Candidate Photo</label>
+                                                <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="name">Full Name of Candidate as in INDOS</label>
+                                                <input t-att-disabled="1" type="text" class="form-control" id="name" name="name" required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="indos_no">Indos No.</label>
+                                                <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="candidate_code">CCMC Candidate Code No.</label>
+                                                <input t-att-disabled="1" type="text" class="form-control" id="candidate_code" name="candidate_code" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="roll_no">Roll No.</label>
+                                                <input type="text" class="form-control" id="roll_no" name="roll_no" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="dob">DOB</label>
+                                                <input type="date" class="form-control" id="dob" name="dob" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="street">Street</label>
+                                                <input type="text" class="form-control" id="street" name="street"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="street2">Street2</label>
+                                                <input type="text" class="form-control" id="street2" name="street2"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="city">City</label>
+                                                <input type="text" class="form-control" id="city" name="city"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="zip">Zip</label>
+                                                <input type="text" class="form-control" id="zip" name="zip"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="state_id">State</label>
+                                                <select class="form-control" id="state_id" name="state_id">
+                                                    <t t-foreach="states" t-as="state">
+                                                        <option t-attf-value="{{state.id}}">
+                                                            <t t-out="state.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone</label>
+                                                <input type="text" class="form-control" id="phone" name="phone"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="mobile">Mobile</label>
+                                                <input type="text" class="form-control" id="mobile" name="mobile"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="tenth_percent">% Xth Std in Eng.</label>
+                                                <input type="number" class="form-control" id="tenth_percent" name="tenth_percent"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="twelve_percent">% 12th Std in Eng.</label>
+                                                <input type="number" class="form-control" id="twelve_percent" name="twelve_percent"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="iti_percent">% ITI</label>
+                                                <input type="number" class="form-control" id="iti_percent" name="iti_percent"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="sc_st" name="sc_st"/>
+                                                <label class="form-check-label" for="sc_st">To be mentioned if Candidate SC/ST</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Create</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <t t-call="portal.portal_table">
                 <thead>
