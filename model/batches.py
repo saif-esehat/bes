@@ -13,6 +13,7 @@ class InstituteGPBatches(models.Model):
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     batch_name = fields.Char("Batch Name",required=True)
     faculty_name = fields.Char("Faculty name")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
@@ -275,7 +276,8 @@ class InstituteGPBatches(models.Model):
             'target': 'new',
             'context': {
                 'default_institute_id': self.institute_id.id,
-                'default_batch_id': self.id
+                'default_batch_id': self.id,
+                'default_dgs_batch': self.dgs_batch.id
             }
         }
     
@@ -471,6 +473,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
 
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
     
@@ -483,7 +486,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         for candidate in candidates:
             
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id , 'dgs_batch': self.dgs_batch.id })
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             

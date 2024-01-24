@@ -433,6 +433,7 @@ class GPExam(models.Model):
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
