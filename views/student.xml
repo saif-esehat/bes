@@ -183,8 +183,8 @@
                             </button>
                         </div>
                         <field name="elligiblity_criteria" invisible="1"/>
-                        <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
-                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+                        <!-- <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
+                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/> -->
 
                         
                         
@@ -496,8 +496,8 @@
                    </header>
                     <sheet>
                         <field name="elligiblity_criteria" invisible="1"/>
-                        <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
-                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/>
+                        <!-- <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}" />
+                        <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}" /> -->
 
                         <div class="oe_button_box" name="button_box">
                             <!-- <button name="open_attendance" string="Attendance" type="object" class="oe_stat_button" icon="fa-align-justify">

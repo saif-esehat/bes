@@ -2,7 +2,7 @@
     <data noupdate="1">
         <record id="gp_exam_seq" model="ir.sequence">
             <field name="name">GP Exam Sequence</field>
-            <field name="code">gp.exam.sequence</field>
+            <field name="code">gp.exam.schedule</field>
             <field name="prefix">GP/</field>
             <field name="padding">5</field>
             <field name="number_next_actual">1</field>
@@ -12,7 +12,7 @@
 
         <record id="ccmc_exam_seq" model="ir.sequence">
             <field name="name">CCMC Exam Sequence</field>
-            <field name="code">ccmc.exam.sequence</field>
+            <field name="code">ccmc.exam.schedule</field>
             <field name="prefix">CCMC/</field>
             <field name="padding">5</field>
             <field name="number_next_actual">1</field>

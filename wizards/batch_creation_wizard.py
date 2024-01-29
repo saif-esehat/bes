@@ -5,6 +5,7 @@ class BatchWizard(models.TransientModel):
     _name = 'create.institute.batches.wizard'
     _description = 'Create Batches Wizard'
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     batch_name = fields.Char("Batch Name")
     from_date = fields.Date("From Date")
     to_date = fields.Date("To Date")
@@ -22,6 +23,7 @@ class BatchWizard(models.TransientModel):
             for course in institute.courses:
                 if course.course.course_code == 'GP':
                     self.env['institute.gp.batches'].create({
+                        "dgs_batch": self.dgs_batch,
                         "institute_id":institute_id.id,
                         "batch_name":str(course.course.course_code)+"/"+self.batch_name,
                         "from_date" : self.from_date,

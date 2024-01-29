@@ -1,5 +1,5 @@
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import random
 import logging
@@ -166,7 +166,7 @@ class ExamCandidate(models.Model):
     mobile = fields.Char("Mobile")
     email = fields.Char("Email")
     
-    mek_practical_id = fields.Many2one("practical.mek","Mek Practical")
+    mek_practical_id = fields.Many2one("practical.mek","MEK Practical")
     mek_oral_id = fields.Many2one("oral.mek","MEK Oral Practical")
     gsk_practical_id = fields.Many2one("practical.gsk","GSK Practical")
     gsk_oral_id = fields.Many2one("oral.gsk","GSK Oral")
@@ -430,27 +430,44 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.sequence'))
+    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
+                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
+    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    #                             default=lambda self: _('New')) 
+    
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    mek_oral = fields.Many2one("gp.mek.oral.line","Mek Oral")
-    mek_prac = fields.Many2one("gp.mek.practical.line","Mek Practical")
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
     gsk_online = fields.Many2one("survey.user_input","GSK Online")
     mek_online = fields.Many2one("survey.user_input","MEK Online")
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
-    gsk_total = fields.Float("GSK Total",readonly=True)
-    gsk_percentage = fields.Float("GSK Precentage",readonly=True)
+    
+    gsk_oral_marks = fields.Float("GSK Oral/Journal",readonly=True)
+    mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True)
+    gsk_practical_marks = fields.Float("GSK Practical",readonly=True)
+    mek_practical_marks = fields.Float("MEK Practical",readonly=True)
+    gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
+    gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
    
     
     
-    mek_total = fields.Float("Mek Total",readonly=True)
-    mek_percentage = fields.Float("Mek Percentage",readonly=True)
+    mek_total = fields.Float("MEK Total",readonly=True)
+    mek_percentage = fields.Float("MEK Percentage",readonly=True)
+    mek_online_marks = fields.Float("MEK Online",readonly=True)
+    gsk_online_marks = fields.Float("GSK Online",readonly=True)
+    mek_online_percentage = fields.Float("MEK Online (%)",readonly=True)
+    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)    
+    mek_total = fields.Float("MEK Oral/Practical",readonly=True)
+    mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True)
+    overall_marks = fields.Float("Overall Marks",readonly=True)
+    overall_percentage = fields.Float("Overall (%)",readonly=True)
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -461,60 +478,71 @@ class GPExam(models.Model):
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Oral/Practical Status', default='pending')
+    ], string='MEK Oral/Practical Status', default='pending')
     
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Online Status', default='pending')
+    ], string='MEK Online Status', default='pending')
     
     gsk_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Gsk Online Status', default='pending')
+    ], string='GSK Online Status', default='pending')
     
     exam_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Exam Criteria' , compute="compute_certificate_criteria")
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
-    ], string='Certificate Criteria')
+        ('passed', 'Complied'),
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
 
     
     stcw_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='STCW Criteria' , compute="compute_certificate_criteria")
     
     ship_visit_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Ship Visit Criteria' , compute="compute_certificate_criteria")
     
     
     attendance_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Attendance Criteria' , compute="compute_certificate_criteria")
 
     
     state = fields.Selection([
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
+        ('3-certified', 'Certified'),
     ], string='State', default='1-in_process')
 
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
-
+    
+    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    
+    @api.depends('certificate_criteria','state')
+    def compute_dgs_visible(self):
+        for record in self:
+            if record.certificate_criteria == 'passed' and record.state == '2-done':
+                record.dgs_visible = True
+            else:
+                record.dgs_visible = False
+                
 
 
     def _compute_url(self):
@@ -534,6 +562,8 @@ class GPExam(models.Model):
 
         # Assign the base64 string to a field in the 'srf' object
         self.qr_code = qr_image_base64
+        
+    
     
     @api.depends('gsk_online_status','mek_online_status','mek_oral_prac_status','gsk_oral_prac_status')
     def compute_certificate_criteria(self):
@@ -567,28 +597,26 @@ class GPExam(models.Model):
             else:
 
                 record.ship_visit_criteria = 'pending'
+    
+    @api.depends('exam_criteria','stcw_criteria','attendance_criteria','ship_visit_criteria')
+    def compute_pending_certificate_criteria(self):
+        for record in self:
+            if record.exam_criteria == record.stcw_criteria == record.attendance_criteria == record.ship_visit_criteria == 'passed':
+                record.certificate_criteria = 'passed'
+            else:
+                record.certificate_criteria = 'pending'
+
                 
         
     # def move_done(self):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
+    def dgs_approval(self):
+            if(self.certificate_criteria == 'passed'):
+                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
+                self.state = '3-certified'
             
-    class GPCertificate(models.AbstractModel):
-        _name = 'report.bes.report_general_certificate'
-
-        @api.model
-        def _get_report_values(self, docids, data=None):
-            docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-            if docs1.certificate_criteria == 'passed':
-                return {
-                    'docids': docids,
-                    'doc_model': 'gp.exam.schedule',
-                    'data': data,
-                    'docs': docs1
-                }
-            else:
-                raise ValidationError("Certificate criteria not met. Report cannot be generated.")
     
     
     @api.model
@@ -598,7 +626,62 @@ class GPExam(models.Model):
             last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
             vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
 
-        return super(GPExam, self).create(vals)
+            a = super(GPExam, self).create(vals)   
+            print(a,"==============================================================================================")
+            if a.gsk_oral_prac_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'GSK Oral/Practical'
+                    }
+                )    
+                
+            if a.mek_oral_prac_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'MEK Oral/Practical'
+                    }
+                )  
+                
+            if a.gsk_online_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'GSK Online'
+                    }
+                )
+                  
+            if a.mek_online_status == "pending":
+                self.env['gp.exam.appear'].create(
+                    {
+                        'gp_exam_schedule_id': a.id,
+                        'subject_name': 'MEK Online'
+                    }
+                )  
+                
+            return a 
+            
+        return a
+    
+    # @api.model
+    # def create(self,vals):
+       
+    #     return super(, self).create(vals)
+    
+    # def apply_unique_sequence_to_existing_data(self):
+    #     records_without_sequence = self.search([('roll_no', '=', 'New')])
+
+    #     for record in records_without_sequence:
+    #         new_roll_no = self.env['ir.sequence'].next_by_code('gp.exam.schedule')
+    #         record.write({'roll_no': new_roll_no})
+
+    # # Run this method to apply the unique sequence to existing records
+    # def apply_unique_sequence_to_existing_records(self):
+    #     existing_records = self.search([('roll_no', '=', 'New')])
+    #     for record in existing_records:
+    #         new_roll_no = self.env['ir.sequence'].next_by_code('gp.exam.schedule')
+    #         record.write({'roll_no': new_roll_no})
     
     
     
@@ -612,8 +695,12 @@ class GPExam(models.Model):
             if exams_count > max_exams:
                 raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
                                       f"You cannot schedule more than {max_exams} exams for a candidate.")
-                
+    
+    # def dgs_approval(self):                
 
+    #     print("work")
+        
+        
     def move_done(self):
         
         # import wdb; wdb.set_trace();
@@ -632,10 +719,15 @@ class GPExam(models.Model):
         if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
         
             mek_oral_marks = self.mek_oral.mek_oral_total_marks
+            self.mek_oral_marks = mek_oral_marks
             mek_practical_marks = self.mek_prac.mek_practical_total_marks
+            self.mek_practical_marks = mek_practical_marks
             mek_total_marks = mek_oral_marks + mek_practical_marks
             self.mek_total = mek_total_marks
             self.mek_percentage = (mek_total_marks/175) * 100
+            self.mek_online_marks = self.mek_online.scoring_total
+            self.mek_online_percentage = (self.mek_online_marks/75)*100
+            
             
             
             if self.mek_percentage >= 60:
@@ -645,11 +737,18 @@ class GPExam(models.Model):
 
 
             gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
+            self.gsk_oral_marks = gsk_oral_marks
             gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
+            self.gsk_practical_marks = gsk_practical_marks
             gsk_total_marks = gsk_oral_marks + gsk_practical_marks
             self.gsk_total = gsk_total_marks
             self.gsk_percentage = (gsk_total_marks/175) * 100
+            self.gsk_online_marks = self.gsk_online.scoring_total
+            self.gsk_online_percentage = (self.gsk_online_marks/75)*100
             
+            overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
+            self.overall_marks = overall_marks
+            self.overall_percentage = (overall_marks/500) * 100
             
             if self.gsk_percentage >= 60:
                 self.gsk_oral_prac_status = 'passed'
@@ -657,34 +756,39 @@ class GPExam(models.Model):
                 self.gsk_oral_prac_status = 'failed'
 
             
-            self.state = '2-done'
+            # self.state = '2-done'
             
             
-            if self.gsk_online.scoring_success:
+            
+            
+            if self.gsk_online_percentage >= 60 :
                 self.gsk_online_status = 'passed'
             else:
                 self.gsk_online_status = 'failed'
                 
             
-            if self.mek_online.scoring_success:
+            if self.mek_online_percentage >= 60 :
                 self.mek_online_status = 'passed'
             else:
                 self.mek_online_status = 'failed'
             
+            
+            
+            
             all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
             # import wdb; wdb.set_trace();
-            if all_passed:
+            # if all_passed:
                 
-                self.write({'certificate_criteria':'passed'})
-                # self.certificate_criteria = 'passed'
-            else:
-                self.write({'certificate_criteria':'pending'})
+            #     self.write({'certificate_criteria':'passed'})
+            #     # self.certificate_criteria = 'passed'
+            # else:
+            #     self.write({'certificate_criteria':'pending'})
 
                 # self.certificate_criteria = 'failed'
             
-            if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
+            # if(self.certificate_criteria == 'passed'):
+            #     self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
             
             self.state = '2-done'
                 
@@ -693,9 +797,34 @@ class GPExam(models.Model):
         else:
              raise ValidationError("Not All exam are Confirmed")
 
-    attempting_exam_list= fields.One2many("gp.exam.schedule",'gp_candidate')
-
+    attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
+class GPAppearingExam(models.Model):
+    _name = 'gp.exam.appear'
+    
+    gp_exam_schedule_id = fields.Many2one('gp.exam.schedule',string="GP Exam ID")
+    subject_name = fields.Char(string="Appearing Exam Lists")
+    
+    
+    
+    
+    
+
+class GPCertificate(models.AbstractModel):
+    _name = 'report.bes.report_general_certificate'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        if docs1.certificate_criteria == 'passed' and len(docs1.certificate_id) > 0:
+            return {
+                'docids': docids,
+                'doc_model': 'gp.exam.schedule',
+                'data': data,
+                'docs': docs1
+            }
+        else:
+            raise ValidationError("Certificate criteria not met. Report cannot be generated.")
 
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
@@ -704,9 +833,11 @@ class CCMCExam(models.Model):
     
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    exam_id = fields.Char("Exam ID",required=True, copy=False, readonly=True,
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
+    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
@@ -777,6 +908,28 @@ class CCMCExam(models.Model):
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
     
+    url = fields.Char("URL",compute="_compute_url")
+    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+
+    def _compute_url(self):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        current_url = base_url + "/verification/ccmcadmitcard/" + str(self.id)
+        self.url = current_url
+        print("Current URL:", current_url)
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+        qr.add_data(current_url)
+        qr.make(fit=True)
+        qr_image = qr.make_image()
+
+        # Convert the QR code image to base64 string
+        buffered = io.BytesIO()
+        qr_image.save(buffered, format="PNG")
+        qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+        # Assign the base64 string to a field in the 'srf' object
+        self.qr_code = qr_image_base64
+
+    
     @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status')
     def compute_certificate_criteria(self):
         for record in self:
@@ -820,8 +973,10 @@ class CCMCExam(models.Model):
             candidate_id = vals['ccmc_candidate']
             last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
             vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
-
+        
         return super(CCMCExam, self).create(vals)
+
+        
     
     
     
@@ -890,7 +1045,7 @@ class CcmcCertificate(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
-        if docs1.certificate_criteria == 'passed':
+        if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,
                 'doc_model': 'ccmc.exam.schedule',

@@ -6,11 +6,13 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','portal','survey','website','sale','odoo_website_helpdesk'],
+ 'depends':['product','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
  'data': [
+        'data/roll_no_sequence.xml',
         'data/exam_sequence.xml',
         'data/certificate_sequence.xml',
         'data/tags.xml',
+        'data/email_template.xml',
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
@@ -48,6 +50,7 @@
 'assets': {
 		'web.assets_frontend': [
 			'bes/static/src/js/custom_validation.js',
+                        'bes/views/portal/static/src/js/candidate_oral_practical.js'
 		],
                 
 	},

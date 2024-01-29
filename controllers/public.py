@@ -36,7 +36,7 @@ class PublicPortal(http.Controller):
             exam_id = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)])
         except:
             raise ValidationError("Admit Card Not Found or Not Generated")
-        report_action = request.env.ref('bes.candidate_gp_admit_card_action')
+        report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)

@@ -98,7 +98,7 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
 
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject})
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
@@ -117,7 +117,11 @@ class ExaminerPortal(CustomerPortal):
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt==============================================')
             print(rec)
+            
+            # import wdb; wdb.set_trace()
             rec_id = rec['rec_id']
+            
+            marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
 
             # Convert string values to integers
             subject_area1 = int(rec['subject_area1'])
@@ -134,7 +138,7 @@ class ExaminerPortal(CustomerPortal):
             remarks_oral_gsk = rec['remarks_oral_gsk']
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
-            # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+            draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
 
             # Construct the dictionary with integer values
             vals = {
@@ -152,11 +156,14 @@ class ExaminerPortal(CustomerPortal):
             
             
 
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss=============================', vals)
-            return {}
-            request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
+            marksheet.write(vals)
+            # import wdb; wdb.set_trace()
+            
+            return request.redirect("/open_candidate_form?rec_id="+rec["assignment_id"]+"&subject_name=GSK")
+            # return request.redirect()
+            
             # Write to the One2many field using the constructed dictionary
-            # draft_records.write(vals)
+            # 
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr======================', rec)
@@ -169,76 +176,87 @@ class ExaminerPortal(CustomerPortal):
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
+            # import wdb; wdb.set_trace()
+            # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
+            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec , 'exam_date':gsk_marksheet.gsk_oral_exam_date})
 
-            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
-            # print('dateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',draft_records.gsk_oral_exam_date)
-            # exam_date = draft_records.gsk_oral_exam_date
-            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
-                
 
-    @http.route('/open_gsk_practical_form', type='http', auth="user", website=True)
+    @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_practical_form(self, **rec):
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
 
             # Convert string values to integers
-            subject_area1 = int(rec['climbing_mast'])
-            subject_area2 = int(rec['buoy_flags_recognition'])
-            subject_area3 = int(rec['bosun_chair'])
-            subject_area4 = int(rec['rig_stage'])
-            subject_area5 = int(rec['rig_pilot'])
-            subject_area6 = int(rec['rig_scoffolding'])
-            subject_area7 = int(rec['fast_ropes'])
-            subject_area8 = int(rec['knots_bend'])
-            subject_area9 = int(rec['sounding_rod'])
+            climbing_mast = int(rec['climbing_mast'])
+            buoy_flags_recognition = int(rec['buoy_flags_recognition'])
+            bosun_chair = int(rec['bosun_chair'])
+            rig_stage = int(rec['rig_stage'])
+            rig_pilot = int(rec['rig_pilot'])
+            rig_scoffolding = int(rec['rig_scoffolding'])
+            fast_ropes = int(rec['fast_ropes'])
+            knots_bend = int(rec['knots_bend'])
+            sounding_rod = int(rec['sounding_rod'])
             state = rec['state']
             remarks_oral_gsk = rec['gsk_practical_remarks']
+            
+            
+            # marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_oral'])])
 
-            candidate_rec = candidate.search([('indos_no', '=', indos)])
-            draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
+            # candidate_rec = candidate.search([('indos_no', '=', indos)])
+            # draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
 
             # Construct the dictionary with integer values
             vals = {
-                'climbing_mast': subject_area1,
-                'buoy_flags_recognition': subject_area2,
-                'bosun_chair': subject_area3,
-                'rig_stage': subject_area4,
-                'rig_pilot': subject_area5,
-                'rig_scaffolding': subject_area6,
-                'fast_ropes': subject_area7,
-                'knots_bend': subject_area8,
-                'sounding_rod': subject_area9,
+                'climbing_mast': climbing_mast,
+                'buoy_flags_recognition': buoy_flags_recognition,
+                'bosun_chair': bosun_chair,
+                'rig_stage': rig_stage,
+                'rig_pilot': rig_pilot,
+                'rig_scaffolding': rig_scoffolding,
+                'fast_ropes': fast_ropes,
+                'knots_bend': knots_bend,
+                'sounding_rod': sounding_rod,
                 'gsk_practical_draft_confirm': state,
-               
                 'gsk_practical_remarks': remarks_oral_gsk
             }
+            
+            marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
+
+            marksheet.write(vals)
+            
+            return request.redirect("/open_candidate_form?rec_id="+rec["assignment_id"]+"&subject_name=GSK")
 
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            draft_records.write(vals)
+            # draft_records.write(vals)
 
         else:
+            # import wdb; wdb.set_trace()
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            candidate_rec = candidate.search([('id', '=', rec['rec_id'])])
             name=candidate_rec.name
             candidate_image = candidate_rec.candidate_image
-            draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
-
+            # draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
+            gsk_prac_marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
-            
-            exam_date = draft_records.gsk_practical_exam_date
-            return request.render("bes.gsk_practical_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})       
+            exam_date = gsk_prac_marksheet.gsk_practical_exam_date
+            return request.render("bes.gsk_practical_marks_submit", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'gsk_prac_marksheet':gsk_prac_marksheet})       
             
 
-    @http.route('/open_mek_oral_form', type='http', auth="user", website=True)
+    @http.route('/open_mek_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_mek_oral_form(self, **rec):
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
-            print('exittttttttttttttttttttttttttttttt')
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
+            # print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
 
             # Convert string values to integers
@@ -251,8 +269,8 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_remarks = rec['remarks_oral_mek']
             state = rec['state']
 
-            candidate_rec = candidate.search([('indos_no', '=', indos)])
-            draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
+            # candidate_rec = candidate.search([('indos_no', '=', indos)])
+            # draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
 
 
             # Construct the dictionary with integer values
@@ -264,36 +282,48 @@ class ExaminerPortal(CustomerPortal):
                 'electrical': subject_area5,
                 'journal': subject_area6,
                 'mek_oral_remarks': mek_oral_remarks,
-                'mek_oral_draft_confirm': state,
-                
-                
+                'mek_oral_draft_confirm': state
             }
+            
+            marksheet = request.env['gp.mek.oral.line'].sudo().search([('id','=',rec['mek_oral'])])
+            marksheet.write(vals)
+            
+            return request.redirect("/open_candidate_form?rec_id="+rec["assignment_id"]+"&subject_name=MEK")
 
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
+            # print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
-            # Write to the One2many field using the constructed dictionary
-            draft_records.write(vals)
+            # # Write to the One2many field using the constructed dictionary
+            # if draft_records:
+            #     draft_records.write(vals)
+            #     print("++++==============================+++++++++++++++++++ data is entered",draft_records)
+            # else:
+            #     print("Record not found for updating.========================================================================")
+        
+            # return {}
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            candidate_rec = candidate.search([('id', '=', rec_id)])
             name=candidate_rec.name
             candidate_image = candidate_rec.candidate_image
-            draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
+            # draft_records = candidate_rec.mek_oral_child_line.filtered(lambda line: line.mek_oral_draft_confirm == 'draft')
+            mek_oral_marksheet = request.env['gp.mek.oral.line'].sudo().search([('id','=',rec['mek_oral'])])
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
-            exam_date = draft_records.mek_oral_exam_date
-            return request.render("bes.mek_oral_marks_submit", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
+            exam_date = mek_oral_marksheet.mek_oral_exam_date
+            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet})
 
-    @http.route('/open_practical_mek_form', type='http', auth="user", website=True)
+    @http.route('/open_practical_mek_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_practical_mek_form(self, **rec):
         print("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         candidate = request.env['gp.candidate'].sudo()
-        if 'indos' in rec:
+        print("=======================================================",request.httprequest.method)
+        
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
-            indos = rec['indos']
+            # rec_id = rec['rec_id']
            
 
             # Convert string values to integers
@@ -310,8 +340,8 @@ class ExaminerPortal(CustomerPortal):
             mek_practical_remarks = rec['remarks_practical_mek']
             state = rec['state']
 
-            candidate_rec = candidate.search([('indos_no', '=', indos)])
-            draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
+            # candidate_rec = candidate.search([('id', '=', rec_id)])
+            # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
 
 
             # Construct the dictionary with integer values
@@ -326,28 +356,30 @@ class ExaminerPortal(CustomerPortal):
                 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
-                'mek_practical_draft_confirm': state,
-                
+                'mek_practical_draft_confirm': state
             }
+            
+            marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
+            
+            marksheet.write(vals)
+            
+            return request.redirect("/open_candidate_form?rec_id="+rec["assignment_id"]+"&subject_name=MEK")
 
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
+            # print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            draft_records.write(
-                 vals)
+            # draft_records.write(vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            candidate_rec = candidate.search([('indos_no', '=', rec_id)])
+            candidate_rec = candidate.search([('id', '=', rec_id)])
             name=candidate_rec.name
             candidate_image = candidate_rec.candidate_image
-            draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
-
-            print('recccccccccccccccccccccccccccccccccc',candidate_rec)
-            
-            exam_date = draft_records.mek_practical_exam_date
-            return request.render("bes.mek_practical_marks", {'indos': rec_id,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image})
+            # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
+            mek_prac_marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
+            exam_date = mek_prac_marksheet.mek_practical_exam_date
+            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet})
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True)
     def open_cookery_bakery_form(self, **rec):

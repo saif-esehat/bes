@@ -132,6 +132,12 @@ class Institute(models.Model):
         wizard = self.env['create.institute.batches.wizard'].create({
             'batch_name': '',  # Set default values if needed
         })
+        
+        # import wdb; wdb.set_trace()
+        dgs_batch_id = self.env['dgs.batches'].search([('is_current_batch', '=', True)]).id
+        
+        if not dgs_batch_id:
+            raise ValidationError("Please Create Current DGS Batch")
 
         # Open the wizard view
         return {
@@ -139,10 +145,11 @@ class Institute(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'create.institute.batches.wizard',
-            'res_id': wizard.id,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': self.env.context,  # Pass the current context
+            'context': {
+                    'default_dgs_batch': dgs_batch_id
+                },  
         }
 
     def _generate_password(self, length=8):
