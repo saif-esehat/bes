@@ -33,6 +33,32 @@
         report_type="qweb-html"
         name="bes.report_general_certificate"
         file="bes.report_general_certificate"/>
+
+    <!-- <report
+        id="report_dgs_action"
+        string="Report DGS"
+        model="dgs.batches"
+        report_type="qweb-html"
+        name="bes.dgs_report"
+        file="bes.dgs_report"
+        paperformat="bes.dgs_report_landscape"
+    /> -->
+
+    <record id="report_dgs_action" model="ir.actions.report">
+    
+        <field name="name">DGS Report</field>
+            
+        <field name="model">dgs.batches</field>
+            
+        <field name="report_type">qweb-html</field>
+            
+        <field name="report_name">bes.dgs_report</field>
+            
+        <field name="report_file">bes.dgs_report</field>
+        <field name="binding_model_id" ref="bes.model_dgs_batches"/>
+
+
+    </record>
    
     <report
         id="report_ccmc_certificate"
@@ -41,7 +67,6 @@
         report_type="qweb-html"
         name="bes.course_certificate"
         file="bes.course_certificate"
-
         />
 
     <report

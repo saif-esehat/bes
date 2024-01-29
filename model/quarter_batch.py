@@ -39,5 +39,28 @@ class DGSBatch(models.Model):
     def set_current_batch(self):
         other_batches = self.search([('is_current_batch', '=', True)])
         other_batches.write({'is_current_batch': False})
+        
+
+class DGSBatchReport(models.AbstractModel):
+    _name = "report.bes.dgs_report"
+    _description = "DGS Batch Report"
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        
+        
+        
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)
+        import wdb; wdb.set_trace(); 
+        exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id)])
+        # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
+
+        
+        return {
+            'docids': docids,
+            'doc_model': 'gp.exam.schedule',
+            'docs':docs1,
+            'exams':exams
+        }
 
     

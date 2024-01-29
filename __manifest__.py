@@ -13,6 +13,7 @@
         'data/certificate_sequence.xml',
         'data/tags.xml',
         'data/email_template.xml',
+        'data/paper_format.xml',
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
@@ -45,6 +46,7 @@
         'reports/report_ccmc_certificate.xml',
         'reports/admit_card_template_gp.xml',
         'reports/admit_card_template_ccmc.xml',
+        'reports/dgs_report.xml',
         
 ],
 'assets': {
@@ -58,6 +60,7 @@
             '/bes/static/src/css/report_css.scss',
             '/bes/static/src/css/style_gp.css',
             '/bes/static/src/css/style_ccmc.css',
+            '/bes/static/src/css/dgs_report.css'
 
         ],
 }

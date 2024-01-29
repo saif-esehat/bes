@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>  
+
+    <template id="dgs_report_custom_header_footer">
+        <div  t-attf-class="header article" t-att-style="report_header_style">
+            <div class="row" style="text-align:center; font-size:20px">
+                  Board of Examinations for Seafarers Trust
+
+            </div >
+            <div class="row" style="text-align:center; font-size:18px">
+                All India Exit Examination Result for Fresh Candidates - <span  t-field="doc.batch_name" />
+            </div >
+        </div>
+        <div t-attf-class="article" t-att-style="report_header_style">
+            <t t-out="0" />
+        </div>
+        <div t-attf-class="footer o_standard_footer">
+            <div class="row">
+                <div class="col-xs-2 pull-left">
+                    <small>
+                        <span>Page</span>
+                        <span class="page" />
+                        of
+                        <span class="topage" />
+                    </small>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="dgs_report">
+        <t t-call="web.html_container">
+            <t t-call="bes.dgs_report_custom_header_footer" >
+                <t t-foreach="docs" t-as="doc">
+                    
+                    <style>
+                        .black-bordered-table {
+                            width: 100%;
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            margin-top: 20px;
+                        }
+                        th, td , tr {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding: 10px;
+                            border-collapse: collapse;
+                            padding-bottom: 0px;
+                            
+                        }
+                        thead {
+                            padding-bottom: 0px;
+
+                        }
+                        th {
+
+                          vertical-align: bottom;
+                        }
+                        </style>
+                
+
+                    <table class="black-bordered-table">
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: bottom;">Sr. No.</th>
+                                <th style="vertical-align: bottom;">Code No.</th>
+                                <th style="vertical-align: bottom;">Inst. Code</th>
+                                <th style="vertical-align: bottom;">Roll No</th>
+                                <th style="white-space: nowrap; vertical-align: bottom;" >Name of the Institute</th>
+                                <th style="vertical-align: bottom;" >Full Name of the Candidate as in INDOS</th>
+                                <th > DOB</th>
+                                <th>GSK P  O Pass or Fail</th>
+                                <th>MEK P  O Pass or Fail</th>
+                                <th>Online GSK Pass or Fail</th>
+                                <th>Online MEK Pass or Fail</th>
+                                <th>Final Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Add rows with student data here -->
+                            <t t-set="index" t-value="0" />
+                            <t t-foreach="exams" t-as="exam">
+                                <tr>
+                                    <t t-set="index" t-value="index + 1"/>
+                                    <td><span t-esc="index"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.gp_candidate.candidate_code"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.code"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
+                                    <td><span t-esc="exam.gp_candidate.institute_id.name"/></td>
+                                    <td><span t-esc="exam.gp_candidate.name"/></td>
+                                    <td style="text-align:center; white-space: nowrap;"><span t-esc="exam.gp_candidate.dob"/></td>
+                                    <td style="text-align:center"><strong>P</strong></td>
+                                    <td style="text-align:center"><strong>P</strong></td>
+                                    <td style="text-align:center"><strong>F</strong></td>
+                                    <td style="text-align:center"><strong>P</strong></td>
+                                    <td><strong>Fail</strong></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                
+                </t>
+            </t>
+            
+        </t>
+    </template>
+</odoo>
