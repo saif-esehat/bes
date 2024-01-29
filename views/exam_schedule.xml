@@ -93,15 +93,12 @@
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                         </group>
-<<<<<<< HEAD
-=======
                          <group style="width:50%">
                             <field name="url" invisible="1"/>
                             <field name="qr_code" widget="image"  style="width:100px; height:100px;"/>
                         </group>
                
                         
->>>>>>> b28b5e7cd23559b7ae9a2b443f84a12ba4d3f86e
 
                         <notebook>
                             <page string="Attempting Exam List">
