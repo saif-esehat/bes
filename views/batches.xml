@@ -304,6 +304,10 @@
             <field name="model">dgs.batches</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>                        
+                        <button name="print_gp_fresh" string="GP Fresh" type="object" class="btn-primary" />
+                        <button name="print_gp_repeater" string="GP Repeater" type="object" class="btn-primary" />
+                    </header>
                     <sheet>
                          <div class="oe_button_box" name="button_box">
                             <button name="open_gp_exams" string="GP Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
