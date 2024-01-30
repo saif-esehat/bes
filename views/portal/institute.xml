@@ -2182,6 +2182,18 @@
 
                                     }
 
+                                    function onOpenDeleteandidateModal(button){
+                                        
+                                        var dataId = button.getAttribute('candidate-id');
+                                        console.log(dataId)
+                                        document.getElementById('ccmc_candidate_id').value = dataId;
+                                        var batchId = button.getAttribute('batch-id');
+                                        document.getElementById('ccmc_candidate_batch_id').value = batchId;
+
+
+                                    }
+
+
                                     function onOpenAddCandidateModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('batch-id');
@@ -2189,7 +2201,7 @@
                                     // Update the content of the modal with the retrieved data
                                     
                                     document.getElementById('ccmc_candidate_batch_id').value = dataId;
-
+                    
                                      $.ajax({
                                             url: "/getcountrystate", // Update the URL with your actual route
                                             method: "GET",
@@ -2289,7 +2301,8 @@
             </div>
 
             <div class="modal fade" id="addCandidateModal" tabindex="-1" role="dailog" aria-labelledby="examplpeModalLabela" aria-hidden="true">
-                <form method="post" action="/my/createccmccandidateform" enctype="multipart/form-data">
+                <form method="post" action="/my/createccmccandidateform" >
+                <!-- enctype="multipart/form-data" -->
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
 
@@ -2317,7 +2330,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Full Name of Candidate as in INDOS</label>
-                                                <input t-att-disabled="1" type="text" class="form-control" id="name" name="name" required="true" />
+                                                <input type="text" class="form-control" id="name" name="name" required="true" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -2335,19 +2348,19 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="roll_no">Roll No.</label>
-                                                <input type="text" class="form-control" id="roll_no" name="roll_no" />
+                                                <input t-att-disabled="1" type="text" class="form-control" id="roll_no" name="roll_no" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="dob">DOB</label>
-                                                <input type="date" class="form-control" id="dob" name="dob" />
+                                                <input type="date" class="form-control" id="dob" name="dob" required="true"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="street">Street</label>
-                                                <input type="text" class="form-control" id="street" name="street"/>
+                                                <input type="text" class="form-control" id="street" name="street" required="true"/>
                                             </div>
                                         </div>
 
@@ -2361,14 +2374,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="city">City</label>
-                                                <input type="text" class="form-control" id="city" name="city"/>
+                                                <input type="text" class="form-control" id="city" name="city" required="true"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="zip">Zip</label>
-                                                <input type="text" class="form-control" id="zip" name="zip"/>
+                                                <input type="text" class="form-control" id="zip" name="zip" required="true"/>
                                             </div>
                                         </div>
 
@@ -2394,7 +2407,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="mobile">Mobile</label>
-                                                <input type="text" class="form-control" id="mobile" name="mobile"/>
+                                                <input type="text" class="form-control" id="mobile" name="mobile" required="true"/>
                                             </div>
                                         </div>
 
@@ -2448,6 +2461,33 @@
                 </form>
             </div>
 
+            <div class="modal fade" id="delete_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/my/deleteccmccandidate" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Candidate</h5>
+                            </div>
+                            
+                            <input type="hidden" id="ccmc_candidate_id" name="ccmc_candidate_id"/>
+                            <input type="hidden" id="ccmc_candidate_batch_id" name="ccmc_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+
+                                    Are you sure you want to delete this candidate ?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
@@ -2483,6 +2523,11 @@
                             <t t-if='exams_certificate'>
                                 <td class="text-center">
                                     <a t-attf-href="/my/ccmccandidates/download_ccmc_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
+                                </td>
+                            </t>
+                            <t t-if="candidate.institute_batch_id.ccmc_state == '1-ongoing'">
+                                <td class="text-center">
+                                    <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
                                 </td>
                             </t>
 

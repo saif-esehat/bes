@@ -526,32 +526,45 @@ class CCMCCandidate(models.Model):
         institute_batch_id  = values['institute_batch_id']
         gp_batches = self.env["institute.ccmc.batches"].search([('id','=',institute_batch_id)])
         
+        import wdb; wdb.set_trace()
         capacity = gp_batches.dgs_approved_capacity
+        # print(capacity,"*******************************++++++++++++++++++++================================")
+        # print(gp_batches.institute_id,"*******************************++++++++++++++++++++================================")
+        
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
+        # print(candidate_count,"*******************************++++++++++++++++++++================================")
+        
         if candidate_count > capacity:
             raise ValidationError("DGS approved Capacity Exceeded")
         ccmc_candidate = super(CCMCCandidate, self).create(values)
-        group_xml_ids = [
-            'bes.group_ccmc_candidates',
-            'base.group_portal'
-            # Add more XML IDs as needed
-        ]
+        # group_xml_ids = [
+        #     'bes.group_ccmc_candidates',
+        #     'base.group_portal'
+        #     # Add more XML IDs as needed
+        # ]
         
-        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+        # group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
         
-        user_values = {
-            'name': ccmc_candidate.name,
-            'login': ccmc_candidate.indos_no,  # You can set the login as the same as the user name
-            'password': 12345678,  # Generate a random password
-            'sel_groups_1_9_10':9,
-            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
-        }
+        # user_values = {
+        #     'name': ccmc_candidate.name,
+        #     'login': ccmc_candidate.indos_no,  # You can set the login as the same as the user name
+        #     'password': 12345678,  # Generate a random password
+        #     'sel_groups_1_9_10':9,
+        #     'groups_id':  [(4, group_id, 0) for group_id in group_ids]
+        # }
 
-        portal_user = self.env['res.users'].sudo().create(user_values)
-        ccmc_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
-        # import wdb; wdb.set_trace()
-        candidate_tag = self.env.ref('bes.candidates_tags').id
-        portal_user.partner_id.write({'email': ccmc_candidate.email,'phone':ccmc_candidate.phone,'mobile':ccmc_candidate.mobile,'street':ccmc_candidate.street,'street2':ccmc_candidate.street2,'city':ccmc_candidate.city,'zip':ccmc_candidate.zip,'state_id':ccmc_candidate.state_id.id,'category_id':[candidate_tag]})
+        # portal_user = self.env['res.users'].sudo().create(user_values)
+        # ccmc_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
+        # # import wdb; wdb.set_trace()
+        # candidate_tag = self.env.ref('bes.candidates_tags').id
+        # portal_user.partner_id.write({'email': ccmc_candidate.email,
+        #                               'phone':ccmc_candidate.phone,
+        #                               'mobile':ccmc_candidate.mobile,
+        #                               'street':ccmc_candidate.street,
+        #                               'street2':ccmc_candidate.street2,
+        #                               'city':ccmc_candidate.city,
+        #                               'zip':ccmc_candidate.zip,
+        #                               'state_id':ccmc_candidate.state_id.id,'category_id':[candidate_tag]})
         return ccmc_candidate    
     
     
