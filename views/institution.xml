@@ -20,6 +20,7 @@
             <field name="arch" type="xml">
                 <form >
                     <group>
+                        <field name="dgs_batch" readonly="1"/>
                         <field name="batch_name"/>
                     </group>
                     <group style="width:50%;">

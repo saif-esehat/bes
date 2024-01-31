@@ -39,6 +39,7 @@
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
+                            <field name="dgs_batch" readonly="1"/>
                             <field name="gp_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
                             <field name="institute_name"/>

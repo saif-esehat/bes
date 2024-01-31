@@ -91,6 +91,8 @@
 
         <menuitem id="batches_menu" parent="bes_menu" name="Batches" action="gpbatch_form_kanban_action" />
 
+        <menuitem id="dgs_batch_menu" parent="bes_menu" name="DGS Batch" action="dgs_batch_action" />
+
 
         <record id="survey.menu_surveys" model="ir.ui.menu">
             <field name="name">Examinations</field>
