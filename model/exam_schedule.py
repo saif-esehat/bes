@@ -812,22 +812,41 @@ class GPAppearingExam(models.Model):
     
     
 
+# class GPCertificate(models.AbstractModel):
+#     _name = 'report.bes.report_general_certificate'
+
+#     @api.model
+#     def _get_report_values(self, docids, data=None):
+#         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        
+#         if docs1.certificate_criteria == 'passed' :
+#             return {
+#                 'docids': docids,
+#                 'doc_model': 'gp.exam.schedule',
+#                 'data': data,
+#                 'docs': docs1
+#             }
+#         else:
+#             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
+        
 class GPCertificate(models.AbstractModel):
     _name = 'report.bes.report_general_certificate'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-        
-        if docs1.certificate_criteria == 'passed' :
+        docs = self.env['gp.exam.schedule'].sudo().browse(docids)
+
+        # Check if all records meet the certificate criteria
+        if all(doc.certificate_criteria == 'passed' for doc in docs):
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
                 'data': data,
-                'docs': docs1
+                'docs': docs
             }
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
+
 
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"

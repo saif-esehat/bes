@@ -34,13 +34,23 @@
                             <div style="flex: 1; margin-right: 0;">
                                 <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Roll No: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.roll_no"/></span>
                             </div>
-                            <div style="flex: 1; text-align: center; margin-left:8rem; margin-right:5rem; font-family: 'Times New Roman';">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">INDOS No: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.indos_no"/></span>
+                            <div style="flex: 1; text-align: center; margin-left:2.5rem; margin-right:0rem; font-family: 'Times New Roman';">
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">INDOS No: </label>
+                                <span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.indos_no"/></span>
                             </div>
                             <div style="flex: 1; margin-left: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Date of Birth: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.dob"/></span>
+                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Date of Birth: </label>
+                                <span style="font-size: 1.2rem; font-family: 'Times New Roman';">
+                                    <t t-set="formatted_dob" t-value="doc.gp_candidate.dob.strftime('%d-%b-%y')" />
+                                    <t t-esc="formatted_dob" />
+                                </span>
                             </div>
                         </div>
+
+
+
+
+
 
 
                         
