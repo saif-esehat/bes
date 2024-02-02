@@ -1067,6 +1067,10 @@ class CcmcCertificate(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
+
+        #If causing error uncomment this line 
+        # Check if all records meet the certificate criteria
+        # if all(doc.certificate_criteria == 'passed' for doc in docs):
         if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,
