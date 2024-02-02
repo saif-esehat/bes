@@ -24,7 +24,9 @@ class Examiner(models.Model):
     email = fields.Char("Email", validators=[api.constrains('email')],required=True)
     
     pan_no = fields.Char("Pan No .",required=True)
-    dob = fields.Date("DOB",required=True)
+    dob = fields.Date("DOB",help="Date of Birth", required=True,
+                      widget="date", 
+                      date_format="%d-%b-%y")
     present_designation = fields.Text("Present Designation",required=True)
     name_address_present_employer = fields.Text("Name and address of present employer",required=True)
     designation = fields.Selection([

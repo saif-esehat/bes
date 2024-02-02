@@ -156,7 +156,9 @@ class ExamCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("Candidate Code No.")
     roll_no = fields.Char("Roll No.")
-    dob = fields.Date("DOB")
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")

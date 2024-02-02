@@ -157,7 +157,7 @@ class InstitutePortal(CustomerPortal):
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        print("Batch id",kw.get("ccmc_batch_id"))
+        print("Batch id1",kw.get("ccmc_batch_id"))
         batch_id = int(kw.get("ccmc_batch_id"))
         file_content = kw.get("ccmcfileUpload").read()
         filename = kw.get('ccmcfileUpload').filename
@@ -301,11 +301,14 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/deletegpcandidate'], type="http", auth="user", website=True)
     def DeleteGPcandidate(self, **kw):
+        print(kw,"keeeewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
         candidate_id = kw.get("candidate_id")
         
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))])
-        print(batch.state,"hello=======================================================================================================")
+        print(batch,"batchhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+       
+        print(batch.state,"state=======================================================================================================")
         if batch.state == '1-ongoing':
             request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).unlink()
             
@@ -318,8 +321,11 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/creategpcandidateform'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPcandidate(self, **kw):
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
         batch_id = kw.get("batch_id")
+        print(batch_id,"batch_idddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+        
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
         institute_id = request.env["bes.institute"].sudo().search(
@@ -362,17 +368,31 @@ class InstitutePortal(CustomerPortal):
             
             
             request.env['gp.candidate'].sudo().create(candidate_data)
+            print(request.env['gp.candidate'].sudo().create(candidate_data),"DATA_CHECK================================================================================================")
             
             return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
         
     @http.route(['/my/createccmccandidateform'],method=["POST"], type="http", auth="user", website=True)
     def CreateCCMCcandidate(self, **kw):
+        print("gg")
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
-        batch_id = kw.get("batch_id")
+        print("")
+        # print(user_id,"user-iddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+        # print(kw.get,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+        
+        batch_id = kw.get("ccmc_candidate_batch_id")
+        print("")
+        print(batch_id,"batch_idddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+        
         batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
+        # print(request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]),"batchessssssssssssssssssssssssssssssssssssssssssssssssssss")
+        # print(batch_name,"Batch-Name=====================================================================")
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        print("")
+        # print(institute_id,"ID++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
@@ -409,20 +429,28 @@ class InstitutePortal(CustomerPortal):
                 "sc_st": sc_st,
             }
             
-            
+            # import wdb; wdb.set_trace();
+            # print(candidate_data,"candidate data=======================================================================================")
+            # print(request.env['ccmc.candidate'].sudo().create(candidate_data),"================================================================================")
             request.env['ccmc.candidate'].sudo().create(candidate_data)
+            
             
             return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
     
     @http.route(['/my/deleteccmccandidate'], type="http", auth="user", website=True)
     def DeleteCCMCcandidate(self, **kw):
-        user_id = request.env.user.id
-        candidate_id = kw.get("candidate_id")
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         
-        print(request.env['institute.ccmc.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))]),"hellow=================================================================================888888888888")
+        user_id = request.env.user.id
+        candidate_id = kw.get("ccmc_candidate_batch_id")
+
+        print(candidate_id)
 
         batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',kw.get("ccmc_candidate_batch_id"))])
-
+        print()
+        print(batch,"hellowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+        
+        print()
         print(batch.ccmc_state,"id=======================================================================================================")
         if batch.ccmc_state == '1-ongoing':
             request.env['ccmc.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).unlink()
@@ -579,7 +607,7 @@ class InstitutePortal(CustomerPortal):
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
 
         
-        print("BATCH id",batch_id)
+        print("BATCH id2",batch_id)
 
         if request.httprequest.method == 'POST':
             faculty_name = kw.get("faculty_name")
@@ -628,7 +656,7 @@ class InstitutePortal(CustomerPortal):
         batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
 
         
-        print("BATCH id",batch_id)
+        print("BATCH id3",batch_id)
 
         if request.httprequest.method == 'POST':
             faculty_name = kw.get("faculty_name")
@@ -771,7 +799,7 @@ class InstitutePortal(CustomerPortal):
                 'search':search,
                 'searchbar_inputs':search_list
                 }
-        print("Batch id",batch_id)
+        print("Batch id4",batch_id)
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.ccmc_candidate_portal_list", vals)
 

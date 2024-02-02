@@ -596,6 +596,17 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
+                                        <p class="mb-0">E-mail</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.email"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
                                         <p class="mb-0">Indos</p>
                                     </div>
                                     <div class="col-sm-9">
@@ -1775,8 +1786,10 @@
                                     function onOpenDeleteandidateModal(button){
                                         
                                         var dataId = button.getAttribute('candidate-id');
+                                        console.log(dataId)
                                         document.getElementById('candidate_id').value = dataId;
                                         var batchId = button.getAttribute('batch-id');
+                                        console.log(batchId)
                                         document.getElementById('candidate_batch_id').value = batchId;
 
 
@@ -2182,15 +2195,13 @@
 
                                     }
 
-                                    function onOpenDeleteandidateModal(button){
-                                        
+                                    function onOpenDeleteCandidateModal(button) {
                                         var dataId = button.getAttribute('candidate-id');
-                                        console.log(dataId)
+                                        console.log(dataId);
                                         document.getElementById('ccmc_candidate_id').value = dataId;
                                         var batchId = button.getAttribute('batch-id');
+                                        console.log(batchId);
                                         document.getElementById('ccmc_candidate_batch_id').value = batchId;
-
-
                                     }
 
 
@@ -2227,6 +2238,8 @@
 
                                     
                                     }
+
+                                    
 
                                     
         </script>
@@ -2356,7 +2369,54 @@
                                                 <label for="dob">DOB</label>
                                                 <input type="date" class="form-control" id="dob" name="dob" required="true"/>
                                             </div>
-                                        </div>
+
+                                        <!-- <script type="text/javascript">
+                                            // Fetch the input element
+                                            var input = document.getElementById('dob');
+
+                                            // Function to format the date value in the input field
+                                            function formatInputDate() {
+                                                // Get the entered date value
+                                                var dateValue = input.value;
+                                                
+                                                // Convert the date format to DD-MON-YY
+                                                var formattedDate = convertDateFormat(dateValue);
+                                                
+                                                // Set the formatted date back to the input
+                                                input.value = formattedDate;
+                                            }
+
+                                            // Add an event listener to format the date on input change
+                                            input.addEventListener('input', formatInputDate);
+
+                                            // Function to convert date format from YYYY-MM-DD to DD-MON-YY
+                                            function convertDateFormat(dateValue) {
+                                                // Split the date value by '-'
+                                                var parts = dateValue.split('-');
+                                                
+                                                // Get day, month, and year parts
+                                                var day = parts[2]; // Inverted order as date input expects YYYY-MM-DD
+                                                var month = getMonthAbbreviation(parts[1]);
+                                                var year = parts[0].substring(2); // Take the last two digits of the year
+                                                
+                                                // Return the formatted date as DD-MON-YY
+                                                return day + '-' + month + '-' + year;
+                                            }
+
+                                            // Function to convert month to abbreviation
+                                            function getMonthAbbreviation(month) {
+                                                // Define an array of month abbreviations
+                                                var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                                
+                                                // Get the index of the month and return its abbreviation
+                                                return months[parseInt(month) - 1];
+                                            }
+                                        </script>
+
+                                        </div> -->
+
+                                    </div>
+
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="street">Street</label>
@@ -2461,7 +2521,7 @@
                 </form>
             </div>
 
-            <div class="modal fade" id="delete_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="delete_ccmc_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <form method="post" action="/my/deleteccmccandidate" enctype="multipart/form-data">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -2527,7 +2587,9 @@
                             </t>
                             <t t-if="candidate.institute_batch_id.ccmc_state == '1-ongoing'">
                                 <td class="text-center">
-                                    <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
+                                    <!-- <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a> -->
+                                    <a href="#" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a>
+
                                 </td>
                             </t>
 
@@ -3051,6 +3113,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">E-mail</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.email"/>
                                         </p>
                                     </div>
                                 </div>
