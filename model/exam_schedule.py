@@ -156,7 +156,9 @@ class ExamCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("Candidate Code No.")
     roll_no = fields.Char("Roll No.")
-    dob = fields.Date("DOB")
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")
@@ -433,6 +435,7 @@ class GPExam(models.Model):
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -809,31 +812,50 @@ class GPAppearingExam(models.Model):
     
     
 
+# class GPCertificate(models.AbstractModel):
+#     _name = 'report.bes.report_general_certificate'
+
+#     @api.model
+#     def _get_report_values(self, docids, data=None):
+#         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        
+#         if docs1.certificate_criteria == 'passed' :
+#             return {
+#                 'docids': docids,
+#                 'doc_model': 'gp.exam.schedule',
+#                 'data': data,
+#                 'docs': docs1
+#             }
+#         else:
+#             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
+        
 class GPCertificate(models.AbstractModel):
     _name = 'report.bes.report_general_certificate'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-        
-        if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
+        docs = self.env['gp.exam.schedule'].sudo().browse(docids)
+
+        # Check if all records meet the certificate criteria
+        if all(doc.certificate_criteria == 'passed' for doc in docs):
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
                 'data': data,
-                'docs': docs1
+                'docs': docs
             }
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
 
+
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
-    _rec_name = "roll_no"
+    _rec_name = "exam_id"
     _description= 'Schedule'
     
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -1045,6 +1067,10 @@ class CcmcCertificate(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
+
+        #If causing error uncomment this line 
+        # Check if all records meet the certificate criteria
+        # if all(doc.certificate_criteria == 'passed' for doc in docs):
         if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,

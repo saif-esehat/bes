@@ -21,7 +21,9 @@ class GPCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
-    dob = fields.Date("DOB")
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
     user_id = fields.Many2one("res.users", "Portal User")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
@@ -234,11 +236,16 @@ class GPCandidate(models.Model):
     @api.model
     def create(self, values):
         institute_batch_id  = values['institute_batch_id']
+
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
+        # print(gp_batches,"gpbatchesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        
         capacity = gp_batches.dgs_approved_capacity - 1
+        # print(capacity,"capacityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy, ")
+        
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)]) 
-        # print("capacity, " , capacity)
-        # print("candidate_count, ",candidate_count)
+        # print(candidate_count,"candidate_countttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt, ")
+       
         if candidate_count > capacity:
             raise ValidationError("DGS approved Capacity Exceeded")
         gp_candidate = super(GPCandidate, self).create(values)
@@ -265,7 +272,9 @@ class GPCandidate(models.Model):
         # # import wdb; wdb.set_trace()
         # candidate_tag = self.env.ref('bes.candidates_tags').id
         # portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
+        
         return gp_candidate
+
 
     @api.depends('fees_paid')
     def _compute_invoice_no(self):
@@ -381,7 +390,10 @@ class CCMCCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("CCMC Candidate Code No.")
     roll_no = fields.Char("Roll No.")
-    dob = fields.Date("DOB")
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
+                      
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City",required=True)
@@ -518,40 +530,56 @@ class CCMCCandidate(models.Model):
                 candidate.invoice_no = ''
 
 
-    
-    
-    
+
+
     @api.model
     def create(self, values):
+        print(values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         institute_batch_id  = values['institute_batch_id']
-        gp_batches = self.env["institute.ccmc.batches"].search([('id','=',institute_batch_id)])
         
-        capacity = gp_batches.dgs_approved_capacity
+        ccmc_batches = self.env["institute.ccmc.batches"].search([('id','=',institute_batch_id)])
+        # print(ccmc_batches,"ccmc_vatches*******************************++++++++++++++++++++================================")
+        
+        capacity = ccmc_batches.dgs_approved_capacity 
+        # print(capacity,"capacity*******************************++++++++++++++++++++================================")
+        
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
+        # print(candidate_count,"countttttttt*******************************++++++++++++++++++++================================")
+
         if candidate_count > capacity:
             raise ValidationError("DGS approved Capacity Exceeded")
         ccmc_candidate = super(CCMCCandidate, self).create(values)
-        group_xml_ids = [
-            'bes.group_ccmc_candidates',
-            'base.group_portal'
-            # Add more XML IDs as needed
-        ]
-        
-        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
-        
-        user_values = {
-            'name': ccmc_candidate.name,
-            'login': ccmc_candidate.indos_no,  # You can set the login as the same as the user name
-            'password': 12345678,  # Generate a random password
-            'sel_groups_1_9_10':9,
-            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
-        }
 
-        portal_user = self.env['res.users'].sudo().create(user_values)
-        ccmc_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
-        # import wdb; wdb.set_trace()
-        candidate_tag = self.env.ref('bes.candidates_tags').id
-        portal_user.partner_id.write({'email': ccmc_candidate.email,'phone':ccmc_candidate.phone,'mobile':ccmc_candidate.mobile,'street':ccmc_candidate.street,'street2':ccmc_candidate.street2,'city':ccmc_candidate.city,'zip':ccmc_candidate.zip,'state_id':ccmc_candidate.state_id.id,'category_id':[candidate_tag]})
+
+        ### Comment Out for enable Login creation automatically
+        # group_xml_ids = [
+        #     'bes.group_ccmc_candidates',
+        #     'base.group_portal'
+        #     # Add more XML IDs as needed
+        # ]
+        
+        # group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+        
+        # user_values = {
+        #     'name': ccmc_candidate.name,
+        #     'login': ccmc_candidate.indos_no,  # You can set the login as the same as the user name
+        #     'password': 12345678,  # Generate a random password
+        #     'sel_groups_1_9_10':9,
+        #     'groups_id':  [(4, group_id, 0) for group_id in group_ids]
+        # }
+
+        # portal_user = self.env['res.users'].sudo().create(user_values)
+        # ccmc_candidate.write({'user_id': portal_user.id})  # Associate the user with the institute
+        # # import wdb; wdb.set_trace()
+        # candidate_tag = self.env.ref('bes.candidates_tags').id
+        # portal_user.partner_id.write({'email': ccmc_candidate.email,
+        #                               'phone':ccmc_candidate.phone,
+        #                               'mobile':ccmc_candidate.mobile,
+        #                               'street':ccmc_candidate.street,
+        #                               'street2':ccmc_candidate.street2,
+        #                               'city':ccmc_candidate.city,
+        #                               'zip':ccmc_candidate.zip,
+        #                               'state_id':ccmc_candidate.state_id.id,'category_id':[candidate_tag]})
         return ccmc_candidate    
     
     
@@ -1448,7 +1476,9 @@ class SEPCandidateLine(models.Model):
 
     sep_candidate_parent = fields.Many2one("sep.candidate",string="SEP Registration Line")
     name = fields.Char("Name of the Rating's")
-    dob = fields.Date("DOB")
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
     indos_no= fields.Char("Indos No")
     cdc_no= fields.Char("CDC No")
     contact= fields.Char("Contact No")
