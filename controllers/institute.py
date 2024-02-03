@@ -368,7 +368,7 @@ class InstitutePortal(CustomerPortal):
             
             
             request.env['gp.candidate'].sudo().create(candidate_data)
-            print(request.env['gp.candidate'].sudo().create(candidate_data),"DATA_CHECK================================================================================================")
+            # print(request.env['gp.candidate'].sudo().create(candidate_data),"DATA_CHECK================================================================================================")
             
             return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
         
