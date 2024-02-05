@@ -834,10 +834,16 @@ class GPCertificate(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+<<<<<<< HEAD
         docs = self.env['gp.exam.schedule'].sudo().browse(docids)
 
         # Check if all records meet the certificate criteria
         if all(doc.certificate_criteria == 'passed' for doc in docs):
+=======
+        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        
+        if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
+>>>>>>> b5d43b3 (Data)
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
