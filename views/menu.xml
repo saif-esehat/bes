@@ -89,7 +89,13 @@
 
         <menuitem id="exam_center_menu" parent="bes_menu" name="Exam Region" action="exam_center_action" />
 
-        <menuitem id="batches_menu" parent="bes_menu" name="Batches" action="gpbatch_form_kanban_action" />
+        <menuitem id="batches_menu" parent="bes_menu" name="Batches"  />
+
+        <menuitem id="gp_batches_menu" parent="batches_menu" name="GP Batch" action="gpbatch_form_kanban_action"/>
+
+        <menuitem id="ccmc_batches_menu" parent="batches_menu" name="CCMC Batch" action="ccmc_batches_action"/>
+
+
 
         <menuitem id="dgs_batch_menu" parent="bes_menu" name="Exam Result Details" action="dgs_batch_action" />
 

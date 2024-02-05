@@ -36,6 +36,8 @@ class InstituteGPBatches(models.Model):
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing')
     
+    active = fields.Boolean(string="Active",default=True)
+    
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
         ('paid', 'Paid'),
@@ -327,6 +329,9 @@ class InstituteCcmcBatches(models.Model):
         ('paid', 'Paid'),
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
+    
+    active = fields.Boolean(string="Active",default=True)
+
     
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")

@@ -56,6 +56,7 @@
                         <group style="width:50%">
                             <field name="dgs_approval_state" readonly="0"/>
                             <field name="dgs_document"/>
+                            <field name="active" invisible="1"/>
                         </group>
 
                     </sheet>
@@ -131,11 +132,17 @@
 
 
         <record id="gpbatch_form_kanban_action" model="ir.actions.act_window">
-            <field name="name">Batches</field>
+            <field name="name">GP Batches</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">institute.gp.batches</field>
             <field name="view_mode">kanban,form,tree</field>
+        </record>
 
+        <record id="ccmc_batches_action" model="ir.actions.act_window">
+            <field name="name">CCMC Batches</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">institute.ccmc.batches</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <record id="dgs_batch_action" model="ir.actions.act_window">
@@ -200,6 +207,7 @@
                         <group style="width:50%">
                             <field name="dgs_approval_state" readonly="0"/>
                             <field name="dgs_document"/>
+                            <field name="active" invisible="1"/>
                         </group>
 
                     </sheet>
@@ -211,7 +219,7 @@
             <field name="name">institute.ccmc.batches.kanban</field>
             <field name="model">institute.ccmc.batches</field>
             <field name="arch" type="xml">
-                <kanban disable_drag_drop_record="true" create="false" default_group_by="state">
+                <kanban disable_drag_drop_record="true" create="false" default_group_by="ccmc_state">
                     <field name="ccmc_state" readonly="1" />
                     <field name="ccmc_batch_name"/>
                     <!-- <field name="candidate_count"/> -->
@@ -235,17 +243,7 @@
                                 <b>No of Candidate : </b>
                                 <field name="ccmc_candidate_count"/>
                                 <br/>
-                                <t t-if="record.ccmc_state.raw_value === '3-pending_invoice' || record.state.raw_value === '4-invoiced'">
-                                    <b>Invoice Status : </b>
-                                    <field name="payment_state" decoration-success="payment_state == 'paid'" widget="badge" />
-                                </t>
-                                <!-- </t> -->
-                                <!-- <br/>
-                                <div class="o_kanban_record_bottom" t-if="!selection_mode">
-                                  <div class="oe_kanban_bottom_left">
-                                    <field name="activity_ids" widget="kanban_activity"/>
-                                  </div>
-                                </div> -->
+                                
                             </div>
                         </t>
                     </templates>
@@ -284,7 +282,6 @@
                     <field name="institute_id"/>
                     <field name="ccmc_from_date"/>
                     <field name="ccmc_to_date"/>
-                    <!-- <field name="course"/> -->
                 </tree>
             </field>
         </record>
@@ -323,7 +320,7 @@
         </record>
 
         <record id="ccmc_batch_form_kanban_action" model="ir.actions.act_window">
-            <field name="name">Batches</field>
+            <field name="name"> CCMC Batches</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">institute.ccmc.batches</field>
             <field name="view_mode">kanban,form,tree</field>
