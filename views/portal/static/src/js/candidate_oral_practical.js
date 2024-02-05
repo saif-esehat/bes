@@ -17,6 +17,10 @@ odoo.define('bes.CandidatOralPractical', function (require) {
             
             console.log("Working")
         },
+
+        _onChangeSubmitArea2:function(ev){
+          var msg = "Value must be smaller than 6"
+        },
         
         _onChangeSubmitArea1: function(ev){
 

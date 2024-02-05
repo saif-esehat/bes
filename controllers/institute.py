@@ -368,7 +368,7 @@ class InstitutePortal(CustomerPortal):
             
             
             request.env['gp.candidate'].sudo().create(candidate_data)
-            print(request.env['gp.candidate'].sudo().create(candidate_data),"DATA_CHECK================================================================================================")
+            # print(request.env['gp.candidate'].sudo().create(candidate_data),"DATA_CHECK================================================================================================")
             
             return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
         
@@ -997,13 +997,15 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/editinstitute'], method=["POST", "GET"], type="http", auth="user", website=True)
     def editInstituteView(self, **kw):
-        # import wdb; wdb.set_trace()
+        
 
         user_id = request.env.user.id
         institute = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
 
         if request.httprequest.method == 'POST':
+            
+            
             institute.write({"email": kw.get("email"),
                              "street": kw.get("street"),
                              "street2": kw.get("street2"),
@@ -1020,8 +1022,10 @@ class InstitutePortal(CustomerPortal):
                              "computer_lab_pc_count": kw.get("computer_lab_pc_count"),
                              "internet_strength": kw.get("internet_strength")
                              })
+            
 
             vals = {'institutes': institute, 'page_name': 'institute_page'}
+            institute.user_id.write({'email': kw.get("email"),'login':kw.get("email")})
 
             return request.render("bes.institute_detail_form", vals)
 

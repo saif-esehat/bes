@@ -906,15 +906,14 @@ class GPCertificate(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs = self.env['gp.exam.schedule'].sudo().browse(docids)
-
-        # Check if all records meet the certificate criteria
-        if all(doc.certificate_criteria == 'passed' for doc in docs):
+        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        
+        if docs1.certificate_criteria == 'passed' and docs1.certificate_id == False:
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
                 'data': data,
-                'docs': docs
+                'docs': docs1
             }
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")

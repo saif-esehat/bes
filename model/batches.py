@@ -54,7 +54,7 @@ class InstituteGPBatches(models.Model):
     @api.model
     def create(self, values):
         record = super(InstituteGPBatches, self).create(values)
-        course_id = self.env["course_master"].sudo().search([('course_code','=','GP')]).id
+        course_id = self.env["course.master"].sudo().search([('course_code','=','GP')]).id
         record.write({'course': course_id})
         return record
     

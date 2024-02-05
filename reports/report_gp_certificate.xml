@@ -4,6 +4,19 @@
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="doc">
                 <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+                <style>
+                    .wrapper {
+                        display: flex;
+                        }
+                    .line {
+                        display: -webkit-box; /* wkhtmltopdf uses this one */
+                        display: -webkit-flex;
+                        display: flex;
+                        -webkit-box-pack: center; /* wkhtmltopdf uses this one */
+                        -webkit-justify-content: space-between;
+                                justify-content: space-between;
+                        }
+                </style>
                 <div class="o_report" style="">
                     <div id="header" style="width:100%; text-align: center; font-family: 'Times New Roman';">
                         <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem; max-width: 100%;"/>
@@ -30,20 +43,23 @@
                             <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">This is to certify that: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.name"/></span>
                         </div>
                         
-                         <div class="line" style="display: flex; width: 100%; font-size: 1rem; font-family: 'Times New Roman';">
-                            <div style="flex: 1; margin-right: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Roll No: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.roll_no"/></span>
-                            </div>
-                            <div style="flex: 1; text-align: center; margin-left:2.5rem; margin-right:0rem; font-family: 'Times New Roman';">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">INDOS No: </label>
-                                <span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.indos_no"/></span>
-                            </div>
-                            <div style="flex: 1; margin-left: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Date of Birth: </label>
-                                <span style="font-size: 1.2rem; font-family: 'Times New Roman';">
-                                    <t t-set="formatted_dob" t-value="doc.gp_candidate.dob.strftime('%d-%b-%y')" />
-                                    <t t-esc="formatted_dob" />
-                                </span>
+                         <div class="wrapper" style="display: flex; width: 100%; font-size: 1rem;text-align: left; font-family: 'Times New Roman';">
+                            <div class="line">
+                                <div style="flex: 1; margin-right: 0;text-align: left;">
+                                    <label for="" style="color: #4c2d8b;text-align: left; font-size: 1.2rem; font-family: 'Times New Roman';">Roll No: </label><span style="font-size:1.2rem;text-align: left; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.roll_no"/></span>
+                                </div>
+                                <div style="flex: 1; text-align: left; margin-left:2.5rem; margin-right:0rem; font-family: 'Times New Roman';">
+                                    <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">INDOS No: </label>
+                                    <span style="font-size:1.2rem;text-align: left; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.indos_no"/></span>
+                                </div>
+                                <div style="flex: 1; margin-left: 0;text-align: left;">
+                                    <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Date of Birth: </label>
+                                    <span style="font-size: 1.2rem;text-align: left; font-family: 'Times New Roman';">
+                                        <t t-set="formatted_dob" t-value="doc.gp_candidate.dob.strftime('%d-%b-%y')" />
+                                        <t t-esc="formatted_dob" />
+                                    </span>
+                                </div>
+                            
                             </div>
                         </div>
 
@@ -73,7 +89,7 @@
                                 </div>
                                 <div id="sign" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
                                     <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" id="img-sign" 
-                                    style="width: 250px; height: 55px; border: 2px dotted #000;  position: absolute; top: -30px; right:0;" />
+                                    style="width: 250px; height: 55px; position: absolute; top: -30px; right:0;" />
                                     <span style="display: block; position: absolute; top: 30%; right:0;">Signature of the Candidate</span>
                                 </div>
                             </div>
@@ -96,10 +112,10 @@
 
                 <div class="o_report" style="font-family: 'Times New Roman';">
                     <div id="main" style="padding: 20px; font-size:1rem;">
-                        <p>The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
+                        <p style="text-align: left;">The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
 
                         <!-- Add the curriculum components -->
-                        <p>The curriculum for pre-sea training programme includes the following components:</p>
+                        <p style="text-align: left;">The curriculum for pre-sea training programme includes the following components:</p>
                         <table style="width: 95%; margin: 0 auto; text-align: center; border-collapse: collapse; border: 1px solid #000;" >
                             <tbody>
                                 <tr>
@@ -171,10 +187,10 @@
 
 
                         <!-- Add the mandatory STCW courses -->
-                        <p>*Mandatory courses for General Purpose Rating pre-sea training:</p>
+                        <p style="text-align: left;">*Mandatory courses for General Purpose Rating pre-sea training:</p>
                         
 
-                        <p>Under the All India Exit Examination, conducted by the Board of Examinations for Seafarers
+                        <p style="text-align: left;">Under the All India Exit Examination, conducted by the Board of Examinations for Seafarers
                         Trust, each candidate is evaluated through an online examination, practical skill assessment
                         with oral test for parts 1 to 7. To pass the examination, a candidate must obtain the minimum
                         marks as prescribed for each component. Results are evaluated by the Directorate General of
@@ -195,31 +211,39 @@
                             <tbody style="border: 1px solid #000;">
                                 <tr >
                                     <td style="border: 1px solid #000;">1.</td>
-                                    <td style="border: 1px solid #000;">Part 1+2+3+6</td>
+                                    <td style="border: 1px solid #000;text-align: left;">Part 1+2+3+6</td>
                                     <td style="border: 1px solid #000;">75</td>
                                     <td style="border: 1px solid #000;">45</td>
-                                    <td style="border: 1px solid #000;">66.80</td>
+                                    <td style="border: 1px solid #000;">
+                                        <span t-esc="doc.gsk_online_marks"/>
+                                    </td>
                                 </tr>
                                 <tr >
                                     <td style="border: 1px solid #000;">2.</td>
-                                    <td style="border: 1px solid #000;">Part 4+5+7</td>
+                                    <td style="border: 1px solid #000;text-align: left;">Part 4+5+7</td>
                                     <td style="border: 1px solid #000;">75</td>
                                     <td style="border: 1px solid #000;">45</td>
-                                    <td style="border: 1px solid #000;">66.00</td>
+                                    <td style="border: 1px solid #000;">
+                                        <span t-esc="doc.mek_online_marks"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td style="border: 1px solid #000;">3.</td>
-                                    <td style="border: 1px solid #000;">Part 1+2+3+6 Practical with Oral</td>
+                                    <td style="border: 1px solid #000;text-align: left;">Part 1+2+3+6 Practical with Oral</td>
                                     <td style="border: 1px solid #000;">175</td>
                                     <td style="border: 1px solid #000;">105</td>
-                                    <td style="border: 1px solid #000;">126</td>
+                                    <td style="border: 1px solid #000;">
+                                        <span t-esc="doc.gsk_total"/>
+                                    </td>
                                 </tr>
                                 <tr >
                                     <td style="border: 1px solid #000;">4.</td>
-                                    <td style="border: 1px solid #000;">Part 4+5+7 Practical with Oral</td>
+                                    <td style="border: 1px solid #000;text-align: left;">Part 4+5+7 Practical with Oral</td>
                                     <td style="border: 1px solid #000;">175</td>
                                     <td style="border: 1px solid #000;">105</td>
-                                    <td style="border: 1px solid #000;">120</td>
+                                    <td style="border: 1px solid #000;">
+                                        <span t-esc="doc.mek_total"/>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
