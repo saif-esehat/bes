@@ -59,7 +59,7 @@
                         </div>
                         <h1 style="text-align: center; font-family: 'Times New Roman';">General Purpose Rating</h1>
                         <div class="left" style="font-size:1.2rem; font-family: 'Times New Roman';">
-                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.gp_candidate.institute_id.name"/></span></p>
+                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.gp_candidate.institute_id.name"/>(<t t-esc="doc.gp_candidate.institute_id.mti"/>)</span></p>
 
                             <p style="color:#4c2d8b; margin:0;  margin-top:10px;">From <span style="color:#000;">Demo</span> and has successfully passed the All India Exit Examination
                                 held in <span></span></p>

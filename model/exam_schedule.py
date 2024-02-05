@@ -801,6 +801,78 @@ class GPExam(models.Model):
 
     attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
+
+    # def send_certificate_email(self):
+    #     template = self.env.ref('bes.gp_certificate_mail')
+    #     print(template,"templateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
+    #     for rec in self:
+    #         print(rec.id,"recccccccccccccccccccccccccccccccccccccccccccccccccc")
+            
+    #         attachment_ids = [(4, attachment.id) for attachment in rec.attachment_ids]
+    #         print(attachment_ids,"attaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+    #         template.write({'attachment_ids': attachment_ids})
+    #         template.send_mail(rec.id)
+
+
+    def send_certificate_email(self):
+        print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
+        # Replace 'bes.report_gp_certificate' with the correct XML ID of the report template
+        report_template = self.env.ref('bes.report_gp_certificate')
+        report_pdf = report_template.render_pdf([self.id])
+        print(report_pdf, "reportttttttttttttttttttttttttttttttttttttttttttttt")
+        
+        # Render the report as PDF
+        # generated_report = report_template._render_qweb_pdf(self.id)
+        # print(generated_report,"genraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+         # Convert the report to PDF format
+        # pdf_content = self.env['ir.actions.report'].convert(
+        #         generated_report,
+        #         'pdf',
+        #         {'model': self._name, 'id': self.ids[0]}
+        #     )
+        # print(pdf_content,"pdfffffffffffffffffffffffffffffffffffffff")
+
+        # Encode the PDF data
+        data_record = base64.b64encode(report_pdf[0])
+        
+
+        # Create an attachment record
+        ir_values = {
+            'name': 'Certificate Report',
+            'type': 'binary',
+            'datas': data_record,
+            'store_fname': 'Certificate_Report.pdf',
+            'mimetype': 'application/pdf',
+            'res_model': 'gp.exam.schedule',
+        }
+
+        print(ir_values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        report_attachment = self.env['ir.attachment'].sudo().create(ir_values)
+        
+        # Get the email template
+        email_template = self.env.ref('bes.gp_certificate_mail')
+        
+        # Prepare email values
+        email_values = {
+            'email_to': self.gp_candidate.email,  # Use the appropriate recipient's email address
+            'email_from': self.env.user.email,
+        }
+        
+        # Attach the PDF to the email template
+        if email_template:
+            email_template.attachment_ids = [(4, report_attachment.id)]
+            
+            # Send the email
+            email_template.send_mail(self.id, email_values=email_values, force_send=True)
+            
+            # Remove the attachment from the email template
+            email_template.attachment_ids = [(5, 0, 0)]
+
+
+    
 class GPAppearingExam(models.Model):
     _name = 'gp.exam.appear'
     

@@ -13,7 +13,7 @@ class InstituteGPBatches(models.Model):
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     batch_name = fields.Char("Batch Name",required=True)
     faculty_name = fields.Char("Faculty name")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")

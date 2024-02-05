@@ -25,7 +25,7 @@
 
         <menuitem id="examiner_menu" parent="bes_menu" name="Examiner" action="bes_examiner_action" sequence="3"/>
 
-        <menuitem id="candidate_menus" parent="bes_menu" name="Candidates"  sequence="4"/>
+        <menuitem id="candidate_menus" parent="bes_menu" name="Candidate Master"  sequence="4"/>
 
         <!-- <menuitem id="candidate_all_action" 
                   parent="candidate_menus" 
@@ -61,7 +61,7 @@
 
         <menuitem id="bes_exams_menu" 
                   parent="bes_menu" 
-                  name="Exams"
+                  name="Exam Result Details"
                   sequence="5" />
 
         <menuitem id="bes_exam" 
@@ -91,7 +91,7 @@
 
         <menuitem id="batches_menu" parent="bes_menu" name="Batches" action="gpbatch_form_kanban_action" />
 
-        <menuitem id="dgs_batch_menu" parent="bes_menu" name="DGS Batch" action="dgs_batch_action" />
+        <menuitem id="dgs_batch_menu" parent="bes_menu" name="Exam Result Details" action="dgs_batch_action" />
 
 
         <record id="survey.menu_surveys" model="ir.ui.menu">

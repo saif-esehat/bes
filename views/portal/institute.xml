@@ -1783,7 +1783,7 @@
                                         });
                                     });
 
-                                    function onOpenDeleteandidateModal(button){
+                                    function onOpenDeleteCandidateModal(button){
                                         
                                         var dataId = button.getAttribute('candidate-id');
                                         console.log(dataId)
@@ -2164,7 +2164,7 @@
                             </t>
                             <t t-if="candidate.institute_batch_id.state == '1-ongoing'">
                                 <td class="text-center">
-                                    <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
+                                    <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
                                 </td>
                             </t>
 
