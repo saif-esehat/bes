@@ -13,7 +13,7 @@ class InstituteGPBatches(models.Model):
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     batch_name = fields.Char("Batch Name",required=True)
     faculty_name = fields.Char("Faculty name")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
@@ -35,6 +35,8 @@ class InstituteGPBatches(models.Model):
         ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing')
+    
+    active = fields.Boolean(string="Active",default=True)
     
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
@@ -327,6 +329,9 @@ class InstituteCcmcBatches(models.Model):
         ('paid', 'Paid'),
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
+    
+    active = fields.Boolean(string="Active",default=True)
+
     
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")

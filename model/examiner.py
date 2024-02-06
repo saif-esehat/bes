@@ -30,10 +30,11 @@ class Examiner(models.Model):
     present_designation = fields.Text("Present Designation",required=True)
     name_address_present_employer = fields.Text("Name and address of present employer",required=True)
     designation = fields.Selection([
-        ('master', 'Master'),
-        ('chief', 'Chief')
+        ('master', 'Master Mariner'),
+        ('chief', 'Chief Engineer'),
+        ('catering','Catering Officer')
     ], string='Rank',default='master')
-    competency_no = fields.Char("Certificate of competency no.",required=True)
+    competency_no = fields.Char("Certificate of competency no.")
     date_of_issue = fields.Date("Date of Issue",required=True)
     member_of_imei_cmmi = fields.Selection([
         ('imei', 'IMEI'),

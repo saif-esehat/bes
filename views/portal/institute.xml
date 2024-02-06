@@ -153,6 +153,20 @@
                 </div>
             </t>
         </xpath>
+        <xpath expr="//div[hasclass('o_portal_my_details')]" position="replace">
+            <t t-if="env.user.has_group('bes.group_institute')">
+
+            </t>
+            <t t-else="">
+                <div class="o_portal_my_details">
+                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
+                        <hr class="mt-1 mb-0"/>
+                    <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                </div>
+            </t>
+            
+        </xpath>
+
     </template>
 
 
@@ -1783,7 +1797,7 @@
                                         });
                                     });
 
-                                    function onOpenDeleteandidateModal(button){
+                                    function onOpenDeleteCandidateModal(button){
                                         
                                         var dataId = button.getAttribute('candidate-id');
                                         console.log(dataId)
@@ -2164,7 +2178,7 @@
                             </t>
                             <t t-if="candidate.institute_batch_id.state == '1-ongoing'">
                                 <td class="text-center">
-                                    <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
+                                    <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
                                 </td>
                             </t>
 
@@ -2802,13 +2816,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="code">MTI no.</label>
-                                <input type="text" class="form-control" id="code" name="code" t-att-value="institutes.mti" t-att-readonly="'1'" />
+                                <input type="text" class="form-control" id="mti" name="mti" t-att-value="institutes.mti" t-att-readonly="'1'" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">Code</label>
-                                <input type="text" class="form-control" id="email" name="email" t-att-value="institutes.code" t-att-readonly="'1'"/>
+                                <input type="text" class="form-control" id="code" name="code" t-att-value="institutes.code" t-att-readonly="'1'"/>
                             </div>
                         </div>
                         <div class="col-md-6">
