@@ -73,7 +73,7 @@
                 <p>Dear <t t-out="object.institute_id.name"/>, Administration,</p>
                 <p>I trust this email finds you well. We are pleased to inform you that the enrollment processes for candidates have been successfully completed. User IDs have been generated for each candidate.</p>
                 <p>Please ensure that each candidate is provided with their respective user ID and password at your earliest convenience. This information is essential for their engagement with the examination's services.</p>
-                <p>The batch name is: <strong><t t-out="object.batch_name"/></strong></p>
+                <p>The batch name is: <strong><t t-out="object.ccmc_batch_name"/></strong></p>
                 <p>We kindly request your assistance in guiding them through the orientation sessions of the BES portal. This will help them familiarize themselves with the portal and make the most of the resources available.</p>
                 
                 

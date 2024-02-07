@@ -317,7 +317,7 @@ class InstituteCcmcBatches(models.Model):
 
     ccmc_state = fields.Selection([
         ('1-ongoing', 'On-Going'),
-        ('2-indos_pending', 'Indos Pending'),
+        ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Pending'),
         ('4-invoiced', 'Invoiced'),
         ('5-exam_scheduled', 'Exam Scheduled'),
@@ -419,6 +419,7 @@ class InstituteCcmcBatches(models.Model):
     
     def confirm_batch_ccmc(self):
 
+        print(self,"selfffffffffffffffffffffffffffffffffffffffffffffffffffff")
 
         candidate_list_no_indos = []
         for candidate in self.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
@@ -467,7 +468,7 @@ class InstituteCcmcBatches(models.Model):
             }
         else:
 
-            ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('insitute_batch_id', '=', self.id)])
+            ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)])
             
             group_xml_ids = [
                 'bes.group_ccmc_candidates',
@@ -488,7 +489,8 @@ class InstituteCcmcBatches(models.Model):
                 portal_user = self.env['res.users'].sudo().create(user_values)
                 ccmc_candidate.write({'user_id': portal_user.id})
                 # You may need to adjust the following fields based on your actual field names in ccmc_candidate
-                ccmc_candidate_tag = self.env.ref('bes.ccmc_candidates_tags').id
+                ccmc_candidate_tag = self.env.ref('bes.candidates_tags').id
+
                 portal_user.partner_id.write({
                     'email': ccmc_candidate.email,
                     'phone': ccmc_candidate.phone,
@@ -505,7 +507,7 @@ class InstituteCcmcBatches(models.Model):
             mail_template.send_mail(self.id, force_send=True)
 
             # Update the state field based on your actual field name in ccmc_batches
-            self.write({"state": "2-indos_pending"})
+            self.write({"ccmc_state": "2-indos_pending"})
     
     
     def confirm_indos_ccmc(self):
