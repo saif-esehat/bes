@@ -357,6 +357,12 @@
                                                 <label for="approvaldocument">Upload Approval Document</label>
                                                 <input required="" type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
                                             </div>
+
+                                            <t t-if="batch.state == '2-indos_pending'">
+                                                <td class="text-center">
+                                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                                </td>
+                                            </t>
                                         </div>
 
 
