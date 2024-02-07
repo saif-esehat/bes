@@ -21,9 +21,9 @@
 
 
 
-        <menuitem id="institute_menu" parent="bes_menu" name="Institute" action="institute_action" sequence="2"/>
+        <menuitem id="institute_menu" parent="bes_menu" name="Institute Master" action="institute_action" sequence="2"/>
 
-        <menuitem id="examiner_menu" parent="bes_menu" name="Examiner" action="bes_examiner_action" sequence="3"/>
+        <menuitem id="examiner_menu" parent="bes_menu" name="Examiner Master" action="bes_examiner_action" sequence="3"/>
 
         <menuitem id="candidate_menus" parent="bes_menu" name="Candidate Master"  sequence="4"/>
 
