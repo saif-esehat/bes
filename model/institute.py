@@ -32,6 +32,7 @@ class Institute(models.Model):
     principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute", validators=[api.constrains('principal_mobile')])
     principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute", validators=[api.constrains('principal_email')])
     
+    ip_address = fields.Char("IP Address")
     
     admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_phone')])
     admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')])

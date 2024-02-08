@@ -17,6 +17,9 @@
             <field name="model">bes.examiner</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                            <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <group>
                             <field nolabel="1" name="examiner_image" widget="image" options="{'preview_image': 'image'}" width="150" height="150"/>

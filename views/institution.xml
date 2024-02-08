@@ -111,31 +111,35 @@
                             </group>
                             <group style="width:50%;">
                                 <label for="admin_phone" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="admin_phone" optional="hide"/>
+                                <field name="admin_phone" nolabel="1"/>
                                 <label for="admin_mobile" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="admin_mobile" optional="hide"/>
+                                <field name="admin_mobile" nolabel="1"/>
                                 <label for="admin_email" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="admin_email" optional="hide"/>
+                                <field name="admin_email" nolabel="1"/>
                             </group>
                             <group style="width:100%;">
                                 <field name="name_of_second_authorized_person"/>
                             </group>
 
                             <group style="width:50%;">
-                                <label for="institute_computer_lab" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <!-- <label for="institute_computer_lab" style="margin-bottom:10px; margin-top: 15px;"/> -->
 
-                                <field name="institute_computer_lab" optional="hide"/>
+                                <field name="institute_computer_lab"/>
 
                             </group>
 
                             <group style="width:50%;">
-                                <label for="computer_lab_pc_count" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="computer_lab_pc_count" optional="hide" attrs="{'required': [('institute_computer_lab', '=', True)]}" />
+                                <!-- <label for="computer_lab_pc_count" style="margin-bottom:10px; margin-top: 15px;"/> -->
+                                <field name="computer_lab_pc_count" attrs="{'required': [('institute_computer_lab', '=', True)]}" />
                             </group>
 
                             <group style="width:100%;">
-                                <label for="internet_strength" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="internet_strength" optional="hide"/>
+                                <!-- <label for="internet_strength" style="margin-bottom:10px; margin-top: 15px;"/> -->
+                                <field name="internet_strength" />
+                            </group>
+                            <group style="width:100%;">
+                                <!-- <label for="ip_address" style="margin-bottom:10px; margin-top: 15px;"/> -->
+                                <field name="ip_address" />
                             </group>
                             <group>
                                 <field name="ccmc_present" invisible="1"/>
@@ -143,13 +147,13 @@
                             </group>
 
                             <group style="width:100%;">
-                                <label for="institute_approved_conduct_stcw" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="institute_approved_conduct_stcw" optional="hide"/>
+                                <!-- <label for="institute_approved_conduct_stcw" style="margin-bottom:10px; margin-top: 15px;"/> -->
+                                <field name="institute_approved_conduct_stcw" />
                             </group>
 
                             <group style="width:100%;">
-                                <label for="is_lab_used_for_stcw_exit_exam" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="is_lab_used_for_stcw_exit_exam" optional="hide"/>
+                                <!-- <label for="is_lab_used_for_stcw_exit_exam" style="margin-bottom:10px; margin-top: 15px;"/> -->
+                                <field name="is_lab_used_for_stcw_exit_exam" />
                             </group>
                         </group>
                         <notebook>
