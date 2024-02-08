@@ -235,16 +235,17 @@ class GPCandidate(models.Model):
     
     @api.model
     def create(self, values):
-        institute_batch_id  = values['institute_batch_id']
+        print(values,"valeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        institute_batch_id  = int(values['institute_batch_id'])
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
         # print(gp_batches,"gpbatchesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         
-        capacity = gp_batches.dgs_approved_capacity - 1
-        # print(capacity,"capacityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy, ")
+        capacity = gp_batches.dgs_approved_capacity
+        print(capacity,"capacityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy, ")
         
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)]) 
-        # print(candidate_count,"candidate_countttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt, ")
+        print(candidate_count,"candidate_countttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt, ")
        
         if candidate_count > capacity:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -535,18 +536,20 @@ class CCMCCandidate(models.Model):
     @api.model
     def create(self, values):
         print(values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-        institute_batch_id  = values['institute_batch_id']
+        institute_batch_id  = int(values['institute_batch_id'])
         
         ccmc_batches = self.env["institute.ccmc.batches"].search([('id','=',institute_batch_id)])
-        # print(ccmc_batches,"ccmc_vatches*******************************++++++++++++++++++++================================")
+        print(ccmc_batches,"ccmc_vatches*******************************++++++++++++++++++++================================")
         
         capacity = ccmc_batches.dgs_approved_capacity 
-        # print(capacity,"capacity*******************************++++++++++++++++++++================================")
+        print(capacity,"capacity*******************************++++++++++++++++++++================================")
         
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
-        # print(candidate_count,"countttttttt*******************************++++++++++++++++++++================================")
-
+        print(candidate_count,"countttttttt*******************************++++++++++++++++++++================================")
+        
+        print("noooooooooooooooooooooooooooooooooooooooo")
         if candidate_count > capacity:
+            print("yesssssssssssssssssssssssssssssssssssssss")
             raise ValidationError("DGS approved Capacity Exceeded")
         ccmc_candidate = super(CCMCCandidate, self).create(values)
 

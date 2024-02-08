@@ -330,6 +330,15 @@
                 document.getElementById('modal_batch_id').value = dataId;
 
                 }
+
+                function openRaiseInvoiceModal(button) {
+                // Retrieve the data-id attribute value from the clicked button
+                var dataId = button.getAttribute('data-id');
+                // Update the content of the modal with the retrieved data
+                document.getElementById('ccmc_invoice_batch_id').value = dataId;
+                <!-- debugger -->
+
+                }
         
         </script>
         <t t-call="portal.portal_layout">
@@ -358,11 +367,6 @@
                                                 <input required="" type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
                                             </div>
 
-                                            <t t-if="batch.state == '2-indos_pending'">
-                                                <td class="text-center">
-                                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
-                                                </td>
-                                            </t>
                                         </div>
 
 
@@ -372,6 +376,29 @@
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Upload</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="generate_invoice_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/createccmcinvoice" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Generate Invoice</h5>
+                                </div>
+                                <input type="hidden" id="ccmc_invoice_batch_id" name="ccmc_invoice_batch_id"/>
+                                <div class="modal-body">
+
+                                        Are you sure you want to generate invoice ?
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                 </div>
                             </div>
                         </form>
@@ -421,6 +448,11 @@
                             <t t-if="batch.dgs_approval_state != True">
                                 <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
+                                </td>
+                            </t>
+                            <t t-if="batch.ccmc_state == '2-indos_pending'">
+                                <td class="text-center">
+                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t>
                             <!-- <td class="text-center">

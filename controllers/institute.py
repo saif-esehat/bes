@@ -251,6 +251,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
+        
         # import wdb; wdb.set_trace();
         user_id = request.env.user.id
         batch_id = kw.get("invoice_batch_id")
@@ -295,6 +296,52 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect("/my/invoices/")
     
+    #CCMC Invoice  
+    @http.route(['/my/createccmcinvoice'],method=["POST"], type="http", auth="user", website=True)
+    def CreateGPinvoice(self, **kw):
+        # import wdb; wdb.set_trace();
+        user_id = request.env.user.id
+        batch_id = kw.get("ccmc_invoice_batch_id")
+        batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)])
+        
+        partner_id = institute_id.user_id.partner_id.id
+        
+        product_id = batch.course.exam_fees.id
+        
+        product_price = batch.course.exam_fees.lst_price
+        
+        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
+        
+        # qty = batch.candidate_count
+        # import wdb; wdb.set_trace();
+        line_items = [(0, 0, {
+        'product_id': product_id,
+        'price_unit':product_price,
+        'quantity':qty
+        })]
+        
+        # import wdb; wdb.set_trace();
+        
+        invoice_vals = {
+            'partner_id': partner_id,  # Replace with the partner ID for the customer
+            'move_type': 'out_invoice',
+            'invoice_line_ids':line_items,
+            'batch_ok':True,
+            'batch':batch.id,
+            'l10n_in_gst_treatment':'unregistered'
+            # Add other invoice fields as needed
+        }
+        
+        
+        
+        new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        new_invoice.action_post()
+        # import wdb; wdb.set_trace();
+        batch.write({"invoice_created":True,"account_move":new_invoice.id,'ccmc_state': '3-pending_invoice'})
+        
+        return request.redirect("/my/invoices/")
     # @http.route(['/my/deletegpcandidate'], type="http", auth="user", website=True)
     # def DeleteGPcandidate(self, **kw):
 
