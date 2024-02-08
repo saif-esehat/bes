@@ -47,6 +47,11 @@ class Examiner(models.Model):
     subject_id = fields.Many2one("course.master.subject","Subject")
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
     exam_coordinator = fields.Boolean("Exam Coordinator")
+    
+    state = fields.Selection([
+        ('active', 'Active'),
+        ('inactive', 'Inactive')
+    ], string='State',default="active")
 
     @api.constrains('zip')
     def _check_valid_zip(self):

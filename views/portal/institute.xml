@@ -2987,7 +2987,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="internet_strength">Strength of Internet connection</label>
-                                <input type="text" class="form-control" id="internet_strength" name="internet_strength" t-att-value="institutes.internet_strength" />
+                                <input required=""  type="text" class="form-control" id="internet_strength" name="internet_strength" t-att-value="institutes.internet_strength" />
+                                <span class="text-warning">Minimum requirement: 500 megabits/s</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ip_address">IP Address</label>
+                                <input required=""  type="text" class="form-control" id="ip_address" name="ip_address" t-att-value="institutes.ip_address" />
                             </div>
                         </div>
 

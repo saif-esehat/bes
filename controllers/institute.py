@@ -1075,7 +1075,8 @@ class InstitutePortal(CustomerPortal):
                              "admin_email": kw.get("admin_email"),
                              "name_of_second_authorized_person": kw.get("second_authorized_person"),
                              "computer_lab_pc_count": kw.get("computer_lab_pc_count"),
-                             "internet_strength": kw.get("internet_strength")
+                             "internet_strength": kw.get("internet_strength"),
+                             "ip_address": kw.get("ip_address")
                              })
             
 
