@@ -420,6 +420,7 @@ class InstituteCcmcBatches(models.Model):
         print(self,"selfffffffffffffffffffffffffffffffffffffffffffffffffffff")
 
         candidate_list_no_indos = []
+        candidate_missing_data_id = []
         for candidate in self.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature:
                 
@@ -437,6 +438,7 @@ class InstituteCcmcBatches(models.Model):
                 
                 candidate_data = {"candidate_name": candidate.name, "candidate_mobile": candidate.mobile, "missing_data": missing_data}
                 candidate_list_no_indos.append(candidate_data)
+                candidate_missing_data_id.append(candidate.id)
 
         if len(candidate_list_no_indos) > 0:
 
@@ -454,58 +456,64 @@ class InstituteCcmcBatches(models.Model):
                 "default_candidate_lists": candidate_list_no_indos
             }
 
-            return {
-                'name': 'Email Compose Wizard',
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'mail.compose.message',
-                'views': [(False, 'form')],
-                'view_id': False,
-                'target': 'new',
-                'context': ctx
-            }
-        else:
-
-            ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)])
-            
-            group_xml_ids = [
-                'bes.group_ccmc_candidates',
-                'base.group_portal'
-            ]
-            
-            group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
-
-            for ccmc_candidate in ccmc_candidates:
-                user_values = {
-                    'name': ccmc_candidate.name,
-                    'login': ccmc_candidate.indos_no, # You can set the login as the same as the user name
-                    'password': str(ccmc_candidate.indos_no) + "1",  # Generate a random password
-                    'sel_groups_1_9_10': 9,
-                    'groups_id': [(4, group_id, 0) for group_id in group_ids]
-                }
-
-                portal_user = self.env['res.users'].sudo().create(user_values)
-                ccmc_candidate.write({'user_id': portal_user.id})
-                # You may need to adjust the following fields based on your actual field names in ccmc_candidate
-                ccmc_candidate_tag = self.env.ref('bes.candidates_tags').id
-
-                portal_user.partner_id.write({
-                    'email': ccmc_candidate.email,
-                    'phone': ccmc_candidate.phone,
-                    'mobile': ccmc_candidate.mobile,
-                    'street': ccmc_candidate.street,
-                    'street2': ccmc_candidate.street2,
-                    'city': ccmc_candidate.city,
-                    'zip': ccmc_candidate.zip,
-                    'state_id': ccmc_candidate.state_id.id,
-                    'category_id': [ccmc_candidate_tag]
-                })
-
             mail_template = self.env.ref('bes.ccmc_candidate_confirmation_mail')
             mail_template.send_mail(self.id, force_send=True)
 
-            # Update the state field based on your actual field name in ccmc_batches
-            self.write({"ccmc_state": "2-indos_pending"})
+            # return {
+            #     'name': 'Email Compose Wizard',
+            #     'type': 'ir.actions.act_window',
+            #     'view_mode': 'form',
+            #     'res_model': 'mail.compose.message',
+            #     'views': [(False, 'form')],
+            #     'view_id': False,
+            #     'target': 'new',
+            #     'context': ctx
+            # }
+
+        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)])
+            
+        set1 = set(ccmc_candidates)
+        set2 = set(candidate_missing_data_id)    
+            
+        array1_without_common = list(set1 - set2)
+            
+        ccmc_candidate = self.env['ccmc.candidate'].sudo().browse(array1_without_common)
+        group_xml_ids = [
+            'bes.group_ccmc_candidates',
+            'base.group_portal'
+        ]
+            
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+
+        for ccmc_candidate in ccmc_candidates:
+            user_values = {
+                'name': ccmc_candidate.name,
+                'login': ccmc_candidate.indos_no, # You can set the login as the same as the user name
+                'password': str(ccmc_candidate.indos_no) + "1",  # Generate a random password
+                'sel_groups_1_9_10': 9,
+                'groups_id': [(4, group_id, 0) for group_id in group_ids]
+            }
+
+            portal_user = self.env['res.users'].sudo().create(user_values)
+            ccmc_candidate.write({'user_id': portal_user.id})
+            # You may need to adjust the following fields based on your actual field names in ccmc_candidate
+            ccmc_candidate_tag = self.env.ref('bes.candidates_tags').id
+
+            portal_user.partner_id.write({
+                'email': ccmc_candidate.email,
+                'phone': ccmc_candidate.phone,
+                'mobile': ccmc_candidate.mobile,
+                'street': ccmc_candidate.street,
+                'street2': ccmc_candidate.street2,
+                'city': ccmc_candidate.city,
+                'zip': ccmc_candidate.zip,
+                'state_id': ccmc_candidate.state_id.id,
+                'category_id': [ccmc_candidate_tag]
+            })
+
+        
+        # Update the state field based on your actual field name in ccmc_batches
+        self.write({"ccmc_state": "2-indos_pending"})
     
     
     def confirm_indos_ccmc(self):
