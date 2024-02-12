@@ -125,7 +125,7 @@ class InstituteGPBatches(models.Model):
             'partner_id': partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
-            'batch_ok':True,
+            'gp_batch_ok':True,
             'batch':self.id
             # Add other invoice fields as needed
         }
@@ -392,8 +392,8 @@ class InstituteCcmcBatches(models.Model):
             'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
-            'batch_ok':True,
-            'batch':self.id
+            'ccmc_batch_ok':True,
+            'ccmc_batch':self.id
             # Add other invoice fields as needed
         }
         new_invoice = self.env['account.move'].create(invoice_vals)    
@@ -409,7 +409,7 @@ class InstituteCcmcBatches(models.Model):
         'type': 'ir.actions.act_window',
         'res_id': new_invoice.id,
         'target': 'current',  # Open in the current window
-        }
+        send}
     
     # def confirm_batch_ccmc(self):
         
