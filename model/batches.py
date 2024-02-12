@@ -409,7 +409,7 @@ class InstituteCcmcBatches(models.Model):
         'type': 'ir.actions.act_window',
         'res_id': new_invoice.id,
         'target': 'current',  # Open in the current window
-        send}
+        }
     
     # def confirm_batch_ccmc(self):
         
