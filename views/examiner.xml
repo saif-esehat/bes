@@ -135,6 +135,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
                 </tree>
             </field>
         </record>
