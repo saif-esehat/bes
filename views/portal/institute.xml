@@ -2300,6 +2300,23 @@
                                     
                                     }
 
+                                    function createUser() {
+                                        var indosNumber = $('#indos_number_input').val(); // Assuming you have an input field with id 'indos_number_input'
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/create_user",
+                                            data: {
+                                                'indos_number': indosNumber,
+                                            },
+                                            success: function(response) {
+                                                alert(response); // Show success message
+                                            },
+                                            error: function(xhr, status, error) {
+                                                alert('Error creating user: ' + error); // Show error message
+                                            }
+                                        });
+                                    }
+
                                     
 
                                     
@@ -2661,6 +2678,10 @@
                                 <td class="text-center">
                                     <!-- <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a> -->
                                     <a href="#" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a>
+                                   <t t-if="ccmc_state == '2-indos_pending'">
+                                    
+                                   </t>
+                                    <button t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="createUser()">Create User</button>
 
                                 </td>
                             </t>

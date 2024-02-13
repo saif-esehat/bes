@@ -296,6 +296,7 @@ class InstituteGPBatches(models.Model):
 class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"
     _rec_name = "ccmc_batch_name"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
@@ -456,28 +457,17 @@ class InstituteCcmcBatches(models.Model):
                 "default_candidate_lists": candidate_list_no_indos
             }
 
-            mail_template = self.env.ref('bes.ccmc_candidate_confirmation_mail')
-            mail_template.send_mail(self.id, force_send=True)
+            mail_template = self.env.ref('bes.ccmc_indos_check_mail')
+            mail_template.with_context(ctx).send_mail(self.id, force_send=True)
 
-            # return {
-            #     'name': 'Email Compose Wizard',
-            #     'type': 'ir.actions.act_window',
-            #     'view_mode': 'form',
-            #     'res_model': 'mail.compose.message',
-            #     'views': [(False, 'form')],
-            #     'view_id': False,
-            #     'target': 'new',
-            #     'context': ctx
-            # }
-
-        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)])
+        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)]).ids
             
         set1 = set(ccmc_candidates)
         set2 = set(candidate_missing_data_id)    
             
         array1_without_common = list(set1 - set2)
             
-        ccmc_candidate = self.env['ccmc.candidate'].sudo().browse(array1_without_common)
+        ccmc_candidates = self.env['ccmc.candidate'].sudo().browse(array1_without_common)
         group_xml_ids = [
             'bes.group_ccmc_candidates',
             'base.group_portal'
