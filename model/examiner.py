@@ -46,12 +46,27 @@ class Examiner(models.Model):
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
     subject_id = fields.Many2one("course.master.subject","Subject")
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
+    # payment_details = fields.One2many("examiner.assignment","examiner_id","Payment Details")
+    acc_no = fields.Char(string="Account Number")
+    ifsc_code = fields.Char(string="IFSC Code")
+    bank_name = fields.Char(string="Bank Name")
     exam_coordinator = fields.Boolean("Exam Coordinator")
     
     state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
-    ], string='State',default="active")
+    ], string='State',compute="_compute_examiner_state",default="active")
+    
+    
+    
+    @api.depends('user_id')
+    def _compute_examiner_state(self):
+        for record in self:
+            if record.user_id and record.user_id.active:
+                record.state = "active"
+            else:
+                record.state = "inactive"
+                
 
     @api.constrains('zip')
     def _check_valid_zip(self):

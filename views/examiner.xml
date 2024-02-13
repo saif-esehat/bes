@@ -103,7 +103,11 @@
                                 </field>
                             </page>
                             <page string="Payment Details">
-                                
+                                <group style="width:50%;">
+                                    <field name="acc_no" string="Account No."/>
+                                    <field name="ifsc_code" string="IFSC Code"/>
+                                    <field name="bank_name" string="Bank Name"/>                        
+                                </group>
                             </page>
                         </notebook>
 
@@ -135,6 +139,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
                 </tree>
             </field>
         </record>

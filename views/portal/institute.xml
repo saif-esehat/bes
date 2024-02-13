@@ -1917,11 +1917,11 @@
         <t t-call="portal.portal_layout">
 
 
-
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
-            <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
-
+            <t t-if="batches.state == '1-ongoing'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+            </t>
             <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
 
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a>
@@ -2182,6 +2182,7 @@
                         <th>GP Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
+                        <th>User Id.</th>
                         <th>GP Candidate Code No.</th>
                     </tr>
                 </thead>
@@ -2196,6 +2197,14 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.user_id">
+                                    <span class="text-success">Confirmed</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
@@ -2214,7 +2223,7 @@
                                     <a t-attf-href="/my/gpcandidates/download_gp_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
                                 </td>
                             </t>
-                            <t t-if="candidate.institute_batch_id.state == '1-ongoing'">
+                            <t t-if="not candidate.user_id">
                                 <td class="text-center">
                                     <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
                                 </td>
@@ -2253,7 +2262,7 @@
                                         document.getElementById('ccmc_candidate_id').value = dataId;
                                         var batchId = button.getAttribute('batch-id');
                                         console.log(batchId);
-                                        document.getElementById('ccmc_candidate_batch_id').value = batchId;
+                                        document.getElementById('delete_ccmc_candidate_batch_id').value = batchId;
                                     }
 
 
@@ -2291,6 +2300,23 @@
                                     
                                     }
 
+                                    function createUser() {
+                                        var indosNumber = $('#indos_number_input').val(); // Assuming you have an input field with id 'indos_number_input'
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/create_user",
+                                            data: {
+                                                'indos_number': indosNumber,
+                                            },
+                                            success: function(response) {
+                                                alert(response); // Show success message
+                                            },
+                                            error: function(xhr, status, error) {
+                                                alert('Error creating user: ' + error); // Show error message
+                                            }
+                                        });
+                                    }
+
                                     
 
                                     
@@ -2325,10 +2351,12 @@
                 <t t-set="title">CCMC Candidate</t>
             </t>
 
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+            <t t-if="batches.ccmc_state == '1-ongoing'">     
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
 
-            <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+            </t>
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -2583,7 +2611,7 @@
                             </div>
                             
                             <input type="hidden" id="ccmc_candidate_id" name="ccmc_candidate_id"/>
-                            <input type="hidden" id="ccmc_candidate_batch_id" name="ccmc_candidate_batch_id"/>
+                            <input type="hidden" id="delete_ccmc_candidate_batch_id" name="delete_ccmc_candidate_batch_id"/>
 
                             
                             <div class="modal-body">
@@ -2606,6 +2634,7 @@
                         <th>CCMC Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
+                        <th>User Id.</th>
                         <th>CCMC Candidate Code No.</th>
                     </tr>
                 </thead>
@@ -2620,6 +2649,14 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.user_id">
+                                    <span class="text-success">Confirmed</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
@@ -2637,10 +2674,14 @@
                                     <a t-attf-href="/my/ccmccandidates/download_ccmc_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
                                 </td>
                             </t>
-                            <t t-if="candidate.institute_batch_id.ccmc_state == '1-ongoing'">
+                            <t t-if="not candidate.user_id">
                                 <td class="text-center">
                                     <!-- <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a> -->
                                     <a href="#" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a>
+                                   <t t-if="ccmc_state == '2-indos_pending'">
+                                    
+                                   </t>
+                                    <button t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="createUser()">Create User</button>
 
                                 </td>
                             </t>

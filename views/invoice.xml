@@ -9,12 +9,16 @@
             <field name="arch" type="xml">
                 <!-- Add a new field after the existing fields -->
                 <xpath expr="//field[@name='invoice_date']" position="after">
-                    <field name="batch_ok" invisible="1"/>
-                    <field name="batch" attrs="{'invisible': [('batch_ok', '=', False)]}" />
+                    <field name="gp_batch_ok" invisible="1"/>
+                    <field name="batch" attrs="{'invisible': [('gp_batch_ok', '=', False)]}" />
+                    <field name="ccmc_batch_ok" invisible="1"/>
+                    <field name="ccmc_batch" attrs="{'invisible': [('ccmc_batch_ok', '=', False)]}" />
 
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button attrs="{'invisible': [('batch_ok', '=', False)]}" name="open_gp_candidate" string="GP Candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
+                    <button attrs="{'invisible': [('gp_batch_ok', '=', False)]}" name="open_gp_candidate" string="GP Candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
+                    </button>
+                    <button attrs="{'invisible': [('ccmc_batch_ok', '=', False)]}" name="open_ccmc_candidate" string="CCMC Candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
                     </button>
                 </xpath>
             </field>
