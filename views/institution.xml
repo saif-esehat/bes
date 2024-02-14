@@ -209,6 +209,20 @@
                 </form>
             </field>
         </record>
+
+        <record id="institute_search" model="ir.ui.view">
+            <field name="name">bes.institute.search</field>
+            <field name="model">bes.institute</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="code"/>
+                    <field name="mti"/>
+                    <field name="exam_center"/>
+                </search>
+            </field>
+        </record>
         
 
         <record id="institute_tree" model="ir.ui.view">

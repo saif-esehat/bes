@@ -163,6 +163,10 @@
         <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
             <search string="GP Candidate Search">
+                <field name="name"  />
+                <field name="indos_no"/>
+                <field name="candidate_code"  />
+                <field name="roll_no" />
                 <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
             </search>
             </field>
@@ -658,6 +662,19 @@
                         </notebook>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="ccmc_candidate_form_search" model="ir.ui.view">
+            <field name="name">ccmc.candidate.search</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"  />
+                    <field name="indos_no"/>
+                    <field name="candidate_code"  />
+                    <field name="roll_no" />
+                </search>
             </field>
         </record>
 

@@ -132,6 +132,20 @@
             </field>
         </record>
 
+        <record id="bes_examiner_search" model="ir.ui.view">
+            <field name="name">bes.examiner.search</field>
+            <field name="model">bes.examiner</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="pan_no"/>
+                    <field name="subject_id"/>
+                    <field name="exam_center"/>
+                </search>
+            </field>
+        </record>
 
         <record id="bes_examiner_tree" model="ir.ui.view">
             <field name="name">bes.examiner.tree</field>
@@ -139,6 +153,11 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="pan_no"/>
+                    <field name="subject_id"/>
+                    <field name="exam_center"/>
                     <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
                 </tree>
             </field>
