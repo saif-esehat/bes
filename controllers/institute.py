@@ -456,25 +456,18 @@ class InstitutePortal(CustomerPortal):
         
     @http.route(['/my/createccmccandidateform'],method=["POST"], type="http", auth="user", website=True)
     def CreateCCMCcandidate(self, **kw):
-        print("gg")
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
-        print("")
-        # print(user_id,"user-iddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
-        # print(kw.get,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-        
+
         batch_id = kw.get("ccmc_candidate_batch_id")
-        print("")
-        print(batch_id,"batch_idddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
         
         batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
-        # print(request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]),"batchessssssssssssssssssssssssssssssssssssssssssssssssssss")
-        # print(batch_name,"Batch-Name=====================================================================")
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         print("")
-        # print(institute_id,"ID++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        # candidate_count = request.env['institute.ccmc.batches'].sudo().search([('id', '=',batch_id)]).candidate_count
+        print(request.env['institute.ccmc.batches'].sudo().search([('id', '=',batch_id)]).candidate_count,"countt")
+        print(request.env['institute.ccmc.batches'].sudo().search([('id', '=',batch_id)]).ccmc_candidate_count,"ccmc_conttttttttttttttttt")
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
