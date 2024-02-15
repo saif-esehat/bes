@@ -92,7 +92,7 @@
                                 <span>75</span>
                             </div>
                         </group>
-                                                <group style="width:50%">
+                                            <group style="width:50%">
                                          </group>      
 
                         <group style="width:50%">
@@ -180,7 +180,11 @@
             <field name="name">gp.exam.schedule.tree</field>
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
+
                 <tree>
+                    <header>
+                        <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
+                    </header>
                     <field name="exam_id"/>
                     <field name="attempt_number"/>
                     <field name="gsk_total"/>

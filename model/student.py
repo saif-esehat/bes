@@ -218,6 +218,20 @@ class GPCandidate(models.Model):
                      }
                 }
     
+    def open_add_marksheet(self):
+        
+        
+        
+        return {
+                    'name': _('Add Marksheet'),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'gp.marksheet.creation.wizard',
+                    'type': 'ir.actions.act_window',
+                    'view_id': False,
+                    'target': 'new'
+                }
+    
     # @api.model
     def unlink(self):
         # users_to_delete = self.mapped('user_id')

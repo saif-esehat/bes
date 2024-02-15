@@ -456,8 +456,6 @@ class GPExam(models.Model):
     mek_practical_marks = fields.Float("MEK Practical",readonly=True)
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
-   
-    
     
     mek_total = fields.Float("MEK Total",readonly=True)
     mek_percentage = fields.Float("MEK Percentage",readonly=True)
@@ -617,6 +615,21 @@ class GPExam(models.Model):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
+<<<<<<< HEAD
+=======
+    def open_marksheet_wizard(self):
+        view_id = self.env.ref('bes.gp_marksheet_creation_wizard_form').id
+        
+        return {
+            'name': 'Add Marksheet',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'gp.marksheet.creation.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
+>>>>>>> 1613c6b (Data)
     
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
