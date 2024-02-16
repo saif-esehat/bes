@@ -519,6 +519,7 @@ class InstitutePortal(CustomerPortal):
 
         batch = request.env['ccmc.candidate'].sudo().search([('id', '=', kw.get("confirm_ccmc_candidate_batch_id"))]) 
 
+        batch_id = kw.get("confirm_ccmc_candidate_batch_id")
         candidate = request.env['ccmc.candidate'].sudo().search([('id', '=', kw.get("confirm_ccmc_candidate_id"))])
         
         
@@ -538,7 +539,7 @@ class InstitutePortal(CustomerPortal):
         else:
             raise ValidationError("Indos No. cannot be empty")
 
-        return request.redirect("/my/ccmcbatch/candidates/"+str(batch.id))
+        return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
     
     @http.route(['/my/deleteccmccandidate'], type="http", auth="user", website=True)
     def DeleteCCMCcandidate(self, **kw):
@@ -567,7 +568,8 @@ class InstitutePortal(CustomerPortal):
 
         print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 
-        batch = request.env['gp.candidate'].sudo().search([('id', '=', kw.get("confirm_gp_candidate_batch_id"))]) 
+        batch = request.env['gp.candidate'].sudo().search([('id', '=', kw.get("confirm_gp_candidate_batch_id"))])
+        batch_id = kw.get("confirm_gp_candidate_batch_id")
 
         candidate = request.env['gp.candidate'].sudo().search([('id', '=', kw.get("confirm_gp_candidate_id"))])
         
@@ -588,7 +590,7 @@ class InstitutePortal(CustomerPortal):
         else:
             raise ValidationError("Indos No. cannot be empty")
 
-        return request.redirect("/my/gpbatch/candidates/"+str(batch.id))
+        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
     @http.route(['/my/gpcandidateform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPcandidateFormView(self,batch_id, **kw):
