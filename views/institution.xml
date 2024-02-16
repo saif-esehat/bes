@@ -232,7 +232,7 @@
                 <tree>
                     <header>
                         
-                        <button name="open_create_institute_batches_wizard" string="Create Batches" />
+                        <button name="open_create_institute_batches_wizard" type="object" class="btn-primary"  string="Create Batches" />
                     </header>
 
                     <field name="name"/>
