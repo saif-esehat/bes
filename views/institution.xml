@@ -230,7 +230,10 @@
             <field name="model">bes.institute</field>
             <field name="arch" type="xml">
                 <tree>
-                    
+                    <header>
+                        
+                        <button name="open_create_institute_batches_wizard" string="Create Batches" />
+                    </header>
 
                     <field name="name"/>
                     <field name="email" optional="hide"/>
