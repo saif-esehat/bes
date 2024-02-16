@@ -1,3 +1,7 @@
+*{
+    margin: 0;
+    padding: 0;
+}
 body {
     margin: 0;
     padding: 0;
@@ -14,6 +18,14 @@ body {
     /* or 'no-repeat' for a single instance */
         /* Other background properties can be adjusted based on your requirements */
     }
+    
+    #header {
+        width: 80%;
+        margin: auto;
+        text-align: center;
+        color: #4c2d8b;
+        position: relative;
+    }
 
 #body {
     width: 70%;
@@ -21,39 +33,23 @@ body {
     border: 2px solid #4c2d8b;
     font-size: 1.2rem;
     font: 600;
-}
+} 
 
-#header {
-    width: 80%;
-    margin: auto;
-    text-align: center;
-    color: #4c2d8b;
-    position: relative;
-}
 
-#photo {
-    width: 15%;
-    height: 25%;
-    position: absolute;
-    top: 5%;
-    right: 0;
-    border: 2px solid black;
-}
-
-/* #img-sign {
+ /* #img-sign {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 5%;
     right: 0;
     border: 2px solid black;
-} */
+}  */
 
 #header img {
     max-width: 100%;
     height: auto;
-    /* margin: 1rem; */
-}
+    margin: 1rem; 
+} 
 
 #header span {
     display: block;
@@ -70,7 +66,6 @@ input {
 
 #main {
     width: 100%;
-    /* margin: auto; */
     text-align: center;
 }
 
@@ -119,23 +114,8 @@ span {
     text-align: center;
 }
 
-
-/* #split{
-    display: -webkit-box; 
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center; 
-    -webkit-justify-content: space-between;
-            justify-content: space-between;
-    gap: 15rem;
-} */
-
 #sign input{
     display: block;
     text-align: center;
 }
 
-/* #img-sign{
-    width: 8rem;
-    height: 3rem;
-} */

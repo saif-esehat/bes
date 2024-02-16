@@ -13,6 +13,13 @@ class DGSBatch(models.Model):
     
     batch_name = fields.Char("Batch Name",required=True)
     is_current_batch = fields.Boolean(string='Is Current Batch', default=False)
+    to_date = fields.Date(string='To Date', 
+                      widget="date", 
+                      date_format="%b-%y")
+    
+    from_date = fields.Date(string='From Date', 
+                      widget="date", 
+                      date_format="%b-%y")
     
     
     def print_gp_repeater(self):

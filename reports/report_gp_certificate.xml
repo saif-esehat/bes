@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_general_certificate">
+        <xpath expr="//style" position="inside">
+            <![CDATA[
+    .row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .row > * {
+        flex: 1;
+        margin: 0 5px; /* Adjust spacing as needed */
+    }
+    ]]>
+        </xpath>
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="doc">
                 <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
-                <style>
+                <!-- <style>
                     .wrapper {
                         display: flex;
                         }
@@ -16,45 +29,46 @@
                         -webkit-justify-content: space-between;
                                 justify-content: space-between;
                         }
-                </style>
+                </style> -->
                 <div class="o_report" style="">
                     <div id="header" style="width:100%; text-align: center; font-family: 'Times New Roman';">
-                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem; max-width: 100%;"/>
+                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:0; max-width: 100%;"/>
                         <br/>
                         <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture3.png" alt="" style="margin-top:0; width:80%; max-height:250px;"/>
-                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" style="width: 150px; height: 150px; position: absolute; top: 10%; right: 10%;"/>
+                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 150px; height: 150px; position: absolute; top: 15px; right: 15px;  border: 2px solid black;"/>
                         
                         <br/>
-                        <div style="width:100%;">
-                            <span style="font-size:1rem;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
+                        <div class="" style="">
+                            <span style="font-size:1rem; font-family: 'Times New Roman', Times, serif;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
                         </div>
-                        <div style="width:100% display:block;">
-                            <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
+                        <div class="container-fluid" style="">
+                            <span style="font-size:1rem; font-family: 'Times New Roman', Times, serif;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
                             Awards this</span>
                         </div>
-                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style=""/>
                     </div>
                     
-                    <div id="main" style="padding: 20px;">
+                    <div class="container-fluid" style="">
                         <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">Certificate No.: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"></span>
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">Certificate No.: </label><span style="font-size:1.2rem; font-family: 'Times New Roman'; margin-left:10px"><t t-esc="doc.certificate_id"/></span>
                         </div>
                         <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">This is to certify that: </label><span style="font-size:1.2rem; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.name"/></span>
+                            <label for="" style="font-size:1.2rem; color:#4c2d8b; font-family: 'Times New Roman';">This is to certify that </label><span style="font-size:1.2rem; font-family: 'Times New Roman'; margin-left:10px"><t t-esc="doc.gp_candidate.name"/></span>
                         </div>
                         
-                         <div class="wrapper" style="display: flex; width: 100%; font-size: 1rem;text-align: left; font-family: 'Times New Roman';">
-                            <div class="line">
-                                <div style="flex: 1; margin-right: 0;text-align: left;">
-                                    <label for="" style="color: #4c2d8b;text-align: left; font-size: 1.2rem; font-family: 'Times New Roman';">Roll No: </label><span style="font-size:1.2rem;text-align: left; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.roll_no"/></span>
+                        <div class="container" style=" font-size:1.2rem;">
+                            <div class="row">
+                                <div class="col-4" style=" ">
+                                    <label for="" style="color: #4c2d8b;">Roll No: </label>
+                                    <span style=""><t t-esc="doc.gp_candidate.roll_no"/></span>
                                 </div>
-                                <div style="flex: 1; text-align: left; margin-left:2.5rem; margin-right:0rem; font-family: 'Times New Roman';">
-                                    <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">INDOS No: </label>
-                                    <span style="font-size:1.2rem;text-align: left; font-family: 'Times New Roman';"><t t-esc="doc.gp_candidate.indos_no"/></span>
+                                <div class="col-4" style="">
+                                    <label for="" style="color:#4c2d8b;">INDOS No: </label>
+                                    <span style=""><t t-esc="doc.gp_candidate.indos_no"/></span>
                                 </div>
-                                <div style="flex: 1; margin-left: 0;text-align: left;">
-                                    <label for="" style="color: #4c2d8b; font-size: 1.2rem; font-family: 'Times New Roman';">Date of Birth: </label>
-                                    <span style="font-size: 1.2rem;text-align: left; font-family: 'Times New Roman';">
+                                <div class="col-4" style="">
+                                    <label for="" style="color:#4c2d8b;">Date of Birth: </label>
+                                    <span style="">
                                         <t t-set="formatted_dob" t-value="doc.gp_candidate.dob.strftime('%d-%b-%y')" />
                                         <t t-esc="formatted_dob" />
                                     </span>
@@ -69,23 +83,21 @@
 
 
 
-                        
-                        <div>
-                            <span style="color:#4c2d8b; text-align:left; font-size:1.2rem; font-family: 'Times New Roman';" >has undergone an approved 25 weeks Pre-sea training course for</span>
+                        <div class="row">
+                            <span class="col-12" style="font-size:1.2rem; color:#4c2d8b;" >has undergone an approved 25 weeks Pre-sea training course for</span>
                         </div>
                         <h1 style="text-align: center; font-family: 'Times New Roman';">General Purpose Rating</h1>
                         <div class="left" style="font-size:1.2rem; font-family: 'Times New Roman';">
-                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.gp_candidate.institute_id.name"/>(<t t-esc="doc.gp_candidate.institute_id.mti"/>)</span></p>
+                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No.<t t-esc="doc.gp_candidate.institute_id.mti"/>)</span></p>
 
-                            <p style="color:#4c2d8b; margin:0;  margin-top:10px;">From <span style="color:#000;">Demo</span> and has successfully passed the All India Exit Examination
-                                held in <span></span></p>
+                            <p style="color:#4c2d8b; margin:0;  margin-top:10px;">From <span style="color:#000;"><t t-esc="doc.gp_candidate.institute_batch_id.from_date.strftime('%b-%y')"/> to <t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/></span> and has successfully passed the All India Exit Examination
+                                held in <span style="color:#000;"><t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/></span></p>
                     
                             <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Position in the merit list of first 25% - <span style="color:#000;">N/A</span></p>
-                            <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Date of Examination Passed: <span style="color:#000;">16-Aug-2023</span></p>
-                            
+                                <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Date of Examination Passed: <span style="color:#000;"><t t-esc="doc.certificate_issue_date.strftime('%d-%b-%y')"/></span></p>
                             <div style="display: flex; justify-content: space-between; width: 100%; position: relative; margin-top: 10px;">
                                 <div id="split" style="">
-                                    <div style="color: #4c2d8b;">Date of Issue of Certificate: <span style="color: #000; font-size: 1.2rem;">16-Aug-2023</span></div>
+                                    <div style="color: #4c2d8b;">Date of Issue of Certificate: <span style="color: #000; font-size: 1.2rem;"><t t-esc="doc.certificate_issue_date.strftime('%d-%b-%y')"/></span></div>
                                 </div>
                                 <div id="sign" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
                                     <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" id="img-sign" 

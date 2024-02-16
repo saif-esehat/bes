@@ -318,6 +318,8 @@
                         <group>
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
+                            <field name="to_date"/>
+                            <field name="from_date"/>
                         </group>
                     </sheet>
                 </form>

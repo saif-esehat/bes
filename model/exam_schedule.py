@@ -6,7 +6,7 @@ import logging
 import qrcode
 import io
 import base64
-from datetime import datetime
+from datetime import datetime , date
 
 
 class BesBatches(models.Model):
@@ -176,7 +176,6 @@ class ExamCandidate(models.Model):
     
     mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity")
     gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity")
-    
     
     
     def compute_mek_gsk_visiblity(self):
@@ -457,8 +456,6 @@ class GPExam(models.Model):
     mek_practical_marks = fields.Float("MEK Practical",readonly=True)
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
-   
-    
     
     mek_total = fields.Float("MEK Total",readonly=True)
     mek_percentage = fields.Float("MEK Percentage",readonly=True)
@@ -537,6 +534,10 @@ class GPExam(models.Model):
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
     
+    exam_pass_date = fields.Date(string="Date of Examination Passed:")
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+
+    
     @api.depends('certificate_criteria','state')
     def compute_dgs_visible(self):
         for record in self:
@@ -614,10 +615,25 @@ class GPExam(models.Model):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
+    def open_marksheet_wizard(self):
+        view_id = self.env.ref('bes.gp_marksheet_creation_wizard_form').id
+        
+        return {
+            'name': 'Add Marksheet',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'gp.marksheet.creation.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
+    
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
                 self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
                 self.state = '3-certified'
+                self.certificate_issue_date = fields.date.today()
+                
             
     
     

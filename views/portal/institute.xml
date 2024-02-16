@@ -1843,8 +1843,16 @@
                                         var batchId = button.getAttribute('batch-id');
                                         console.log(batchId)
                                         document.getElementById('candidate_batch_id').value = batchId;
+                                    }
 
-
+                                    function createUser(button) {
+                                        debugger
+                                        var dataId = button.getAttribute('candidate-id');
+                                        console.log(dataId);
+                                        document.getElementById('confirm_gp_candidate_id').value = dataId;
+                                        var batchId = button.getAttribute('batch-id');
+                                        console.log(batchId);
+                                        document.getElementById('confirm_gp_candidate_batch_id').value = batchId;
                                     }
 
                                     function openUploadModal(button) {
@@ -2139,30 +2147,57 @@
             </div>
 
             <div class="modal fade" id="delete_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/deletegpcandidate" enctype="multipart/form-data">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Delete Candidate</h5>
-                                </div>
-                                <input type="hidden" id="candidate_id" name="candidate_id"/>
-                                <input type="hidden" id="candidate_batch_id" name="candidate_batch_id"/>
-
-                                
-                                <div class="modal-body">
-
-                                        Are you sure you want to delete this candidate ?
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Yes</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                </div>
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/my/deletegpcandidate" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Candidate</h5>
                             </div>
-                        </form>
-                    </div>
+                            <input type="hidden" id="candidate_id" name="candidate_id"/>
+                            <input type="hidden" id="candidate_batch_id" name="candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+
+                                    Are you sure you want to delete this candidate ?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
+            </div>
+
+            <div class="modal fade" id="confirm_gp_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/confirmgpuser" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirm Candidate</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_gp_candidate_id" name="confirm_gp_candidate_id"/>
+                            <input type="hidden" id="confirm_gp_candidate_batch_id" name="confirm_gp_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+
+                                    Are you sure?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             
 
@@ -2228,7 +2263,11 @@
                                     <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
                                 </td>
                             </t>
-
+                            <t t-if="batches.state == '2-indos_pending' and not candidate.user_id">
+                                <td class="text-center">
+                                    <a href="#" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="createUser(this)" data-target="#confirm_gp_candidate_modal" class="fa">Confirm Candidate</a>
+                                </td>
+                            </t>
 
                         </tr>
                     </t>
@@ -2265,6 +2304,16 @@
                                         document.getElementById('delete_ccmc_candidate_batch_id').value = batchId;
                                     }
 
+                                    function createUser(button) {
+                                        debugger
+                                        var dataId = button.getAttribute('candidate-id');
+                                        console.log(dataId);
+                                        document.getElementById('confirm_ccmc_candidate_id').value = dataId;
+                                        var batchId = button.getAttribute('batch-id');
+                                        console.log(batchId);
+                                        document.getElementById('confirm_ccmc_candidate_batch_id').value = batchId;
+                                    }
+
 
                                     function onOpenAddCandidateModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
@@ -2298,24 +2347,7 @@
                                         });
 
                                     
-                                    }
-
-                                    function createUser() {
-                                        var indosNumber = $('#indos_number_input').val(); // Assuming you have an input field with id 'indos_number_input'
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "/create_user",
-                                            data: {
-                                                'indos_number': indosNumber,
-                                            },
-                                            success: function(response) {
-                                                alert(response); // Show success message
-                                            },
-                                            error: function(xhr, status, error) {
-                                                alert('Error creating user: ' + error); // Show error message
-                                            }
-                                        });
-                                    }
+                                    }                                   
 
                                     
 
@@ -2407,17 +2439,6 @@
                                     <div class="row">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" class="form-control" id="ccmc_candidate_batch_id" name="ccmc_candidate_batch_id" t-att-value="batch_id"/>
-                                        <!-- <div class="col-md-2">
-                                            <div class="card-img-container">
-                                                <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <div class="form-group">
-                                                <label for="photo" class="form-label">Candidate Photo</label>
-                                                <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
-                                            </div>
-                                        </div> -->
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -2449,52 +2470,6 @@
                                                 <label for="dob">DOB</label>
                                                 <input type="date" class="form-control" id="dob" name="dob" required="true"/>
                                             </div>
-
-                                        <!-- <script type="text/javascript">
-                                            // Fetch the input element
-                                            var input = document.getElementById('dob');
-
-                                            // Function to format the date value in the input field
-                                            function formatInputDate() {
-                                                // Get the entered date value
-                                                var dateValue = input.value;
-                                                
-                                                // Convert the date format to DD-MON-YY
-                                                var formattedDate = convertDateFormat(dateValue);
-                                                
-                                                // Set the formatted date back to the input
-                                                input.value = formattedDate;
-                                            }
-
-                                            // Add an event listener to format the date on input change
-                                            input.addEventListener('input', formatInputDate);
-
-                                            // Function to convert date format from YYYY-MM-DD to DD-MON-YY
-                                            function convertDateFormat(dateValue) {
-                                                // Split the date value by '-'
-                                                var parts = dateValue.split('-');
-                                                
-                                                // Get day, month, and year parts
-                                                var day = parts[2]; // Inverted order as date input expects YYYY-MM-DD
-                                                var month = getMonthAbbreviation(parts[1]);
-                                                var year = parts[0].substring(2); // Take the last two digits of the year
-                                                
-                                                // Return the formatted date as DD-MON-YY
-                                                return day + '-' + month + '-' + year;
-                                            }
-
-                                            // Function to convert month to abbreviation
-                                            function getMonthAbbreviation(month) {
-                                                // Define an array of month abbreviations
-                                                var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                                
-                                                // Get the index of the month and return its abbreviation
-                                                return months[parseInt(month) - 1];
-                                            }
-                                        </script>
-
-                                        </div> -->
-
                                     </div>
 
                                         <div class="col-md-12">
@@ -2628,6 +2603,33 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="confirm_ccmc_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/confirmccmcuser" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirm Candidate</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_ccmc_candidate_id" name="confirm_ccmc_candidate_id"/>
+                            <input type="hidden" id="confirm_ccmc_candidate_batch_id" name="confirm_ccmc_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+
+                                    Are you sure?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
@@ -2678,11 +2680,12 @@
                                 <td class="text-center">
                                     <!-- <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a> -->
                                     <a href="#" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_ccmc_candidate_modal" class="fa">Delete</a>
-                                   <t t-if="ccmc_state == '2-indos_pending'">
-                                    
-                                   </t>
-                                    <button t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="createUser()">Create User</button>
 
+                                </td>
+                            </t>
+                            <t t-if="batches.ccmc_state == '2-indos_pending' and not candidate.user_id">
+                                <td class="text-center">
+                                    <a href="#" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="createUser(this)" data-target="#confirm_ccmc_candidate_modal" class="fa">Confirm Candidate</a>
                                 </td>
                             </t>
 
