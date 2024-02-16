@@ -2605,7 +2605,7 @@
 
             <div class="modal fade" id="confirm_ccmc_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="post" action="/confirmccmcuser" enctype="multipart/form-data">
+                    <form method="post" action="/my/confirmccmcuser" enctype="multipart/form-data">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                         <div class="modal-content">
                             <div class="modal-header">

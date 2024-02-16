@@ -512,8 +512,8 @@ class InstitutePortal(CustomerPortal):
             
             return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
     
-    @http.route('/confirmccmcuser', type='http', auth="public", website=True)
-    def create_user(self, **kw):
+    @http.route('/my/confirmccmcuser', type='http', auth="public", website=True)
+    def CreateCCMCUser(self, **kw):
 
         print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 
@@ -563,7 +563,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
     @http.route('/confirmgpuser', type='http', auth="public", website=True)
-    def create_user(self, **kw):
+    def CreateGPUser(self, **kw):
 
         print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 
