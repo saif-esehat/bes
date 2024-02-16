@@ -30,6 +30,7 @@
         'views/institution.xml',
         'views/survey.xml',
         'views/invoice.xml',
+        'views/marksheet_wizard.xml',
         # 'views/portal_template.xml',
         
         'views/marksheets/mek.xml',
@@ -54,6 +55,12 @@
 			'bes/static/src/js/custom_validation.js',
                         'bes/views/portal/static/src/js/candidate_oral_practical.js'
 		],
+                'web.assets_qweb': [
+                        'bes/static/src/xml/gp_exam_tree_button.xml',
+                ],
+                'web.assets_backend': [
+                        'bes/static/src/js/gp_exam_tree_button.js',
+                ],
                 
 	},
 'web.report_assets_common': [
