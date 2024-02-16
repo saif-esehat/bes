@@ -562,7 +562,33 @@ class InstitutePortal(CustomerPortal):
             raise ValidationError("Not Allowed")
         # import wdb; wdb.set_trace();
         
+    @http.route('/confirmgpuser', type='http', auth="public", website=True)
+    def create_user(self, **kw):
+
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+
+        batch = request.env['gp.candidate'].sudo().search([('id', '=', kw.get("confirm_gp_candidate_batch_id"))]) 
+
+        candidate = request.env['gp.candidate'].sudo().search([('id', '=', kw.get("confirm_gp_candidate_id"))])
         
+        
+        if candidate.indos_no:
+            if candidate.candidate_image and candidate.candidate_signature:
+               # Create user based on candidate details
+                user_values = {
+                    'name': candidate.name,
+                    'login': candidate.indos_no,  # You can set the login as the same as the user name
+                    'password': str(candidate.indos_no) + "1",  # Generate a random password
+                }
+                portal_user = request.env['res.users'].sudo().create(user_values)
+                # Assign the created user to the candidate
+                candidate.write({'user_id': portal_user.id})
+            else:
+                raise ValidationError("Candidate Image or Candidate Signature Missing")
+        else:
+            raise ValidationError("Indos No. cannot be empty")
+
+        return request.redirect("/my/gpbatch/candidates/"+str(batch.id))
 
     @http.route(['/my/gpcandidateform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPcandidateFormView(self,batch_id, **kw):

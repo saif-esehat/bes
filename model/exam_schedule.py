@@ -615,8 +615,6 @@ class GPExam(models.Model):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
-<<<<<<< HEAD
-=======
     def open_marksheet_wizard(self):
         view_id = self.env.ref('bes.gp_marksheet_creation_wizard_form').id
         
@@ -629,7 +627,6 @@ class GPExam(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new'
         }
->>>>>>> 1613c6b (Data)
     
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
