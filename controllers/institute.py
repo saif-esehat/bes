@@ -512,25 +512,33 @@ class InstitutePortal(CustomerPortal):
             
             return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
     
-    @http.route('/create_user', type='http', auth="public", website=True)
-    def create_user(self, indos_number):
-        print("heloooControlllllllllllllllllllllll")
-        # Fetch candidate details based on Indos number
-        candidate = request.env['gp.candidate'].sudo().search([('indos_no', '=', indos_number)], limit=1)
-        if candidate:
-            # Create user based on candidate details
-            user_values = {
-                'name': candidate.name,
-                'login': candidate.indos_no,  # You can set the login as the same as the user name
-                'password': str(candidate.indos_no) + "1",  # Generate a random password
-                # Add other user fields as needed
-            }
-            portal_user = request.env['res.users'].sudo().create(user_values)
-            # Assign the created user to the candidate
-            candidate.write({'user_id': portal_user.id})
-            return "User created successfully"
+    @http.route('/confirmccmcuser', type='http', auth="public", website=True)
+    def create_user(self, **kw):
+
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+
+        batch = request.env['ccmc.candidate'].sudo().search([('id', '=', kw.get("confirm_ccmc_candidate_batch_id"))]) 
+
+        candidate = request.env['ccmc.candidate'].sudo().search([('id', '=', kw.get("confirm_ccmc_candidate_id"))])
+        
+        
+        if candidate.indos_no:
+            if candidate.candidate_image and candidate.candidate_signature:
+               # Create user based on candidate details
+                user_values = {
+                    'name': candidate.name,
+                    'login': candidate.indos_no,  # You can set the login as the same as the user name
+                    'password': str(candidate.indos_no) + "1",  # Generate a random password
+                }
+                portal_user = request.env['res.users'].sudo().create(user_values)
+                # Assign the created user to the candidate
+                candidate.write({'user_id': portal_user.id})
+            else:
+                raise ValidationError("Candidate Image or Candidate Signature Missing")
         else:
-            return "Candidate not found"
+            raise ValidationError("Indos No. cannot be empty")
+
+        return request.redirect("/my/ccmcbatch/candidates/"+str(batch.id))
     
     @http.route(['/my/deleteccmccandidate'], type="http", auth="user", website=True)
     def DeleteCCMCcandidate(self, **kw):
