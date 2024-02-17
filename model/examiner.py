@@ -198,6 +198,18 @@ class ExaminerAssignment(models.Model):
                 mek_practical_child_line = candidate.mek_practical_child_line.filtered(lambda r: r.mek_practical_draft_confirm == 'draft')
                 self.env["gp.candidate.oral.prac.assignment"].create({"assignment_id":self.id,"mek_oral":mek_oral_child_line.id,"mek_prac":mek_practical_child_line.id,"gp_candidate":candidate_id})
             
+        # elif self.subject_id.name == 'CCMC':
+        #     self.gp_oral_prac.unlink()
+        #     practical_line_candidates = set(self.env["gp.mek.practical.line"].search([('institute_id','=',self.institute_id.id),('mek_practical_draft_confirm','=','draft')]).mapped('mek_parent'))
+        #     oral_line_candidates = set(self.env["gp.mek.oral.line"].search([('institute_id','=',self.institute_id.id),('mek_oral_draft_confirm','=','draft')]).mapped('mek_oral_parent'))
+        #     gp_candidates = list(practical_line_candidates.intersection(oral_line_candidates))
+            
+        #     for candidate in gp_candidates:
+        #         candidate_id = candidate.id
+        #         mek_oral_child_line = candidate.mek_oral_child_line.filtered(lambda r: r.mek_oral_draft_confirm == 'draft')
+        #         mek_practical_child_line = candidate.mek_practical_child_line.filtered(lambda r: r.mek_practical_draft_confirm == 'draft')
+        #         self.env["gp.candidate.oral.prac.assignment"].create({"assignment_id":self.id,"mek_oral":mek_oral_child_line.id,"mek_prac":mek_practical_child_line.id,"gp_candidate":candidate_id})
+            
             
             
                             
@@ -259,7 +271,7 @@ class GPOralPracAssignment(models.Model):
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
 
-class GPOralPracAssignment(models.Model):
+class CCMCOralPracAssignment(models.Model):
     _name = "ccmc.candidate.assignment"
     _description= 'CCMC Candidate Assignment'
     

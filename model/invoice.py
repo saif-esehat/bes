@@ -54,10 +54,18 @@ class CustomPaymentRegister(models.TransientModel):
         action = super(CustomPaymentRegister, self).action_create_payments()
         account_move_id = self.env.context['active_id']
         invoice = self.env['account.move'].sudo().search([('id','=',account_move_id)])
-        if invoice.batch_ok:
+        if invoice.gp_batch_ok: #in GP Invoice
+            print("gopppppppppppppppppppppppppppppppppppppp")
             batch = invoice.batch
             batch.write({'state':'4-invoiced'})
+        elif invoice.ccmc_batch_ok: #if CCMC Inovice
+            print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
+            batch = invoice.ccmc_batch
+            batch.write({'ccmc_state':'4-invoiced'})
         # Your custom code here after calling the super method
+            # For CCMC
+            return action
+        # For Gp 
         return action
         
 
