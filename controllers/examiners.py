@@ -93,12 +93,40 @@ class ExaminerPortal(CustomerPortal):
                 subject = assignment.subject_id.name
             # Check if ccmc_candidate is set
             elif assignment.assigned_to == "ccmc_candidate":
-                candidate = assignment.ccmc_candidates
+                candidate = assignment.ccmc_candidate
             else:
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
 
             return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id})
+        else:
+            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            search_filter = rec.get('search_filter') or request.params.get('search_filter')
+            search_value = rec.get('search_value') or request.params.get('search_value')
+            print('filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',search_filter)
+            print('valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',search_value)
+
+
+    @http.route('/open_ccmc_candidate_form', type='http', auth="user", website=True)
+    def open_ccmc_candidate_form(self, **rec):
+        if 'rec_id' in rec:
+            rec_id =rec['rec_id']
+            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
+
+            # Check if gp_candidate is set
+            if assignment.assigned_to == "ccmc_candidate":
+                ccmc_assignment = assignment.ccmc_assignment
+                candidate = assignment.ccmc_assignment.ccmc_candidate
+                subject = assignment.subject_id.name
+            # Check if ccmc_candidate is set
+            elif assignment.assigned_to == "gp_candidate":
+                candidate = assignment.gp_candidate
+            else:
+                # Handle the case when both gp_candidate and ccmc_candidate are not set
+                candidate = False
+
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'ccmc_assignment':ccmc_assignment , 'subject':subject ,'assignment_id':rec_id})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
