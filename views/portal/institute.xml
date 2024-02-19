@@ -209,7 +209,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="capacity">DGS Approved Capacity</label>
-                                                <input required="" type="text" class="form-control" id="capacity" name="capacity" min="0" />
+                                                <input required="" type="number" class="form-control" id="capacity" name="capacity" min="0" />
                                             </div>
                                             <div class="form-group">
                                                 <label for="approvaldocument">Upload Approval Document</label>
