@@ -1,6 +1,7 @@
 <odoo>
     <template id="examiner_candidate_list" name="Candidates">
         <script>
+            debugger
         </script>
         <style>
                                     #loader-overlay {
@@ -98,8 +99,8 @@
                             </t>       
                             <t t-if="subject == 'CCMC'" >
                                 <td class="text-left">
-                                    <a  t-attf-href="/open_practical_mek_form?rec_id={{ c.gp_candidate.id }}&amp;mek_practical={{ c.mek_prac.id }}&amp;assignment_id={{assignment_id}}">
-                                        MEK Practical
+                                    <a  t-attf-href="/open_cookery_bakery_form?rec_id={{ c.ccmc_candidate.id }}&amp;mek_practical={{ c.mek_prac.id }}&amp;assignment_id={{assignment_id}}">
+                                        CCMC
                                     </a> 
                                 </td>
                             </t>

@@ -60,12 +60,19 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route(['/my/assignments'], type="http", auth="user", website=True)
     def ExaminerAssignmentListView(self, **kw):
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+        print(self,"selffffffffffffffffffffffffffffffffffffffffffffffff")
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
+        print(user_id,"userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        print(examiner,"eaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
+        print(examiner_assignments,"assssssssssssssssssssssssssssssssssssssssssssssss")
+        
         vals = {'assignments':examiner_assignments, 'examiner':examiner}
+        print(vals,"valssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
 
@@ -109,21 +116,28 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route('/open_ccmc_candidate_form', type='http', auth="user", website=True)
     def open_ccmc_candidate_form(self, **rec):
+        
+        print(rec,"recccccccccccccccccccccccccccccccccccc")
+        
         if 'rec_id' in rec:
+            print("yessssssssssssssssssssssssssssssssssss")
             rec_id =rec['rec_id']
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
-
+            print(assignment,"asssssssssssssssssssssssssssssssssssss")
             # Check if gp_candidate is set
             if assignment.assigned_to == "ccmc_candidate":
+                print("ccmcccccccccccccccccccccccccccccccccccccccccccccccc")
                 ccmc_assignment = assignment.ccmc_assignment
                 candidate = assignment.ccmc_assignment.ccmc_candidate
                 subject = assignment.subject_id.name
             # Check if ccmc_candidate is set
             elif assignment.assigned_to == "gp_candidate":
+                print("gppppppppppppppppppppppppppppppppppppppppp")
                 candidate = assignment.gp_candidate
             else:
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
+                print("falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 candidate = False
 
             return request.render("bes.examiner_candidate_list", {'candidate': candidate,'ccmc_assignment':ccmc_assignment , 'subject':subject ,'assignment_id':rec_id})
@@ -409,11 +423,12 @@ class ExaminerPortal(CustomerPortal):
             exam_date = mek_prac_marksheet.mek_practical_exam_date
             return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet})
 
-    @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True)
+
+    @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_cookery_bakery_form(self, **rec):
 
         candidate = request.env['ccmc.candidate'].sudo()
-        if 'indos' in rec:
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
             
@@ -464,10 +479,10 @@ class ExaminerPortal(CustomerPortal):
             rec_id = rec['rec_id']
             return request.render("bes.cookery_bakery_marks_submit", {'indos': rec_id})
 
-    @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True)
+    @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_ccmc_oral_form(self, **rec):
 
-        if 'indos' in rec:
+        if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
             
