@@ -1926,11 +1926,11 @@
 
 
             <t t-if="batches.state == '1-ongoing'">
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a> -->
                 <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
             </t>
-            <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
+            <!-- <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a> -->
 
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a>
 
@@ -2384,7 +2384,7 @@
             </t>
 
             <t t-if="batches.ccmc_state == '1-ongoing'">     
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a> -->
 
                 <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
