@@ -68,20 +68,28 @@
                                 <!-- <t t-out="assignment.assigned_to" /> -->
                                 <span>GP Candidate</span>
                             </td>
-                            <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'">
+                            <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'"> 
                                 <!-- <t t-out="assignment.assigned_to" /> -->
                                 <span>CCMC Candidate</span>
                             </td>
                             <td class="text-left">
-                                <t t-out="examiner.subject_id.course_id.name" />
+                                <t t-out="assignment.subject_id.course_id.name" />
                             </td>
                             <td class="text-left">
                                 <t t-out="assignment.subject_id.name" />
                             </td>
-                            <td class="text-left">
+                            <td class="text-left" t-if="assignment.assigned_to == 'gp_candidate'">
+                                <!-- <t t-out="assignment.assigned_to" /> -->
                                 <a class="btn btn-primary" t-attf-href="/open_candidate_form?rec_id={{ assignment.id }}&amp;subject_name={{ assignment.subject_id.name }}">
                                 Candidate</a>                            
+                                
                             </td>
+                             <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'">
+                                <!-- <t t-out="assignment.assigned_to" /> -->
+                                <a class="btn btn-primary" t-attf-href="/open_ccmc_candidate_form?rec_id={{ assignment.id }}&amp;subject_name={{ assignment.subject_id.name }}">
+                                Candidate</a>                            
+                            </td>
+                            
 
                         </tr>
                     </t>
