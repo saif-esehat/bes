@@ -1399,6 +1399,7 @@ class InstitutePortal(CustomerPortal):
         faculties = request.env["institute.faculty"].sudo().search([('gp_batches_id','=',batch_id)])
         institutes = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
         
+        # print(institutes.dgs_approved_capacity)
         
         
         institute_worksheet = workbook.add_worksheet("Institute")
@@ -1422,9 +1423,10 @@ class InstitutePortal(CustomerPortal):
         data = [
             ['Name of the Institute', institutes.institute_id.name],
             ['MTI No. of institute', institutes.institute_id.mti],
-            ['Approved Capacity', institutes.institute_id.computer_lab_pc_count],
+            ['Approved Capacity', institutes.dgs_approved_capacity],
             ['Course Title', institutes.course.name],
             ['Batch No.', institutes.batch_name],
+            # ['DOB.',gp_candidate.dob],
             ['Date of commencement and ending of the course', str(institutes.from_date) + ' to ' + str(institutes.to_date)],
         ]
         
