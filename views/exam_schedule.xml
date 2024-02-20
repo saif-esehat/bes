@@ -20,7 +20,7 @@
             <field name="res_model">ccmc.exam.schedule</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">GP Exam</p>
+                <p class="o_view_nocontent_smiling_face">CCMC Exam</p>
             </field>
         </record>
 
@@ -34,14 +34,16 @@
                     <header>
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
+                        <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
                     </header>
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
+                            <field name="dgs_batch" readonly="0"/>
                             <field name="gp_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
-                            <field name="institute_name"/>
+                            <field name="institute_name" invisible="1" />
                         </group>
                         <group>
                             <field name="attempt_number"/>
@@ -90,7 +92,7 @@
                                 <span>75</span>
                             </div>
                         </group>
-                                                <group style="width:50%">
+                                            <group style="width:50%">
                                          </group>      
 
                         <group style="width:50%">
@@ -146,6 +148,9 @@
                             <field name="ship_visit_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
+                            <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+
                         </group>
                         <group style="width:50%">
                             <field name="url" invisible="1"/>
@@ -175,7 +180,11 @@
             <field name="name">gp.exam.schedule.tree</field>
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
+
                 <tree>
+                    <header>
+                        <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
+                    </header>
                     <field name="exam_id"/>
                     <field name="attempt_number"/>
                     <field name="gsk_total"/>
@@ -215,7 +224,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="roll_no" readonly="1"/>
+                            <field name="exam_id" readonly="1"/>
                             <field name="ccmc_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
                             <field name="institute_name"/>
@@ -279,7 +288,7 @@
             <field name="model">ccmc.exam.schedule</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="roll_no"/>
+                    <field name="exam_id"/>
                 </tree>
             </field>
         </record>

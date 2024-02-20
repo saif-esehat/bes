@@ -4,9 +4,10 @@ from odoo.exceptions import UserError,ValidationError
 
 class BatchInvoice(models.Model):
     _inherit = "account.move"
-    batch_ok = fields.Boolean("Batch Required")
+    gp_batch_ok = fields.Boolean("GP Batch Required")
     batch = fields.Many2one("institute.gp.batches","Batch")
-    
+    ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
+    ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
     
     
     
@@ -19,6 +20,21 @@ class BatchInvoice(models.Model):
                     'view_type': 'form',
                     'view_mode': 'tree,form',
                     'res_model': 'gp.candidate',
+                    'type': 'ir.actions.act_window',
+                    'view_id': False,
+                    'context': {'search_default_fees_paid':1}
+                    
+                }
+        
+    def open_ccmc_candidate(self):
+        
+        batch_id  = self.batch.id
+        return {
+                    'name': 'CCMC Candidate',
+                    'domain': [('institute_batch_id', '=',batch_id)],
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'ccmc.candidate',
                     'type': 'ir.actions.act_window',
                     'view_id': False,
                     'context': {'search_default_fees_paid':1}
@@ -38,10 +54,18 @@ class CustomPaymentRegister(models.TransientModel):
         action = super(CustomPaymentRegister, self).action_create_payments()
         account_move_id = self.env.context['active_id']
         invoice = self.env['account.move'].sudo().search([('id','=',account_move_id)])
-        if invoice.batch_ok:
+        if invoice.gp_batch_ok: #in GP Invoice
+            print("gopppppppppppppppppppppppppppppppppppppp")
             batch = invoice.batch
             batch.write({'state':'4-invoiced'})
+        elif invoice.ccmc_batch_ok: #if CCMC Inovice
+            print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
+            batch = invoice.ccmc_batch
+            batch.write({'ccmc_state':'4-invoiced'})
         # Your custom code here after calling the super method
+            # For CCMC
+            return action
+        # For Gp 
         return action
         
 

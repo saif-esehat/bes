@@ -17,6 +17,9 @@
             <field name="model">bes.examiner</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                            <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <group>
                             <field nolabel="1" name="examiner_image" widget="image" options="{'preview_image': 'image'}" width="150" height="150"/>
@@ -100,7 +103,11 @@
                                 </field>
                             </page>
                             <page string="Payment Details">
-                                
+                                <group style="width:50%;">
+                                    <field name="acc_no" string="Account No."/>
+                                    <field name="ifsc_code" string="IFSC Code"/>
+                                    <field name="bank_name" string="Bank Name"/>                        
+                                </group>
                             </page>
                         </notebook>
 
@@ -125,6 +132,20 @@
             </field>
         </record>
 
+        <record id="bes_examiner_search" model="ir.ui.view">
+            <field name="name">bes.examiner.search</field>
+            <field name="model">bes.examiner</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="pan_no"/>
+                    <field name="subject_id"/>
+                    <field name="exam_center"/>
+                </search>
+            </field>
+        </record>
 
         <record id="bes_examiner_tree" model="ir.ui.view">
             <field name="name">bes.examiner.tree</field>
@@ -132,6 +153,12 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="pan_no"/>
+                    <field name="subject_id"/>
+                    <field name="exam_center"/>
+                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
                 </tree>
             </field>
         </record>

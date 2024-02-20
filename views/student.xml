@@ -163,6 +163,10 @@
         <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
             <search string="GP Candidate Search">
+                <field name="name"  />
+                <field name="indos_no"/>
+                <field name="candidate_code"  />
+                <field name="roll_no" />
                 <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
             </search>
             </field>
@@ -176,6 +180,7 @@
                 <form>
                    <header>
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
+                        <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/>
                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -493,8 +498,13 @@
                 <form>
                     <header>
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
+                        <!-- <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/> -->
                    </header>
                     <sheet>
+                    <div class="oe_button_box" name="button_box">
+                            <button name="open_ccmc_candidate_exams" string="Exams" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
                         <field name="elligiblity_criteria" invisible="1"/>
                         <!-- <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}" />
                         <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}" /> -->
@@ -658,6 +668,19 @@
                         </notebook>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="ccmc_candidate_form_search" model="ir.ui.view">
+            <field name="name">ccmc.candidate.search</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"  />
+                    <field name="indos_no"/>
+                    <field name="candidate_code"  />
+                    <field name="roll_no" />
+                </search>
             </field>
         </record>
 

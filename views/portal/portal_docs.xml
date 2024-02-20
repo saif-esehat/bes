@@ -22,10 +22,18 @@
                 </t>
                 <t t-elif="env.user.has_group('bes.group_ccmc_candidates')">
 
-                    <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
+                    <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
                     <h3>CCMC Candidate</h3>
                     <div >
-
+                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcexam/list">
+                                Exams
+                        </a>
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcexam/list?ccmcexamcand=parameter_value">
+                                Download Admit Card
+                        </a>
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
+                                Raise a Query
+                        </a>
                     </div>
                 </t>
                 <t t-elif="env.user.has_group('bes.group_institute')">
@@ -33,7 +41,7 @@
                         <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                         <h3>My Accounts</h3>
                         <div>
-                            <!-- <t t-set="courses" t-value="env['bes.institute'].sudo().search([('user_id','=',env.user.id)]).courses"/>
+                            <t t-set="courses" t-value="env['bes.institute'].sudo().search([('user_id','=',env.user.id)]).courses"/>
 
                             <t t-set="gp_course_exists" t-value="0"/>
 
@@ -45,21 +53,24 @@
 
                             <t t-set="courses" t-value="env['bes.institute'].sudo().search([('user_id','=',env.user.id)]).courses"/>
 
-                            <t t-set="ccmc_course_exists" t-value="0"/> -->
+                            <t t-set="ccmc_course_exists" t-value="0"/>
 
-                            <!-- <t t-foreach="courses" t-as="course">
+                            <t t-foreach="courses" t-as="course">
                                 <t t-if="course.course.course_code == 'CCMC'">
                                     <t t-set="ccmc_course_exists" t-value="1"/>
                                 </t>
-                            </t> -->
+                            </t>
 
-                            <!-- <t t-if="gp_course_exists"> -->
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpbatch">
-                                GP Batches
-                            </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcbatch">
-                                CCMC Batches
-                            </a>
+                            <t t-if="gp_course_exists">
+                                <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpbatch">
+                                    GP Batches
+                                </a>
+                            </t>
+                            <t t-if="ccmc_course_exists">
+                                <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcbatch">
+                                    CCMC Batches
+                                </a>
+                            </t>
                             <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpcandidate/list">
                                 GP Candidate
                             </a> -->

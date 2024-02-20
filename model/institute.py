@@ -32,6 +32,7 @@ class Institute(models.Model):
     principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute", validators=[api.constrains('principal_mobile')])
     principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute", validators=[api.constrains('principal_email')])
     
+    ip_address = fields.Char("IP Address")
     
     admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_phone')])
     admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')])
@@ -132,6 +133,12 @@ class Institute(models.Model):
         wizard = self.env['create.institute.batches.wizard'].create({
             'batch_name': '',  # Set default values if needed
         })
+        
+        # import wdb; wdb.set_trace()
+        dgs_batch_id = self.env['dgs.batches'].search([('is_current_batch', '=', True)]).id
+        
+        if not dgs_batch_id:
+            raise ValidationError("Please Create Current DGS Batch")
 
         # Open the wizard view
         return {
@@ -139,10 +146,11 @@ class Institute(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'create.institute.batches.wizard',
-            'res_id': wizard.id,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': self.env.context,  # Pass the current context
+            'context': {
+                    'default_dgs_batch': dgs_batch_id
+                },  
         }
 
     def _generate_password(self, length=8):

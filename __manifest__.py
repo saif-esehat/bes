@@ -13,6 +13,7 @@
         'data/certificate_sequence.xml',
         'data/tags.xml',
         'data/email_template.xml',
+        'data/paper_format.xml',
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
@@ -29,6 +30,7 @@
         'views/institution.xml',
         'views/survey.xml',
         'views/invoice.xml',
+        'views/marksheet_wizard.xml',
         # 'views/portal_template.xml',
         
         'views/marksheets/mek.xml',
@@ -45,6 +47,7 @@
         'reports/report_ccmc_certificate.xml',
         'reports/admit_card_template_gp.xml',
         'reports/admit_card_template_ccmc.xml',
+        'reports/dgs_report.xml',
         
 ],
 'assets': {
@@ -52,12 +55,19 @@
 			'bes/static/src/js/custom_validation.js',
                         'bes/views/portal/static/src/js/candidate_oral_practical.js'
 		],
+                'web.assets_qweb': [
+                        'bes/static/src/xml/gp_exam_tree_button.xml',
+                ],
+                'web.assets_backend': [
+                        'bes/static/src/js/gp_exam_tree_button.js',
+                ],
                 
 	},
 'web.report_assets_common': [
             '/bes/static/src/css/report_css.scss',
             '/bes/static/src/css/style_gp.css',
             '/bes/static/src/css/style_ccmc.css',
+            '/bes/static/src/css/dgs_report.css'
 
         ],
 }

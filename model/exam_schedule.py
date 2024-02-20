@@ -6,7 +6,7 @@ import logging
 import qrcode
 import io
 import base64
-from datetime import datetime
+from datetime import datetime , date
 
 
 class BesBatches(models.Model):
@@ -156,7 +156,9 @@ class ExamCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("Candidate Code No.")
     roll_no = fields.Char("Roll No.")
-    dob = fields.Date("DOB")
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
     street = fields.Char("Street")
     street2 = fields.Char("Street2")
     city = fields.Char("City")
@@ -174,7 +176,6 @@ class ExamCandidate(models.Model):
     
     mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity")
     gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity")
-    
     
     
     def compute_mek_gsk_visiblity(self):
@@ -433,6 +434,7 @@ class GPExam(models.Model):
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -454,8 +456,6 @@ class GPExam(models.Model):
     mek_practical_marks = fields.Float("MEK Practical",readonly=True)
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
-   
-    
     
     mek_total = fields.Float("MEK Total",readonly=True)
     mek_percentage = fields.Float("MEK Percentage",readonly=True)
@@ -534,6 +534,10 @@ class GPExam(models.Model):
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
     
+    exam_pass_date = fields.Date(string="Date of Examination Passed:")
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+
+    
     @api.depends('certificate_criteria','state')
     def compute_dgs_visible(self):
         for record in self:
@@ -611,10 +615,25 @@ class GPExam(models.Model):
     #         if(self.certificate_criteria == 'passed'):
     #             self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
     #         self.state = '2-done'
+    def open_marksheet_wizard(self):
+        view_id = self.env.ref('bes.gp_marksheet_creation_wizard_form').id
+        
+        return {
+            'name': 'Add Marksheet',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'gp.marksheet.creation.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
+    
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
                 self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
                 self.state = '3-certified'
+                self.certificate_issue_date = fields.date.today()
+                
             
     
     
@@ -798,6 +817,78 @@ class GPExam(models.Model):
 
     attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
+
+    # def send_certificate_email(self):
+    #     template = self.env.ref('bes.gp_certificate_mail')
+    #     print(template,"templateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
+    #     for rec in self:
+    #         print(rec.id,"recccccccccccccccccccccccccccccccccccccccccccccccccc")
+            
+    #         attachment_ids = [(4, attachment.id) for attachment in rec.attachment_ids]
+    #         print(attachment_ids,"attaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+    #         template.write({'attachment_ids': attachment_ids})
+    #         template.send_mail(rec.id)
+
+
+    def send_certificate_email(self):
+        print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
+        # Replace 'bes.report_gp_certificate' with the correct XML ID of the report template
+        report_template = self.env.ref('bes.report_gp_certificate')
+        report_pdf = report_template.render_pdf([self.id])
+        print(report_pdf, "reportttttttttttttttttttttttttttttttttttttttttttttt")
+        
+        # Render the report as PDF
+        # generated_report = report_template._render_qweb_pdf(self.id)
+        # print(generated_report,"genraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+         # Convert the report to PDF format
+        # pdf_content = self.env['ir.actions.report'].convert(
+        #         generated_report,
+        #         'pdf',
+        #         {'model': self._name, 'id': self.ids[0]}
+        #     )
+        # print(pdf_content,"pdfffffffffffffffffffffffffffffffffffffff")
+
+        # Encode the PDF data
+        data_record = base64.b64encode(report_pdf[0])
+        
+
+        # Create an attachment record
+        ir_values = {
+            'name': 'Certificate Report',
+            'type': 'binary',
+            'datas': data_record,
+            'store_fname': 'Certificate_Report.pdf',
+            'mimetype': 'application/pdf',
+            'res_model': 'gp.exam.schedule',
+        }
+
+        print(ir_values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        report_attachment = self.env['ir.attachment'].sudo().create(ir_values)
+        
+        # Get the email template
+        email_template = self.env.ref('bes.gp_certificate_mail')
+        
+        # Prepare email values
+        email_values = {
+            'email_to': self.gp_candidate.email,  # Use the appropriate recipient's email address
+            'email_from': self.env.user.email,
+        }
+        
+        # Attach the PDF to the email template
+        if email_template:
+            email_template.attachment_ids = [(4, report_attachment.id)]
+            
+            # Send the email
+            email_template.send_mail(self.id, email_values=email_values, force_send=True)
+            
+            # Remove the attachment from the email template
+            email_template.attachment_ids = [(5, 0, 0)]
+
+
+    
 class GPAppearingExam(models.Model):
     _name = 'gp.exam.appear'
     
@@ -809,13 +900,31 @@ class GPAppearingExam(models.Model):
     
     
 
+# class GPCertificate(models.AbstractModel):
+#     _name = 'report.bes.report_general_certificate'
+
+#     @api.model
+#     def _get_report_values(self, docids, data=None):
+#         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+        
+#         if docs1.certificate_criteria == 'passed' :
+#             return {
+#                 'docids': docids,
+#                 'doc_model': 'gp.exam.schedule',
+#                 'data': data,
+#                 'docs': docs1
+#             }
+#         else:
+#             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
+        
 class GPCertificate(models.AbstractModel):
     _name = 'report.bes.report_general_certificate'
 
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-        if docs1.certificate_criteria == 'passed' and len(docs1.certificate_id) > 0:
+        
+        if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
@@ -825,14 +934,15 @@ class GPCertificate(models.AbstractModel):
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
 
+
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
-    _rec_name = "roll_no"
+    _rec_name = "exam_id"
     _description= 'Schedule'
     
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
                                 default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
     
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -1044,6 +1154,10 @@ class CcmcCertificate(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
+
+        #If causing error uncomment this line 
+        # Check if all records meet the certificate criteria
+        # if all(doc.certificate_criteria == 'passed' for doc in docs):
         if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,

@@ -24,14 +24,17 @@ class Examiner(models.Model):
     email = fields.Char("Email", validators=[api.constrains('email')],required=True)
     
     pan_no = fields.Char("Pan No .",required=True)
-    dob = fields.Date("DOB",required=True)
+    dob = fields.Date("DOB",help="Date of Birth", required=True,
+                      widget="date", 
+                      date_format="%d-%b-%y")
     present_designation = fields.Text("Present Designation",required=True)
     name_address_present_employer = fields.Text("Name and address of present employer",required=True)
     designation = fields.Selection([
-        ('master', 'Master'),
-        ('chief', 'Chief')
+        ('master', 'Master Mariner'),
+        ('chief', 'Chief Engineer'),
+        ('catering','Catering Officer')
     ], string='Rank',default='master')
-    competency_no = fields.Char("Certificate of competency no.",required=True)
+    competency_no = fields.Char("Certificate of competency no.")
     date_of_issue = fields.Date("Date of Issue",required=True)
     member_of_imei_cmmi = fields.Selection([
         ('imei', 'IMEI'),
@@ -43,7 +46,27 @@ class Examiner(models.Model):
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
     subject_id = fields.Many2one("course.master.subject","Subject")
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
+    # payment_details = fields.One2many("examiner.assignment","examiner_id","Payment Details")
+    acc_no = fields.Char(string="Account Number")
+    ifsc_code = fields.Char(string="IFSC Code")
+    bank_name = fields.Char(string="Bank Name")
     exam_coordinator = fields.Boolean("Exam Coordinator")
+    
+    state = fields.Selection([
+        ('active', 'Active'),
+        ('inactive', 'Inactive')
+    ], string='State',compute="_compute_examiner_state",default="active")
+    
+    
+    
+    @api.depends('user_id')
+    def _compute_examiner_state(self):
+        for record in self:
+            if record.user_id and record.user_id.active:
+                record.state = "active"
+            else:
+                record.state = "inactive"
+                
 
     @api.constrains('zip')
     def _check_valid_zip(self):
@@ -175,6 +198,18 @@ class ExaminerAssignment(models.Model):
                 mek_practical_child_line = candidate.mek_practical_child_line.filtered(lambda r: r.mek_practical_draft_confirm == 'draft')
                 self.env["gp.candidate.oral.prac.assignment"].create({"assignment_id":self.id,"mek_oral":mek_oral_child_line.id,"mek_prac":mek_practical_child_line.id,"gp_candidate":candidate_id})
             
+        elif self.subject_id.name == 'CCMC':
+            self.ccmc_assignment.unlink()
+            practical_line_candidates = set(self.env["ccmc.cookery.bakery.line"].search([('institute_id','=',self.institute_id.id),('cookery_draft_confirm','=','draft')]).mapped('cookery_parent'))
+            oral_line_candidates = set(self.env["ccmc.oral.line"].search([('institute_id','=',self.institute_id.id),('ccmc_oral_draft_confirm','=','draft')]).mapped('ccmc_oral_parent'))
+            ccmc_candidates = list(practical_line_candidates.intersection(oral_line_candidates))
+            
+            for candidate in ccmc_candidates:
+                candidate_id = candidate.id
+                ccmc_oral_child_line = candidate.ccmc_oral_child_line.filtered(lambda r: r.ccmc_oral_draft_confirm == 'draft')
+                ccmc_practical_child_line = candidate.cookery_child_line.filtered(lambda r: r.cookery_draft_confirm == 'draft')
+                self.env["ccmc.candidate.assignment"].create({"assignment_id":self.id,"ccmc_oral":ccmc_oral_child_line.id,"cookery_bakery":ccmc_practical_child_line.id,"ccmc_candidate":candidate_id})
+            
             
             
                             
@@ -236,7 +271,7 @@ class GPOralPracAssignment(models.Model):
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
 
-class GPOralPracAssignment(models.Model):
+class CCMCOralPracAssignment(models.Model):
     _name = "ccmc.candidate.assignment"
     _description= 'CCMC Candidate Assignment'
     

@@ -13,6 +13,7 @@ class InstituteGPBatches(models.Model):
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     batch_name = fields.Char("Batch Name",required=True)
     faculty_name = fields.Char("Faculty name")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
@@ -35,6 +36,8 @@ class InstituteGPBatches(models.Model):
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing')
     
+    active = fields.Boolean(string="Active",default=True)
+    
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
         ('paid', 'Paid'),
@@ -53,7 +56,7 @@ class InstituteGPBatches(models.Model):
     @api.model
     def create(self, values):
         record = super(InstituteGPBatches, self).create(values)
-        course_id = self.env["course_master"].sudo().search([('course_code','=','GP')]).id
+        course_id = self.env["course.master"].sudo().search([('course_code','=','GP')]).id
         record.write({'course': course_id})
         return record
     
@@ -122,7 +125,7 @@ class InstituteGPBatches(models.Model):
             'partner_id': partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
-            'batch_ok':True,
+            'gp_batch_ok':True,
             'batch':self.id
             # Add other invoice fields as needed
         }
@@ -145,6 +148,7 @@ class InstituteGPBatches(models.Model):
         
         
         canidate_list_no_indos = []
+        candidate_missing_data_id = [] 
         for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
                 
@@ -162,7 +166,7 @@ class InstituteGPBatches(models.Model):
                 
                 candidate_data = {"candidate_name" : candidate.name , "candidate_mobile":candidate.mobile , "missing_data": missing_data }
                 canidate_list_no_indos.append(candidate_data)
-        
+                candidate_missing_data_id.append(candidate.id)
         # import wdb; wdb.set_trace()
         
         if len(canidate_list_no_indos) > 0:
@@ -182,47 +186,53 @@ class InstituteGPBatches(models.Model):
             }
 
             
-            return {
-            'name': 'Email Compose Wizard',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(False, 'form')],
-            'view_id': False,
-            'target': 'new',
-            'context': ctx
+            mail_template = self.env.ref('bes.indos_check_mail')
+            mail_template.with_context(ctx).send_mail(self.id, force_send=True)
+            
+        gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]).ids
+        print(candidate_missing_data_id,"missssssssssssssssssssssssssssssssssssssss") 
+        print("")  
+        print(gp_candidates,"alllllllllllllllllllllllllllllllllllllll") 
+        
+        set1 = set(gp_candidates)
+        set2 = set(candidate_missing_data_id)
+        
+        # Remove common elements from both sets
+        array1_without_common = list(set1 - set2)
+
+        gp_candidates = self.env['gp.candidate'].sudo().browse(array1_without_common)
+        
+        group_xml_ids = [
+        'bes.group_gp_candidates',
+        'base.group_portal'
+        ]
+        # # import wdb; wdb.set_trace()
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+        
+        for gp_candidate in gp_candidates:
+            user_values = {
+            'name': gp_candidate.name,
+            'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
+            'password': str(gp_candidate.indos_no)+"1",  # Generate a random password
+            'sel_groups_1_9_10':9,
+            'groups_id':  [(4, group_id, 0) for group_id in group_ids]
             }
-        else:
-            
-            gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)])
-            
-            group_xml_ids = [
-            'bes.group_gp_candidates',
-            'base.group_portal'
-            ]
-            # import wdb; wdb.set_trace()
-            group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
-            
-            for gp_candidate in gp_candidates:
-                user_values = {
-                'name': gp_candidate.name,
-                'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
-                'password': str(gp_candidate.indos_no)+"1",  # Generate a random password
-                'sel_groups_1_9_10':9,
-                'groups_id':  [(4, group_id, 0) for group_id in group_ids]
-                }
-            
-                portal_user = self.env['res.users'].sudo().create(user_values)
-                gp_candidate.write({'user_id': portal_user.id})
-                candidate_tag = self.env.ref('bes.candidates_tags').id
-                portal_user.partner_id.write({'email': gp_candidate.email,'phone':gp_candidate.phone,'mobile':gp_candidate.mobile,'street':gp_candidate.street,'street2':gp_candidate.street2,'city':gp_candidate.city,'zip':gp_candidate.zip,'state_id':gp_candidate.state_id.id,'category_id':[candidate_tag]})
-
-
-            
-            mail_template = self.env.ref('bes.candidate_confirmtion_mail')
-            mail_template.send_mail(self.id, force_send=True)
+        
+            portal_user = self.env['res.users'].sudo().create(user_values)
+            gp_candidate.write({'user_id': portal_user.id})
+            candidate_tag = self.env.ref('bes.candidates_tags').id
+            portal_user.partner_id.write({
+                'email': gp_candidate.email,
+                'phone':gp_candidate.phone,
+                'mobile':gp_candidate.mobile,
+                'street':gp_candidate.street,
+                'street2':gp_candidate.street2,
+                'city':gp_candidate.city,
+                'zip':gp_candidate.zip,
+                'state_id':gp_candidate.state_id.id,
+                'category_id':[candidate_tag]})
              
-            self.write({"state":"2-indos_pending"})
+        self.write({"state":"2-indos_pending"})
         
     
     def confirm_indos(self):
@@ -275,7 +285,8 @@ class InstituteGPBatches(models.Model):
             'target': 'new',
             'context': {
                 'default_institute_id': self.institute_id.id,
-                'default_batch_id': self.id
+                'default_batch_id': self.id,
+                'default_dgs_batch': self.dgs_batch.id
             }
         }
     
@@ -285,6 +296,7 @@ class InstituteGPBatches(models.Model):
 class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"
     _rec_name = "ccmc_batch_name"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
@@ -304,7 +316,7 @@ class InstituteCcmcBatches(models.Model):
 
     ccmc_state = fields.Selection([
         ('1-ongoing', 'On-Going'),
-        ('2-indos_pending', 'Indos Pending'),
+        ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Pending'),
         ('4-invoiced', 'Invoiced'),
         ('5-exam_scheduled', 'Exam Scheduled'),
@@ -317,11 +329,14 @@ class InstituteCcmcBatches(models.Model):
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
     
+    active = fields.Boolean(string="Active",default=True)
+
+    
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
     
-    
+    cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     
     @api.depends("candidate_count")
     def _compute_candidate_count(self):
@@ -378,8 +393,8 @@ class InstituteCcmcBatches(models.Model):
             'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
-            'batch_ok':True,
-            'batch':self.id
+            'ccmc_batch_ok':True,
+            'ccmc_batch':self.id
             # Add other invoice fields as needed
         }
         new_invoice = self.env['account.move'].create(invoice_vals)    
@@ -397,10 +412,99 @@ class InstituteCcmcBatches(models.Model):
         'target': 'current',  # Open in the current window
         }
     
+    # def confirm_batch_ccmc(self):
+        
+    #     self.write({"ccmc_state":"2-indos_pending"})
+    
     def confirm_batch_ccmc(self):
+
+        print(self,"selfffffffffffffffffffffffffffffffffffffffffffffffffffff")
+
+        candidate_list_no_indos = []
+        candidate_missing_data_id = []
+        for candidate in self.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
+            if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature:
+                
+                missing_data = ""
+                if not candidate.indos_no:
+                    missing_data += "Indos No,"
+                
+                if not candidate.candidate_image:
+                    missing_data += "Candidate Image,"
+                
+                if not candidate.candidate_signature:
+                    missing_data += "Candidate Signature,"
+                
+                missing_data = missing_data.rstrip(',')
+                
+                candidate_data = {"candidate_name": candidate.name, "candidate_mobile": candidate.mobile, "missing_data": missing_data}
+                candidate_list_no_indos.append(candidate_data)
+                candidate_missing_data_id.append(candidate.id)
+
+        if len(candidate_list_no_indos) > 0:
+
+
+            template_id = self.env.ref('bes.ccmc_indos_check_mail').id
+            official_institute_mail_id = self.institute_id.user_id.partner_id.ids
+
+
+            ctx = {
+                'default_res_id': self.id,
+                'default_template_id': template_id,
+                'default_use_template': bool(template_id),
+                'default_composition_mode': 'comment',
+                'default_partner_ids': official_institute_mail_id,
+                "default_candidate_lists": candidate_list_no_indos
+            }
+
+            mail_template = self.env.ref('bes.ccmc_indos_check_mail')
+            mail_template.with_context(ctx).send_mail(self.id, force_send=True)
+
+        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)]).ids
+            
+        set1 = set(ccmc_candidates)
+        set2 = set(candidate_missing_data_id)    
+            
+        array1_without_common = list(set1 - set2)
+            
+        ccmc_candidates = self.env['ccmc.candidate'].sudo().browse(array1_without_common)
+        group_xml_ids = [
+            'bes.group_ccmc_candidates',
+            'base.group_portal'
+        ]
+            
+        group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
+
+        for ccmc_candidate in ccmc_candidates:
+            user_values = {
+                'name': ccmc_candidate.name,
+                'login': ccmc_candidate.indos_no, # You can set the login as the same as the user name
+                'password': str(ccmc_candidate.indos_no) + "1",  # Generate a random password
+                'sel_groups_1_9_10': 9,
+                'groups_id': [(4, group_id, 0) for group_id in group_ids]
+            }
+
+            portal_user = self.env['res.users'].sudo().create(user_values)
+            ccmc_candidate.write({'user_id': portal_user.id})
+            # You may need to adjust the following fields based on your actual field names in ccmc_candidate
+            ccmc_candidate_tag = self.env.ref('bes.candidates_tags').id
+
+            portal_user.partner_id.write({
+                'email': ccmc_candidate.email,
+                'phone': ccmc_candidate.phone,
+                'mobile': ccmc_candidate.mobile,
+                'street': ccmc_candidate.street,
+                'street2': ccmc_candidate.street2,
+                'city': ccmc_candidate.city,
+                'zip': ccmc_candidate.zip,
+                'state_id': ccmc_candidate.state_id.id,
+                'category_id': [ccmc_candidate_tag]
+            })
+
         
-        self.write({"ccmc_state":"2-indos_pending"})
-        
+        # Update the state field based on your actual field name in ccmc_batches
+        self.write({"ccmc_state": "2-indos_pending"})
+    
     
     def confirm_indos_ccmc(self):
         self.write({"ccmc_state":"3-pending_invoice"})
@@ -471,6 +575,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
 
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
     
@@ -481,9 +586,10 @@ class BatchesRegisterExamWizard(models.TransientModel):
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
+       
         for candidate in candidates:
             
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id , 'dgs_batch': self.dgs_batch.id })
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             
@@ -525,11 +631,15 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     
     def register(self):
 
+        # print(self,"selffffffffffffffffffffffffffffffffffffffffffffff")
         candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
+        # print(candidates)
         cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.ccmc_batch_name , 'template' :False })
+        # print(cookery_bakery_qb.id,"cookeryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
         
         for candidate in candidates:
             ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id})
+            # print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})
@@ -544,7 +654,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
                         
 
         
-        self.batch_id.write({"ccmc_state":'5-exam_scheduled'})
+        self.batch_id.write({"ccmc_state":'5-exam_scheduled',"cookery_bakery_qb":cookery_bakery_qb.id})
 
 
    

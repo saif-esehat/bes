@@ -45,4 +45,58 @@
 
             </field>
         </record>
+
+        <record id="ccmc_indos_check_mail" model="mail.template">
+            <field name="name">CCMC Indos Check Mail</field>
+            <field name="subject">Candidate Information Update: Missing Data</field>
+            <field name="model_id" ref="bes.model_institute_ccmc_batches"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <p>We hope this email finds you well. Our records indicate that the following candidate(s) in your system do not have associated data. It is crucial to update their information for our records.</p>
+                <ul> 
+                    <t t-foreach="ctx['default_candidate_lists']" t-as="candidate_list">
+                        <li><strong><t t-out="candidate_list['candidate_name']">Test</t></strong> - Mobile: <t t-out="candidate_list['candidate_mobile']"/> - <strong>Missing Data:</strong> <t t-out="candidate_list['missing_data']"/> </li>
+                    </t>
+                </ul>
+                <p>Please take the necessary steps to obtain and update the above-given data for the mentioned candidates at your earliest convenience. This ensures accurate and up-to-date information in our system.</p>
+                <p>If you have any questions or concerns, feel free to contact us. Thank you for your prompt attention to this matter.</p>
+            </field>
+        </record>
+
+        <record id="ccmc_candidate_confirmation_mail" model="mail.template">
+            <field name="name">CCMC Candidate Confirmation Mail</field>
+            <field name="subject">Enrollment Confirmation and User ID Generation for Candidates</field>
+            <field name="model_id" ref="bes.model_institute_ccmc_batches"/>
+            <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <p>Dear <t t-out="object.institute_id.name"/>, Administration,</p>
+                <p>I trust this email finds you well. We are pleased to inform you that the enrollment processes for candidates have been successfully completed. User IDs have been generated for each candidate.</p>
+                <p>Please ensure that each candidate is provided with their respective user ID and password at your earliest convenience. This information is essential for their engagement with the examination's services.</p>
+                <p>The batch name is: <strong><t t-out="object.ccmc_batch_name"/></strong></p>
+                <p>We kindly request your assistance in guiding them through the orientation sessions of the BES portal. This will help them familiarize themselves with the portal and make the most of the resources available.</p>
+                
+                
+                <p>Best regards,<br/> BES</p>
+            
+            
+            </field>
+        </record>
+
+        <!-- For sending certificate through email-->
+        <record id="gp_certificate_mail" model="mail.template">
+            <field name="name">GP Candidate Certificate Mail</field>
+            <field name="subject">Your Certificate</field>
+            <field name="model_id" ref="bes.model_gp_exam_schedule"/>
+            <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <p>Dear Candidate,</p>
+                <p>I trust this email finds you well. Please find your certificate attached to this mail with Certificate ID -</p>
+            </field>
+            <!-- <field name="exam_id" eval="[(4, ref('bes.report_general_certificate'))]"/> -->
+            <field name="report_template" ref="bes.report_gp_certificate"/>
+
+        </record>
+
 </odoo>
