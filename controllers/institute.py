@@ -1404,7 +1404,7 @@ class InstitutePortal(CustomerPortal):
         
         institute_worksheet = workbook.add_worksheet("Institute")
         institute_worksheet.set_column('A:B', 60)
-        
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy'})
         bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})  # 'border': 1 adds a thin border
 
         # Create a format with borders.
@@ -1480,7 +1480,7 @@ class InstitutePortal(CustomerPortal):
             candidate_worksheet.write(row,0,row)
             candidate_worksheet.write(row,1,gp_candidate.roll_no)
             candidate_worksheet.write(row,2,gp_candidate.name)
-            candidate_worksheet.write(row,3,gp_candidate.dob)
+            candidate_worksheet.write(row,3,gp_candidate.dob,date_format)
             candidate_worksheet.write(row,4,gp_candidate.tenth_percent)
             candidate_worksheet.write(row,5,gp_candidate.twelve_percent)
             row += 1
@@ -1488,6 +1488,8 @@ class InstitutePortal(CustomerPortal):
         #Faculty
         
         faculty_worksheet = workbook.add_worksheet("Faculty")
+        
+
         faculty_worksheet.write('A1', 'Qualification')
         faculty_worksheet.write('B1', 'Faculty Name')
         faculty_worksheet.write('C1', 'Specialization')
@@ -1503,7 +1505,7 @@ class InstitutePortal(CustomerPortal):
             faculty_worksheet.write(row,0,faculty.qualification)
             faculty_worksheet.write(row,1,faculty.faculty_name)
             faculty_worksheet.write(row,2,faculty.designation)
-            faculty_worksheet.write(row,3,faculty.dob)
+            faculty_worksheet.write(row,3,faculty.dob,date_format)
             row += 1
 
         
@@ -1548,7 +1550,7 @@ class InstitutePortal(CustomerPortal):
         
         institute_worksheet = workbook.add_worksheet("Institute")
         institute_worksheet.set_column('A:B', 60)
-        
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy'})
         bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})  # 'border': 1 adds a thin border
 
         # Create a format with borders.
@@ -1567,7 +1569,7 @@ class InstitutePortal(CustomerPortal):
         data = [
             ['Name of the Institute', institutes.institute_id.name],
             ['MTI No. of institute', institutes.institute_id.mti],
-            ['Approved Capacity', institutes.institute_id.computer_lab_pc_count],
+            ['Approved Capacity', institutes.dgs_approved_capacity],
             ['Course Title', institutes.ccmc_course.name],
             ['Batch No.', institutes.ccmc_batch_name],
             ['Date of commencement and ending of the course', str(institutes.ccmc_from_date) + ' to ' + str(institutes.ccmc_to_date)],
@@ -1623,7 +1625,7 @@ class InstitutePortal(CustomerPortal):
             candidate_worksheet.write(row,0,row)
             candidate_worksheet.write(row,1,ccmc_candidate.roll_no)
             candidate_worksheet.write(row,2,ccmc_candidate.name)
-            candidate_worksheet.write(row,3,ccmc_candidate.dob)
+            candidate_worksheet.write(row,3,ccmc_candidate.dob,date_format)
             candidate_worksheet.write(row,4,ccmc_candidate.tenth_percent)
             candidate_worksheet.write(row,5,ccmc_candidate.twelve_percent)
             row += 1
@@ -1646,7 +1648,7 @@ class InstitutePortal(CustomerPortal):
             faculty_worksheet.write(row,0,faculty.qualification)
             faculty_worksheet.write(row,1,faculty.faculty_name)
             faculty_worksheet.write(row,2,faculty.designation)
-            faculty_worksheet.write(row,3,faculty.dob)
+            faculty_worksheet.write(row,3,faculty.dob,date_format)
             row += 1
 
         
