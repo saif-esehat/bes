@@ -167,7 +167,7 @@
                         <!-- <button name="move_to_invoiced_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '3-pending_invoice'),]}"/> -->
                         <button name="confirm_batch_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '1-ongoing')]}"/>
                         <!-- <button name="confirm_indos_ccmc" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '2-indos_pending')]}"/> -->
-                        <!-- <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '4-invoiced')]}"/> -->
+                        <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
                         <field name="ccmc_state" widget="statusbar"/>
                     </header>
@@ -248,6 +248,10 @@
                                 <b>No of Candidate : </b>
                                 <field name="ccmc_candidate_count"/>
                                 <br/>
+                                <t t-if="record.ccmc_state.raw_value === '3-pending_invoice' || record.ccmc_state.raw_value === '4-invoiced'">
+                                    <b>Invoice Status : </b>
+                                    <field name="payment_state" decoration-success="payment_state == 'paid'" widget="badge" />
+                                </t>
                                 
                             </div>
                         </t>

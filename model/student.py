@@ -477,6 +477,40 @@ class CCMCCandidate(models.Model):
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
     
+    
+    def open_ccmc_candidate_exams(self):
+        
+        
+        
+        return {
+                'name': _('CCMC Exam'), 
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'ccmc.exam.schedule',
+                'type': 'ir.actions.act_window',
+                'view_id': False,
+                'target': 'current',
+                'domain': [('ccmc_candidate', '=', self.id)],
+                'context':{
+                    'default_ccmc_candidate': self.id    
+                }
+                }
+    
+    
+    # def open_add_marksheet(self):
+        
+        
+        
+    #     return {
+    #                 'name': _('Add Marksheet'),
+    #                 'view_type': 'form',
+    #                 'view_mode': 'form',
+    #                 'res_model': 'ccmc.marksheet.creation.wizard',
+    #                 'type': 'ir.actions.act_window',
+    #                 'view_id': False,
+    #                 'target': 'new'
+    #             }
+
     def unlink(self):
         # users_to_delete = self.mapped('user_id')
         # print
