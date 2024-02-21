@@ -52,7 +52,6 @@
 ],
 'assets': {
 		'web.assets_frontend': [
-			'bes/static/src/js/custom_validation.js',
                         'bes/views/portal/static/src/js/candidate_oral_practical.js'
 		],
                 'web.assets_qweb': [
