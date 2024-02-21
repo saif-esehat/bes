@@ -630,7 +630,8 @@ class GPExam(models.Model):
     
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
+                # date = self.dgs_batch.from_date
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.from_date + '/' + self.gp_candidate.roll_no
                 self.state = '3-certified'
                 self.certificate_issue_date = fields.date.today()
                 
@@ -954,15 +955,16 @@ class CCMCExam(models.Model):
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
-    cookery_bakery_total = fields.Float("Cookery And Bakery",readonly=True)
+    cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
+    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True)
     cookery_bakery_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='Cookery And Bakery')
     
     
-    ccmc_oral_total = fields.Float("CCMC Oral Total",readonly=True)
+    cookery_oral = fields.Float("Cookery Oral",readonly=True)
     ccmc_oral_percentage = fields.Float("CCMC Oral Percentage",readonly=True)
     ccmc_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
@@ -1103,7 +1105,7 @@ class CCMCExam(models.Model):
             cookery_bakery_marks = self.cookery_bakery.total_mrks
             ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
             self.ccmc_oral_total = ccmc_oral_marks
-            self.cookery_bakery_total = cookery_bakery_marks
+            self.cookery_practical = cookery_bakery_marks
             self.cookery_bakery_percentage = (cookery_bakery_marks/100) * 100
             self.ccmc_oral_percentage = (ccmc_oral_marks/20) * 100
 

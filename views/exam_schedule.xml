@@ -240,18 +240,25 @@
                         
                         <group style="width:50%">
                         
-                            <label for="cookery_bakery_total"/>
+                            <label for="cookery_practical"/>
                             <div>
-                                <field name="cookery_bakery_total" nolabel="1"/>
+                                <field name="cookery_practical" nolabel="1"/>
                             / 
                                 <span>100</span>
                             </div>
                       
-                            <label for="ccmc_oral_total"/>
+                            <label for="cookery_oral"/>
                             <div>
-                                <field name="ccmc_oral_total" nolabel="1"/>
+                                <field name="cookery_oral" nolabel="1"/>
                             / 
-                                <span>20</span>
+                                <span>100</span>
+                            </div>
+
+                            <label for="cookery_gsk_online"/>
+                            <div>
+                                <field name="cookery_gsk_online" nolabel="1"/>
+                            / 
+                                <span>100</span>
                             </div>
                       
                         </group>

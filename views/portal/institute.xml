@@ -1804,6 +1804,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="courses_taught">Courses Taught</label>
+                                        <textarea type="text" class="form-control" id="courses_taught" name="courses_taught" required="true" />
+                                    </div>
+                                </div>
+                            </div>
 
 
 
@@ -1826,14 +1834,13 @@
 
     <template id="gp_candidate_portal_list" name="GP Candidate">
         <script>                    
-                                    rpc = require("web.rpc")
 
-                                    $(document).ready(function () {
+                                    <!-- $(document).ready(function () {
                                         $('#uploadBtn').on('click', function () {
                                             // Show the overlay and loader when the upload button is clicked
                                             $('#loader-overlay').show();
                                         });
-                                    });
+                                    }); -->
 
                                     function onOpenDeleteCandidateModal(button){
                                         
