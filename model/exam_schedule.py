@@ -630,7 +630,8 @@ class GPExam(models.Model):
     
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
+                # date = self.dgs_batch.from_date
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.from_date + '/' + self.gp_candidate.roll_no
                 self.state = '3-certified'
                 self.certificate_issue_date = fields.date.today()
                 
