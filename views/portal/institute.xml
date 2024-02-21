@@ -1804,14 +1804,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="courses_taught">Courses Taught</label>
                                         <textarea type="text" class="form-control" id="courses_taught" name="courses_taught" required="true" />
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
 
 

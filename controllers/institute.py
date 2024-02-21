@@ -749,7 +749,7 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            courses_taught = kw.get("courses_taught")
+            # courses_taught = kw.get("courses_taught")
 
             
             faculty_data = {
@@ -762,7 +762,7 @@ class InstitutePortal(CustomerPortal):
                 "qualification": qualification,
                 "contract_terms": contract_terms,
                 "course_name":course_name
-                "courses_taught": courses_taught,
+                # "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();
@@ -798,7 +798,7 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            courses_taught = kw.get("courses_taught")
+            # courses_taught = kw.get("courses_taught")
 
             
             faculty_data = {
@@ -811,7 +811,7 @@ class InstitutePortal(CustomerPortal):
                 "qualification": qualification,
                 "contract_terms": contract_terms,
                 "course_name":course_name
-                "courses_taught": courses_taught,
+                # "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();

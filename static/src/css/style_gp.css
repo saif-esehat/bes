@@ -1,14 +1,17 @@
 
-.o_report{
-    border: 5px solid #4c2d8b;
+.oe_report{
+    border: 3px solid #4c2d8b;
     background-image: url("/bes/static/src/img/watermark.png");
     background-repeat: no-repeat;
     background-position: center;
     font-family: 'Times New Roman', Times, serif;
-    /* or 'no-repeat' for a single instance */
-        /* Other background properties can be adjusted based on your requirements */
-    }
+    margin: 2px;
+}
     
+.oe_structure{
+    border: 1px solid #4c2d8b;
+
+}
 #header {
     width: 80%;
     margin: auto;
@@ -16,11 +19,3 @@
     color: #4c2d8b;
     position: relative;
 }
-
-/* #body {
-    width: 70%;
-    margin: auto;
-    border: 2px solid #4c2d8b;
-    font-size: 1.2rem;
-    font: 600;
-}  */
