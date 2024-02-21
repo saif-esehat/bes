@@ -1827,12 +1827,12 @@
     <template id="gp_candidate_portal_list" name="GP Candidate">
         <script>                    
 
-                                    $(document).ready(function () {
+                                    <!-- $(document).ready(function () {
                                         $('#uploadBtn').on('click', function () {
                                             // Show the overlay and loader when the upload button is clicked
                                             $('#loader-overlay').show();
                                         });
-                                    });
+                                    }); -->
 
                                     function onOpenDeleteCandidateModal(button){
                                         
