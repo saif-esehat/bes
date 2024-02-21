@@ -761,7 +761,7 @@ class InstitutePortal(CustomerPortal):
                 "designation": designation,
                 "qualification": qualification,
                 "contract_terms": contract_terms,
-                "course_name":course_name
+                "course_name":course_name,
                 "courses_taught": courses_taught,
 
             }
@@ -810,7 +810,7 @@ class InstitutePortal(CustomerPortal):
                 "designation": designation,
                 "qualification": qualification,
                 "contract_terms": contract_terms,
-                "course_name":course_name
+                "course_name":course_name,
                 "courses_taught": courses_taught,
 
             }
