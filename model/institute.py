@@ -35,7 +35,8 @@ class Institute(models.Model):
     
     ip_address = fields.Char("IP Address")
     #  validators=[api.constrains('admin_phone')]
-    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute" )
+    
+    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute")
     admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')])
     admin_email= fields.Char("E-mail of Admin Officer of Training Institute",  validators=[api.constrains('admin_email')])
     
@@ -222,6 +223,21 @@ class Institute(models.Model):
 
         
         return institute
+    
+    def faculty_button(self):
+        
+        return {
+        'name': 'Faculty',
+        'domain': [('institute_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'institute.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_institute_id': self.id    
+            }
+        }
     
     def ccmc_button(self):
         
