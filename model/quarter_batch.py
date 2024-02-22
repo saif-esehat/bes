@@ -31,7 +31,6 @@ class DGSBatch(models.Model):
     ], string='State', default='1-on_going')
     
     def move_confirm(self):
-        import wdb;wdb.set_trace()
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
         for exam in exams:
             exam.move_done()

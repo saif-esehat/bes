@@ -544,7 +544,6 @@ class GPExam(models.Model):
     
     @api.depends('overall_percentage')
     def _compute_rank(self):
-        import wdb; wdb.set_trace(); 
         sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
