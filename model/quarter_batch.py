@@ -42,6 +42,7 @@ class DGSBatch(models.Model):
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
         for exam in exams:
             exam.dgs_approval()
+            exam.update_ranks()
         
         self.state = '3-dgs_approved'
     

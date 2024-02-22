@@ -536,20 +536,20 @@ class GPExam(models.Model):
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:")
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
-    rank = fields.Char("Rank")
+    rank = fields.Char("Rank",compute='_compute_rank')
     
     
     
 
     
-    @api.model
-    def update_ranks(self):
-        # Fetch all records and sort them by marks
-        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',record.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+    @api.depends('marks')
+    def _compute_rank(self):
+        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
 
-        for index, record in enumerate(sorted_records):
+        for record in self:
+            index = sorted_records.ids.index(record.id)
             numeric_rank = index + 1 if index < top_25_percent else 0
 
             # Convert numeric rank to character format
@@ -562,9 +562,7 @@ class GPExam(models.Model):
             else:
                 suffix = 'th'
 
-            record.write({'rank': f'{numeric_rank}{suffix}'})
-
-        return True
+            record.rank = f'{numeric_rank}{suffix}'
 
 
     
