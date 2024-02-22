@@ -536,6 +536,7 @@ class GPExam(models.Model):
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:")
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    rank = fields.Integer("Rank")
 
     
     @api.depends('certificate_criteria','state')
@@ -631,7 +632,7 @@ class GPExam(models.Model):
     def dgs_approval(self):
             if(self.certificate_criteria == 'passed'):
                 # date = self.dgs_batch.from_date
-                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.from_date + '/' + self.gp_candidate.roll_no
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.gp_candidate.roll_no
                 self.state = '3-certified'
                 self.certificate_issue_date = fields.date.today()
                 
