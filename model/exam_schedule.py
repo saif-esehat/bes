@@ -536,6 +536,7 @@ class GPExam(models.Model):
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:")
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    rank = fields.Integer("Rank")
 
     
     @api.depends('certificate_criteria','state')
