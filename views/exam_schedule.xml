@@ -199,6 +199,7 @@
                     <field name="ship_visit_criteria" />
                     <field name="certificate_criteria"/>
                     <field name="state"/>
+                    <field name="rank"/>
                 </tree>
             </field>
         </record>

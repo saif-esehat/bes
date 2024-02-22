@@ -544,7 +544,8 @@ class GPExam(models.Model):
        
 
         for record in self:
-            sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',record.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='marks desc')
+            sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',record.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+            print("asasasa",sorted_records)
             total_records = len(sorted_records)
             top_25_percent = int(total_records * 0.25)
             index = sorted_records.ids.index(record.id)
