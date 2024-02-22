@@ -1,11 +1,16 @@
 
 .oe_report{
     border: 3px solid #4c2d8b;
-    background-image: url("/bes/static/src/img/watermark.png");
-    background-repeat: no-repeat;
-    background-position: center;
     font-family: 'Times New Roman', Times, serif;
     margin: 2px;
+    height: 100vh;
+}
+
+.backgroundd{
+    background-image: url("/bes/static/src/img/watermark.png");
+    background-repeat: no-repeat;
+    background-position: 175px 510px;
+    background-size: 500px 500px;
 }
     
 .oe_structure{
@@ -40,4 +45,8 @@
 
 .arabic{
     font-family:DroidArabicKufiRegular !important;
+}
+
+td{
+    padding: 0;
 }
