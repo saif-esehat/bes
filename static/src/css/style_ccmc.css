@@ -1,7 +1,7 @@
 
 .oe_report{
     border: 3px solid #4c2d8b;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'TimesNewRoman';
     margin: 2px;
     height: 100vh;
 }
@@ -26,7 +26,9 @@
 }
 
 .font{
-    font-family:'timesNewRoman';;font-weight:100;font-size: 13px;
+    font-family:'timesNewRoman';
+    font-weight:100;
+    font-size: 13px;
     }
     
 @font-face {

@@ -25,7 +25,8 @@
                             <div class="container" style="text-align:left; font-weight:bold;">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
                                     <div class="col-12">
-                                        <span style="font-size:20px; color:#4c2d8b; margin-right:8px;">Certificate No.:</span><span style="font-size:20px;"><t t-esc="doc.gp_candidate.candidate_code"/>/<t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b %y')"/>/<t t-esc="doc.gp_candidate.roll_no"/></span>  
+                                        <span style="font-size:20px; color:#4c2d8b; margin-right:8px;">Certificate No.:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.certificate_id"/></span>  
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
