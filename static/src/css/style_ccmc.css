@@ -1,131 +1,42 @@
-body {
-    margin: 0;
-    padding: 0;
-    color: #4c2d8b;
-    text-align: center;
-    /* border: 4px solid #4c2d8b; */
+
+.oe_report{
+    border: 3px solid #4c2d8b;
+    font-family: 'Times New Roman', Times, serif;
+    margin: 2px;
+    height: 100vh;
 }
 
-.o_report{
-    border: 5px solid #4c2d8b;
+.backgroundd{
     background-image: url("/bes/static/src/img/watermark.png");
     background-repeat: no-repeat;
-    background-position: center;
-    /* or 'no-repeat' for a single instance */
-        /* Other background properties can be adjusted based on your requirements */
+    background-position: 175px 510px;
+    background-size: 500px 500px;
+}
     
-}
+.oe_structure{
+    border: 1px solid #4c2d8b;
 
-#body {
-    width: 70%;
-    margin: auto;
-    border: 2px solid #4c2d8b;
-    font-size: 1.2rem;
-    font: 600;
 }
-
 #header {
+    width: 80%;
     margin: auto;
     text-align: center;
     color: #4c2d8b;
     position: relative;
 }
 
-#photo {
-    width: 15%;
-    height: 25%;
-    position: absolute;
-    top: 5%;
-    right: 0;
-    border: 2px solid black;
-}
-
-#header img {
-    max-width: 100%;
-    height: auto;
-    /* margin: 1rem; */
-}
-
-#header span {
-    display: block;
-    margin: 0 auto;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-align: center;
-}
-
-input {
-    outline: none;
-    margin: 0.5rem;
-}
-
-#main {
-    width: 100%;
-    /* margin: auto; */
-    text-align: center;
-}
-
-h1 {
-    display: inline-block;
-    color: #4c2d8b;
-    background-color:#c0c0c0;
-    font-size: 2rem;
-    text-align: center;
-    padding: 0.5rem;
-    margin: 0;
-}
-
-.text {
-    width: max-content;
-    text-align: left;
-    display: flex;
-    gap: 5rem;
-}
-
-.left {
-    text-align: left;
-    margin: 0;
-}
-
-span {
-    margin: 1rem 0;
-}
-
-.line {
-    display: -webkit-box; 
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center; 
-    -webkit-justify-content: center;
-            justify-content: center;
-}
-
-.center {
-    width: 100%;
-    margin: auto;
-}
-
-#center {
-    text-align: center;
+.font{
+    font-family:'timesNewRoman';;font-weight:100;font-size: 13px;
+    }
+    
+@font-face {
+    font-family: 'TimesNewRoman';
+    src: url('/bes/static/src/fonts/times.ttf') format('truetype');  
+    font-weight: normal;
+    font-style: normal;
 }
 
 
-/* #split{
-    display: -webkit-box; 
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center; 
-    -webkit-justify-content: space-between;
-            justify-content: space-between;
-    gap: 15rem;
-} */
-
-/* #sign input{
-    display: block;
-    text-align: center;
-} */
-
-/* #img-sign{
-    width: 8rem;
-    height: 3rem;
-} */
+td{
+    padding: 0;
+}
