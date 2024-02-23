@@ -99,4 +99,18 @@
 
         </record>
 
+        <record id="ccmc_certificate_mail" model="mail.template">
+            <field name="name">GP Candidate Certificate Mail</field>
+            <field name="subject">Your Certificate</field>
+            <field name="model_id" ref="bes.model_gp_exam_schedule"/>
+            <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <p>Dear Candidate,</p>
+                <p>I trust this email finds you well. Please find your certificate attached to this mail with Certificate ID -</p>
+            </field>
+            <!-- <field name="exam_id" eval="[(4, ref('bes.report_general_certificate'))]"/> -->
+            <field name="report_template" ref="bes.report_ccmc_certificate"/>
+
+        </record>
 </odoo>

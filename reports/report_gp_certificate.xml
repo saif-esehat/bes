@@ -6,27 +6,27 @@
                 <div class="page">
                     <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
                     <div class="oe_structure">
-                        <div class="oe_report backgroundd" style="font-family: 'TimesNewRoman';">
-                            <div id="header" style="width:100%; text-align: center; font-family: 'Times New Roman';">
+                        <div class="oe_report backgroundd" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
+                            <div id="header" style="width:100%; text-align: center;">
                                 <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
                                 <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;  border: 2px solid black;"/>
-                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:800px; height:50px;"/>
-                                <div class="" style="">
-                                    <span style="font-size: 18px; font-weight: bold;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
+                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
+                                <div class="container-fluid" style="width:100%;">
+                                    <span style="font-size: 17px; font-weight: bold; font-family: 'TimesNewRomanBold';">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
                                 </div>
                                 <div class="container-fluid" style="">
-                                    <span style="font-size: 24px; font-weight: 700;">Under the authority of the Directorate General of Shipping, Ministry of Shipping,</span>
-                                    <span style="font-size: 24px; font-weight: 700;">Government of India<br/></span>
-                                    <span style="font-size: 24px; font-weight: 700;">Awards this</span>
+                                    <span style="font-size: 21px; font-weight: 700; font-family: 'TimesNewRomanBold';">Under the authority of the Directorate General of Shipping, Ministry of Shipping,</span><br/>
+                                    <span style="font-size: 22px; font-weight: 700; font-family: 'TimesNewRomanBold';">Government of India</span><br/>
+                                    <span style="font-size: 22px; font-weight: 700; font-family: 'TimesNewRomanBold';">Awards this</span>
                                 </div>
                                 <img class="img img-responsive" t-attf-src="/bes/static/src/img/certificate.jpg" alt="" style="height:95px; width: 400px; margin-bottom:10px;"/>
                             </div>
                             
-                            <div class="container" style="text-align:left; font-weight:bold;">
+                            <div class="container" style="text-align:left; font-weight:900; font-family: 'TimesNewRomanBold';">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
                                     <div class="col-12">
                                         <span style="font-size:20px; color:#4c2d8b; margin-right:8px;">Certificate No.:</span>
-                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.certificate_id"/></span>  
+                                        <span style="font-size:20px;"><t t-esc="doc.certificate_id"/></span>  
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
 
-                            <div class="container" style="text-align:left;font-weight:bold; ">
+                            <div class="container" style="text-align:left;font-weight:900; font-family: 'TimesNewRomanBold'; ">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ;">
                                     <div class="col-4">
                                         <span style="color: #4c2d8b; font-size:20px;">Roll no:</span>
@@ -56,14 +56,14 @@
                                 </div>
                             </div>
 
-                            <div class="container" style="text-align:left; margin-bottom:15px;font-weight:bold;">
+                            <div class="container" style="text-align:left; margin-bottom:15px;font-weight:900; font-family: 'TimesNewRomanBold';">
                                 <div class="row" style="padding-left:9px; margin-bottom:5px;">
                                     <span class="col-12" style="font-size:20px; color:#4c2d8b;" >has undergone an approved 25 weeks Pre-sea training course for</span>
                                 </div>
                                 <div class="row" style="text-align: center; margin-bottom:15px;">
                                     <div class="col-12" style="">
                                     <!-- display:inline-block; -->
-                                        <span style="color: #4c2d8b; background-color: #e5b8b7; font-size:50px; font-weight:bolder;">General Purpose Rating</span>
+                                        <span style="color: #4c2d8b; background-color: #e5b8b7; font-size:50px; font-weight:900;">General Purpose Rating</span>
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
 
-                            <div class="container" style="text-align:left; margin-bottom:60px; font-weight:bold;">
+                            <div class="container" style="text-align:left; margin-bottom:15px; font-weight:900; font-family: 'TimesNewRomanBold';">
                                 <div class="row" style="padding-left:9px; margin-bottom:10px ;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px;">Position in the merit list of first 25% - </span>
@@ -100,28 +100,28 @@
                                 </div>
                             </div>
 
-                            <div class="container" style="margin-bottom:90px; position: relative; font-weight:bold;">
+                            <div class="container" style="margin-bottom:90px; position: relative; font-weight:900; font-family: 'TimesNewRomanBold';">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
                                     <div class="col-6" style="text-align:left;">
                                         <span style="color: #4c2d8b; font-size:20px;">Date of Issue of Certificate: </span>
                                         <span style="font-size:20px;"><t t-esc="doc.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
                                     </div>
                                     <div class="col-6" style="text-align:right;">
-                                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" style="width: 240px; height: 55px; position:absolute; top:-60px; right:10px;" />
+                                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" style="width: 200px; height: 55px; position:absolute; top:-60px; right:10px;" />
                                         <span style="color: #4c2d8b; font-size:20px;">Signature of the Candidate</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="container" style="text-align:center; font-weight:bold;">
+                            <div class="container" style="text-align:center; margin-bottom:15px;">
                                 <div class="row">
                                     <div class="col-12">
                                         <span style="color: #000000; font-size:25px; font-weight:900;">Ravindra Nath Tripathi</span>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
-                                        <span style="color:#4c2d8b; font-size:25px; font-weight:100;">Marine Engineering Officer</span>
+                                    <div class="col-12" style="height:max-content;">
+                                        <span style="color:#4c2d8b; font-size:25px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -131,12 +131,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span style="color: #4c2d8b; font-size:17px;"> NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614.</span>
+                                        <span style="color: #4c2d8b; font-size:17px; font-weight:light; font-family: 'TimesNewRoman';"> NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614.</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span style="color: #4c2d8b; font-size:20px;">E-mail: bestexam@bestrust.in</span>
+                                        <span style="color: #4c2d8b; font-size:20px; font-family: 'TimesNewRoman';">E-mail: bestexam@bestrust.in</span>
                                     </div>
                                 </div>
                             </div>
@@ -149,76 +149,76 @@
                 <div style="page-break-before: always;"></div>
 
                 <div class="oe_structure">
-                    <div class="oe_report" style="font-family: 'Times New Roman';">
-                        <div id="main" style="padding: 20px; font-size:1rem;">
-                            <p style="text-align: left; font-size:18px;">The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
+                    <div class="oe_report" style="font-family: 'TimesNewRoman';">
+                        <div style="padding: 20px;">
+                            <p style="text-align: left; font-size:18px; margin-top:25px;">The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
 
                             <p style="text-align: left; font-size:18px;">The curriculum for pre-sea training programme includes the following components:</p>
                             <table style="width:100%; text-align: center; border-collapse: collapse; border: 1px solid #000; font-size:18px; margin-bottom:15px;" >
                                 <tbody>
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 1</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Maritime English and General Ship Knowledge</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 1</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Maritime English and General Ship Knowledge</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 2</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Navigation at Support Level</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 2</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Navigation at Support Level</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 3</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Cargo Handling and stowage at Support Level</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 3</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Cargo Handling and stowage at Support Level</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 4</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Marine Engineering at Support Level</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 4</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Marine Engineering at Support Level</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 5</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Electrical, electronic and control engineering at Support level</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 5</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Electrical, electronic and control engineering at Support level</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 6</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Controlling the Operation of Ship and Care for persons on board at Support Level</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 6</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Controlling the Operation of Ship and Care for persons on board at Support Level</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 7</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Maintenance and Repair at Support Level</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 7</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Maintenance and Repair at Support Level</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 8px;">Part 8</td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">Mandatory STCW Courses and Ship Visit</td>
+                                        <td style="border: 1px solid #000; padding:2px;">Part 8</td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">Mandatory STCW Courses and Ship Visit</td>
                                     </tr>
                                     
                                     <tr>
-                                        <td></td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">A. Proficiency in Survival Techniques *</td>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">A. Proficiency in Survival Techniques *</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">B. Elementary First Aid *</td>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">B. Elementary First Aid *</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">C. Fire Prevention and Fire Fighting *</td>
+                                        <td  style="border: 1px solid #000; padding:1px;"></td>
+                                        <td style="border: 1px solid #000; padding:1px; text-align:left;">C. Fire Prevention and Fire Fighting *</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">D. Personal Safety and Social Responsibility *</td>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">D. Personal Safety and Social Responsibility *</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">E. Security Training for Seafarers with Designated Security Duties *</td>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">E. Security Training for Seafarers with Designated Security Duties *</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td style="border: 1px solid #000; padding: 8px; text-align: left;">F. Ship Visit / Harbour Visit *</td>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; text-align: left;">F. Ship Visit / Harbour Visit *</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -232,9 +232,9 @@
                             marks as prescribed for each component. Results are evaluated by the Directorate General of
                             Shipping prior to issue of this certificate to successful candidates.</p>
 
-                            <p style="text-align:center; margin-top:50px; font-size:20px;"><u>Mark Sheet of the Candidate</u></p>
+                            <p style="text-align:center; margin-top:65px;font-size:20px;"><u>Mark Sheet of the Candidate</u></p>
                             
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:40px;">
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:130px; font-size:20px; ">
                                 <thead style="border: 1px solid #000; padding: 8px;">
                                     <tr>
                                         <th style="border: 1px solid #000;">S. No</th>

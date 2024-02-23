@@ -26,25 +26,22 @@
 }
 
 .font{
-    font-family:'timesNewRoman';;font-weight:100;font-size: 13px;
-    }
+    font-family:'timesNewRoman';font-weight:100;font-size: 13px;
+}
     
+    
+@font-face {
+    font-family: 'TimesNewRomanBold';
+    src: url('/bes/static/src/fonts/Times New Roman Bold.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'TimesNewRoman';
     src: url('/bes/static/src/fonts/times.ttf') format('truetype');  
     font-weight: normal;
     font-style: normal;
-}
-
-/* @font-face {
-    font-family: 'DroidArabicKufiRegular';
-    src: url('/yourmodulename/static/src/fonts/DroidKufi-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-} */
-
-.arabic{
-    font-family:DroidArabicKufiRegular !important;
 }
 
 td{
