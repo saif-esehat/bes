@@ -728,7 +728,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/gpfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPFacultiesFormView(self,batch_id, **kw):
-        import wdb; wdb.set_trace();
+        # import wdb; wdb.set_trace();
         states = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN')])
         
