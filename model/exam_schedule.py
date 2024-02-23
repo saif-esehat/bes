@@ -1117,7 +1117,11 @@ class CCMCExam(models.Model):
                 
                
     def dgs_approval(self):
+<<<<<<< HEAD
         
+=======
+        print(self.dgs_batch.to_date,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+>>>>>>> 29764aa03e3110b0838df2f453cabdbd369dd88a
         if(self.certificate_criteria == 'passed'):
             # date = self.dgs_batch.from_date
             self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no

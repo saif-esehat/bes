@@ -74,8 +74,8 @@
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
                                     <div class="col-12">
-                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span><span style="font-size:20px;"> <t t-esc="doc.gp_candidate.institute_batch_id.from_date.strftime('%b-%y')"/> </span> <span style="color: #4c2d8b; font-size:20px;"> to </span><span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/>,</span><span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
-                                        <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span><span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/></span>
+                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span><span style="font-size:20px;"> <t t-esc="doc.dgs_batch.from_date.strftime('%b-%y')"/> </span> <span style="color: #4c2d8b; font-size:20px;"> to </span><span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.dgs_batch.to_date.strftime('%b-%y')"/>,</span><span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
+                                        <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span><span style="font-size:20px;"><t t-esc="doc.dgs_batch.to_date.strftime('%b-%y')"/></span>
                                     </div>
                                 </div>
                             </div>
