@@ -28,13 +28,15 @@ class Institute(models.Model):
     zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
     
     principal_name = fields.Char("Name of Principal / Trustee of Training Institute")
-    principal_phone = fields.Char("Phone No. of Principal / Trustee of Training Institute",  validators=[api.constrains('principal_phone')] )
+    # ,  validators=[api.constrains('principal_phone')]
+    principal_phone = fields.Char("Phone No. of Principal / Trustee of Training Institute" )
     principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute", validators=[api.constrains('principal_mobile')])
     principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute", validators=[api.constrains('principal_email')])
     
     ip_address = fields.Char("IP Address")
+    #  validators=[api.constrains('admin_phone')]
     
-    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_phone')])
+    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute")
     admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')])
     admin_email= fields.Char("E-mail of Admin Officer of Training Institute",  validators=[api.constrains('admin_email')])
     
@@ -80,12 +82,12 @@ class Institute(models.Model):
 
 
 
-    @api.constrains('principal_phone')
-    def _check_valid_phone(self):
-        for record in self:
-            # Check if phone has 8 digits
-            if record.principal_phone and not record.principal_phone.isdigit() or len(record.principal_phone) != 8:
-                raise ValidationError("Principal Phone number must be 8 digits.")
+    # @api.constrains('principal_phone')
+    # def _check_valid_phone(self):
+    #     for record in self:
+    #         # Check if phone has 8 digits
+    #         if record.principal_phone and not record.principal_phone.isdigit() or len(record.principal_phone) != 8:
+    #             raise ValidationError("Principal Phone number must be 8 digits.")
 
     @api.constrains('zip')
     def _check_valid_zip(self):
@@ -107,12 +109,12 @@ class Institute(models.Model):
             if record.principal_email and '@' not in record.principal_email:
                 raise ValidationError("Invalid Principal email address. Must contain @ symbol.")
 
-    @api.constrains('admin_phone')
-    def _check_valid_phone(self):
-        for record in self:
-            # Check if phone has 8 digits
-            if record.admin_phone and not record.admin_phone.isdigit() or len(record.admin_phone) != 8:
-                raise ValidationError("Admin Phone number must be 8 digits.")
+    # @api.constrains('admin_phone')
+    # def _check_valid_phone(self):
+    #     for record in self:
+    #         # Check if phone has 8 digits
+    #         if record.admin_phone and not record.admin_phone.isdigit() or len(record.admin_phone) != 10:
+    #             raise ValidationError("Admin Phone number must be 8 digits.")
 
     @api.constrains('admin_mobile')
     def _check_valid_mobile(self):
@@ -221,6 +223,21 @@ class Institute(models.Model):
 
         
         return institute
+    
+    def faculty_button(self):
+        
+        return {
+        'name': 'Faculty',
+        'domain': [('institute_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'institute.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_institute_id': self.id    
+            }
+        }
     
     def ccmc_button(self):
         

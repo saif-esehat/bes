@@ -257,9 +257,9 @@
 
                         <group style="width:50%;">
                             <field name="qualification"/>
-                            <field name="tenth_percent" attrs="{'invisible': [('qualification', '!=', 'tenth')] , 'required':[('qualification', '=', 'tenth')] }"/>
-                            <field name="twelve_percent" attrs="{'invisible': [('qualification', '!=', 'twelve')], 'required':[('qualification', '=', 'twelve')] }"/>
-                            <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
+                            <field name="tenth_percent" />
+                            <field name="twelve_percent" />
+                            <field name="iti_percent" />
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
                             <field name="fees_paid"/>
@@ -565,9 +565,9 @@
 
                         <group style="width:50%;">
                             <field name="qualification"/>
-                            <field name="tenth_percent" attrs="{'invisible': [('qualification', '!=', 'tenth')] , 'required':[('qualification', '=', 'tenth')] }"/>
-                            <field name="twelve_percent" attrs="{'invisible': [('qualification', '!=', 'twelve')], 'required':[('qualification', '=', 'twelve')] }"/>
-                            <field name="iti_percent"  attrs="{'invisible': [('qualification', '!=', 'iti')], 'required':[('qualification', '=', 'iti')]}"/>
+                            <field name="tenth_percent" />
+                            <field name="twelve_percent" />
+                            <field name="iti_percent" />
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
                             <field name="fees_paid"/>

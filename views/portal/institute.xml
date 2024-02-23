@@ -209,7 +209,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="capacity">DGS Approved Capacity</label>
-                                                <input required="" type="text" class="form-control" id="capacity" name="capacity" min="0" />
+                                                <input required="" type="number" class="form-control" id="capacity" name="capacity" min="0" />
                                             </div>
                                             <div class="form-group">
                                                 <label for="approvaldocument">Upload Approval Document</label>
@@ -1804,6 +1804,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="courses_taught">Courses Taught</label>
+                                        <textarea type="text" class="form-control" id="courses_taught" name="courses_taught" required="true" />
+                                    </div>
+                                </div>
+                            </div> -->
 
 
 
@@ -1826,14 +1834,13 @@
 
     <template id="gp_candidate_portal_list" name="GP Candidate">
         <script>                    
-                                    rpc = require("web.rpc")
 
-                                    $(document).ready(function () {
+                                    <!-- $(document).ready(function () {
                                         $('#uploadBtn').on('click', function () {
                                             // Show the overlay and loader when the upload button is clicked
                                             $('#loader-overlay').show();
                                         });
-                                    });
+                                    }); -->
 
                                     function onOpenDeleteCandidateModal(button){
                                         
@@ -1926,11 +1933,11 @@
 
 
             <t t-if="batches.state == '1-ongoing'">
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a> -->
                 <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
             </t>
-            <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a>
+            <!-- <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a> -->
 
             <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a>
 
@@ -2384,7 +2391,7 @@
             </t>
 
             <t t-if="batches.ccmc_state == '1-ongoing'">     
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a> -->
 
                 <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>

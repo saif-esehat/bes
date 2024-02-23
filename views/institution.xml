@@ -60,6 +60,10 @@
                     <sheet>
                         
                         <div class="oe_button_box" name="button_box">
+                        <!-- attrs="{'invisible':[('ccmc_present','=',False)]}" -->
+                            <button name="faculty_button" string="Faculty" type="object" class="oe_stat_button" icon="fa-align-justify" >
+                            </button>
+
                             <button name="ccmc_button" string="CCMC Batches" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible':[('ccmc_present','=',False)]}">
                             </button>
                             <button name="batch_button" string="GP Batches" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible':[('gp_present','=',False)]}">
@@ -176,20 +180,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <!-- <page string="Faculty">
-                                <field name="faculty_ids"  nolabel="1">
-                                    <tree>
-                                        <field name="faculty_photo" widget="binary" filename="documents_name"/>
-                                        <field name="course_name" />
-                                        <field name="faculty_name" />
-                                        <field name="dob" />
-                                        <field name="designation"/>
-                                        <field name="qualification"/>
-                                        <field name="contract_terms"/>
-                                        <field name="courses_taught"/>
-                                    </tree>
-                                </field>
-                            </page> -->
+                            
                             <page string="Payment Slip">
                                 <field name="payment_slip_ids"  nolabel="1">
                                     <tree>

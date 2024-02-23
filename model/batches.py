@@ -27,6 +27,7 @@ class InstituteGPBatches(models.Model):
                                                       store=False,  # This field is not stored in the database
                                                             )
 
+    
     state = fields.Selection([
         ('1-ongoing', 'On-Going'),
         ('2-indos_pending', 'Confirmed'),
@@ -262,6 +263,7 @@ class InstituteGPBatches(models.Model):
         'domain': [('gp_batches_id', '=', self.id)],
         'view_type': 'form',
         'res_model': 'institute.faculty',
+        # 'res_model': 'batches.faculty',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
@@ -534,6 +536,7 @@ class InstituteCcmcBatches(models.Model):
         'domain': [('ccmc_batches_id', '=', self.id)],
         'view_type': 'form',
         'res_model': 'institute.faculty',
+        # 'res_model': 'batches.faculty',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
@@ -656,5 +659,11 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         
         self.batch_id.write({"ccmc_state":'5-exam_scheduled',"cookery_bakery_qb":cookery_bakery_qb.id})
 
+class BatchFaculty(models.Model):
+    _name = 'batches.faculty'
+    _description = 'Faculty Batches'
+    
+    ccmc_faculty = fields.Many2one('institute.ccmc.batches',string="CCMC Faculty")
+    gp_faculty = fields.Many2one('institute.gp.batches',string="gp Faculty")
 
    
