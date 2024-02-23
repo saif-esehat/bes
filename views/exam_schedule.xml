@@ -24,6 +24,17 @@
             </field>
         </record>
 
+        <!-- <record model="ir.ui.view" id="gp_exam_schedul_search">
+            <field name="name">gp.exam.schedule.search</field>
+            <field name="model">gp.exam.schedule</field>
+            <field name="arch" type="xml">
+                <search >
+                    <field name="rank"  />
+                </search>
+            </field>
+        </record> -->
+
+
 
 
         <record id="gp_exam_schedule_form" model="ir.ui.view">
@@ -150,6 +161,7 @@
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                             <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                             <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="rank" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
 
                         </group>
                         <group style="width:50%">
@@ -198,6 +210,7 @@
                     <field name="ship_visit_criteria" />
                     <field name="certificate_criteria"/>
                     <field name="state"/>
+                    <field name="rank"/>
                 </tree>
             </field>
         </record>

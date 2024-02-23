@@ -31,7 +31,6 @@ class DGSBatch(models.Model):
     ], string='State', default='1-on_going')
     
     def move_confirm(self):
-        import wdb;wdb.set_trace()
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
         for exam in exams:
             exam.move_done()
@@ -42,7 +41,7 @@ class DGSBatch(models.Model):
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
         for exam in exams:
             exam.dgs_approval()
-        
+                    
         self.state = '3-dgs_approved'
     
     def print_gp_repeater(self):
