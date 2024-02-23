@@ -21,6 +21,28 @@ class DGSBatch(models.Model):
                       widget="date", 
                       date_format="%b-%y")
     
+    exam_pass_date = fields.Date(string="Date of Examination Passed:")
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    
+    state = fields.Selection([
+        ('1-on_going', 'On-Going'),
+        ('2-confirmed', 'Confirmed'),
+        ('3-dgs_approved', 'Approved')     
+    ], string='State', default='1-on_going')
+    
+    def move_confirm(self):
+        exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        for exam in exams:
+            exam.move_done()
+        self.state = '2-confirmed'
+        
+    def move_dgs_approved(self):
+        
+        exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        for exam in exams:
+            exam.dgs_approval()
+                    
+        self.state = '3-dgs_approved'
     
     def print_gp_repeater(self):
         
