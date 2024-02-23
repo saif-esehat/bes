@@ -657,6 +657,7 @@ class GPExam(models.Model):
         }
     
     def dgs_approval(self):
+        
             if(self.certificate_criteria == 'passed'):
                 # date = self.dgs_batch.from_date
                 self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.gp_candidate.roll_no
@@ -970,6 +971,7 @@ class CCMCExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -1051,6 +1053,16 @@ class CCMCExam(models.Model):
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
 
+    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    
+    @api.depends('certificate_criteria','state')
+    def compute_dgs_visible(self):
+        for record in self:
+            if record.certificate_criteria == 'passed' and record.state == '2-done':
+                record.dgs_visible = True
+            else:
+                record.dgs_visible = False
+    
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         current_url = base_url + "/verification/ccmcadmitcard/" + str(self.id)
@@ -1103,7 +1115,13 @@ class CCMCExam(models.Model):
             else:
                 record.ship_visit_criteria = 'pending'
                 
-                
+               
+    def dgs_approval(self):
+            if(self.certificate_criteria == 'passed'):
+                # date = self.dgs_batch.from_date
+                self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
+                self.state = '3-certified'
+                self.certificate_issue_date = fields.date.today() 
             
 
     
@@ -1176,7 +1194,60 @@ class CCMCExam(models.Model):
         else:
             raise ValidationError("Not All exam are Confirmed")
         
+    def send_certificate_email(self):
+        print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
+        # Replace 'bes.report_gp_certificate' with the correct XML ID of the report template
+        report_template = self.env.ref('bes.report_ccmc_certificate')
+        report_pdf = report_template.render_pdf([self.id])
+        print(report_pdf, "reportttttttttttttttttttttttttttttttttttttttttttttt")
         
+        # Render the report as PDF
+        # generated_report = report_template._render_qweb_pdf(self.id)
+        # print(generated_report,"genraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+        # Convert the report to PDF format
+        # pdf_content = self.env['ir.actions.report'].convert(
+        #         generated_report,
+        #         'pdf',
+        #         {'model': self._name, 'id': self.ids[0]}
+        #     )
+        # print(pdf_content,"pdfffffffffffffffffffffffffffffffffffffff")
+
+        # Encode the PDF data
+        data_record = base64.b64encode(report_pdf[0])
+        
+
+        # Create an attachment record
+        ir_values = {
+            'name': 'Certificate Report',
+            'type': 'binary',
+            'datas': data_record,
+            'store_fname': 'Certificate_Report.pdf',
+            'mimetype': 'application/pdf',
+            'res_model': 'ccmc.exam.schedule',
+        }
+
+        print(ir_values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        report_attachment = self.env['ir.attachment'].sudo().create(ir_values)
+        
+        # Get the email template
+        email_template = self.env.ref('bes.ccmc_certificate_mail')
+        
+        # Prepare email values
+        email_values = {
+            'email_to': self.ccmc_candidate.email,  # Use the appropriate recipient's email address
+            'email_from': self.env.user.email,
+        }
+        
+        # Attach the PDF to the email template
+        if email_template:
+            email_template.attachment_ids = [(4, report_attachment.id)]
+            
+            # Send the email
+            email_template.send_mail(self.id, email_values=email_values, force_send=True)
+            
+            # Remove the attachment from the email template
+            email_template.attachment_ids = [(5, 0, 0)]
             
         # Certificate Logic
 class CcmcCertificate(models.AbstractModel):
