@@ -303,6 +303,7 @@ class InstituteCcmcBatches(models.Model):
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     ccmc_batch_name = fields.Char("Batch Name",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     ccmc_faculty_name = fields.Char("Faculty name")
     ccmc_candidate_count = fields.Integer("Candidate Count",compute="ccmc_compute_candidate_count")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
@@ -585,7 +586,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     def register(self):
-        # import wdb; wdb.set_trace(); 
+        import wdb; wdb.set_trace(); 
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
@@ -633,16 +634,20 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     
     
     def register(self):
-
-        # print(self,"selffffffffffffffffffffffffffffffffffffffffffffff")
+        # import wdb; wdb.set_trace(); 
+        print(self,"selffffffffffffffffffffffffffffffffffffffffffffff")
         candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
-        # print(candidates)
+        print(candidates)
         cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.ccmc_batch_name , 'template' :False })
-        # print(cookery_bakery_qb.id,"cookeryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        print(cookery_bakery_qb.id,"cookeryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        
+        # import wdb; wdb.set_trace(); 
         
         for candidate in candidates:
+            
+            
             ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'dgs_batch': self.dgs_batch.id})
-            # print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
+            print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})

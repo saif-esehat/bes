@@ -1117,6 +1117,7 @@ class CCMCExam(models.Model):
                 
                
     def dgs_approval(self):
+            # import wdb; wdb.set_trace();
             if(self.certificate_criteria == 'passed'):
                 # date = self.dgs_batch.from_date
                 self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
