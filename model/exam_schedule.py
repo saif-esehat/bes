@@ -1117,21 +1117,13 @@ class CCMCExam(models.Model):
                 
                
     def dgs_approval(self):
-<<<<<<< HEAD
-            # import wdb; wdb.set_trace();
-            if(self.certificate_criteria == 'passed'):
-                # date = self.dgs_batch.from_date
-                self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
-                self.state = '3-certified'
-                self.certificate_issue_date = fields.date.today() 
-=======
-        print(self.dgs_batch.to_date,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        
         if(self.certificate_criteria == 'passed'):
             # date = self.dgs_batch.from_date
             self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
+            print(self.certificate_id,"criiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
             self.state = '3-certified'
             self.certificate_issue_date = fields.date.today() 
->>>>>>> 33698fdffd490641aa2c2dac0791f436882f8b3b
             
 
     
@@ -1149,9 +1141,7 @@ class CCMCExam(models.Model):
     
     
     def move_done(self):
-        if(self.certificate_criteria == 'passed'):
-            self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
-        self.state = '2-done'
+        
         
         cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
         ccmc_oral = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
@@ -1159,6 +1149,7 @@ class CCMCExam(models.Model):
         
         # import wdb; wdb.set_trace(); 
         if cookery_draft_confirm and ccmc_oral and ccmc_online:
+            
             cookery_bakery_marks = self.cookery_bakery.total_mrks
             ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
             self.ccmc_oral_total = ccmc_oral_marks
@@ -1186,23 +1177,19 @@ class CCMCExam(models.Model):
                 
             all_passed = all(field == 'passed' for field in [self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
-            if all_passed:
-                self.write({'certificate_criteria':'passed'})
-            else:
-                self.write({'certificate_criteria':'pending'})
+            # if all_passed:
+            #     self.write({'certificate_criteria':'passed'})
+            # else:
+            #     self.write({'certificate_criteria':'pending'})
                 
             
-            
-            if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
-            self.state = '2-done'
-            # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
-
-                
-            
+            self.ccmc_state = '2-done'
             
         else:
             raise ValidationError("Not All exam are Confirmed")
+        # attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
+            # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+            
         
     def send_certificate_email(self):
         print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
