@@ -185,6 +185,7 @@
                             </h1>
                         </group>
                         <group style="width:50%;">
+                            <field name="dgs_batch"/>
                             <field name="institute_id" options="{'no_create':True}"/>
                             <field name="ccmc_from_date"/>
                             <field name="ccmc_to_date"/>

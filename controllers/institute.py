@@ -231,7 +231,9 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=', candidate_id)])
-        vals = {'candidate': candidate, "page_name": "gp_candidate_form"}
+        batches = candidate.institute_batch_id
+        print(batches.id,"keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
 
     @http.route(['/my/ccmccandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
@@ -728,7 +730,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/gpfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPFacultiesFormView(self,batch_id, **kw):
-
+        # import wdb; wdb.set_trace();
         states = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN')])
         
@@ -977,6 +979,8 @@ class InstitutePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         
+        
+        
         if request.httprequest.method == 'POST':
             # import wdb; wdb.set_trace()
             candidate_image = kw.get("candidate_photo").read()
@@ -1009,8 +1013,8 @@ class InstitutePortal(CustomerPortal):
             return request.redirect('/my/gpcandidateprofile/'+str(kw.get("canidate_id")))
             
             
-       
-        vals = {}
+        batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
+        vals = {'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
 
 

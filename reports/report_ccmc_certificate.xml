@@ -1,15 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="course_certificate">
-        <t t-debug="context"/>
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="doc">
-                <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
-                <div class="o_report">
+                <div class="page">
+                    <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
+                    <div class="oe_structure">
+                        <div class="oe_report backgroundd" style="font-family: 'TimesNewRoman';">
+                            <div id="header" style="width:100%; text-align: center; font-family: 'Times New Roman';">
+                                <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
+                                <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;  border: 2px solid black;"/>
+                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:800px; height:50px;"/>
+                                <div class="" style="">
+                                    <span style="font-size: 18px; font-weight: bold;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
+                                </div>
+                                <div class="container-fluid" style="">
+                                    <span style="font-size: 24px; font-weight: 700;">Under the authority of the Directorate General of Shipping, Ministry of Shipping,</span>
+                                    <span style="font-size: 24px; font-weight: 700;">Government of India<br/></span>
+                                    <span style="font-size: 24px; font-weight: 700;">Awards this</span>
+                                </div>
+                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/certificate.jpg" alt="" style="height:95px; width: 400px; margin-bottom:10px;"/>
+                            </div>
+                            
+                            <div class="container" style="text-align:left; font-weight:bold;">
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                                    <div class="col-12">
+                                        <span style="font-size:20px; color:#4c2d8b; margin-right:8px;">Certificate No.:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.candidate_code"/>/<t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b %y')"/>/<t t-esc="doc.ccmc_candidate.roll_no"/></span>  
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                                    <div class="col-12" style="">
+                                        <span style="font-size:20px; color:#4c2d8b; margin-right:10px;">This is to certify that </span><span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.name"/></span>  
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="container" style="text-align:left;font-weight:bold; ">
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ;">
+                                    <div class="col-4">
+                                        <span style="color: #4c2d8b; font-size:20px;">Roll no:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.roll_no"/></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="color: #4c2d8b; font-size:20px;">INDOS No: </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.indos_no"/></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="color: #4c2d8b; font-size:20px;">Date of Birth: </span>
+                                        <span style="font-size:20px;">
+                                            <t t-set="formatted_dob" t-value="doc.gp_candidate.dob.strftime('%d-%b-%y')" />
+                                            <t t-esc="formatted_dob" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- <div class="container" style="text-align:left; margin-bottom:15px;font-weight:bold;">
+                                <div class="row" style="padding-left:9px; margin-bottom:5px;">
+                                    <span class="col-12" style="font-size:20px; color:#4c2d8b;" >has undergone an approved 25 weeks Pre-sea training course for</span>
+                                </div>
+                                <div class="row" style="text-align: center; margin-bottom:15px;">
+                                    <div class="col-12" style="">
+                                        <span style="color: #4c2d8b; background-color: #e5b8b7; font-size:50px; font-weight:bolder;">General Purpose Rating</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">at:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No.<t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span><span style="font-size:20px;"> <t t-esc="doc.gp_candidate.institute_batch_id.from_date.strftime('%b-%y')"/> </span> <span style="color: #4c2d8b; font-size:20px;"> to </span><span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/>,</span><span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
+                                        <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span><span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/></span>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- <div class="container" style="text-align:left; margin-bottom:60px; font-weight:bold;">
+                                <div class="row" style="padding-left:9px; margin-bottom:10px ;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px;">Position in the merit list of first 25% - </span>
+                                        <span style="font-size:20px;">N/A</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:10px ;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px;">Date of Examination Passed: </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- <div class="container" style="margin-bottom:90px; position: relative; font-weight:bold;">
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                                    <div class="col-6" style="text-align:left;">
+                                        <span style="color: #4c2d8b; font-size:20px;">Date of Issue of Certificate: </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
+                                    </div>
+                                    <div class="col-6" style="text-align:right;">
+                                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" style="width: 240px; height: 55px; position:absolute; top:-60px; right:10px;" />
+                                        <span style="color: #4c2d8b; font-size:20px;">Signature of the Candidate</span>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- <div class="container" style="text-align:center; font-weight:bold;">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #000000; font-size:25px; font-weight:900;">Ravindra Nath Tripathi</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color:#4c2d8b; font-size:25px; font-weight:100;">Marine Engineering Officer</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; font-weight:900;">Board of Examinations for Seafarers Trust</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:17px;"> NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614.</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px;">E-mail: bestexam@bestrust.in</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_report">
                     <div id="header" style="width:100%; text-align: center;">
-                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem; max-width: 100%;"/>
+                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.png" style="margin-top:1rem; max-width: 100%;"/>
                         <br/>
-                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture3.png" alt="" style="margin-top:0; width:80%; max-height:250px;"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.png" alt="" style="margin-top:0; width:80%; max-height:250px;"/>
                         <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" style="width: 150px; height: 150px; position: absolute; top: 10%; right: 10%;"/>
                         
                         <br/>
@@ -20,7 +157,7 @@
                             <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
                             Awards this</span>
                         </div>
-                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
+                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/certificate.png" alt="" style="margin-bottom:1.5rem;"/>
                     </div>
                     <div id="main" style="padding: 20px;">
                         <div class="left">
