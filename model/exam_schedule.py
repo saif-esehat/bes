@@ -1040,6 +1040,7 @@ class CCMCExam(models.Model):
     state = fields.Selection([
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
+        ('3-certified', 'Certified'),
     ], string='State', default='1-in_process')
     
     certificate_criteria = fields.Selection([
@@ -1117,17 +1118,13 @@ class CCMCExam(models.Model):
                 
                
     def dgs_approval(self):
-<<<<<<< HEAD
-        
-=======
-        print(self.dgs_batch.to_date,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
->>>>>>> 29764aa03e3110b0838df2f453cabdbd369dd88a
+        print(self.state,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         if(self.certificate_criteria == 'passed'):
             # date = self.dgs_batch.from_date
             self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
             print(self.certificate_id,"criiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
             self.state = '3-certified'
-            self.certificate_issue_date = fields.date.today() 
+            # self.certificate_issue_date = fields.date.today() 
             
 
     

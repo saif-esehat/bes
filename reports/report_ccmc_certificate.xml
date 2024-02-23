@@ -74,9 +74,13 @@
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
                                     <div class="col-12">
-                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span><span style="font-size:20px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/> </span> <span style="color: #4c2d8b; font-size:20px;"> to </span>
-                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/>,</span><span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
-                                        <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span><span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/></span>
+                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span>
+                                        <span style="font-size:20px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/> </span> 
+                                        <span style="color: #4c2d8b; font-size:20px;"> to </span>
+                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/>,</span>
+                                        <span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
+                                        <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/></span>
                                     </div>
                                 </div>
                             </div>
