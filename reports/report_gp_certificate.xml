@@ -105,7 +105,7 @@
                                 </div>
                             </div>
 
-                            <div class="container" style="margin-bottom:90px; position: relative; font-weight:900; font-family: 'TimesNewRomanBold';">
+                            <div class="container" style="margin-bottom:100px; position: relative; font-weight:900; font-family: 'TimesNewRomanBold';">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
                                     <div class="col-6" style="text-align:left;">
                                         <span style="color: #4c2d8b; font-size:20px;">Date of Issue of Certificate: </span>
@@ -121,12 +121,12 @@
                             <div class="container" style="text-align:center; margin-bottom:15px;">
                                 <div class="row">
                                     <div class="col-12">
-                                        <span style="color: #000000; font-size:25px; font-weight:900;">Ravindra Nath Tripathi</span>
+                                        <span style="color: #000000; font-size:22px; font-weight:900; font-family: 'TimesNewRomanBold';">Ravindra Nath Tripathi</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12" style="height:max-content;">
-                                        <span style="color:#4c2d8b; font-size:25px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
+                                        <span style="color:#4c2d8b; font-size:22px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -237,7 +237,7 @@
                             marks as prescribed for each component. Results are evaluated by the Directorate General of
                             Shipping prior to issue of this certificate to successful candidates.</p>
 
-                            <p style="text-align:center; margin-top:65px;font-size:20px;"><u>Mark Sheet of the Candidate</u></p>
+                            <p style="text-align:center; margin-top:65px; font-size:20px;  font-family:'TimesNewRomanBold'; font-weight:900;"><u>Mark Sheet of the Candidate</u></p>
                             
                             <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:130px; font-size:20px; ">
                                 <thead style="border: 1px solid #000; padding: 8px;">
