@@ -751,8 +751,9 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            # courses_taught = kw.get("courses_taught")
-
+            print(course_name,"ffffffffffffffffffffffffffffffffffffffff")
+            courses_taught = kw.get("courses_taught")
+            print(courses_taught,"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
             
             faculty_data = {
                 "faculty_name": faculty_name,
@@ -939,12 +940,14 @@ class InstitutePortal(CustomerPortal):
     @http.route(['/my/gpbatch/faculties/<int:batch_id>'], type="http", auth="user", website=True)
     def GPFacultyListView(self, batch_id, **kw):
         # import wdb; wdb.set_trace()
-
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
         gp_batches_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         faculties = request.env["institute.faculty"].sudo().search(
             [('gp_batches_id', '=', batch_id)])
+        print(faculties.course_name,"faculttttttttttttttttttttttttttttttt")
+        print(faculties.courses_taught,"faculttttttttttttttttttttttttttttttt")
         vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
