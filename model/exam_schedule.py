@@ -530,7 +530,8 @@ class GPExam(models.Model):
     ], string='State', default='1-in_process')
 
     url = fields.Char("URL",compute="_compute_url")
-    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
     
@@ -573,12 +574,39 @@ class GPExam(models.Model):
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
-                
+
+    @api.depends('certificate_id','state')
+    def _compute_certificate_url(self):
+        for record in self:
+            print("Working CERT URL Func")
+
+            if record.state == "3-certified":
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                print("base_url:", base_url)
+
+                certificate_id = record.id
+                current_certificate_url = base_url + "verification/gpcerificate/" + str(certificate_id)
+                print("current_url:", current_certificate_url)
+                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+                qr.add_data(current_certificate_url)
+                qr.make(fit=True)
+                qr_image = qr.make_image()
+
+                # Convert the QR code image to base64 string
+                buffered = io.BytesIO()
+                qr_image.save(buffered, format="PNG")
+                qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+                # Assign the base64 string to a field in the 'srf' object
+                record.certificate_qr_code = qr_image_base64
+            else:
+                record.certificate_qr_code = None
+        
 
 
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        current_url = base_url + "/verification/gpadmitcard/" + str(self.id)
+        current_url = base_url + "verification/gpadmitcard/" + str(self.id)
         self.url = current_url
         print("Current URL:", current_url)
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
@@ -1066,7 +1094,8 @@ class CCMCExam(models.Model):
     
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        current_url = base_url + "/verification/ccmcadmitcard/" + str(self.id)
+        print("Base URL:", base_url)
+        current_url = base_url + "verification/ccmcadmitcard/" + str(self.id)
         self.url = current_url
         print("Current URL:", current_url)
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
