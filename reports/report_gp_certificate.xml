@@ -9,7 +9,7 @@
                         <div class="oe_report backgroundd" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
                             <div id="header" style="width:100%; text-align: center;">
                                 <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
-                                <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;  border: 2px solid black;"/>
+                                <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;"/>
                                 <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
                                 <div class="container-fluid" style="width:100%;">
                                     <span style="font-size: 17px; font-weight: bold; font-family: 'TimesNewRomanBold';">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
@@ -89,7 +89,14 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:10px ;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px;">Position in the merit list of first 25% - </span>
-                                        <span style="font-size:20px;">N/A</span>
+                                        <span style="font-size:20px;">
+                                            <t t-if="doc.rank != '0th'">
+                                                <t t-esc="doc.rank"/>
+                                            </t>
+                                            <t t-else="">
+                                                N/A
+                                            </t>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:10px ;">
