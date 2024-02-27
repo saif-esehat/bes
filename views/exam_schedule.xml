@@ -162,7 +162,6 @@
                             <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                             <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                             <field name="rank" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
-
                         </group>
                         <group style="width:50%">
                             <field name="url" invisible="1"/>
@@ -170,8 +169,6 @@
                             <field name="certificate_qr_code" widget="image"  style="width:100px; height:100px;" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         </group>
                         <field name="dgs_visible" invisible="0"/>
-                        
-               
                         
 
                         <notebook>
@@ -277,11 +274,19 @@
                             / 
                                 <span>100</span>
                             </div>
+                            <label for="overall_marks"/>
+                            <div>
+                                <field name="overall_marks" nolabel="1"/>
+                            / 
+                                <span>300</span>
+                            </div>
                       
                         </group>
                         <group style="width:50%">
                             <field name="cookery_bakery_percentage" readonly="1"/>
                             <field name="ccmc_oral_percentage" readonly="1"/>
+                            <field name="cookery_gsk_online_percentage" readonly="1"/>
+                            <field name="overall_percentage" readonly="1"/>
                         </group>
 
                         <group style="width:33.33%">

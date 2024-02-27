@@ -431,8 +431,7 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
+    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True)
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
@@ -977,8 +976,7 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
     
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
@@ -992,6 +990,9 @@ class CCMCExam(models.Model):
     cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
     cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True)
+    overall_marks = fields.Float("Overall Marks",readonly=True)
+    overall_percentage = fields.Float("Overall Percentage",readonly=True)
+    cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True)
     cookery_bakery_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
@@ -999,7 +1000,7 @@ class CCMCExam(models.Model):
     
     
     cookery_oral = fields.Float("Cookery Oral",readonly=True)
-    ccmc_oral_percentage = fields.Float("CCMC Oral Percentage",readonly=True)
+    ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True)
     ccmc_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
@@ -1214,27 +1215,36 @@ class CCMCExam(models.Model):
         # import wdb; wdb.set_trace(); 
         if cookery_draft_confirm and ccmc_oral and ccmc_online:
             
+            # All CCMC Marks
             cookery_bakery_marks = self.cookery_bakery.total_mrks
             ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
             self.ccmc_oral_total = ccmc_oral_marks
             self.cookery_practical = cookery_bakery_marks
+            cookery_gsk_online = self.ccmc_online.scoring_total
+            self.cookery_gsk_online = cookery_gsk_online
+            self.overall_marks = ccmc_oral_marks + cookery_bakery_marks + cookery_gsk_online
+            
+            
+            
+            #All Percentage
             self.cookery_bakery_percentage = (cookery_bakery_marks/100) * 100
-            self.ccmc_oral_percentage = (ccmc_oral_marks/20) * 100
-
+            self.ccmc_oral_percentage = (ccmc_oral_marks/100) * 100
+            self.cookery_gsk_online_percentage = (cookery_gsk_online/100) * 100
+            self.overall_percentage = (self.overall_marks/300) * 100
             
             
-            if self.cookery_bakery_percentage >= 60:
+            if self.cookery_practical >= 60:
                 self.cookery_bakery_prac_status = 'passed'
             else:
                 self.cookery_bakery_prac_status = 'failed'
                 
-            if self.ccmc_oral_percentage >= 60:
+            if self.cookery_oral >= 60:
                 self.ccmc_oral_prac_status = 'passed'
             else:
                 self.ccmc_oral_prac_status = 'failed'
             
             
-            if self.ccmc_online.scoring_success:
+            if self.cookery_gsk_online  >= 60:
                 self.ccmc_online_status = 'passed'
             else:
                 self.ccmc_online_status = 'failed'
