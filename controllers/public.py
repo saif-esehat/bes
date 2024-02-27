@@ -56,3 +56,19 @@ class PublicPortal(http.Controller):
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(certificate_id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+    
+    @http.route(['/verification/ccmccerificate/<int:certificate_id>'], type="http", auth='none')
+    def VerifyCCMCCertificate(self,certificate_id,**kw ):
+        try:
+            certificate = request.env['ccmc.exam.schedule'].sudo().search([('id','=',certificate_id)])
+            if certificate.state == "3-certified":
+                certificate_id = certificate.id
+            else:
+                raise ValidationError("Certificate Not Found or Not Generated")
+                
+        except:
+            raise ValidationError("Certificate Not Found or Not Generated")
+        report_action = request.env.ref('bes.report_ccmc_certificate')
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(certificate_id))
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
