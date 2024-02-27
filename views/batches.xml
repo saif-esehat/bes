@@ -321,6 +321,8 @@
                     </header>
                     <sheet>
                          <div class="oe_button_box" name="button_box">
+                            <button name="open_ccmc_exams" string="CCMC Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
+                            </button>
                             <button name="open_gp_exams" string="GP Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
                         </div>

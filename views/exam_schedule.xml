@@ -162,7 +162,6 @@
                             <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                             <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                             <field name="rank" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
-
                         </group>
                         <group style="width:50%">
                             <field name="url" invisible="1"/>
@@ -170,8 +169,6 @@
                             <field name="certificate_qr_code" widget="image"  style="width:100px; height:100px;" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         </group>
                         <field name="dgs_visible" invisible="0"/>
-                        
-               
                         
 
                         <notebook>
@@ -236,7 +233,7 @@
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
                     </header>
                     <sheet>
                         <group>
@@ -308,6 +305,7 @@
                         <group style="width:50%">
                             <field name="url" invisible="1"/>
                             <field name="qr_code" widget="image"  style="width:100px; height:100px;"/>
+                            <field name="certificate_qr_code" widget="image"  style="width:100px; height:100px;" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         </group>
                         <field name="dgs_visible" invisible="0"/>
 
