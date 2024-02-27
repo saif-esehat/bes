@@ -112,7 +112,7 @@
                                 </div>
                             </div>
 
-                            <div class="container" style="margin-bottom:100px; position: relative; font-weight:900; font-family: 'TimesNewRomanBold';">
+                            <div class="container" style="margin-bottom:20px; position: relative; font-weight:900; font-family: 'TimesNewRomanBold';">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
                                     <div class="col-6" style="text-align:left;">
                                         <span style="color: #4c2d8b; font-size:20px;">Date of Issue of Certificate: </span>
@@ -130,6 +130,11 @@
                                     <t t-if="doc.certificate_qr_code">
                                         <img t-attf-src="data:image/png;base64,{{doc.certificate_qr_code}}" style="width: 120px; height: 120px; position:absolute; bottom: 70px; left:11px;" />
                                     </t>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                         <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
