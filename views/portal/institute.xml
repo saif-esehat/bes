@@ -724,10 +724,13 @@
                                                 <option value="no" t-att-selected="1">No</option>
                                             </select> -->
                                         </p>
-
-                                        <p class="text-muted mb-0">
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateFeesPaid" class="btn btn-primary btn_cta">Update</a>
-                                        </p>
+                                        <t t-if="batches.state == '6-done'">
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted mb-0">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateFeesPaid" class="btn btn-primary btn_cta">Update</a>
+                                            </p>
+                                        </t>
                                         <div class="modal fade" id="updateFeesPaid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <form method="post" action="/my/gpcandidate/updatefees" enctype="multipart/form-data">
@@ -801,7 +804,13 @@
 
                                         <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel" aria-labelledby="ex-with-icons-tab-1">
 
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" t-attf-candidate-id="{candidate.id}" class="btn btn-primary btn_cta">Add</a>
+                                            <t t-if="batches.state == '6-done'">
+                                            </t>
+                                            <t t-else="">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddShipVisit" t-attf-candidate-id="{candidate.id}" class="btn btn-primary btn_cta">Add</a>
+                                            </t>
+                                            
+
 
                                             <div class="modal fade" id="DeleteShipVisitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -930,12 +939,18 @@
                                                         <t t-foreach="candidate.ship_visits" t-as="ship_visit">
                                                             <tr>
                                                                 <td>
-                                                                    <button type="button" class="btn btn-danger" t-attf-data-id="{{ship_visit.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openDeleteModal(this)" data-target="#DeleteShipVisitModal">
+                                                                    <t t-if="batches.state == '6-done'">
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <button type="button" class="btn btn-danger" t-attf-data-id="{{ship_visit.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openDeleteModal(this)" data-target="#DeleteShipVisitModal">
+                                                                
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                                                             <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
                                                                         </svg>
                                                                     </button>
+                                                                    </t>
+                                                                    
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="ship_visit.name_of_ships" />
@@ -975,8 +990,11 @@
                                         <!-- Attendance  -->
 
                                         <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
-
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
+                                            <t t-if="batches.state == '6-done'">
+                                            </t>
+                                            <t t-else="">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
+                                            </t>
                                             <div>
                                                 <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
 
@@ -1029,7 +1047,11 @@
 
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
 
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
+                                            <t t-if="batches.state == '6-done'">
+                                            </t>
+                                            <t t-else="">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddStcw" class="btn btn-primary btn_cta">Add</a>
+                                            </t>
                                             <div class="modal fade" id="AddStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <form method="post" action="/my/gpcandidate/addstcw" enctype="multipart/form-data">
@@ -1804,6 +1826,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="courses_taught">Courses Taught</label>
+                                        <!-- Assuming you have a list of courses available -->
+                                        <select class="form-control" id="courses_taught" name="courses_taught">
+                                            <t t-foreach="courses" t-as="course">
+                                                <option t-attf-value="{{course.id}}">
+                                                    <t t-out="course.name"/>
+                                                </option>
+                                            </t>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
 
 
@@ -1928,6 +1966,8 @@
                 <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a> -->
                 <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                <!-- <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a> -->
+
             </t>
             <!-- <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a> -->
 
@@ -2387,6 +2427,7 @@
 
                 <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
             </t>
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -10,7 +10,7 @@ from datetime import datetime
 import xlsxwriter
 from odoo.exceptions import UserError,ValidationError
 import json
-
+from io import BytesIO
 
 
 
@@ -73,79 +73,79 @@ class InstitutePortal(CustomerPortal):
         vals = {"batches": batches, "page_name": "ccmc_batches"}
         return request.render("bes.institute_ccmc_batches", vals)
 
-    @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
-    def UploadGPCandidateData(self, **kw):
-        user_id = request.env.user.id
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+    # @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
+    # def UploadGPCandidateData(self, **kw):
+    #     user_id = request.env.user.id
+    #     institute_id = request.env["bes.institute"].sudo().search(
+    #         [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
-        file_content = kw.get("fileUpload").read()
-        filename = kw.get('fileUpload').filename
-        file_content_str = file_content.decode('utf-8')
+    #     batch_id = int(kw.get("batch_id"))
+    #     file_content = kw.get("fileUpload").read()
+    #     filename = kw.get('fileUpload').filename
+    #     file_content_str = file_content.decode('utf-8')
 
-        if file_content_str.startswith('\ufeff'):
-            file_content_str = file_content_str.lstrip('\ufeff')
+    #     if file_content_str.startswith('\ufeff'):
+    #         file_content_str = file_content_str.lstrip('\ufeff')
 
-        csv_file = StringIO(file_content_str)
-        csv_reader = csv.DictReader(csv_file)
+    #     csv_file = StringIO(file_content_str)
+    #     csv_reader = csv.DictReader(csv_file)
 
-        for row in csv_reader:
-            # import wdb; wdb.set_trace()
-            full_name = row['Full Name of candidate as in INDOS']
-            indos_no = row['Indos No.']
-            dob = datetime.strptime(row['DOB'], '%d/%m/%y').date()
-            address = row['Address']
-            dist_city = row['Dist./City']
-            if row['State (short)']:
-                state = request.env['res.country.state'].sudo().search(
-                    [('country_id.code', '=', 'IN'), ('code', '=', row['State (short)'])]).id
-                # state = row['State (short)']
-            pin_code = row['Pin code']
-            roll_no = row['Roll No.']
-            code_no = row['Code No.']
-            xth_std_eng = float(row['%  Xth Std in Eng.'])
+    #     for row in csv_reader:
+    #         # import wdb; wdb.set_trace()
+    #         full_name = row['Full Name of candidate as in INDOS']
+    #         indos_no = row['Indos No.']
+    #         dob = datetime.strptime(row['DOB'], '%d/%m/%y').date()
+    #         address = row['Address']
+    #         dist_city = row['Dist./City']
+    #         if row['State (short)']:
+    #             state = request.env['res.country.state'].sudo().search(
+    #                 [('country_id.code', '=', 'IN'), ('code', '=', row['State (short)'])]).id
+    #             # state = row['State (short)']
+    #         pin_code = row['Pin code']
+    #         roll_no = row['Roll No.']
+    #         code_no = row['Code No.']
+    #         xth_std_eng = float(row['%  Xth Std in Eng.'])
 
-            if not row['%12th Std in Eng.']:
-                twelfth_std_eng = 0
-            else:
-                twelfth_std_eng = float(row['%12th Std in Eng.'])
+    #         if not row['%12th Std in Eng.']:
+    #             twelfth_std_eng = 0
+    #         else:
+    #             twelfth_std_eng = float(row['%12th Std in Eng.'])
 
-            if not row['%ITI ']:
-                iti = 0
-            else:
-                iti = float(row['%ITI '])
+    #         if not row['%ITI ']:
+    #             iti = 0
+    #         else:
+    #             iti = float(row['%ITI '])
 
-            candidate_st = row['To be mentioned if Candidate SC/ST']
+    #         candidate_st = row['To be mentioned if Candidate SC/ST']
 
-            if candidate_st == 'Yes':
-                candidate_st = True
-            else:
-                candidate_st = False
+    #         if candidate_st == 'Yes':
+    #             candidate_st = True
+    #         else:
+    #             candidate_st = False
 
-            new_candidate = request.env['gp.candidate'].sudo().create({
-                'name': full_name,
-                'institute_id': institute_id,
-                'indos_no': indos_no,
-                'dob': dob,
-                'roll_no':roll_no,
-                'candidate_code':code_no,
-                # Include other fields here with their corresponding data
-                'institute_batch_id':batch_id,
-                'street': address,
-                'city': dist_city,
-                'state_id': state,
-                'zip': pin_code,
-                'tenth_percent': xth_std_eng,
-                'twelve_percent': twelfth_std_eng,
-                'iti_percent': iti,
-                'sc_st': candidate_st  # Assuming 'Yes' as value for SC/ST
-                # Add other fields similarly
-            })
+    #         new_candidate = request.env['gp.candidate'].sudo().create({
+    #             'name': full_name,
+    #             'institute_id': institute_id,
+    #             'indos_no': indos_no,
+    #             'dob': dob,
+    #             'roll_no':roll_no,
+    #             'candidate_code':code_no,
+    #             # Include other fields here with their corresponding data
+    #             'institute_batch_id':batch_id,
+    #             'street': address,
+    #             'city': dist_city,
+    #             'state_id': state,
+    #             'zip': pin_code,
+    #             'tenth_percent': xth_std_eng,
+    #             'twelve_percent': twelfth_std_eng,
+    #             'iti_percent': iti,
+    #             'sc_st': candidate_st  # Assuming 'Yes' as value for SC/ST
+    #             # Add other fields similarly
+    #         })
 
-            # import wdb; wdb.set_trace()
+    #         # import wdb; wdb.set_trace()
 
-        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
+    #     return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
     
     
@@ -231,7 +231,9 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=', candidate_id)])
-        vals = {'candidate': candidate, "page_name": "gp_candidate_form"}
+        batches = candidate.institute_batch_id
+        print(batches.id,"keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
 
     @http.route(['/my/ccmccandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
@@ -728,7 +730,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/gpfacultiesform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPFacultiesFormView(self,batch_id, **kw):
-
+        # import wdb; wdb.set_trace();
         states = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN')])
         
@@ -749,8 +751,9 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            # courses_taught = kw.get("courses_taught")
-
+            print(course_name,"ffffffffffffffffffffffffffffffffffffffff")
+            courses_taught = kw.get("courses_taught")
+            print(courses_taught,"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
             
             faculty_data = {
                 "faculty_name": faculty_name,
@@ -762,7 +765,7 @@ class InstitutePortal(CustomerPortal):
                 "qualification": qualification,
                 "contract_terms": contract_terms,
                 "course_name":course_name
-                # "courses_taught": courses_taught,
+                # "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();
@@ -811,7 +814,7 @@ class InstitutePortal(CustomerPortal):
                 "qualification": qualification,
                 "contract_terms": contract_terms,
                 "course_name":course_name
-                # "courses_taught": courses_taught,
+                # "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();
@@ -937,12 +940,14 @@ class InstitutePortal(CustomerPortal):
     @http.route(['/my/gpbatch/faculties/<int:batch_id>'], type="http", auth="user", website=True)
     def GPFacultyListView(self, batch_id, **kw):
         # import wdb; wdb.set_trace()
-
+        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
         gp_batches_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         faculties = request.env["institute.faculty"].sudo().search(
             [('gp_batches_id', '=', batch_id)])
+        print(faculties.course_name,"faculttttttttttttttttttttttttttttttt")
+        print(faculties.courses_taught,"faculttttttttttttttttttttttttttttttt")
         vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
@@ -977,6 +982,8 @@ class InstitutePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         
+        
+        
         if request.httprequest.method == 'POST':
             # import wdb; wdb.set_trace()
             candidate_image = kw.get("candidate_photo").read()
@@ -1009,8 +1016,8 @@ class InstitutePortal(CustomerPortal):
             return request.redirect('/my/gpcandidateprofile/'+str(kw.get("canidate_id")))
             
             
-       
-        vals = {}
+        batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
+        vals = {'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
 
 
@@ -1752,12 +1759,212 @@ class InstitutePortal(CustomerPortal):
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id.id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
-
-
-        
-        
-        
-        
+    
 
     
 
+
+    @http.route('/my/ccmcbatch/candidates/download_format', type='http', auth='user',website=True)
+    def generate_ccmc_student_format(self ):
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        candidate_worksheet = workbook.add_worksheet("Candidates")
+        
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        candidate_worksheet.set_column('A:XDF', None, unlocked)
+        candidate_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
+
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        for col, value in enumerate(header):
+            candidate_worksheet.write(0, col, value, header_format)
+
+        # Set date format for DOB column
+        candidate_worksheet.set_column('C:C', None, date_format)
+
+        dropdown_values = ['Yes', 'No']
+
+        # Add data validation for SC/ST column
+        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
+                                                'source': dropdown_values })
+        
+
+        
+        
+        
+        # candidate_worksheet.protect()
+        # candidate_worksheet.write(1, None, None, {'locked': False})
+        # candidate_worksheet.set_row(0, None, None)
+
+
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=candidate_format_file.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+    
+
+    @http.route('/my/gpbatch/candidates/download_format', type='http', auth='user',website=True)
+    def generate_gp_student_format(self ):
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        candidate_worksheet = workbook.add_worksheet("Candidates")
+        
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        candidate_worksheet.set_column('A:XDF', None, unlocked)
+        candidate_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
+
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        for col, value in enumerate(header):
+            candidate_worksheet.write(0, col, value, header_format)
+
+        # Set date format for DOB column
+        candidate_worksheet.set_column('C:C', None, date_format)
+
+        dropdown_values = ['Yes', 'No']
+
+        # Add data validation for SC/ST column
+        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
+                                                'source': dropdown_values })
+        
+
+        
+        
+        
+        # candidate_worksheet.protect()
+        # candidate_worksheet.write(1, None, None, {'locked': False})
+        # candidate_worksheet.set_row(0, None, None)
+
+
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=candidate_format_file.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+    
+
+    @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
+    def UploadGPCandidateData(self, **kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        batch_id = int(kw.get("batch_id"))
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        # worksheet = workbook.sheet_by_index(0)
+        worksheet = workbook.get_worksheet_by_name('Candidates')
+
+        for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+            row = worksheet.row_values(row_num)
+            
+            indos_no = row[0]  
+            full_name = row[1]  
+            dob = datetime.strptime(row[2], '%dd/%mm/%yy').date()  
+            street1 = row[3]
+            street2 = row[4]  
+            dist_city = row[5]  # Assuming Dist./City is the fifth column
+
+            pin_code = row[6]  # Assuming Pin code is the seventh column
+            state_short = row[7]  # Assuming State (short) is the sixth column
+            state = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN'), ('code', '=', state_short)]).id if state_short else False
+
+            phone = row[8] 
+            mobile = row[9] 
+            email = row[10] 
+
+            
+            xth_std_eng = float(row[11])  # Assuming %  Xth Std in Eng. is the tenth column
+
+            twelfth_std_eng = float(row[12]) if row[12] else 0  # Assuming %12th Std in Eng. is the eleventh column
+
+            iti = float(row[13]) if row[13] else 0  # Assuming %ITI is the twelfth column
+
+            candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+
+            new_candidate = request.env['gp.candidate'].sudo().create({
+                'name': full_name,
+                'institute_id': institute_id,
+                'indos_no': indos_no,
+                'dob': dob,
+                # 'roll_no': roll_no,
+                # 'candidate_code': code_no,
+                'institute_batch_id': batch_id,
+                'street': street1,
+                'street2': street2,
+                'phone': phone,
+                'mobile': mobile,
+                'email': email,
+
+                'city': dist_city,
+                'state_id': state,
+                'zip': pin_code,
+                'tenth_percent': xth_std_eng,
+                'twelve_percent': twelfth_std_eng,
+                'iti_percent': iti,
+                'sc_st': candidate_st
+            })
+
+        workbook.close()
+
+        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))

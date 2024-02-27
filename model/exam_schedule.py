@@ -431,8 +431,7 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('gp.exam.schedule'))
+    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True)
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
@@ -459,10 +458,10 @@ class GPExam(models.Model):
     
     mek_total = fields.Float("MEK Total",readonly=True)
     mek_percentage = fields.Float("MEK Percentage",readonly=True)
-    mek_online_marks = fields.Float("MEK Online",readonly=True)
-    gsk_online_marks = fields.Float("GSK Online",readonly=True)
-    mek_online_percentage = fields.Float("MEK Online (%)",readonly=True)
-    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True)    
+    mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2))
+    gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2))
+    mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2))
+    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True,digits=(16,2))    
     mek_total = fields.Float("MEK Oral/Practical",readonly=True)
     mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True)
     overall_marks = fields.Float("Overall Marks",readonly=True)
@@ -527,15 +526,46 @@ class GPExam(models.Model):
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
         ('3-certified', 'Certified'),
+        ('4-pending', 'Pending'),
     ], string='State', default='1-in_process')
 
     url = fields.Char("URL",compute="_compute_url")
-    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:")
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    rank = fields.Char("Rank",compute='_compute_rank')
+    
+    
+    
+
+    
+    @api.depends('overall_percentage')
+    def _compute_rank(self):
+        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+        total_records = len(sorted_records)
+        top_25_percent = int(total_records * 0.25)
+
+        for record in self:
+            print(record.id)
+            index = sorted_records.ids.index(record.id)
+            numeric_rank = index + 1 if index < top_25_percent else 0
+
+            # Convert numeric rank to character format
+            if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+                suffix = 'st'
+            elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+                suffix = 'nd'
+            elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+                suffix = 'rd'
+            else:
+                suffix = 'th'
+
+            record.rank = f'{numeric_rank}{suffix}'
+
 
     
     @api.depends('certificate_criteria','state')
@@ -545,12 +575,39 @@ class GPExam(models.Model):
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
-                
+
+    @api.depends('certificate_id','state')
+    def _compute_certificate_url(self):
+        for record in self:
+            print("Working CERT URL Func")
+
+            if record.state == "3-certified":
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                print("base_url:", base_url)
+
+                certificate_id = record.id
+                current_certificate_url = base_url + "verification/gpcerificate/" + str(certificate_id)
+                print("current_url:", current_certificate_url)
+                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+                qr.add_data(current_certificate_url)
+                qr.make(fit=True)
+                qr_image = qr.make_image()
+
+                # Convert the QR code image to base64 string
+                buffered = io.BytesIO()
+                qr_image.save(buffered, format="PNG")
+                qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+                # Assign the base64 string to a field in the 'srf' object
+                record.certificate_qr_code = qr_image_base64
+            else:
+                record.certificate_qr_code = None
+        
 
 
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        current_url = base_url + "/verification/gpadmitcard/" + str(self.id)
+        current_url = base_url + "verification/gpadmitcard/" + str(self.id)
         self.url = current_url
         print("Current URL:", current_url)
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
@@ -629,10 +686,15 @@ class GPExam(models.Model):
         }
     
     def dgs_approval(self):
+        
             if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("gp.certificate.id")
+                # date = self.dgs_batch.from_date
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.gp_candidate.roll_no
                 self.state = '3-certified'
-                self.certificate_issue_date = fields.date.today()
+                self.certificate_issue_date = self.dgs_batch.certificate_issue_date
+                self.exam_pass_date = self.dgs_batch.exam_pass_date
+            else:
+                self.state = '4-pending'
                 
             
     
@@ -714,9 +776,6 @@ class GPExam(models.Model):
                 raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
                                       f"You cannot schedule more than {max_exams} exams for a candidate.")
     
-    # def dgs_approval(self):                
-
-    #     print("work")
         
         
     def move_done(self):
@@ -795,18 +854,6 @@ class GPExam(models.Model):
             
             all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
-            # import wdb; wdb.set_trace();
-            # if all_passed:
-                
-            #     self.write({'certificate_criteria':'passed'})
-            #     # self.certificate_criteria = 'passed'
-            # else:
-            #     self.write({'certificate_criteria':'pending'})
-
-                # self.certificate_criteria = 'failed'
-            
-            # if(self.certificate_criteria == 'passed'):
-            #     self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
             
             self.state = '2-done'
                 
@@ -817,19 +864,6 @@ class GPExam(models.Model):
 
     attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
-
-    # def send_certificate_email(self):
-    #     template = self.env.ref('bes.gp_certificate_mail')
-    #     print(template,"templateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-
-    #     for rec in self:
-    #         print(rec.id,"recccccccccccccccccccccccccccccccccccccccccccccccccc")
-            
-    #         attachment_ids = [(4, attachment.id) for attachment in rec.attachment_ids]
-    #         print(attachment_ids,"attaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-
-    #         template.write({'attachment_ids': attachment_ids})
-    #         template.send_mail(rec.id)
 
 
     def send_certificate_email(self):
@@ -940,10 +974,10 @@ class CCMCExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
-    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-                                default=lambda self: self.env['ir.sequence'].next_by_code('ccmc.exam.sequence'))
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
     
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
@@ -957,6 +991,9 @@ class CCMCExam(models.Model):
     cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
     cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True)
+    overall_marks = fields.Float("Overall Marks",readonly=True)
+    overall_percentage = fields.Float("Overall Percentage",readonly=True)
+    cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True)
     cookery_bakery_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
@@ -964,7 +1001,7 @@ class CCMCExam(models.Model):
     
     
     cookery_oral = fields.Float("Cookery Oral",readonly=True)
-    ccmc_oral_percentage = fields.Float("CCMC Oral Percentage",readonly=True)
+    ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True)
     ccmc_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
@@ -1008,6 +1045,8 @@ class CCMCExam(models.Model):
     state = fields.Selection([
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
+        ('3-certified', 'Certified'),
+        ('4-pending', 'Pending'),
     ], string='State', default='1-in_process')
     
     certificate_criteria = fields.Selection([
@@ -1020,10 +1059,28 @@ class CCMCExam(models.Model):
     
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
 
+    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    
+    exam_pass_date = fields.Date(string="Date of Examination Passed:")
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    ccmc_rank = fields.Char("Rank",compute='_compute_rank')
+    
+    
+    
+    @api.depends('certificate_criteria','state')
+    def compute_dgs_visible(self):
+        for record in self:
+            if record.certificate_criteria == 'passed' and record.state == '2-done':
+                record.dgs_visible = True
+            else:
+                record.dgs_visible = False
+    
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        current_url = base_url + "/verification/ccmcadmitcard/" + str(self.id)
+        print("Base URL:", base_url)
+        current_url = base_url + "verification/ccmcadmitcard/" + str(self.id)
         self.url = current_url
         print("Current URL:", current_url)
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
@@ -1073,9 +1130,68 @@ class CCMCExam(models.Model):
             else:
                 record.ship_visit_criteria = 'pending'
                 
-                
+               
+    def dgs_approval(self):
+        print(self.state,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        if(self.certificate_criteria == 'passed'):
+            # date = self.dgs_batch.from_date
+            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
+            print(self.certificate_id,"criiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+            self.state = '3-certified'
+            self.certificate_issue_date = self.dgs_batch.certificate_issue_date
+            self.exam_pass_date = self.dgs_batch.exam_pass_date
+        else:
+            self.state = '4-pending'
+            # self.certificate_issue_date = fields.date.today() 
             
+    # @api.depends('overall_percentage')
+    # def _compute_rank(self):
+    #     sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+    #     total_records = len(sorted_records)
+    #     top_25_percent = int(total_records * 0.25)
 
+    #     for record in self:
+    #         index = sorted_records.ids.index(record.id)
+    #         numeric_rank = index + 1 if index < top_25_percent else 0
+
+    #         # Convert numeric rank to character format
+    #         if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+    #             suffix = 'st'
+    #         elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+    #             suffix = 'nd'
+    #         elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+    #             suffix = 'rd'
+    #         else:
+    #             suffix = 'th'
+
+    #         record.rank = f'{numeric_rank}{suffix}'
+
+    @api.depends('certificate_id','state')
+    def _compute_certificate_url(self):
+        for record in self:
+            print("Working CERT URL Func")
+
+            if record.state == "3-certified":
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                print("base_url:", base_url)
+
+                certificate_id = record.id
+                current_certificate_url = base_url + "verification/ccmccerificate/" + str(certificate_id)
+                print("current_url:", current_certificate_url)
+                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+                qr.add_data(current_certificate_url)
+                qr.make(fit=True)
+                qr_image = qr.make_image()
+
+                # Convert the QR code image to base64 string
+                buffered = io.BytesIO()
+                qr_image.save(buffered, format="PNG")
+                qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+                # Assign the base64 string to a field in the 'srf' object
+                record.certificate_qr_code = qr_image_base64
+            else:
+                record.certificate_qr_code = None
     
     @api.model
     def create(self, vals):
@@ -1091,9 +1207,7 @@ class CCMCExam(models.Model):
     
     
     def move_done(self):
-        if(self.certificate_criteria == 'passed'):
-            self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
-        self.state = '2-done'
+        
         
         cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
         ccmc_oral = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
@@ -1101,52 +1215,111 @@ class CCMCExam(models.Model):
         
         # import wdb; wdb.set_trace(); 
         if cookery_draft_confirm and ccmc_oral and ccmc_online:
+            
+            # All CCMC Marks
             cookery_bakery_marks = self.cookery_bakery.total_mrks
             ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
             self.ccmc_oral_total = ccmc_oral_marks
             self.cookery_practical = cookery_bakery_marks
+            cookery_gsk_online = self.ccmc_online.scoring_total
+            self.cookery_gsk_online = cookery_gsk_online
+            self.overall_marks = ccmc_oral_marks + cookery_bakery_marks + cookery_gsk_online
+            
+            
+            
+            #All Percentage
             self.cookery_bakery_percentage = (cookery_bakery_marks/100) * 100
-            self.ccmc_oral_percentage = (ccmc_oral_marks/20) * 100
-
+            self.ccmc_oral_percentage = (ccmc_oral_marks/100) * 100
+            self.cookery_gsk_online_percentage = (cookery_gsk_online/100) * 100
+            self.overall_percentage = (self.overall_marks/300) * 100
             
             
-            if self.cookery_bakery_percentage >= 60:
+            if self.cookery_practical >= 60:
                 self.cookery_bakery_prac_status = 'passed'
             else:
                 self.cookery_bakery_prac_status = 'failed'
                 
-            if self.ccmc_oral_percentage >= 60:
+            if self.cookery_oral >= 60:
                 self.ccmc_oral_prac_status = 'passed'
             else:
                 self.ccmc_oral_prac_status = 'failed'
             
             
-            if self.ccmc_online.scoring_success:
+            if self.cookery_gsk_online  >= 60:
                 self.ccmc_online_status = 'passed'
             else:
                 self.ccmc_online_status = 'failed'
                 
             all_passed = all(field == 'passed' for field in [self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
-            if all_passed:
-                self.write({'certificate_criteria':'passed'})
-            else:
-                self.write({'certificate_criteria':'pending'})
+            # if all_passed:
+            #     self.write({'certificate_criteria':'passed'})
+            # else:
+            #     self.write({'certificate_criteria':'pending'})
                 
             
-            
-            if(self.certificate_criteria == 'passed'):
-                self.certificate_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
-            self.state = '2-done'
-            # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
-
-                
-            
+            self.ccmc_state = '2-done'
             
         else:
             raise ValidationError("Not All exam are Confirmed")
+        # attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
+            # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+            
         
+    def send_certificate_email(self):
+        print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
+        # Replace 'bes.report_gp_certificate' with the correct XML ID of the report template
+        report_template = self.env.ref('bes.report_ccmc_certificate')
+        report_pdf = report_template.render_pdf([self.id])
+        print(report_pdf, "reportttttttttttttttttttttttttttttttttttttttttttttt")
         
+        # Render the report as PDF
+        # generated_report = report_template._render_qweb_pdf(self.id)
+        # print(generated_report,"genraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+        # Convert the report to PDF format
+        # pdf_content = self.env['ir.actions.report'].convert(
+        #         generated_report,
+        #         'pdf',
+        #         {'model': self._name, 'id': self.ids[0]}
+        #     )
+        # print(pdf_content,"pdfffffffffffffffffffffffffffffffffffffff")
+
+        # Encode the PDF data
+        data_record = base64.b64encode(report_pdf[0])
+        
+
+        # Create an attachment record
+        ir_values = {
+            'name': 'Certificate Report',
+            'type': 'binary',
+            'datas': data_record,
+            'store_fname': 'Certificate_Report.pdf',
+            'mimetype': 'application/pdf',
+            'res_model': 'ccmc.exam.schedule',
+        }
+
+        print(ir_values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        report_attachment = self.env['ir.attachment'].sudo().create(ir_values)
+        
+        # Get the email template
+        email_template = self.env.ref('bes.ccmc_certificate_mail')
+        
+        # Prepare email values
+        email_values = {
+            'email_to': self.ccmc_candidate.email,  # Use the appropriate recipient's email address
+            'email_from': self.env.user.email,
+        }
+        
+        # Attach the PDF to the email template
+        if email_template:
+            email_template.attachment_ids = [(4, report_attachment.id)]
+            
+            # Send the email
+            email_template.send_mail(self.id, email_values=email_values, force_send=True)
+            
+            # Remove the attachment from the email template
+            email_template.attachment_ids = [(5, 0, 0)]
             
         # Certificate Logic
 class CcmcCertificate(models.AbstractModel):

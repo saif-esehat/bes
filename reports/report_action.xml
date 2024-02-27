@@ -14,7 +14,7 @@
         id="candidate_gp_admit_card_action"
         string="GP Admit Card"
         model="gp.exam.schedule"
-        report_type="qweb-html"
+        report_type="qweb-pdf"
         name="bes.candidate_admit_card_gp"
         file="bes.candidate_admit_card_gp"/>
         
@@ -61,7 +61,7 @@
         id="report_ccmc_certificate"
         string="CCMC Ceritificate"
         model="ccmc.exam.schedule"
-        report_type="qweb-html"
+        report_type="qweb-pdf"
         name="bes.course_certificate"
         file="bes.course_certificate"
         />

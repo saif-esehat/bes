@@ -185,6 +185,7 @@
                             </h1>
                         </group>
                         <group style="width:50%;">
+                            <field name="dgs_batch"/>
                             <field name="institute_id" options="{'no_create':True}"/>
                             <field name="ccmc_from_date"/>
                             <field name="ccmc_to_date"/>
@@ -313,17 +314,27 @@
                     <header>                        
                         <button name="print_gp_fresh" string="GP Fresh" type="object" class="btn-primary" />
                         <button name="print_gp_repeater" string="GP Repeater" type="object" class="btn-primary" />
+                        
+                        <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
+                        <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                          <div class="oe_button_box" name="button_box">
+                            <button name="open_ccmc_exams" string="CCMC Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
+                            </button>
                             <button name="open_gp_exams" string="GP Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
                         </div>
                         <group>
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
-                            <field name="to_date"/>
                             <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                        <group>
+                            <field name="exam_pass_date"/>
+                            <field name="certificate_issue_date"/>
                         </group>
                     </sheet>
                 </form>

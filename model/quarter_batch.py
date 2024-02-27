@@ -21,6 +21,28 @@ class DGSBatch(models.Model):
                       widget="date", 
                       date_format="%b-%y")
     
+    exam_pass_date = fields.Date(string="Date of Examination Passed:")
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    
+    state = fields.Selection([
+        ('1-on_going', 'On-Going'),
+        ('2-confirmed', 'Confirmed'),
+        ('3-dgs_approved', 'Approved')     
+    ], string='State', default='1-on_going')
+    
+    def move_confirm(self):
+        exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        for exam in exams:
+            exam.move_done()
+        self.state = '2-confirmed'
+        
+    def move_dgs_approved(self):
+        
+        exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        for exam in exams:
+            exam.dgs_approval()
+                    
+        self.state = '3-dgs_approved'
     
     def print_gp_repeater(self):
         
@@ -53,6 +75,22 @@ class DGSBatch(models.Model):
         'domain': [ ('id' , 'in' ,exam_ids) ],
         'view_type': 'form',
         'res_model': 'gp.exam.schedule',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window'
+        }
+        
+        
+    def open_ccmc_exams(self):
+        
+        # import wdb;wdb.set_trace()
+        exam_ids = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.id)]).ids
+        
+        return {
+        'name': 'CCMC Exams',
+        'domain': [ ('id' , 'in' ,exam_ids) ],
+        'view_type': 'form',
+        'res_model': 'ccmc.exam.schedule',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window'

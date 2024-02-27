@@ -1,103 +1,283 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="course_certificate">
-        <t t-debug="context"/>
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="doc">
-                <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
-                <div class="o_report">
-                    <div id="header" style="width:100%; text-align: center;">
-                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/Picture1.png" style="margin-top:1rem; max-width: 100%;"/>
-                        <br/>
-                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture3.png" alt="" style="margin-top:0; width:80%; max-height:250px;"/>
-                        <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" style="width: 150px; height: 150px; position: absolute; top: 10%; right: 10%;"/>
-                        
-                        <br/>
-                        <div style="width:100%; ">
-                            <span style="font-size:1rem;">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
-                        </div>
-                        <div style="width:100%">
-                            <span style="font-size:1rem;">Under the authority of the Directorate General of Shipping, Ministry of Shipping, <br/>Government of India<br/>
-                            Awards this</span>
-                        </div>
-                        <img class="img img-responsive" t-attf-src="/bes/static/src/img/Picture2.png" alt="" style="margin-bottom:1.5rem;"/>
-                    </div>
-                    <div id="main" style="padding: 20px;">
-                        <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">Certificate No.: </label><span style="font-size:1.2rem;"></span>
-                        </div>
-                        <div class="left">
-                            <label for="" style="font-size:1.2rem; color:#4c2d8b;">This is to certify that: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.name"/></span>
-                        </div>
-                        
-                         <div class="line" style="display: flex; width: 100%; font-size: 1rem;">
-                            <div style="flex: 1; margin-right: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem; ">Roll No: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.roll_no"/></span>
+                <div class="page">
+                    <link rel="stylesheet" href="/bes/static/src/css/style_ccmc.css"/>
+                    <div class="oe_structure">
+                        <div class="oe_report backgroundd" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
+                            <div id="header" style="width:100%; text-align: center;">
+                                <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
+                                <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;  border: 2px solid black;"/>
+                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
+                                <div class="container-fluid" style="width:100%;">
+                                    <span style="font-size: 17px; font-weight: bold; font-family: 'TimesNewRomanBold';">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
+                                </div>
+                                <div class="container-fluid" style="">
+                                    <span style="font-size: 21px; font-weight: 700; font-family: 'TimesNewRomanBold';">Under the authority of the Directorate General of Shipping, Ministry of Shipping,</span><br/>
+                                    <span style="font-size: 22px; font-weight: 700; font-family: 'TimesNewRomanBold';">Government of India</span><br/>
+                                    <span style="font-size: 22px; font-weight: 700; font-family: 'TimesNewRomanBold';">Awards this</span>
+                                </div>
+                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/certificate.jpg" alt="" style="height:95px; width: 400px; margin-bottom:10px;"/>
                             </div>
-                            <div style="flex: 1; text-align: center; margin-left:8rem; margin-right:5rem;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">INDOS No: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.indos_no"/></span>
-                            </div>
-                            <div style="flex: 1; margin-left: 0;">
-                                <label for="" style="color: #4c2d8b; font-size: 1.2rem;">Date of Birth: </label><span style="font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.dob"/></span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <span style="color:#4c2d8b; text-align:left; font-size:1.2rem" >has undergone an approved six months Pre-sea training for</span>
-                        </div>
-                        <h1 style="">Certificate Course in Maritime Catering</h1>
-
-                        <div class="left" style="font-size:1.2rem;">
-                            <p style="color:#4c2d8b; font-size:1.2rem; margin:0;">at: <span style="color:#000; font-size:1.2rem;"><t t-esc="doc.ccmc_candidate.institute_id.name"/>(<t t-esc="doc.ccmc_candidate.institute_id.mti"/>)</span></p>
-
-                            <p style="color:#4c2d8b; margin:0;  margin-top:10px;">From <span style="color:#000;">Demo</span> and has successfully passed the All India Exit Examination
-                                held in <span></span></p>
-                    
-                            <div style="width: 100%; margin-top: 0rem; text-align:center;">
-                        
-                        <table style="width: 80%; margin: 0 auto; text-align:center; border-collapse: collapse; border: 1px solid #ddd;">
-                            <thead>
-                                <tr style="">
-                                    <th style=" padding: 10px;"><strong>A</strong></th>
-                                    <th style="padding: 10px;"><strong>B</strong></th>
-                                    <th style="padding: 10px;"><strong>C</strong></th>
-                                    <!-- <th style="width: 50%; padding: 10px;"><strong>Status</strong></th> -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                                <tr >
-                                    <td style=" padding: 10px; border: 1px solid #ddd;">Above 80% marks</td>
-                                    <td style=" padding: 10px; border: 1px solid #ddd;">71-80 % marks</td>
-                                    <td style=" padding: 10px; border: 1px solid #ddd;">60-70 % marks</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                            <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Position in the merit list of first 25% - <span style="color:#000;">N/A</span></p>
-                            <p style="color:#4c2d8b; margin:0; text-align:left;  margin-top:10px;">Date of Examination Passed: <span style="color:#000;">16-Aug-2023</span></p>
                             
-                            <div style="display: flex; justify-content: space-between; width: 100%; position: relative; margin-top: 10px;">
-                                <div id="split" style="">
-                                    <div style="color: #4c2d8b;">Date of Issue of Certificate: <span style="color: #000; font-size: 1.2rem;">16-Aug-2023</span></div>
+                            <div class="container" style="text-align:left; font-weight:900; font-family: 'TimesNewRomanBold';">
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                                    <div class="col-12">
+                                        <span style="font-size:20px; color:#4c2d8b; margin-right:8px;">Certificate No.:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.certificate_id"/></span>  
+                                    </div>
                                 </div>
-                                <div id="sign" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-                                    <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" id="img-sign" 
-                                    style="width: 250px; height: 55px; border: 2px dotted #000;  position: absolute; top: -30px; right:0;" />
-                                    <span style="display: block; position: absolute; top: 30%; right:0;">Signature of the Candidate</span>
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                                    <div class="col-12" style="">
+                                        <span style="font-size:20px; color:#4c2d8b; margin-right:10px;">This is to certify that </span><span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.name"/></span>  
+                                    </div>
                                 </div>
                             </div>
 
+                            <div class="container" style="text-align:left;font-weight:900; font-family: 'TimesNewRomanBold'; ">
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ;">
+                                    <div class="col-4">
+                                        <span style="color: #4c2d8b; font-size:20px;">Roll no:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.roll_no"/></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="color: #4c2d8b; font-size:20px;">INDOS No: </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.indos_no"/></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="color: #4c2d8b; font-size:20px;">Date of Birth: </span>
+                                        <span style="font-size:20px;">
+                                            <t t-set="formatted_dob" t-value="doc.ccmc_candidate.dob.strftime('%d-%b-%y')" />
+                                            <t t-esc="formatted_dob" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container" style="text-align:left; margin-bottom:15px;font-weight:900; font-family: 'TimesNewRomanBold';">
+                                <div class="row" style="padding-left:9px; margin-bottom:5px;">
+                                    <span class="col-12" style="font-size:20px; color:#4c2d8b;" >has undergone an approved six months Pre-sea training for</span>
+                                </div>
+                                <div class="row" style="text-align: center; margin-bottom:15px;">
+                                    <div class="col-12" style="">
+                                    <!-- display:inline-block; -->
+                                        <span style="color: #4c2d8b; background-color: #c0c0c0; font-size:40px; font-weight:900;">Certificate Course in Maritime Catering</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">at:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.institute_id.name"/> (MTI No.<t t-esc="doc.ccmc_candidate.institute_id.mti"/>)</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span>
+                                        <span style="font-size:20px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/> </span> 
+                                        <span style="color: #4c2d8b; font-size:20px;"> to </span>
+                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/>,</span>
+                                        <span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
+                                        <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container" style="text-align:left; margin-bottom:15px; font-weight:900; font-family: 'TimesNewRomanBold';">
+                                <div class="row" style="padding-left:9px; margin-bottom:10px ;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px;">Position in the merit list of first 25% - </span>
+                                        <span style="font-size:20px;">N/A</span>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-left:9px; margin-bottom:10px ;">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px;">Date of Examination Passed: </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.dgs_batch.exam_pass_date.strftime('%d-%b-%Y')"/></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container" style="margin-bottom:30px; position: relative; font-weight:900; font-family: 'TimesNewRomanBold';">
+                                <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                                    <div class="col-6" style="text-align:left;">
+                                        <span style="color: #4c2d8b; font-size:20px;">Date of Issue of Certificate: </span>
+                                        <span style="font-size:20px;"><t t-esc="doc.dgs_batch.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
+                                    </div>
+                                    <div class="col-6" style="text-align:right;">
+                                        <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" style="width: 75px; height: 55px; position:absolute; top:-60px; right:80px;" />
+                                        <span style="color: #4c2d8b; font-size:20px;">Signature of the Candidate</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container" style="text-align:center; margin-bottom:15px;">
+                                 <div>
+                                    <t t-if="doc.certificate_qr_code">
+                                        <img t-attf-src="data:image/png;base64,{{doc.certificate_qr_code}}" style="width: 120px; height: 120px; position:absolute; bottom: 70px; left:11px;" />
+                                    </t>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                         <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #000000; font-size:25px; font-weight:900;">Ravindra Nath Tripathi</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="height:max-content;">
+                                        <span style="color:#4c2d8b; font-size:25px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; font-weight:900;">Board of Examinations for Seafarers Trust</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:17px; font-weight:light; font-family: 'TimesNewRoman';"> NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614.</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span style="color: #4c2d8b; font-size:20px; font-family: 'TimesNewRoman';">E-mail: bestexam@bestrust.in</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div id="footer">
-                        <div style="text-align:center; display:block;">Ravindra Nath Tripathi</div>
-                        <div style="color:#4c2d8b;">Marine Engineering Officer</div>
-                        <p style="color:#4c2d8b;">Board of Examinations for Seafarers Trust <br/>
-                            NMS Titanium, 1007 &amp; 1008, 10th Floor, Plot No.74, Sector-15, CBD Belapur, Navi Mumbai – 400 614. <br/>
-                            E-mail: bestexam@bestrust.in / ivexams@bestrust.in
-                        </p>
+                </div>
+                
+
+                <!-- Page break for the next page -->
+                <div style="page-break-before: always;"></div>
+
+                <div class="oe_structure">
+                    <div class="oe_report" style="font-family: 'TimesNewRoman';">
+                        <div style="padding: 20px;">
+                            <p style="text-align: left; font-size:18px; margin-top:40px;">The All India Exit Examination is conducted in accordance with Training Guidelines 07 of 2010 and Training Circular 04 of 2019 of Directorate General of Shipping, Govt. of India.</p>
+
+                            <p style="text-align: left; font-size:18px; margin-top:20px; margin-bottom:20px;">The curriculum for 25 weeks pre-sea Training Programme includes following components:</p>
+                            <table style="width:100%; text-align: center; border-collapse: collapse; border: 1px solid #000; font-size:18px; margin-bottom:15px;" >
+                                <tbody>
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px; font-family: 'TimesNewRomanBold';">Part 1</td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">General Ship Knowledge and Safety, Personal Skills</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px; font-family: 'TimesNewRomanBold';">Part 2.1</td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">Cookery, Hygiene and Nutrition</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px; font-family: 'TimesNewRomanBold';">Part 2.2</td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">House Keeping</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px; font-family: 'TimesNewRomanBold';">Part 2.3</td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">Food and Beverage Service</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px; font-family: 'TimesNewRomanBold';">Part 3</td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">Mandatory STCW Courses and Ship Visit</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">A. Proficiency in Survival Techniques*</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">B. Elementary First Aid*</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">C. Fire Prevention and Fire Fighting*</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">D. Personal Safety and Social responsibility*</td>
+                                    </tr>
+                                    <tr>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align: left;">E. Security Training for Seafarers with Designated Security Duties*</td>
+                                    </tr>
+                                    <tr>
+                                        <td  style="border: 1px solid #000; padding:2px;"></td>
+                                        <td style="border: 1px solid #000; padding:2px; padding-left:5px; text-align:left;">F. Ship Visit / Harbour Visit *</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <span style="text-align: left; font-size:18px;">* Mandatory courses for Certificate Course in Maritime Catering pre-sea training.</span>
+                            
+
+                            <p style="text-align: left; margin-top:15px; font-size:18px;">Under the All India Exit Examination, conducted by the Board of Examinations for Seafarers Trust, 
+                            each candidate is evaluated through examination consisting of sections of online, practical and oral test for General Ship Knowledge, Safety and Personal Skills, 
+                            Cookery Hygiene and Nutrition, House-keeping, and Food &amp; Beverage Services. To pass the examination, a candidate must obtain a minimum of 60% marks in each section. 
+                            Results are evaluated by the Directorate General of Shipping prior to issue of this certificate to successful candidates.</p>
+
+                            <p style="text-align:center; margin-top:65px;font-size:20px;"><u>Mark Sheet of the Candidate</u></p>
+                            
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:235px; font-size:20px; ">
+                                <thead style="border: 1px solid #000; padding: 8px;">
+                                    <tr>
+                                        <th style="border: 1px solid #000;">S. No</th>
+                                        <th style="border: 1px solid #000;"></th>
+                                        <th style="border: 1px solid #000;">Full Mark</th>
+                                        <th style="border: 1px solid #000;">Pass Mark</th>
+                                        <th style="border: 1px solid #000;">Marks obtained</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid #000; ">
+                                    <tr>
+                                        <td style="border: 1px solid #000;">1.</td>
+                                        <td style="border: 1px solid #000;text-align: left; padding-left:6px;">Online of Part 1+2.1+2.2+2.3</td>
+                                        <td style="border: 1px solid #000;">100</td>
+                                        <td style="border: 1px solid #000;">60</td>
+                                        <td style="border: 1px solid #000;">
+                                            <!-- <span t-esc="doc.gsk_online_marks"/> -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000;">2.</td>
+                                        <td style="border: 1px solid #000;text-align: left; padding-left:6px;">Practical of Part 2.1</td>
+                                        <td style="border: 1px solid #000;">100</td>
+                                        <td style="border: 1px solid #000;">60</td>
+                                        <td style="border: 1px solid #000;">
+                                            <!-- <span t-esc="doc.mek_online_marks" t-options='{"widget": "float", "precision": 2}'/> -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid #000;">3.</td>
+                                        <td style="border: 1px solid #000;text-align: left; padding-left:6px;">Practical of Part 2.2+2.3 &amp; Oral of Part 1+2.2+2.3</td>
+                                        <td style="border: 1px solid #000;">100</td>
+                                        <td style="border: 1px solid #000;">60</td>
+                                        <td style="border: 1px solid #000;">
+                                            <!-- <span t-esc="doc.gsk_total"/> -->
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </t>
