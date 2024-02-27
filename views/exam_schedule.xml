@@ -274,11 +274,19 @@
                             / 
                                 <span>100</span>
                             </div>
+                            <label for="overall_marks"/>
+                            <div>
+                                <field name="overall_marks" nolabel="1"/>
+                            / 
+                                <span>300</span>
+                            </div>
                       
                         </group>
                         <group style="width:50%">
                             <field name="cookery_bakery_percentage" readonly="1"/>
                             <field name="ccmc_oral_percentage" readonly="1"/>
+                            <field name="cookery_gsk_online_percentage" readonly="1"/>
+                            <field name="overall_percentage" readonly="1"/>
                         </group>
 
                         <group style="width:33.33%">
