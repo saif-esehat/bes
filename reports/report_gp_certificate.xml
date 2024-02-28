@@ -273,7 +273,7 @@
                                         <td style="border: 1px solid #000;">75</td>
                                         <td style="border: 1px solid #000;">45</td>
                                         <td style="border: 1px solid #000;">
-                                            <span t-esc="doc.gsk_online_marks"/>
+                                            <span t-esc="doc.gsk_online_marks" t-options='{"widget": "float", "precision": 2}'/>
                                         </td>
                                     </tr>
                                     <tr>
