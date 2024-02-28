@@ -551,6 +551,7 @@ class GPExam(models.Model):
         top_25_percent = int(total_records * 0.25)
 
         for record in self:
+            print(record.id)
             index = sorted_records.ids.index(record.id)
             numeric_rank = index + 1 if index < top_25_percent else 0
 
@@ -689,7 +690,7 @@ class GPExam(models.Model):
         
             if(self.certificate_criteria == 'passed'):
                 # date = self.dgs_batch.from_date
-                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.gp_candidate.roll_no
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.exam_id
                 self.state = '3-certified'
                 self.certificate_issue_date = self.dgs_batch.certificate_issue_date
                 self.exam_pass_date = self.dgs_batch.exam_pass_date
@@ -1135,7 +1136,7 @@ class CCMCExam(models.Model):
         print(self.state,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         if(self.certificate_criteria == 'passed'):
             # date = self.dgs_batch.from_date
-            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
+            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.exam_id
             print(self.certificate_id,"criiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
             self.state = '3-certified'
             self.certificate_issue_date = self.dgs_batch.certificate_issue_date
