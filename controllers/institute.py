@@ -11,6 +11,7 @@ import xlsxwriter
 from odoo.exceptions import UserError,ValidationError
 import json
 from io import BytesIO
+import xlrd
 
 
 
@@ -151,80 +152,80 @@ class InstitutePortal(CustomerPortal):
     
 
 
-    @http.route(['/my/uploadccmccandidatedata'], type="http", auth="user", website=True)
-    def UploadCcmcCandidateData(self, **kw):
-        user_id = request.env.user.id
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+    # @http.route(['/my/uploadccmccandidatedata'], type="http", auth="user", website=True)
+    # def UploadCcmcCandidateData(self, **kw):
+    #     user_id = request.env.user.id
+    #     institute_id = request.env["bes.institute"].sudo().search(
+    #         [('user_id', '=', user_id)]).id
         
-        print("Batch id1",kw.get("ccmc_batch_id"))
-        batch_id = int(kw.get("ccmc_batch_id"))
-        file_content = kw.get("ccmcfileUpload").read()
-        filename = kw.get('ccmcfileUpload').filename
-        file_content_str = file_content.decode('utf-8')
+    #     print("Batch id1",kw.get("ccmc_batch_id"))
+    #     batch_id = int(kw.get("ccmc_batch_id"))
+    #     file_content = kw.get("ccmcfileUpload").read()
+    #     filename = kw.get('ccmcfileUpload').filename
+    #     file_content_str = file_content.decode('utf-8')
 
-        if file_content_str.startswith('\ufeff'):
-            file_content_str = file_content_str.lstrip('\ufeff')
+    #     if file_content_str.startswith('\ufeff'):
+    #         file_content_str = file_content_str.lstrip('\ufeff')
 
-        csv_file = StringIO(file_content_str)
-        csv_reader = csv.DictReader(csv_file)
+    #     csv_file = StringIO(file_content_str)
+    #     csv_reader = csv.DictReader(csv_file)
 
-        for row in csv_reader:
-            # import wdb; wdb.set_trace()
-            full_name = row['Full Name of candidate as in INDOS']
-            indos_no = row['Indos No.']
-            dob = datetime.strptime(row['DOB'], '%d/%m/%y').date()
-            address = row['Address']
-            dist_city = row['Dist./City']
-            if row['State (short)']:
-                state = request.env['res.country.state'].sudo().search(
-                    [('country_id.code', '=', 'IN'), ('code', '=', row['State (short)'])]).id
-                # state = row['State (short)']
-            pin_code = row['Pin code']
-            xth_std_eng = float(row['%  Xth Std in Eng.'])
-            roll_no = row['Roll No.']
-            code_no = row['Code No.']
+    #     for row in csv_reader:
+    #         # import wdb; wdb.set_trace()
+    #         full_name = row['Full Name of candidate as in INDOS']
+    #         indos_no = row['Indos No.']
+    #         dob = datetime.strptime(row['DOB'], '%d/%m/%y').date()
+    #         address = row['Address']
+    #         dist_city = row['Dist./City']
+    #         if row['State (short)']:
+    #             state = request.env['res.country.state'].sudo().search(
+    #                 [('country_id.code', '=', 'IN'), ('code', '=', row['State (short)'])]).id
+    #             # state = row['State (short)']
+    #         pin_code = row['Pin code']
+    #         xth_std_eng = float(row['%  Xth Std in Eng.'])
+    #         roll_no = row['Roll No.']
+    #         code_no = row['Code No.']
 
-            if not row['%12th Std in Eng.']:
-                twelfth_std_eng = 0
-            else:
-                twelfth_std_eng = float(row['%12th Std in Eng.'])
+    #         if not row['%12th Std in Eng.']:
+    #             twelfth_std_eng = 0
+    #         else:
+    #             twelfth_std_eng = float(row['%12th Std in Eng.'])
 
-            if not row['%ITI ']:
-                iti = 0
-            else:
-                iti = float(row['%ITI '])
+    #         if not row['%ITI ']:
+    #             iti = 0
+    #         else:
+    #             iti = float(row['%ITI '])
 
-            candidate_st = row['To be mentioned if Candidate SC/ST']
+    #         candidate_st = row['To be mentioned if Candidate SC/ST']
 
-            if candidate_st == 'Yes':
-                candidate_st = True
-            else:
-                candidate_st = False
+    #         if candidate_st == 'Yes':
+    #             candidate_st = True
+    #         else:
+    #             candidate_st = False
 
-            new_candidate = request.env['ccmc.candidate'].sudo().create({
-                'name': full_name,
-                'institute_id': institute_id,
-                'indos_no': indos_no,
-                'dob': dob,
-                # Include other fields here with their corresponding data
-                'institute_batch_id':batch_id,
-                'street': address,
-                'roll_no':roll_no,
-                'candidate_code':code_no,
-                'city': dist_city,
-                'state_id': state,
-                'zip': pin_code,
-                'tenth_percent': xth_std_eng,
-                'twelve_percent': twelfth_std_eng,
-                'iti_percent': iti,
-                'sc_st': candidate_st  # Assuming 'Yes' as value for SC/ST
-                # Add other fields similarly
-            })
+    #         new_candidate = request.env['ccmc.candidate'].sudo().create({
+    #             'name': full_name,
+    #             'institute_id': institute_id,
+    #             'indos_no': indos_no,
+    #             'dob': dob,
+    #             # Include other fields here with their corresponding data
+    #             'institute_batch_id':batch_id,
+    #             'street': address,
+    #             'roll_no':roll_no,
+    #             'candidate_code':code_no,
+    #             'city': dist_city,
+    #             'state_id': state,
+    #             'zip': pin_code,
+    #             'tenth_percent': xth_std_eng,
+    #             'twelve_percent': twelfth_std_eng,
+    #             'iti_percent': iti,
+    #             'sc_st': candidate_st  # Assuming 'Yes' as value for SC/ST
+    #             # Add other fields similarly
+    #         })
 
-            # import wdb; wdb.set_trace()
+    #         # import wdb; wdb.set_trace()
 
-        return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
+    #     return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
     @http.route(['/my/gpcandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
     def GPcandidateProfileView(self, candidate_id, **kw):
@@ -1910,27 +1911,34 @@ class InstitutePortal(CustomerPortal):
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
-        workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
         # worksheet = workbook.sheet_by_index(0)
-        worksheet = workbook.get_worksheet_by_name('Candidates')
+        # import wdb; wdb.set_trace()
+
+        # worksheet = workbook.get_worksheet_by_name('Candidates')
+        worksheet = workbook.sheet_by_index(0)
 
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
             indos_no = row[0]  
-            full_name = row[1]  
-            dob = datetime.strptime(row[2], '%dd/%mm/%yy').date()  
+            full_name = row[1] 
+            date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+            date_string = date_value.strftime('%d-%b-%y') 
+            # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
+            dob = date_value
             street1 = row[3]
             street2 = row[4]  
             dist_city = row[5]  # Assuming Dist./City is the fifth column
 
-            pin_code = row[6]  # Assuming Pin code is the seventh column
+            pin_code = int(row[6])  # Assuming Pin code is the seventh column
             state_short = row[7]  # Assuming State (short) is the sixth column
             state = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN'), ('code', '=', state_short)]).id if state_short else False
 
-            phone = row[8] 
-            mobile = row[9] 
+            phone = int(row[8])
+            mobile = int(row[9]) 
             email = row[10] 
 
             
@@ -1965,6 +1973,85 @@ class InstitutePortal(CustomerPortal):
                 'sc_st': candidate_st
             })
 
-        workbook.close()
+        # workbook.close()
 
         return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
+
+
+
+
+    @http.route(['/my/uploadccmccandidatedata'], type="http", auth="user", website=True)
+    def UploadCCMCCandidateData(self, **kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        batch_id = int(kw.get("batch_id"))
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        # worksheet = workbook.sheet_by_index(0)
+        # import wdb; wdb.set_trace()
+
+        # worksheet = workbook.get_worksheet_by_name('Candidates')
+        worksheet = workbook.sheet_by_index(0)
+
+        for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+            row = worksheet.row_values(row_num)
+            
+            indos_no = row[0]  
+            full_name = row[1] 
+            date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+            date_string = date_value.strftime('%d-%b-%y') 
+            # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
+            dob = date_value
+            street1 = row[3]
+            street2 = row[4]  
+            dist_city = row[5]  # Assuming Dist./City is the fifth column
+
+            pin_code = int(row[6])  # Assuming Pin code is the seventh column
+            state_short = row[7]  # Assuming State (short) is the sixth column
+            state = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN'), ('code', '=', state_short)]).id if state_short else False
+
+            phone = int(row[8])
+            mobile = int(row[9]) 
+            email = row[10] 
+
+            
+            xth_std_eng = float(row[11])  # Assuming %  Xth Std in Eng. is the tenth column
+
+            twelfth_std_eng = float(row[12]) if row[12] else 0  # Assuming %12th Std in Eng. is the eleventh column
+
+            iti = float(row[13]) if row[13] else 0  # Assuming %ITI is the twelfth column
+
+            candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+
+            new_candidate = request.env['ccmc.candidate'].sudo().create({
+                'name': full_name,
+                'institute_id': institute_id,
+                'indos_no': indos_no,
+                'dob': dob,
+                # 'roll_no': roll_no,
+                # 'candidate_code': code_no,
+                'institute_batch_id': batch_id,
+                'street': street1,
+                'street2': street2,
+                'phone': phone,
+                'mobile': mobile,
+                'email': email,
+
+                'city': dist_city,
+                'state_id': state,
+                'zip': pin_code,
+                'tenth_percent': xth_std_eng,
+                'twelve_percent': twelfth_std_eng,
+                'iti_percent': iti,
+                'sc_st': candidate_st
+            })
+
+        # workbook.close()
+
+        return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
