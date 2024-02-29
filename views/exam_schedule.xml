@@ -50,7 +50,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="exam_id" readonly="1"/>
+                            <!-- <field name="exam_id" readonly="1"/> -->
                             <field name="dgs_batch" readonly="0"/>
                             <field name="gp_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->

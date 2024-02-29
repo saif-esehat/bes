@@ -60,19 +60,13 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route(['/my/assignments'], type="http", auth="user", website=True)
     def ExaminerAssignmentListView(self, **kw):
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-        print(self,"selffffffffffffffffffffffffffffffffffffffffffffffff")
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
-        print(user_id,"userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        print(examiner,"eaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
-        print(examiner_assignments,"assssssssssssssssssssssssssssssssssssssssssssssss")
         
         vals = {'assignments':examiner_assignments, 'examiner':examiner}
-        print(vals,"valssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
 
@@ -88,23 +82,37 @@ class ExaminerPortal(CustomerPortal):
     #     ​return decorator
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
     def open_candidate_form(self, **rec):
+        print(rec,"reccccccccccccccccccccccccccccccccc")
         if 'rec_id' in rec:
             rec_id =rec['rec_id']
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec_id)
             assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
-
+            print(assignment.assigned_to,"asssssssssssssssssssssssssssssssssssss")
             # Check if gp_candidate is set
             if assignment.assigned_to == "gp_candidate":
+                print("gpppppppppppppppppppppppppppppppppppppppppgggggggggggg")
                 gp_oral_prac = assignment.gp_oral_prac
+                print(gp_oral_prac,"gp_orallllllllllllllllllll")
                 candidate = assignment.gp_oral_prac.gp_candidate
+                print(candidate,"candidateeeeeeeeeeeeeeeeeee")
                 subject = assignment.subject_id.name
+                print(subject,"subjectttttttttttttttttttttttttttttt")
             # Check if ccmc_candidate is set
             elif assignment.assigned_to == "ccmc_candidate":
+                print("ccmcccccccccccccccccccccccccccccccccccccccccccccccc")
                 candidate = assignment.ccmc_candidate
             else:
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
+            
+            vals = {
+                'candidate': candidate,
+                'gp_oral_prac':gp_oral_prac , 
+                'subject':subject ,'assignment_id':rec_id
+            }
 
+            print(vals,"valssssssssssssssssssssssssssss")
             return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
@@ -120,17 +128,20 @@ class ExaminerPortal(CustomerPortal):
         print(rec,"recccccccccccccccccccccccccccccccccccc")
         
         if 'rec_id' in rec:
-            print("yessssssssssssssssssssssssssssssssssss")
-            rec_id =rec['rec_id']
+            rec_id = rec['rec_id']
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec_id)
             assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
-            print(assignment,"asssssssssssssssssssssssssssssssssssss")
+            print(assignment.assigned_to,"asssssssssssssssssssssssssssssssssssss")
             # Check if gp_candidate is set
             if assignment.assigned_to == "ccmc_candidate":
                 print("ccmcccccccccccccccccccccccccccccccccccccccccccccccc")
                 ccmc_assignment = assignment.ccmc_assignment
+                print(ccmc_assignment,"ccmc_assign")
                 candidate = assignment.ccmc_assignment.ccmc_candidate
+                print(candidate,"candidateeeeeeeeeee")
                 subject = assignment.subject_id.name
+                print(subject,"dubject_dddd")
             # Check if ccmc_candidate is set
             elif assignment.assigned_to == "gp_candidate":
                 print("gppppppppppppppppppppppppppppppppppppppppp")
@@ -139,7 +150,12 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 print("falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 candidate = False
-
+            vals = {
+                'candidate': candidate,
+                'ccmc_assignment':ccmc_assignment , 
+                'subject':subject ,'assignment_id':rec_id
+            }
+            print(vals,"valssssssssssssssssssssssssssss")
             return request.render("bes.examiner_candidate_list", {'candidate': candidate,'ccmc_assignment':ccmc_assignment , 'subject':subject ,'assignment_id':rec_id})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
