@@ -545,26 +545,31 @@ class GPExam(models.Model):
     
     @api.depends('overall_percentage')
     def _compute_rank(self):
-        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+        
+        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')], order='overall_percentage desc')
+        # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
 
         for record in self:
-            index = sorted_records.ids.index(record.id)
-            numeric_rank = index + 1 if index < top_25_percent else 0
+            print(record.id)
+            try:
+                index = sorted_records.ids.index(record.id)
+                numeric_rank = index + 1 if index < top_25_percent else 0
 
-            # Convert numeric rank to character format
-            if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
-                suffix = 'st'
-            elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
-                suffix = 'nd'
-            elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
-                suffix = 'rd'
-            else:
-                suffix = 'th'
+                # Convert numeric rank to character format
+                if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+                    suffix = 'st'
+                elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+                    suffix = 'nd'
+                elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+                    suffix = 'rd'
+                else:
+                    suffix = 'th'
 
-            record.rank = f'{numeric_rank}{suffix}'
-
+                record.rank = f'{numeric_rank}{suffix}'
+            except:
+                record.rank = "0th"
 
     
     @api.depends('certificate_criteria','state')
@@ -688,7 +693,7 @@ class GPExam(models.Model):
         
             if(self.certificate_criteria == 'passed'):
                 # date = self.dgs_batch.from_date
-                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.gp_candidate.roll_no
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.exam_id
                 self.state = '3-certified'
                 self.certificate_issue_date = self.dgs_batch.certificate_issue_date
                 self.exam_pass_date = self.dgs_batch.exam_pass_date
@@ -1134,7 +1139,7 @@ class CCMCExam(models.Model):
         print(self.state,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         if(self.certificate_criteria == 'passed'):
             # date = self.dgs_batch.from_date
-            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
+            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.exam_id
             print(self.certificate_id,"criiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
             self.state = '3-certified'
             self.certificate_issue_date = self.dgs_batch.certificate_issue_date

@@ -106,12 +106,12 @@ class GPCandidate(models.Model):
     #         if record.phone and not record.phone.isdigit() or len(record.phone) != 8 or len(record.phone) != 0:
     #             raise ValidationError("Phone number must be 8 digits.")
 
-    @api.constrains('mobile')
-    def _check_valid_mobile(self):
-        for record in self:
-            # Check if mobile has 10 digits
-            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
-                raise ValidationError("Mobile number must be 10 digits.")
+    # @api.constrains('mobile')
+    # def _check_valid_mobile(self):
+    #     for record in self:
+    #         # Check if mobile has 10 digits
+    #         if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+    #             raise ValidationError("Mobile number must be 10 digits.")
 
     @api.constrains('email')
     def _check_valid_email(self):
@@ -253,9 +253,12 @@ class GPCandidate(models.Model):
         institute_batch_id  = int(values['institute_batch_id'])
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
+        # gp_batches = self.institute_batch_id
+        print(gp_batches.batch_name,"sasasa")
         # print(gp_batches,"gpbatchesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         
-        capacity = gp_batches.dgs_approved_capacity -1
+        capacity = gp_batches.dgs_approved_capacity - 1
+        # capacity = gp_batches.dgs_approved_capacity 
         print(capacity,"capacityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy, ")
         
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])  
@@ -566,12 +569,12 @@ class CCMCCandidate(models.Model):
     #         if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
     #             raise ValidationError("Phone number must be 8 digits.")
 
-    @api.constrains('mobile')
-    def _check_valid_mobile(self):
-        for record in self:
-            # Check if mobile has 10 digits
-            if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
-                raise ValidationError("Mobile number must be 10 digits.")
+    # @api.constrains('mobile')
+    # def _check_valid_mobile(self):
+    #     for record in self:
+    #         # Check if mobile has 10 digits
+    #         if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
+    #             raise ValidationError("Mobile number must be 10 digits.")
 
     @api.constrains('email')
     def _check_valid_email(self):
