@@ -11,6 +11,7 @@ import xlsxwriter
 from odoo.exceptions import UserError,ValidationError
 import json
 from io import BytesIO
+import xlrd
 
 
 
@@ -1910,27 +1911,34 @@ class InstitutePortal(CustomerPortal):
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
-        workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
         # worksheet = workbook.sheet_by_index(0)
-        worksheet = workbook.get_worksheet_by_name('Candidates')
+        # import wdb; wdb.set_trace()
+
+        # worksheet = workbook.get_worksheet_by_name('Candidates')
+        worksheet = workbook.sheet_by_index(0)
 
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
             indos_no = row[0]  
-            full_name = row[1]  
-            dob = datetime.strptime(row[2], '%dd/%mm/%yy').date()  
+            full_name = row[1] 
+            date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+            date_string = date_value.strftime('%d-%b-%y') 
+            # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
+            dob = date_value
             street1 = row[3]
             street2 = row[4]  
             dist_city = row[5]  # Assuming Dist./City is the fifth column
 
-            pin_code = row[6]  # Assuming Pin code is the seventh column
+            pin_code = int(row[6])  # Assuming Pin code is the seventh column
             state_short = row[7]  # Assuming State (short) is the sixth column
             state = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN'), ('code', '=', state_short)]).id if state_short else False
 
-            phone = row[8] 
-            mobile = row[9] 
+            phone = int(row[8])
+            mobile = int(row[9]) 
             email = row[10] 
 
             
@@ -1965,6 +1973,6 @@ class InstitutePortal(CustomerPortal):
                 'sc_st': candidate_st
             })
 
-        workbook.close()
+        # workbook.close()
 
         return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
