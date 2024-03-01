@@ -539,12 +539,8 @@ class GPExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     rank = fields.Char("Rank",compute='_compute_rank')
     
-    institute_code = fields.Char("Institute code",compute="_compute_code_ins")
-    
-    @api.depends('gp_candidate')
-    def _compute_code_ins(self):
-        for record in self:
-            record.institute_code  = record.gp_candidate.institute_id.code
+    institute_code = fields.Char("Institute code")
+
 
     
     @api.depends('overall_percentage','gp_candidate')
