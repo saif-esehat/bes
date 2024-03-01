@@ -6,9 +6,9 @@
                 <li class="breadcrumb-item">
                     <a t-attf-href="/open_ccmc_candidate_form">CCMC Candidates</a>
                 </li>
-                <li class="breadcrumb-item">
+                <!-- <li class="breadcrumb-item">
                     <t t-out="ccmc_assignment"/>
-                </li>
+                </li> -->
             </t>
         </xpath>
     </template>

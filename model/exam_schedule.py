@@ -543,10 +543,11 @@ class GPExam(models.Model):
     
 
     
-    @api.depends('overall_percentage')
+    @api.depends('overall_percentage','gp_candidate')
     def _compute_rank(self):
         
-        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')], order='overall_percentage desc')
+        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+                                                             order='overall_percentage desc , gp_candidate asc')
         # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
@@ -570,6 +571,10 @@ class GPExam(models.Model):
                 record.rank = f'{numeric_rank}{suffix}'
             except:
                 record.rank = "0th"
+    
+    
+
+
 
     
     @api.depends('certificate_criteria','state')

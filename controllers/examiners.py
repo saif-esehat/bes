@@ -97,7 +97,7 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
             
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id})
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id, 'page_name':'gp_assignment'})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
@@ -118,7 +118,7 @@ class ExaminerPortal(CustomerPortal):
                 ccmc_assignment = assignment.ccmc_assignment
                 candidate = assignment.ccmc_assignment.ccmc_candidate
                 subject = assignment.subject_id.name
-            # Check if ccmc_candidate is set
+            # Check if gp_candidate is set
             elif assignment.assigned_to == "gp_candidate":
                 candidate = assignment.gp_candidate
             else:
