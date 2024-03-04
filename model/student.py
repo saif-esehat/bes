@@ -249,20 +249,16 @@ class GPCandidate(models.Model):
     
     @api.model
     def create(self, values):
-        print(values,"valeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         institute_batch_id  = int(values['institute_batch_id'])
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
         # gp_batches = self.institute_batch_id
         print(gp_batches.batch_name,"sasasa")
-        # print(gp_batches,"gpbatchesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         
         capacity = gp_batches.dgs_approved_capacity - 1
         # capacity = gp_batches.dgs_approved_capacity 
-        print(capacity,"capacityyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy, ")
         
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])  
-        print(candidate_count,"candidate_countttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt, ")
        
         if candidate_count <= capacity:
             gp_candidate = super(GPCandidate, self).create(values)

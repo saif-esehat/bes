@@ -1779,6 +1779,9 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('A:XDF', None, unlocked)
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
+        # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
+
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
 
 
@@ -1797,6 +1800,10 @@ class InstitutePortal(CustomerPortal):
 
         # Set date format for DOB column
         candidate_worksheet.set_column('C:C', None, date_format)
+        # candidate_worksheet.set_column('J:J', None, number_format)
+        # candidate_worksheet.set_column('G:G', None, zip_format)
+
+
 
         dropdown_values = ['Yes', 'No']
 
@@ -1847,6 +1854,9 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('A:XDF', None, unlocked)
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
+        # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
+
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
 
 
@@ -1862,6 +1872,9 @@ class InstitutePortal(CustomerPortal):
         header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
+            # candidate_worksheet.set_column('J:J', None, number_format)
+            # candidate_worksheet.set_column('G:G', None, zip_format)
+
 
         # Set date format for DOB column
         candidate_worksheet.set_column('C:C', None, date_format)
