@@ -1,7 +1,20 @@
 <odoo>
+
+    <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <t t-if="page_name == 'ccmc_oral'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/open_ccmc_candidate_form">CCMC Candidates</a>
+                </li>
+                <!-- <li class="breadcrumb-item">
+                    <t t-out="ccmc_assignment"/>
+                </li> -->
+            </t>
+        </xpath>
+    </template>
+
     <template id="examiner_candidate_list" name="Candidates">
         <script>
-            debugger
         </script>
         <style>
                                     #loader-overlay {
@@ -40,75 +53,88 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="gp_oral_prac" t-as="c">
-                        <tr>
-                            <td class="text-left">
-                                <t t-if="subject == 'CCMC'" >
+                    <t t-if="subject == 'CCMC'" >
+                        <t t-foreach="ccmc_assignment" t-as="c">
+                            <tr>
+                                <td class="text-left">
                                     <t t-out="c.ccmc_candidate.name" readonly="1"/>
-                                </t>
-                                <t t-else="" >
-                                    <t t-out="c.gp_candidate.name" readonly="1"/>
-                                </t>
-                            </td>
-                            <td class="text-left">
-                                <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
-                            </td>
-                            <td class="text-left">
-                                <t t-if="subject == 'CCMC'" >
+                                </td>
+                                <td class="text-left">
+                                    <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
+                                </td>
+                                <td class="text-left">
                                     <t t-out="c.ccmc_candidate.indos_no" readonly="1"/>
-                                </t>
-                                <t t-else="" >
-                                    <t t-out="c.gp_candidate.indos_no" readonly="1"/>
-                                </t>
-                            </td>
-                            <td class="text-left">
-                                <t t-if="subject == 'CCMC'" >
+                                </td>
+                                <td class="text-left">
                                     <t t-out="c.ccmc_candidate.roll_no" />
+                                </td>
+                                <t t-if="subject == 'CCMC'" >
+                                    <td class="text-left">
+                                        <a  t-attf-href="/open_cookery_bakery_form?rec_id={{ c.ccmc_candidate.id }}&amp;cookery_bakery={{ c.cookery_bakery.id }}&amp;assignment_id={{assignment_id}}">
+                                            Cookery Bakery Practical
+                                        </a> 
+                                    </td>
                                 </t>
-                                <t t-else="" >
-                                    <t t-out="c.gp_candidate.roll_no" />
+                                <t t-if="subject == 'CCMC'" >
+                                    <td class="text-left">
+                                        <a  t-attf-href="/open_ccmc_oral_form?rec_id={{ c.ccmc_candidate.id }}&amp;ccmc_oral={{ c.ccmc_oral.id }}&amp;assignment_id={{assignment_id}}">
+                                            CCMC Oral
+                                        </a> 
+                                    </td>
                                 </t>
-                            </td>
-                             <t t-if="subject == 'GSK'" >
-                                <td class="text-left">
-                                 <a  t-attf-href="/open_gsk_oral_form?rec_id={{ c.gp_candidate.id }}&amp;gsk_oral={{ c.gsk_oral.id }}&amp;assignment_id={{assignment_id}}">
-                                GSK Oral</a>                            
-                                </td>
-                             </t>
-                            <t t-if="subject == 'GSK'" >
-                                <td class="text-left">
-                                 <a  t-attf-href="/open_gsk_practical_form?rec_id={{ c.gp_candidate.id }}&amp;gsk_practical={{ c.gsk_prac.id }}&amp;assignment_id={{assignment_id}}">
-                                GSK Practical</a>
-                                </td>
-                             </t>
-                            <t t-if="subject == 'MEK'" >       
-                                <td class="text-left">
-                                    <a t-attf-href="/open_mek_oral_form?rec_id={{ c.gp_candidate.id }}&amp;mek_oral={{ c.mek_oral.id }}&amp;assignment_id={{assignment_id}}">
-                                    MEK Oral
-                                    </a> 
-                                    
-                                </td>
-                            </t>
-                            <t t-if="subject == 'MEK'" >
-                                <td class="text-left">
-                                    <a  t-attf-href="/open_practical_mek_form?rec_id={{ c.gp_candidate.id }}&amp;mek_practical={{ c.mek_prac.id }}&amp;assignment_id={{assignment_id}}">
-                                        MEK Practical
-                                    </a> 
-                                </td>
 
-                            </t>       
-                            <t t-if="subject == 'CCMC'" >
-                                <td class="text-left">
-                                    <a  t-attf-href="/open_cookery_bakery_form?rec_id={{ c.ccmc_candidate.id }}&amp;mek_practical={{ c.mek_prac.id }}&amp;assignment_id={{assignment_id}}">
-                                        CCMC
-                                    </a> 
-                                </td>
-                            </t>
+                            
 
-                           
-
-                        </tr>
+                            </tr>
+                        </t>
                     </t>
+                    <t t-else="">
+                        <t t-foreach="gp_oral_prac" t-as="c">
+                            <tr>
+                                <td class="text-left">
+                                    <t t-out="c.gp_candidate.name" readonly="1"/>
+                                </td>
+                                <td class="text-left">
+                                    <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
+                                </td>
+                                <td class="text-left">
+                                    <t t-out="c.gp_candidate.indos_no" readonly="1"/>
+                                </td>
+                                <td class="text-left">
+                                    <t t-out="c.gp_candidate.roll_no" />
+                                </td>
+                                <t t-if="subject == 'GSK'" >
+                                    <td class="text-left">
+                                    <a  t-attf-href="/open_gsk_oral_form?rec_id={{ c.gp_candidate.id }}&amp;gsk_oral={{ c.gsk_oral.id }}&amp;assignment_id={{assignment_id}}">
+                                    GSK Oral</a>                            
+                                    </td>
+                                </t>
+                                <t t-if="subject == 'GSK'" >
+                                    <td class="text-left">
+                                    <a  t-attf-href="/open_gsk_practical_form?rec_id={{ c.gp_candidate.id }}&amp;gsk_practical={{ c.gsk_prac.id }}&amp;assignment_id={{assignment_id}}">
+                                    GSK Practical</a>
+                                    </td>
+                                </t>
+                                <t t-if="subject == 'MEK'" >       
+                                    <td class="text-left">
+                                        <a t-attf-href="/open_mek_oral_form?rec_id={{ c.gp_candidate.id }}&amp;mek_oral={{ c.mek_oral.id }}&amp;assignment_id={{assignment_id}}">
+                                        MEK Oral
+                                        </a> 
+                                        
+                                    </td>
+                                </t>
+                                <t t-if="subject == 'MEK'" >
+                                    <td class="text-left">
+                                        <a  t-attf-href="/open_practical_mek_form?rec_id={{ c.gp_candidate.id }}&amp;mek_practical={{ c.mek_prac.id }}&amp;assignment_id={{assignment_id}}">
+                                            MEK Practical
+                                        </a> 
+                                    </td>
+
+                                </t>       
+                            </tr>
+                        </t>
+                    </t>
+                    
 
                 </tbody>
             </t>
