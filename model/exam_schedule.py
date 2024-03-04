@@ -539,19 +539,15 @@ class GPExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     rank = fields.Char("Rank",compute='_compute_rank')
     
-    institute_code = fields.Char("Institute code",compute="_compute_code_ins")
-    
-    @api.depends('gp_candidate')
-    def _compute_code_ins(self):
-        for record in self:
-            record.institute_code  = record.gp_candidate.institute_id.code
+    institute_code = fields.Char("Institute code")
+
 
     
     @api.depends('overall_percentage','gp_candidate')
     def _compute_rank(self):
         
         sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
-                                                             order='overall_percentage desc , institute_code asc')
+                                                             order='overall_percentage desc , institute_code asc ,gp_candidate asc')
         # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
