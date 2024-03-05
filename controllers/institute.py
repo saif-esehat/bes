@@ -1900,15 +1900,65 @@ class InstitutePortal(CustomerPortal):
 
         candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
         
+
+
+        state_cheatsheet = workbook.add_worksheet("States")
+        state_cheatsheet.write('A1','Code')
+        state_cheatsheet.write('B1','State')
+
+        state_values = {
+                'MH': 'Maharashtra',
+                'AP': 'Andhra Pradesh',
+                'AR': 'Arunachal Pradesh',
+                'AS': 'Assam',
+                'BR': 'Bihar',
+                'CT': 'Chhattisgarh',
+                'GA': 'Goa',
+                'GJ': 'Gujarat',
+                'HR': 'Haryana',
+                'HP': 'Himachal Pradesh',
+                'JH': 'Jharkhand',
+                'KA': 'Karnataka',
+                'KL': 'Kerala',
+                'MP': 'Madhya Pradesh',
+                'MN': 'Manipur',
+                'ML': 'Meghalaya',
+                'MZ': 'Mizoram',
+                'NL': 'Nagaland',
+                'OD': 'Odisha',
+                'PB': 'Punjab',
+                'RJ': 'Rajasthan',
+                'SK': 'Sikkim',
+                'TN': 'Tamil Nadu',
+                'TG': 'Telangana',
+                'TR': 'Tripura',
+                'UP': 'Uttar Pradesh',
+                'UT': 'Uttarakhand',
+                'WB': 'West Bengal',
+                'AN': 'Andaman and Nicobar Islands',
+                'CH': 'Chandigarh',
+                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                'LD': 'Lakshadweep',
+                'DL': 'Delhi',
+                'PY': 'Puducherry'
+            }
+        
+        row = 1
+        for state, code in state_values.items():
+            state_cheatsheet.write(row, 0, state)
+            state_cheatsheet.write(row, 1, code)
+            row += 1
+
+
+        state_cheatsheet.protect()
+        state_cheatsheet.write(1, None, None, {'locked': False})
+        state_cheatsheet.set_row(0, None, None)
       
         
 
         
         
         
-        # candidate_worksheet.protect()
-        # candidate_worksheet.write(1, None, None, {'locked': False})
-        # candidate_worksheet.set_row(0, None, None)
 
 
         workbook.close()
@@ -2021,11 +2071,86 @@ class InstitutePortal(CustomerPortal):
             email = row[10] 
 
             
-            xth_std_eng = float(row[11])  # Assuming %  Xth Std in Eng. is the tenth column
+            xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            if type(xth_std_eng) in [int, float]:
+                xth_std_eng = float(xth_std_eng)
+            elif type(xth_std_eng) == str:
+                if xth_std_eng.lower() == 'a+':
+                    xth_std_eng = 90
+                if xth_std_eng.lower() == 'a':
+                    xth_std_eng = 80
+                if xth_std_eng.lower() == 'b+':
+                    xth_std_eng = 70
+                if xth_std_eng.lower() == 'b':
+                    xth_std_eng = 60
+                if xth_std_eng.lower() == 'c+':
+                    xth_std_eng = 50
+                if xth_std_eng.lower() == 'c':
+                    xth_std_eng = 40
+                if xth_std_eng.lower() == 'd+':
+                    xth_std_eng = 30
+                if xth_std_eng.lower() == 'd':
+                    xth_std_eng = 20
+                if xth_std_eng.lower() == 'e':
+                    xth_std_eng = 10
+                else:
+                    xth_std_eng = 0
+            else:
+                raise ValidationError("Invalid marks/percentage")
 
-            twelfth_std_eng = float(row[12]) if row[12] else 0  # Assuming %12th Std in Eng. is the eleventh column
+            twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+            if type(twelfth_std_eng) in [int, float]:
+                twelfth_std_eng = float(twelfth_std_eng)
+            elif type(twelfth_std_eng) == str:
+                if twelfth_std_eng.lower() == 'a+':
+                    twelfth_std_eng = 90
+                if twelfth_std_eng.lower() == 'a':
+                    twelfth_std_eng = 80
+                if twelfth_std_eng.lower() == 'b+':
+                    twelfth_std_eng = 70
+                if twelfth_std_eng.lower() == 'b':
+                    twelfth_std_eng = 60
+                if twelfth_std_eng.lower() == 'c+':
+                    twelfth_std_eng = 50
+                if twelfth_std_eng.lower() == 'c':
+                    twelfth_std_eng = 40
+                if twelfth_std_eng.lower() == 'd+':
+                    twelfth_std_eng = 30
+                if twelfth_std_eng.lower() == 'd':
+                    twelfth_std_eng = 20
+                if twelfth_std_eng.lower() == 'e':
+                    twelfth_std_eng = 10
+                else:
+                    twelfth_std_eng = 0
+            else:
+                raise ValidationError("Invalid marks/percentage")
 
-            iti = float(row[13]) if row[13] else 0  # Assuming %ITI is the twelfth column
+            iti = row[13] # Assuming %ITI is the twelfth column
+            if type(iti) in [int, float]:
+                iti = float(iti)
+            elif type(iti) == str:
+                if iti.lower() == 'a+':
+                    iti = 90
+                if iti.lower() == 'a':
+                    iti = 80
+                if iti.lower() == 'b+':
+                    iti = 70
+                if iti.lower() == 'b':
+                    iti = 60
+                if iti.lower() == 'c+':
+                    iti = 50
+                if iti.lower() == 'c':
+                    iti = 40
+                if iti.lower() == 'd+':
+                    iti = 30
+                if iti.lower() == 'd':
+                    iti = 20
+                if iti.lower() == 'e':
+                    iti = 10
+                else:
+                    iti = 0
+            else:
+                raise ValidationError("Invalid marks/percentage")
 
             candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
@@ -2150,11 +2275,86 @@ class InstitutePortal(CustomerPortal):
             email = row[10] 
 
             
-            xth_std_eng = float(row[11])  # Assuming %  Xth Std in Eng. is the tenth column
+            xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            if type(xth_std_eng) in [int, float]:
+                xth_std_eng = float(xth_std_eng)
+            elif type(xth_std_eng) == str:
+                if xth_std_eng.lower() == 'a+':
+                    xth_std_eng = 90
+                if xth_std_eng.lower() == 'a':
+                    xth_std_eng = 80
+                if xth_std_eng.lower() == 'b+':
+                    xth_std_eng = 70
+                if xth_std_eng.lower() == 'b':
+                    xth_std_eng = 60
+                if xth_std_eng.lower() == 'c+':
+                    xth_std_eng = 50
+                if xth_std_eng.lower() == 'c':
+                    xth_std_eng = 40
+                if xth_std_eng.lower() == 'd+':
+                    xth_std_eng = 30
+                if xth_std_eng.lower() == 'd':
+                    xth_std_eng = 20
+                if xth_std_eng.lower() == 'e':
+                    xth_std_eng = 10
+                else:
+                    xth_std_eng = 0
+            else:
+                raise ValidationError("Invalid marks/percentage")
 
-            twelfth_std_eng = float(row[12]) if row[12] else 0  # Assuming %12th Std in Eng. is the eleventh column
+            twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+            if type(twelfth_std_eng) in [int, float]:
+                twelfth_std_eng = float(twelfth_std_eng)
+            elif type(twelfth_std_eng) == str:
+                if twelfth_std_eng.lower() == 'a+':
+                    twelfth_std_eng = 90
+                if twelfth_std_eng.lower() == 'a':
+                    twelfth_std_eng = 80
+                if twelfth_std_eng.lower() == 'b+':
+                    twelfth_std_eng = 70
+                if twelfth_std_eng.lower() == 'b':
+                    twelfth_std_eng = 60
+                if twelfth_std_eng.lower() == 'c+':
+                    twelfth_std_eng = 50
+                if twelfth_std_eng.lower() == 'c':
+                    twelfth_std_eng = 40
+                if twelfth_std_eng.lower() == 'd+':
+                    twelfth_std_eng = 30
+                if twelfth_std_eng.lower() == 'd':
+                    twelfth_std_eng = 20
+                if twelfth_std_eng.lower() == 'e':
+                    twelfth_std_eng = 10
+                else:
+                    twelfth_std_eng = 0
+            else:
+                raise ValidationError("Invalid marks/percentage")
 
-            iti = float(row[13]) if row[13] else 0  # Assuming %ITI is the twelfth column
+            iti = row[13] # Assuming %ITI is the twelfth column
+            if type(iti) in [int, float]:
+                iti = float(iti)
+            elif type(iti) == str:
+                if iti.lower() == 'a+':
+                    iti = 90
+                if iti.lower() == 'a':
+                    iti = 80
+                if iti.lower() == 'b+':
+                    iti = 70
+                if iti.lower() == 'b':
+                    iti = 60
+                if iti.lower() == 'c+':
+                    iti = 50
+                if iti.lower() == 'c':
+                    iti = 40
+                if iti.lower() == 'd+':
+                    iti = 30
+                if iti.lower() == 'd':
+                    iti = 20
+                if iti.lower() == 'e':
+                    iti = 10
+                else:
+                    iti = 0
+            else:
+                raise ValidationError("Invalid marks/percentage")
 
             candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
