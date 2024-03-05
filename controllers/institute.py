@@ -2092,7 +2092,7 @@ class InstitutePortal(CustomerPortal):
                 if xth_std_eng.lower() == 'd':
                     xth_std_eng = 20
                 if xth_std_eng.lower() == 'e':
-                    xth_std_eng = 10
+                    xth_std_eng = 19
                 else:
                     xth_std_eng = 0
             else:
@@ -2119,7 +2119,7 @@ class InstitutePortal(CustomerPortal):
                 if twelfth_std_eng.lower() == 'd':
                     twelfth_std_eng = 20
                 if twelfth_std_eng.lower() == 'e':
-                    twelfth_std_eng = 10
+                    twelfth_std_eng = 19
                 else:
                     twelfth_std_eng = 0
             else:
@@ -2146,7 +2146,7 @@ class InstitutePortal(CustomerPortal):
                 if iti.lower() == 'd':
                     iti = 20
                 if iti.lower() == 'e':
-                    iti = 10
+                    iti = 19
                 else:
                     iti = 0
             else:
@@ -2296,7 +2296,7 @@ class InstitutePortal(CustomerPortal):
                 if xth_std_eng.lower() == 'd':
                     xth_std_eng = 20
                 if xth_std_eng.lower() == 'e':
-                    xth_std_eng = 10
+                    xth_std_eng = 19
                 else:
                     xth_std_eng = 0
             else:
@@ -2323,7 +2323,7 @@ class InstitutePortal(CustomerPortal):
                 if twelfth_std_eng.lower() == 'd':
                     twelfth_std_eng = 20
                 if twelfth_std_eng.lower() == 'e':
-                    twelfth_std_eng = 10
+                    twelfth_std_eng = 19
                 else:
                     twelfth_std_eng = 0
             else:
@@ -2350,7 +2350,7 @@ class InstitutePortal(CustomerPortal):
                 if iti.lower() == 'd':
                     iti = 20
                 if iti.lower() == 'e':
-                    iti = 10
+                    iti = 19
                 else:
                     iti = 0
             else:

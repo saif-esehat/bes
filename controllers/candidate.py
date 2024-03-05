@@ -141,4 +141,33 @@ class GPCandidatePortal(CustomerPortal):
         # print(pdf ,"Tbis is PDF")
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+    
+
+
+    @http.route(['/my/gpexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadCertificateGP(self,exam_id,**kw ):
+        # import wdb; wdb.set_trace()
+        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        print("INSIDE DOWNLOAD Certificate")
+        report_action = request.env.ref('bes.report_gp_certificate')
+        # certificate_available = request.env['gp.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
+
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
+        # print(pdf ,"Tbis is PDF")
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+    
+
+    @http.route(['/my/ccmcexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadCertificateCCMC(self,exam_id,**kw ):
+        # import wdb; wdb.set_trace()
+        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        print("INSIDE DOWNLOAD Certificate")
+        report_action = request.env.ref('bes.report_ccmc_certificate')
+        # certificate_available = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
+
+        pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
+        # print(pdf ,"Tbis is PDF")
+        pdfhttpheaders = [('Content-Type', 'application/pdf'),('Content-Disposition', 'attachment; filename="Certificate.pdf"'), ('Content-Length', u'%s' % len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)
             
