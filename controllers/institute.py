@@ -1807,13 +1807,8 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
 
-        state_values = ['Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-                        'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
-                        'Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland',
-                        'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana',
-                        'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-                        'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
-                        'Lakshadweep', 'Delhi', 'Puducherry']
+        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+
 
         # Add data validation for SC/ST column
         candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
