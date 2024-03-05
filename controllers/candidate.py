@@ -20,7 +20,9 @@ class GPCandidatePortal(CustomerPortal):
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
             # import wdb; wdb.set_trace(); 
-            vals = {"registered_exams":registered_exams,"candidate":registered_exams.gp_candidate}
+            show_certificate = candidate.certificate_criteria == 'passed' or False
+            show_admit_card = candidate.state == '1-in_process'
+            vals = {"registered_exams":registered_exams,"candidate":registered_exams.gp_candidate,"show_certificate":show_certificate,'show_admit_card':show_admit_card}
             return request.render("bes.gp_exam_candidate", vals)
         else:
 
@@ -44,7 +46,9 @@ class GPCandidatePortal(CustomerPortal):
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
             # import wdb; wdb.set_trace(); 
-            vals = {"registered_exams":registered_exams,"candidate":registered_exams.ccmc_candidate}
+            show_certificate = candidate.certificate_criteria == 'passed' or False
+            show_admit_card = candidate.state == '1-in_process'
+            vals = {"registered_exams":registered_exams,"candidate":registered_exams.ccmc_candidate,"show_certificate":show_certificate,'show_admit_card':show_admit_card}
             return request.render("bes.ccmc_exam_candidate", vals)
         else:
 
