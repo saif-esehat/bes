@@ -1807,9 +1807,15 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
 
+        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+
+
         # Add data validation for SC/ST column
         candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
                                                 'source': dropdown_values })
+        
+        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list',
+                                        'source': state_values })
         
 
         
@@ -1880,10 +1886,21 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('C:C', None, date_format)
 
         dropdown_values = ['Yes', 'No']
+        # import wdb; wdb.set_trace()
+
+
+        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+
+        state_values2 = ['Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
         # Add data validation for SC/ST column
         candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
                                                 'source': dropdown_values })
+        
+
+        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        
+      
         
 
         
@@ -1946,12 +1963,61 @@ class InstitutePortal(CustomerPortal):
             dist_city = row[5]  # Assuming Dist./City is the fifth column
 
             pin_code = int(row[6])  # Assuming Pin code is the seventh column
-            state_short = row[7]  # Assuming State (short) is the sixth column
-            state = request.env['res.country.state'].sudo().search(
-                [('country_id.code', '=', 'IN'), ('code', '=', state_short)]).id if state_short else False
+            state_value = row[7]  # Assuming State (short) is the sixth column
 
-            phone = int(row[8])
-            mobile = int(row[9]) 
+
+            state_values = {
+                'MH': 'Maharashtra',
+                'AP': 'Andhra Pradesh',
+                'AR': 'Arunachal Pradesh',
+                'AS': 'Assam',
+                'BR': 'Bihar',
+                'CT': 'Chhattisgarh',
+                'GA': 'Goa',
+                'GJ': 'Gujarat',
+                'HR': 'Haryana',
+                'HP': 'Himachal Pradesh',
+                'JH': 'Jharkhand',
+                'KA': 'Karnataka',
+                'KL': 'Kerala',
+                'MP': 'Madhya Pradesh',
+                'MN': 'Manipur',
+                'ML': 'Meghalaya',
+                'MZ': 'Mizoram',
+                'NL': 'Nagaland',
+                'OD': 'Odisha',
+                'PB': 'Punjab',
+                'RJ': 'Rajasthan',
+                'SK': 'Sikkim',
+                'TN': 'Tamil Nadu',
+                'TG': 'Telangana',
+                'TR': 'Tripura',
+                'UP': 'Uttar Pradesh',
+                'UT': 'Uttarakhand',
+                'WB': 'West Bengal',
+                'AN': 'Andaman and Nicobar Islands',
+                'CH': 'Chandigarh',
+                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                'LD': 'Lakshadweep',
+                'DL': 'Delhi',
+                'PY': 'Puducherry'
+            }
+
+            # state = False
+            # for code, name in state_values.items():
+            #     if name.lower() == state_value.lower():
+            #         state = code
+            #     else:
+            #         state = False
+
+            # print("Stateeeeee",state)
+                    
+            
+            state = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
+
+            phone = str(row[8])
+            mobile = str(row[9]) 
             email = row[10] 
 
             
@@ -2025,12 +2091,62 @@ class InstitutePortal(CustomerPortal):
             dist_city = row[5]  # Assuming Dist./City is the fifth column
 
             pin_code = int(row[6])  # Assuming Pin code is the seventh column
-            state_short = row[7]  # Assuming State (short) is the sixth column
-            state = request.env['res.country.state'].sudo().search(
-                [('country_id.code', '=', 'IN'), ('code', '=', state_short)]).id if state_short else False
+            state_value = row[7]  # Assuming State (short) is the sixth column
 
-            phone = int(row[8])
-            mobile = int(row[9]) 
+
+            state_values = {
+                'MH': 'Maharashtra',
+                'AP': 'Andhra Pradesh',
+                'AR': 'Arunachal Pradesh',
+                'AS': 'Assam',
+                'BR': 'Bihar',
+                'CT': 'Chhattisgarh',
+                'GA': 'Goa',
+                'GJ': 'Gujarat',
+                'HR': 'Haryana',
+                'HP': 'Himachal Pradesh',
+                'JH': 'Jharkhand',
+                'KA': 'Karnataka',
+                'KL': 'Kerala',
+                'MP': 'Madhya Pradesh',
+                'MN': 'Manipur',
+                'ML': 'Meghalaya',
+                'MZ': 'Mizoram',
+                'NL': 'Nagaland',
+                'OD': 'Odisha',
+                'PB': 'Punjab',
+                'RJ': 'Rajasthan',
+                'SK': 'Sikkim',
+                'TN': 'Tamil Nadu',
+                'TG': 'Telangana',
+                'TR': 'Tripura',
+                'UP': 'Uttar Pradesh',
+                'UT': 'Uttarakhand',
+                'WB': 'West Bengal',
+                'AN': 'Andaman and Nicobar Islands',
+                'CH': 'Chandigarh',
+                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                'LD': 'Lakshadweep',
+                'DL': 'Delhi',
+                'PY': 'Puducherry'
+            }
+
+            # state = False
+            # for code, name in state_values.items():
+            #     if name.lower() == state_value.lower():
+            #         state = code
+            #     else:
+            #         state = False
+
+            # print("Stateeeeee",state)
+                    
+            
+            state = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
+            
+
+            phone = str(row[8])
+            mobile = str(row[9]) 
             email = row[10] 
 
             
