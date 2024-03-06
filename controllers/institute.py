@@ -2062,7 +2062,7 @@ class InstitutePortal(CustomerPortal):
 
             # print("Stateeeeee",state)
                     
-            
+            data_xth_std_eng = 0
             state = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
@@ -2072,29 +2072,34 @@ class InstitutePortal(CustomerPortal):
 
             
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            # import wdb; wdb.set_trace()
+            
             if type(xth_std_eng) in [int, float]:
                 xth_std_eng = float(xth_std_eng)
             elif type(xth_std_eng) == str:
+              
                 if xth_std_eng.lower() == 'a+':
-                    xth_std_eng = 90
+                    data_xth_std_eng = 90
                 if xth_std_eng.lower() == 'a':
-                    xth_std_eng = 80
+                    data_xth_std_eng = 80
                 if xth_std_eng.lower() == 'b+':
-                    xth_std_eng = 70
+                    data_xth_std_eng = 70
                 if xth_std_eng.lower() == 'b':
-                    xth_std_eng = 60
+                    data_xth_std_eng = 60
+                
                 if xth_std_eng.lower() == 'c+':
-                    xth_std_eng = 50
+                    data_xth_std_eng = 50
+                
                 if xth_std_eng.lower() == 'c':
-                    xth_std_eng = 40
+                    data_xth_std_eng = 40
                 if xth_std_eng.lower() == 'd+':
-                    xth_std_eng = 30
+                    data_xth_std_eng = 30
                 if xth_std_eng.lower() == 'd':
-                    xth_std_eng = 20
+                    data_xth_std_eng = 20
                 if xth_std_eng.lower() == 'e':
-                    xth_std_eng = 19
+                    data_xth_std_eng = 19
                 else:
-                    xth_std_eng = 0
+                    data_xth_std_eng = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
@@ -2171,7 +2176,7 @@ class InstitutePortal(CustomerPortal):
                 'city': dist_city,
                 'state_id': state,
                 'zip': pin_code,
-                'tenth_percent': xth_std_eng,
+                'tenth_percent': data_xth_std_eng,
                 'twelve_percent': twelfth_std_eng,
                 'iti_percent': iti,
                 'sc_st': candidate_st
