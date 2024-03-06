@@ -2127,7 +2127,7 @@ class InstitutePortal(CustomerPortal):
             if type(xth_std_eng) in [int, float]:
                 data_xth_std_eng = float(xth_std_eng)
             # import wdb; wdb.set_trace()
-            if type(xth_std_eng) == str:
+            elif type(xth_std_eng) == str:
                 
                 if xth_std_eng.lower() == 'a+':
                     data_xth_std_eng = 90
@@ -2148,13 +2148,14 @@ class InstitutePortal(CustomerPortal):
                 if xth_std_eng.lower() == 'e':
                     data_xth_std_eng = 19
                
-                else:
-                    raise ValidationError("Invalid marks/percentage")
+            else:
+                # import wdb; wdb.set_trace()
+                raise ValidationError("Invalid marks/percentage")
 
             twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
             if type(twelfth_std_eng) in [int, float]:
                 data_twelfth_std_eng = float(twelfth_std_eng)
-            if type(twelfth_std_eng) == str:
+            elif type(twelfth_std_eng) == str:
                 if twelfth_std_eng.lower() == 'a+':
                     data_twelfth_std_eng = 90
                 if twelfth_std_eng.lower() == 'a':
@@ -2181,7 +2182,7 @@ class InstitutePortal(CustomerPortal):
             iti = row[13] # Assuming %ITI is the twelfth column
             if type(iti) in [int, float]:
                 data_iti = float(iti)
-            if type(iti) == str:
+            elif type(iti) == str:
                 if iti.lower() == 'a+':
                     data_iti = 90
                 if iti.lower() == 'a':
