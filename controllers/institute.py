@@ -2062,7 +2062,9 @@ class InstitutePortal(CustomerPortal):
 
             # print("Stateeeeee",state)
                     
-            
+            data_xth_std_eng = 0
+            data_twelfth_std_eng = 0
+            data_iti = 0
             state = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
@@ -2073,82 +2075,82 @@ class InstitutePortal(CustomerPortal):
             
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
             if type(xth_std_eng) in [int, float]:
-                xth_std_eng = float(xth_std_eng)
-            elif type(xth_std_eng) == str:
+                data_xth_std_eng = float(xth_std_eng)
+            if type(xth_std_eng) == str:
                 if xth_std_eng.lower() == 'a+':
-                    xth_std_eng = 90
+                    data_xth_std_eng = 90
                 if xth_std_eng.lower() == 'a':
-                    xth_std_eng = 80
+                    data_xth_std_eng = 80
                 if xth_std_eng.lower() == 'b+':
-                    xth_std_eng = 70
+                    data_xth_std_eng = 70
                 if xth_std_eng.lower() == 'b':
-                    xth_std_eng = 60
+                    data_xth_std_eng = 60
                 if xth_std_eng.lower() == 'c+':
-                    xth_std_eng = 50
+                    data_xth_std_eng = 50
                 if xth_std_eng.lower() == 'c':
-                    xth_std_eng = 40
+                    data_xth_std_eng = 40
                 if xth_std_eng.lower() == 'd+':
-                    xth_std_eng = 30
+                    data_xth_std_eng = 30
                 if xth_std_eng.lower() == 'd':
-                    xth_std_eng = 20
+                    data_xth_std_eng = 20
                 if xth_std_eng.lower() == 'e':
-                    xth_std_eng = 19
+                    data_xth_std_eng = 19
                 else:
-                    xth_std_eng = 0
+                    data_xth_std_eng = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
             twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
             if type(twelfth_std_eng) in [int, float]:
-                twelfth_std_eng = float(twelfth_std_eng)
-            elif type(twelfth_std_eng) == str:
+                data_twelfth_std_eng = float(twelfth_std_eng)
+            if type(twelfth_std_eng) == str:
                 if twelfth_std_eng.lower() == 'a+':
-                    twelfth_std_eng = 90
+                    data_twelfth_std_eng = 90
                 if twelfth_std_eng.lower() == 'a':
-                    twelfth_std_eng = 80
+                    data_twelfth_std_eng = 80
                 if twelfth_std_eng.lower() == 'b+':
-                    twelfth_std_eng = 70
+                    data_twelfth_std_eng = 70
                 if twelfth_std_eng.lower() == 'b':
-                    twelfth_std_eng = 60
+                    data_twelfth_std_eng = 60
                 if twelfth_std_eng.lower() == 'c+':
-                    twelfth_std_eng = 50
+                    data_twelfth_std_eng = 50
                 if twelfth_std_eng.lower() == 'c':
-                    twelfth_std_eng = 40
+                    data_twelfth_std_eng = 40
                 if twelfth_std_eng.lower() == 'd+':
-                    twelfth_std_eng = 30
+                    data_twelfth_std_eng = 30
                 if twelfth_std_eng.lower() == 'd':
-                    twelfth_std_eng = 20
+                    data_twelfth_std_eng = 20
                 if twelfth_std_eng.lower() == 'e':
-                    twelfth_std_eng = 19
+                    data_twelfth_std_eng = 19
                 else:
-                    twelfth_std_eng = 0
+                    data_twelfth_std_eng = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
             iti = row[13] # Assuming %ITI is the twelfth column
             if type(iti) in [int, float]:
-                iti = float(iti)
-            elif type(iti) == str:
+                data_iti = float(iti)
+            if type(iti) == str:
                 if iti.lower() == 'a+':
-                    iti = 90
+                    data_iti = 90
                 if iti.lower() == 'a':
-                    iti = 80
+                    data_iti = 80
                 if iti.lower() == 'b+':
-                    iti = 70
+                    data_iti = 70
                 if iti.lower() == 'b':
-                    iti = 60
+                    data_iti = 60
                 if iti.lower() == 'c+':
-                    iti = 50
+                    data_iti = 50
                 if iti.lower() == 'c':
-                    iti = 40
+                    data_iti = 40
                 if iti.lower() == 'd+':
-                    iti = 30
+                    data_iti = 30
                 if iti.lower() == 'd':
-                    iti = 20
+                    data_iti = 20
                 if iti.lower() == 'e':
-                    iti = 19
+                    data_iti = 19
                 else:
-                    iti = 0
+                    data_iti = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
@@ -2171,9 +2173,9 @@ class InstitutePortal(CustomerPortal):
                 'city': dist_city,
                 'state_id': state,
                 'zip': pin_code,
-                'tenth_percent': xth_std_eng,
-                'twelve_percent': twelfth_std_eng,
-                'iti_percent': iti,
+                'tenth_percent': data_xth_std_eng,
+                'twelve_percent': data_twelfth_std_eng,
+                'iti_percent': data_iti,
                 'sc_st': candidate_st
             })
 
@@ -2265,7 +2267,10 @@ class InstitutePortal(CustomerPortal):
 
             # print("Stateeeeee",state)
                     
-            
+            data_xth_std_eng = 0
+            data_twelfth_std_eng = 0
+            data_iti = 0
+
             state = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
             
@@ -2277,82 +2282,82 @@ class InstitutePortal(CustomerPortal):
             
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
             if type(xth_std_eng) in [int, float]:
-                xth_std_eng = float(xth_std_eng)
-            elif type(xth_std_eng) == str:
+                data_xth_std_eng = float(xth_std_eng)
+            if type(xth_std_eng) == str:
                 if xth_std_eng.lower() == 'a+':
-                    xth_std_eng = 90
+                    data_xth_std_eng = 90
                 if xth_std_eng.lower() == 'a':
-                    xth_std_eng = 80
+                    data_xth_std_eng = 80
                 if xth_std_eng.lower() == 'b+':
-                    xth_std_eng = 70
+                    data_xth_std_eng = 70
                 if xth_std_eng.lower() == 'b':
-                    xth_std_eng = 60
+                    data_xth_std_eng = 60
                 if xth_std_eng.lower() == 'c+':
-                    xth_std_eng = 50
+                    data_xth_std_eng = 50
                 if xth_std_eng.lower() == 'c':
-                    xth_std_eng = 40
+                    data_xth_std_eng = 40
                 if xth_std_eng.lower() == 'd+':
-                    xth_std_eng = 30
+                    data_xth_std_eng = 30
                 if xth_std_eng.lower() == 'd':
-                    xth_std_eng = 20
+                    data_xth_std_eng = 20
                 if xth_std_eng.lower() == 'e':
-                    xth_std_eng = 19
+                    data_xth_std_eng = 19
                 else:
-                    xth_std_eng = 0
+                    data_xth_std_eng = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
             twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
             if type(twelfth_std_eng) in [int, float]:
-                twelfth_std_eng = float(twelfth_std_eng)
-            elif type(twelfth_std_eng) == str:
+                data_twelfth_std_eng = float(twelfth_std_eng)
+            if type(twelfth_std_eng) == str:
                 if twelfth_std_eng.lower() == 'a+':
-                    twelfth_std_eng = 90
+                    data_twelfth_std_eng = 90
                 if twelfth_std_eng.lower() == 'a':
-                    twelfth_std_eng = 80
+                    data_twelfth_std_eng = 80
                 if twelfth_std_eng.lower() == 'b+':
-                    twelfth_std_eng = 70
+                    data_twelfth_std_eng = 70
                 if twelfth_std_eng.lower() == 'b':
-                    twelfth_std_eng = 60
+                    data_twelfth_std_eng = 60
                 if twelfth_std_eng.lower() == 'c+':
-                    twelfth_std_eng = 50
+                    data_twelfth_std_eng = 50
                 if twelfth_std_eng.lower() == 'c':
-                    twelfth_std_eng = 40
+                    data_twelfth_std_eng = 40
                 if twelfth_std_eng.lower() == 'd+':
-                    twelfth_std_eng = 30
+                    data_twelfth_std_eng = 30
                 if twelfth_std_eng.lower() == 'd':
-                    twelfth_std_eng = 20
+                    data_twelfth_std_eng = 20
                 if twelfth_std_eng.lower() == 'e':
-                    twelfth_std_eng = 19
+                    data_twelfth_std_eng = 19
                 else:
-                    twelfth_std_eng = 0
+                    data_twelfth_std_eng = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
             iti = row[13] # Assuming %ITI is the twelfth column
             if type(iti) in [int, float]:
-                iti = float(iti)
-            elif type(iti) == str:
+                data_iti = float(iti)
+            if type(iti) == str:
                 if iti.lower() == 'a+':
-                    iti = 90
+                    data_iti = 90
                 if iti.lower() == 'a':
-                    iti = 80
+                    data_iti = 80
                 if iti.lower() == 'b+':
-                    iti = 70
+                    data_iti = 70
                 if iti.lower() == 'b':
-                    iti = 60
+                    data_iti = 60
                 if iti.lower() == 'c+':
-                    iti = 50
+                    data_iti = 50
                 if iti.lower() == 'c':
-                    iti = 40
+                    data_iti = 40
                 if iti.lower() == 'd+':
-                    iti = 30
+                    data_iti = 30
                 if iti.lower() == 'd':
-                    iti = 20
+                    data_iti = 20
                 if iti.lower() == 'e':
-                    iti = 19
+                    data_iti = 19
                 else:
-                    iti = 0
+                    data_iti = 0
             else:
                 raise ValidationError("Invalid marks/percentage")
 
@@ -2375,9 +2380,9 @@ class InstitutePortal(CustomerPortal):
                 'city': dist_city,
                 'state_id': state,
                 'zip': pin_code,
-                'tenth_percent': xth_std_eng,
-                'twelve_percent': twelfth_std_eng,
-                'iti_percent': iti,
+                'tenth_percent': data_xth_std_eng,
+                'twelve_percent': data_twelfth_std_eng,
+                'iti_percent': data_iti,
                 'sc_st': candidate_st
             })
 
