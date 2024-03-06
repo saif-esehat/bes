@@ -2074,11 +2074,13 @@ class InstitutePortal(CustomerPortal):
 
             
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
-            # import wdb; wdb.set_trace()
+            
             
             if type(xth_std_eng) in [int, float]:
                 data_xth_std_eng = float(xth_std_eng)
+            # import wdb; wdb.set_trace()
             if type(xth_std_eng) == str:
+                
                 if xth_std_eng.lower() == 'a+':
                     data_xth_std_eng = 90
                 if xth_std_eng.lower() == 'a':
@@ -2097,10 +2099,9 @@ class InstitutePortal(CustomerPortal):
                     data_xth_std_eng = 20
                 if xth_std_eng.lower() == 'e':
                     data_xth_std_eng = 19
+               
                 else:
-                    data_xth_std_eng = 0
-            else:
-                raise ValidationError("Invalid marks/percentage")
+                    raise ValidationError("Invalid marks/percentage")
 
             twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
             if type(twelfth_std_eng) in [int, float]:
