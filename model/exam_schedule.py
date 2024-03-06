@@ -541,13 +541,21 @@ class GPExam(models.Model):
     
     institute_code = fields.Char("Institute code")
 
+    
+    
 
     
     @api.depends('overall_percentage','gp_candidate')
     def _compute_rank(self):
+<<<<<<< HEAD
         
         sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
                                                              order='overall_percentage desc , institute_code asc, gp_candidate asc')
+=======
+        for rec in self:
+            sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+                                                             order='overall_percentage desc , institute_code asc')
+>>>>>>> f05def4f86b08d8d6fd644cc268d9d5fa9d07ea2
         # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
@@ -1059,7 +1067,7 @@ class CCMCExam(models.Model):
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Certificate Criteria')
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
@@ -1083,6 +1091,14 @@ class CCMCExam(models.Model):
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
+
+    @api.depends('exam_criteria','stcw_criteria','attendance_criteria','ship_visit_criteria')
+    def compute_pending_certificate_criteria(self):
+        for record in self:
+            if record.exam_criteria == record.stcw_criteria == record.attendance_criteria == record.ship_visit_criteria == 'passed':
+                record.certificate_criteria = 'passed'
+            else:
+                record.certificate_criteria = 'pending'
     
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
