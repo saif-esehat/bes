@@ -547,7 +547,7 @@ class GPExam(models.Model):
     def _compute_rank(self):
         
         sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
-                                                             order='overall_percentage desc , institute_code asc')
+                                                             order='overall_percentage desc , institute_code asc, gp_candidate asc')
         # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
@@ -987,9 +987,7 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
-    
-    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-    #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
+
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
@@ -999,7 +997,7 @@ class CCMCExam(models.Model):
     
     cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
-    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True)
+    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True,digits=(16,2))
     overall_marks = fields.Float("Overall Marks",readonly=True)
     overall_percentage = fields.Float("Overall Percentage",readonly=True)
     cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True)
