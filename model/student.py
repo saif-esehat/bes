@@ -125,6 +125,9 @@ class GPCandidate(models.Model):
                 
         last_exam_record = self.env['gp.exam.schedule'].search([('gp_candidate','=',self.id)], order='attempt_number desc', limit=1)
         
+        current_dgs_batch  = self.env['dgs.batches'].search([('is_current_batch', '=', True)]).id
+
+        
         if len(last_exam_record) <= 0:
             raise ValidationError("No previous Exam Found . This Candidate Must be registered through batches")
         
@@ -159,6 +162,7 @@ class GPCandidate(models.Model):
             "default_mek_online_status": last_exam_record.mek_online_status,
             "default_gsk_online_status":last_exam_record.gsk_online_status,
             "default_exam_month" : self.detect_current_month(),
+            "default_dgs_batch" : current_dgs_batch,
             "default_institute_ids" : institute_ids
             }
         }
@@ -1277,12 +1281,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
     
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
-
-
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True)
     
     
     previous_attempt =  fields.Integer("Previous Attempt No.")
+    deffereds =  fields.Boolean("Deffered")
     # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
 
     
@@ -1328,7 +1332,11 @@ class CandidateRegisterExamWizard(models.TransientModel):
     
     def register_exam(self):
         
-        gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':self.candidate_id.id})
+        dgs_exam = self.dgs_batch.id
+        
+        exam_id = self.candidate_id.roll_no+"R"+str(self.previous_attempt)
+        
+        gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':self.candidate_id.id , "dgs_batch": dgs_exam  , "exam_id":exam_id })
 
         
         if self.gsk_oral_prac_status == 'failed':
