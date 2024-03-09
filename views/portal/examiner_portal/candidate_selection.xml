@@ -2,16 +2,32 @@
 
     <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <t t-if="page_name == 'ccmc_oral'">
+            <t t-if="page_name == 'my_assignment'">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/open_ccmc_candidate_form">CCMC Candidates</a>
+                    <a t-attf-href="/my/assignments">Exam Assignments</a>
+                </li>
+            </t>
+            <t t-if="page_name == 'ccmc_assignment'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Exam Assignments</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <t t-out="ccmc_assignment.assignment_id.institute_id.name"/>
+                </li>
+            </t>
+            <t t-if="page_name == 'cooker_bakery_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/open_ccmc_candidate_form?{{rec_id}}">
+                        listttt
+                        <!-- <t t-out="ccmc_assignment.assignment_id.institute_id.name"/> -->
+                    </a>
                 </li>
                 <!-- <li class="breadcrumb-item">
-                    <t t-out="ccmc_assignment"/>
                 </li> -->
             </t>
         </xpath>
     </template>
+
 
     <template id="examiner_candidate_list" name="Candidates">
         <script>
@@ -1375,13 +1391,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk">GSK</label>
-                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" />
+                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_oral.gsk_ccmc" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="safety_ccmc">Safety</label>
-                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" />
+                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_oral.safety_ccmc"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
