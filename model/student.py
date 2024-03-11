@@ -754,7 +754,7 @@ class CookeryBakeryLine(models.Model):
     _description = 'Cookery and Bakery Line'
 
     cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
-    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute")
     exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id")
     # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
     exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True)

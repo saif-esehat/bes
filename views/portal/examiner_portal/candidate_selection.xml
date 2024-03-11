@@ -2,16 +2,32 @@
 
     <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <t t-if="page_name == 'ccmc_oral'">
+            <t t-if="page_name == 'my_assignment'">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/open_ccmc_candidate_form">CCMC Candidates</a>
+                    <a t-attf-href="/my/assignments">Exam Assignments</a>
+                </li>
+            </t>
+            <t t-if="page_name == 'ccmc_assignment'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Exam Assignments</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <t t-out="ccmc_assignment.assignment_id.institute_id.name"/>
+                </li>
+            </t>
+            <t t-if="page_name == 'cooker_bakery_form'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/open_ccmc_candidate_form?{{rec_id}}">
+                        listttt
+                        <!-- <t t-out="ccmc_assignment.assignment_id.institute_id.name"/> -->
+                    </a>
                 </li>
                 <!-- <li class="breadcrumb-item">
-                    <t t-out="ccmc_assignment"/>
                 </li> -->
             </t>
         </xpath>
     </template>
+
 
     <template id="examiner_candidate_list" name="Candidates">
         <script>
@@ -1122,13 +1138,14 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="hygiene_grooming">Hygiene and Grooming</label>
-                                        <input type="number" class="form-control" id="hygiene_grooming" name="hygiene_grooming" />
+                                        <input type="number" min="0" max="10" class="form-control" id="hygiene_grooming" name="hygiene_grooming" t-att-value="cookery_bakery.hygien_grooming" />
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
-                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                    <input type="date" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
                                 </div>
                            
@@ -1139,19 +1156,22 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="appearance_dish1">Appearance</label>
-                                        <input type="number" class="form-control" id="appearance_dish1" name="appearance_dish1" />
+                                        <input type="number" min="0" max="10" class="form-control" id="appearance_dish1" name="appearance_dish1"  t-att-value="cookery_bakery.appearance"/>
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="taste_dish1">Taste</label>
-                                        <input type="number" class="form-control" id="taste_dish1" name="taste_dish1" />
+                                        <input type="number" min="0" max="10" class="form-control" id="taste_dish1" name="taste_dish1"  t-att-value="cookery_bakery.taste"/>
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="texture_dish1">Texture</label>
-                                        <input type="number" class="form-control" id="texture_dish1" name="texture_dish1" />
+                                        <input type="number" min="0" max="9" class="form-control" id="texture_dish1" name="texture_dish1"  t-att-value="cookery_bakery.texture"/>
+                                        /9
                                     </div>
                                 </div>
                             </div>
@@ -1162,19 +1182,22 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="appearance_dish2">Appearance</label>
-                                        <input type="number" class="form-control" id="appearance_dish2" name="appearance_dish2" />
+                                        <input type="number" min="0" max="10" class="form-control" id="appearance_dish2" name="appearance_dish2"  t-att-value="cookery_bakery.appearance_2"/>
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="taste_dish2">Taste</label>
-                                        <input type="number" class="form-control" id="taste_dish2" name="taste_dish2" />
+                                        <input type="number" min="0" max="10" class="form-control" id="taste_dish2" name="taste_dish2"  t-att-value="cookery_bakery.taste_2" />
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="texture_dish2">Texture</label>
-                                        <input type="number" class="form-control" id="texture_dish2" name="texture_dish2" />
+                                        <input type="number" min="0" max="9" class="form-control" id="texture_dish2" name="texture_dish2"  t-att-value="cookery_bakery.texture_2" />
+                                        /9
                                     </div>
                                 </div>
                             </div>
@@ -1185,19 +1208,22 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="appearance_dish3">Appearance</label>
-                                        <input type="number" class="form-control" id="appearance_dish3" name="appearance_dish3" />
+                                        <input type="number" min="0" max="5" class="form-control" id="appearance_dish3" name="appearance_dish3"  t-att-value="cookery_bakery.appearance_3" />
+                                        /5
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="taste_dish3">Taste</label>
-                                        <input type="number" class="form-control" id="taste_dish3" name="taste_dish3" />
+                                        <input type="number" min="0" max="5" class="form-control" id="taste_dish3" name="taste_dish3"  t-att-value="cookery_bakery.taste_3" />
+                                        /5
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="texture_dish3">Texture</label>
-                                        <input type="number" class="form-control" id="texture_dish3" name="texture_dish3" />
+                                        <input type="number" min="0" max="5" class="form-control" id="texture_dish3" name="texture_dish3"  t-att-value="cookery_bakery.texture_3" />
+                                        /5
                                     </div>
                                 </div>
                             </div>
@@ -1208,13 +1234,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="identification_of_ingredients">Identification of Ingredients</label>
-                                        <input type="number" class="form-control" id="identification_of_ingredients" name="identification_of_ingredients" />
+                                        <input type="number" min="0" max="9" class="form-control" id="identification_of_ingredients" name="identification_of_ingredients"  t-att-value="cookery_bakery.identification_ingredians" />
+                                        /9
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="knowledge_of_menu">Knowledge of Menu</label>
-                                        <input type="number" class="form-control" id="knowledge_of_menu" name="knowledge_of_menu" />
+                                        <input type="number" min="0" max="8" class="form-control" id="knowledge_of_menu" name="knowledge_of_menu"  t-att-value="cookery_bakery.knowledge_of_menu"/>
+                                        /8
                                     </div>
                                 </div>
                             </div>
@@ -1363,13 +1391,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk">GSK</label>
-                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" />
+                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_oral.gsk_ccmc" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="safety_ccmc">Safety</label>
-                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" />
+                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_oral.safety_ccmc"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
