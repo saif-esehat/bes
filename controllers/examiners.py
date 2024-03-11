@@ -138,8 +138,9 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_oral_form(self, **rec):
         # import wdb;wdb.set_trace();
+        print(rec,"recccccccccccccccccccccccccccccccc")
         candidate = request.env['gp.candidate'].sudo()
-        print("=======================================================",request.httprequest.method)
+        print(candidate,"cccccccccccccccccandideeeeeeeeeeeeeeeeeeee")   
         
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt==============================================')
@@ -412,11 +413,17 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_cookery_bakery_form(self, **rec):
 
+        
         candidate = request.env['ccmc.candidate'].sudo()
+        
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
             
+            rec_id = rec['rec_id']
+            
+            print(rec,'reccccccccccccccccccccccccccccc')
+            marksheet = request.env['ccmc.cookery.bakery.line'].sudo().search([('id','=',rec['cookery_bakery'])])
 
             # Convert string values to integers
             subject_area1 = int(rec['hygiene_grooming'])
@@ -455,14 +462,26 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'cookery_child_line': [(0, 0, vals)]
-            })
+            # candidate_rec.write({
+            #     'cookery_child_line': [(0, 0, vals)]
+            # })
+            marksheet.write(vals)
 
+            return request.redirect("/open_ccmc_candidate_form?rec_id="+rec["assignment_id"]+"&subject_name=CCMC")
         else:
-            print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
+
             rec_id = rec['rec_id']
-            return request.render("bes.cookery_bakery_marks_submit", {'indos': rec_id,  "page_name": "cooker_bakery_form"})
+            ccmc_candidate_rec = candidate.search([('id', '=', rec_id)])
+            candidate_indos = ccmc_candidate_rec.indos_no
+            candidate_name = ccmc_candidate_rec.name
+            candidate_image = ccmc_candidate_rec.candidate_image
+        
+            print(rec,'cccceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+            cooker_bakery = request.env['ccmc.cookery.bakery.line'].sudo().search([('id','=',rec['cookery_bakery'])]) 
+            print(cooker_bakery,'cmcccccccccccccccccccccssssssssssssssss')   
+            return request.render("bes.cookery_bakery_marks_submit", {'indos': candidate_indos,'cookery_bakery':cooker_bakery,'candidate_name': candidate_name, 'candidate_image': candidate_image,  "page_name": "cooker_bakery_form"})
+        
+            # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec , 'exam_date':gsk_marksheet.gsk_oral_exam_date, "page_name": "gsk_oral"})
 
     @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_ccmc_oral_form(self, **rec):

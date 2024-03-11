@@ -1818,6 +1818,54 @@ class InstitutePortal(CustomerPortal):
                                         'source': state_values })
         
 
+        state_cheatsheet = workbook.add_worksheet("States")
+        state_cheatsheet.write('A1','Code')
+        state_cheatsheet.write('B1','State')
+
+        state_values = {
+                'MH': 'Maharashtra',
+                'AP': 'Andhra Pradesh',
+                'AR': 'Arunachal Pradesh',
+                'AS': 'Assam',
+                'BR': 'Bihar',
+                'CT': 'Chhattisgarh',
+                'GA': 'Goa',
+                'GJ': 'Gujarat',
+                'HR': 'Haryana',
+                'HP': 'Himachal Pradesh',
+                'JH': 'Jharkhand',
+                'KA': 'Karnataka',
+                'KL': 'Kerala',
+                'MP': 'Madhya Pradesh',
+                'MN': 'Manipur',
+                'ML': 'Meghalaya',
+                'MZ': 'Mizoram',
+                'NL': 'Nagaland',
+                'OD': 'Odisha',
+                'PB': 'Punjab',
+                'RJ': 'Rajasthan',
+                'SK': 'Sikkim',
+                'TN': 'Tamil Nadu',
+                'TG': 'Telangana',
+                'TR': 'Tripura',
+                'UP': 'Uttar Pradesh',
+                'UT': 'Uttarakhand',
+                'WB': 'West Bengal',
+                'AN': 'Andaman and Nicobar Islands',
+                'CH': 'Chandigarh',
+                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                'LD': 'Lakshadweep',
+                'DL': 'Delhi',
+                'PY': 'Puducherry'
+            }
+        
+        row = 1
+        for state, code in state_values.items():
+            state_cheatsheet.write(row, 0, state)
+            state_cheatsheet.write(row, 1, code)
+            row += 1
+        
+
         
         
         
@@ -1950,9 +1998,9 @@ class InstitutePortal(CustomerPortal):
             row += 1
 
 
-        state_cheatsheet.protect()
-        state_cheatsheet.write(1, None, None, {'locked': False})
-        state_cheatsheet.set_row(0, None, None)
+        # state_cheatsheet.protect()
+        # state_cheatsheet.write(1, None, None, {'locked': False})
+        # state_cheatsheet.set_row(0, None, None)
       
         
 
