@@ -51,6 +51,9 @@ class Examiner(models.Model):
     ifsc_code = fields.Char(string="IFSC Code")
     bank_name = fields.Char(string="Bank Name")
     exam_coordinator = fields.Boolean("Exam Coordinator")
+    exam_coordinator_id = fields.Boolean("Exam Coordinator ID")
+    
+    
     
     state = fields.Selection([
         ('active', 'Active'),

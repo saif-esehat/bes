@@ -4,6 +4,11 @@
         <field name="name">BES</field>
     </record>
 
+    <record id="group_exam_coordinator" model="res.groups">
+        <field name="name">Exam Co-ordinator</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <record id="group_examiners" model="res.groups">
         <field name="name">Examiner</field>
         <field name="category_id" ref="bes_access_category"/>
