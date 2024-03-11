@@ -16,7 +16,7 @@ class ExamCenter(models.Model):
         
         return {
         'name': 'Examiners',
-        'domain': [('exam_coordinator_id', '=', self.id)],
+        'domain': [('exam_center', '=', self.id)],
         'view_type': 'form',
         'res_model': 'bes.examiner',
         'view_id': False,
