@@ -69,7 +69,12 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">at:</span>
-                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No.<t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                        <t t-if="doc.gp_candidate.institute_id.code == 'K10'">
+                                            <span style="font-size:17px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No. <t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No. <t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                        </t>
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
