@@ -26,17 +26,22 @@ class GPCandidatePortal(CustomerPortal):
     def GPExamListView(self,**kwargs):
         parameter_value = kwargs.get('gpexamcand')
         print(parameter_value)
-
         if parameter_value:
             partner_id = request.env.user.id
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).id
+            exam_region = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.exam_center.name
+            institute_code = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.code
+            print(institute_code,"codeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+            print(exam_region,"regionnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
             registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate)])
+            
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
             # import wdb; wdb.set_trace(); 
             show_certificate = candidate.certificate_criteria == 'passed' or False
             show_admit_card = candidate.state == '1-in_process'
-            vals = {"registered_exams":registered_exams,"candidate":registered_exams.gp_candidate,"show_certificate":show_certificate,'show_admit_card':show_admit_card}
+            vals = {"registered_exams":registered_exams,"candidate":registered_exams.gp_candidate,"show_certificate":show_certificate,'show_admit_card':show_admit_card,'exam_region':exam_region,'institute_code':institute_code}
+            print(vals)
             return request.render("bes.gp_exam_candidate", vals)
         else:
 
