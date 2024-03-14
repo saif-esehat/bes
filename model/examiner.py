@@ -52,7 +52,8 @@ class Examiner(models.Model):
     bank_name = fields.Char(string="Bank Name")
     exam_coordinator = fields.Boolean("Exam Coordinator")
     exam_coordinator_id = fields.Boolean("Exam Coordinator ID")
-    
+    exam_assignments = fields.Many2many('examiner.assignment',string="Exam Assignments")
+    import wdb; wdb.set_trace()
     
     
     state = fields.Selection([

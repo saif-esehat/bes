@@ -39,8 +39,13 @@ class DGSBatch(models.Model):
     def move_dgs_approved(self):
         
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        ccmc_exams = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.id)])
+        ccmc_exams
         for exam in exams:
             exam.dgs_approval()
+        for exam in ccmc_exams:
+            exam.dgs_approval()
+        
                     
         self.state = '3-dgs_approved'
     
