@@ -1,9 +1,23 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.http import request
+from odoo.http import db_monodb, request, root
+from odoo import fields
 from odoo import http
 from werkzeug.utils import secure_filename
 import base64
+import datetime
+from odoo.service import security
 
+
+
+def _rotate_session(httprequest):
+    if httprequest.session.rotate:
+        root.session_store.delete(httprequest.session)
+        httprequest.session.sid = root.session_store.generate_key()
+        if httprequest.session.uid:
+            httprequest.session.session_token = security.compute_session_token(
+                httprequest.session, request.env
+            )
+        httprequest.session.modified = True
 
 
 class GPCandidatePortal(CustomerPortal):
@@ -179,4 +193,30 @@ class GPCandidatePortal(CustomerPortal):
         # print(pdf ,"Tbis is PDF")
         pdfhttpheaders = [('Content-Type', 'application/pdf'),('Content-Disposition', 'attachment; filename="Certificate.pdf"'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    @http.route(['/check_candidate_group'], method=["GET"], type="json", auth="user")
+    def CheckCandidateGroup(self):
+        
+        group1_exists = request.env.user.has_group('bes.group_gp_candidates')
+        group2_exists = request.env.user.has_group('bes.group_ccmc_candidates')
+
+        if group1_exists or group2_exists:
             
+            return {"valid_group":True}
+        else:
+            return {"valid_group":False}
+
+    @http.route('/web/session/authenticate', type='json', auth="none")
+    def authenticate(self, db, login, password, base_location=None):
+        request.session.authenticate(db, login, password)
+        result = request.env["ir.http"].session_info()
+        _rotate_session(request)
+        request.session.rotate = False
+        expiration = datetime.datetime.utcnow() + datetime.timedelta(days=90)
+        result["session"] = {
+            "sid": request.session.sid,
+            "expires_at": fields.Datetime.to_string(expiration),
+        }
+        print(result)
+        return result
+        
