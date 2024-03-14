@@ -69,7 +69,12 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">at:</span>
-                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No.<t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                        <t t-if="doc.gp_candidate.institute_id.code == 'K10'">
+                                            <span style="font-size:17px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No. <t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span style="font-size:20px;"><t t-esc="doc.gp_candidate.institute_id.name"/> (MTI No. <t t-esc="doc.gp_candidate.institute_id.mti"/>)</span>
+                                        </t>
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
@@ -119,7 +124,7 @@
                                         <span style="font-size:20px;"><t t-esc="doc.dgs_batch.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
                                     </div>
                                     <div class="col-6" style="text-align:right;">
-                                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" style="width: 75px; height: 55px; position:absolute; top:-60px; right:80px;" />
+                                        <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" style="width: 160px; height: 55px; position:absolute; top:-60px; right:40px;" />
                                         <span style="color: #4c2d8b; font-size:20px;">Signature of the Candidate</span>
                                     </div>
                                 </div>

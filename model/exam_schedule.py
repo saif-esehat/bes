@@ -539,16 +539,26 @@ class GPExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     rank = fields.Char("Rank",compute='_compute_rank')
     
+    institute_code = fields.Char("Institute code")
+
     
     
 
     
+<<<<<<< HEAD
     @api.depends('overall_percentage','gp_candidate.name')
     def _compute_rank(self):
         
         sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')], 
                                                              order='overall_percentage desc, gp_candidate.name asc')
 
+=======
+    @api.depends('overall_percentage','gp_candidate')
+    def _compute_rank(self):
+        
+        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+                                                             order='overall_percentage desc , institute_code asc, gp_candidate asc')
+>>>>>>> ae0a83ef1a1a2660b664e82a0e2e7a70fbd37a42
         # import wdb; wdb.set_trace();
 
         total_records = len(sorted_records)
@@ -573,6 +583,10 @@ class GPExam(models.Model):
                 record.rank = f'{numeric_rank}{suffix}'
             except:
                 record.rank = "0th"
+    
+    
+
+
 
     
     @api.depends('certificate_criteria','state')
@@ -985,9 +999,7 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
-    
-    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-    #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
+
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
@@ -997,7 +1009,7 @@ class CCMCExam(models.Model):
     
     cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
-    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True)
+    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True,digits=(16,2))
     overall_marks = fields.Float("Overall Marks",readonly=True)
     overall_percentage = fields.Float("Overall Percentage",readonly=True)
     cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True)
@@ -1059,7 +1071,7 @@ class CCMCExam(models.Model):
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Certificate Criteria')
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
@@ -1083,6 +1095,14 @@ class CCMCExam(models.Model):
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
+
+    @api.depends('exam_criteria','stcw_criteria','attendance_criteria','ship_visit_criteria')
+    def compute_pending_certificate_criteria(self):
+        for record in self:
+            if record.exam_criteria == record.stcw_criteria == record.attendance_criteria == record.ship_visit_criteria == 'passed':
+                record.certificate_criteria = 'passed'
+            else:
+                record.certificate_criteria = 'pending'
     
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')

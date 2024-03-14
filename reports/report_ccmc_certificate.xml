@@ -253,7 +253,7 @@
                                         <td style="border: 1px solid #000;">100</td>
                                         <td style="border: 1px solid #000;">60</td>
                                         <td style="border: 1px solid #000;">
-                                            <!-- <span t-esc="doc.gsk_online_marks"/> -->
+                                            <span t-esc="doc.cookery_gsk_online" t-options='{"widget": "float", "precision": 2}'/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -262,7 +262,7 @@
                                         <td style="border: 1px solid #000;">100</td>
                                         <td style="border: 1px solid #000;">60</td>
                                         <td style="border: 1px solid #000;">
-                                            <!-- <span t-esc="doc.mek_online_marks" t-options='{"widget": "float", "precision": 2}'/> -->
+                                            <span t-esc="doc.cookery_practical" t-options='{"widget": "float", "precision": 2}'/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -271,7 +271,7 @@
                                         <td style="border: 1px solid #000;">100</td>
                                         <td style="border: 1px solid #000;">60</td>
                                         <td style="border: 1px solid #000;">
-                                            <!-- <span t-esc="doc.gsk_total"/> -->
+                                            <span t-esc="doc.cookery_oral" t-options='{"widget": "float", "precision": 2}'/>
                                         </td>
                                     </tr>
 

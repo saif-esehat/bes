@@ -180,7 +180,7 @@
                 <form>
                    <header>
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
-                        <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/>
+                        <!-- <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/> -->
                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -1313,6 +1313,8 @@
                     <group style="width:50%">
                         <field name="gp_exam" readonly="1" />
                         <field name="previous_attempt" readonly="1" />
+                        <field name="deffereds" invisible="1" />
+                        <field name="dgs_batch" readonly="1"/>
                     </group>
                      <group style="width:50%">
                         <field name="exam_month" readonly="1" />
