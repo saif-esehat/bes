@@ -155,7 +155,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
-                    <field name="exam_assignments.institute_id"/>
+                    <field name="exam_assignments"/>
                     
                     <!-- <field name="mobile"/>
                     <field name="email"/>
