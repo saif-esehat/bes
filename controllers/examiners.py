@@ -60,19 +60,13 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route(['/my/assignments'], type="http", auth="user", website=True)
     def ExaminerAssignmentListView(self, **kw):
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-        print(self,"selffffffffffffffffffffffffffffffffffffffffffffffff")
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
-        print(user_id,"userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        print(examiner,"eaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
-        print(examiner_assignments,"assssssssssssssssssssssssssssssssssssssssssssssss")
         
         vals = {'assignments':examiner_assignments, 'examiner':examiner}
-        print(vals,"valssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
 
@@ -90,9 +84,7 @@ class ExaminerPortal(CustomerPortal):
     def open_candidate_form(self, **rec):
         if 'rec_id' in rec:
             rec_id =rec['rec_id']
-            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
-
             # Check if gp_candidate is set
             if assignment.assigned_to == "gp_candidate":
                 gp_oral_prac = assignment.gp_oral_prac
@@ -104,8 +96,8 @@ class ExaminerPortal(CustomerPortal):
             else:
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
-
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id})
+            
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id, 'page_name':'gp_assignment'})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
@@ -117,30 +109,23 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_ccmc_candidate_form', type='http', auth="user", website=True)
     def open_ccmc_candidate_form(self, **rec):
         
-        print(rec,"recccccccccccccccccccccccccccccccccccc")
         
         if 'rec_id' in rec:
-            print("yessssssssssssssssssssssssssssssssssss")
-            rec_id =rec['rec_id']
-            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
+            rec_id = rec['rec_id']
             assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
-            print(assignment,"asssssssssssssssssssssssssssssssssssss")
             # Check if gp_candidate is set
             if assignment.assigned_to == "ccmc_candidate":
-                print("ccmcccccccccccccccccccccccccccccccccccccccccccccccc")
                 ccmc_assignment = assignment.ccmc_assignment
                 candidate = assignment.ccmc_assignment.ccmc_candidate
                 subject = assignment.subject_id.name
-            # Check if ccmc_candidate is set
+            # Check if gp_candidate is set
             elif assignment.assigned_to == "gp_candidate":
-                print("gppppppppppppppppppppppppppppppppppppppppp")
                 candidate = assignment.gp_candidate
             else:
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
-                print("falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 candidate = False
-
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'ccmc_assignment':ccmc_assignment , 'subject':subject ,'assignment_id':rec_id})
+            
+            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'ccmc_assignment':ccmc_assignment , 'subject':subject ,'assignment_id':rec_id, "page_name": "ccmc_assignment"})
         else:
             print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
@@ -153,8 +138,9 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_oral_form(self, **rec):
         # import wdb;wdb.set_trace();
+        print(rec,"recccccccccccccccccccccccccccccccc")
         candidate = request.env['gp.candidate'].sudo()
-        print("=======================================================",request.httprequest.method)
+        print(candidate,"cccccccccccccccccandideeeeeeeeeeeeeeeeeeee")   
         
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt==============================================')
@@ -221,7 +207,7 @@ class ExaminerPortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})
-            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec , 'exam_date':gsk_marksheet.gsk_oral_exam_date})
+            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec , 'exam_date':gsk_marksheet.gsk_oral_exam_date, "page_name": "gsk_oral"})
 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -289,7 +275,7 @@ class ExaminerPortal(CustomerPortal):
             gsk_prac_marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             exam_date = gsk_prac_marksheet.gsk_practical_exam_date
-            return request.render("bes.gsk_practical_marks_submit", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'gsk_prac_marksheet':gsk_prac_marksheet})       
+            return request.render("bes.gsk_practical_marks_submit", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'gsk_prac_marksheet':gsk_prac_marksheet, "page_name": "gsk_prac"})       
             
 
     @http.route('/open_mek_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -355,7 +341,7 @@ class ExaminerPortal(CustomerPortal):
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             
             exam_date = mek_oral_marksheet.mek_oral_exam_date
-            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet})
+            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet, "page_name": "mek_oral"})
 
     @http.route('/open_practical_mek_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_practical_mek_form(self, **rec):
@@ -421,17 +407,23 @@ class ExaminerPortal(CustomerPortal):
             # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
             mek_prac_marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
             exam_date = mek_prac_marksheet.mek_practical_exam_date
-            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet})
+            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'exam_date':exam_date,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet,  "page_name": "mek_prac"})
 
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_cookery_bakery_form(self, **rec):
 
+        
         candidate = request.env['ccmc.candidate'].sudo()
+        
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
             
+            rec_id = rec['rec_id']
+            
+            print(rec,'reccccccccccccccccccccccccccccc')
+            marksheet = request.env['ccmc.cookery.bakery.line'].sudo().search([('id','=',rec['cookery_bakery'])])
 
             # Convert string values to integers
             subject_area1 = int(rec['hygiene_grooming'])
@@ -470,31 +462,41 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'cookery_child_line': [(0, 0, vals)]
-            })
+            # candidate_rec.write({
+            #     'cookery_child_line': [(0, 0, vals)]
+            # })
+            marksheet.write(vals)
 
+            return request.redirect("/open_ccmc_candidate_form?rec_id="+rec["assignment_id"]+"&subject_name=CCMC")
         else:
-            print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
+
             rec_id = rec['rec_id']
-            return request.render("bes.cookery_bakery_marks_submit", {'indos': rec_id})
+            ccmc_candidate_rec = candidate.search([('id', '=', rec_id)])
+            candidate_indos = ccmc_candidate_rec.indos_no
+            candidate_name = ccmc_candidate_rec.name
+            candidate_image = ccmc_candidate_rec.candidate_image
+        
+            print(rec,'cccceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+            cooker_bakery = request.env['ccmc.cookery.bakery.line'].sudo().search([('id','=',rec['cookery_bakery'])]) 
+            exam_date = cooker_bakery.cookery_exam_date
+            return request.render("bes.cookery_bakery_marks_submit", {'indos': candidate_indos,'cookery_bakery':cooker_bakery,'candidate_name': candidate_name, 'candidate_image': candidate_image, 'exam_date':exam_date,  "page_name": "cooker_bakery_form"})
+        
+            # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec , 'exam_date':gsk_marksheet.gsk_oral_exam_date, "page_name": "gsk_oral"})
 
     @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_ccmc_oral_form(self, **rec):
 
+        candidate = request.env['ccmc.candidate'].sudo()
+        
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
             indos = rec['indos']
             
+            marksheet = request.env['ccmc.oral.line'].sudo().search([('id','=',rec['ccmc_oral'])])
 
             # Convert string values to integers
             subject_area1 = int(rec['ccmc_gsk'])
             subject_area2 = int(rec['safety_ccmc'])
-          
-           
-
-            candidate = request.env['ccmc.candidate'].sudo()
-            candidate_rec = candidate.search([('indos_no', '=', indos)])
 
             # Construct the dictionary with integer values
             vals = {
@@ -507,11 +509,18 @@ class ExaminerPortal(CustomerPortal):
             print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
             # Write to the One2many field using the constructed dictionary
-            candidate_rec.write({
-                'ccmc_oral_child_line': [(0, 0, vals)]
-            })
+            marksheet.write(vals)
 
         else:
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
             rec_id = rec['rec_id']
-            return request.render("bes.ccmc_gsk_oral_marks_submit", {'indos': rec_id})
+            
+            ccmc_candidate_rec = candidate.search([('id', '=', rec_id)])
+            candidate_indos = ccmc_candidate_rec.indos_no
+            candidate_name = ccmc_candidate_rec.name
+            candidate_image = ccmc_candidate_rec.candidate_image
+        
+            ccmc_oral = request.env['ccmc.oral.line'].sudo().search([('id','=',rec['ccmc_oral'])]) 
+            exam_date = ccmc_oral.ccmc_oral_exam_date
+            
+            return request.render("bes.ccmc_gsk_oral_marks_submit", {'indos': candidate_indos,'ccmc_oral':ccmc_oral ,'candidate_name': candidate_name, 'candidate_image': candidate_image,'exam_date':exam_date,  "page_name": "ccmc_oral"})

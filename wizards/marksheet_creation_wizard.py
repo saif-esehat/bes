@@ -39,7 +39,7 @@ class GPMarksheetCreateWizard(models.TransientModel):
             "mek_online_percentage": self.mek_online_percentage,
             "gsk_online_percentage": self.gsk_online_percentage,
             "mek_total": self.mek_total,
-            "mek_percentage": self.mek_percentage,
+
             "overall_marks": self.overall_marks,
             "overall_percentage": self.overall_percentage,
             "state":"2-done"

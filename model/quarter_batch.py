@@ -80,6 +80,22 @@ class DGSBatch(models.Model):
         'type': 'ir.actions.act_window'
         }
         
+        
+    def open_ccmc_exams(self):
+        
+        # import wdb;wdb.set_trace()
+        exam_ids = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.id)]).ids
+        
+        return {
+        'name': 'CCMC Exams',
+        'domain': [ ('id' , 'in' ,exam_ids) ],
+        'view_type': 'form',
+        'res_model': 'ccmc.exam.schedule',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window'
+        }
+        
     @api.onchange('is_current_batch')
     def on_change_current_batch(self):
         if self.is_current_batch:

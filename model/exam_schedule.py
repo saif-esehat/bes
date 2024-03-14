@@ -526,6 +526,7 @@ class GPExam(models.Model):
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
         ('3-certified', 'Certified'),
+        ('4-pending', 'Pending'),
     ], string='State', default='1-in_process')
 
     url = fields.Char("URL",compute="_compute_url")
@@ -538,31 +539,43 @@ class GPExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     rank = fields.Char("Rank",compute='_compute_rank')
     
+    institute_code = fields.Char("Institute code")
+
     
     
 
     
-    @api.depends('overall_percentage')
+    @api.depends('overall_percentage','gp_candidate')
     def _compute_rank(self):
-        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+        
+        sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+                                                             order='overall_percentage desc , institute_code asc, gp_candidate asc')
+        # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
 
         for record in self:
-            index = sorted_records.ids.index(record.id)
-            numeric_rank = index + 1 if index < top_25_percent else 0
+            print(record.id)
+            try:
+                index = sorted_records.ids.index(record.id)
+                numeric_rank = index + 1 if index < top_25_percent else 0
 
-            # Convert numeric rank to character format
-            if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
-                suffix = 'st'
-            elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
-                suffix = 'nd'
-            elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
-                suffix = 'rd'
-            else:
-                suffix = 'th'
+                # Convert numeric rank to character format
+                if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+                    suffix = 'st'
+                elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+                    suffix = 'nd'
+                elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+                    suffix = 'rd'
+                else:
+                    suffix = 'th'
 
-            record.rank = f'{numeric_rank}{suffix}'
+                record.rank = f'{numeric_rank}{suffix}'
+            except:
+                record.rank = "0th"
+    
+    
+
 
 
     
@@ -687,10 +700,12 @@ class GPExam(models.Model):
         
             if(self.certificate_criteria == 'passed'):
                 # date = self.dgs_batch.from_date
-                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.gp_candidate.roll_no
+                self.certificate_id = str(self.gp_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.exam_id
                 self.state = '3-certified'
                 self.certificate_issue_date = self.dgs_batch.certificate_issue_date
                 self.exam_pass_date = self.dgs_batch.exam_pass_date
+            else:
+                self.state = '4-pending'
                 
             
     
@@ -772,9 +787,6 @@ class GPExam(models.Model):
                 raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
                                       f"You cannot schedule more than {max_exams} exams for a candidate.")
     
-    # def dgs_approval(self):                
-
-    #     print("work")
         
         
     def move_done(self):
@@ -853,18 +865,6 @@ class GPExam(models.Model):
             
             all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
-            # import wdb; wdb.set_trace();
-            # if all_passed:
-                
-            #     self.write({'certificate_criteria':'passed'})
-            #     # self.certificate_criteria = 'passed'
-            # else:
-            #     self.write({'certificate_criteria':'pending'})
-
-                # self.certificate_criteria = 'failed'
-            
-            # if(self.certificate_criteria == 'passed'):
-            #     self.certificate_id = self.env['ir.sequence'].next_by_code("gp.exam.schedule")
             
             self.state = '2-done'
                 
@@ -875,19 +875,6 @@ class GPExam(models.Model):
 
     attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
-
-    # def send_certificate_email(self):
-    #     template = self.env.ref('bes.gp_certificate_mail')
-    #     print(template,"templateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-
-    #     for rec in self:
-    #         print(rec.id,"recccccccccccccccccccccccccccccccccccccccccccccccccc")
-            
-    #         attachment_ids = [(4, attachment.id) for attachment in rec.attachment_ids]
-    #         print(attachment_ids,"attaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-
-    #         template.write({'attachment_ids': attachment_ids})
-    #         template.send_mail(rec.id)
 
 
     def send_certificate_email(self):
@@ -1002,9 +989,7 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
-    
-    # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
-    #                             default=lambda self: self.env['ir.sequence'].next_by_code('ccmc_roll_no_sequence'))
+
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
@@ -1014,7 +999,7 @@ class CCMCExam(models.Model):
     
     cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
-    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True)
+    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True,digits=(16,2))
     overall_marks = fields.Float("Overall Marks",readonly=True)
     overall_percentage = fields.Float("Overall Percentage",readonly=True)
     cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True)
@@ -1070,20 +1055,28 @@ class CCMCExam(models.Model):
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
         ('3-certified', 'Certified'),
+        ('4-pending', 'Pending'),
     ], string='State', default='1-in_process')
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Certificate Criteria')
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
     
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
 
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    
+    exam_pass_date = fields.Date(string="Date of Examination Passed:")
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    ccmc_rank = fields.Char("Rank",compute='_compute_rank')
+    
+    
     
     @api.depends('certificate_criteria','state')
     def compute_dgs_visible(self):
@@ -1092,6 +1085,14 @@ class CCMCExam(models.Model):
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
+
+    @api.depends('exam_criteria','stcw_criteria','attendance_criteria','ship_visit_criteria')
+    def compute_pending_certificate_criteria(self):
+        for record in self:
+            if record.exam_criteria == record.stcw_criteria == record.attendance_criteria == record.ship_visit_criteria == 'passed':
+                record.certificate_criteria = 'passed'
+            else:
+                record.certificate_criteria = 'pending'
     
     def _compute_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -1151,12 +1152,63 @@ class CCMCExam(models.Model):
         print(self.state,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         if(self.certificate_criteria == 'passed'):
             # date = self.dgs_batch.from_date
-            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.ccmc_candidate.roll_no
+            self.certificate_id = str(self.ccmc_candidate.candidate_code) + '/' + self.dgs_batch.to_date.strftime('%b %y') + '/' + self.exam_id
             print(self.certificate_id,"criiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
             self.state = '3-certified'
+            self.certificate_issue_date = self.dgs_batch.certificate_issue_date
+            self.exam_pass_date = self.dgs_batch.exam_pass_date
+        else:
+            self.state = '4-pending'
             # self.certificate_issue_date = fields.date.today() 
             
+    # @api.depends('overall_percentage')
+    # def _compute_rank(self):
+    #     sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('certificate_criteria','=','passed')], order='overall_percentage desc')
+    #     total_records = len(sorted_records)
+    #     top_25_percent = int(total_records * 0.25)
 
+    #     for record in self:
+    #         index = sorted_records.ids.index(record.id)
+    #         numeric_rank = index + 1 if index < top_25_percent else 0
+
+    #         # Convert numeric rank to character format
+    #         if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+    #             suffix = 'st'
+    #         elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+    #             suffix = 'nd'
+    #         elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+    #             suffix = 'rd'
+    #         else:
+    #             suffix = 'th'
+
+    #         record.rank = f'{numeric_rank}{suffix}'
+
+    @api.depends('certificate_id','state')
+    def _compute_certificate_url(self):
+        for record in self:
+            print("Working CERT URL Func")
+
+            if record.state == "3-certified":
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                print("base_url:", base_url)
+
+                certificate_id = record.id
+                current_certificate_url = base_url + "verification/ccmccerificate/" + str(certificate_id)
+                print("current_url:", current_certificate_url)
+                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+                qr.add_data(current_certificate_url)
+                qr.make(fit=True)
+                qr_image = qr.make_image()
+
+                # Convert the QR code image to base64 string
+                buffered = io.BytesIO()
+                qr_image.save(buffered, format="PNG")
+                qr_image_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+                # Assign the base64 string to a field in the 'srf' object
+                record.certificate_qr_code = qr_image_base64
+            else:
+                record.certificate_qr_code = None
     
     @api.model
     def create(self, vals):

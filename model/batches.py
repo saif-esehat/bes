@@ -586,7 +586,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     def register(self):
-        import wdb; wdb.set_trace(); 
+        # import wdb; wdb.set_trace(); 
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
