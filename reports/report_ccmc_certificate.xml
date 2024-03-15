@@ -89,7 +89,14 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:10px ;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px;">Position in the merit list of first 25% - </span>
-                                        <span style="font-size:20px;">N/A</span>
+                                         <span style="font-size:20px;">
+                                            <t t-if="doc.ccmc_rank != '0th'">
+                                                <t t-esc="doc.ccmc_rank"/>
+                                            </t>
+                                            <t t-else="">
+                                                N/A
+                                            </t>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="row" style="padding-left:9px; margin-bottom:10px ;">
