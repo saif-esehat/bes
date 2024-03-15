@@ -1075,6 +1075,7 @@ class CCMCExam(models.Model):
     exam_pass_date = fields.Date(string="Date of Examination Passed:")
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     ccmc_rank = fields.Char("Rank",compute='_compute_rank')
+   
     institute_code = fields.Char("Institute code")
     
     
