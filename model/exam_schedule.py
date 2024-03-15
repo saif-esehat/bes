@@ -1060,7 +1060,7 @@ class CCMCExam(models.Model):
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
-        ('passed', 'Passed'),
+        ('passed', 'Complied'),
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
