@@ -1118,8 +1118,8 @@ class CCMCExam(models.Model):
     @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status')
     def compute_certificate_criteria(self):
         for record in self:
-            # all_passed = all(field == 'passed' for field in [record.gsk_online_status, record.mek_online_status, record.mek_oral_prac_status , record.gsk_oral_prac_status])
-            all_passed = all(field == 'passed' for field in [record.cookery_bakery_prac_status , record.ccmc_online_status])
+            
+            all_passed = all(field == 'passed' for field in [record.cookery_bakery_prac_status , record.ccmc_online_status, record.ccmc_oral_prac_status])
             all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
             course_type_already  = [course.course_name for course in record.ccmc_candidate.stcw_certificate]
             all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
