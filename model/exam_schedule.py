@@ -1167,6 +1167,7 @@ class CCMCExam(models.Model):
         
         sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
                                                              order='overall_percentage desc , institute_code asc, ccmc_candidate asc')
+        
         # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
