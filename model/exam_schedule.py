@@ -1186,9 +1186,9 @@ class CCMCExam(models.Model):
                 else:
                     suffix = 'th'
 
-                record.rank = f'{numeric_rank}{suffix}'
+                record.ccmc_rank = f'{numeric_rank}{suffix}'
             except:
-                record.rank = "0th"
+                record.ccmc_rank = "0th"
     
 
     @api.depends('certificate_id','state')
