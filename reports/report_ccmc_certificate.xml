@@ -9,7 +9,7 @@
                         <div class="oe_report backgroundd" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
                             <div id="header" style="width:100%; text-align: center;">
                                 <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
-                                <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;  border: 2px solid black;"/>
+                                <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;"/>
                                 <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
                                 <div class="container-fluid" style="width:100%;">
                                     <span style="font-size: 17px; font-weight: bold; font-family: 'TimesNewRomanBold';">A Collaboration of The Institute of Marine Engineers (India) and The Company of Master Mariners of India</span>
@@ -125,7 +125,7 @@
                                         <span style="font-size:20px;"><t t-esc="doc.dgs_batch.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
                                     </div>
                                     <div class="col-6" style="text-align:right;">
-                                        <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" style="width: 75px; height: 55px; position:absolute; top:-60px; right:80px;" />
+                                        <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_signature}}" alt="Image" style="width: 160px; height: 55px; position:absolute; top:-60px; right:40px;" />
                                         <span style="color: #4c2d8b; font-size:20px;">Signature of the Candidate</span>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                             <div class="container" style="text-align:center; margin-bottom:15px;">
                                  <div>
                                     <t t-if="doc.certificate_qr_code">
-                                        <img t-attf-src="data:image/png;base64,{{doc.certificate_qr_code}}" style="width: 120px; height: 120px; position:absolute; bottom: 70px; left:11px;" />
+                                        <img t-attf-src="data:image/png;base64,{{doc.certificate_qr_code}}" style="width: 120px; height: 120px; position:absolute;" />
                                     </t>
                                 </div>
                                 <div class="row">
