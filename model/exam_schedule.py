@@ -1276,7 +1276,7 @@ class CCMCExam(models.Model):
             else:
                 self.ccmc_online_status = 'failed'
                 
-            all_passed = all(field == 'passed' for field in [self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+            all_passed = all(field == 'passed' for field in [self.ccmc_oral_prac_status,self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
             if all_passed:
                 self.write({'certificate_criteria':'passed'})
