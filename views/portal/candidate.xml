@@ -348,7 +348,7 @@
                                 <!-- <t t-if="exam_region != 'CHENNAI' and exam_region != 'KOLKATTA'">
                                     <a t-attf-href="/my/gpexam/list/download_certificate/{{rec.id}}" class="fa">Download Certificate</a>
                                 </t> -->
-                                <t t-if="institute_code != 'K06' or institute_code != 'M05' or institute_code != 'M11' or institute_code != 'M18'">
+                                <t t-if="institute_code != 'K06' and institute_code != 'M05' and institute_code != 'M11' and institute_code != 'M18'">
                                     <a t-attf-href="/my/gpexam/list/download_certificate/{{rec.id}}" class="fa">Download Certificate</a>
                                 </t>
 
