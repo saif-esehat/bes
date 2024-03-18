@@ -52,7 +52,7 @@ class Examiner(models.Model):
     bank_name = fields.Char(string="Bank Name")
     exam_coordinator = fields.Boolean("Exam Coordinator")
     exam_coordinator_id = fields.Boolean("Exam Coordinator ID")
-    exam_assignments = fields.Many2many('examiner.assignment',string="Exam Assignments")
+    exam_assignments = fields.One2many("examiner.assignment","examiner_id",string="Exam Assignments")
     
     
     
@@ -155,6 +155,7 @@ class ExaminerAssignment(models.Model):
     
     examiner_id = fields.Many2one("bes.examiner","Examiner")
     assignment_date = fields.Date("Assignment Date")
+    exam_region = fields.Many2one('exam.center',"Exam Region")
     # exam_date = fields.Date("Exam Date")
     exam_start_time = fields.Datetime("Exam Start Time")
     exam_end_time = fields.Datetime("Exam End Time")
@@ -285,6 +286,7 @@ class CCMCOralPracAssignment(models.Model):
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
     
     
-    
+# class ExaminerTimeSheet(models.Model):
+#     _name = "examiner.time.sheet"
     
     

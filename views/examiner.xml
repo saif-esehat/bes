@@ -226,64 +226,79 @@
             </field>
         </record>
 
+    <record id="examiner_assignment_tree" model="ir.ui.view">
+        <field name="name">examiner.assignment.tree</field>
+        <field name="model">examiner.assignment</field>
+        <field name="arch" type="xml">
+            <tree>
+                    <field name="examiner_id"/>
+                    <field name="exam_region"/>
+                    <field name="assigned_to"/>
+                    <field name="institute_id"/>
+                </tree>
+        </field>
+    </record>
+
     <record id="examiner_assignment_form" model="ir.ui.view">
-            <field name="name">examiner.assignment.form</field>
-            <field name="model">examiner.assignment</field>
-            <field name="arch" type="xml">
-                <form>
+        <field name="name">examiner.assignment.form</field>
+        <field name="model">examiner.assignment</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group style="width:50%">
+                        <field name="examiner_id"/>
+                        <field name="exam_start_time"/>
+                        <field name="assigned_to"/>
+                        <field name="course"/>
+                        <field name="subject_id" domain="[('course_id','=',course)]"/>
+                        <field name="gsk_boolean" invisible="1"/>
+                        <field name="mek_boolean" invisible="1"/>
+
+                    </group>
+                    <group style="width:50%">
+                        <field name="assignment_date" />
+                        <field name="exam_end_time" />
+                        <field name="institute_id" />
+                        <field name="exam_region" />
+
+                        <field name="gp_batches" invisible="1" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+
+                    </group>
                     <group>
-                        <group style="width:50%">
-                            <field name="examiner_id"/>
-                            <field name="exam_start_time"/>
-                            <field name="assigned_to"/>
-                            <field name="course"/>
-                            <field name="subject_id" domain="[('course_id','=',course)]"/>
-                            <field name="gsk_boolean" invisible="1"/>
-                            <field name="mek_boolean" invisible="1"/>
-
-                        </group>
-                        <group style="width:50%">
-                            <field name="assignment_date" />
-                            <field name="exam_end_time" />
-                            <field name="institute_id" />
-                            <field name="gp_batches" invisible="1" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
-
-                        </group>
-                        <group>
-                            <button name="update_candidate_from_institute" string="Update Candidate" type="object" class="btn-primary" />
-                        </group>
-                        <group style="width:100%">
-                            <field name="gp_oral_prac" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}">
-                                <tree>
-                                    <field name="gp_candidate"/>
-                                    <field name="gsk_oral" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False )]}"/>
-                                    <field name="gsk_prac" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False)]}"/>
-                                    <field name="mek_oral" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
-                                    <field name="mek_prac" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group style="width:100%">
-                            <field name="ccmc_assignment" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}">
-                                <tree>
-                                    <field name="ccmc_candidate"/>
-                                    <field name="cookery_bakery" />                                    
-                                    <field name="ccmc_oral" />
-                                </tree>
-                            </field>
-                        </group>
-
-                        <!-- <group style="width:100%">
-                            <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
-                        </group> -->
-                        <!-- <group style="width:100%">
-                            <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
-                        </group> -->
+                        <button name="update_candidate_from_institute" string="Update Candidate" type="object" class="btn-primary" />
+                    </group>
+                    <group style="width:100%">
+                        <field name="gp_oral_prac" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}">
+                            <tree>
+                                <field name="gp_candidate"/>
+                                <field name="gsk_oral" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False )]}"/>
+                                <field name="gsk_prac" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False)]}"/>
+                                <field name="mek_oral" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
+                                <field name="mek_prac" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group style="width:100%">
+                        <field name="ccmc_assignment" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}">
+                            <tree>
+                                <field name="ccmc_candidate"/>
+                                <field name="cookery_bakery" />                                    
+                                <field name="ccmc_oral" />
+                            </tree>
+                        </field>
                     </group>
 
-                </form>
-            </field>
-        </record>
+                    <!-- <group style="width:100%">
+                        <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                    </group> -->
+                    <!-- <group style="width:100%">
+                        <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
+                    </group> -->
+                </group>
+
+            </form>
+        </field>
+    </record>
 
 
 
