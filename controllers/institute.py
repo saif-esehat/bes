@@ -1913,7 +1913,7 @@ class InstitutePortal(CustomerPortal):
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
-        candidate_worksheet.write_comment('L2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,a+,b,b+,c,c+,d,d+)')
+        candidate_worksheet.write_comment('L2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
 
         header_format = workbook.add_format({
             'bold': True,
