@@ -33,7 +33,7 @@ class GPCandidatePortal(CustomerPortal):
             institute_code = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.code
             print(institute_code,"codeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
             print(exam_region,"regionnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
-            registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate)])
+            registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate)])[-1]
             
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
