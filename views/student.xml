@@ -1356,6 +1356,7 @@
                     <group style="width:50%">
                         <field name="ccmc_exam" readonly="1" />
                         <field name="previous_attempt" readonly="1" />
+                        <field name="dgs_batch" />
                     </group>
                      <group style="width:50%">
                         <field name="exam_month" readonly="1" />

@@ -1522,6 +1522,8 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     _description = 'Register Exam'
     
     exam_region = fields.Many2one("exam.center",string="Exam Region")
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
+
     institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
     institute_id = fields.Many2one("bes.institute",string="Institute")
     candidate_id = fields.Many2one("ccmc.candidate",string="Candidate",required=True)
@@ -1566,7 +1568,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     @api.depends('ccmc_exam')
     def _compute_cookery_bakery_status(self):
          for record in self:
-             record.cookery_bakery_status = record.ccmc_exam.cookery_bakery_prac_status
+             
+             if record.ccmc_exam.cookery_bakery_prac_status == 'passed' and record.ccmc_exam.ccmc_oral_prac_status == 'passed':
+                record.cookery_bakery_status = 'passed'
+             else:
+                record.cookery_bakery_status = 'failed'
+             
+    
     
     @api.depends('ccmc_exam')
     def _compute_ccmc_online(self):
@@ -1589,7 +1597,35 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     
     def register_exam(self):
         
-        ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':self.candidate_id.id})
+        dgs_batch = self.dgs_batch.id
+        exam_id  = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
+        
+        # Marks
+        cookery_practical = self.ccmc_exam.cookery_practical
+        cookery_oral = self.ccmc_exam.cookery_oral
+        cookery_gsk_online = self.ccmc_exam.cookery_gsk_online
+        overall_marks = self.ccmc_exam.overall_marks
+        
+        #Mark Percentage
+        cookery_bakery_percentage = self.ccmc_exam.cookery_bakery_percentage
+        ccmc_oral_percentage = self.ccmc_exam.ccmc_oral_percentage
+        cookery_gsk_online_percentage = self.ccmc_exam.cookery_gsk_online_percentage
+        overall_percentage = self.ccmc_exam.overall_percentage
+        
+        ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
+            'ccmc_candidate':self.candidate_id.id,
+            'exam_id':exam_id,
+            'dgs_batch':dgs_batch,
+            'cookery_practical':cookery_practical,
+            'cookery_oral':cookery_oral,
+            'cookery_gsk_online':cookery_gsk_online,
+            'overall_marks':overall_marks ,
+            'cookery_bakery_percentage':cookery_bakery_percentage,
+            'ccmc_oral_percentage':ccmc_oral_percentage,
+            'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
+            'overall_percentage':overall_percentage
+            
+            })
 
         
         if self.cookery_bakery_status == 'failed':
@@ -1614,17 +1650,11 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         else:
             cookery_bakery_qb_input = self.ccmc_exam.ccmc_online
         
-        
-        # if self.gsk_online_status == 'failed':
-        #     gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
-        #     gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
-        # else:
-        #     gsk_survey_qb_input = self.gp_exam.gsk_online
+
             
         
-        ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id})
+        ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id,"ccmc_online":cookery_bakery_qb_input.id})
         
-        ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
 
         
         
