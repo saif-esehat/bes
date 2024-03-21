@@ -1807,7 +1807,7 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
 
-        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
 
         # Add data validation for SC/ST column
@@ -1823,6 +1823,7 @@ class InstitutePortal(CustomerPortal):
         state_cheatsheet.write('B1','State')
 
         state_values = {
+                'JK': 'Jammu and Kashmir',
                 'MH': 'Maharashtra',
                 'AP': 'Andhra Pradesh',
                 'AR': 'Arunachal Pradesh',
@@ -1912,7 +1913,7 @@ class InstitutePortal(CustomerPortal):
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
-
+        candidate_worksheet.write_comment('L2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
 
         header_format = workbook.add_format({
             'bold': True,
@@ -1937,9 +1938,9 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
 
-        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
-        state_values2 = ['Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
+        state_values2 = ['Jammu and Kashmir','Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
         # Add data validation for SC/ST column
         candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
@@ -1955,6 +1956,7 @@ class InstitutePortal(CustomerPortal):
         state_cheatsheet.write('B1','State')
 
         state_values = {
+                'JK': 'Jammu and Kashmir',
                 'MH': 'Maharashtra',
                 'AP': 'Andhra Pradesh',
                 'AR': 'Arunachal Pradesh',
@@ -2046,7 +2048,6 @@ class InstitutePortal(CustomerPortal):
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)
-
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
@@ -2065,6 +2066,7 @@ class InstitutePortal(CustomerPortal):
 
 
             state_values = {
+                'JK': 'Jammu and Kashmir',
                 'MH': 'Maharashtra',
                 'AP': 'Andhra Pradesh',
                 'AR': 'Arunachal Pradesh',

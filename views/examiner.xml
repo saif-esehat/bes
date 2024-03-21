@@ -300,9 +300,33 @@
         </field>
     </record>
 
+    <record id="bes_examiner_time_sheet_tree" model="ir.ui.view">
+        <field name="name">examiner.time.sheet.tree</field>
+        <field name="model">examiner.time.sheet</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examiner_id"/>
+                <field name="exam_region"/>
+            </tree>
+        </field>
+    </record>
 
 
-
+    <record id="bes_examiner_time_sheet_form" model="ir.ui.view">
+            <field name="name">examiner.time.sheet.form</field>
+            <field name="model">examiner.time.sheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <!-- <field name="travelling_details" readonly="1">
+                            <tree editable="bottom">
+                                <field name="subject_name" />
+                            </tree>
+                        </field> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
     </data>
 </odoo>

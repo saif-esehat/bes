@@ -286,7 +286,33 @@ class CCMCOralPracAssignment(models.Model):
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
     
     
-# class ExaminerTimeSheet(models.Model):
-#     _name = "examiner.time.sheet"
+class ExaminerTimeSheet(models.Model):
+    _name = "examiner.time.sheet"
+    _description = 'Examiner Time Sheet'
+    
+    examiner_id = fields.Many2one('bes.examiner','Examiner')
+    assignment_id = fields.Many2one('examiner.assignment','Assignment ID')
+    exam_region = fields.Many2one('exam.center', 'Place')
+    # date_of_examination = fields.Many2one('')
+    
+    arrival_institute = fields.Datetime('Date & Time of arrival at the Institute')
+    exam_start = fields.Datetime('Commencement of Practical/Oral Examination')
+    lunch_break = fields.Datetime('Lunch Break')
+    time_of_completion = fields.Datetime('Time of completion')
+    debriefing_institute = fields.Datetime('Time spent for debriefing the Institute (Last day of examination)')
+    
+    state = fields.Selection([
+        ('active', '1'),
+        ('inactive', '2')
+    ], string='State',default="active")
+    
+    # travelling_details = fields.One2many('time.sheet.travel.detail',"Travelling Details")
     
     
+    
+class ExaminerTimeSheetTravelling(models.Model):
+    _name = "time.sheet.travel.detail"
+    _description = 'Examiner Travelling Details'
+    
+    # left_residence = fields.char('')
+    # mode_of_travel = fields.Char('Mode of travel')
