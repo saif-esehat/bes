@@ -1310,7 +1310,7 @@ class CCMCExam(models.Model):
     
     def move_done(self):
         
-        
+        # import wdb; wdb.set_trace(); 
         cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
         ccmc_oral_state = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
         ccmc_online_state = self.ccmc_online.state == 'done'
@@ -1335,9 +1335,42 @@ class CCMCExam(models.Model):
                  else:
                     raise ValidationError("CCMC Online Not Confirmed")
             
-             self.overall_marks = self.ccmc_oral.toal_ccmc_rating + self.cookery_bakery.total_mrks + self.ccmc_online.scoring_total
-             
+             self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online
+            
              #Percentage Calculation
+             
+             self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
+             self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+             self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
+             self.overall_percentage = (self.overall_marks/300)*100
+             
+             
+             if self.cookery_practical >= 60:
+                    self.cookery_bakery_prac_status = 'passed'
+             else:
+                    self.cookery_bakery_prac_status = 'failed'
+                    
+             if self.cookery_oral >= 60:
+                self.ccmc_oral_prac_status = 'passed'
+             else:
+                self.ccmc_oral_prac_status = 'failed'
+                
+                
+             if self.cookery_gsk_online  >= 60:
+                self.ccmc_online_status = 'passed'
+             else:
+                self.ccmc_online_status = 'failed'
+                    
+             all_passed = all(field == 'passed' for field in [self.ccmc_oral_prac_status,self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+
+             if all_passed:
+                self.write({'certificate_criteria':'passed'})
+             else:
+                self.write({'certificate_criteria':'pending'})
+             
+             
+             
+             self.state = '2-done'
                 
                      
         
@@ -1388,7 +1421,7 @@ class CCMCExam(models.Model):
                     self.write({'certificate_criteria':'pending'})
                     
                 
-                self.ccmc_state = '2-done'
+                self.state = '2-done'
                 
             else:
                 raise ValidationError("Not All exam are Confirmed")
