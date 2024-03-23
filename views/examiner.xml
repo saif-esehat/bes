@@ -153,11 +153,12 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
-                    <field name="mobile"/>
+                    <field name="exam_assignment"/>
+                    <!-- <field name="mobile"/>
                     <field name="email"/>
                     <field name="pan_no"/>
                     <field name="subject_id"/>
-                    <field name="exam_center"/>
+                    <field name="exam_center"/> -->
                     <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
                 </tree>
             </field>
