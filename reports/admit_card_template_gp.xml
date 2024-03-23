@@ -16,12 +16,12 @@
                         </t>
                     </div>
                     <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
-                        <strong>Exam Center: <span><t t-esc="o.institute_name.name"/></span></strong>
+                        <strong>Exam Center: <span><t t-esc="o.gp_candidate.institute_id.name"/></span></strong>
                     </div>
                     <div style="position: relative;">
                         <!-- Candidate Image -->
                         <t t-if="o.gp_candidate.candidate_image">
-                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 120px; height: 120px; position: absolute; top: 0%; right: 8px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 125px; height: 150px; position: absolute; top: 0%; right: 8px;" />
                         </t>
                         <!-- Candidate Details  position: absolute; top: 10%; left: 3%; border-collapse: collapse; border: 1px solid #ddd; -->
                         <div style="margin-top:2rem">
@@ -30,7 +30,7 @@
                                 <tr>
                                     <td colspan="6">
                                         <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
-                                            <strong>Examination: June 2022</strong>
+                                            <strong>Examination: <span t-field="docs.dgs_batch.to_date"/></strong>
                                         </div>
                                     </td>
                                 </tr>
@@ -38,7 +38,7 @@
                                 <tr>
                                     <td colspan="6">
                                         <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px; width:100%;">
-                                            <strong>Roll No: <span t-esc="o.gp_candidate.roll_no"/></strong>
+                                            <strong>Roll No: <span t-esc="o.exam_id"/></strong>
                                         </div>
                                         <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
                                             <strong style=" text-align: right;">Name as in INDOS: <span t-esc="o.gp_candidate.name"/></strong>
