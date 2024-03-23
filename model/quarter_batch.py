@@ -39,8 +39,13 @@ class DGSBatch(models.Model):
     def move_dgs_approved(self):
         
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        ccmc_exams = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.id)])
+        ccmc_exams
         for exam in exams:
             exam.dgs_approval()
+        for exam in ccmc_exams:
+            exam.dgs_approval()
+        
                     
         self.state = '3-dgs_approved'
     
@@ -67,12 +72,12 @@ class DGSBatch(models.Model):
     
     def open_gp_exams(self):
         
-        # import wdb;wdb.set_trace()
         exam_ids = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)]).ids
-        
+        # import wdb;wdb.set_trace()
+
         return {
         'name': 'GP Exams',
-        'domain': [ ('id' , 'in' ,exam_ids) ],
+        'domain': [ ('id' , 'in' , exam_ids) ],
         'view_type': 'form',
         'res_model': 'gp.exam.schedule',
         'view_id': False,

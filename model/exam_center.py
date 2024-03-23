@@ -26,3 +26,33 @@ class ExamCenter(models.Model):
             'default_exam_coordinator_id': self.id    
             }
         }
+    
+    def assignment(self):
+        
+        return {
+        'name': 'Exam Assignment',
+        'domain': [('exam_region', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'examiner.assignment',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_exam_coordinator_id': self.id    
+            }
+        }
+        
+    def time_sheet(self):
+        
+        return {
+        'name': 'Time Sheets',
+        'domain': [('exam_region', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'examiner.time.sheet',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            'default_exam_coordinator_id': self.id    
+            }
+        }

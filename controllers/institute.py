@@ -316,38 +316,19 @@ class InstitutePortal(CustomerPortal):
     #CCMC Invoice  
     @http.route(['/my/createccmcinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateCCMCinvoice(self, **kw):
-        print(kw,"keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
         # import wdb; wdb.set_trace();
         user_id = request.env.user.id
-        print(request.env.user)
-        print(user_id,"userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        
-        batch_id = kw.get("ccmc_invoice_batch_id")
-        print(batch_id,"battttch idddddddddddddd")
-        
+        print(request.env.user)   
+        batch_id = kw.get("ccmc_invoice_batch_id")   
         batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
-        print(request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]))
-        
-        print(batch,"batcheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
         
-        print(request.env["bes.institute"].sudo().search([('user_id', '=', user_id)]))
-        print(user_id)
-        
-        print(institute_id,"institttttttttttttttttttttttttttttttttttt")
-        
         ccmc_partner_id = institute_id.user_id.partner_id.id
-        
-        print(ccmc_partner_id,"Partnerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        
         product_id_ccmc = batch.ccmc_course.exam_fees.id
-        print(batch.ccmc_course)
-        print(product_id_ccmc,"prooooooooooooooooooooooooooooooooooooooooooo")
         
         product_price = batch.ccmc_course.exam_fees.lst_price
-        print(product_price,"priceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         
         qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
@@ -385,14 +366,11 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/deletegpcandidate'], type="http", auth="user", website=True)
     def DeleteGPcandidate(self, **kw):
-        print(kw,"keeeewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+
         user_id = request.env.user.id
         candidate_id = kw.get("candidate_id")
         
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))])
-        print(batch,"batchhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
-       
-        print(batch.state,"state=======================================================================================================")
         candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).user_id
         if not candidate_user_id:
             request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).unlink()
@@ -406,10 +384,10 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/creategpcandidateform'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPcandidate(self, **kw):
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwww")
+
         user_id = request.env.user.id
         batch_id = kw.get("batch_id")
-        print(batch_id,"batch_idddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+
         
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
@@ -453,7 +431,6 @@ class InstitutePortal(CustomerPortal):
             
             
             request.env['gp.candidate'].sudo().create(candidate_data)
-            # print(request.env['gp.candidate'].sudo().create(candidate_data),"DATA_CHECK================================================================================================")
             
             return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
         
@@ -467,10 +444,6 @@ class InstitutePortal(CustomerPortal):
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
-        print("")
-        # candidate_count = request.env['institute.ccmc.batches'].sudo().search([('id', '=',batch_id)]).candidate_count
-        print(request.env['institute.ccmc.batches'].sudo().search([('id', '=',batch_id)]).candidate_count,"countt")
-        print(request.env['institute.ccmc.batches'].sudo().search([('id', '=',batch_id)]).ccmc_candidate_count,"ccmc_conttttttttttttttttt")
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
@@ -508,8 +481,6 @@ class InstitutePortal(CustomerPortal):
             }
             
             # import wdb; wdb.set_trace();
-            # print(candidate_data,"candidate data=======================================================================================")
-            # print(request.env['ccmc.candidate'].sudo().create(candidate_data),"================================================================================")
             request.env['ccmc.candidate'].sudo().create(candidate_data)
             
             
@@ -517,8 +488,6 @@ class InstitutePortal(CustomerPortal):
     
     @http.route('/my/confirmccmcuser', type='http', auth="public", website=True)
     def CreateCCMCUser(self, **kw):
-
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 
         batch = request.env['ccmc.candidate'].sudo().search([('id', '=', kw.get("confirm_ccmc_candidate_batch_id"))]) 
 
@@ -546,7 +515,6 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/deleteccmccandidate'], type="http", auth="user", website=True)
     def DeleteCCMCcandidate(self, **kw):
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         
         user_id = request.env.user.id
         candidate_id = kw.get("ccmc_candidate_id")
@@ -554,8 +522,6 @@ class InstitutePortal(CustomerPortal):
         print(candidate_id)
 
         batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',kw.get("delete_ccmc_candidate_batch_id"))])
-        
-        print(batch,"hellowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         
         candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).user_id
         if not candidate_user_id:
@@ -569,7 +535,6 @@ class InstitutePortal(CustomerPortal):
     @http.route('/confirmgpuser', type='http', auth="public", website=True)
     def CreateGPUser(self, **kw):
 
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 
         batch = request.env['gp.candidate'].sudo().search([('id', '=', kw.get("confirm_gp_candidate_batch_id"))])
         batch_id = kw.get("confirm_gp_candidate_batch_id")
@@ -752,9 +717,7 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            print(course_name,"ffffffffffffffffffffffffffffffffffffffff")
             courses_taught = kw.get("courses_taught")
-            print(courses_taught,"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
             
             faculty_data = {
                 "faculty_name": faculty_name,
@@ -1807,7 +1770,7 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
 
-        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
 
         # Add data validation for SC/ST column
@@ -1823,6 +1786,7 @@ class InstitutePortal(CustomerPortal):
         state_cheatsheet.write('B1','State')
 
         state_values = {
+                'JK': 'Jammu and Kashmir',
                 'MH': 'Maharashtra',
                 'AP': 'Andhra Pradesh',
                 'AR': 'Arunachal Pradesh',
@@ -1912,7 +1876,7 @@ class InstitutePortal(CustomerPortal):
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
-
+        candidate_worksheet.write_comment('L2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
 
         header_format = workbook.add_format({
             'bold': True,
@@ -1937,9 +1901,9 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
 
-        state_values = ['MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
-        state_values2 = ['Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
+        state_values2 = ['Jammu and Kashmir','Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
         # Add data validation for SC/ST column
         candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
@@ -1955,6 +1919,7 @@ class InstitutePortal(CustomerPortal):
         state_cheatsheet.write('B1','State')
 
         state_values = {
+                'JK': 'Jammu and Kashmir',
                 'MH': 'Maharashtra',
                 'AP': 'Andhra Pradesh',
                 'AR': 'Arunachal Pradesh',
@@ -2046,7 +2011,6 @@ class InstitutePortal(CustomerPortal):
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)
-
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
@@ -2065,6 +2029,7 @@ class InstitutePortal(CustomerPortal):
 
 
             state_values = {
+                'JK': 'Jammu and Kashmir',
                 'MH': 'Maharashtra',
                 'AP': 'Andhra Pradesh',
                 'AR': 'Arunachal Pradesh',

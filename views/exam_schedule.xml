@@ -239,11 +239,11 @@
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
+                            <field name="institute_code"/>
                             
                             <field name="dgs_batch" readonly="0"/>
                             <field name="ccmc_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
-                            <field name="institute_name"/>
                         </group>
                         <group>
                             <field name="attempt_number"/>
@@ -303,6 +303,9 @@
                             <field name="exam_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
+                            <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="ccmc_rank" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                         </group>
                         <group style="width:50%">
                             <field name="url" invisible="1"/>
@@ -322,6 +325,10 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="exam_id"/>
+                    <field name="overall_marks"/>
+                    <field name="certificate_criteria"/>
+                    <field name="state"/>
+                    <field name="ccmc_rank"/>
                 </tree>
             </field>
         </record>

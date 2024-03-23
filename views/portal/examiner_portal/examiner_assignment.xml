@@ -32,7 +32,8 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            
+            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Marksheet</a>
+                <a href="/open_candidate_form/download_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Marksheet</a>
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
