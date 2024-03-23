@@ -138,10 +138,12 @@ class Examiner(models.Model):
         }
 
         group_id = self.env.ref(group_xml_id).id
+        print(group_id)
+        # import wdb; wdb.set_trace()
+        
         portal_user = self.env['res.users'].sudo().create(user_values)
         portal_user.write({'groups_id': [(4, group_id)]  })
         examiner.write({'user_id': portal_user.id})  # Associate the user with the institute
-        # import wdb; wdb.set_trace()
         examiner_tag = self.env.ref('bes.examiner_tags').id
         portal_user.partner_id.write({'email': examiner.email,'phone':examiner.phone,'mobile':examiner.mobile,'street':examiner.street,'street2':examiner.street2,'city':examiner.city,'zip':examiner.zip,'state_id':examiner.state_id.id,'category_id':[examiner_tag]})
         return examiner
@@ -294,19 +296,17 @@ class ExaminerTimeSheet(models.Model):
     assignment_id = fields.Many2one('examiner.assignment','Assignment ID')
     exam_region = fields.Many2one('exam.center', 'Place')
     # date_of_examination = fields.Many2one('')
-    
-    arrival_institute = fields.Datetime('Date & Time of arrival at the Institute')
-    exam_start = fields.Datetime('Commencement of Practical/Oral Examination')
-    lunch_break = fields.Datetime('Lunch Break')
-    time_of_completion = fields.Datetime('Time of completion')
-    debriefing_institute = fields.Datetime('Time spent for debriefing the Institute (Last day of examination)')
+    remarks = fields.Char('Remakrs')
+    remarks_quality = fields.Char('Remarks on the quality of transport and logistics')
     
     state = fields.Selection([
         ('active', '1'),
         ('inactive', '2')
     ], string='State',default="active")
     
-    # travelling_details = fields.One2many('time.sheet.travel.detail',"Travelling Details")
+    examination_details = fields.One2many('time.sheet.exam','examiner_id','Time Sheet for Examination')
+    
+    travelling_details = fields.One2many('time.sheet.travel.detail','travel_id',"Travelling Details")
     
     
     
@@ -314,5 +314,25 @@ class ExaminerTimeSheetTravelling(models.Model):
     _name = "time.sheet.travel.detail"
     _description = 'Examiner Travelling Details'
     
-    # left_residence = fields.char('')
-    # mode_of_travel = fields.Char('Mode of travel')
+    
+    # examiner_id = fields.Many2one('bes.examiner','Examiner')
+    travel_id = fields.Many2one('bes.examiner','Examiner')
+    travel_details = fields.Selection([
+        ('left_residence','Left Residence'),
+        ('arrival_institute','Arrival at the Institute/Hotel'),
+        ('left_institute','Left the Institute/Hotel'),
+        ('arrival_residence','Arrival at Residence')],string='Travelling Details')
+    date_time = fields.Datetime('Date and Time')
+    mode_of_travel = fields.Char('Mode of travel')
+
+
+class ExaminerTimeSheetExaminatopn(models.Model):
+    _name = "time.sheet.exam"
+    _description = 'Examiner Time Sheet Examination'
+    
+    examiner_id = fields.Many2one('bes.examiner','Examiner')
+    arrival_institute = fields.Datetime('Date & Time of arrival at the Institute')
+    exam_start = fields.Datetime('Commencement of Practical/Oral Examination')
+    lunch_break = fields.Datetime('Lunch Break')
+    time_of_completion = fields.Datetime('Time of completion')
+    debriefing_institute = fields.Datetime('Time spent for debriefing the Institute (Last day of examination)')

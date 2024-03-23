@@ -70,8 +70,6 @@ class ExaminerPortal(CustomerPortal):
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
 
-    
-    
     # def check_user_groups(group_xml_id):
     #     ​def decorator(func):
     #     ​	​def wrapper(self, *args, **kwargs):
@@ -80,6 +78,8 @@ class ExaminerPortal(CustomerPortal):
     #     ​	​	​return func(self, *args, **kwargs)
     #     ​	​return wrapper
     #     ​return decorator
+    
+    
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
     def open_candidate_form(self, **rec):
         if 'rec_id' in rec:
@@ -97,13 +97,14 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
             
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'gp_oral_prac':gp_oral_prac , 'subject':subject ,'assignment_id':rec_id, 'page_name':'gp_assignment'})
+            return request.render("bes.examiner_candidate_list", 
+                                  {'candidate': candidate,
+                                   'gp_oral_prac':gp_oral_prac , 
+                                   'subject':subject ,'assignment_id':rec_id, 
+                                   'page_name':'gp_assignment'})
         else:
-            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
             search_value = rec.get('search_value') or request.params.get('search_value')
-            print('filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',search_filter)
-            print('valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',search_value)
 
 
     @http.route('/open_ccmc_candidate_form', type='http', auth="user", website=True)
@@ -125,13 +126,16 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
             
-            return request.render("bes.examiner_candidate_list", {'candidate': candidate,'ccmc_assignment':ccmc_assignment , 'subject':subject ,'assignment_id':rec_id, "page_name": "ccmc_assignment"})
+            return request.render("bes.examiner_candidate_list", 
+                                  {'candidate': candidate,
+                                   'ccmc_assignment':ccmc_assignment , 
+                                   'subject':subject ,
+                                   'assignment_id':rec_id, 
+                                   "page_name": "ccmc_assignment"})
         else:
-            print('candidateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',rec)
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
             search_value = rec.get('search_value') or request.params.get('search_value')
-            print('filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',search_filter)
-            print('valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',search_value)
+
 
 
 
@@ -506,13 +510,11 @@ class ExaminerPortal(CustomerPortal):
                 
             }
 
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
-
             # Write to the One2many field using the constructed dictionary
             marksheet.write(vals)
 
         else:
-            print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
+
             rec_id = rec['rec_id']
             
             ccmc_candidate_rec = candidate.search([('id', '=', rec_id)])
@@ -524,3 +526,84 @@ class ExaminerPortal(CustomerPortal):
             exam_date = ccmc_oral.ccmc_oral_exam_date
             
             return request.render("bes.ccmc_gsk_oral_marks_submit", {'indos': candidate_indos,'ccmc_oral':ccmc_oral ,'candidate_name': candidate_name, 'candidate_image': candidate_image,'exam_date':exam_date,  "page_name": "ccmc_oral"})
+        
+        
+        
+    @http.route('/open_candidate_form/download_marksheet', type='http', auth="user", website=True)
+    def download_marksheet(self):
+
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        candidate_worksheet = workbook.add_worksheet("Candidates")
+        
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        candidate_worksheet.set_column('A:XDF', None, unlocked)
+        candidate_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['SR NO', 'Name of the Candidate', 'Candidate Code No', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        for col, value in enumerate(header):
+            candidate_worksheet.write(0, col, value, header_format)
+            # candidate_worksheet.set_column('J:J', None, number_format)
+            # candidate_worksheet.set_column('G:G', None, zip_format)
+
+
+        # Set date format for DOB column
+        candidate_worksheet.set_column('C:C', None, date_format)
+        # Add data validation for SC/ST column
+        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
+                                                'source': dropdown_values })
+        
+
+        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        
+        row = 1
+        for state, code in state_values.items():
+            state_cheatsheet.write(row, 0, state)
+            state_cheatsheet.write(row, 1, code)
+            row += 1
+
+
+        # state_cheatsheet.protect()
+        # state_cheatsheet.write(1, None, None, {'locked': False})
+        # state_cheatsheet.set_row(0, None, None)
+        
+        
+
+        
+        
+        
+
+
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=candidate_format_file.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response

@@ -718,7 +718,7 @@ class GPExam(models.Model):
             vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
 
             a = super(GPExam, self).create(vals)   
-            print(a,"==============================================================================================")
+
             if a.gsk_oral_prac_status == "pending":
                 self.env['gp.exam.appear'].create(
                     {

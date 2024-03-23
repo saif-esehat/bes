@@ -80,20 +80,20 @@
                             </thead>
                             <tbody>
                                 <!-- Rows for each exam and status -->
-                                <tr t-if="o.gsk_oral_prac_status == 'pending'">
+                                <tr t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
                                     <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Oral/Practical</td>
                                     <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.gsk_oral_prac_status"/> -->
                                 </tr>
-                                <tr t-if="o.gsk_online_status == 'pending'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Online Status</td>
+                                <tr t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
+                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Online</td>
                                     <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.gsk_online_status"/> -->
                                 </tr>
-                                <tr t-if="o.mek_oral_prac_status == 'pending'">
+                                <tr t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
                                     <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Mek Oral/Practical</td>
                                     <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.mek_oral_prac_status"/> -->
                                 </tr>
-                                <tr t-if="o.mek_online_status == 'pending'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">MeK Online Status</td>
+                                <tr t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
+                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">MeK Online</td>
                                     <!-- <td style="width: 50%; padding: 10px; border: 1px solid #ddd;" t-esc="o.mek_online_status"/> -->
                                 </tr>
                             </tbody>

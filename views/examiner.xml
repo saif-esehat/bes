@@ -318,11 +318,37 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <!-- <field name="travelling_details" readonly="1">
-                            <tree editable="bottom">
-                                <field name="subject_name" />
-                            </tree>
-                        </field> -->
+                        <group style="width:50%">
+                            <field name="examiner_id"/>
+                            <field name="exam_region"/>
+                        </group>
+                        <group style="width:100%">
+                            <field name="remarks"/>
+                            <field name="remarks_quality"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Examination Time Sheet">
+                                <field name="examination_details">
+                                    <tree editable="bottom">
+                                        <field name="arrival_institute" />
+                                        <field name="exam_start" />
+                                        <field name="lunch_break" />
+                                        <field name="time_of_completion" />
+                                        <field name="debriefing_institute" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Travelling Details">
+                                <field name="travelling_details">
+                                    <tree editable="bottom">
+                                        <field name="travel_details" style="width:50%"/>
+                                        <field name="date_time" style="width:25%"/>
+                                        <field name="mode_of_travel" style="width:25%"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
