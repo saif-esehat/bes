@@ -753,7 +753,6 @@ class GPExam(models.Model):
                 
             return a 
             
-        return a
     
     # @api.model
     # def create(self,vals):
@@ -790,8 +789,8 @@ class GPExam(models.Model):
         
         
     def move_done(self):
-        
-        # import wdb; wdb.set_trace();
+                # import wdb; wdb.set_trace();
+
         
         
 
@@ -803,75 +802,150 @@ class GPExam(models.Model):
         gsk_online_done = self.gsk_online.state == 'done' 
         mek_online_done = self.mek_online.state == 'done'
         
-        
-        if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
-        
-            mek_oral_marks = self.mek_oral.mek_oral_total_marks
-            self.mek_oral_marks = mek_oral_marks
-            mek_practical_marks = self.mek_prac.mek_practical_total_marks
-            self.mek_practical_marks = mek_practical_marks
-            mek_total_marks = mek_oral_marks + mek_practical_marks
-            self.mek_total = mek_total_marks
-            self.mek_percentage = (mek_total_marks/175) * 100
-            self.mek_online_marks = self.mek_online.scoring_total
-            self.mek_online_percentage = (self.mek_online_marks/75)*100
+        if not (len(self.mek_oral) == 0 and len(self.mek_prac) == 0) or not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0) or not (len(self.gsk_online) == 0) or not (len(self.mek_online) == 0)  :
             
-            
-            
-            if self.mek_percentage >= 60:
-                self.mek_oral_prac_status = 'passed'
-            else:
-                self.mek_oral_prac_status = 'failed'
+            if not (len(self.mek_oral) == 0 and len(self.mek_prac) == 0):
+                if mek_oral_draft_confirm and mek_practical_draft_confirm: 
+                    mek_oral_marks = self.mek_oral.mek_oral_total_marks
+                    self.mek_oral_marks = mek_oral_marks
+                    mek_practical_marks = self.mek_prac.mek_practical_total_marks
+                    self.mek_practical_marks = mek_practical_marks
+                    mek_total_marks = mek_oral_marks + mek_practical_marks
+                    self.mek_total = mek_total_marks
+                    self.mek_percentage = (mek_total_marks/175) * 100
+                    
+                    if self.mek_percentage >= 60:
+                        self.mek_oral_prac_status = 'passed'
+                    else:
+                        self.mek_oral_prac_status = 'failed'
+                else:
+                    raise ValidationError("MEK Oral Or Practical Not Confirmed")
 
-
-            gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
-            self.gsk_oral_marks = gsk_oral_marks
-            gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
-            self.gsk_practical_marks = gsk_practical_marks
-            gsk_total_marks = gsk_oral_marks + gsk_practical_marks
-            self.gsk_total = gsk_total_marks
-            self.gsk_percentage = (gsk_total_marks/175) * 100
-            self.gsk_online_marks = self.gsk_online.scoring_total
-            self.gsk_online_percentage = (self.gsk_online_marks/75)*100
+            if not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0):
+                
+                if gsk_oral_draft_confirm and gsk_practical_draft_confirm:
+                    gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
+                    self.gsk_oral_marks = gsk_oral_marks
+                    gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
+                    self.gsk_practical_marks = gsk_practical_marks
+                    gsk_total_marks = gsk_oral_marks + gsk_practical_marks
+                    self.gsk_total = gsk_total_marks
+                    self.gsk_percentage = (gsk_total_marks/175) * 100
+                    
+                    if self.gsk_percentage >= 60:
+                        self.gsk_oral_prac_status = 'passed'
+                    else:
+                        self.gsk_oral_prac_status = 'failed'
+                else:
+                    raise ValidationError("GSK Oral Or Practical Not Confirmed")
             
+            if not (len(self.gsk_online) == 0):
+                
+                if gsk_online_done:
+                
+                    self.gsk_online_marks = self.gsk_online.scoring_total
+                    self.gsk_online_percentage = (self.gsk_online_marks/75)*100
+                    
+                    if self.gsk_online_percentage >= 60 :
+                        self.gsk_online_status = 'passed'
+                    else:
+                        self.gsk_online_status = 'failed'
+                else:
+                    raise ValidationError("GSK Online Exam Not Done or Confirmed")
+            
+            if not (len(self.mek_online) == 0):
+                if mek_online_done:
+                
+                    self.mek_online_marks = self.mek_online.scoring_total
+                    self.mek_online_percentage = (self.mek_online_marks/75)*100
+                    
+                    if self.mek_online_percentage >= 60 :
+                        self.mek_online_status = 'passed'
+                    else:
+                        self.mek_online_status = 'failed'
+                else:
+                    raise ValidationError("MEK Online Exam Not Done or Confirmed")
+                
+                
+            
+            # print("Doing Nothing")
             overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
             self.overall_marks = overall_marks
             self.overall_percentage = (overall_marks/500) * 100
             
-            if self.gsk_percentage >= 60:
-                self.gsk_oral_prac_status = 'passed'
-            else:
-                self.gsk_oral_prac_status = 'failed'
-
-            
-            # self.state = '2-done'
-            
-            
-            
-            
-            if self.gsk_online_percentage >= 60 :
-                self.gsk_online_status = 'passed'
-            else:
-                self.gsk_online_status = 'failed'
-                
-            
-            if self.mek_online_percentage >= 60 :
-                self.mek_online_status = 'passed'
-            else:
-                self.mek_online_status = 'failed'
-            
-            
-            
-            
-            all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
-
-            
             self.state = '2-done'
-                
-                
-        
         else:
-             raise ValidationError("Not All exam are Confirmed")
+            
+        
+        
+            if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
+            
+                mek_oral_marks = self.mek_oral.mek_oral_total_marks
+                self.mek_oral_marks = mek_oral_marks
+                mek_practical_marks = self.mek_prac.mek_practical_total_marks
+                self.mek_practical_marks = mek_practical_marks
+                mek_total_marks = mek_oral_marks + mek_practical_marks
+                self.mek_total = mek_total_marks
+                self.mek_percentage = (mek_total_marks/175) * 100
+                self.mek_online_marks = self.mek_online.scoring_total
+                self.mek_online_percentage = (self.mek_online_marks/75)*100
+                
+                
+                
+                if self.mek_percentage >= 60:
+                    self.mek_oral_prac_status = 'passed'
+                else:
+                    self.mek_oral_prac_status = 'failed'
+
+
+                gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
+                self.gsk_oral_marks = gsk_oral_marks
+                gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
+                self.gsk_practical_marks = gsk_practical_marks
+                gsk_total_marks = gsk_oral_marks + gsk_practical_marks
+                self.gsk_total = gsk_total_marks
+                self.gsk_percentage = (gsk_total_marks/175) * 100
+                self.gsk_online_marks = self.gsk_online.scoring_total
+                self.gsk_online_percentage = (self.gsk_online_marks/75)*100
+                
+                overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
+                self.overall_marks = overall_marks
+                self.overall_percentage = (overall_marks/500) * 100
+                
+                if self.gsk_percentage >= 60:
+                    self.gsk_oral_prac_status = 'passed'
+                else:
+                    self.gsk_oral_prac_status = 'failed'
+
+                
+                # self.state = '2-done'
+                
+                
+                
+                
+                if self.gsk_online_percentage >= 60 :
+                    self.gsk_online_status = 'passed'
+                else:
+                    self.gsk_online_status = 'failed'
+                    
+                
+                if self.mek_online_percentage >= 60 :
+                    self.mek_online_status = 'passed'
+                else:
+                    self.mek_online_status = 'failed'
+                
+                
+                
+                
+                all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+
+                
+                self.state = '2-done'
+                    
+                    
+            
+            else:
+                raise ValidationError("Not All exam are Confirmed")
 
     attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     
@@ -1165,7 +1239,8 @@ class CCMCExam(models.Model):
     @api.depends('overall_percentage')
     def _compute_rank(self):
         
-        sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+        for rec in self:
+            sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
                                                              order='overall_percentage desc , institute_code asc, ccmc_candidate asc')
         
         # import wdb; wdb.set_trace();
@@ -1235,62 +1310,123 @@ class CCMCExam(models.Model):
     
     def move_done(self):
         
-        
-        cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
-        ccmc_oral = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
-        ccmc_online = self.ccmc_online.state == 'done'
-        
         # import wdb; wdb.set_trace(); 
-        if cookery_draft_confirm and ccmc_oral and ccmc_online:
+        cookery_draft_confirm = self.cookery_bakery.cookery_draft_confirm == 'confirm'
+        ccmc_oral_state = self.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'
+        ccmc_online_state = self.ccmc_online.state == 'done'
+        
+        
+        if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 ) or not (len(self.ccmc_online)==0):
             
-            # All CCMC Marks
-            cookery_bakery_marks = self.cookery_bakery.total_mrks
-            ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
-            self.ccmc_oral_total = ccmc_oral_marks
-            self.cookery_practical = cookery_bakery_marks
-            cookery_gsk_online = self.ccmc_online.scoring_total
-            self.cookery_gsk_online = cookery_gsk_online
-            self.overall_marks = ccmc_oral_marks + cookery_bakery_marks + cookery_gsk_online
-            
-            
-            
-            #All Percentage
-            self.cookery_bakery_percentage = (cookery_bakery_marks/100) * 100
-            self.ccmc_oral_percentage = (ccmc_oral_marks/100) * 100
-            self.cookery_gsk_online_percentage = (cookery_gsk_online/100) * 100
-            self.overall_percentage = (self.overall_marks/300) * 100
-            
-            
-            if self.cookery_practical >= 60:
-                self.cookery_bakery_prac_status = 'passed'
-            else:
-                self.cookery_bakery_prac_status = 'failed'
+             if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 ):
+                 
+                 if cookery_draft_confirm and ccmc_oral_state:
+                     cookery_bakery_marks = self.cookery_bakery.total_mrks
+                     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+                     self.ccmc_oral_total = ccmc_oral_marks
+                     self.cookery_practical = cookery_bakery_marks
+                 else:
+                    raise ValidationError("MEK Oral Or Practical Not Confirmed")
                 
-            if self.cookery_oral >= 60:
+             if not (len(self.ccmc_online)==0):
+                 if ccmc_online_state:
+                    cookery_gsk_online = self.ccmc_online.scoring_total
+                    self.cookery_gsk_online = cookery_gsk_online
+                 else:
+                    raise ValidationError("CCMC Online Not Confirmed")
+            
+             self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online
+            
+             #Percentage Calculation
+             
+             self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
+             self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+             self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
+             self.overall_percentage = (self.overall_marks/300)*100
+             
+             
+             if self.cookery_practical >= 60:
+                    self.cookery_bakery_prac_status = 'passed'
+             else:
+                    self.cookery_bakery_prac_status = 'failed'
+                    
+             if self.cookery_oral >= 60:
                 self.ccmc_oral_prac_status = 'passed'
-            else:
+             else:
                 self.ccmc_oral_prac_status = 'failed'
-            
-            
-            if self.cookery_gsk_online  >= 60:
+                
+                
+             if self.cookery_gsk_online  >= 60:
                 self.ccmc_online_status = 'passed'
-            else:
+             else:
                 self.ccmc_online_status = 'failed'
-                
-            all_passed = all(field == 'passed' for field in [self.ccmc_oral_prac_status,self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+                    
+             all_passed = all(field == 'passed' for field in [self.ccmc_oral_prac_status,self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
 
-            if all_passed:
+             if all_passed:
                 self.write({'certificate_criteria':'passed'})
-            else:
+             else:
                 self.write({'certificate_criteria':'pending'})
+             
+             
+             
+             self.state = '2-done'
                 
-            
-            self.ccmc_state = '2-done'
-            
+                     
+        
         else:
-            raise ValidationError("Not All exam are Confirmed")
-        # attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
-            # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+        
+            # import wdb; wdb.set_trace(); 
+            if cookery_draft_confirm and ccmc_oral_state and ccmc_online_state:
+                
+                # All CCMC Marks
+                cookery_bakery_marks = self.cookery_bakery.total_mrks
+                ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+                self.ccmc_oral_total = ccmc_oral_marks
+                self.cookery_practical = cookery_bakery_marks
+                cookery_gsk_online = self.ccmc_online.scoring_total
+                self.cookery_gsk_online = cookery_gsk_online
+                self.overall_marks = ccmc_oral_marks + cookery_bakery_marks + cookery_gsk_online
+                
+                
+                
+                #All Percentage
+                self.cookery_bakery_percentage = (cookery_bakery_marks/100) * 100
+                self.ccmc_oral_percentage = (ccmc_oral_marks/100) * 100
+                self.cookery_gsk_online_percentage = (cookery_gsk_online/100) * 100
+                self.overall_percentage = (self.overall_marks/300) * 100
+                
+                
+                if self.cookery_practical >= 60:
+                    self.cookery_bakery_prac_status = 'passed'
+                else:
+                    self.cookery_bakery_prac_status = 'failed'
+                    
+                if self.cookery_oral >= 60:
+                    self.ccmc_oral_prac_status = 'passed'
+                else:
+                    self.ccmc_oral_prac_status = 'failed'
+                
+                
+                if self.cookery_gsk_online  >= 60:
+                    self.ccmc_online_status = 'passed'
+                else:
+                    self.ccmc_online_status = 'failed'
+                    
+                all_passed = all(field == 'passed' for field in [self.ccmc_oral_prac_status,self.cookery_bakery_prac_status,self.ccmc_online_status, self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+
+                if all_passed:
+                    self.write({'certificate_criteria':'passed'})
+                else:
+                    self.write({'certificate_criteria':'pending'})
+                    
+                
+                self.state = '2-done'
+                
+            else:
+                raise ValidationError("Not All exam are Confirmed")
+            # attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
+                # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
             
         
     def send_certificate_email(self):

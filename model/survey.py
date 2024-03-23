@@ -48,12 +48,12 @@ class InheritedSurvey(models.Model):
     
     def generate_unique_string(self):
     # Define the length of the desired string
-        characters = string.ascii_letters + string.digits
+        # characters = string.ascii_letters + string.digits
 
     # Use secrets module to generate a random string of the specified length
-        random_string = ''.join(secrets.choice(characters) for _ in range(10))
+        # random_string = ''.join(secrets.choice(characters) for _ in range(10))
 
-        return random_string
+        return ''.join(random.choices('0123456789', k=6))
 
     
     
