@@ -24,8 +24,8 @@ class BesBatches(models.Model):
     ], string='State', default='1-draft')
     exam_center = fields.Many2one("exam.center","Exam Region",required=True)
     examiners = fields.Many2many('bes.examiner', string="Examiners")
-    exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
-    exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
+    # exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
+    # exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
     candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count")
     
     
@@ -150,7 +150,7 @@ class ExamCandidate(models.Model):
     _name = 'exam.schedule.bes.candidate'
     _description = 'Exam Candidate'
     
-    exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule",required=True)
+    # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule",required=True)
     partner_id = fields.Many2one("res.partner",string="Contacts")
     name = fields.Char("Name of Candidate",)
     indos_no = fields.Char("Indos No.")
@@ -371,57 +371,115 @@ class ExamOnline(models.Model):
       
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
-    _rec_name = "examiners"
-    exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
-    examiners = fields.Many2one('bes.examiner', string="Examiner")
-    subject = fields.Many2one("course.master.subject","Subject")
-    start_time_online = fields.Datetime("Start Time")
-    end_time_online = fields.Datetime("End Time")
-    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count")
-    candidates = fields.Many2many("exam.schedule.bes.candidate","exam_type_practical_oral_candidate_rel","exam_type_prac_oral_id","exam_candidate_id",string="Candidate")
+    # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
+    # examiners = fields.Many2one('bes.examiner', string="Examiner")
+    # subject = fields.Many2one("course.master.subject","Subject")
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
+
+    start_time = fields.Datetime("Start Time")
+    end_time = fields.Datetime("End Time")
+    examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Examiners")
+   
+    
+    course = fields.Many2one("course.master",string="Course")
+    
+    subject = fields.Many2one("course.master.subject",string="Subject")
+
 
     state = fields.Selection([
         ('1-draft', 'Draft'),
-        ('2-confirm', 'Confirmed'),
-        ('3-in_progress','In-Progress'),   
-        ('4-done','Done'),
-        ('5-completed','Completed')     
+        ('2-confirm', 'Confirmed')     
     ], string='State', default='1-draft')
     
-    def open_oral_prac_candidate(self):
+    def confirm(self):
+        import wdb;wdb.set_trace()
+    
+
+class ExamOralPracticalExaminers(models.Model):
+    _name = 'exam.type.oral.practical.examiners'
+    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False)
+    
+    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False)
+    course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course")
+    examiners = fields.Many2one('bes.examiner', string="Examiner")
+    exam_date = fields.Date("Exam Date")
+    marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates")
+    
+    def open_marksheet_list(self):
         
-        candidates_id = self.candidates.ids
+        if self.prac_oral_id.subject.name == 'GSK':
+            views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_gp_form_gsk").id, 'form')]
+        elif self.prac_oral_id.subject.name == 'MEK':
+             views = [(self.env.ref("bes.view_marksheet_gp_tree_mek").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
+        elif self.prac_oral_id.subject.name == 'CCMC':
+            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
             
+        
+        
         return {
-        'name': 'Exam Candidate',
-        'domain': [('id', 'in', candidates_id)],
-        'view_type': 'form',
-        'res_model': 'exam.schedule.bes.candidate',
-        'view_id': False,
-        'view_mode': 'tree,form',
-        'type': 'ir.actions.act_window',
-        'context': {
-            'subject_id': self.subject.id
+            'name': 'GP Marksheet',
+            'domain': [('examiners_id', '=', self.id)],
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,form',  # Specify both tree and form views
+            'res_model': 'exam.type.oral.practical.examiners.marksheet',
+            'views': views,
+            'target': 'current',
         }
-        }       
+class OralPracticalExaminersMarksheet(models.Model):
+    _name = 'exam.type.oral.practical.examiners.marksheet'
+    
+    examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID")
+    gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate")
+    ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate")
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+
+    
+    
+    
+    # def open_oral_prac_candidate(self):
+        
+    #     candidates_id = self.candidates.ids
+            
+    #     return {
+    #     'name': 'Exam Candidate',
+    #     'domain': [('id', 'in', candidates_id)],
+    #     'view_type': 'form',
+    #     'res_model': 'exam.schedule.bes.candidate',
+    #     'view_id': False,
+    #     'view_mode': 'tree,form',
+    #     'type': 'ir.actions.act_window',
+    #     'context': {
+    #         'subject_id': self.subject.id
+    #     }
+    #     }       
         
         
     
-    @api.onchange('exam_schedule_id')
-    def onchange_exam_schedule_id(self):
-        for rec in self:
-            return {'domain':{'subject':[('id','in',rec.exam_schedule_id.course.subjects.ids)]}}
+    # @api.onchange('exam_schedule_id')
+    # def onchange_exam_schedule_id(self):
+    #     for rec in self:
+    #         return {'domain':{'subject':[('id','in',rec.exam_schedule_id.course.subjects.ids)]}}
     
     
-    def compute_candidate_count(self):
-        for rec in self:
-            count = len(rec.candidates)
-            rec.candidate_count = count
+    # def compute_candidate_count(self):
+    #     for rec in self:
+    #         count = len(rec.candidates)
+    #         rec.candidate_count = count
     
-    @api.onchange('exam_schedule_id')
-    def onchange_exam_schedule_id(self):
-        for rec in self:
-            return {'domain':{'examiners':[('id','in',rec.exam_schedule_id.examiners.ids)]}}
+    # @api.onchange('exam_schedule_id')
+    # def onchange_exam_schedule_id(self):
+    #     for rec in self:
+    #         return {'domain':{'examiners':[('id','in',rec.exam_schedule_id.examiners.ids)]}}
    
 
     

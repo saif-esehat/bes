@@ -354,7 +354,7 @@
                             </button>
                         </div>
                         <group style="width:50%;">
-                            <field name="exam_schedule_id" />
+                            <!-- <field name="exam_schedule_id" /> -->
                             <field name="partner_id" />
                             <field name="name" />
                             <field name="mek_visiblity" invisible="1" />

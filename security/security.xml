@@ -42,7 +42,6 @@
     <record id="examiner_duty_record" model="ir.rule">
             <field name="name">Examiner Duty Record</field>
             <field ref="model_exam_type_oral_practical" name="model_id"/>
-            <field name="domain_force">[('examiners.user_id.id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('group_examiners'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
