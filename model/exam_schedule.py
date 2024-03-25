@@ -496,7 +496,7 @@ class ExamOralPracticalExaminers(models.Model):
                     (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
         elif self.prac_oral_id.subject.name == 'CCMC':
             views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
+                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
             
         
         
