@@ -19,5 +19,8 @@
             <field name="number_increment">1</field>
             <field name="use_date_range">False</field>
         </record>
+
+        
+
     </data>
 </odoo>
