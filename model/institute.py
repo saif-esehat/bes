@@ -15,6 +15,7 @@ class Institute(models.Model):
     name = fields.Char("Name")
     
     institute_repeater = fields.Boolean("Repeater Institute")
+    repeater = fields.Boolean("repeaters")
 
     email = fields.Char("Email")
     state = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])

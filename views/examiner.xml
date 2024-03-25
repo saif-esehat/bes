@@ -138,6 +138,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
+                    
                     <field name="mobile"/>
                     <field name="email"/>
                     <field name="pan_no"/>
@@ -153,12 +154,14 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
-                    <field name="mobile"/>
+                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
+                    <field name="exam_assignments"/>
+                    
+                    <!-- <field name="mobile"/>
                     <field name="email"/>
                     <field name="pan_no"/>
                     <field name="subject_id"/>
-                    <field name="exam_center"/>
-                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
+                    <field name="exam_center"/> -->
                 </tree>
             </field>
         </record>
@@ -181,29 +184,136 @@
                 <form>
                     <header>
                             <field name="state" widget="statusbar"/>
+                            <button name="confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"  />
                     </header>
                     <sheet>
-                         <div class="oe_button_box" name="button_box">
+                         <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
                                 <field name="candidate_count" string="Candidate"  widget="statinfo"/>
                             </button>
-                        </div>
-                        
+                        </div> -->
                         <group style="width:100%;">
-                            <h1>
-                                <field name="exam_schedule_id" placeholder="Exam Schedule"/>
-                            </h1>
+                            <field name="dgs_batch"/>
+                        </group> 
+                        <group style="width:50%;">
+                            <field name="institute_id"/>
                         </group>
                         <group style="width:50%;">
-                            <field name="examiners"/>
-                            <field name="start_time_online"/>
+                            <field name="institute_code"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="course" required="1"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="subject" domain="[('course_id','=',course)]" required="1" />
+                        </group>
+                        <group style="width:50%;">
+                            <field name="start_time"/>
                             <!-- <field name="candidate_count"/> -->
                         </group>
                         <group style="width:50%;">
-                            <field name="subject"/>
-                            <field name="end_time_online"/>
+                            <field name="end_time"/>
                         </group>
+                       
+                        <field name="examiners" >
+                            <tree editable="bottom"  >
+                            <field name="prac_oral_id" invisible="1"  />
+                                <field name="dgs_batch" required="1" invisible="1"   />
+                                <field name="subject" invisible="1" />
+                                <field name="course" required="1" invisible="1"  />
+                                <field name="examiner" required="1" domain="[('subject_id','=', subject)]"  />
+                                <field name="exam_date" required="1"  />
+                                <field name="marksheets"  />
+                                <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+                            </tree>
+                        </field>
+
+
+
                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_gp_tree_mek" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="gp_candidate"/>
+                    <field name="mek_oral"/>
+                    <field name="mek_prac"/>
+                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_gp_tree_gsk" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="gp_candidate"/>
+                    <field name="gsk_oral"/>
+                    <field name="gsk_prac"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_marksheet_gp_form_mek" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="gp_candidate"/>
+                            <field name="mek_oral"/>
+                            <field name="mek_prac"/>
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_gp_form_gsk" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <sheet>
+                            <field name="gp_candidate"/>                        
+                            <field name="gsk_oral"/>
+                            <field name="gsk_prac"/>
+                        </sheet>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_tree_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ccmc_candidate"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_form_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ccmc_candidate"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
                 </form>
             </field>
         </record>
@@ -213,78 +323,137 @@
             <field name="model">exam.type.oral.practical</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="exam_schedule_id"/>
-                    <field name="examiners"/>
-                    <field name="subject"/>
-                    <field name="start_time_online"/>
-                    <field name="end_time_online"/>
-                    <field name="candidate_count"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
                 </tree>
             </field>
         </record>
 
+    <record id="examiner_assignment_tree" model="ir.ui.view">
+        <field name="name">examiner.assignment.tree</field>
+        <field name="model">examiner.assignment</field>
+        <field name="arch" type="xml">
+            <tree>
+                    <field name="examiner_id"/>
+                    <field name="exam_region"/>
+                    <field name="assigned_to"/>
+                    <field name="institute_id"/>
+                </tree>
+        </field>
+    </record>
+
     <record id="examiner_assignment_form" model="ir.ui.view">
-            <field name="name">examiner.assignment.form</field>
-            <field name="model">examiner.assignment</field>
-            <field name="arch" type="xml">
-                <form>
+        <field name="name">examiner.assignment.form</field>
+        <field name="model">examiner.assignment</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group style="width:50%">
+                        <field name="examiner_id"/>
+                        <field name="exam_start_time"/>
+                        <field name="assigned_to"/>
+                        <field name="course"/>
+                        <field name="subject_id" domain="[('course_id','=',course)]"/>
+                        <field name="gsk_boolean" invisible="1"/>
+                        <field name="mek_boolean" invisible="1"/>
+
+                    </group>
+                    <group style="width:50%">
+                        <field name="assignment_date" />
+                        <field name="exam_end_time" />
+                        <field name="institute_id" />
+                        <field name="exam_region" />
+                        <field name="gp_batches" invisible="1" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                    </group>
                     <group>
-                        <group style="width:50%">
-                            <field name="examiner_id"/>
-                            <field name="exam_start_time"/>
-                            <field name="assigned_to"/>
-                            <field name="course"/>
-                            <field name="subject_id" domain="[('course_id','=',course)]"/>
-                            <field name="gsk_boolean" invisible="1"/>
-                            <field name="mek_boolean" invisible="1"/>
-
-                        </group>
-                        <group style="width:50%">
-                            <field name="assignment_date" />
-                            <field name="exam_end_time" />
-                            <field name="institute_id" />
-                            <field name="gp_batches" invisible="1" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
-
-                        </group>
-                        <group>
-                            <button name="update_candidate_from_institute" string="Update Candidate" type="object" class="btn-primary" />
-                        </group>
-                        <group style="width:100%">
-                            <field name="gp_oral_prac" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}">
-                                <tree>
-                                    <field name="gp_candidate"/>
-                                    <field name="gsk_oral" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False )]}"/>
-                                    <field name="gsk_prac" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False)]}"/>
-                                    <field name="mek_oral" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
-                                    <field name="mek_prac" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group style="width:100%">
-                            <field name="ccmc_assignment" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}">
-                                <tree>
-                                    <field name="ccmc_candidate"/>
-                                    <field name="cookery_bakery" />                                    
-                                    <field name="ccmc_oral" />
-                                </tree>
-                            </field>
-                        </group>
-
-                        <!-- <group style="width:100%">
-                            <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
-                        </group> -->
-                        <!-- <group style="width:100%">
-                            <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
-                        </group> -->
+                        <button name="update_candidate_from_institute" string="Update Candidate" type="object" class="btn-primary" />
+                    </group>
+                    <group style="width:100%">
+                        <field name="gp_oral_prac" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}">
+                            <tree>
+                                <field name="gp_candidate"/>
+                                <field name="gsk_oral" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False )]}"/>
+                                <field name="gsk_prac" attrs="{'column_invisible': [('parent.gsk_boolean', '==', False)]}"/>
+                                <field name="mek_oral" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
+                                <field name="mek_prac" attrs="{'column_invisible': [('parent.mek_boolean', '==', False)]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group style="width:100%">
+                        <field name="ccmc_assignment" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}">
+                            <tree>
+                                <field name="ccmc_candidate"/>
+                                <field name="cookery_bakery" />                                    
+                                <field name="ccmc_oral" />
+                            </tree>
+                        </field>
                     </group>
 
+                    <!-- <group style="width:100%">
+                        <field name="gp_candidates" attrs="{'invisible': [('assigned_to', '!=', 'gp_candidate')]}" />
+                    </group> -->
+                    <!-- <group style="width:100%">
+                        <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}"/>
+                    </group> -->
+                </group>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="bes_examiner_time_sheet_tree" model="ir.ui.view">
+        <field name="name">examiner.time.sheet.tree</field>
+        <field name="model">examiner.time.sheet</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examiner_id"/>
+                <field name="exam_region"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="bes_examiner_time_sheet_form" model="ir.ui.view">
+            <field name="name">examiner.time.sheet.form</field>
+            <field name="model">examiner.time.sheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group style="width:50%">
+                            <field name="examiner_id"/>
+                            <field name="exam_region"/>
+                        </group>
+                        <group style="width:100%">
+                            <field name="remarks"/>
+                            <field name="remarks_quality"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Examination Time Sheet">
+                                <field name="examination_details">
+                                    <tree editable="bottom">
+                                        <field name="arrival_institute" />
+                                        <field name="exam_start" />
+                                        <field name="lunch_break" />
+                                        <field name="time_of_completion" />
+                                        <field name="debriefing_institute" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Travelling Details">
+                                <field name="travelling_details">
+                                    <tree editable="bottom">
+                                        <field name="travel_details" style="width:50%"/>
+                                        <field name="date_time" style="width:25%"/>
+                                        <field name="mode_of_travel" style="width:25%"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
-
-
-
-
 
     </data>
 </odoo>

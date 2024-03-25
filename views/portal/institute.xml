@@ -581,7 +581,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
-                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img sign-img" style="width: 150px;" alt="Signature" />
+                                                    <img src="/bes/static/src/img/150.png" class="card-img-top card-img sign-img" style="width: 150px; height:75px" alt="Signature" />
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -612,7 +612,7 @@
                         <div class="card mb-4">
                             <div class="card-body text-center">
                                 <t t-if="candidate.candidate_image">
-                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
                                 </t>
                                 <t t-else="">
                                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
@@ -627,7 +627,7 @@
                                     <t t-out="candidate.street2"/>
                                 </p>
                                 <t t-if="candidate.candidate_signature">
-                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                    <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
                                 </t>
                             </div>
                         </div>

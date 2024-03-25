@@ -1330,11 +1330,13 @@ class CandidateRegisterExamWizard(models.TransientModel):
             record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
             
     
+    
     def register_exam(self):
         
         dgs_exam = self.dgs_batch.id
         
-        exam_id = self.candidate_id.roll_no+"R"+str(self.previous_attempt)
+        exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
+
         
         gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':self.candidate_id.id , "dgs_batch": dgs_exam  , "exam_id":exam_id })
 
@@ -1342,36 +1344,177 @@ class CandidateRegisterExamWizard(models.TransientModel):
         if self.gsk_oral_prac_status == 'failed':
             gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+        
+            gsk_practical_marks = self.gp_exam.gsk_practical_marks
+            gsk_oral_marks = self.gp_exam.gsk_oral_marks
+            gsk_total = self.gp_exam.gsk_total
+            gsk_percentage = self.gp_exam.gsk_percentage
+        
         else:
             gsk_practical = self.gp_exam.gsk_prac
             gsk_oral =self.gp_exam.gsk_oral
+            
+            gsk_practical_marks = self.gp_exam.gsk_practical_marks
+            gsk_oral_marks = self.gp_exam.gsk_oral_marks
+            gsk_total = self.gp_exam.gsk_total
+            gsk_percentage = self.gp_exam.gsk_percentage
+
         
         
         if self.mek_oral_prac_status == 'failed':
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            
+            mek_practical_marks = self.gp_exam.mek_practical_marks
+            mek_oral_marks = self.gp_exam.mek_oral_marks
+            mek_total = self.gp_exam.mek_total
+            mek_percentage = self.gp_exam.mek_percentage
         else:
             mek_practical = self.gp_exam.mek_prac
             mek_oral =self.gp_exam.mek_oral
+            
+            mek_practical_marks = self.gp_exam.mek_practical_marks
+            mek_oral_marks = self.gp_exam.mek_oral_marks
+            mek_total = self.gp_exam.mek_total
+            mek_percentage = self.gp_exam.mek_percentage
         
         
         if self.mek_online_status == 'failed':
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+            
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
         else:
             mek_survey_qb_input = self.gp_exam.mek_online
+            
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
         
         
         if self.gsk_online_status == 'failed':
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
+            
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
         else:
             gsk_survey_qb_input = self.gp_exam.gsk_online
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            
+        overall_marks = self.gp_exam.overall_marks
+        
+        overall_percentage = self.gp_exam.overall_percentage
+        
             
         
-        gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
+        gp_exam_schedule.write({
+                                "mek_oral":mek_oral.id,
+                                "mek_prac":mek_practical.id,
+                                "gsk_oral":gsk_oral.id,
+                                "gsk_prac":gsk_practical.id , 
+                                "gsk_online":gsk_survey_qb_input.id, 
+                                "mek_online":mek_survey_qb_input.id,
+                                "gsk_practical_marks":gsk_practical_marks,
+                                "gsk_oral_marks":gsk_oral_marks,
+                                "gsk_total":gsk_total,
+                                "gsk_percentage":gsk_percentage,
+                                "mek_practical_marks":mek_practical_marks,
+                                "mek_oral_marks":mek_oral_marks,
+                                "mek_total":mek_total,
+                                "mek_percentage":mek_percentage,
+                                "mek_online_marks":mek_online_marks,
+                                "mek_online_percentage":mek_online_percentage,
+                                "gsk_online_marks":gsk_online_marks,
+                                "gsk_online_percentage":gsk_online_percentage,
+                                "overall_marks":overall_marks,
+                                "overall_percentage":overall_percentage     
+                                })
         
-        gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+        # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+    
+    # def register_exam(self):
+        # dgs_exam = self.dgs_batch.id
+        # exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
+
+        # gp_exam_schedule_vals = {
+        #     'gp_candidate': self.candidate_id.id,
+        #     'dgs_batch': dgs_exam,
+        #     'exam_id': exam_id
+        # }
+
+        # if self.gsk_oral_prac_status == 'failed':
+        #     gsk_practical_vals = {"exam_id": None, 'gsk_practical_parent': self.candidate_id.id, 'institute_id': self.institute_id.id}
+        #     gsk_oral_vals = {"exam_id": None, 'gsk_oral_parent': self.candidate_id.id, 'institute_id': self.institute_id.id}
+        # else:
+        #     gsk_practical_vals = {}
+        #     gsk_oral_vals = {}
+
+        # if self.mek_oral_prac_status == 'failed':
+        #     mek_practical_vals = {"exam_id": None, 'mek_parent': self.candidate_id.id, 'institute_id': self.institute_id.id}
+        #     mek_oral_vals = {"exam_id": None, 'mek_oral_parent': self.candidate_id.id, 'institute_id': self.institute_id.id}
+        # else:
+        #     mek_practical_vals = {}
+        #     mek_oral_vals = {}
+
+        # if self.mek_online_status == 'failed':
+        #     mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+        # else:
+        #     mek_survey_qb_input = None
+
+        # if self.gsk_online_status == 'failed':
+        #     gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+        # else:
+        #     gsk_survey_qb_input = None
+
+        # gp_exam_schedule_vals.update({
+        #     'mek_oral': mek_oral_vals.get('id'),
+        #     'mek_prac': mek_practical_vals.get('id'),
+        #     'gsk_oral': gsk_oral_vals.get('id'),
+        #     'gsk_prac': gsk_practical_vals.get('id'),
+        #     'gsk_online': gsk_survey_qb_input.id if gsk_survey_qb_input else None,
+        #     'mek_online': mek_survey_qb_input.id if mek_survey_qb_input else None
+        # })
+
+        # gp_exam_schedule = self.env["gp.exam.schedule"].create(gp_exam_schedule_vals)
+
+        # if self.gsk_oral_prac_status == 'failed':
+        #     gsk_practical_vals['exam_id'] = gp_exam_schedule.id
+        #     gsk_oral_vals['exam_id'] = gp_exam_schedule.id
+        #     gsk_practical = self.env["gp.gsk.practical.line"].create(gsk_practical_vals)
+        #     gsk_oral = self.env["gp.gsk.oral.line"].create(gsk_oral_vals)
+        # else:
+        #     gsk_practical = self.gp_exam.gsk_prac
+        #     gsk_oral = self.gp_exam.gsk_oral
+            
+        #     gsk_practical_marks = self.gp_exam.gsk_practical_marks
+        #     gsk_oral_marks = self.gp_exam.gsk_oral_marks
+        #     gsk_total = self.gp_exam.gsk_total
+
+        # if self.mek_oral_prac_status == 'failed':
+        #     mek_practical_vals['exam_id'] = gp_exam_schedule.id
+        #     mek_oral_vals['exam_id'] = gp_exam_schedule.id
+        #     mek_practical = self.env["gp.mek.practical.line"].create(mek_practical_vals)
+        #     mek_oral = self.env["gp.mek.oral.line"].create(mek_oral_vals)
+        # else:
+        #     mek_practical = self.gp_exam.mek_prac
+        #     mek_oral = self.gp_exam.mek_oral
+            
+        #     mek_practical_marks = self.gp_exam.mek_practical_marks
+        #     mek_oral_marks = self.gp_exam.mek_oral_marks
+        #     mek_total = self.gp_exam.mek_total
+
+
+        # gp_exam_schedule.write({
+        #     "mek_oral": mek_oral.id,
+        #     "mek_prac": mek_practical.id,
+        #     "gsk_oral": gsk_oral.id,
+        #     "gsk_prac": gsk_practical.id
+        # })
+
+        # return gp_exam_schedule
+
 
 
 class CandidateCCMCRegisterExamWizard(models.TransientModel):
@@ -1379,6 +1522,8 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     _description = 'Register Exam'
     
     exam_region = fields.Many2one("exam.center",string="Exam Region")
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
+
     institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
     institute_id = fields.Many2one("bes.institute",string="Institute")
     candidate_id = fields.Many2one("ccmc.candidate",string="Candidate",required=True)
@@ -1423,7 +1568,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     @api.depends('ccmc_exam')
     def _compute_cookery_bakery_status(self):
          for record in self:
-             record.cookery_bakery_status = record.ccmc_exam.cookery_bakery_prac_status
+             
+             if record.ccmc_exam.cookery_bakery_prac_status == 'passed' and record.ccmc_exam.ccmc_oral_prac_status == 'passed':
+                record.cookery_bakery_status = 'passed'
+             else:
+                record.cookery_bakery_status = 'failed'
+             
+    
     
     @api.depends('ccmc_exam')
     def _compute_ccmc_online(self):
@@ -1446,7 +1597,37 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     
     def register_exam(self):
         
-        ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':self.candidate_id.id})
+        dgs_batch = self.dgs_batch.id
+        exam_id  = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
+        
+        # Marks
+        cookery_practical = self.ccmc_exam.cookery_practical
+        cookery_oral = self.ccmc_exam.cookery_oral
+        cookery_gsk_online = self.ccmc_exam.cookery_gsk_online
+        overall_marks = self.ccmc_exam.overall_marks
+        
+        #Mark Percentage
+        cookery_bakery_percentage = self.ccmc_exam.cookery_bakery_percentage
+        ccmc_oral_percentage = self.ccmc_exam.ccmc_oral_percentage
+        cookery_gsk_online_percentage = self.ccmc_exam.cookery_gsk_online_percentage
+        overall_percentage = self.ccmc_exam.overall_percentage
+        
+        ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
+            'ccmc_candidate':self.candidate_id.id,
+            'exam_id':exam_id,
+            'dgs_batch':dgs_batch,
+            'cookery_practical':cookery_practical,
+            'cookery_oral':cookery_oral,
+            'cookery_gsk_online':cookery_gsk_online,
+            'overall_marks':overall_marks ,
+            'cookery_bakery_percentage':cookery_bakery_percentage,
+            'ccmc_oral_percentage':ccmc_oral_percentage,
+            'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
+            'overall_percentage':overall_percentage,
+            'cookery_bakery_prac_status':self.ccmc_exam.cookery_bakery_prac_status,
+            'ccmc_oral_prac_status':self.ccmc_exam.ccmc_oral_prac_status
+            
+            })
 
         
         if self.cookery_bakery_status == 'failed':
@@ -1471,17 +1652,11 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         else:
             cookery_bakery_qb_input = self.ccmc_exam.ccmc_online
         
-        
-        # if self.gsk_online_status == 'failed':
-        #     gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
-        #     gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
-        # else:
-        #     gsk_survey_qb_input = self.gp_exam.gsk_online
+
             
         
-        ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id})
+        ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id,"ccmc_online":cookery_bakery_qb_input.id})
         
-        ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
 
         
         

@@ -239,11 +239,11 @@
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
+                            <field name="institute_code"/>
                             
                             <field name="dgs_batch" readonly="0"/>
                             <field name="ccmc_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
-                            <field name="institute_name"/>
                         </group>
                         <group>
                             <field name="attempt_number"/>
@@ -251,6 +251,7 @@
                         <group style="width:50%">
                             <field name="cookery_bakery"/>
                             <field name="ccmc_oral"/>
+                            
                             <field name="ccmc_online"/>
                         </group>
                         
@@ -294,6 +295,7 @@
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" readonly="1"/>
                             <field name="ccmc_oral_prac_status" readonly="1"/>
+                            <field name="oral_prac_status"/>
 
                             
                             <field name="ccmc_online_status" readonly="1"/>
@@ -303,6 +305,9 @@
                             <field name="exam_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
+                            <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="ccmc_rank" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                         </group>
                         <group style="width:50%">
                             <field name="url" invisible="1"/>
@@ -322,6 +327,10 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="exam_id"/>
+                    <field name="overall_marks"/>
+                    <field name="certificate_criteria"/>
+                    <field name="state"/>
+                    <field name="ccmc_rank"/>
                 </tree>
             </field>
         </record>
@@ -347,7 +356,7 @@
                             </button>
                         </div>
                         <group style="width:50%;">
-                            <field name="exam_schedule_id" />
+                            <!-- <field name="exam_schedule_id" /> -->
                             <field name="partner_id" />
                             <field name="name" />
                             <field name="mek_visiblity" invisible="1" />
