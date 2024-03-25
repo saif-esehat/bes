@@ -184,7 +184,7 @@
                 <form>
                     <header>
                             <field name="state" widget="statusbar"/>
-                            <button name="confirm" string="Confirm" type="object" class="btn-primary"/>
+                            <button name="confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"  />
                     </header>
                     <sheet>
                          <!-- <div class="oe_button_box" name="button_box">
@@ -216,14 +216,15 @@
                         </group>
                        
                         <field name="examiners" >
-                            <tree  >
+                            <tree editable="bottom"  >
                             <field name="prac_oral_id" invisible="1"  />
                                 <field name="dgs_batch" required="1" invisible="1"   />
+                                <field name="subject" invisible="1" />
                                 <field name="course" required="1" invisible="1"  />
-                                <field name="examiners" required="1"  />
-                                 <field name="exam_date" required="1"  />
-                                 <field name="marksheets"  />
-                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+                                <field name="examiner" required="1" domain="[('subject_id','=', subject)]"  />
+                                <field name="exam_date" required="1"  />
+                                <field name="marksheets"  />
+                                <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
                             </tree>
                         </field>
 
