@@ -581,7 +581,7 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         
-        import wdb;wdb.set_trace();
+        # import wdb;wdb.set_trace();
         
         assignment_id = examiner.assignments.id
         
