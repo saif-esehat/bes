@@ -457,9 +457,9 @@ class ExamOralPractical(models.Model):
             
         elif self.course.course_code == 'CCMC':
             
-            # import wdb;wdb.set_trace()
+            import wdb;wdb.set_trace()
             
-            ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
+            ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
             
             examiners = self.examiners.ids
                 

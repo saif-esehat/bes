@@ -183,6 +183,10 @@
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
                 <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
             </t>
+            <t t-if="examiner.subject_id.name == 'CCMC'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_marksheet/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+            </t>
                 
                 <thead>
                     <tr >
@@ -206,15 +210,16 @@
                     <t t-foreach="assignments" t-as="assignment">
                         <tr>
                             <td class="text-left">
-                                <t t-if="assignment.examiner.subject_id.name == 'GSK'" t-out="assignment.marksheets.gp_candidate.name" />
-                                <t t-if="assignment.examiner.subject_id.name == 'MEK'" t-out="assignment.marksheets.gp_candidate.name" />
+                                <!-- <t t-if="assignment.examiner.subject_id.name == 'GSK'" t-out="assignment.marksheets.gp_candidate.name" /> -->
+                                <t t-if="assignment.examiner.subject_id.name == 'GSK'" t-out="assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.name" />
+                                <t t-if="assignment.examiner.subject_id.name == 'MEK'" t-out="assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.name" />
                                 <t t-if="assignment.examiner.subject_id.name == 'CCMC'" t-out="assignment.marksheets.ccmc_candidate.name" />
 
                             
                             </td>
                             <td class="text-left">
-                                <t t-if="assignment.examiner.subject_id.name == 'GSK'" t-out="assignment.marksheets.gp_candidate.indos_no" />
-                                <t t-if="assignment.examiner.subject_id.name == 'MEK'" t-out="assignment.marksheets.gp_candidate.indos_no" />
+                                <t t-if="assignment.examiner.subject_id.name == 'GSK'" t-out="assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.indos_no" />
+                                <t t-if="assignment.examiner.subject_id.name == 'MEK'" t-out="assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.indos_no" />
                                 <t t-if="assignment.examiner.subject_id.name == 'CCMC'" t-out="assignment.marksheets.ccmc_candidate.indos_no" />
                             </td>
                             <td  class="text-left">
@@ -222,16 +227,17 @@
                             </td>
 
                             <td t-if="assignment.examiner.subject_id.name == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_oral={{ assignment.marksheets.gsk_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}"><span>GSK Oral</span></a>
+                                <!-- <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_oral={{ assignment.marksheets.gsk_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}"> -->
+                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].id }}&amp;gsk_oral={{ assignment.marksheets.filtered(lambda r: r.gsk_oral)[0].id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}"><span>GSK Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_practical={{ assignment.marksheets.gsk_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>GSK Practical</span></a>
+                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.id }}&amp;gsk_practical={{ assignment.marksheets.filtered(lambda r: r.gsk_prac)[0].id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}"><span>GSK Practical</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_mek_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_oral={{ assignment.marksheets.mek_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Oral</span></a>
+                                <a t-attf-href="/open_mek_oral_form?rec_id={{ assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.id }}&amp;mek_oral={{ assignment.marksheets.mek_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_practical_mek_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_practical={{ assignment.marksheets.mek_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
+                                <a t-attf-href="/open_practical_mek_form?rec_id={{ assignment.marksheets.filtered(lambda r: r.gp_candidate)[0].gp_candidate.id }}&amp;mek_practical={{ assignment.marksheets.mek_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'CCMC'" class="text-left">
                                 <a t-attf-href="/open_ccmc_oral_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;ccmc_oral={{ assignment.marksheets.ccmc_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
