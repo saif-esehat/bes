@@ -288,8 +288,8 @@
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
-                            -->
                                 </div>   
+                            -->
                                
                                 <div class="col-md-6">
                                     <!-- onchange="validateClimbingMast(this)" -->
@@ -758,10 +758,10 @@
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
-                                </div> -->
-                           
+                                </div> 
                                 </div>   
-                               
+                               -->
+                           
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Uses of Hand/Plumbing/Carpentry Tools</label>
@@ -970,9 +970,9 @@
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
+                                </div>   
                                 </div> -->
                            
-                                </div>   
                                
                                 <div class="col-md-6">
                                     <div class="form-group">

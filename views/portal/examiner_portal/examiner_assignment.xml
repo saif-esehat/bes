@@ -213,22 +213,22 @@
                             </td>
 
                             <td t-if="assignment.examiner.subject_id.name == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_oral={{ assignment.marksheets.gsk_oral.id }}&amp;assignment_id={{assignment.id}}"><span>GSK Oral</span></a>
+                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_oral={{ assignment.marksheets.gsk_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}"><span>GSK Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_practical={{ assignment.marksheets.gsk_prac.id }}&amp;assignment_id={{assignment.id}}" ><span>GSK Practical</span></a>
+                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_practical={{ assignment.marksheets.gsk_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>GSK Practical</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_mek_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_oral={{ assignment.marksheets.mek_oral.id }}&amp;assignment_id={{assignment.id}}" ><span>MEK Oral</span></a>
+                                <a t-attf-href="/open_mek_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_oral={{ assignment.marksheets.mek_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_practical_mek_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_practical={{ assignment.marksheets.mek_prac.id }}&amp;assignment_id={{assignment.id}}" ><span>MEK Practical</span></a>
+                                <a t-attf-href="/open_practical_mek_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_practical={{ assignment.marksheets.mek_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'CCMC'" class="text-left">
-                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;ccmc_oral={{ assignment.marksheets.ccmc_oral.id }}&amp;assignment_id={{assignment.id}}" ><span>CCMC Oral</span></a>
+                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;ccmc_oral={{ assignment.marksheets.ccmc_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'CCMC'" class="text-left">
-                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;cookery_bakery={{ assignment.marksheets.cookery_bakery.id }}&amp;assignment_id={{assignment.id}}" ><span>CCMC Practical</span></a>
+                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;cookery_bakery={{ assignment.marksheets.cookery_bakery.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Practical</span></a>
                             </td>
                             
                         </tr>

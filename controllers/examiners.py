@@ -105,7 +105,7 @@ class ExaminerPortal(CustomerPortal):
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
 
-        vals = {'assignments':examiner_assignments, 'examiner':examiner}
+        vals = {'assignments':examiner_assignments, 'examiner':examiner, 'batch_id':batch_id}
         return request.render("bes.examiner_assignment_candidate_list",vals)
 
     # def check_user_groups(group_xml_id):

@@ -39,7 +39,7 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
-    <record id="examiner_duty_record" model="ir.rule">
+    <!-- <record id="examiner_duty_record" model="ir.rule">
             <field name="name">Examiner Duty Record</field>
             <field ref="model_exam_type_oral_practical" name="model_id"/>
             <field name="groups" eval="[(4, ref('group_examiners'))]"/>
@@ -48,7 +48,7 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
             <field name="active" eval="True"/>
-    </record>
+    </record> -->
 
     
 
