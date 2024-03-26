@@ -82,6 +82,9 @@ class ExaminerPortal(CustomerPortal):
     
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
     def open_candidate_form(self, **rec):
+        
+        # import wdb;wdb.set_trace();
+        
         if 'rec_id' in rec:
             rec_id =rec['rec_id']
             assignment = request.env['examiner.assignment'].sudo().browse(int(rec_id))
@@ -100,7 +103,8 @@ class ExaminerPortal(CustomerPortal):
             return request.render("bes.examiner_candidate_list", 
                                   {'candidate': candidate,
                                    'gp_oral_prac':gp_oral_prac , 
-                                   'subject':subject ,'assignment_id':rec_id, 
+                                   'subject':subject ,
+                                   'assignment_id':rec_id, 
                                    'page_name':'gp_assignment'})
         else:
             search_filter = rec.get('search_filter') or request.params.get('search_filter')
@@ -349,7 +353,7 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route('/open_practical_mek_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_practical_mek_form(self, **rec):
-        print("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+       
         candidate = request.env['gp.candidate'].sudo()
         print("=======================================================",request.httprequest.method)
         
@@ -529,66 +533,137 @@ class ExaminerPortal(CustomerPortal):
         
         
         
-    @http.route('/open_candidate_form/download_marksheet', type='http', auth="user", website=True)
-    def download_marksheet(self):
+    @http.route('/open_candidate_form/download_gsk_marksheet', type='http', auth="user", website=True)
+    def download_gsk_marksheet(self, **rec):
+        
+        user_id = request.env.user.id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        
+        # if examiner.exam_assignments:
+        #     assignment_id = examiner.exam_assignments[0].id
+        
+        for exam in examiner.exam_assignments:
+            if exam.subject_id.name == 'GSK':
+                assignment = exam.id
+                
+        import wdb;wdb.set_trace();
+        
+        # assignment = request.env['examiner.assignment'].sudo().browse(int(assignment_id))
+            
+        # for candidate in assignment.gp_oral_prac
 
         excel_buffer = io.BytesIO()
 
         # Create a new Excel workbook and add a worksheet
         workbook = xlsxwriter.Workbook(excel_buffer)
-        candidate_worksheet = workbook.add_worksheet("Candidates")
-        
+        # workbook   = xlsxwriter.Workbook('filename.xlsx')
+
+        gsk_oral_sheet = workbook.add_worksheet('GSK Oral')
+        gsk_practical_sheet = workbook.add_worksheet('GSK Practical')
         
         locked = workbook.add_format({'locked':True})
         unlocked = workbook.add_format({'locked':False})
-        candidate_worksheet.set_column('A:XDF', None, unlocked)
-        candidate_worksheet.protect()
+        # Set the wrap text format
+        wrap_format = workbook.add_format({'text_wrap': True})
+        
+        #For GSK Oral Marksheet
+        gsk_oral_sheet.set_column('A:XDF',None, unlocked)
+        gsk_oral_sheet.set_column('A2:A2',35, unlocked)
+        gsk_oral_sheet.set_column('B2:B2',20, unlocked)
+        gsk_oral_sheet.set_column('C2:H2',20, unlocked)
+        gsk_oral_sheet.set_column('I2:I2',30, unlocked)
+        gsk_oral_sheet.set_column('J2:J2',15, unlocked)
+            
+        gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
 
-
         header_format = workbook.add_format({
-            'bold': True,
-            'align': 'center',
-            'valign': 'vcenter',
-            'font_color': 'white',
-            'bg_color': '#336699',  # Blue color for the background
-            'locked':True
-        })
+                                                'bold': True,
+                                                'align': 'center',
+                                                'valign': 'vcenter',
+                                                'font_color': 'black',
+                                                'locked':True,
+                                                'text_wrap': True,
+                                            })
         
-        header = ['SR NO', 'Name of the Candidate', 'Candidate Code No', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
-        for col, value in enumerate(header):
-            candidate_worksheet.write(0, col, value, header_format)
-            # candidate_worksheet.set_column('J:J', None, number_format)
-            # candidate_worksheet.set_column('G:G', None, zip_format)
-
-
-        # Set date format for DOB column
-        candidate_worksheet.set_column('C:C', None, date_format)
-        # Add data validation for SC/ST column
-        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
-                                                'source': dropdown_values })
+        merge_format = workbook.add_format({
+                                                'bold':     True,
+                                                'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 20,
+                                                'font_color': 'black',
+                                            })
         
-
-        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        # Merge 3 cells over two rows.
+        gsk_oral_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
         
-        row = 1
-        for state, code in state_values.items():
-            state_cheatsheet.write(row, 0, state)
-            state_cheatsheet.write(row, 1, code)
-            row += 1
+        header_oral = ['Name of the Candidate', 'Candidate Code No',
+          'Subject Area 1 \n Minimum 3 Questions \n 9 Marks',
+          'Subject Area 2 \n Minimum 2 Questions \n 6 Marks',
+          'Subject Area 3 \n Minimum 3 Questions \n 9 Marks',
+          'Subject Area 4 \n Minimum 3 Questions \n 9 Marks',
+          'Subject Area 5 \n Minimum 4 Questions \n 12 Marks',
+          'Subject Area 6 \n Minimum 2 Questions \n 5 Marks',
+          'Practical Record Book and Journal \n 25 Marks', 'Total Marks 75', 'Remarks']
+        for col, value in enumerate(header_oral):
+            gsk_oral_sheet.write(1, col, value, header_format)
+        
+          
+        candidate_list = [] #List of Candidates
+        candidate_code = [] #Candidates Code No.
 
+        for candidate in assignment.gp_oral_prac:
+            candidate_list.append(candidate.gp_candidate.name)
+            candidate_code.append(candidate.gp_candidate.candidate_code)
+        
+        # # import wdb;wdb.set_trace();
+        
+        for i, candidate in enumerate(candidate_list):
+            gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
 
-        # state_cheatsheet.protect()
-        # state_cheatsheet.write(1, None, None, {'locked': False})
-        # state_cheatsheet.set_row(0, None, None)
+        for i, code in enumerate(candidate_code):
+            gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
         
         
-
         
         
         
+        
+        #For GSK Practical Marksheet
+        gsk_practical_sheet.set_column('A:XDF',None, unlocked)
+        gsk_practical_sheet.set_column('A2:A2',35, unlocked)
+        gsk_practical_sheet.set_column('B2:B2',20, unlocked)
+        gsk_practical_sheet.set_column('C2:J2',20, unlocked)
+        gsk_practical_sheet.set_column('K2:K2',15, unlocked)
+        gsk_practical_sheet.set_column('L2:L2',15, unlocked)
+            
+        gsk_practical_sheet.protect()
+        
+        
+        # Merge 3 cells over two rows.
+        gsk_practical_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        
+        header_prac = ['Name of the Candidate', 'Candidate Code No',
+          '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
+          '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 12 Marks',
+          '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
+          '-Rig a stage for painting shipside \n 8 marks',
+          '-Rig a Pilot Ladder \n 8 marks',
+          '-Rig scaffolding to work at a height  \n 8 marks',
+          '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
+          '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
+          'Total 100 Marks', 'Remarks']
+        for col, value in enumerate(header_prac):
+            gsk_practical_sheet.write(1, col, value, header_format)
+        
+        # # import wdb;wdb.set_trace();
+        
+        for i, candidate in enumerate(candidate_list):
+            gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
 
-
+        for i, code in enumerate(candidate_code):
+            gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
+        
         workbook.close()
 
         # Set the buffer position to the beginning
@@ -599,7 +674,156 @@ class ExaminerPortal(CustomerPortal):
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=candidate_format_file.xlsx')
+                ('Content-Disposition', 'attachment; filename=gsk-marksheet.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+    
+    
+    
+    
+    
+    
+    @http.route('/open_candidate_form/download_mek_marksheet', type='http', auth="user", website=True)
+    def download_mek_marksheet(self, **rec):
+        
+        user_id = request.env.user.id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        assignment_id = examiner.exam_assignments.id
+        assignment = request.env['examiner.assignment'].sudo().browse(int(assignment_id))
+            
+        # for candidate in assignment.gp_oral_prac
+
+        # import wdb;wdb.set_trace();
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        # workbook   = xlsxwriter.Workbook('filename.xlsx')
+
+        mek_oral_sheet = workbook.add_worksheet('MEK Oral')
+        mek_practical_sheet = workbook.add_worksheet('MEK Practical')
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        # Set the wrap text format
+        wrap_format = workbook.add_format({'text_wrap': True})
+        
+        #For GSK Oral Marksheet
+        mek_oral_sheet.set_column('A:XDF',None, unlocked)
+        mek_oral_sheet.set_column('A2:A2',35, unlocked)
+        mek_oral_sheet.set_column('B2:B2',20, unlocked)
+        mek_oral_sheet.set_column('C2:H2',20, unlocked)
+        mek_oral_sheet.set_column('I2:I2',15, unlocked)
+        mek_oral_sheet.set_column('J2:J2',15, unlocked)
+            
+        mek_oral_sheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+
+        header_format = workbook.add_format({
+                                                'bold': True,
+                                                'align': 'center',
+                                                'valign': 'vcenter',
+                                                'font_color': 'black',
+                                                'locked':True,
+                                                'text_wrap': True,
+                                            })
+        
+        merge_format = workbook.add_format({
+                                                'bold':     True,
+                                                'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 20,
+                                                'font_color': 'black',
+                                            })
+        
+        # Merge 3 cells over two rows.
+        mek_oral_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        
+        header_oral = ['Name of the Candidate', 'Candidate Code No',
+          'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
+          'Use of chipping Tools & Brushes & Paints \n 10 Marks',
+          'Welding \n 10 Marks',
+          'Lathe /Drill/Grinder \n 10 Marks',
+          'Electrical  \n 12 Marks',
+          'Journal \n 25 Marks', 'Total Marks 75', 'Remarks']
+        for col, value in enumerate(header_oral):
+            mek_oral_sheet.write(1, col, value, header_format)
+        
+          
+        candidate_list = [] #List of Candidates
+        candidate_code = [] #Candidates Code No.
+        roll_no = []
+
+        for candidate in assignment.gp_oral_prac:
+            candidate_list.append(candidate.gp_candidate.name)
+            candidate_code.append(candidate.gp_candidate.candidate_code)
+            # roll_no.append(candidate.gp_candidate.candidate_code)
+        
+        # # import wdb;wdb.set_trace();
+        
+        for i, candidate in enumerate(candidate_list):
+            mek_oral_sheet.write('A{}'.format(i+3), candidate, locked)
+
+        for i, code in enumerate(candidate_code):
+            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
+        
+        
+        
+        
+        
+        
+        #For GSK Practical Marksheet
+        mek_practical_sheet.set_column('A:XDF',None, unlocked)
+        mek_practical_sheet.set_column('A2:A2',35, unlocked)
+        mek_practical_sheet.set_column('B2:B2',20, unlocked)
+        mek_practical_sheet.set_column('C2:K2',25, unlocked)
+        mek_practical_sheet.set_column('L2:L2',15, unlocked)
+        mek_practical_sheet.set_column('M2:M2',15, unlocked)
+            
+        mek_practical_sheet.protect()
+        
+        
+        # Merge 3 cells over two rows.
+        mek_practical_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        
+        header_prac = ['Name of the Candidate', 'Candidate Code No',
+          '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks',
+          '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks',
+          '-Using Hand & Plumbing Tools \n -Task 3 \n 10 Marks',
+          '-Use of Chipping Tools & paint Brushes \n 10 marks',
+          '-Use of Carpentry Tools \n 10 marks',
+          '-Use of Measuring Instruments \n 10 marks',
+          '-Welding (1 Task)  \n 20 marks',
+          '-Lathe Work (1 Task) \n 10 Marks', 
+          '-Electrical (1 Task) \n 10 Marks', 
+          'Total 100 Marks', 'Remarks']
+        for col, value in enumerate(header_prac):
+            mek_practical_sheet.write(1, col, value, header_format)
+        
+        # # import wdb;wdb.set_trace();
+        
+        for i, candidate in enumerate(candidate_list):
+            mek_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+
+        for i, code in enumerate(candidate_code):
+            mek_practical_sheet.write('B{}'.format(i+3), code, locked)
+        
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=mek-marksheet.xlsx')
             ]
         )
 

@@ -283,12 +283,12 @@
                                 </div>
 
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
-                           
+                            -->
                                 </div>   
                                
                                 <div class="col-md-6">
@@ -524,12 +524,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exam_date">Exam Date</label>
                                         <input type="text" class="form-control" id="exam_date"  name="exam_date" t-att-value="gsk_marksheet.gsk_oral_exam_date"/>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -754,11 +754,11 @@
                                 </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
-                                </div>
+                                </div> -->
                            
                                 </div>   
                                
@@ -966,11 +966,11 @@
                                 </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
-                                </div>
+                                </div> -->
                            
                                 </div>   
                                
@@ -1142,12 +1142,13 @@
                                         /10
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+
+                                <!-- <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="date" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
-                                </div>
+                                </div> -->
                            
 
                             <!-- Dish 1 Group -->
@@ -1380,13 +1381,13 @@
                                 </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
                            
-                                </div>   
+                                </div>    -->
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
