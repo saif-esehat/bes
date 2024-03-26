@@ -236,7 +236,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="gp_candidate"/>
-                    <field name="gp_markshheet"/>
+                    <field name="gp_marksheet"/>
                     <field name="mek_oral"/>
                     <field name="mek_prac"/>
                     
@@ -266,7 +266,7 @@
                     <sheet>
                         <group>
                             <field name="gp_candidate"/>
-                            <field name="gp_markshheet"/>
+                            <field name="gp_marksheet"/>
                             <field name="mek_oral"/>
                             <field name="mek_prac"/>
                         </group>
@@ -284,7 +284,7 @@
                     <group>
                         <sheet>
                             <field name="gp_candidate"/> 
-                            <field name="gp_markshheet"/>
+                            <field name="gp_marksheet"/>
                             <field name="gsk_oral"/>
                             <field name="gsk_prac"/>
                         </sheet>

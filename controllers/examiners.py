@@ -583,8 +583,7 @@ class ExaminerPortal(CustomerPortal):
         
         import wdb;wdb.set_trace();
         
-        if examiner.exam_assignments:
-            assignment_id = examiner.exam_assignments[0].id
+        assignment_id = examiner.assignments.id
         
         # for exam in examiner.exam_assignments:
         #     if exam.subject_id.name == 'GSK':
