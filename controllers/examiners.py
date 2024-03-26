@@ -624,9 +624,10 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('A:XDF',None, unlocked)
         gsk_oral_sheet.set_column('A2:A2',35, unlocked)
         gsk_oral_sheet.set_column('B2:B2',20, unlocked)
-        gsk_oral_sheet.set_column('C2:H2',20, unlocked)
-        gsk_oral_sheet.set_column('I2:I2',30, unlocked)
-        gsk_oral_sheet.set_column('J2:J2',15, unlocked)
+        gsk_oral_sheet.set_column('C2:C2',10, unlocked)
+        gsk_oral_sheet.set_column('D2:I2',20, unlocked)
+        gsk_oral_sheet.set_column('J2:J2',30, unlocked)
+        gsk_oral_sheet.set_column('K2:K2',15, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -651,7 +652,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge 3 cells over two rows.
         gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_oral = ['Name of the Candidate', 'Candidate Code No',
+        header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Subject Area 1 \n Minimum 3 Questions \n 9 Marks',
           'Subject Area 2 \n Minimum 2 Questions \n 6 Marks',
           'Subject Area 3 \n Minimum 3 Questions \n 9 Marks',
@@ -664,10 +665,12 @@ class ExaminerPortal(CustomerPortal):
         
           
         candidate_list = [] #List of Candidates
+        roll_no = []
         candidate_code = [] #Candidates Code No.
 
         for candidate in examiner_assignments.marksheets:
             candidate_list.append(candidate.gp_candidate.name)
+            roll_no.append(candidate.gp_marksheet.exam_id)
             candidate_code.append(candidate.gp_candidate.candidate_code)
         
         # # import wdb;wdb.set_trace();
@@ -675,8 +678,12 @@ class ExaminerPortal(CustomerPortal):
         for i, candidate in enumerate(candidate_list):
             gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
 
-        for i, code in enumerate(candidate_code):
+        for i, code in enumerate(roll_no):
             gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
+
+        for i, code in enumerate(candidate_code):
+            gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
+
         
         
         
