@@ -39,7 +39,7 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
-    <record id="examiner_duty_record" model="ir.rule">
+    <!-- <record id="examiner_duty_record" model="ir.rule">
             <field name="name">Examiner Duty Record</field>
             <field ref="model_exam_type_oral_practical" name="model_id"/>
             <field name="groups" eval="[(4, ref('group_examiners'))]"/>
@@ -48,16 +48,11 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
             <field name="active" eval="True"/>
-    </record>
-
-    
-
-
-    
-
-    <!-- <record id="contacts.menu_contacts" model="ir.ui.menu">
-        <field name="groups_id" eval="[(3,ref('group_examiners'))]"/>
     </record> -->
+
+    
+
+
 
     <record id="mail.menu_root_discuss" model="ir.ui.menu">
         <field name="groups_id" eval="[(3,ref('group_examiners'))]"/>

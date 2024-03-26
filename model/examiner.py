@@ -172,6 +172,7 @@ class ExaminerAssignment(models.Model):
     institute_id = fields.Many2one('bes.institute',string="Institute")
     gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
+    ccmc_batches = fields.Many2one('institute.ccmc.batches',string="CCMC Batches",domain="[('institute_id', '=', institute_id)]")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
     gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment")
     ccmc_assignment = fields.One2many("ccmc.candidate.assignment","assignment_id",string="CCMC Assignment")

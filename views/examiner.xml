@@ -156,12 +156,7 @@
                     <field name="name"/>
                     <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
                     <field name="exam_assignments"/>
-                    
-                    <!-- <field name="mobile"/>
-                    <field name="email"/>
-                    <field name="pan_no"/>
-                    <field name="subject_id"/>
-                    <field name="exam_center"/> -->
+    
                 </tree>
             </field>
         </record>
@@ -241,6 +236,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="gp_candidate"/>
+                    <field name="gp_marksheet"/>
                     <field name="mek_oral"/>
                     <field name="mek_prac"/>
                     
@@ -254,6 +250,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="gp_candidate"/>
+                     <field name="gp_marksheet"/>
                     <field name="gsk_oral"/>
                     <field name="gsk_prac"/>
                 </tree>
@@ -269,6 +266,7 @@
                     <sheet>
                         <group>
                             <field name="gp_candidate"/>
+                            <field name="gp_marksheet"/>
                             <field name="mek_oral"/>
                             <field name="mek_prac"/>
                         </group>
@@ -285,7 +283,8 @@
                 <form>
                     <group>
                         <sheet>
-                            <field name="gp_candidate"/>                        
+                            <field name="gp_candidate"/> 
+                            <field name="gp_marksheet"/>
                             <field name="gsk_oral"/>
                             <field name="gsk_prac"/>
                         </sheet>
@@ -300,6 +299,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="ccmc_candidate"/>
+                    <field name="ccmc_marksheet"/>
                     <field name="cookery_bakery"/>
                     <field name="ccmc_oral"/>
                 </tree>
@@ -312,6 +312,7 @@
             <field name="arch" type="xml">
                 <form>
                     <field name="ccmc_candidate"/>
+                    <field name="ccmc_marksheet"/>
                     <field name="cookery_bakery"/>
                     <field name="ccmc_oral"/>
                 </form>

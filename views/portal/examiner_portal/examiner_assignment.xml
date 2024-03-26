@@ -32,8 +32,17 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Marksheet</a>
-                <a href="/open_candidate_form/download_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Marksheet</a>
+            <t t-foreach="assignments" t-as="assignment">
+                <t t-if="assignment.subject_id.name == 'GSK'">
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                    <a href="/open_candidate_form/download_gsk_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download GSK Marksheet</a>
+                </t>
+                <t t-if="assignment.subject_id.name == 'MEK'">
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                    <a href="/open_candidate_form/download_mek_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
+                </t>
+            </t>
+            <!-- <a href="/open_candidate_form/download_gsk_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Marksheet</a> -->
             <t t-call="portal.portal_table">
                 
                 <thead>
@@ -165,6 +174,15 @@
 
         <t t-call="portal.portal_layout">
            <t t-call="portal.portal_table">
+
+           <t t-if="examiner.subject_id.name == 'GSK'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                <a href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download GSK Marksheet</a>
+            </t>
+            <t t-if="examiner.subject_id.name == 'MEK'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                <a href="/open_candidate_form/download_mek_marksheet/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
+            </t>
                 
                 <thead>
                     <tr >
@@ -204,22 +222,22 @@
                             </td>
 
                             <td t-if="assignment.examiner.subject_id.name == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_oral={{ assignment.marksheets.gsk_oral.id }}&amp;assignment_id={{assignment.id}}"><span>GSK Oral</span></a>
+                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_oral={{ assignment.marksheets.gsk_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}"><span>GSK Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_practical={{ assignment.marksheets.gsk_prac.id }}&amp;assignment_id={{assignment.id}}" ><span>GSK Practical</span></a>
+                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;gsk_practical={{ assignment.marksheets.gsk_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>GSK Practical</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_mek_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_oral={{ assignment.marksheets.mek_oral.id }}&amp;assignment_id={{assignment.id}}" ><span>MEK Oral</span></a>
+                                <a t-attf-href="/open_mek_oral_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_oral={{ assignment.marksheets.mek_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_practical_mek_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_practical={{ assignment.marksheets.mek_prac.id }}&amp;assignment_id={{assignment.id}}" ><span>MEK Practical</span></a>
+                                <a t-attf-href="/open_practical_mek_form?rec_id={{ assignment.marksheets.gp_candidate.id }}&amp;mek_practical={{ assignment.marksheets.mek_prac.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'CCMC'" class="text-left">
-                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;ccmc_oral={{ assignment.marksheets.ccmc_oral.id }}&amp;assignment_id={{assignment.id}}" ><span>CCMC Oral</span></a>
+                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;ccmc_oral={{ assignment.marksheets.ccmc_oral.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
                             </td>
                             <td t-if="assignment.examiner.subject_id.name == 'CCMC'" class="text-left">
-                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;cookery_bakery={{ assignment.marksheets.cookery_bakery.id }}&amp;assignment_id={{assignment.id}}" ><span>CCMC Practical</span></a>
+                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ assignment.marksheets.ccmc_candidate.id }}&amp;cookery_bakery={{ assignment.marksheets.cookery_bakery.id }}&amp;assignment_id={{assignment.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Practical</span></a>
                             </td>
                             
                         </tr>

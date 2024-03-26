@@ -283,13 +283,13 @@
                                 </div>
 
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
-                           
                                 </div>   
+                            -->
                                
                                 <div class="col-md-6">
                                     <!-- onchange="validateClimbingMast(this)" -->
@@ -524,12 +524,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exam_date">Exam Date</label>
                                         <input type="text" class="form-control" id="exam_date"  name="exam_date" t-att-value="gsk_marksheet.gsk_oral_exam_date"/>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -754,14 +754,14 @@
                                 </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
-                                </div>
-                           
+                                </div> 
                                 </div>   
-                               
+                               -->
+                           
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Uses of Hand/Plumbing/Carpentry Tools</label>
@@ -966,13 +966,13 @@
                                 </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
-                                </div>
-                           
                                 </div>   
+                                </div> -->
+                           
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -1142,12 +1142,13 @@
                                         /10
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+
+                                <!-- <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="date" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
-                                </div>
+                                </div> -->
                            
 
                             <!-- Dish 1 Group -->
@@ -1380,13 +1381,13 @@
                                 </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exam_date">Exam Date</label>
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
                            
-                                </div>   
+                                </div>    -->
                                
                                 <div class="col-md-6">
                                     <div class="form-group">
