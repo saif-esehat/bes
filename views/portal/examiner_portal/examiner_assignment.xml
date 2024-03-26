@@ -174,7 +174,14 @@
 
         <t t-call="portal.portal_layout">
            <t t-call="portal.portal_table">
-                
+                <t t-if="examiner.subject_id.name == 'GSK'">
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                    <a href="/open_candidate_form/download_gsk_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download GSK Marksheet</a>
+                </t>
+                <t t-if="examiner.subject_id.name == 'MEK'">
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                    <a href="/open_candidate_form/download_mek_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
+                </t>
                 <thead>
                     <tr >
                         <th class="text-left">Candidate Name</th>

@@ -400,7 +400,7 @@ class ExamOralPractical(models.Model):
             
             if self.subject.name == 'GSK':
             
-                gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed'))]).ids
+                gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed'))]).ids
                 
                 examiners = self.examiners.ids
                 
@@ -424,7 +424,7 @@ class ExamOralPractical(models.Model):
             
             elif self.subject.name == 'MEK':
                 
-                gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed'))]).ids
+                gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed'))]).ids
                 
                 examiners = self.examiners.ids
                 
