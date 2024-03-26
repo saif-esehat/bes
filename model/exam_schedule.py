@@ -516,6 +516,7 @@ class ExamOralPracticalExaminers(models.Model):
             'views': views,
             'target': 'current',
         }
+        
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     
