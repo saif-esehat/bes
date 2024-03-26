@@ -569,7 +569,7 @@ class GPExam(models.Model):
     _description= 'Schedule'
     
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True)
-    
+
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
@@ -676,7 +676,8 @@ class GPExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     rank = fields.Char("Rank",compute='_compute_rank')
     
-    institute_code = fields.Char("Institute code")
+    institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True)
+
 
     
     
