@@ -570,6 +570,8 @@ class GPExam(models.Model):
     
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True)
 
+    registered_institute = fields.Many2one("bes.institute",string="Registered Institute")
+    
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
@@ -1201,7 +1203,7 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
-
+    registered_institute = fields.Many2one("bes.institute",string="Registered Institute")
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
