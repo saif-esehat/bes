@@ -1410,6 +1410,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
             
         
         gp_exam_schedule.write({
+                                "registered_institute":self.institute_id.id,
                                 "mek_oral":mek_oral.id,
                                 "mek_prac":mek_practical.id,
                                 "gsk_oral":gsk_oral.id,
@@ -1613,6 +1614,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         overall_percentage = self.ccmc_exam.overall_percentage
         
         ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
+            'registered_institute':self.institute_id.id,
             'ccmc_candidate':self.candidate_id.id,
             'exam_id':exam_id,
             'dgs_batch':dgs_batch,
