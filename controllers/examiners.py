@@ -610,8 +610,8 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Oral Marksheet
         gsk_oral_sheet.set_column('A:XDF',None, unlocked)
         gsk_oral_sheet.set_column('A2:A2',35, unlocked)
-        gsk_oral_sheet.set_column('B2:B2',20, unlocked)
-        gsk_oral_sheet.set_column('C2:C2',10, unlocked)
+        gsk_oral_sheet.set_column('B2:B2',10, unlocked)
+        gsk_oral_sheet.set_column('C2:C2',20, unlocked)
         gsk_oral_sheet.set_column('D2:I2',20, unlocked)
         gsk_oral_sheet.set_column('J2:J2',30, unlocked)
         gsk_oral_sheet.set_column('K2:K2',15, unlocked)
@@ -680,10 +680,11 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
         gsk_practical_sheet.set_column('A2:A2',35, unlocked)
-        gsk_practical_sheet.set_column('B2:B2',20, unlocked)
-        gsk_practical_sheet.set_column('C2:J2',20, unlocked)
-        gsk_practical_sheet.set_column('K2:K2',15, unlocked)
+        gsk_practical_sheet.set_column('B2:B2',10, unlocked)
+        gsk_practical_sheet.set_column('C2:C2',20, unlocked)
+        gsk_practical_sheet.set_column('D2:K2',20, unlocked)
         gsk_practical_sheet.set_column('L2:L2',15, unlocked)
+        gsk_practical_sheet.set_column('M2:M2',15, unlocked)
             
         gsk_practical_sheet.protect()
         
@@ -691,7 +692,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge 3 cells over two rows.
         gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_prac = ['Name of the Candidate', 'Candidate Code No',
+        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
           '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 12 Marks',
           '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
@@ -708,6 +709,9 @@ class ExaminerPortal(CustomerPortal):
         
         for i, candidate in enumerate(candidate_list):
             gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+            
+        for i, code in enumerate(roll_no):
+            gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
@@ -768,10 +772,11 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Oral Marksheet
         mek_oral_sheet.set_column('A:XDF',None, unlocked)
         mek_oral_sheet.set_column('A2:A2',35, unlocked)
-        mek_oral_sheet.set_column('B2:B2',20, unlocked)
-        mek_oral_sheet.set_column('C2:H2',20, unlocked)
-        mek_oral_sheet.set_column('I2:I2',15, unlocked)
+        mek_oral_sheet.set_column('B2:B2',10, unlocked)
+        mek_oral_sheet.set_column('C2:C2',20, unlocked)
+        mek_oral_sheet.set_column('D2:I2',20, unlocked)
         mek_oral_sheet.set_column('J2:J2',15, unlocked)
+        mek_oral_sheet.set_column('K2:K2',15, unlocked)
             
         mek_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -796,7 +801,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge 3 cells over two rows.
         mek_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_oral = ['Name of the Candidate', 'Candidate Code No',
+        header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
           'Use of chipping Tools & Brushes & Paints \n 10 Marks',
           'Welding \n 10 Marks',
@@ -814,15 +819,18 @@ class ExaminerPortal(CustomerPortal):
         for candidate in examiner_assignments.marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             candidate_code.append(candidate.gp_candidate.candidate_code)
-            # roll_no.append(candidate.gp_candidate.candidate_code)
+            roll_no.append(candidate.gp_marksheet.exam_id)
         
         # # import wdb;wdb.set_trace();
         
         for i, candidate in enumerate(candidate_list):
             mek_oral_sheet.write('A{}'.format(i+3), candidate, locked)
+        
+        for i, code in enumerate(roll_no):
+            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
-            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
+            mek_oral_sheet.write('C{}'.format(i+3), code, locked)
         
         
         
@@ -832,10 +840,11 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
         mek_practical_sheet.set_column('A2:A2',35, unlocked)
-        mek_practical_sheet.set_column('B2:B2',20, unlocked)
-        mek_practical_sheet.set_column('C2:K2',25, unlocked)
-        mek_practical_sheet.set_column('L2:L2',15, unlocked)
+        mek_practical_sheet.set_column('B2:B2',10, unlocked)
+        mek_practical_sheet.set_column('C2:C2',20, unlocked)
+        mek_practical_sheet.set_column('D2:L2',25, unlocked)
         mek_practical_sheet.set_column('M2:M2',15, unlocked)
+        mek_practical_sheet.set_column('N2:N2',15, unlocked)
             
         mek_practical_sheet.protect()
         
@@ -843,7 +852,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge 3 cells over two rows.
         mek_practical_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_prac = ['Name of the Candidate', 'Candidate Code No',
+        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks',
           '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks',
           '-Using Hand & Plumbing Tools \n -Task 3 \n 10 Marks',
@@ -862,8 +871,11 @@ class ExaminerPortal(CustomerPortal):
         for i, candidate in enumerate(candidate_list):
             mek_practical_sheet.write('A{}'.format(i+3), candidate, locked)
 
-        for i, code in enumerate(candidate_code):
+        for i, code in enumerate(roll_no):
             mek_practical_sheet.write('B{}'.format(i+3), code, locked)
+
+        for i, code in enumerate(candidate_code):
+            mek_practical_sheet.write('C{}'.format(i+3), code, locked)
         
         workbook.close()
 
