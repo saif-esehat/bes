@@ -415,17 +415,18 @@ class ExamOralPractical(models.Model):
                 for examiner, assigned_candidates in assignments.items():
                     examiner_id = examiner
                     for i in assigned_candidates:
+                        gp_marksheet = self.env['gp.exam.schedule'].browse(i).id
                         gsk_oral = self.env['gp.exam.schedule'].browse(i).gsk_oral.id
                         gsk_prac = self.env['gp.exam.schedule'].browse(i).gsk_prac.id
                         candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
-                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_candidate':candidate , 'gsk_oral':gsk_oral , 'gsk_prac':gsk_prac })
+                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_marksheet':gp_marksheet ,'gp_candidate':candidate , 'gsk_oral':gsk_oral , 'gsk_prac':gsk_prac })
                 
                 self.write({'state':'2-confirm'})       
             
             elif self.subject.name == 'MEK':
                 
                 gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed'))]).ids
-                
+                gp_marksheet = self.env['gp.exam.schedule'].browse(i).id
                 examiners = self.examiners.ids
                 
                 assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
@@ -442,7 +443,7 @@ class ExamOralPractical(models.Model):
                         gsk_oral = self.env['gp.exam.schedule'].browse(i).mek_oral.id
                         gsk_prac = self.env['gp.exam.schedule'].browse(i).mek_prac.id
                         candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
-                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_candidate':candidate , 'mek_oral':gsk_oral , 'mek_prac':gsk_prac })
+                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_marksheet':gp_marksheet,'gp_candidate':candidate , 'mek_oral':gsk_oral , 'mek_prac':gsk_prac })
                 
                 self.write({'state':'2-confirm'})
                                             
@@ -467,10 +468,11 @@ class ExamOralPractical(models.Model):
             for examiner, assigned_candidates in assignments.items():
                 examiner_id = examiner
                 for i in assigned_candidates:
+                    ccmc_marksheet = self.env['ccmc.exam.schedule'].browse(i)
                     ccmc_oral = self.env['ccmc.exam.schedule'].browse(i).ccmc_oral.id
                     cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
                     candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
-                    self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'ccmc_candidate':candidate ,'ccmc_oral':ccmc_oral , 'cookery_bakery':cookery_bakery })
+                    self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate ,'ccmc_oral':ccmc_oral , 'cookery_bakery':cookery_bakery })
                    
 
     
@@ -514,6 +516,8 @@ class OralPracticalExaminersMarksheet(models.Model):
     
     examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID")
     gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate")
+    gp_marksheet = fields.Many2one("gp.exam.schedule",string="GP Marksheet")
+    ccmc_marksheet = fields.Many2one("ccmc.exam.schedule",string="GP Marksheet")
     ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate")
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
