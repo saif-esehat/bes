@@ -575,13 +575,25 @@ class ExaminerPortal(CustomerPortal):
         
         
         
-    @http.route('/open_candidate_form/download_gsk_marksheet', type='http', auth="user", website=True)
-    def download_gsk_marksheet(self, **rec):
+    @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>', type='http', auth="user", website=True)
+    def download_gsk_marksheet(self,batch_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         
+        # if examiner.exam_assignments:
+        #     assignment_id = examiner.exam_assignments[0].id
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
         # import wdb;wdb.set_trace();
+        
+        for exam in examiner_assignments:
+            if examiner.subject_id.name == 'GSK':
+                assignment = exam.id
+
         
         assignment_id = examiner.assignments.id
         
@@ -637,7 +649,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        gsk_oral_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate', 'Candidate Code No',
           'Subject Area 1 \n Minimum 3 Questions \n 9 Marks',
@@ -654,7 +666,7 @@ class ExaminerPortal(CustomerPortal):
         candidate_list = [] #List of Candidates
         candidate_code = [] #Candidates Code No.
 
-        for candidate in assignment.gp_oral_prac:
+        for candidate in examiner_assignments.marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             candidate_code.append(candidate.gp_candidate.candidate_code)
         
@@ -683,7 +695,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
