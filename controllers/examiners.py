@@ -593,7 +593,11 @@ class ExaminerPortal(CustomerPortal):
         for exam in examiner_assignments:
             if examiner.subject_id.name == 'GSK':
                 assignment = exam.id
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> ce000e4700a5f78e1a9d898122a68220aa1ea58b
         
         assignment_id = examiner.assignments.id
         
