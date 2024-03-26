@@ -179,29 +179,136 @@
                 <form>
                     <header>
                             <field name="state" widget="statusbar"/>
+                            <button name="confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-draft')]}"  />
                     </header>
                     <sheet>
-                         <div class="oe_button_box" name="button_box">
+                         <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
                                 <field name="candidate_count" string="Candidate"  widget="statinfo"/>
                             </button>
-                        </div>
-                        
+                        </div> -->
                         <group style="width:100%;">
-                            <h1>
-                                <field name="exam_schedule_id" placeholder="Exam Schedule"/>
-                            </h1>
+                            <field name="dgs_batch"/>
+                        </group> 
+                        <group style="width:50%;">
+                            <field name="institute_id"/>
                         </group>
                         <group style="width:50%;">
-                            <field name="examiners"/>
-                            <field name="start_time_online"/>
+                            <field name="institute_code"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="course" required="1"/>
+                        </group>
+                        <group style="width:50%;">
+                            <field name="subject" domain="[('course_id','=',course)]" required="1" />
+                        </group>
+                        <group style="width:50%;">
+                            <field name="start_time"/>
                             <!-- <field name="candidate_count"/> -->
                         </group>
                         <group style="width:50%;">
-                            <field name="subject"/>
-                            <field name="end_time_online"/>
+                            <field name="end_time"/>
                         </group>
+                       
+                        <field name="examiners" >
+                            <tree editable="bottom"  >
+                            <field name="prac_oral_id" invisible="1"  />
+                                <field name="dgs_batch" required="1" invisible="1"   />
+                                <field name="subject" invisible="1" />
+                                <field name="course" required="1" invisible="1"  />
+                                <field name="examiner" required="1" domain="[('subject_id','=', subject)]"  />
+                                <field name="exam_date" required="1"  />
+                                <field name="marksheets"  />
+                                <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+                            </tree>
+                        </field>
+
+
+
                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_gp_tree_mek" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="gp_candidate"/>
+                    <field name="mek_oral"/>
+                    <field name="mek_prac"/>
+                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_gp_tree_gsk" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="gp_candidate"/>
+                    <field name="gsk_oral"/>
+                    <field name="gsk_prac"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_marksheet_gp_form_mek" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="gp_candidate"/>
+                            <field name="mek_oral"/>
+                            <field name="mek_prac"/>
+                        </group>
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_gp_form_gsk" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <sheet>
+                            <field name="gp_candidate"/>                        
+                            <field name="gsk_oral"/>
+                            <field name="gsk_prac"/>
+                        </sheet>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_tree_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ccmc_candidate"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_form_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ccmc_candidate"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
                 </form>
             </field>
         </record>
@@ -211,12 +318,8 @@
             <field name="model">exam.type.oral.practical</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="exam_schedule_id"/>
-                    <field name="examiners"/>
-                    <field name="subject"/>
-                    <field name="start_time_online"/>
-                    <field name="end_time_online"/>
-                    <field name="candidate_count"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
                 </tree>
             </field>
         </record>

@@ -64,11 +64,49 @@ class ExaminerPortal(CustomerPortal):
 
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
+        # examiner_assignments = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)]).assignments
+        filtered_batches = []
+
+        # Assuming examiner is already defined
+        for batch in request.env['dgs.batches'].sudo().search([]):
+            count = request.env['exam.type.oral.practical.examiners'].sudo().search_count([
+                ('dgs_batch', '=', batch.id),
+                ('examiner', '=', examiner.id)
+            ])
+            if count > 0:
+                filtered_batches.append(batch)
+
+
         
-        vals = {'assignments':examiner_assignments, 'examiner':examiner}
+        vals = {'batches':filtered_batches,'assignments':'', 'examiner':examiner}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
+    
+    @http.route(['/my/assignments/batches/<int:batch_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentBatchListView(self,batch_id, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
+        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id}
+        return request.render("bes.examiner_assignment_institute_list",vals)
+    
+    @http.route(['/my/assignments/batches/candidates/<int:batch_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentCandidateListView(self,batch_id, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
+        vals = {'assignments':examiner_assignments, 'examiner':examiner}
+        return request.render("bes.examiner_assignment_candidate_list",vals)
 
     # def check_user_groups(group_xml_id):
     #     ​def decorator(func):

@@ -31,8 +31,6 @@
         'views/survey.xml',
         'views/invoice.xml',
         'views/marksheet_wizard.xml',
-        # 'views/portal_template.xml',
-        
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
         'views/exam_schedule.xml',
