@@ -52,6 +52,9 @@
                         <group>
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code" readonly="1"/>
+                            <field name="registered_institute" readonly="1"/>
+
+                            
                             <field name="dgs_batch" readonly="0"/>
                             <field name="gp_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
@@ -240,7 +243,7 @@
                         <group>
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code"/>
-                            
+                            <field name="registered_institute" readonly="1"/>
                             <field name="dgs_batch" readonly="0"/>
                             <field name="ccmc_candidate"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
