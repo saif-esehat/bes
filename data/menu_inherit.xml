@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing menu item
+        <record id="odoo_website_helpdesk.menu_helpdesk" model="ir.ui.menu">
+            <field name="name">Helpdesks</field>
+            <field name="groups">group_bes_admin</field>
+        </record> -->
+
+        <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <!-- <field name="groups_id" eval="[(5, 0, 0), (4, ref('bes.group_exam_coordinator'))]"/> -->
+            <field name="groups_id" eval="[(6,0,[ref('bes.group_exam_coordinator')])]"/>
+            <!-- <field name="groups_id" eval="[(3,ref('my_new_group_id'))]"/> -->
+
+        </record>
+
+
+    </data>
+</odoo>

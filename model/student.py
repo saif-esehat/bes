@@ -1623,7 +1623,9 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
             'cookery_bakery_percentage':cookery_bakery_percentage,
             'ccmc_oral_percentage':ccmc_oral_percentage,
             'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
-            'overall_percentage':overall_percentage
+            'overall_percentage':overall_percentage,
+            'cookery_bakery_prac_status':self.ccmc_exam.cookery_bakery_prac_status,
+            'ccmc_oral_prac_status':self.ccmc_exam.ccmc_oral_prac_status
             
             })
 

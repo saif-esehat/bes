@@ -24,8 +24,8 @@ class BesBatches(models.Model):
     ], string='State', default='1-draft')
     exam_center = fields.Many2one("exam.center","Exam Region",required=True)
     examiners = fields.Many2many('bes.examiner', string="Examiners")
-    exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
-    exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
+    # exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
+    # exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
     candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count")
     
     
@@ -150,7 +150,7 @@ class ExamCandidate(models.Model):
     _name = 'exam.schedule.bes.candidate'
     _description = 'Exam Candidate'
     
-    exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule",required=True)
+    # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule",required=True)
     partner_id = fields.Many2one("res.partner",string="Contacts")
     name = fields.Char("Name of Candidate",)
     indos_no = fields.Char("Indos No.")
@@ -371,57 +371,194 @@ class ExamOnline(models.Model):
       
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
-    _rec_name = "examiners"
-    exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
-    examiners = fields.Many2one('bes.examiner', string="Examiner")
-    subject = fields.Many2one("course.master.subject","Subject")
-    start_time_online = fields.Datetime("Start Time")
-    end_time_online = fields.Datetime("End Time")
-    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count")
-    candidates = fields.Many2many("exam.schedule.bes.candidate","exam_type_practical_oral_candidate_rel","exam_type_prac_oral_id","exam_candidate_id",string="Candidate")
+    # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
+    # examiners = fields.Many2one('bes.examiner', string="Examiner")
+    # subject = fields.Many2one("course.master.subject","Subject")
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
+
+    start_time = fields.Datetime("Start Time")
+    end_time = fields.Datetime("End Time")
+    examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Examiners")
+   
+    
+    course = fields.Many2one("course.master",string="Course")
+    
+    subject = fields.Many2one("course.master.subject",string="Subject")
+
 
     state = fields.Selection([
         ('1-draft', 'Draft'),
-        ('2-confirm', 'Confirmed'),
-        ('3-in_progress','In-Progress'),   
-        ('4-done','Done'),
-        ('5-completed','Completed')     
+        ('2-confirm', 'Confirmed')     
     ], string='State', default='1-draft')
     
-    def open_oral_prac_candidate(self):
+    def confirm(self):
         
-        candidates_id = self.candidates.ids
+        
+        if self.course.course_code == 'GP':
             
+            if self.subject.name == 'GSK':
+            
+                gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed'))]).ids
+                
+                examiners = self.examiners.ids
+                
+                assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
+
+            
+                for i, candidate in enumerate(gp_marksheets):
+                    examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
+                    examiner = examiners[examiner_index]
+                    assignments[examiner].append(candidate)   
+                    
+                for examiner, assigned_candidates in assignments.items():
+                    examiner_id = examiner
+                    for i in assigned_candidates:
+                        gsk_oral = self.env['gp.exam.schedule'].browse(i).gsk_oral.id
+                        gsk_prac = self.env['gp.exam.schedule'].browse(i).gsk_prac.id
+                        candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
+                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_candidate':candidate , 'gsk_oral':gsk_oral , 'gsk_prac':gsk_prac })
+                
+                self.write({'state':'2-confirm'})       
+            
+            elif self.subject.name == 'MEK':
+                
+                gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed'))]).ids
+                
+                examiners = self.examiners.ids
+                
+                assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
+
+            
+                for i, candidate in enumerate(gp_marksheets):
+                    examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
+                    examiner = examiners[examiner_index]
+                    assignments[examiner].append(candidate)   
+                    
+                for examiner, assigned_candidates in assignments.items():
+                    examiner_id = examiner
+                    for i in assigned_candidates:
+                        gsk_oral = self.env['gp.exam.schedule'].browse(i).mek_oral.id
+                        gsk_prac = self.env['gp.exam.schedule'].browse(i).mek_prac.id
+                        candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
+                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_candidate':candidate , 'mek_oral':gsk_oral , 'mek_prac':gsk_prac })
+                
+                self.write({'state':'2-confirm'})
+                                            
+
+                
+            
+        elif self.course.course_code == 'CCMC':
+            
+            # import wdb;wdb.set_trace()
+            
+            ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
+            
+            examiners = self.examiners.ids
+                
+            assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
+            
+            for i, candidate in enumerate(ccmc_marksheets):
+                    examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
+                    examiner = examiners[examiner_index]
+                    assignments[examiner].append(candidate)
+            
+            for examiner, assigned_candidates in assignments.items():
+                examiner_id = examiner
+                for i in assigned_candidates:
+                    ccmc_oral = self.env['ccmc.exam.schedule'].browse(i).ccmc_oral.id
+                    cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
+                    candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
+                    self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'ccmc_candidate':candidate ,'ccmc_oral':ccmc_oral , 'cookery_bakery':cookery_bakery })
+                   
+
+    
+
+class ExamOralPracticalExaminers(models.Model):
+    _name = 'exam.type.oral.practical.examiners'
+    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False)
+    
+    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False)
+    course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course")
+    subject = fields.Many2one("course.master.subject",related='prac_oral_id.subject',string="Subject")
+    examiner = fields.Many2one('bes.examiner', string="Examiner")
+    exam_date = fields.Date("Exam Date")
+    marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates")
+    
+    def open_marksheet_list(self):
+        
+        if self.prac_oral_id.subject.name == 'GSK':
+            views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_gp_form_gsk").id, 'form')]
+        elif self.prac_oral_id.subject.name == 'MEK':
+             views = [(self.env.ref("bes.view_marksheet_gp_tree_mek").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
+        elif self.prac_oral_id.subject.name == 'CCMC':
+            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
+            
+        
+        
         return {
-        'name': 'Exam Candidate',
-        'domain': [('id', 'in', candidates_id)],
-        'view_type': 'form',
-        'res_model': 'exam.schedule.bes.candidate',
-        'view_id': False,
-        'view_mode': 'tree,form',
-        'type': 'ir.actions.act_window',
-        'context': {
-            'subject_id': self.subject.id
+            'name': 'GP Marksheet',
+            'domain': [('examiners_id', '=', self.id)],
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,form',  # Specify both tree and form views
+            'res_model': 'exam.type.oral.practical.examiners.marksheet',
+            'views': views,
+            'target': 'current',
         }
-        }       
+class OralPracticalExaminersMarksheet(models.Model):
+    _name = 'exam.type.oral.practical.examiners.marksheet'
+    
+    examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID")
+    gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate")
+    ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate")
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+
+    
+    
+    
+    # def open_oral_prac_candidate(self):
+        
+    #     candidates_id = self.candidates.ids
+            
+    #     return {
+    #     'name': 'Exam Candidate',
+    #     'domain': [('id', 'in', candidates_id)],
+    #     'view_type': 'form',
+    #     'res_model': 'exam.schedule.bes.candidate',
+    #     'view_id': False,
+    #     'view_mode': 'tree,form',
+    #     'type': 'ir.actions.act_window',
+    #     'context': {
+    #         'subject_id': self.subject.id
+    #     }
+    #     }       
         
         
     
-    @api.onchange('exam_schedule_id')
-    def onchange_exam_schedule_id(self):
-        for rec in self:
-            return {'domain':{'subject':[('id','in',rec.exam_schedule_id.course.subjects.ids)]}}
+    # @api.onchange('exam_schedule_id')
+    # def onchange_exam_schedule_id(self):
+    #     for rec in self:
+    #         return {'domain':{'subject':[('id','in',rec.exam_schedule_id.course.subjects.ids)]}}
     
     
-    def compute_candidate_count(self):
-        for rec in self:
-            count = len(rec.candidates)
-            rec.candidate_count = count
+    # def compute_candidate_count(self):
+    #     for rec in self:
+    #         count = len(rec.candidates)
+    #         rec.candidate_count = count
     
-    @api.onchange('exam_schedule_id')
-    def onchange_exam_schedule_id(self):
-        for rec in self:
-            return {'domain':{'examiners':[('id','in',rec.exam_schedule_id.examiners.ids)]}}
+    # @api.onchange('exam_schedule_id')
+    # def onchange_exam_schedule_id(self):
+    #     for rec in self:
+    #         return {'domain':{'examiners':[('id','in',rec.exam_schedule_id.examiners.ids)]}}
    
 
     
@@ -718,7 +855,7 @@ class GPExam(models.Model):
             vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
 
             a = super(GPExam, self).create(vals)   
-            print(a,"==============================================================================================")
+
             if a.gsk_oral_prac_status == "pending":
                 self.env['gp.exam.appear'].create(
                     {
@@ -1083,6 +1220,12 @@ class CCMCExam(models.Model):
     ], string='Cookery And Bakery')
     
     
+    cookery_bakery_prac_oral_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Cookery And Bakery')
+    
+    
     cookery_oral = fields.Float("Cookery Oral",readonly=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True)
     ccmc_oral_prac_status = fields.Selection([
@@ -1090,7 +1233,10 @@ class CCMCExam(models.Model):
         ('passed', 'Passed'),
     ], string='CCMC Oral Status')
     
-    
+    oral_prac_status = fields.Selection([
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Oral/Prac Status',compute="compute_oral_prac_status")
     
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -1152,6 +1298,18 @@ class CCMCExam(models.Model):
    
     institute_code = fields.Char("Institute code")
     
+    @api.depends('ccmc_oral_prac_status','cookery_bakery_prac_status')
+    def compute_oral_prac_status(self):
+        for record in self:
+            # import wdb; wdb.set_trace()
+            if record.cookery_bakery_prac_status == 'failed' or record.ccmc_oral_prac_status == 'failed':
+                record.oral_prac_status = 'failed'
+            else:
+                record.oral_prac_status = ''
+                
+            
+            
+        
     
     @api.depends('certificate_criteria','state')
     def compute_dgs_visible(self):
