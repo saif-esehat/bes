@@ -581,7 +581,6 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         
-<<<<<<< HEAD
         # if examiner.exam_assignments:
         #     assignment_id = examiner.exam_assignments[0].id
         batch_id = batch_id
@@ -595,9 +594,6 @@ class ExaminerPortal(CustomerPortal):
             if examiner.subject_id.name == 'GSK':
                 assignment = exam.id
                 
-=======
-        import wdb;wdb.set_trace();
->>>>>>> 33bba34efedb7aaff902613926c7a598bbd40a5c
         
         assignment_id = examiner.assignments.id
         
