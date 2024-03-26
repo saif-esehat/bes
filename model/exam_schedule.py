@@ -426,7 +426,6 @@ class ExamOralPractical(models.Model):
             elif self.subject.name == 'MEK':
                 
                 gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed'))]).ids
-                gp_marksheet = self.env['gp.exam.schedule'].browse(i).id
                 examiners = self.examiners.ids
                 
                 assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
@@ -440,6 +439,7 @@ class ExamOralPractical(models.Model):
                 for examiner, assigned_candidates in assignments.items():
                     examiner_id = examiner
                     for i in assigned_candidates:
+                        gp_marksheet = self.env['gp.exam.schedule'].browse(i).id
                         gsk_oral = self.env['gp.exam.schedule'].browse(i).mek_oral.id
                         gsk_prac = self.env['gp.exam.schedule'].browse(i).mek_prac.id
                         candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
@@ -511,6 +511,7 @@ class ExamOralPracticalExaminers(models.Model):
             'views': views,
             'target': 'current',
         }
+        
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     
