@@ -426,7 +426,10 @@ class ExamOralPractical(models.Model):
             elif self.subject.name == 'MEK':
                 
                 gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed'))]).ids
-                gp_marksheet = self.env['gp.exam.schedule'].browse(i).id
+                
+                # import wdb;wdb.set_trace()
+                
+                
                 examiners = self.examiners.ids
                 
                 assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
@@ -440,9 +443,11 @@ class ExamOralPractical(models.Model):
                 for examiner, assigned_candidates in assignments.items():
                     examiner_id = examiner
                     for i in assigned_candidates:
+                        gp_marksheet = self.env['gp.exam.schedule'].browse(i).id
                         gsk_oral = self.env['gp.exam.schedule'].browse(i).mek_oral.id
                         gsk_prac = self.env['gp.exam.schedule'].browse(i).mek_prac.id
                         candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
+                        
                         self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_marksheet':gp_marksheet,'gp_candidate':candidate , 'mek_oral':gsk_oral , 'mek_prac':gsk_prac })
                 
                 self.write({'state':'2-confirm'})
@@ -699,7 +704,7 @@ class GPExam(models.Model):
         top_25_percent = int(total_records * 0.25)
 
         for record in self:
-            print(record.id)
+            # print(record.id)
             try:
                 index = sorted_records.ids.index(record.id)
                 numeric_rank = index + 1 if index < top_25_percent else 0
@@ -734,15 +739,15 @@ class GPExam(models.Model):
     @api.depends('certificate_id','state')
     def _compute_certificate_url(self):
         for record in self:
-            print("Working CERT URL Func")
+            # print("Working CERT URL Func")
 
             if record.state == "3-certified":
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-                print("base_url:", base_url)
+                # print("base_url:", base_url)
 
                 certificate_id = record.id
                 current_certificate_url = base_url + "verification/gpcerificate/" + str(certificate_id)
-                print("current_url:", current_certificate_url)
+                # print("current_url:", current_certificate_url)
                 qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
                 qr.add_data(current_certificate_url)
                 qr.make(fit=True)

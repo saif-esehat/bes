@@ -580,9 +580,6 @@ class ExaminerPortal(CustomerPortal):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        
-        # if examiner.exam_assignments:
-        #     assignment_id = examiner.exam_assignments[0].id
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
@@ -593,21 +590,7 @@ class ExaminerPortal(CustomerPortal):
         for exam in examiner_assignments:
             if examiner.subject_id.name == 'GSK':
                 assignment = exam.id
-<<<<<<< HEAD
-
-=======
                 
->>>>>>> ce000e4700a5f78e1a9d898122a68220aa1ea58b
-        
-        assignment_id = examiner.assignments.id
-        
-        # for exam in examiner.exam_assignments:
-        #     if exam.subject_id.name == 'GSK':
-        #         assignment = exam.id
-                
-        
-        assignment = request.env['examiner.assignment'].sudo().browse(int(assignment_id))
-            
         # for candidate in assignment.gp_oral_prac
 
         excel_buffer = io.BytesIO()
@@ -746,15 +729,19 @@ class ExaminerPortal(CustomerPortal):
     
     
     
-    @http.route('/open_candidate_form/download_mek_marksheet', type='http', auth="user", website=True)
-    def download_mek_marksheet(self, **rec):
+    @http.route('/open_candidate_form/download_mek_marksheet/<int:batch_id>', type='http', auth="user", website=True)
+    def download_mek_marksheet(self,batch_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        assignment_id = examiner.exam_assignments.id
-        assignment = request.env['examiner.assignment'].sudo().browse(int(assignment_id))
-            
-        # for candidate in assignment.gp_oral_prac
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
+        for exam in examiner_assignments:
+            if examiner.subject_id.name == 'MEK':
+                assignment = exam.id
 
         # import wdb;wdb.set_trace();
         excel_buffer = io.BytesIO()
@@ -800,7 +787,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        mek_oral_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        mek_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
@@ -817,7 +804,7 @@ class ExaminerPortal(CustomerPortal):
         candidate_code = [] #Candidates Code No.
         roll_no = []
 
-        for candidate in assignment.gp_oral_prac:
+        for candidate in examiner_assignments.marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             candidate_code.append(candidate.gp_candidate.candidate_code)
             # roll_no.append(candidate.gp_candidate.candidate_code)
@@ -847,7 +834,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        mek_practical_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate', 'Candidate Code No',
           '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks',
