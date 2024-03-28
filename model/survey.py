@@ -103,3 +103,8 @@ class SurveyUserInputInherited(models.Model):
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
 
+
+class InheritedSurveyQuestions(models.Model):
+    _inherit = "survey.question"
+    
+    q_no = fields.Char("Q.No")

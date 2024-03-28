@@ -97,17 +97,21 @@ class ExaminerPortal(CustomerPortal):
         vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id}
         return request.render("bes.examiner_assignment_institute_list",vals)
     
-    @http.route(['/my/assignments/batches/candidates/<int:batch_id>'], type="http", auth="user", website=True)
-    def ExaminerAssignmentCandidateListView(self,batch_id, **kw):
+    @http.route(['/my/assignments/batches/candidates/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentCandidateListView(self,batch_id,assignment_id, **kw):
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_subject = examiner.subject_id.name
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        vals = {'assignments':examiner_assignments, 'examiner':examiner, 'batch_id':batch_id}
+        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id}
+        
+        print(examiner_subject)
         return request.render("bes.examiner_assignment_candidate_list",vals)
 
     # def check_user_groups(group_xml_id):
@@ -577,18 +581,17 @@ class ExaminerPortal(CustomerPortal):
         
         
         
-    @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>', type='http', auth="user", website=True)
-    def download_gsk_marksheet(self,batch_id, **rec):
+    @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_gsk_marksheet(self,batch_id,assignment_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        
-        # if examiner.exam_assignments:
-        #     assignment_id = examiner.exam_assignments[0].id
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
         # import wdb;wdb.set_trace();
         
@@ -596,16 +599,6 @@ class ExaminerPortal(CustomerPortal):
             if examiner.subject_id.name == 'GSK':
                 assignment = exam.id
                 
-        
-        assignment_id = examiner.assignments.id
-        
-        # for exam in examiner.exam_assignments:
-        #     if exam.subject_id.name == 'GSK':
-        #         assignment = exam.id
-                
-        
-        assignment = request.env['examiner.assignment'].sudo().browse(int(assignment_id))
-            
         # for candidate in assignment.gp_oral_prac
 
         excel_buffer = io.BytesIO()
@@ -625,8 +618,8 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Oral Marksheet
         gsk_oral_sheet.set_column('A:XDF',None, unlocked)
         gsk_oral_sheet.set_column('A2:A2',35, unlocked)
-        gsk_oral_sheet.set_column('B2:B2',20, unlocked)
-        gsk_oral_sheet.set_column('C2:C2',10, unlocked)
+        gsk_oral_sheet.set_column('B2:B2',10, unlocked)
+        gsk_oral_sheet.set_column('C2:C2',20, unlocked)
         gsk_oral_sheet.set_column('D2:I2',20, unlocked)
         gsk_oral_sheet.set_column('J2:J2',30, unlocked)
         gsk_oral_sheet.set_column('K2:K2',15, unlocked)
@@ -670,7 +663,7 @@ class ExaminerPortal(CustomerPortal):
         roll_no = []
         candidate_code = [] #Candidates Code No.
 
-        for candidate in examiner_assignments.marksheets:
+        for candidate in marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             roll_no.append(candidate.gp_marksheet.exam_id)
             candidate_code.append(candidate.gp_candidate.candidate_code)
@@ -695,10 +688,11 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
         gsk_practical_sheet.set_column('A2:A2',35, unlocked)
-        gsk_practical_sheet.set_column('B2:B2',20, unlocked)
-        gsk_practical_sheet.set_column('C2:J2',20, unlocked)
-        gsk_practical_sheet.set_column('K2:K2',15, unlocked)
+        gsk_practical_sheet.set_column('B2:B2',10, unlocked)
+        gsk_practical_sheet.set_column('C2:C2',20, unlocked)
+        gsk_practical_sheet.set_column('D2:K2',20, unlocked)
         gsk_practical_sheet.set_column('L2:L2',15, unlocked)
+        gsk_practical_sheet.set_column('M2:M2',15, unlocked)
             
         gsk_practical_sheet.protect()
         
@@ -706,7 +700,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge 3 cells over two rows.
         gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_prac = ['Name of the Candidate', 'Candidate Code No',
+        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
           '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 12 Marks',
           '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
@@ -715,6 +709,7 @@ class ExaminerPortal(CustomerPortal):
           '-Rig scaffolding to work at a height  \n 8 marks',
           '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
           '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
+          '·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight (18 Marks)',
           'Total 100 Marks', 'Remarks']
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
@@ -723,6 +718,9 @@ class ExaminerPortal(CustomerPortal):
         
         for i, candidate in enumerate(candidate_list):
             gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+            
+        for i, code in enumerate(roll_no):
+            gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
@@ -732,12 +730,16 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
 
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
+        
         # Generate a response with the Excel file
         response = request.make_response(
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=gsk-marksheet.xlsx')
+                ('Content-Disposition', 'attachment; filename='+file_name)
             ]
         )
 
@@ -751,15 +753,22 @@ class ExaminerPortal(CustomerPortal):
     
     
     
-    @http.route('/open_candidate_form/download_mek_marksheet', type='http', auth="user", website=True)
-    def download_mek_marksheet(self, **rec):
+    @http.route('/open_candidate_form/download_mek_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_mek_marksheet(self,batch_id,assignment_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        assignment_id = examiner.exam_assignments.id
-        assignment = request.env['examiner.assignment'].sudo().browse(int(assignment_id))
-            
-        # for candidate in assignment.gp_oral_prac
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+
+        
+        for exam in examiner_assignments:
+            if examiner.subject_id.name == 'MEK':
+                assignment = exam.id
 
         # import wdb;wdb.set_trace();
         excel_buffer = io.BytesIO()
@@ -779,10 +788,11 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Oral Marksheet
         mek_oral_sheet.set_column('A:XDF',None, unlocked)
         mek_oral_sheet.set_column('A2:A2',35, unlocked)
-        mek_oral_sheet.set_column('B2:B2',20, unlocked)
-        mek_oral_sheet.set_column('C2:H2',20, unlocked)
-        mek_oral_sheet.set_column('I2:I2',15, unlocked)
+        mek_oral_sheet.set_column('B2:B2',10, unlocked)
+        mek_oral_sheet.set_column('C2:C2',20, unlocked)
+        mek_oral_sheet.set_column('D2:I2',20, unlocked)
         mek_oral_sheet.set_column('J2:J2',15, unlocked)
+        mek_oral_sheet.set_column('K2:K2',15, unlocked)
             
         mek_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -805,9 +815,9 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        mek_oral_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        mek_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_oral = ['Name of the Candidate', 'Candidate Code No',
+        header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
           'Use of chipping Tools & Brushes & Paints \n 10 Marks',
           'Welding \n 10 Marks',
@@ -822,18 +832,21 @@ class ExaminerPortal(CustomerPortal):
         candidate_code = [] #Candidates Code No.
         roll_no = []
 
-        for candidate in assignment.gp_oral_prac:
+        for candidate in marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             candidate_code.append(candidate.gp_candidate.candidate_code)
-            # roll_no.append(candidate.gp_candidate.candidate_code)
+            roll_no.append(candidate.gp_marksheet.exam_id)
         
         # # import wdb;wdb.set_trace();
         
         for i, candidate in enumerate(candidate_list):
             mek_oral_sheet.write('A{}'.format(i+3), candidate, locked)
+        
+        for i, code in enumerate(roll_no):
+            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
-            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
+            mek_oral_sheet.write('C{}'.format(i+3), code, locked)
         
         
         
@@ -843,18 +856,19 @@ class ExaminerPortal(CustomerPortal):
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
         mek_practical_sheet.set_column('A2:A2',35, unlocked)
-        mek_practical_sheet.set_column('B2:B2',20, unlocked)
-        mek_practical_sheet.set_column('C2:K2',25, unlocked)
-        mek_practical_sheet.set_column('L2:L2',15, unlocked)
+        mek_practical_sheet.set_column('B2:B2',10, unlocked)
+        mek_practical_sheet.set_column('C2:C2',20, unlocked)
+        mek_practical_sheet.set_column('D2:L2',25, unlocked)
         mek_practical_sheet.set_column('M2:M2',15, unlocked)
+        mek_practical_sheet.set_column('N2:N2',15, unlocked)
             
         mek_practical_sheet.protect()
         
         
         # Merge 3 cells over two rows.
-        mek_practical_sheet.merge_range("A1:G1", assignment.institute_id.name, merge_format)
+        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
-        header_prac = ['Name of the Candidate', 'Candidate Code No',
+        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks',
           '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks',
           '-Using Hand & Plumbing Tools \n -Task 3 \n 10 Marks',
@@ -873,20 +887,28 @@ class ExaminerPortal(CustomerPortal):
         for i, candidate in enumerate(candidate_list):
             mek_practical_sheet.write('A{}'.format(i+3), candidate, locked)
 
-        for i, code in enumerate(candidate_code):
+        for i, code in enumerate(roll_no):
             mek_practical_sheet.write('B{}'.format(i+3), code, locked)
+
+        for i, code in enumerate(candidate_code):
+            mek_practical_sheet.write('C{}'.format(i+3), code, locked)
         
         workbook.close()
 
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
+        
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
 
+       
         # Generate a response with the Excel file
         response = request.make_response(
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=mek-marksheet.xlsx')
+                ('Content-Disposition', 'attachment; filename='+file_name)
             ]
         )
 
