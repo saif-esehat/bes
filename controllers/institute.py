@@ -2019,6 +2019,7 @@ class InstitutePortal(CustomerPortal):
             date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
             date_string = date_value.strftime('%d-%b-%y') 
             # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
+            
             dob = date_value
             street1 = row[3]
             street2 = row[4]  
