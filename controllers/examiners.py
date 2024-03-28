@@ -707,6 +707,7 @@ class ExaminerPortal(CustomerPortal):
           '-Rig scaffolding to work at a height  \n 8 marks',
           '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
           '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
+          '·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight (18 Marks)',
           'Total 100 Marks', 'Remarks']
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)

@@ -459,10 +459,10 @@ class ExamOralPractical(models.Model):
             
             # import wdb;wdb.set_trace()
             
-            ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('institute_code','=',self.institute_code),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
+            ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
             
             examiners = self.examiners.ids
-                
+            
             assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
             
             for i, candidate in enumerate(ccmc_marksheets):
@@ -470,15 +470,18 @@ class ExamOralPractical(models.Model):
                     examiner = examiners[examiner_index]
                     assignments[examiner].append(candidate)
             
+            
+            
             for examiner, assigned_candidates in assignments.items():
                 examiner_id = examiner
                 for i in assigned_candidates:
-                    ccmc_marksheet = self.env['ccmc.exam.schedule'].browse(i)
+                    ccmc_marksheet = self.env['ccmc.exam.schedule'].browse(i).id
                     ccmc_oral = self.env['ccmc.exam.schedule'].browse(i).ccmc_oral.id
                     cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
                     candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
-                    self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate ,'ccmc_oral':ccmc_oral , 'cookery_bakery':cookery_bakery })
-                   
+                    self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate ,'ccmc_oral':ccmc_oral , 'cookery_bakery':cookery_bakery })
+            
+            self.write({'state':'2-confirm'})       
 
     
 
