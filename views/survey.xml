@@ -126,6 +126,29 @@
             </field>
         </record>
 
+        <record id="survey_form_inherited" model="ir.ui.view">
+            <field name="name">survey.survey.view.tree.inherited</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='sequence']" position="after">
+                    <field name="q_no" />
+                </xpath>
+            </field>
+        </record>
+
+         <record id="survey_questions_inherited" model="ir.ui.view">
+            <field name="name">survey.question.view.form.inherited</field>
+            <field name="model">survey.question</field>
+            <field name="inherit_id" ref="survey.survey_question_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']" position="before">
+                    <label for="q_no" />
+                    <field name="q_no" />
+                </xpath>
+            </field>
+        </record>
+
 
 
 
