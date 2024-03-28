@@ -1281,12 +1281,18 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
 
+
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
+
+
         # Generate a response with the Excel file
         response = request.make_response(
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=ccmc-marksheet.xlsx')
+                ('Content-Disposition', 'attachment; filename='+file_name)
             ]
         )
 

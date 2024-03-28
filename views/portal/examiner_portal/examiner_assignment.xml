@@ -223,6 +223,7 @@
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Oral</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Practical</th>
+
                         <th t-if="examiner_subject == 'CCMC'" class="text-left">CCMC Oral</th>
                         <th t-if="examiner_subject == 'CCMC'" class="text-left">CCMC Practical</th>
 
@@ -263,7 +264,8 @@
                             <td t-if="examiner_subject == 'MEK'" class="text-left">
                                 <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
                             </td>
-                            <td t-if="examiner_subject == 'CCMC'" class="text-left">
+                            
+                            <td t-if="examiner_subject == 'CCMC' and " class="text-left">
                                 <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
                             </td>
                             <td t-if="examiner_subject == 'CCMC'" class="text-left">
