@@ -45,13 +45,13 @@ class Examiner(models.Model):
     associated_training_institute = fields.Text("Name & address of the training institute to which you were associated")
     present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
     subject_id = fields.Many2one("course.master.subject","Subject")
-    assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
-    # payment_details = fields.One2many("examiner.assignment","examiner_id","Payment Details")
+    payment_details = fields.One2many("examiner.assignment","examiner_id","Payment Details")
     acc_no = fields.Char(string="Account Number")
     ifsc_code = fields.Char(string="IFSC Code")
     bank_name = fields.Char(string="Bank Name")
     exam_coordinator = fields.Boolean("Exam Coordinator")
     exam_coordinator_id = fields.Boolean("Exam Coordinator ID")
+    assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
     exam_assignments = fields.One2many("examiner.assignment","examiner_id",string="Exam Assignments")
     
     
@@ -172,6 +172,7 @@ class ExaminerAssignment(models.Model):
     institute_id = fields.Many2one('bes.institute',string="Institute")
     gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]")
     gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
+    ccmc_batches = fields.Many2one('institute.ccmc.batches',string="CCMC Batches",domain="[('institute_id', '=', institute_id)]")
     ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
     gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment")
     ccmc_assignment = fields.One2many("ccmc.candidate.assignment","assignment_id",string="CCMC Assignment")

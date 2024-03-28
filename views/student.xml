@@ -875,6 +875,46 @@
                                 <Strong>Marks for Oral</Strong>
                             </h2>
                         </span>
+                         <group>
+                            <label for="house_keeping" />
+                            <div>
+                                <field name="house_keeping" nolabel="1"/>
+                                        / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+                         <group>
+                            <label for="f_b" />
+                            <div>
+                                <field name="f_b" nolabel="1"/>
+                                        / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="orals_house_keeping" />
+                            <div>
+                                <field name="orals_house_keeping" nolabel="1"/>
+                                        / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="attitude_proffessionalism" />
+                            <div>
+                                <field name="attitude_proffessionalism" nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="equipment_identification" />
+                            <div>
+                                <field name="equipment_identification" nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group>
                         <group>
                             <label for="gsk_ccmc" />
                             <div>
@@ -896,7 +936,7 @@
                             <div>
                                 <field name="toal_ccmc_rating" nolabel="1"/>
                                         / 
-                                <span>20 Marks</span>
+                                <span>100 Marks</span>
                             </div>
                         </group>
                         <group>
@@ -1314,7 +1354,7 @@
                         <field name="gp_exam" readonly="1" />
                         <field name="previous_attempt" readonly="1" />
                         <field name="deffereds" invisible="1" />
-                        <field name="dgs_batch" readonly="1"/>
+                        <field name="dgs_batch" readonly="0"/>
                     </group>
                      <group style="width:50%">
                         <field name="exam_month" readonly="1" />

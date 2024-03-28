@@ -32,65 +32,295 @@
         </style>
 
         <t t-call="portal.portal_layout">
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Marksheet</a>
-            <a href="/open_candidate_form/download_marksheet" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Marksheet</a>
             <t t-call="portal.portal_table">
+                
                 <thead>
                     <tr>
-                        <th>Institute</th>
-                        <th>Assignment Date</th>
-                        <th>Exam Start Time</th>
-                        <th>Exam End Time</th>
-                        <th>Assigned To</th>
-                        <th>Course</th>
-                        <th>Subject</th>
-                        <th>Action</th>
+                        <th class="text-left">Batch</th>
+                        <th class="text-left">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <t t-foreach="batches" t-as="batch">
+                        <tr>
+                            <td class="text-left">
+                                <t t-out="batch.batch_name" />
+                            </td>
+                            <td class="text-left">
+                               <a t-attf-href="/my/assignments/batches/{{batch.id}}">View</a>
+                            </td>
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="examiner_assignment_institute_list" name="Institutes">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+           <t t-call="portal.portal_table">
+                
+                <thead>
+                    <tr>
+                        <th class="text-left">Institute</th>
+                        <th class="text-left">Exam Date</th>
+                        <th class="text-left">No of Candidates</th>
+                        <th class="text-left">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <t t-foreach="assignments" t-as="assignment">
+                        <tr>
+                            <td class="text-left">
+                                <t t-out="assignment.prac_oral_id.institute_id.name" />
+                            </td>
+                            <td class="text-left">
+                                <t t-out="assignment.exam_date" />
+                            </td>
+                            <td class="text-left">
+                                <t t-out="len(assignment.marksheets)" />
+                            </td>
+                            <td class="text-left">
+                               <a t-attf-href="/my/assignments/batches/candidates/{{batch}}/{{assignment.id}}">View</a>
+                            </td>
+                        </tr>
+                    </t>
+
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="examiner_assignment_candidate_list" name="Candidates">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+
+                                    function openGskUploadModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('batch_id').value = dataId;
+                                    
+
+
+                                    }
+
+                                    function openMekUploadModal(button) {
+                                        console.log(button)
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('mek-batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('mek_batch_ids').value = dataId;
+                                    
+
+
+                                    }
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+           <t t-call="portal.portal_table">
+            <!-- Upload GSK marksheet  -->
+                <div class="modal fade" id="uploadGskMarksheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Marksheet</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+
+                                    <form method="post" action="/my/uploadgskmarksheet" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="batch_id" name="batch_id" />
+                                        <div class="form-group">
+                                            <label for="fileUpload">XLSX Upload</label>
+                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                        </div>
+                                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            <!-- Upload Mek Marksheet  -->
+                <div class="modal fade" id="uploadMekMarksheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Marksheet</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+
+                                    <form method="post" action="/my/uploadmekmarksheet" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="mek_batch_ids" name="mek_batch_ids" />
+                                        <div class="form-group">
+                                            <label for="fileUpload">XLSX Upload</label>
+                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                        </div>
+                                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+           <t t-if="examiner_subject == 'GSK'">
+                <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download GSK Marksheet</a>
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+            </t>
+            <t t-if="examiner_subject == 'MEK'">
+                <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+            </t>
+            <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+            </t>
+            <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+            </t>
+                
+                <thead>
+                    <tr >
+                        <th class="text-left">Candidate Name</th>
+                        <th class="text-left">Indos No</th>
+                        <th class="text-left">Course</th>
+                        <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Oral</th>
+                        <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
+                        <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Oral</th>
+                        <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Practical</th>
+
+                        <th t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">CCMC Oral</th>
+
+                        <th t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">CCMC Practical</th>
+
+
 
 
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="assignments" t-as="assignment">
+                    
+                    <t t-foreach="marksheets" t-as="marksheet">
                         <tr>
                             <td class="text-left">
-                                <t t-out="assignment.institute_id.name" />
+                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
+                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
+                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.name" />
+                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.name" />
+
+                            
                             </td>
                             <td class="text-left">
-                                <t t-out="assignment.assignment_date" />
+                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.indos_no" />
                             </td>
-                            <td class="text-left">
-                                <t t-out="assignment.exam_start_time" />
+                            <td  class="text-left">
+                                <t t-out="marksheet.examiners_id.prac_oral_id.course.name" />
                             </td>
-                            <td class="text-left">
-                                <t t-out="assignment.exam_end_time" />
+
+                            <td t-if="examiner_subject == 'GSK'" class="text-left">
+                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}"><span>GSK Oral</span></a>
                             </td>
-                            <td class="text-left" t-if="assignment.assigned_to == 'gp_candidate'">
-                                <!-- <t t-out="assignment.assigned_to" /> -->
-                                <span>GP Candidate</span>
+                            <td t-if="examiner_subject == 'GSK'" class="text-left">
+                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>GSK Practical</span></a>
                             </td>
-                            <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'"> 
-                                <!-- <t t-out="assignment.assigned_to" /> -->
-                                <span>CCMC Candidate</span>
+                            <td t-if="examiner_subject == 'MEK'" class="text-left">
+                                <a t-attf-href="/open_mek_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_oral={{marksheet.mek_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>MEK Oral</span></a>
                             </td>
-                            <td class="text-left">
-                                <t t-out="assignment.subject_id.course_id.name" />
+                            <td t-if="examiner_subject == 'MEK'" class="text-left">
+                                <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
                             </td>
-                            <td class="text-left">
-                                <t t-out="assignment.subject_id.name" />
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">
+                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
                             </td>
-                            <td class="text-left" t-if="assignment.assigned_to == 'gp_candidate'">
-                                <!-- <t t-out="assignment.assigned_to" /> -->
-                                <a class="btn btn-primary" t-attf-href="/open_candidate_form?rec_id={{ assignment.id }}">
-                                Candidate</a>                            
-                                
-                            </td>
-                             <td class="text-left" t-if="assignment.assigned_to == 'ccmc_candidate'">
-                                <!-- <t t-out="assignment.assigned_to" /> -->
-                                <a class="btn btn-primary" t-attf-href="/open_ccmc_candidate_form?rec_id={{ assignment.id }}">
-                                Candidate</a>                            
+                            <td t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">
+                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Practical</span></a>
                             </td>
                             
-
                         </tr>
                     </t>
 

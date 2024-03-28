@@ -1219,6 +1219,13 @@ class CcmcOralLine(models.Model):
     exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
     ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
     ccmc_oral_exam_date = fields.Date(string="Exam Date")
+    
+    house_keeping = fields.Integer("House Keeping")
+    f_b = fields.Integer("F & B service Practical")
+    orals_house_keeping = fields.Integer("Orals on Housekeeping and F& B Service")
+    attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism")
+    equipment_identification = fields.Integer("Identification of Equipment")
+    
     gsk_ccmc = fields.Integer("GSK")
     safety_ccmc = fields.Integer("Safety")
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
@@ -1227,14 +1234,18 @@ class CcmcOralLine(models.Model):
     
 
     @api.depends(
-        'gsk_ccmc', 'safety_ccmc'
+        'gsk_ccmc', 'safety_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
     )
     def _compute_ccmc_rating_total(self):
         for record in self:
             rating_total = (
                 record.gsk_ccmc +
-                record.safety_ccmc
+                record.safety_ccmc+
+                record.house_keeping+
+                record.attitude_proffessionalism+
+                record.equipment_identification
             )
+            
             record.toal_ccmc_rating = rating_total
 
 
@@ -1410,6 +1421,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
             
         
         gp_exam_schedule.write({
+                                "registered_institute":self.institute_id.id,
                                 "mek_oral":mek_oral.id,
                                 "mek_prac":mek_practical.id,
                                 "gsk_oral":gsk_oral.id,
@@ -1613,6 +1625,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         overall_percentage = self.ccmc_exam.overall_percentage
         
         ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
+            'registered_institute':self.institute_id.id,
             'ccmc_candidate':self.candidate_id.id,
             'exam_id':exam_id,
             'dgs_batch':dgs_batch,
@@ -1623,7 +1636,9 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
             'cookery_bakery_percentage':cookery_bakery_percentage,
             'ccmc_oral_percentage':ccmc_oral_percentage,
             'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
-            'overall_percentage':overall_percentage
+            'overall_percentage':overall_percentage,
+            'cookery_bakery_prac_status':self.ccmc_exam.cookery_bakery_prac_status,
+            'ccmc_oral_prac_status':self.ccmc_exam.ccmc_oral_prac_status
             
             })
 
