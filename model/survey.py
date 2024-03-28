@@ -107,4 +107,4 @@ class SurveyUserInputInherited(models.Model):
 class InheritedSurveyQuestions(models.Model):
     _inherit = "survey.question"
     
-    q_no = field.Char("Q.No")
+    q_no = fields.Char("Q.No")
