@@ -95,8 +95,8 @@ class ExaminerPortal(CustomerPortal):
         vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id}
         return request.render("bes.examiner_assignment_institute_list",vals)
     
-    @http.route(['/my/assignments/batches/candidates/<int:batch_id>'], type="http", auth="user", website=True)
-    def ExaminerAssignmentCandidateListView(self,batch_id, **kw):
+    @http.route(['/my/assignments/batches/candidates/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentCandidateListView(self,batch_id,assignment_id, **kw):
         # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
@@ -105,10 +105,11 @@ class ExaminerPortal(CustomerPortal):
         examiner_subject = examiner.subject_id.name
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner, 'batch_id':batch_id}
+        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id}
         
-        print("Route Working")
+        print(examiner_subject)
         return request.render("bes.examiner_assignment_candidate_list",vals)
 
     # def check_user_groups(group_xml_id):
@@ -578,8 +579,8 @@ class ExaminerPortal(CustomerPortal):
         
         
         
-    @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>', type='http', auth="user", website=True)
-    def download_gsk_marksheet(self,batch_id, **rec):
+    @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_gsk_marksheet(self,batch_id,assignment_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
@@ -587,6 +588,8 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
         # import wdb;wdb.set_trace();
         
@@ -664,7 +667,7 @@ class ExaminerPortal(CustomerPortal):
         roll_no = []
         candidate_code = [] #Candidates Code No.
 
-        for candidate in examiner_assignments.marksheets:
+        for candidate in marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             roll_no.append(candidate.gp_marksheet.exam_id)
             candidate_code.append(candidate.gp_candidate.candidate_code)
@@ -733,12 +736,16 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
 
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
+        
         # Generate a response with the Excel file
         response = request.make_response(
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=gsk-marksheet.xlsx')
+                ('Content-Disposition', 'attachment; filename='+file_name)
             ]
         )
 
@@ -752,8 +759,8 @@ class ExaminerPortal(CustomerPortal):
     
     
     
-    @http.route('/open_candidate_form/download_mek_marksheet/<int:batch_id>', type='http', auth="user", website=True)
-    def download_mek_marksheet(self,batch_id, **rec):
+    @http.route('/open_candidate_form/download_mek_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_mek_marksheet(self,batch_id,assignment_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
@@ -762,6 +769,9 @@ class ExaminerPortal(CustomerPortal):
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
 
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+
+        
         for exam in examiner_assignments:
             if examiner.subject_id.name == 'MEK':
                 assignment = exam.id
@@ -828,7 +838,7 @@ class ExaminerPortal(CustomerPortal):
         candidate_code = [] #Candidates Code No.
         roll_no = []
 
-        for candidate in examiner_assignments.marksheets:
+        for candidate in marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             candidate_code.append(candidate.gp_candidate.candidate_code)
             roll_no.append(candidate.gp_marksheet.exam_id)
@@ -893,13 +903,18 @@ class ExaminerPortal(CustomerPortal):
 
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
+        
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
 
+       
         # Generate a response with the Excel file
         response = request.make_response(
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=mek-marksheet.xlsx')
+                ('Content-Disposition', 'attachment; filename='+file_name)
             ]
         )
 
