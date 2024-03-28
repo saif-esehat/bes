@@ -457,31 +457,61 @@ class ExamOralPractical(models.Model):
             
         elif self.course.course_code == 'CCMC':
             
-            # import wdb;wdb.set_trace()
             
-            ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
+            if self.subject.name == 'CCMC Oral and Practical':
             
-            examiners = self.examiners.ids
+                # import wdb;wdb.set_trace()
+                
+                ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
+                
+                examiners = self.examiners.ids
+                
+                assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
+                
+                for i, candidate in enumerate(ccmc_marksheets):
+                        examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
+                        examiner = examiners[examiner_index]
+                        assignments[examiner].append(candidate)
+                
+                
+                
+                for examiner, assigned_candidates in assignments.items():
+                    examiner_id = examiner
+                    for i in assigned_candidates:
+                        ccmc_marksheet = self.env['ccmc.exam.schedule'].browse(i).id
+                        ccmc_oral = self.env['ccmc.exam.schedule'].browse(i).ccmc_oral.id
+                        cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
+                        candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
+                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate , 'cookery_bakery':cookery_bakery })
+                
+                self.write({'state':'2-confirm'})
             
-            assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
-            
-            for i, candidate in enumerate(ccmc_marksheets):
-                    examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
-                    examiner = examiners[examiner_index]
-                    assignments[examiner].append(candidate)
-            
-            
-            
-            for examiner, assigned_candidates in assignments.items():
-                examiner_id = examiner
-                for i in assigned_candidates:
-                    ccmc_marksheet = self.env['ccmc.exam.schedule'].browse(i).id
-                    ccmc_oral = self.env['ccmc.exam.schedule'].browse(i).ccmc_oral.id
-                    cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
-                    candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
-                    self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate ,'ccmc_oral':ccmc_oral , 'cookery_bakery':cookery_bakery })
-            
-            self.write({'state':'2-confirm'})       
+            elif self.subject.name == 'CCMC GSK Oral':
+                
+                ccmc_marksheets = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','=','failed')]).ids
+                
+                examiners = self.examiners.ids
+                
+                assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
+                
+                for i, candidate in enumerate(ccmc_marksheets):
+                        examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
+                        examiner = examiners[examiner_index]
+                        assignments[examiner].append(candidate)
+                
+                
+                
+                for examiner, assigned_candidates in assignments.items():
+                    examiner_id = examiner
+                    for i in assigned_candidates:
+                        ccmc_marksheet = self.env['ccmc.exam.schedule'].browse(i).id
+                        ccmc_oral = self.env['ccmc.exam.schedule'].browse(i).ccmc_oral.id
+                        cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
+                        candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
+                        self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_oral':ccmc_oral,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate  })
+                
+                self.write({'state':'2-confirm'})
+                  
 
     
 
@@ -504,7 +534,12 @@ class ExamOralPracticalExaminers(models.Model):
         elif self.prac_oral_id.subject.name == 'MEK':
              views = [(self.env.ref("bes.view_marksheet_gp_tree_mek").id, 'tree'),  # Define tree view
                     (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
-        elif self.prac_oral_id.subject.name == 'CCMC':
+        
+        elif self.prac_oral_id.subject.name == 'CCMC GSK Oral':
+            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
+        
+        elif self.prac_oral_id.subject.name == 'CCMC Oral and Practical':
             views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
                     (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
             
