@@ -1085,6 +1085,7 @@ class ExaminerPortal(CustomerPortal):
                 assignment = exam.id
 
         # import wdb;wdb.set_trace();
+        
         excel_buffer = io.BytesIO()
 
         # Create a new Excel workbook and add a worksheet
