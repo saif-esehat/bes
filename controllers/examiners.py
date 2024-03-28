@@ -241,7 +241,7 @@ class ExaminerPortal(CustomerPortal):
             marksheet.write(vals)
             
             
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
             
             
             # Write to the One2many field using the constructed dictionary
@@ -266,6 +266,8 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_practical_form(self, **rec):
+        
+        # import wdb;wdb.set_trace();
         candidate = request.env['gp.candidate'].sudo()
         print("=======================================================",request.httprequest.method)
         
@@ -370,7 +372,7 @@ class ExaminerPortal(CustomerPortal):
             marksheet = request.env['gp.mek.oral.line'].sudo().search([('id','=',rec['mek_oral'])])
             marksheet.write(vals)
             
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
 
             # print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
@@ -445,7 +447,7 @@ class ExaminerPortal(CustomerPortal):
             
             marksheet.write(vals)
             
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
 
             # print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
 
@@ -467,6 +469,7 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_cookery_bakery_form(self, **rec):
 
+        # import wdb;wdb.set_trace();
         
         candidate = request.env['ccmc.candidate'].sudo()
         
@@ -521,7 +524,7 @@ class ExaminerPortal(CustomerPortal):
             # })
             marksheet.write(vals)
 
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
         else:
 
             rec_id = rec['rec_id']
@@ -540,22 +543,34 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_ccmc_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_ccmc_oral_form(self, **rec):
 
+        # import wdb;wdb.set_trace();
+        
         candidate = request.env['ccmc.candidate'].sudo()
         
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
-            indos = rec['indos']
+            # indos = rec['indos']
             
             marksheet = request.env['ccmc.oral.line'].sudo().search([('id','=',rec['ccmc_oral'])])
 
-            # Convert string values to integers
+            # Convert string values to integers                    
             subject_area1 = int(rec['ccmc_gsk'])
             subject_area2 = int(rec['safety_ccmc'])
+            subject_area3 = int(rec['house_keeping'])
+            subject_area4 = int(rec['f_b'])
+            subject_area5 = int(rec['orals_house_keeping'])
+            subject_area6 = int(rec['attitude_proffessionalism'])
+            subject_area7 = int(rec['equipment_identification'])
 
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': subject_area1,
                 'safety_ccmc': subject_area2,
+                'house_keeping': subject_area3,
+                'f_b': subject_area4,
+                'orals_house_keeping': subject_area5,
+                'attitude_proffessionalism': subject_area6,
+                'equipment_identification': subject_area7,
                
                 
             }
@@ -563,7 +578,7 @@ class ExaminerPortal(CustomerPortal):
             # Write to the One2many field using the constructed dictionary
             marksheet.write(vals)
             
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
 
         else:
 
@@ -643,15 +658,8 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_size': 20,
                                                 'font_color': 'black',
                                             })
-        
-        # Merge 3 cells over two rows.
-        # gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        # import wdb;wdb.set_trace();
-        
-        institute_record = examiner_assignments.prac_oral_id.institute_id
-        institute_record.ensure_one()
 
-        gsk_oral_sheet.merge_range("A1:G1", institute_record.name, merge_format)
+        gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Subject Area 1 \n Minimum 3 Questions \n 9 Marks',
@@ -685,9 +693,21 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
 
+        marks_values_5 = [1,2,3,4,5]
+        marks_values_6 = [1,2,3,4,5,6]
+        marks_values_8 = [1,2,3,4,5,6,7,8]
+        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
+        marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        
-        
+        gsk_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_6 })
+        gsk_oral_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_oral_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_5 })
+        gsk_oral_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_25 })
         
         
         
@@ -733,6 +753,17 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
+        
+        gsk_practical_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_practical_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_practical_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_18 })
+        gsk_practical_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_18 })
+        
         
         workbook.close()
 
@@ -858,9 +889,17 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             mek_oral_sheet.write('C{}'.format(i+3), code, locked)
         
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        
-        
+        mek_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_12 })
+        mek_oral_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_25 })
         
         
         #For GSK Practical Marksheet
@@ -879,15 +918,15 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks',
-          '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks',
-          '-Using Hand & Plumbing Tools \n -Task 3 \n 10 Marks',
-          '-Use of Chipping Tools & paint Brushes \n 10 marks',
-          '-Use of Carpentry Tools \n 10 marks',
-          '-Use of Measuring Instruments \n 10 marks',
-          '-Welding (1 Task)  \n 20 marks',
-          '-Lathe Work (1 Task) \n 10 Marks', 
-          '-Electrical (1 Task) \n 10 Marks', 
+          '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
+          '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks', #E
+          '-Using Hand & Plumbing Tools \n -Task 3 \n 10 Marks', #F
+          '-Use of Chipping Tools & paint Brushes \n 10 marks', #G
+          '-Use of Carpentry Tools \n 10 marks', #H
+          '-Use of Measuring Instruments \n 10 marks', #I
+          '-Welding (1 Task)  \n 20 marks', #J
+          '-Lathe Work (1 Task) \n 10 Marks', #K
+          '-Electrical (1 Task) \n 10 Marks', #L
           'Total 100 Marks', 'Remarks']
         for col, value in enumerate(header_prac):
             mek_practical_sheet.write(1, col, value, header_format)
@@ -902,6 +941,19 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             mek_practical_sheet.write('C{}'.format(i+3), code, locked)
+        
+        mek_practical_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_20 })
+        mek_practical_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_10 })
+        
+        
+        
         
         workbook.close()
 
@@ -956,6 +1008,7 @@ class ExaminerPortal(CustomerPortal):
             remarks = row[11]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            
             if candidate and candidate.gsk_oral:
                 candidate.gsk_oral.sudo().write({
                     'subject_area_1':subject_area_1,
@@ -1103,8 +1156,8 @@ class ExaminerPortal(CustomerPortal):
 
             
     
-    @http.route('/open_ccmc_candidate_form/download_ccmc_marksheet/<int:batch_id>', type='http', auth="user", website=True)
-    def download_ccmc_marksheet(self,batch_id, **rec):
+    @http.route('/open_ccmc_candidate_form/download_ccmc_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_ccmc_marksheet(self,batch_id,assignment_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
@@ -1140,9 +1193,8 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.set_column('C2:C2',20, unlocked)
         ccmc_cookery_bakery_sheet.set_column('D2:O2',20, unlocked)
         ccmc_cookery_bakery_sheet.set_column('P2:P2',15, unlocked)
-        # ccmc_cookery_bakery_sheet.set_column('K2:K2',15, unlocked)
             
-        mek_oral_sheet.protect()
+        ccmc_cookery_bakery_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
 
         header_format = workbook.add_format({
@@ -1166,7 +1218,7 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          'Hygiene & Grooming \n 10 Marks',
+          'Hygiene & Grooming \n 10 Marks', 
           
           'Dish 1 \n Appearance \n 10 Marks',
           'Dish 1 \n Taste \n 10 Marks',
@@ -1180,8 +1232,9 @@ class ExaminerPortal(CustomerPortal):
           'Dish 3 \n Taste \n 5 Marks',
           'Dish 3 \n Texture \n 5 Marks',
           'Identification of Ingredients \n 9 Marks',
-          'Knowledge of menu \n 8 Marks'
+          'Knowledge of menu \n 8 Marks',
           'Total Marks 75']
+        
         for col, value in enumerate(header_oral):
             ccmc_cookery_bakery_sheet.write(1, col, value, header_format)
         
@@ -1206,9 +1259,25 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             ccmc_cookery_bakery_sheet.write('C{}'.format(i+3), code, locked)
         
+        marks_values_5 = [1,2,3,4,5]
+        marks_values_6 = [1,2,3,4,5,6]
+        marks_values_8 = [1,2,3,4,5,6,7,8]
+        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
-        
-        
+        ccmc_cookery_bakery_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('M2:M1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('N2:N1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('O2:O1048576', {'validate': 'list', 'source': marks_values_8 })
         
         
         #For GSK Practical Marksheet
@@ -1242,7 +1311,8 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             ccmc_gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
         
-        
+        ccmc_gsk_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_gsk_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
         
         
         
@@ -1251,7 +1321,9 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.set_column('A2:A2',35, unlocked)
         ccmc_oral_summary_sheet.set_column('B2:B2',10, unlocked)
         ccmc_oral_summary_sheet.set_column('C2:C2',20, unlocked)
-        ccmc_oral_summary_sheet.set_column('D2:F2',15, unlocked)
+        ccmc_oral_summary_sheet.set_column('D2:J2',25, unlocked)
+        ccmc_oral_summary_sheet.set_column('K2:K2',15, unlocked)
+        ccmc_oral_summary_sheet.set_column('L2:L2',15, unlocked)
             
         ccmc_oral_summary_sheet.protect()
         
@@ -1260,12 +1332,13 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-House keeping  Practical \n 20 Marks',
+          '-House keeping Practical \n 20 Marks',
           '-F&B services practical \n 20 Marks',
           '-Orals on Housekeeping and F& B Service \n 20 Marks',
           '-Attitude & Proffesionalism \n 10 Marks',
           '-Identification of Equipment \n 10 Marks',
-          '-GSK ORAL \n 20 Marks',
+          '-GSK ORAL \n 10 Marks',
+          '-Safety \n 10 Marks',
           'Total \n 100 Marks','Remarks if any']
         for col, value in enumerate(header_prac):
             ccmc_oral_summary_sheet.write(1, col, value, header_format)
@@ -1280,6 +1353,14 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
+        
+        ccmc_oral_summary_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_10 })
         
         workbook.close()
 
