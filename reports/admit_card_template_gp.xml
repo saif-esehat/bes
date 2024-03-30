@@ -1,139 +1,149 @@
 <odoo>
     <template id="candidate_admit_card_gp">
-        <t t-call="web.html_container">
+        <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <t t-call="web.html_container">
-                    <div style="text-align: center; font-size: 24px; margin-bottom: 10px;">
-                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 50px; height:50px;"/> <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
-                    </div>
-                    <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
-                        <t t-if="attempt_number == 1">
-                            <strong>ADMIT CARD - GP Fresh</strong>
-                        </t>
-                        <t t-else="">
-                            <strong>ADMIT CARD - GP Repeater</strong>
-                        </t>
-                    </div>
-                    <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
-                        <strong>Exam Center: <span><t t-esc="o.gp_candidate.institute_id.name"/></span></strong>
-                    </div>
-                    <div style="position: relative;">
-                        
-                        <t t-if="o.gp_candidate.candidate_image">
-                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" style="width: 125px; height: 150px; position: absolute; top: 0%; right: 8px;" />
-                        </t>
-                        
-                        <div style="margin-top:2rem">
-                            <table style="width: 50%; text-align: left; ">
-                             
-                                <tr>
-                                    <td colspan="6">
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
-                                            <strong>Examination: <span t-field="docs.dgs_batch.to_date"/></strong>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td colspan="6">
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px; width:100%;">
-                                            <strong>Roll No: <span t-esc="o.exam_id"/></strong>
-                                        </div>
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
-                                            <strong style=" text-align: right;">Name as in INDOS: <span t-esc="o.gp_candidate.name"/></strong>
-                                        </div>
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">
-                                            <strong style="margin-right: 30px;">DOB as in INDOS: <span t-esc="o.gp_candidate.dob"/></strong>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td colspan="6">
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
-                                            <strong>INDOs No: <span t-esc="o.gp_candidate.indos_no"/></strong>
-                                        </div>
-                                        <div style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">
-                                            <strong>Code No: <span t-esc="o.gp_candidate.candidate_code"/></strong>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                
+                    <div class="header">
+                        <div class="container" style="text-align: center; font-size: 24px;  margin:0; margin-bottom: 10px;">
+                            <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style=" width: 50px; height:50px;"/> 
+                            <strong>Board of Examinations for Seafarers Trust</strong>
                         </div>
-                    <!-- </div> -->
+                        <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
+                            <t t-if="o.attempt_number == 1">
+                                <strong>Admit Card - GP Fresh Candidate</strong>
+                            </t>
+                            <t t-else="">
+                                <strong>Admit Card - GP Repeater Candidate</strong>
+                            </t>
+                        </div>
+                        <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
+                            <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
+                        </div>
+                    
+                    </div>
 
-                    <div>
+                    <div class="container" style="position:relative; margin:0;">
+                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
+                        <t t-if="o.gp_candidate.candidate_signature">
+                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: 175px; right: 8px;" />
+                        </t>
+                    </div>
+
+                    <div class="container" style="">
+                        <div class="row" style="margin-bottom:4px ; ">
+                            <div class="col-6">
+                                <span style="font-size:20px;">Examination: </span>
+                                <span style="font-size:20px;">
+                                    <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%b-%y')" />
+                                    <t t-esc="formatted_dob" />
+                                </span>  
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:4px ; ">
+                            <div class="col-6">
+                                <span style="font-size:20px;">Attemp Nummber:</span>
+                                <span style="font-size:20px;"><t t-esc="o.attempt_number"/></span>  
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:4px ; ">
+                            <div class="col-12">
+                                <span style="font-size:20px;">Name as in INDOS:</span>
+                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.name"/></span>  
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-bottom:4px;">
+                            <div class="col-6">
+                                <span style="font-size:20px;">DOB as in INDOS: </span>
+                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.dob"/></span>  
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-bottom:4px;">
+                            <div class="col-6">
+                                <span style="font-size:20px;">INDOs No: </span>
+                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.indos_no"/></span>  
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-bottom:4px;">
+                            <div class="col-6">
+                                <span style="font-size:20px;">Code No: </span>
+                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.candidate_code"/></span>  
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-bottom:4px;">
+                            <div class="col-6">
+                                <span style="font-size:20px;">Roll No: </span>
+                                <span style="font-size:20px;"><t t-esc="o.exam_id"/></span>  
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container" style="position:relative; margin:0;">
                         <t t-if="o.qr_code">
-                            <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 32%; right:0%;" />
+                            <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                         </t>
                     </div>
 
-                   <div style="width: 100%; margin-top: 0rem; text-align:center;"> 
-                        <table style="width: 35%; margin: 0 0; text-align:center; border-collapse: collapse; border: 1px solid #ddd;">
-                            <thead>
-                                <tr style="">
-                                    <th style="width: 50%; padding: 10px;"><strong>Attempting Exam</strong></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                              
-                                <tr t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Oral/Practical</td>
-                                   
-                                </tr>
-                                <tr t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Online</td>
-                                    
-                                </tr>
-                                <tr t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Mek Oral/Practical</td>
+                    <div class="container" style="text-align:center;">
+                        <div class="row">
+                            <div class="col-4">
+                                <table class="table" style="border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                </tr>
-                                <tr t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">MeK Online</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                        <tr scope="row" t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
+                                            <td style="border: 1px solid black;">Gsk Oral/Practical</td>
+                                        </tr>
 
+                                        <tr scope="row" t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
+                                            <td style="border: 1px solid black;">Gsk Online</td>
 
-                    <table style="width: 100%; text-align: left;">
-                        <tr>
-                            <td style="font-size: 20px; font-weight: bold; position: absolute; top: 23%; right: 8px;">
-                                <strong>Signature of the Candidate</strong>
-                            </td>
-                            <td>
-                                <t t-if="o.gp_candidate.candidate_signature">
-                                    <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; border: 2px dotted #000; position: absolute; top: 25%; right: 8px;" />
-                                </t>
-                            </td>
-                        </tr>
-                        <tr>
-                         
-                        </tr>
-                        <tr>
-                            <td style="font-size: 17px; font-weight: bold; position: absolute; top: 30%; right: 8px;">
-                                <strong>Please Sign within the box</strong>
-                            </td>
-                        </tr>
-                    </table>
+                                        </tr>
+                                        <tr scope="row" t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
+                                            <td style="border: 1px solid black;">Mek Oral/Practical</td>
 
-                    <div style="margin-top: 50px; position: relative;">
-                        <div style="position: absolute; top: 45%; left: 30%; width: 42%;">
-                            <div>
-                                <b>Capt Harsh Khatri</b>
-                            </div>
-                            <div style="height: 20px"></div>
-                            <div>
-                                <b style="text-align: center">Chief Executive Officer</b>
-                            </div>
-                            <div>
-                                <b style="text-align: left">For Board of Examinations for Seafarers Trust</b>
+                                        </tr>
+                                        <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
+                                            <td style="border: 1px solid black;">MeK Online</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </t>
+                    
+
+                    <div class="container" style="text-align:center; margin:0; margin-top:20px; ">
+                        <div class="row">
+                            <div class="col-12">
+                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span style="font-size:22px; font-weight:900; font-family: 'TimesNewRomanBold';">Ravindra Nath Tripathi</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="height:max-content;">
+                                <span style="font-size:22px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span style="font-size:20px; font-weight:900;">Board of Examinations for Seafarers Trust</span>
+                            </div>
+                        </div>
+                    </div>
             </t>
         </t>
     </template>

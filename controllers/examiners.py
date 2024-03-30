@@ -190,12 +190,9 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_oral_form(self, **rec):
         # import wdb;wdb.set_trace();
-        print(rec,"recccccccccccccccccccccccccccccccc")
         candidate = request.env['gp.candidate'].sudo()
-        print(candidate,"cccccccccccccccccandideeeeeeeeeeeeeeeeeeee")   
         
         if request.httprequest.method == "POST":
-            print('exittttttttttttttttttttttttttttttt==============================================')
             print(rec)
             
             # import wdb; wdb.set_trace()
