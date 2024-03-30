@@ -9,7 +9,12 @@
                         <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
                     </div>
                     <div style="text-align:center; font-size:22px">
-                        <strong>ADMIT CARD - CCMC Fresh</strong>
+                         <t t-if="attempt_number == 1">
+                            <strong>ADMIT CARD - CCMC Fresh</strong>
+                        </t>
+                        <t t-else="">
+                            <strong>ADMIT CARD - CCMC Repeater</strong>
+                        </t>
                     </div>
                     <div style="font-size:20px;text-align:center;">
                         <strong>Exam Center: <span><t t-esc="o.institute_name.name"/></span></strong>
@@ -27,7 +32,7 @@
                             <tr>
                                 <td colspan="6">
                                     <div style="text-align:left; font-size:20px; font-weight: bold; margin-bottom:8px; margin-right:8px;">
-                                        <strong>Examination: June 2022</strong>
+                                        <strong>Examination: <span t-field="docs.dgs_batch.to_date"/></strong>
                                     </div>
                                 </td>
                             </tr>
