@@ -149,11 +149,20 @@
                                     }
 
                                     function openMekUploadModal(button) {
-                                        console.log(button)
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('mek-batch-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('mek_batch_ids').value = dataId;
+                                    
+
+
+                                    }
+
+                                    function openCcmcUploadModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('ccmc-batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('ccmc_batch_ids').value = dataId;
                                     
 
 
@@ -243,6 +252,36 @@
                     </div>
                 </div>
 
+            <!-- Upload CCMC Marksheet  -->
+                <div class="modal fade" id="uploadCcmcMarksheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Marksheet</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+
+                                    <form method="post" action="/my/uploadccmcmarksheet" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="ccmc_batch_ids" name="ccmc_batch_ids" />
+                                        <div class="form-group">
+                                            <label for="fileUpload">XLSX Upload</label>
+                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                        </div>
+                                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
            <t t-if="examiner_subject == 'GSK'">
                 <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download GSK Marksheet</a>
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
@@ -252,8 +291,8 @@
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
             </t>
             <t t-if="examiner.subject_id.name == 'CCMC'">
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
                 <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
             </t>
                 
                 <thead>
