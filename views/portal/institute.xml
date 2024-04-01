@@ -1,6 +1,6 @@
 <odoo>
 
-    <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
+    <template id="portal_breadcrumbs_institute" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="page_name == 'gp_candidate'">
                 <li class="breadcrumb-item">
@@ -38,7 +38,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
-                        <t t-out="batch_name"/>
+                        <t t-out="batches.batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -54,7 +54,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch_id}}">
-                        <t t-out="batch_name"/>
+                        <t t-out="batches.batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -90,6 +90,17 @@
                     Faculties
                 </li>
             </t>
+            <t t-if="page_name == 'gp_faculty_profile'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="batch_name"/>
+                    </a>
+                </li>
+            </t>
+
 
             <t t-if="page_name == 'gp_faculty_form'">
                 <li class="breadcrumb-item">
