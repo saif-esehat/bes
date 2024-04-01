@@ -80,7 +80,7 @@ class ExaminerPortal(CustomerPortal):
 
 
         
-        vals = {'batches':filtered_batches,'assignments':'', 'examiner':examiner}
+        vals = {'batches':filtered_batches,'assignments':'', 'examiner':examiner,'page_name':'batches'}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
     
@@ -93,8 +93,8 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-
-        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id}
+        
+        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'institutes'}
         return request.render("bes.examiner_assignment_institute_list",vals)
     
     @http.route(['/my/assignments/batches/candidates/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
@@ -109,7 +109,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id}
+        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id,'page_name':'institutes1',}
         
         print(examiner_subject)
         return request.render("bes.examiner_assignment_candidate_list",vals)
@@ -190,12 +190,9 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_gsk_oral_form(self, **rec):
         # import wdb;wdb.set_trace();
-        print(rec,"recccccccccccccccccccccccccccccccc")
         candidate = request.env['gp.candidate'].sudo()
-        print(candidate,"cccccccccccccccccandideeeeeeeeeeeeeeeeeeee")   
         
         if request.httprequest.method == "POST":
-            print('exittttttttttttttttttttttttttttttt==============================================')
             print(rec)
             
             # import wdb; wdb.set_trace()
@@ -805,11 +802,6 @@ class ExaminerPortal(CustomerPortal):
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        
-        for exam in examiner_assignments:
-            if examiner.subject_id.name == 'MEK':
-                assignment = exam.id
-
         # import wdb;wdb.set_trace();
         excel_buffer = io.BytesIO()
 
@@ -1156,8 +1148,8 @@ class ExaminerPortal(CustomerPortal):
 
             
     
-    @http.route('/open_ccmc_candidate_form/download_ccmc_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
-    def download_ccmc_marksheet(self,batch_id,assignment_id, **rec):
+    @http.route('/open_ccmc_candidate_form/download_ccmc_oral_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_ccmc_oral_marksheet(self,batch_id,assignment_id, **rec):
         
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
@@ -1165,21 +1157,145 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-
-        for exam in examiner_assignments:
-            if examiner.subject_id.name == 'MEK':
-                assignment = exam.id
-
         # import wdb;wdb.set_trace();
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
         excel_buffer = io.BytesIO()
 
         # Create a new Excel workbook and add a worksheet
         workbook = xlsxwriter.Workbook(excel_buffer)
         # workbook   = xlsxwriter.Workbook('filename.xlsx')
 
-        ccmc_cookery_bakery_sheet = workbook.add_worksheet('CCMC Cookery & Bakery')
-        ccmc_gsk_oral_sheet = workbook.add_worksheet('CCMC GSK Oral')
         ccmc_oral_summary_sheet = workbook.add_worksheet('Summary - CCMC Orals')
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        # Set the wrap text format
+        wrap_format = workbook.add_format({'text_wrap': True})
+        
+                
+        marks_values_5 = [1,2,3,4,5]
+        marks_values_6 = [1,2,3,4,5,6]
+        marks_values_8 = [1,2,3,4,5,6,7,8]
+        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+                      
+        #For GSK Practical Marksheet
+        ccmc_oral_summary_sheet.set_column('A:XDF',None, unlocked)
+        ccmc_oral_summary_sheet.set_column('A2:A2',35, unlocked)
+        ccmc_oral_summary_sheet.set_column('B2:B2',10, unlocked)
+        ccmc_oral_summary_sheet.set_column('C2:C2',20, unlocked)
+        ccmc_oral_summary_sheet.set_column('D2:J2',25, unlocked)
+        ccmc_oral_summary_sheet.set_column('K2:K2',15, unlocked)
+        ccmc_oral_summary_sheet.set_column('L2:L2',15, unlocked)
+            
+        ccmc_oral_summary_sheet.protect()
+        
+        header_format = workbook.add_format({
+                                                'bold': True,
+                                                'align': 'center',
+                                                'valign': 'vcenter',
+                                                'font_color': 'black',
+                                                'locked':True,
+                                                'text_wrap': True,
+                                            })
+        
+        merge_format = workbook.add_format({
+                                                'bold':     True,
+                                                'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 20,
+                                                'font_color': 'black',
+                                            })
+        
+        # Merge 3 cells over two rows.
+        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        
+        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
+          '-House keeping Practical \n 20 Marks',
+          '-F&B services practical \n 20 Marks',
+          '-Orals on Housekeeping and F& B Service \n 20 Marks',
+          '-Attitude & Proffesionalism \n 10 Marks',
+          '-Identification of Equipment \n 10 Marks',
+          '-GSK ORAL \n 10 Marks',
+          '-Safety \n 10 Marks',
+          'Total \n 100 Marks','Remarks if any']
+        for col, value in enumerate(header_prac):
+            ccmc_oral_summary_sheet.write(1, col, value, header_format)
+        
+        # # import wdb;wdb.set_trace();
+        candidate_list = [] #List of Candidates
+        candidate_code = [] #Candidates Code No.
+        roll_no = []
+
+        for candidate in examiner_assignments.marksheets:
+            candidate_list.append(candidate.ccmc_candidate.name)
+            candidate_code.append(candidate.ccmc_candidate.candidate_code)
+            roll_no.append(candidate.ccmc_marksheet.exam_id)
+        
+        for i, candidate in enumerate(candidate_list):
+            ccmc_oral_summary_sheet.write('A{}'.format(i+3), candidate, locked)
+
+        for i, code in enumerate(roll_no):
+            ccmc_oral_summary_sheet.write('B{}'.format(i+3), code, locked)
+
+        for i, code in enumerate(candidate_code):
+            ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
+        
+        ccmc_oral_summary_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_10 })
+        
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-CCMC Oral-"+str(date)+".xlsx"
+
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename='+file_name)
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+    
+    @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def download_ccmc_practical_marksheet(self,batch_id,assignment_id, **rec):
+        
+        user_id = request.env.user.id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
+
+        # import wdb;wdb.set_trace();
+        
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+
+        ccmc_cookery_bakery_sheet = workbook.add_worksheet('CCMC Cookery & Bakery')
         
         locked = workbook.add_format({'locked':True})
         unlocked = workbook.add_format({'locked':False})
@@ -1279,100 +1395,24 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.data_validation('N2:N1048576', {'validate': 'list', 'source': marks_values_9 })
         ccmc_cookery_bakery_sheet.data_validation('O2:O1048576', {'validate': 'list', 'source': marks_values_8 })
         
-        
-        #For GSK Practical Marksheet
-        ccmc_gsk_oral_sheet.set_column('A:XDF',None, unlocked)
-        ccmc_gsk_oral_sheet.set_column('A2:A2',35, unlocked)
-        ccmc_gsk_oral_sheet.set_column('B2:B2',10, unlocked)
-        ccmc_gsk_oral_sheet.set_column('C2:C2',20, unlocked)
-        ccmc_gsk_oral_sheet.set_column('D2:F2',15, unlocked)
-            
-        ccmc_gsk_oral_sheet.protect()
-        
-        
-        # Merge 3 cells over two rows.
-        ccmc_gsk_oral_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        
-        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-GSK \n 10 Marks',
-          '-Safety \n 10 Marks',
-          'Total \n 20 Marks']
-        for col, value in enumerate(header_prac):
-            ccmc_gsk_oral_sheet.write(1, col, value, header_format)
-        
-        # # import wdb;wdb.set_trace();
-        
-        for i, candidate in enumerate(candidate_list):
-            ccmc_gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
-
-        for i, code in enumerate(roll_no):
-            ccmc_gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
-
-        for i, code in enumerate(candidate_code):
-            ccmc_gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
-        
-        ccmc_gsk_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_gsk_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        
-        
-        
-        #For GSK Practical Marksheet
-        ccmc_oral_summary_sheet.set_column('A:XDF',None, unlocked)
-        ccmc_oral_summary_sheet.set_column('A2:A2',35, unlocked)
-        ccmc_oral_summary_sheet.set_column('B2:B2',10, unlocked)
-        ccmc_oral_summary_sheet.set_column('C2:C2',20, unlocked)
-        ccmc_oral_summary_sheet.set_column('D2:J2',25, unlocked)
-        ccmc_oral_summary_sheet.set_column('K2:K2',15, unlocked)
-        ccmc_oral_summary_sheet.set_column('L2:L2',15, unlocked)
-            
-        ccmc_oral_summary_sheet.protect()
-        
-        
-        # Merge 3 cells over two rows.
-        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        
-        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-House keeping Practical \n 20 Marks',
-          '-F&B services practical \n 20 Marks',
-          '-Orals on Housekeeping and F& B Service \n 20 Marks',
-          '-Attitude & Proffesionalism \n 10 Marks',
-          '-Identification of Equipment \n 10 Marks',
-          '-GSK ORAL \n 10 Marks',
-          '-Safety \n 10 Marks',
-          'Total \n 100 Marks','Remarks if any']
-        for col, value in enumerate(header_prac):
-            ccmc_oral_summary_sheet.write(1, col, value, header_format)
-        
-        # # import wdb;wdb.set_trace();
-        
-        for i, candidate in enumerate(candidate_list):
-            ccmc_oral_summary_sheet.write('A{}'.format(i+3), candidate, locked)
-
-        for i, code in enumerate(roll_no):
-            ccmc_oral_summary_sheet.write('B{}'.format(i+3), code, locked)
-
-        for i, code in enumerate(candidate_code):
-            ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
-        
-        ccmc_oral_summary_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_10 })
-        
+               
         workbook.close()
 
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
+
+
+        date = marksheets[0].examiners_id.exam_date
+        
+        file_name = examiner.name+"-CCMC Practical-"+str(date)+".xlsx"
+
 
         # Generate a response with the Excel file
         response = request.make_response(
             excel_buffer.getvalue(),
             headers=[
                 ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-                ('Content-Disposition', 'attachment; filename=ccmc-marksheet.xlsx')
+                ('Content-Disposition', 'attachment; filename='+file_name)
             ]
         )
 

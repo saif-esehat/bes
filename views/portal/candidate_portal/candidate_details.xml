@@ -33,10 +33,10 @@
             </t>
             <t t-else="">
                 <div t-attf-class="form-group mb-1 #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
-                    <label class="col-form-label label-optional" for="vat">VAT Number</label>
+                    <label class="col-form-label label-optional" for="vat">PAN Number</label>
 
                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-disabled="None if partner_can_edit_vat else '1'" />
-                    <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                    <small t-if="not partner_can_edit_vat" class="form-text text-muted d-block d-xl-none">Changing PAN number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                 </div>
             </t>
         </xpath>
@@ -128,9 +128,9 @@
                         <span style="margin-top: 25px; margin-left:25px;"><h4>Signature</h4></span>
                         <img t-attf-src="data:image/png; base64, {{candidate_signature}}" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 20px; margin-left:15px;" />
                     </t>
-                    <t t-else="">
+                    <!-- <t t-else="">
                         <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 20px; margin-left:15px;"/>
-                    </t>                 
+                    </t>                  -->
                  </div>
             </div>
                

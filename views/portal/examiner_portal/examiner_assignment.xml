@@ -1,4 +1,56 @@
 <odoo>
+
+     <template id="portal_breadcrumbs_examiner" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <t t-if="page_name == 'batches'">
+                
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Batches</a>
+                </li>
+                
+                
+            </t>
+
+            <t t-if="page_name == 'institutes'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Batches</a> / <span t-out="assignments.dgs_batch.batch_name"/>
+                </li>
+                <!-- <li class="breadcrumb-item">
+                    <t t-attf-href="/my/assignments/{{batch_id}}">
+                        <t t-out="assignments.dgs_batch.batch_name"/>
+                    </t>
+                </li> -->
+                
+                
+            </t>
+
+            <t t-if="page_name == 'institutes1'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <t >
+                        <a t-attf-href="/my/assignments/batches/{{batch_id}}" t-out="assignments.dgs_batch.batch_name"/>
+                    </t>
+
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/batches/{{batch_id}}">Institutes</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
+                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
+                    </t>
+
+                </li>
+                
+            </t>
+
+            
+        </xpath>
+    </template>
+
+
     <template id="examiner_assignment_list" name="Assignments">
         <script>
                                     $(document).ready(function () {
@@ -290,9 +342,13 @@
                 <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
             </t>
-            <t t-if="examiner.subject_id.name == 'CCMC'">
-                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+            <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'">
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+            </t>
+            <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
             </t>
                 
                 <thead>
@@ -304,8 +360,10 @@
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Oral</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Practical</th>
-                        <th t-if="examiner_subject == 'CCMC'" class="text-left">CCMC Oral</th>
-                        <th t-if="examiner_subject == 'CCMC'" class="text-left">CCMC Practical</th>
+
+                        <th t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">CCMC Oral</th>
+
+                        <th t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">CCMC Practical</th>
 
 
 
@@ -319,14 +377,16 @@
                             <td class="text-left">
                                 <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
                                 <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
-                                <t t-if="examiner_subject == 'CCMC'" t-out="marksheet.ccmc_candidate.name" />
+                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.name" />
+                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.name" />
 
                             
                             </td>
                             <td class="text-left">
                                 <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.indos_no" />
                                 <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'CCMC'" t-out="marksheet.ccmc_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.indos_no" />
                             </td>
                             <td  class="text-left">
                                 <t t-out="marksheet.examiners_id.prac_oral_id.course.name" />
@@ -344,10 +404,11 @@
                             <td t-if="examiner_subject == 'MEK'" class="text-left">
                                 <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
                             </td>
-                            <td t-if="examiner_subject == 'CCMC'" class="text-left">
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">
                                 <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
                             </td>
-                            <td t-if="examiner_subject == 'CCMC'" class="text-left">
+                            <td t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">
                                 <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Practical</span></a>
                             </td>
                             
