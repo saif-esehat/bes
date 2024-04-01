@@ -635,6 +635,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('D2:I2',20, unlocked)
         gsk_oral_sheet.set_column('J2:J2',30, unlocked)
         gsk_oral_sheet.set_column('K2:K2',15, unlocked)
+        gsk_oral_sheet.set_column('L:L',15, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -698,15 +699,18 @@ class ExaminerPortal(CustomerPortal):
         marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        gsk_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_6 })
-        gsk_oral_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_oral_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_5 })
-        gsk_oral_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_6 })
+        gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_5 })
+        gsk_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_25 })
         
+        remarks = ['Absent','Good','Average','Weak']
+        gsk_oral_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': remarks })
         
+        gsk_oral_sheet.write_formula('K3', '{=SUM(D3:J3)}')
         
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -721,10 +725,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        # gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        institute_record = examiner_assignments.prac_oral_id.institute_id
-        institute_record.ensure_one()
-        gsk_practical_sheet.merge_range("A1:G1", institute_record.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
@@ -751,16 +752,17 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
         
-        gsk_practical_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_practical_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_practical_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_18 })
-        gsk_practical_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_18 })
+        gsk_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_18 })
+        gsk_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_18 })
         
+        gsk_practical_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -886,13 +888,15 @@ class ExaminerPortal(CustomerPortal):
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        mek_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        mek_oral_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_25 })
+        mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
+        mek_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_25 })
         
+        remarks = ['Absent','Good','Average','Weak']
+        mek_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -934,17 +938,17 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             mek_practical_sheet.write('C{}'.format(i+3), code, locked)
         
-        mek_practical_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_20 })
-        mek_practical_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_20 })
+        mek_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_10 })
         
-        
+        mek_practical_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': remarks })
         
         
         workbook.close()
@@ -1243,13 +1247,16 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
         
-        ccmc_oral_summary_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_10 })
+        
+        remarks = ['Absent','Good','Average','Weak']
+        mek_oral_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -1382,18 +1389,18 @@ class ExaminerPortal(CustomerPortal):
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
-        ccmc_cookery_bakery_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('M2:M1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('N2:N1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('O2:O1048576', {'validate': 'list', 'source': marks_values_8 })
+        ccmc_cookery_bakery_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('O3:O1048576', {'validate': 'list', 'source': marks_values_8 })
         
                
         workbook.close()

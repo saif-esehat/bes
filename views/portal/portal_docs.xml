@@ -90,9 +90,9 @@
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/institute_document/list">
                                 Upload Documents
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" >
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" >
                                 Books Order Form
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </t>
@@ -107,18 +107,18 @@
 
                             </a>
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/assignments">
-                                Exam Assignments
+                                My Assignments
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
                                 Availability Dates
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
-                            </a>
+                            </a> -->
                             
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"  href="/my/invoices" title="Invoices &amp; Bills">
-                                    Invoices &amp; Bills
+                                    Travel Bills &amp; Time Sheet 
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
                             </a>
                             
