@@ -934,9 +934,9 @@ class InstitutePortal(CustomerPortal):
     def InstituteDocumentList(self, **kw):
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+            [('user_id', '=', user_id)])
         lod = request.env["lod.institute"].sudo().search(
-            [('institute_id', '=', institute_id)])
+            [('institute_id', '=', institute.id)])
         vals = {'lods': lod, 'page_name': 'lod_list'}
         return request.render("bes.institute_document_list", vals)
 
