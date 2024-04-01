@@ -2,7 +2,6 @@
     <template id="candidate_admit_card_gp">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <!-- <t t-call="web.html_container"> -->
                 
                     <div class="header">
                         <div class="container" style="text-align: center; font-size: 24px;  margin:0; margin-bottom: 10px;">
@@ -10,7 +9,7 @@
                             <strong>Board of Examinations for Seafarers Trust</strong>
                         </div>
                         <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
-                            <t t-if="attempt_number == 1">
+                            <t t-if="o.attempt_number == 1">
                                 <strong>Admit Card - GP Fresh Candidate</strong>
                             </t>
                             <t t-else="">
@@ -30,47 +29,55 @@
                         </t>
                     </div>
 
-                    <div class="container" style="margin:0;">
-                        <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+                    <div class="container" style="">
+                        <div class="row" style="margin-bottom:4px ; ">
                             <div class="col-6">
-                                <span style="font-size:20px; margin-right:8px;">Examination: </span>
+                                <span style="font-size:20px;">Examination: </span>
                                 <span style="font-size:20px;">
                                     <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%b-%y')" />
                                     <t t-esc="formatted_dob" />
                                 </span>  
                             </div>
                         </div>
-                        <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
+
+                        <div class="row" style="margin-bottom:4px ; ">
+                            <div class="col-6">
+                                <span style="font-size:20px;">Attemp Nummber:</span>
+                                <span style="font-size:20px;"><t t-esc="o.attempt_number"/></span>  
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom:4px ; ">
                             <div class="col-12">
-                                <span style="font-size:20px; margin-right:8px;">Name as in INDOS:</span>
+                                <span style="font-size:20px;">Name as in INDOS:</span>
                                 <span style="font-size:20px;"><t t-esc="o.gp_candidate.name"/></span>  
                             </div>
                         </div>
                         
-                        <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                        <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
-                                <span style="font-size:20px; margin-right:8px;">DOB as in INDOS: </span>
+                                <span style="font-size:20px;">DOB as in INDOS: </span>
                                 <span style="font-size:20px;"><t t-esc="o.gp_candidate.dob"/></span>  
                             </div>
                         </div>
                         
-                        <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                        <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
-                                <span style="font-size:20px; margin-right:8px;">INDOs No: </span>
+                                <span style="font-size:20px;">INDOs No: </span>
                                 <span style="font-size:20px;"><t t-esc="o.gp_candidate.indos_no"/></span>  
                             </div>
                         </div>
                         
-                        <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                        <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
-                                <span style="font-size:20px; margin-right:8px;">Code No: </span>
+                                <span style="font-size:20px;">Code No: </span>
                                 <span style="font-size:20px;"><t t-esc="o.gp_candidate.candidate_code"/></span>  
                             </div>
                         </div>
                         
-                        <div class="row" style="padding-left:9px; margin-bottom:15px;">
+                        <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
-                                <span style="font-size:20px; margin-right:8px;">Roll No: </span>
+                                <span style="font-size:20px;">Roll No: </span>
                                 <span style="font-size:20px;"><t t-esc="o.exam_id"/></span>  
                             </div>
                         </div>
@@ -82,36 +89,38 @@
                         </t>
                     </div>
 
-                    
-                    <div style="width: 100%; margin:0; text-align:center;">
-                        <table style="width: 35%; margin: 0 0; text-align:center; border-collapse: collapse; border: 1px solid #ddd;">
-                            <thead>
-                                <tr style="">
-                                    <th style="width: 50%; padding: 10px;"><strong>Attempting Exam</strong></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                              
-                                <tr t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Oral/Practical</td>
-                                   
-                                </tr>
-                                <tr t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Gsk Online</td>
-                                   
-                                </tr>
-                                <tr t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">Mek Oral/Practical</td>
-                                    
-                                </tr>
-                                <tr t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
-                                    <td style="width: 50%; padding: 10px; border: 1px solid #ddd;">MeK Online</td>
-                                    
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="container" style="text-align:center;">
+                        <div class="row">
+                            <div class="col-4">
+                                <table class="table" style="border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr scope="row" t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
+                                            <td style="border: 1px solid black;">Gsk Oral/Practical</td>
+                                        </tr>
+
+                                        <tr scope="row" t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
+                                            <td style="border: 1px solid black;">Gsk Online</td>
+
+                                        </tr>
+                                        <tr scope="row" t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
+                                            <td style="border: 1px solid black;">Mek Oral/Practical</td>
+
+                                        </tr>
+                                        <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
+                                            <td style="border: 1px solid black;">MeK Online</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    
 
                     <div class="container" style="text-align:center; margin:0; margin-top:20px; ">
                         <div class="row">
@@ -135,7 +144,6 @@
                             </div>
                         </div>
                     </div>
-                <!-- </t> -->
             </t>
         </t>
     </template>

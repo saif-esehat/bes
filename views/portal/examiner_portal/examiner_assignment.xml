@@ -46,6 +46,40 @@
                 
             </t>
 
+            <t t-if="page_name == 'gsk_oral'">
+                
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">Candidates</a>
+                </li>
+                
+                
+            </t>
+            <t t-if="page_name == 'gsk_prac'">
+                
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">Candidates</a>
+                </li>
+                
+                
+            </t>
+
+            <t t-if="page_name == 'mek_oral'">
+                
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">Candidates</a>
+                </li>
+                
+                
+            </t>
+            <t t-if="page_name == 'mek_prac'">
+                
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">Candidates</a>
+                </li>
+                
+                
+            </t>
+
             
         </xpath>
     </template>
@@ -335,20 +369,20 @@
                 </div>
 
            <t t-if="examiner_subject == 'GSK'">
-                <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download GSK Marksheet</a>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px; " class="btn btn-primary btn_cta">Download GSK Marksheet</a>
+                <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
             </t>
             <t t-if="examiner_subject == 'MEK'">
-                <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
+                <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
             </t>
             <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'">
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
-                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC GSK Oral Marksheet</a>
+                <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload CCMC GSK Oral Marksheet</a>
             </t>
             <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'">
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Marksheet</a>
-                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download CCMC Marksheet</a>
+                <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral and Practical Marksheet</a>
+                <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
             </t>
                 
                 <thead>

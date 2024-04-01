@@ -219,6 +219,8 @@ class ExaminerPortal(CustomerPortal):
             candidate_rec = candidate.search([('id', '=', rec_id)])
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
 
+            # assignment_id = int(rec['assignment_id'])
+            # batch_id = int(rec['batch_id'])
             # Construct the dictionary with integer values
             vals = {
                 'subject_area_1': subject_area1,                
@@ -230,7 +232,10 @@ class ExaminerPortal(CustomerPortal):
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
                 # 'gsk_oral_exam_date': exam_date,
-                'gsk_oral_remarks': remarks_oral_gsk
+                'gsk_oral_remarks': remarks_oral_gsk,
+                # 'assignment_id':assignment_id,
+                # 'batch_id':batch_id,
+                # "page_name": "gsk_oral"
             }
             
             
@@ -254,11 +259,21 @@ class ExaminerPortal(CustomerPortal):
             
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
+            vals = {'indos': candidate_indos,
+                    'gsk_marksheet': gsk_marksheet,
+                    'candidate_name': name,
+                    'candidate_image': candidate_image,
+                    'candidate': candidate_rec,
+                    'assignment_id':assignment_id,
+                    'batch_id':batch_id,
+                    "page_name": "gsk_oral"}
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
             # import wdb; wdb.set_trace()
             # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})'exam_date':gsk_marksheet.gsk_oral_exam_date,
-            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec ,  "page_name": "gsk_oral"})
+            return request.render("bes.gsk_oral_marks_submit", vals)
 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -326,9 +341,21 @@ class ExaminerPortal(CustomerPortal):
             candidate_image = candidate_rec.candidate_image
             # draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
             gsk_prac_marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
+            
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            vals = {'indos': candidate_rec.indos_no,
+                    'candidate_name':name,
+                    'candidate_image': candidate_image,
+                    'candidate': candidate_rec,
+                    'gsk_prac_marksheet':gsk_prac_marksheet,
+                    'assignment_id':assignment_id,
+                    'batch_id':batch_id,
+                    "page_name": "gsk_prac"
+                    }
             # exam_date = gsk_prac_marksheet.gsk_practical_exam_date 'exam_date':exam_date,
-            return request.render("bes.gsk_practical_marks_submit", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'gsk_prac_marksheet':gsk_prac_marksheet, "page_name": "gsk_prac"})       
+            return request.render("bes.gsk_practical_marks_submit", vals)       
             
 
     @http.route('/open_mek_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -392,9 +419,11 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_marksheet = request.env['gp.mek.oral.line'].sudo().search([('id','=',rec['mek_oral'])])
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
             
             # exam_date = mek_oral_marksheet.mek_oral_exam_date 'exam_date':exam_date,
-            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet, "page_name": "mek_oral"})
+            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet,'assignment_id':assignment_id,'batch_id':batch_id,'page_name':'mek_oral'})
 
     @http.route('/open_practical_mek_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_practical_mek_form(self, **rec):
@@ -437,7 +466,8 @@ class ExaminerPortal(CustomerPortal):
                 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
-                'mek_practical_draft_confirm': state
+                'mek_practical_draft_confirm': state,
+                'page_name':'mek_practical'
             }
             
             marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
@@ -459,8 +489,10 @@ class ExaminerPortal(CustomerPortal):
             candidate_image = candidate_rec.candidate_image
             # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
             mek_prac_marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
             # exam_date = mek_prac_marksheet.mek_practical_exam_date 'exam_date':exam_date,
-            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet,  "page_name": "mek_prac"})
+            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet,'assignment_id':assignment_id,'batch_id':batch_id, "page_name": "mek_prac"})
 
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -635,6 +667,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('D2:I2',20, unlocked)
         gsk_oral_sheet.set_column('J2:J2',30, unlocked)
         gsk_oral_sheet.set_column('K2:K2',15, unlocked)
+        gsk_oral_sheet.set_column('L:L',15, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -698,15 +731,18 @@ class ExaminerPortal(CustomerPortal):
         marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        gsk_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_6 })
-        gsk_oral_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_oral_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_5 })
-        gsk_oral_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_6 })
+        gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
+        gsk_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_5 })
+        gsk_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_25 })
         
+        remarks = ['Absent','Good','Average','Weak']
+        gsk_oral_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': remarks })
         
+        gsk_oral_sheet.write_formula('K3', '{=SUM(D3:J3)}')
         
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -721,10 +757,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        # gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        institute_record = examiner_assignments.prac_oral_id.institute_id
-        institute_record.ensure_one()
-        gsk_practical_sheet.merge_range("A1:G1", institute_record.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
@@ -751,16 +784,17 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
         
-        gsk_practical_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_practical_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_practical_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_18 })
-        gsk_practical_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_18 })
+        gsk_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_12 })
+        gsk_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_8 })
+        gsk_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_18 })
+        gsk_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_18 })
         
+        gsk_practical_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -886,13 +920,15 @@ class ExaminerPortal(CustomerPortal):
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        mek_oral_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        mek_oral_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_25 })
+        mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
+        mek_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_25 })
         
+        remarks = ['Absent','Good','Average','Weak']
+        mek_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -934,17 +970,17 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             mek_practical_sheet.write('C{}'.format(i+3), code, locked)
         
-        mek_practical_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_20 })
-        mek_practical_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_20 })
+        mek_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_10 })
         
-        
+        mek_practical_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': remarks })
         
         
         workbook.close()
@@ -1243,13 +1279,16 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
         
-        ccmc_oral_summary_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_20 })
+        ccmc_oral_summary_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_oral_summary_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_10 })
+        
+        remarks = ['Absent','Good','Average','Weak']
+        mek_oral_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -1382,18 +1421,18 @@ class ExaminerPortal(CustomerPortal):
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
-        ccmc_cookery_bakery_sheet.data_validation('D2:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('E2:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('F2:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('G2:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('H2:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('I2:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('J2:J1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('K2:K1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('L2:L1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('M2:M1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('N2:N1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('O2:O1048576', {'validate': 'list', 'source': marks_values_8 })
+        ccmc_cookery_bakery_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        ccmc_cookery_bakery_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': marks_values_5 })
+        ccmc_cookery_bakery_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': marks_values_9 })
+        ccmc_cookery_bakery_sheet.data_validation('O3:O1048576', {'validate': 'list', 'source': marks_values_8 })
         
                
         workbook.close()
