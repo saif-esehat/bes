@@ -1,6 +1,6 @@
 <odoo>
 
-    <template id="portal_breadcrumbs_candidatelist" inherit_id="portal.portal_breadcrumbs">
+    <template id="portal_breadcrumbs_candidatelists" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="page_name == 'gp_candidate'">
                 <li class="breadcrumb-item">
@@ -260,6 +260,7 @@
                         <th>Report</th>
                         <th>From Date.</th>
                         <th>To Date.</th>
+                        <th>DGS Document</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -294,22 +295,24 @@
                             <td class="text-center">
                                 <t t-out="batch.to_date" />
                             </td>
-                            <t t-if="batch.dgs_approval_state != True">
+                            
+                            <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
                                 </td>
                             </t>
+                            
+                            <t t-if="batch.state == '1-ongoing'">
+                                <td class="text-center">
+                                    <a t-attf-href="/my/gpbatch/downloadDGSdocument{{batch.id}}" class="fa">Download document</a>
+                                </td>
+                            </t>
+
                             <t t-if="batch.state == '2-indos_pending'">
-                            <td class="text-center">
-                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
-                            </td>
-                             </t>
-                            <!-- <td class="text-center">
-                                <t t-out="candidate.candidate_code" />
-                            </td>
-                            <td class="text-center">
-                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-                            </td> -->
+                                <td class="text-center">
+                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                </td>
+                            </t>
 
                         </tr>
                     </t>

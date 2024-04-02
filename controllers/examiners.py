@@ -634,8 +634,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('C2:C2',20, unlocked)
         gsk_oral_sheet.set_column('D2:I2',20, unlocked)
         gsk_oral_sheet.set_column('J2:J2',30, unlocked)
-        gsk_oral_sheet.set_column('K2:K2',15, unlocked)
-        gsk_oral_sheet.set_column('L:L',15, unlocked)
+        gsk_oral_sheet.set_column('K:K',15, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -666,7 +665,7 @@ class ExaminerPortal(CustomerPortal):
           'Subject Area 4 \n Minimum 3 Questions \n 9 Marks',
           'Subject Area 5 \n Minimum 4 Questions \n 12 Marks',
           'Subject Area 6 \n Minimum 2 Questions \n 5 Marks',
-          'Practical Record Book and Journal \n 25 Marks', 'Total Marks 75', 'Remarks']
+          'Practical Record Book and Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
             gsk_oral_sheet.write(1, col, value, header_format)
         
@@ -708,10 +707,8 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
-        gsk_oral_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': remarks })
-        
-        gsk_oral_sheet.write_formula('K3', '{=SUM(D3:J3)}')
-        
+        gsk_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
+
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
         gsk_practical_sheet.set_column('A2:A2',35, unlocked)
@@ -737,7 +734,7 @@ class ExaminerPortal(CustomerPortal):
           '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
           '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
           '·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight (18 Marks)',
-          'Total 100 Marks', 'Remarks']
+            'Remarks']
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
         
@@ -762,7 +759,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_18 })
         gsk_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_18 })
         
-        gsk_practical_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': remarks })
+        gsk_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -857,7 +854,7 @@ class ExaminerPortal(CustomerPortal):
           'Welding \n 10 Marks',
           'Lathe /Drill/Grinder \n 10 Marks',
           'Electrical  \n 12 Marks',
-          'Journal \n 25 Marks', 'Total Marks 75', 'Remarks']
+          'Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
             mek_oral_sheet.write(1, col, value, header_format)
         
@@ -896,7 +893,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
-        mek_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
+        mek_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -905,7 +902,6 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.set_column('C2:C2',20, unlocked)
         mek_practical_sheet.set_column('D2:L2',25, unlocked)
         mek_practical_sheet.set_column('M2:M2',15, unlocked)
-        mek_practical_sheet.set_column('N2:N2',15, unlocked)
             
         mek_practical_sheet.protect()
         
@@ -923,7 +919,7 @@ class ExaminerPortal(CustomerPortal):
           '-Welding (1 Task)  \n 20 marks', #J
           '-Lathe Work (1 Task) \n 10 Marks', #K
           '-Electrical (1 Task) \n 10 Marks', #L
-          'Total 100 Marks', 'Remarks']
+           'Remarks']
         for col, value in enumerate(header_prac):
             mek_practical_sheet.write(1, col, value, header_format)
         
@@ -948,7 +944,7 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_10 })
         
-        mek_practical_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': remarks })
+        mek_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
         
         
         workbook.close()
@@ -1000,8 +996,23 @@ class ExaminerPortal(CustomerPortal):
             subject_area_5 = row[7]  
             subject_area_6 = row[8] 
             practical_journal = row[9] 
-            total_marks = row[10]  
-            remarks = row[11]
+            total_marks = 0  # Initialize total_marks to 0
+            if subject_area_1:
+                total_marks += int(subject_area_1)
+            if subject_area_2:
+                total_marks += int(subject_area_2)
+            if subject_area_3:
+                total_marks += int(subject_area_3)
+            if subject_area_4:
+                total_marks += int(subject_area_4)
+            if subject_area_5:
+                total_marks += int(subject_area_5)
+            if subject_area_6:
+                total_marks += int(subject_area_6)
+            if practical_journal:
+                total_marks += int(practical_journal)
+                    
+            remarks = row[10]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             
@@ -1036,8 +1047,27 @@ class ExaminerPortal(CustomerPortal):
             knots_bend = row[10]
             sounding_rod = row[11] 
 
-            gsk_practical_total_marks = row[12]  
-            gsk_practical_remarks = row[13]
+            gsk_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if climbing_mast:
+                gsk_practical_total_marks += int(climbing_mast)
+            if buoy_flags_recognition:
+                gsk_practical_total_marks += int(buoy_flags_recognition)
+            if bosun_chair:
+                gsk_practical_total_marks += int(bosun_chair)
+            if rig_stage:
+                gsk_practical_total_marks += int(rig_stage)
+            if rig_pilot:
+                gsk_practical_total_marks += int(rig_pilot)
+            if rig_scaffolding:
+                gsk_practical_total_marks += int(rig_scaffolding)
+            if fast_ropes:
+                gsk_practical_total_marks += int(fast_ropes)
+            if knots_bend:
+                gsk_practical_total_marks += int(knots_bend)
+            if sounding_rod:
+                gsk_practical_total_marks += int(sounding_rod)
+                
+            gsk_practical_remarks = row[12]
 
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.gsk_prac:
@@ -1088,7 +1118,7 @@ class ExaminerPortal(CustomerPortal):
             electrical = row[7]  
             mek_journal = row[8] 
             total_marks = row[9]  
-            remarks = row[10]
+            remarks = row[9]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.mek_oral:
@@ -1122,7 +1152,7 @@ class ExaminerPortal(CustomerPortal):
             electrical = row[11] 
 
             mek_practical_total_marks = row[12]  
-            mek_practical_remarks = row[13]
+            mek_practical_remarks = row[12]
 
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.mek_prac:
@@ -1192,7 +1222,6 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.set_column('C2:C2',20, unlocked)
         ccmc_oral_summary_sheet.set_column('D2:J2',25, unlocked)
         ccmc_oral_summary_sheet.set_column('K2:K2',15, unlocked)
-        ccmc_oral_summary_sheet.set_column('L2:L2',15, unlocked)
             
         ccmc_oral_summary_sheet.protect()
         
@@ -1224,7 +1253,7 @@ class ExaminerPortal(CustomerPortal):
           '-Identification of Equipment \n 10 Marks',
           '-GSK ORAL \n 10 Marks',
           '-Safety \n 10 Marks',
-          'Total \n 100 Marks','Remarks if any']
+          'Remarks if any']
         for col, value in enumerate(header_prac):
             ccmc_oral_summary_sheet.write(1, col, value, header_format)
         
@@ -1256,7 +1285,7 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_10 })
         
         remarks = ['Absent','Good','Average','Weak']
-        mek_oral_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': remarks })
+        mek_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -1315,7 +1344,7 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.set_column('B2:B2',10, unlocked)
         ccmc_cookery_bakery_sheet.set_column('C2:C2',20, unlocked)
         ccmc_cookery_bakery_sheet.set_column('D2:O2',20, unlocked)
-        ccmc_cookery_bakery_sheet.set_column('P2:P2',15, unlocked)
+        # ccmc_cookery_bakery_sheet.set_column('P2:P2',15, unlocked)
             
         ccmc_cookery_bakery_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -1355,8 +1384,7 @@ class ExaminerPortal(CustomerPortal):
           'Dish 3 \n Taste \n 5 Marks',
           'Dish 3 \n Texture \n 5 Marks',
           'Identification of Ingredients \n 9 Marks',
-          'Knowledge of menu \n 8 Marks',
-          'Total Marks 75']
+          'Knowledge of menu \n 8 Marks']
         
         for col, value in enumerate(header_oral):
             ccmc_cookery_bakery_sheet.write(1, col, value, header_format)

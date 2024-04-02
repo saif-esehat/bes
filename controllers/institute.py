@@ -932,13 +932,29 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
+    
         user_id = request.env.user.id
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+    
+        # institute_id = request.env["bes.institute"].sudo().search(
+        #     [('user_id', '=', user_id)]).id
+
+        institute = request.env["bes.institute"].sudo().search([('user_id', '=', user_id)])
+
+        gp_batches = request.env['institute.gp.batches'].sudo().search([('institute_id','=',institute.id)])
+        ccmc_batches = request.env['institute.ccmc.batches'].sudo().search([('institute_id','=',institute.id)])
+            
+        
         lod = request.env["lod.institute"].sudo().search(
-            [('institute_id', '=', institute_id)])
+            [('institute_id', '=', institute.id)])
+        
+        # import wdb; wdb.set_trace()
+    
+        
         vals = {'lods': lod, 'page_name': 'lod_list'}
+    
         return request.render("bes.institute_document_list", vals)
+    
+    
 
     @http.route(['/my/updategpcandidate'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCandidate(self, **kw):
@@ -1053,6 +1069,8 @@ class InstitutePortal(CustomerPortal):
             return request.make_response(file_content, headers)
         else:
             return "File not found or empty."
+
+
 
     @http.route(['/my/institute_document'], type="http", method=["POST", "GET"], auth="user", website=True)
     def InstituteDocumentView(self, **kw):
@@ -1704,6 +1722,7 @@ class InstitutePortal(CustomerPortal):
             exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
         except:
             raise ValidationError("Admit Card Not Found or Not Generated")
+        
         report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
