@@ -2246,6 +2246,8 @@ class InstitutePortal(CustomerPortal):
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
+            
+            
             indos_no = row[0]  
             full_name = row[1] 
             date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
@@ -2296,15 +2298,8 @@ class InstitutePortal(CustomerPortal):
                 'DL': 'Delhi',
                 'PY': 'Puducherry'
             }
-
-            # state = False
-            # for code, name in state_values.items():
-            #     if name.lower() == state_value.lower():
-            #         state = code
-            #     else:
-            #         state = False
-
-            # print("Stateeeeee",state)
+            
+            
                     
             data_xth_std_eng = 0
             data_twelfth_std_eng = 0
@@ -2319,10 +2314,13 @@ class InstitutePortal(CustomerPortal):
             email = row[10] 
 
             
+            # import wdb; wdb.set_trace()
+            
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            
             if type(xth_std_eng) in [int, float]:
                 data_xth_std_eng = float(xth_std_eng)
-            if type(xth_std_eng) == str:
+            elif type(xth_std_eng) == str:
                 if xth_std_eng.lower() == 'a+':
                     data_xth_std_eng = 90
                 if xth_std_eng.lower() == 'a':
@@ -2349,7 +2347,7 @@ class InstitutePortal(CustomerPortal):
             twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
             if type(twelfth_std_eng) in [int, float]:
                 data_twelfth_std_eng = float(twelfth_std_eng)
-            if type(twelfth_std_eng) == str:
+            elif type(twelfth_std_eng) == str:
                 if twelfth_std_eng.lower() == 'a+':
                     data_twelfth_std_eng = 90
                 if twelfth_std_eng.lower() == 'a':
@@ -2376,7 +2374,7 @@ class InstitutePortal(CustomerPortal):
             iti = row[13] # Assuming %ITI is the twelfth column
             if type(iti) in [int, float]:
                 data_iti = float(iti)
-            if type(iti) == str:
+            elif type(iti) == str:
                 if iti.lower() == 'a+':
                     data_iti = 90
                 if iti.lower() == 'a':
