@@ -832,7 +832,6 @@ class InstitutePortal(CustomerPortal):
                             page=page,
                             step=10
                             )
-        # import wdb; wdb.set_trace()
         candidates = request.env["gp.candidate"].sudo().search(
             search_domain, limit= 10,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
@@ -849,6 +848,7 @@ class InstitutePortal(CustomerPortal):
                 'search':search,
                 'searchbar_inputs':search_list
                 }
+        # import wdb; wdb.set_trace()
         
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
@@ -897,7 +897,7 @@ class InstitutePortal(CustomerPortal):
                 'searchbar_inputs':search_list
                 }
         print("Batch id4",batch_id)
-        # self.env["gp.candidate"].sudo().search([('')])
+        # import wdb; wdb.set_trace()
         return request.render("bes.ccmc_candidate_portal_list", vals)
 
 
@@ -932,13 +932,29 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
+    
         user_id = request.env.user.id
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+    
+        # institute_id = request.env["bes.institute"].sudo().search(
+        #     [('user_id', '=', user_id)]).id
+
+        institute = request.env["bes.institute"].sudo().search([('user_id', '=', user_id)])
+
+        gp_batches = request.env['institute.gp.batches'].sudo().search([('institute_id','=',institute.id)])
+        ccmc_batches = request.env['institute.ccmc.batches'].sudo().search([('institute_id','=',institute.id)])
+            
+        
         lod = request.env["lod.institute"].sudo().search(
-            [('institute_id', '=', institute_id)])
+            [('institute_id', '=', institute.id)])
+        
+        # import wdb; wdb.set_trace()
+    
+        
         vals = {'lods': lod, 'page_name': 'lod_list'}
+    
         return request.render("bes.institute_document_list", vals)
+    
+    
 
     @http.route(['/my/updategpcandidate'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCandidate(self, **kw):
@@ -1053,6 +1069,8 @@ class InstitutePortal(CustomerPortal):
             return request.make_response(file_content, headers)
         else:
             return "File not found or empty."
+
+
 
     @http.route(['/my/institute_document'], type="http", method=["POST", "GET"], auth="user", website=True)
     def InstituteDocumentView(self, **kw):
@@ -1704,6 +1722,7 @@ class InstitutePortal(CustomerPortal):
             exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
         except:
             raise ValidationError("Admit Card Not Found or Not Generated")
+        
         report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
@@ -2210,14 +2229,16 @@ class InstitutePortal(CustomerPortal):
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
-        file_content = kw.get("fileUpload").read()
-        filename = kw.get('fileUpload').filename
+        # import wdb; wdb.set_trace()
+        
+        batch_id = int(kw.get("batch_ccmc_id"))
+        
+        file_content = kw.get("ccmcfileUpload").read()
+        filename = kw.get('ccmcfileUpload').filename
 
         # workbook = xlsxwriter.Workbook(BytesIO(file_content))
         workbook = xlrd.open_workbook(file_contents=file_content)
         # worksheet = workbook.sheet_by_index(0)
-        # import wdb; wdb.set_trace()
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)
