@@ -38,7 +38,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
-                        <t t-out="batches.ccmc_batch_name"/>
+                        <t t-out="batches.batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -54,7 +54,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch_id}}">
-                        <t t-out="batches.batch_name"/>
+                        <t t-out="batches.ccmc_batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
