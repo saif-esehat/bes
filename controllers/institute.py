@@ -2317,6 +2317,7 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            
             if type(xth_std_eng) in [int, float]:
                 data_xth_std_eng = float(xth_std_eng)
             elif type(xth_std_eng) == str:
