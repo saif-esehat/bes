@@ -242,7 +242,8 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         candidate = request.env["ccmc.candidate"].sudo().search(
             [('id', '=', candidate_id)])
-        vals = {'candidate': candidate, "page_name": "ccmc_candidate_form"}
+        batches = candidate.institute_batch_id
+        vals = {'candidate': candidate, "page_name": "ccmc_candidate_form",'batches':batches}
         return request.render("bes.ccmc_candidate_profile_view", vals)
     
     @http.route(['/getcountrystate'],method=["GET"], type="http", auth="user", website=True)
