@@ -80,7 +80,7 @@ class ExaminerPortal(CustomerPortal):
 
 
         
-        vals = {'batches':filtered_batches,'assignments':'', 'examiner':examiner}
+        vals = {'batches':filtered_batches,'assignments':'', 'examiner':examiner,'page_name':'batches'}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.examiner_assignment_list", vals)
     
@@ -93,8 +93,8 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-
-        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id}
+        
+        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'institutes'}
         return request.render("bes.examiner_assignment_institute_list",vals)
     
     @http.route(['/my/assignments/batches/candidates/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
@@ -109,7 +109,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id}
+        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id,'page_name':'institutes1',}
         
         print(examiner_subject)
         return request.render("bes.examiner_assignment_candidate_list",vals)
@@ -219,6 +219,8 @@ class ExaminerPortal(CustomerPortal):
             candidate_rec = candidate.search([('id', '=', rec_id)])
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
 
+            # assignment_id = int(rec['assignment_id'])
+            # batch_id = int(rec['batch_id'])
             # Construct the dictionary with integer values
             vals = {
                 'subject_area_1': subject_area1,                
@@ -230,7 +232,10 @@ class ExaminerPortal(CustomerPortal):
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
                 # 'gsk_oral_exam_date': exam_date,
-                'gsk_oral_remarks': remarks_oral_gsk
+                'gsk_oral_remarks': remarks_oral_gsk,
+                # 'assignment_id':assignment_id,
+                # 'batch_id':batch_id,
+                # "page_name": "gsk_oral"
             }
             
             
@@ -254,11 +259,21 @@ class ExaminerPortal(CustomerPortal):
             
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
+            vals = {'indos': candidate_indos,
+                    'gsk_marksheet': gsk_marksheet,
+                    'candidate_name': name,
+                    'candidate_image': candidate_image,
+                    'candidate': candidate_rec,
+                    'assignment_id':assignment_id,
+                    'batch_id':batch_id,
+                    "page_name": "gsk_oral"}
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
             # import wdb; wdb.set_trace()
             # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})'exam_date':gsk_marksheet.gsk_oral_exam_date,
-            return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos, 'gsk_marksheet': gsk_marksheet, 'candidate_name': name, 'candidate_image': candidate_image, 'candidate': candidate_rec ,  "page_name": "gsk_oral"})
+            return request.render("bes.gsk_oral_marks_submit", vals)
 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -326,9 +341,21 @@ class ExaminerPortal(CustomerPortal):
             candidate_image = candidate_rec.candidate_image
             # draft_records = candidate_rec.gsk_practical_child_line.filtered(lambda line: line.gsk_practical_draft_confirm == 'draft')
             gsk_prac_marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
+            
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            vals = {'indos': candidate_rec.indos_no,
+                    'candidate_name':name,
+                    'candidate_image': candidate_image,
+                    'candidate': candidate_rec,
+                    'gsk_prac_marksheet':gsk_prac_marksheet,
+                    'assignment_id':assignment_id,
+                    'batch_id':batch_id,
+                    "page_name": "gsk_prac"
+                    }
             # exam_date = gsk_prac_marksheet.gsk_practical_exam_date 'exam_date':exam_date,
-            return request.render("bes.gsk_practical_marks_submit", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'gsk_prac_marksheet':gsk_prac_marksheet, "page_name": "gsk_prac"})       
+            return request.render("bes.gsk_practical_marks_submit", vals)       
             
 
     @http.route('/open_mek_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -392,9 +419,11 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_marksheet = request.env['gp.mek.oral.line'].sudo().search([('id','=',rec['mek_oral'])])
 
             print('recccccccccccccccccccccccccccccccccc',candidate_rec)
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
             
             # exam_date = mek_oral_marksheet.mek_oral_exam_date 'exam_date':exam_date,
-            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet, "page_name": "mek_oral"})
+            return request.render("bes.mek_oral_marks_submit", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_oral_marksheet':mek_oral_marksheet,'assignment_id':assignment_id,'batch_id':batch_id,'page_name':'mek_oral'})
 
     @http.route('/open_practical_mek_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_practical_mek_form(self, **rec):
@@ -437,7 +466,8 @@ class ExaminerPortal(CustomerPortal):
                 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
-                'mek_practical_draft_confirm': state
+                'mek_practical_draft_confirm': state,
+                'page_name':'mek_practical'
             }
             
             marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
@@ -459,8 +489,10 @@ class ExaminerPortal(CustomerPortal):
             candidate_image = candidate_rec.candidate_image
             # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
             mek_prac_marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
+            assignment_id = int(rec['assignment_id'])
+            batch_id = int(rec['batch_id'])
             # exam_date = mek_prac_marksheet.mek_practical_exam_date 'exam_date':exam_date,
-            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet,  "page_name": "mek_prac"})
+            return request.render("bes.mek_practical_marks", {'indos': candidate_rec.indos_no,'candidate_name':name, 'candidate_image': candidate_image, 'candidate': candidate_rec,'mek_prac_marksheet':mek_prac_marksheet,'assignment_id':assignment_id,'batch_id':batch_id, "page_name": "mek_prac"})
 
 
     @http.route('/open_cookery_bakery_form', type='http', auth="user", website=True,method=["POST","GET"])

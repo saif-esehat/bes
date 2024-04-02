@@ -1,6 +1,10 @@
 <odoo>
 
+<<<<<<< HEAD
     <template id="portal_breadcrumbs_candidatelists" inherit_id="portal.portal_breadcrumbs">
+=======
+    <template id="portal_breadcrumbs_institute" inherit_id="portal.portal_breadcrumbs">
+>>>>>>> 8d85e582c9b22b6d2b1447cbe092e9f31974d4a2
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="page_name == 'gp_candidate'">
                 <li class="breadcrumb-item">
@@ -38,7 +42,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
-                        <t t-out="batch_name"/>
+                        <t t-out="batches.batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -54,7 +58,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch_id}}">
-                        <t t-out="batch_name"/>
+                        <t t-out="batches.batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -90,6 +94,17 @@
                     Faculties
                 </li>
             </t>
+            <t t-if="page_name == 'gp_faculty_profile'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch/faculties/{{batch_id}}">
+                        <t t-out="batch_name"/>
+                    </a>
+                </li>
+            </t>
+
 
             <t t-if="page_name == 'gp_faculty_form'">
                 <li class="breadcrumb-item">
@@ -1966,15 +1981,15 @@
 
 
             <t t-if="batches.state == '1-ongoing'">
+                <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                 <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
-                <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
 
             </t>
             <!-- <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a> -->
 
-            <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a>
+            <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a> -->
 
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -2426,11 +2441,11 @@
             </t>
 
             <t t-if="batches.ccmc_state == '1-ongoing'">     
+                <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
 
                 <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
-                <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
             </t>
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
