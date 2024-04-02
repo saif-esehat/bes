@@ -394,9 +394,7 @@
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Oral</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Practical</th>
-
                         <th t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">CCMC Oral</th>
-
                         <th t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">CCMC Practical</th>
 
 
@@ -423,7 +421,7 @@
                                 <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.indos_no" />
                             </td>
                             <td  class="text-left">
-                                <t t-out="marksheet.examiners_id.prac_oral_id.course.name" />
+                                <t t-out="marksheet.examiners_id.prac_oral_id.course.course_code" />
                             </td>
 
                             <td t-if="examiner_subject == 'GSK'" class="text-left">
