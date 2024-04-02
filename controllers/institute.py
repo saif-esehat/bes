@@ -832,7 +832,6 @@ class InstitutePortal(CustomerPortal):
                             page=page,
                             step=10
                             )
-        # import wdb; wdb.set_trace()
         candidates = request.env["gp.candidate"].sudo().search(
             search_domain, limit= 10,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
@@ -849,6 +848,7 @@ class InstitutePortal(CustomerPortal):
                 'search':search,
                 'searchbar_inputs':search_list
                 }
+        # import wdb; wdb.set_trace()
         
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
@@ -897,7 +897,7 @@ class InstitutePortal(CustomerPortal):
                 'searchbar_inputs':search_list
                 }
         print("Batch id4",batch_id)
-        # self.env["gp.candidate"].sudo().search([('')])
+        # import wdb; wdb.set_trace()
         return request.render("bes.ccmc_candidate_portal_list", vals)
 
 
@@ -2229,14 +2229,16 @@ class InstitutePortal(CustomerPortal):
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
-        file_content = kw.get("fileUpload").read()
-        filename = kw.get('fileUpload').filename
+        # import wdb; wdb.set_trace()
+        
+        batch_id = int(kw.get("batch_ccmc_id"))
+        
+        file_content = kw.get("ccmcfileUpload").read()
+        filename = kw.get('ccmcfileUpload').filename
 
         # workbook = xlsxwriter.Workbook(BytesIO(file_content))
         workbook = xlrd.open_workbook(file_contents=file_content)
         # worksheet = workbook.sheet_by_index(0)
-        # import wdb; wdb.set_trace()
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)

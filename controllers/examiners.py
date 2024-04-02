@@ -1487,3 +1487,6 @@ class ExaminerPortal(CustomerPortal):
         excel_buffer.close()
 
         return response
+    
+    
+    

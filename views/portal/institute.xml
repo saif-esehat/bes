@@ -1,10 +1,6 @@
 <odoo>
 
-<<<<<<< HEAD
-    <template id="portal_breadcrumbs_candidatelists" inherit_id="portal.portal_breadcrumbs">
-=======
     <template id="portal_breadcrumbs_institute" inherit_id="portal.portal_breadcrumbs">
->>>>>>> 8d85e582c9b22b6d2b1447cbe092e9f31974d4a2
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="page_name == 'gp_candidate'">
                 <li class="breadcrumb-item">
@@ -42,7 +38,7 @@
 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
-                        <t t-out="batches.batch_name"/>
+                        <t t-out="batches.ccmc_batch_name"/>
                     </a>
                 </li>
                 <li class="breadcrumb-item">
@@ -1983,7 +1979,6 @@
             <t t-if="batches.state == '1-ongoing'">
                 <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
-                <!-- <a t-attf-href="/my/gpcandidateform/view/{{batch_id}}" t-if="page_name == 'gp_candidate'" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
 
             </t>
@@ -2344,11 +2339,12 @@
                                         });
                                     }); -->
 
-                                    function openUploadModal(button) {
+                                    function openccmcUploadModal(button) {
+                                    <!-- debugger -->
                                     // Retrieve the data-id attribute value from the clicked button
-                                    var dataId = button.getAttribute('batch-id');
+                                    var dataId = button.getAttribute('batch-modal-id');
                                     // Update the content of the modal with the retrieved data
-                                    document.getElementById('ccmc_batch_id').value = dataId;
+                                    document.getElementById('batch_ccmc_id').value = dataId;
 
                                     }
 
@@ -2442,7 +2438,7 @@
 
             <t t-if="batches.ccmc_state == '1-ongoing'">     
                 <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-modal-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openccmcUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
 
                 <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
@@ -2461,7 +2457,7 @@
 
                                 <form method="post" action="/my/uploadccmccandidatedata" enctype="multipart/form-data">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <input type="hidden" id="ccmc_batch_id" name="ccmc_batch_id" />
+                                    <input type="hidden" id="batch_ccmc_id" name="batch_ccmc_id" />
                                     <div class="form-group">
                                         <label for="ccmcfileUpload">XLSX Upload</label>
                                         <input type="file" class="form-control-file" accept=".xlsx" name="ccmcfileUpload" id="ccmcfileUpload"/>
