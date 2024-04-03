@@ -257,7 +257,6 @@ class GPCandidate(models.Model):
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
         # gp_batches = self.institute_batch_id
-
         
         capacity = gp_batches.dgs_approved_capacity - 1
         # capacity = gp_batches.dgs_approved_capacity 

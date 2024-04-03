@@ -57,6 +57,8 @@
                             <field name="dgs_approval_state" readonly="0"/>
                             <field name="dgs_document"/>
                             <field name="active" invisible="1"/>
+                            <!-- <field name="document_name" />
+                            <field name="document_file" widget="binary" filename="documents_name"/> -->
                         </group>
 
                     </sheet>

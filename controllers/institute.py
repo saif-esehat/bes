@@ -71,7 +71,7 @@ class InstitutePortal(CustomerPortal):
         batches = request.env["institute.ccmc.batches"].sudo().search(
             [('institute_id', '=', institute_id)])
 
-        vals = {"batches": batches, "page_name": "ccmc_batches"}
+        vals = {"batches": batches, 'institute_id':institute_id, "page_name": "ccmc_batches",}
         return request.render("bes.institute_ccmc_batches", vals)
 
     # @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
@@ -233,7 +233,6 @@ class InstitutePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=', candidate_id)])
         batches = candidate.institute_batch_id
-        print(batches.id,"keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
 
@@ -255,34 +254,16 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         # import wdb; wdb.set_trace();
         user_id = request.env.user.id
-        print(request.env.user)
-        print(user_id,"userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        
         batch_id = kw.get("invoice_batch_id")
-        print(batch_id,"battttch idddddddddddddd")
-        
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
-        print(request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]))
-        print(batch,"batcheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-        
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
-        print(request.env["bes.institute"].sudo().search([('user_id', '=', user_id)]))
-        print(institute_id,"institttttttttttttttttttttttttttttttttttt")
         
         partner_id = institute_id.user_id.partner_id.id
-        print(partner_id,"Partnerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        
         product_id = batch.course.exam_fees.id
-        print(batch.course)
-        print(product_id,"prooooooooooooooooooooooooooooooooooooooooooo")
-        
         product_price = batch.course.exam_fees.lst_price
-        print(product_price,"priceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-        
         qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
         # qty = batch.candidate_count
@@ -904,15 +885,15 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/gpbatch/faculties/<int:batch_id>'], type="http", auth="user", website=True)
     def GPFacultyListView(self, batch_id, **kw):
-        # import wdb; wdb.set_trace()
-        print(kw,"kwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
         user_id = request.env.user.id
+        
         gp_batches_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        
         faculties = request.env["institute.faculty"].sudo().search(
             [('gp_batches_id', '=', batch_id)])
-        print(faculties.course_name,"faculttttttttttttttttttttttttttttttt")
-        print(faculties.courses_taught,"faculttttttttttttttttttttttttttttttt")
+        # import wdb; wdb.set_trace()
+        
         vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
@@ -1760,6 +1741,21 @@ class InstitutePortal(CustomerPortal):
         locked = workbook.add_format({'locked':True})
         unlocked = workbook.add_format({'locked':False})
         candidate_worksheet.set_column('A:XDF', None, unlocked)
+
+        candidate_worksheet.set_column('A:A',15,unlocked)
+        candidate_worksheet.set_column('B:B',30,unlocked)
+        candidate_worksheet.set_column('D:D',30,unlocked)
+        candidate_worksheet.set_column('E:E',30,unlocked)
+        candidate_worksheet.set_column('F:F',20,unlocked)
+        candidate_worksheet.set_column('G:G',15,unlocked)
+        candidate_worksheet.set_column('H:H',10,unlocked)
+        candidate_worksheet.set_column('I:I',20,unlocked)
+        candidate_worksheet.set_column('J:J',20,unlocked)
+        candidate_worksheet.set_column('K:K',20,unlocked)
+        candidate_worksheet.set_column('L:L',10,unlocked)
+        candidate_worksheet.set_column('M:M',10,unlocked)
+        candidate_worksheet.set_column('N:N',10,unlocked)
+        candidate_worksheet.set_column('O:O',10,unlocked)
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
@@ -1782,7 +1778,7 @@ class InstitutePortal(CustomerPortal):
             candidate_worksheet.write(0, col, value, header_format)
 
         # Set date format for DOB column
-        candidate_worksheet.set_column('C:C', None, date_format)
+        candidate_worksheet.set_column('C:C', 20, date_format)
         # candidate_worksheet.set_column('J:J', None, number_format)
         # candidate_worksheet.set_column('G:G', None, zip_format)
 
@@ -1890,6 +1886,22 @@ class InstitutePortal(CustomerPortal):
         locked = workbook.add_format({'locked':True})
         unlocked = workbook.add_format({'locked':False})
         candidate_worksheet.set_column('A:XDF', None, unlocked)
+        
+        candidate_worksheet.set_column('A:A',15,unlocked)
+        candidate_worksheet.set_column('B:B',30,unlocked)
+        candidate_worksheet.set_column('D:D',30,unlocked)
+        candidate_worksheet.set_column('E:E',30,unlocked)
+        candidate_worksheet.set_column('F:F',20,unlocked)
+        candidate_worksheet.set_column('G:G',15,unlocked)
+        candidate_worksheet.set_column('H:H',10,unlocked)
+        candidate_worksheet.set_column('I:I',20,unlocked)
+        candidate_worksheet.set_column('J:J',20,unlocked)
+        candidate_worksheet.set_column('K:K',20,unlocked)
+        candidate_worksheet.set_column('L:L',10,unlocked)
+        candidate_worksheet.set_column('M:M',10,unlocked)
+        candidate_worksheet.set_column('N:N',10,unlocked)
+        candidate_worksheet.set_column('O:O',10,unlocked)
+        
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
@@ -1915,7 +1927,7 @@ class InstitutePortal(CustomerPortal):
 
 
         # Set date format for DOB column
-        candidate_worksheet.set_column('C:C', None, date_format)
+        candidate_worksheet.set_column('C:C', 20, date_format)
 
         dropdown_values = ['Yes', 'No']
         # import wdb; wdb.set_trace()
@@ -2036,8 +2048,11 @@ class InstitutePortal(CustomerPortal):
             
             indos_no = row[0]  
             full_name = row[1] 
-            date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
-            date_string = date_value.strftime('%d-%b-%y') 
+            try:
+                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                date_string = date_value.strftime('%d-%b-%y') 
+            except:   
+                raise ValidationError('Date Format Not Correct Please Check Data format')
             # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
             
             dob = date_value
@@ -2434,17 +2449,37 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
 
-    # @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    # def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
-    #     # import wdb; wdb.set_trace()
-    #     batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+    @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+        
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
+        
+        # import wdb; wdb.set_trace()
+        
+        if batch.dgs_document:
+            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
+            file_name = institute.name + "-" + batch.batch_name + "-" + "DGS Document" + ".pdf"
 
-    #     if batch.dgs_document:
-    #         # pdf_data = base64.b64decode(batch.dgs_document)
-    #         pdf_data = batch.dgs_document
+            headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
+            return request.make_response(pdf_data, headers)
+        else:
+            return request.not_found()
+   
+    @http.route(['/my/ccmccandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacity(self,batch_id,institute_id,**kw ):
+        
+        batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
+        institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
+        
+        # import wdb; wdb.set_trace()
+        
+        if batch.dgs_document:
+            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
+            file_name = institute.name + "-" + batch.ccmc_batch_name + "-" + "DGS Document" + ".pdf"
 
-    #         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length',  u'%s' % len(pdf_data))]
-    #         return request.make_response(batch.dgs_document, headers=pdfhttpheaders)
-    #     else:
-    #         return request.not_found()
+            headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
+            return request.make_response(pdf_data, headers)
+        else:
+            return request.not_found()
         

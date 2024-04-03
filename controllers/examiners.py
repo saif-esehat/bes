@@ -1488,5 +1488,124 @@ class ExaminerPortal(CustomerPortal):
 
         return response
     
-    
+    @http.route('/my/uploadgskmarksheet', type='http', auth="user", website=True)
+    def upload_gsk_marksheet(self,**kw):
+        user_id = request.env.user.id
+        batch_id = int(kw['batch_id'])
+        # import wdb;wdb.set_trace();
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet_oral = workbook.sheet_by_index(0)
+        for row_num in range(2, worksheet_oral.nrows):  # Assuming first row contains headers
+            row = worksheet_oral.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            subject_area_1 = row[3]  
+            subject_area_2 = row[4]  
+            subject_area_3 = row[5]  
+            subject_area_4 = row[6]  
+            subject_area_5 = row[7]  
+            subject_area_6 = row[8] 
+            practical_journal = row[9] 
+            total_marks = 0  # Initialize total_marks to 0
+            if subject_area_1:
+                total_marks += int(subject_area_1)
+            if subject_area_2:
+                total_marks += int(subject_area_2)
+            if subject_area_3:
+                total_marks += int(subject_area_3)
+            if subject_area_4:
+                total_marks += int(subject_area_4)
+            if subject_area_5:
+                total_marks += int(subject_area_5)
+            if subject_area_6:
+                total_marks += int(subject_area_6)
+            if practical_journal:
+                total_marks += int(practical_journal)
+                    
+            remarks = row[10]
+            
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            
+            if candidate and candidate.gsk_oral:
+                candidate.gsk_oral.sudo().write({
+                    'subject_area_1':subject_area_1,
+                    'subject_area_2':subject_area_2,
+                    'subject_area_3':subject_area_3,
+                    'subject_area_4':subject_area_4,
+                    'subject_area_5':subject_area_5,
+                    'subject_area_6':subject_area_6,
+                    'practical_record_journals':practical_journal,
+                    'gsk_oral_total_marks':total_marks,
+                    'gsk_oral_remarks':remarks,
+
+
+                })
+
+        worksheet_practical = workbook.sheet_by_index(1)
+        for row_num in range(2, worksheet_practical.nrows):  # Assuming first row contains headers
+            row = worksheet_practical.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            climbing_mast = row[3]  
+            buoy_flags_recognition = row[4]  
+            bosun_chair = row[5]  
+            rig_stage = row[6]  
+            rig_pilot = row[7]  
+            rig_scaffolding = row[8] 
+            fast_ropes = row[9] 
+            knots_bend = row[10]
+            sounding_rod = row[11] 
+
+            gsk_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if climbing_mast:
+                gsk_practical_total_marks += int(climbing_mast)
+            if buoy_flags_recognition:
+                gsk_practical_total_marks += int(buoy_flags_recognition)
+            if bosun_chair:
+                gsk_practical_total_marks += int(bosun_chair)
+            if rig_stage:
+                gsk_practical_total_marks += int(rig_stage)
+            if rig_pilot:
+                gsk_practical_total_marks += int(rig_pilot)
+            if rig_scaffolding:
+                gsk_practical_total_marks += int(rig_scaffolding)
+            if fast_ropes:
+                gsk_practical_total_marks += int(fast_ropes)
+            if knots_bend:
+                gsk_practical_total_marks += int(knots_bend)
+            if sounding_rod:
+                gsk_practical_total_marks += int(sounding_rod)
+                
+            gsk_practical_remarks = row[12]
+
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            if candidate and candidate.gsk_prac:
+                candidate.gsk_prac.sudo().write({
+                    'climbing_mast':climbing_mast,
+                    'buoy_flags_recognition':buoy_flags_recognition,
+                    'bosun_chair':bosun_chair,
+                    'rig_stage':rig_stage,
+                    'rig_pilot':rig_pilot,
+                    'rig_scaffolding':rig_scaffolding,
+                    'fast_ropes':fast_ropes,
+                    'knots_bend':knots_bend,
+                    'sounding_rod':sounding_rod,
+                    'gsk_practical_total_marks':gsk_practical_total_marks,
+                    'gsk_practical_remarks':gsk_practical_remarks
+
+
+                })
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
+
     
