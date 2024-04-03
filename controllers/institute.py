@@ -26,7 +26,7 @@ class InstitutePortal(CustomerPortal):
         batches = request.env["institute.gp.batches"].sudo().search(
             [('institute_id', '=', institute_id)])
 
-        vals = {"batches": batches, "page_name": "gp_batches"}
+        vals = {"batches": batches,'institute_id':institute_id, "page_name": "gp_batches"}
         return request.render("bes.institute_gp_batches", vals)
 
     @http.route(['/my/gpbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
@@ -2407,3 +2407,19 @@ class InstitutePortal(CustomerPortal):
         # workbook.close()
 
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
+
+
+    # @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    # def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+    #     # import wdb; wdb.set_trace()
+    #     batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+
+    #     if batch.dgs_document:
+    #         # pdf_data = base64.b64decode(batch.dgs_document)
+    #         pdf_data = batch.dgs_document
+
+    #         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length',  u'%s' % len(pdf_data))]
+    #         return request.make_response(batch.dgs_document, headers=pdfhttpheaders)
+    #     else:
+    #         return request.not_found()
+        

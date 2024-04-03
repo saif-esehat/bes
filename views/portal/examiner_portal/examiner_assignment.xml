@@ -1,11 +1,19 @@
 <odoo>
 
      <template id="portal_breadcrumbs_examiner" inherit_id="portal.portal_breadcrumbs">
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+        <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
+            <li>
+                <a href="/my/home">
+                    <i class="fa fa-solid fa-home fa-2x" style='margin-right:8px;'></i>
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" class="fa fa-solid fa-home fa-2x">
             <t t-if="page_name == 'batches'">
                 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments">Batches</a>
+                    <!-- fa fa-solid fa-home fa-2x -->
                 </li>
                 
                 

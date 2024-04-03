@@ -1,8 +1,20 @@
 <odoo>
 
     <template id="portal_breadcrumbs_institute" inherit_id="portal.portal_breadcrumbs">
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+
+        <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
+            <li>
+                <a href="/my/home">
+                    <i class="fa fa-solid fa-home fa-2x" style='margin-right:8px;'></i>
+                </a>
+            </li>
+        </xpath>
+
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
+
+            
             <t t-if="page_name == 'gp_candidate'">
+               
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/gpbatch">GP Batches</a>
                 </li>
@@ -12,6 +24,7 @@
             </t>
 
             <t t-if="page_name == 'ccmc_candidate'">
+                
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
@@ -271,6 +284,8 @@
                         <th>Report</th>
                         <th>From Date.</th>
                         <th>To Date.</th>
+                        <!-- <th>Dgs Capacity</th> -->
+
                     </tr>
                 </thead>
                 <tbody>
@@ -314,7 +329,11 @@
                             <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                             </td>
+                            
                              </t>
+                             <!-- <td class="text-center">
+                                <a t-attf-href="/my/gpcandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" style="margin-top: 10px; margin-bottom: 20px;">DGS Capacity</a>
+                            </td> -->
                             <!-- <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
                             </td>
