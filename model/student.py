@@ -358,7 +358,8 @@ class GPSTCWCandidate(models.Model):
         ('efa', 'EFA'),
         ('fpff', 'FPFF'),
         ('pssr', 'PSSR'),
-        ('stsdsd', 'STSDSD')
+        ('stsdsd', 'STSDSD'),
+        ('bst', 'BST')
     ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("MTI Number")
@@ -716,7 +717,8 @@ class CCMCSTCWCandidate(models.Model):
         ('efa', 'EFA'),
         ('fpff', 'FPFF'),
         ('pssr', 'PSSR'),
-        ('stsdsd', 'STSDSD')
+        ('stsdsd', 'STSDSD'),
+        ('bst', 'BST')
     ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("Marine Training Institute Number")
