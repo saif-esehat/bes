@@ -242,7 +242,8 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         candidate = request.env["ccmc.candidate"].sudo().search(
             [('id', '=', candidate_id)])
-        vals = {'candidate': candidate, "page_name": "ccmc_candidate_form"}
+        batches = candidate.institute_batch_id
+        vals = {'candidate': candidate, "page_name": "ccmc_candidate_form",'batches':batches}
         return request.render("bes.ccmc_candidate_profile_view", vals)
     
     @http.route(['/getcountrystate'],method=["GET"], type="http", auth="user", website=True)
@@ -832,7 +833,6 @@ class InstitutePortal(CustomerPortal):
                             page=page,
                             step=10
                             )
-        # import wdb; wdb.set_trace()
         candidates = request.env["gp.candidate"].sudo().search(
             search_domain, limit= 10,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
@@ -849,6 +849,7 @@ class InstitutePortal(CustomerPortal):
                 'search':search,
                 'searchbar_inputs':search_list
                 }
+        # import wdb; wdb.set_trace()
         
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
@@ -897,7 +898,7 @@ class InstitutePortal(CustomerPortal):
                 'searchbar_inputs':search_list
                 }
         print("Batch id4",batch_id)
-        # self.env["gp.candidate"].sudo().search([('')])
+        # import wdb; wdb.set_trace()
         return request.render("bes.ccmc_candidate_portal_list", vals)
 
 
@@ -932,13 +933,29 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
+    
         user_id = request.env.user.id
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+    
+        # institute_id = request.env["bes.institute"].sudo().search(
+        #     [('user_id', '=', user_id)]).id
+
+        institute = request.env["bes.institute"].sudo().search([('user_id', '=', user_id)])
+
+        gp_batches = request.env['institute.gp.batches'].sudo().search([('institute_id','=',institute.id)])
+        ccmc_batches = request.env['institute.ccmc.batches'].sudo().search([('institute_id','=',institute.id)])
+            
+        
         lod = request.env["lod.institute"].sudo().search(
-            [('institute_id', '=', institute_id)])
+            [('institute_id', '=', institute.id)])
+        
+        # import wdb; wdb.set_trace()
+    
+        
         vals = {'lods': lod, 'page_name': 'lod_list'}
+    
         return request.render("bes.institute_document_list", vals)
+    
+    
 
     @http.route(['/my/updategpcandidate'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCandidate(self, **kw):
@@ -1053,6 +1070,8 @@ class InstitutePortal(CustomerPortal):
             return request.make_response(file_content, headers)
         else:
             return "File not found or empty."
+
+
 
     @http.route(['/my/institute_document'], type="http", method=["POST", "GET"], auth="user", website=True)
     def InstituteDocumentView(self, **kw):
@@ -1704,6 +1723,7 @@ class InstitutePortal(CustomerPortal):
             exam_id = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate_id)])[-1]
         except:
             raise ValidationError("Admit Card Not Found or Not Generated")
+        
         report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
@@ -2210,20 +2230,24 @@ class InstitutePortal(CustomerPortal):
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
-        file_content = kw.get("fileUpload").read()
-        filename = kw.get('fileUpload').filename
+        # import wdb; wdb.set_trace()
+        
+        batch_id = int(kw.get("batch_ccmc_id"))
+        
+        file_content = kw.get("ccmcfileUpload").read()
+        filename = kw.get('ccmcfileUpload').filename
 
         # workbook = xlsxwriter.Workbook(BytesIO(file_content))
         workbook = xlrd.open_workbook(file_contents=file_content)
         # worksheet = workbook.sheet_by_index(0)
-        # import wdb; wdb.set_trace()
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)
 
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
+            
+            
             
             indos_no = row[0]  
             full_name = row[1] 
@@ -2275,15 +2299,8 @@ class InstitutePortal(CustomerPortal):
                 'DL': 'Delhi',
                 'PY': 'Puducherry'
             }
-
-            # state = False
-            # for code, name in state_values.items():
-            #     if name.lower() == state_value.lower():
-            #         state = code
-            #     else:
-            #         state = False
-
-            # print("Stateeeeee",state)
+            
+            
                     
             data_xth_std_eng = 0
             data_twelfth_std_eng = 0
@@ -2298,10 +2315,13 @@ class InstitutePortal(CustomerPortal):
             email = row[10] 
 
             
+            # import wdb; wdb.set_trace()
+            
             xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            
             if type(xth_std_eng) in [int, float]:
                 data_xth_std_eng = float(xth_std_eng)
-            if type(xth_std_eng) == str:
+            elif type(xth_std_eng) == str:
                 if xth_std_eng.lower() == 'a+':
                     data_xth_std_eng = 90
                 if xth_std_eng.lower() == 'a':
@@ -2328,7 +2348,7 @@ class InstitutePortal(CustomerPortal):
             twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
             if type(twelfth_std_eng) in [int, float]:
                 data_twelfth_std_eng = float(twelfth_std_eng)
-            if type(twelfth_std_eng) == str:
+            elif type(twelfth_std_eng) == str:
                 if twelfth_std_eng.lower() == 'a+':
                     data_twelfth_std_eng = 90
                 if twelfth_std_eng.lower() == 'a':
@@ -2355,7 +2375,7 @@ class InstitutePortal(CustomerPortal):
             iti = row[13] # Assuming %ITI is the twelfth column
             if type(iti) in [int, float]:
                 data_iti = float(iti)
-            if type(iti) == str:
+            elif type(iti) == str:
                 if iti.lower() == 'a+':
                     data_iti = 90
                 if iti.lower() == 'a':

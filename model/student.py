@@ -257,7 +257,7 @@ class GPCandidate(models.Model):
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
         # gp_batches = self.institute_batch_id
-        print(gp_batches.batch_name,"sasasa")
+
         
         capacity = gp_batches.dgs_approved_capacity - 1
         # capacity = gp_batches.dgs_approved_capacity 
@@ -597,21 +597,15 @@ class CCMCCandidate(models.Model):
 
     @api.model
     def create(self, values):
-        print(values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         institute_batch_id  = int(values['institute_batch_id'])
         
         ccmc_batches = self.env["institute.ccmc.batches"].search([('id','=',institute_batch_id)])
-        print(ccmc_batches,"ccmc_vatches*******************************++++++++++++++++++++================================")
         
         capacity = ccmc_batches.dgs_approved_capacity - 1
-        print(capacity,"capacity*******************************++++++++++++++++++++================================")
         
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
-        print(candidate_count,"countttttttt*******************************++++++++++++++++++++================================")
         
-        print("noooooooooooooooooooooooooooooooooooooooo")
         if candidate_count <= capacity:
-            print("yesssssssssssssssssssssssssssssssssssssss")
             ccmc_candidate = super(CCMCCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -1360,6 +1354,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
             gsk_oral_marks = self.gp_exam.gsk_oral_marks
             gsk_total = self.gp_exam.gsk_total
             gsk_percentage = self.gp_exam.gsk_percentage
+            gsk_oral_prac_carry_forward = False
         
         else:
             gsk_practical = self.gp_exam.gsk_prac
@@ -1369,21 +1364,23 @@ class CandidateRegisterExamWizard(models.TransientModel):
             gsk_oral_marks = self.gp_exam.gsk_oral_marks
             gsk_total = self.gp_exam.gsk_total
             gsk_percentage = self.gp_exam.gsk_percentage
+            gsk_oral_prac_carry_forward = True
 
         
         
         if self.mek_oral_prac_status == 'failed':
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-            
             mek_practical_marks = self.gp_exam.mek_practical_marks
             mek_oral_marks = self.gp_exam.mek_oral_marks
             mek_total = self.gp_exam.mek_total
             mek_percentage = self.gp_exam.mek_percentage
+            mek_oral_prac_carry_forward = False
+            
         else:
             mek_practical = self.gp_exam.mek_prac
             mek_oral =self.gp_exam.mek_oral
-            
+            mek_oral_prac_carry_forward = True
             mek_practical_marks = self.gp_exam.mek_practical_marks
             mek_oral_marks = self.gp_exam.mek_oral_marks
             mek_total = self.gp_exam.mek_total
@@ -1393,12 +1390,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
         if self.mek_online_status == 'failed':
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
-            
+            mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
         else:
             mek_survey_qb_input = self.gp_exam.mek_online
-            
+            mek_online_carry_forward = True
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
         
@@ -1406,13 +1403,14 @@ class CandidateRegisterExamWizard(models.TransientModel):
         if self.gsk_online_status == 'failed':
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id})
-            
+            gsk_online_carry_forward = False
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
         else:
             gsk_survey_qb_input = self.gp_exam.gsk_online
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            gsk_online_carry_forward = True
             
         overall_marks = self.gp_exam.overall_marks
         
@@ -1441,7 +1439,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
                                 "gsk_online_marks":gsk_online_marks,
                                 "gsk_online_percentage":gsk_online_percentage,
                                 "overall_marks":overall_marks,
-                                "overall_percentage":overall_percentage     
+                                "overall_percentage":overall_percentage,
+                                "gsk_oral_prac_carry_forward":gsk_oral_prac_carry_forward,
+                                "mek_oral_prac_carry_forward":mek_oral_prac_carry_forward,
+                                "mek_online_carry_forward":mek_online_carry_forward,
+                                "gsk_online_carry_forward":gsk_online_carry_forward
+                                
                                 })
         
         # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
