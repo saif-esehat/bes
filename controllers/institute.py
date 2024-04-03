@@ -26,7 +26,7 @@ class InstitutePortal(CustomerPortal):
         batches = request.env["institute.gp.batches"].sudo().search(
             [('institute_id', '=', institute_id)])
 
-        vals = {"batches": batches, "page_name": "gp_batches"}
+        vals = {"batches": batches,'institute_id':institute_id, "page_name": "gp_batches"}
         return request.render("bes.institute_gp_batches", vals)
 
     @http.route(['/my/gpbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
@@ -2230,9 +2230,10 @@ class InstitutePortal(CustomerPortal):
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        # import wdb; wdb.set_trace()
         
         batch_id = int(kw.get("batch_ccmc_id"))
+        
+        # import wdb; wdb.set_trace()
         
         file_content = kw.get("ccmcfileUpload").read()
         filename = kw.get('ccmcfileUpload').filename
@@ -2251,6 +2252,7 @@ class InstitutePortal(CustomerPortal):
             
             indos_no = row[0]  
             full_name = row[1] 
+            
             date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
             date_string = date_value.strftime('%d-%b-%y') 
             # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
@@ -2260,7 +2262,10 @@ class InstitutePortal(CustomerPortal):
             dist_city = row[5]  # Assuming Dist./City is the fifth column
 
             pin_code = int(row[6])  # Assuming Pin code is the seventh column
+            
             state_value = row[7]  # Assuming State (short) is the sixth column
+            
+            import wdb; wdb.set_trace()
 
 
             state_values = {
@@ -2427,3 +2432,19 @@ class InstitutePortal(CustomerPortal):
         # workbook.close()
 
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
+
+
+    # @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    # def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+    #     # import wdb; wdb.set_trace()
+    #     batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+
+    #     if batch.dgs_document:
+    #         # pdf_data = base64.b64decode(batch.dgs_document)
+    #         pdf_data = batch.dgs_document
+
+    #         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length',  u'%s' % len(pdf_data))]
+    #         return request.make_response(batch.dgs_document, headers=pdfhttpheaders)
+    #     else:
+    #         return request.not_found()
+        
