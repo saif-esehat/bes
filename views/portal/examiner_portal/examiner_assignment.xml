@@ -2,13 +2,13 @@
 
      <template id="portal_breadcrumbs_examiner" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
-            <li>
+            <li style="font-size:16px;">
                 <a href="/my/home">
-                    <i class="fa fa-solid fa-home fa-2x" style='margin-right:8px;'></i>
+                    <i class="fa fa-solid fa-home fa" style='margin-right:8px;'> Home/</i>
                 </a>
             </li>
         </xpath>
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" class="fa fa-solid fa-home fa-2x">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" class="fa fa-solid fa-home fa" >
             <t t-if="page_name == 'batches'">
                 
                 <li class="breadcrumb-item">

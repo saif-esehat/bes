@@ -48,7 +48,8 @@ class InstituteGPBatches(models.Model):
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
-    
+    document_name = fields.Char("Name of Document")
+    document_file = fields.Binary(string='Upload Document')
     
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
@@ -191,9 +192,6 @@ class InstituteGPBatches(models.Model):
             mail_template.with_context(ctx).send_mail(self.id, force_send=True)
             
         gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]).ids
-        print(candidate_missing_data_id,"missssssssssssssssssssssssssssssssssssssss") 
-        print("")  
-        print(gp_candidates,"alllllllllllllllllllllllllllllllllllllll") 
         
         set1 = set(gp_candidates)
         set2 = set(candidate_missing_data_id)
@@ -338,6 +336,8 @@ class InstituteCcmcBatches(models.Model):
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
+    document_name = fields.Char("Name of Document")
+    document_file = fields.Binary(string='Upload Document')
     
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     

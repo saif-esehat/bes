@@ -4,7 +4,7 @@
             <t t-foreach="docs" t-as="o">
                 
                     <div class="header">
-                        <div class="container" style="text-align: center; font-size: 24px;  margin:0; margin-bottom: 10px;">
+                        <div class="container" style="text-align: center; font-size: 24px; margin-bottom: 10px;">
                             <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style=" width: 50px; height:50px;"/> 
                             <strong>Board of Examinations for Seafarers Trust</strong>
                         </div>
@@ -16,14 +16,20 @@
                                 <strong>Admit Card - GP Repeater Candidate</strong>
                             </t>
                         </div>
-                        <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
+                        <div style="font-size: 20px; text-align:center; margin-bottom: 10px;">
                             <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
                         </div>
                     
                     </div>
 
+<<<<<<< HEAD
+                    
+
+                    <div class="container" style="">
+=======
                    
                     <div class="container" style="position:relative;top:150px;">
+>>>>>>> d496ab981e9ed387850bbfc74b0720187a13febf
                         <div class="row" style="margin-bottom:4px ; ">
                             <div class="col-6">
                                 <span style="font-size:20px;">Examination: </span>
@@ -77,7 +83,11 @@
                         </div>
                     </div>
 
+<<<<<<< HEAD
+                    <div class="container" style="position:relative; margin:0;">
+=======
                     <div class="container" style="position:absolute; margin-top:150px;">
+>>>>>>> d496ab981e9ed387850bbfc74b0720187a13febf
                         <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: -250px; right: 15px;"/>
                         <t t-if="o.gp_candidate.candidate_signature">
                             <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: -80px; right: 8px;" />

@@ -3,9 +3,9 @@
     <template id="portal_breadcrumbs_institute" inherit_id="portal.portal_breadcrumbs">
 
         <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
-            <li>
+            <li style="font-size:16px;">
                 <a href="/my/home">
-                    <i class="fa fa-solid fa-home fa-2x" style='margin-right:8px;'></i>
+                    <i class="fa fa-solid fa-home fa" style='margin-right:8px;'> Home/</i>
                 </a>
             </li>
         </xpath>
@@ -282,8 +282,8 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
-                        <th>From Date.</th>
-                        <th>To Date.</th>
+                        <th>Candidate Count</th>
+                        <th>DGS Capacity</th>
                         <th>DGS Document</th>
                     </tr>
                 </thead>
@@ -313,11 +313,11 @@
                                 Download Report
                                 </a>
                             </td>
-                            <td class="text-left">
-                                <t t-out="batch.from_date" />
+                            <td class="text-center">
+                                <t t-out="batch.candidate_count" />
                             </td>
-                            <td class="text-left">
-                                <t t-out="batch.to_date" />
+                            <td class="text-center">
+                                <t t-out="batch.dgs_approved_capacity" />
                             </td>
                             
                             <t t-if="batch.state == '1-ongoing'">
@@ -328,7 +328,7 @@
                             
                             <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
-                                    <a t-attf-href="/my/gpbatch/downloadDGSdocument{{batch.id}}" class="fa">Download document</a>
+                                    <a t-attf-href="/my/gpcandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" class="fa">Download document</a>
                                 </td>
                             </t>
 
@@ -437,8 +437,9 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
-                        <th>From Date.</th>
-                        <th>To Date.</th>
+                        <th>Candidate Count</th>
+                        <th>DGS Capacity</th>
+                        <th>DGS Document</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -466,17 +467,24 @@
                                 Download Report
                                 </a>
                             </td>
-                            <td class="text-left">
-                                <t t-out="batch.ccmc_from_date" />
+                            <td class="text-center">
+                                <t t-out="batch.candidate_count" />
                             </td>
-                            <td class="text-left">
-                                <t t-out="batch.ccmc_to_date" />
+                            <td class="text-center">
+                                <t t-out="batch.dgs_approved_capacity" />
                             </td>
                             <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
                                 </td>
                             </t>
+
+                            <t t-if="batch.ccmc_state == '1-ongoing'">
+                                <td class="text-left">
+                                    <a t-attf-href="/my/ccmccandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" class="fa">Download document</a>
+                                </td>
+                            </t>
+
                             <t t-if="batch.ccmc_state == '2-indos_pending'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
@@ -603,7 +611,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
-                                                    <img src="/bes/static/src/img/150.png" class="card-img-top card-img sign-img" style="width: 150px; height:75px" alt="Signature" />
+                                                    <img src="/bes/static/src/img/150.png" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
                                                 </div>
                                             </div>
                                             <div class="col-md-5">

@@ -1161,11 +1161,9 @@ class GPExam(models.Model):
 
 
     def send_certificate_email(self):
-        print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
         # Replace 'bes.report_gp_certificate' with the correct XML ID of the report template
         report_template = self.env.ref('bes.report_gp_certificate')
         report_pdf = report_template.render_pdf([self.id])
-        print(report_pdf, "reportttttttttttttttttttttttttttttttttttttttttttttt")
         
         # Render the report as PDF
         # generated_report = report_template._render_qweb_pdf(self.id)
@@ -1193,7 +1191,6 @@ class GPExam(models.Model):
             'res_model': 'gp.exam.schedule',
         }
 
-        print(ir_values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         report_attachment = self.env['ir.attachment'].sudo().create(ir_values)
         
         # Get the email template
