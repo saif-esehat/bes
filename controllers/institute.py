@@ -2230,9 +2230,10 @@ class InstitutePortal(CustomerPortal):
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        # import wdb; wdb.set_trace()
         
         batch_id = int(kw.get("batch_ccmc_id"))
+        
+        # import wdb; wdb.set_trace()
         
         file_content = kw.get("ccmcfileUpload").read()
         filename = kw.get('ccmcfileUpload').filename
@@ -2251,6 +2252,7 @@ class InstitutePortal(CustomerPortal):
             
             indos_no = row[0]  
             full_name = row[1] 
+            
             date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
             date_string = date_value.strftime('%d-%b-%y') 
             # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
@@ -2260,7 +2262,10 @@ class InstitutePortal(CustomerPortal):
             dist_city = row[5]  # Assuming Dist./City is the fifth column
 
             pin_code = int(row[6])  # Assuming Pin code is the seventh column
+            
             state_value = row[7]  # Assuming State (short) is the sixth column
+            
+            import wdb; wdb.set_trace()
 
 
             state_values = {
