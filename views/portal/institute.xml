@@ -277,7 +277,7 @@
                 <tbody>
                     <t t-foreach="batches" t-as="batch">
                         <tr>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-if="batch.dgs_approval_state">
                                     <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.batch_name"/>
@@ -290,38 +290,38 @@
                                 </t>
                             </td>
 
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a t-attf-href="/my/gpbatch/faculties/{{batch.id}}" class="fa">
                                 Faculty
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
                                 Download Report
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="batch.from_date" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="batch.to_date" />
                             </td>
                             
                             <t t-if="batch.state == '1-ongoing'">
-                                <td class="text-center">
+                                <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
                                 </td>
                             </t>
                             
                             <t t-if="batch.state == '1-ongoing'">
-                                <td class="text-center">
+                                <td class="text-left">
                                     <a t-attf-href="/my/gpbatch/downloadDGSdocument{{batch.id}}" class="fa">Download document</a>
                                 </td>
                             </t>
 
                             <t t-if="batch.state == '2-indos_pending'">
-                                <td class="text-center">
-                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                <td class="text-left">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t>
 
@@ -431,7 +431,7 @@
                 <tbody>
                     <t t-foreach="batches" t-as="batch">
                         <tr>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-if="batch.dgs_approval_state">
                                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.ccmc_batch_name"/>
@@ -443,38 +443,33 @@
                                     </span>
                                 </t>
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a t-attf-href="/my/ccmcbatch/faculties/{{batch.id}}" class="fa">
                                 Faculty
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <a t-attf-href="/my/ccmc_batches/download_report/{{batch.id}}" class="fa">
                                 Download Report
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="batch.ccmc_from_date" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <t t-out="batch.ccmc_to_date" />
                             </td>
-                            <t t-if="batch.dgs_approval_state != True">
-                                <td class="text-center">
+                            <t t-if="batch.ccmc_state == '1-ongoing'">
+                                <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Approval Capacity</a>
                                 </td>
                             </t>
                             <t t-if="batch.ccmc_state == '2-indos_pending'">
-                                <td class="text-center">
-                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                <td class="text-left">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t>
-                            <!-- <td class="text-center">
-                                <t t-out="candidate.candidate_code" />
-                            </td>
-                            <td class="text-center">
-                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-                            </td> -->
+                            
 
                         </tr>
                     </t>
