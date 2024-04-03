@@ -152,11 +152,24 @@
                             <field name="gsk_online_percentage" readonly="1"/>
                             <field name="overall_percentage" readonly="1"/>
                         </group>
+                        <group style="width:100%" invisible="1">
+                            <field name="gsk_oral_prac_carry_forward" readonly="1"/>
+                            <field name="mek_oral_prac_carry_forward" readonly="1"/>
+                            <field name="mek_online_carry_forward" readonly="1"/>
+                            <field name="gsk_online_carry_forward" readonly="1"/>
+                        </group>
+                        <group style="width:100%" >
+                            <div>
+                                <p><strong>Note:</strong> <span style="color: orange;"> Subject Passed status in light blue color indicate that marks are carry forwarded from previous attempted Marksheet</span></p>
+                            </div>
+
+
+                        </group>
                         <group style="width:50%">
-                            <field name="gsk_oral_prac_status" readonly="1"/>
-                            <field name="mek_oral_prac_status" readonly="1"/>
-                            <field name="mek_online_status" readonly="1"/>
-                            <field name="gsk_online_status" readonly="1"/>
+                            <field name="gsk_oral_prac_status" widget="badge" decoration-info="gsk_oral_prac_carry_forward == True"  readonly="1"/>
+                            <field name="mek_oral_prac_status" widget="badge" decoration-info="mek_oral_prac_carry_forward == True"  readonly="1"/>
+                            <field name="mek_online_status" widget="badge" decoration-info="mek_online_carry_forward == True"  readonly="1"/>
+                            <field name="gsk_online_status" widget="badge" decoration-info="gsk_online_carry_forward == True" readonly="1"/>
                             <field name="exam_criteria" readonly="1"/>
                             <field name="stcw_criteria" readonly="1"/>
                             <field name="attendance_criteria" readonly="1"/>

@@ -1,11 +1,19 @@
 <odoo>
 
      <template id="portal_breadcrumbs_examiner" inherit_id="portal.portal_breadcrumbs">
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+        <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
+            <li>
+                <a href="/my/home">
+                    <i class="fa fa-solid fa-home fa-2x" style='margin-right:8px;'></i>
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" class="fa fa-solid fa-home fa-2x">
             <t t-if="page_name == 'batches'">
                 
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments">Batches</a>
+                    <!-- fa fa-solid fa-home fa-2x -->
                 </li>
                 
                 
@@ -394,9 +402,7 @@
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Oral</th>
                         <th t-if="examiner_subject == 'MEK'" class="text-left">MEK Practical</th>
-
                         <th t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">CCMC Oral</th>
-
                         <th t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">CCMC Practical</th>
 
 
@@ -423,7 +429,7 @@
                                 <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.indos_no" />
                             </td>
                             <td  class="text-left">
-                                <t t-out="marksheet.examiners_id.prac_oral_id.course.name" />
+                                <t t-out="marksheet.examiners_id.prac_oral_id.course.course_code" />
                             </td>
 
                             <td t-if="examiner_subject == 'GSK'" class="text-left">

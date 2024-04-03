@@ -722,6 +722,11 @@ class GPExam(models.Model):
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
     
+    gsk_oral_prac_carry_forward = fields.Boolean("GSK Oral/Prac Carry Forward")
+    mek_oral_prac_carry_forward = fields.Boolean("MEK Oral/Prac Carry Forward")
+    mek_online_carry_forward = fields.Boolean("MEK Online Carry Forward")
+    gsk_online_carry_forward = fields.Boolean("GSK Online Carry Forward")
+
     exam_pass_date = fields.Date(string="Date of Examination Passed:")
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
     rank = fields.Char("Rank",compute='_compute_rank')
