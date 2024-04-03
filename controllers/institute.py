@@ -929,7 +929,7 @@ class InstitutePortal(CustomerPortal):
         vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
-
+   
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
         user_id = request.env.user.id
@@ -2394,7 +2394,6 @@ class InstitutePortal(CustomerPortal):
                 'phone': phone,
                 'mobile': mobile,
                 'email': email,
-
                 'city': dist_city,
                 'state_id': state,
                 'zip': pin_code,
@@ -2407,3 +2406,16 @@ class InstitutePortal(CustomerPortal):
         # workbook.close()
 
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
+
+    @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+        # import wdb; wdb.set_trace()
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        print(batch)
+
+        if batch.dgs_document:
+            pdf_data = base64.b64decode(batch.dgs_document)
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf_data))]
+            return request.make_response(pdf_data, headers=pdfhttpheaders)
+        else:
+            return request.not_found()
