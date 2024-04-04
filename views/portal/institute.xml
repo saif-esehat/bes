@@ -1102,6 +1102,7 @@
                                                                                 <option value="fpff">FPFF</option>
                                                                                 <option value="pssr">PSSR</option>
                                                                                 <option value="stsdsd">STSDSD</option>
+                                                                                <option value="bst">BST</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -3695,6 +3696,8 @@
                                                                                 <option value="fpff">FPFF</option>
                                                                                 <option value="pssr">PSSR</option>
                                                                                 <option value="stsdsd">STSDSD</option>
+                                                                                <option value="bst">BST</option>
+
                                                                             </select>
                                                                         </div>
                                                                     </div>
