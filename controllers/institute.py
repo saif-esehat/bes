@@ -2046,191 +2046,192 @@ class InstitutePortal(CustomerPortal):
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
-            indos_no = row[0]  
-            full_name = row[1] 
             try:
-                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
-                date_string = date_value.strftime('%d-%b-%y') 
-            except:   
-                raise ValidationError('Date Format Not Correct Please Check Data format')
-            
-            dob = date_value
-            
-            street1 = row[3]
-            street2 = row[4]  
-            dist_city = row[5]  # Assuming Dist./City is the fifth column
-
-            pin_code = int(row[6])  # Assuming Pin code is the seventh column
-            state_value = row[7]  # Assuming State (short) is the sixth column
-
-
-            state_values = {
-                'JK': 'Jammu and Kashmir',
-                'MH': 'Maharashtra',
-                'AP': 'Andhra Pradesh',
-                'AR': 'Arunachal Pradesh',
-                'AS': 'Assam',
-                'BR': 'Bihar',
-                'CT': 'Chhattisgarh',
-                'GA': 'Goa',
-                'GJ': 'Gujarat',
-                'HR': 'Haryana',
-                'HP': 'Himachal Pradesh',
-                'JH': 'Jharkhand',
-                'KA': 'Karnataka',
-                'KL': 'Kerala',
-                'MP': 'Madhya Pradesh',
-                'MN': 'Manipur',
-                'ML': 'Meghalaya',
-                'MZ': 'Mizoram',
-                'NL': 'Nagaland',
-                'OD': 'Odisha',
-                'PB': 'Punjab',
-                'RJ': 'Rajasthan',
-                'SK': 'Sikkim',
-                'TN': 'Tamil Nadu',
-                'TG': 'Telangana',
-                'TR': 'Tripura',
-                'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
-                'WB': 'West Bengal',
-                'AN': 'Andaman and Nicobar Islands',
-                'CH': 'Chandigarh',
-                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                'LD': 'Lakshadweep',
-                'DL': 'Delhi',
-                'PY': 'Puducherry'
-            }
-
-            # state = False
-            # for code, name in state_values.items():
-            #     if name.lower() == state_value.lower():
-            #         state = code
-            #     else:
-            #         state = False
-
-            # print("Stateeeeee",state)
-                    
-            data_xth_std_eng = 0
-            data_twelfth_std_eng = 0
-            data_iti = 0
-            state = request.env['res.country.state'].sudo().search(
-                [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
-
-            phone = str(row[8])
-            mobile = str(row[9]) 
-            email = row[10] 
-
-            
-            xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
-            
-            
-            if type(xth_std_eng) in [int, float]:
-                data_xth_std_eng = float(xth_std_eng)
-            # import wdb; wdb.set_trace()
-            elif type(xth_std_eng) == str:
+                indos_no = row[0]  
+                full_name = row[1] 
                 
-                if xth_std_eng.lower() == 'a+':
-                    data_xth_std_eng = 90
-                if xth_std_eng.lower() == 'a':
-                    data_xth_std_eng = 80
-                if xth_std_eng.lower() == 'b+':
-                    data_xth_std_eng = 70
-                if xth_std_eng.lower() == 'b':
-                    data_xth_std_eng = 60
-                if xth_std_eng.lower() == 'c+':
-                    data_xth_std_eng = 50
-                if xth_std_eng.lower() == 'c':
-                    data_xth_std_eng = 40
-                if xth_std_eng.lower() == 'd+':
-                    data_xth_std_eng = 30
-                if xth_std_eng.lower() == 'd':
-                    data_xth_std_eng = 20
-                if xth_std_eng.lower() == 'e':
-                    data_xth_std_eng = 19
-               
-            else:
+                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                date_string = date_value.strftime('%d-%b-%y')             
+                dob = date_value
+                
+                street1 = row[3]
+                street2 = row[4]  
+                dist_city = row[5]  # Assuming Dist./City is the fifth column
+
+                pin_code = int(row[6])  # Assuming Pin code is the seventh column
+                state_value = row[7]  # Assuming State (short) is the sixth column
+
+
+                state_values = {
+                    'JK': 'Jammu and Kashmir',
+                    'MH': 'Maharashtra',
+                    'AP': 'Andhra Pradesh',
+                    'AR': 'Arunachal Pradesh',
+                    'AS': 'Assam',
+                    'BR': 'Bihar',
+                    'CT': 'Chhattisgarh',
+                    'GA': 'Goa',
+                    'GJ': 'Gujarat',
+                    'HR': 'Haryana',
+                    'HP': 'Himachal Pradesh',
+                    'JH': 'Jharkhand',
+                    'KA': 'Karnataka',
+                    'KL': 'Kerala',
+                    'MP': 'Madhya Pradesh',
+                    'MN': 'Manipur',
+                    'ML': 'Meghalaya',
+                    'MZ': 'Mizoram',
+                    'NL': 'Nagaland',
+                    'OD': 'Odisha',
+                    'PB': 'Punjab',
+                    'RJ': 'Rajasthan',
+                    'SK': 'Sikkim',
+                    'TN': 'Tamil Nadu',
+                    'TG': 'Telangana',
+                    'TR': 'Tripura',
+                    'UP': 'Uttar Pradesh',
+                    'UT': 'Uttarakhand',
+                    'WB': 'West Bengal',
+                    'AN': 'Andaman and Nicobar Islands',
+                    'CH': 'Chandigarh',
+                    'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                    'LD': 'Lakshadweep',
+                    'DL': 'Delhi',
+                    'PY': 'Puducherry'
+                }
+
+                # state = False
+                # for code, name in state_values.items():
+                #     if name.lower() == state_value.lower():
+                #         state = code
+                #     else:
+                #         state = False
+
+                # print("Stateeeeee",state)
+                        
+                data_xth_std_eng = 0
+                data_twelfth_std_eng = 0
+                data_iti = 0
+                state = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
+
+                phone = int(row[8])
+                mobile = int(row[9]) 
+                email = row[10] 
+
+                
+                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+                
+                
+                if type(xth_std_eng) in [int, float]:
+                    data_xth_std_eng = float(xth_std_eng)
                 # import wdb; wdb.set_trace()
-                raise ValidationError("Invalid marks/percentage")
-
-            twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
-            if type(twelfth_std_eng) in [int, float]:
-                data_twelfth_std_eng = float(twelfth_std_eng)
-            elif type(twelfth_std_eng) == str:
-                if twelfth_std_eng.lower() == 'a+':
-                    data_twelfth_std_eng = 90
-                if twelfth_std_eng.lower() == 'a':
-                    data_twelfth_std_eng = 80
-                if twelfth_std_eng.lower() == 'b+':
-                    data_twelfth_std_eng = 70
-                if twelfth_std_eng.lower() == 'b':
-                    data_twelfth_std_eng = 60
-                if twelfth_std_eng.lower() == 'c+':
-                    data_twelfth_std_eng = 50
-                if twelfth_std_eng.lower() == 'c':
-                    data_twelfth_std_eng = 40
-                if twelfth_std_eng.lower() == 'd+':
-                    data_twelfth_std_eng = 30
-                if twelfth_std_eng.lower() == 'd':
-                    data_twelfth_std_eng = 20
-                if twelfth_std_eng.lower() == 'e':
-                    data_twelfth_std_eng = 19
+                elif type(xth_std_eng) == str:
+                    
+                    if xth_std_eng.lower() == 'a+':
+                        data_xth_std_eng = 90
+                    if xth_std_eng.lower() == 'a':
+                        data_xth_std_eng = 80
+                    if xth_std_eng.lower() == 'b+':
+                        data_xth_std_eng = 70
+                    if xth_std_eng.lower() == 'b':
+                        data_xth_std_eng = 60
+                    if xth_std_eng.lower() == 'c+':
+                        data_xth_std_eng = 50
+                    if xth_std_eng.lower() == 'c':
+                        data_xth_std_eng = 40
+                    if xth_std_eng.lower() == 'd+':
+                        data_xth_std_eng = 30
+                    if xth_std_eng.lower() == 'd':
+                        data_xth_std_eng = 20
+                    if xth_std_eng.lower() == 'e':
+                        data_xth_std_eng = 19
+                
                 else:
-                    data_twelfth_std_eng = 0
-            else:
-                raise ValidationError("Invalid marks/percentage")
+                    # import wdb; wdb.set_trace()
+                    raise ValidationError("Invalid marks/percentage")
 
-            iti = row[13] # Assuming %ITI is the twelfth column
-            if type(iti) in [int, float]:
-                data_iti = float(iti)
-            elif type(iti) == str:
-                if iti.lower() == 'a+':
-                    data_iti = 90
-                if iti.lower() == 'a':
-                    data_iti = 80
-                if iti.lower() == 'b+':
-                    data_iti = 70
-                if iti.lower() == 'b':
-                    data_iti = 60
-                if iti.lower() == 'c+':
-                    data_iti = 50
-                if iti.lower() == 'c':
-                    data_iti = 40
-                if iti.lower() == 'd+':
-                    data_iti = 30
-                if iti.lower() == 'd':
-                    data_iti = 20
-                if iti.lower() == 'e':
-                    data_iti = 19
+                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+                if type(twelfth_std_eng) in [int, float]:
+                    data_twelfth_std_eng = float(twelfth_std_eng)
+                elif type(twelfth_std_eng) == str:
+                    if twelfth_std_eng.lower() == 'a+':
+                        data_twelfth_std_eng = 90
+                    if twelfth_std_eng.lower() == 'a':
+                        data_twelfth_std_eng = 80
+                    if twelfth_std_eng.lower() == 'b+':
+                        data_twelfth_std_eng = 70
+                    if twelfth_std_eng.lower() == 'b':
+                        data_twelfth_std_eng = 60
+                    if twelfth_std_eng.lower() == 'c+':
+                        data_twelfth_std_eng = 50
+                    if twelfth_std_eng.lower() == 'c':
+                        data_twelfth_std_eng = 40
+                    if twelfth_std_eng.lower() == 'd+':
+                        data_twelfth_std_eng = 30
+                    if twelfth_std_eng.lower() == 'd':
+                        data_twelfth_std_eng = 20
+                    if twelfth_std_eng.lower() == 'e':
+                        data_twelfth_std_eng = 19
+                    else:
+                        data_twelfth_std_eng = 0
                 else:
-                    data_iti = 0
-            else:
-                raise ValidationError("Invalid marks/percentage")
+                    raise ValidationError("Invalid marks/percentage")
 
-            candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+                iti = row[13] # Assuming %ITI is the twelfth column
+                if type(iti) in [int, float]:
+                    data_iti = float(iti)
+                elif type(iti) == str:
+                    if iti.lower() == 'a+':
+                        data_iti = 90
+                    if iti.lower() == 'a':
+                        data_iti = 80
+                    if iti.lower() == 'b+':
+                        data_iti = 70
+                    if iti.lower() == 'b':
+                        data_iti = 60
+                    if iti.lower() == 'c+':
+                        data_iti = 50
+                    if iti.lower() == 'c':
+                        data_iti = 40
+                    if iti.lower() == 'd+':
+                        data_iti = 30
+                    if iti.lower() == 'd':
+                        data_iti = 20
+                    if iti.lower() == 'e':
+                        data_iti = 19
+                    else:
+                        data_iti = 0
+                else:
+                    raise ValidationError("Invalid marks/percentage")
 
-            new_candidate = request.env['gp.candidate'].sudo().create({
-                'name': full_name,
-                'institute_id': institute_id,
-                'indos_no': indos_no,
-                'dob': dob,
-                # 'roll_no': roll_no,
-                # 'candidate_code': code_no,
-                'institute_batch_id': batch_id,
-                'street': street1,
-                'street2': street2,
-                'phone': phone,
-                'mobile': mobile,
-                'email': email,
+                candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
-                'city': dist_city,
-                'state_id': state,
-                'zip': pin_code,
-                'tenth_percent': data_xth_std_eng,
-                'twelve_percent': data_twelfth_std_eng,
-                'iti_percent': data_iti,
-                'sc_st': candidate_st
-            })
+                new_candidate = request.env['gp.candidate'].sudo().create({
+                    'name': full_name,
+                    'institute_id': institute_id,
+                    'indos_no': indos_no,
+                    'dob': dob,
+                    # 'roll_no': roll_no,
+                    # 'candidate_code': code_no,
+                    'institute_batch_id': batch_id,
+                    'street': street1,
+                    'street2': street2,
+                    'phone': phone,
+                    'mobile': mobile,
+                    'email': email,
+
+                    'city': dist_city,
+                    'state_id': state,
+                    'zip': pin_code,
+                    'tenth_percent': data_xth_std_eng,
+                    'twelve_percent': data_twelfth_std_eng,
+                    'iti_percent': data_iti,
+                    'sc_st': candidate_st
+                })
+            except:
+                error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
+                raise ValidationError(error_val)
 
         # workbook.close()
 
@@ -2263,187 +2264,186 @@ class InstitutePortal(CustomerPortal):
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
-            
-            
-            indos_no = row[0]  
-            full_name = row[1] 
-            
-            date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
-            date_string = date_value.strftime('%d-%b-%y') 
-            # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
-            dob = date_value
-            street1 = row[3]
-            street2 = row[4]  
-            dist_city = row[5]  # Assuming Dist./City is the fifth column
-
-            pin_code = int(row[6])  # Assuming Pin code is the seventh column
-            
-            state_value = row[7]  # Assuming State (short) is the sixth column
-            
-            # import wdb; wdb.set_trace()
-
-
-            state_values = {
-                'MH': 'Maharashtra',
-                'AP': 'Andhra Pradesh',
-                'AR': 'Arunachal Pradesh',
-                'AS': 'Assam',
-                'BR': 'Bihar',
-                'CT': 'Chhattisgarh',
-                'GA': 'Goa',
-                'GJ': 'Gujarat',
-                'HR': 'Haryana',
-                'HP': 'Himachal Pradesh',
-                'JH': 'Jharkhand',
-                'KA': 'Karnataka',
-                'KL': 'Kerala',
-                'MP': 'Madhya Pradesh',
-                'MN': 'Manipur',
-                'ML': 'Meghalaya',
-                'MZ': 'Mizoram',
-                'NL': 'Nagaland',
-                'OD': 'Odisha',
-                'PB': 'Punjab',
-                'RJ': 'Rajasthan',
-                'SK': 'Sikkim',
-                'TN': 'Tamil Nadu',
-                'TG': 'Telangana',
-                'TR': 'Tripura',
-                'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
-                'WB': 'West Bengal',
-                'AN': 'Andaman and Nicobar Islands',
-                'CH': 'Chandigarh',
-                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                'LD': 'Lakshadweep',
-                'DL': 'Delhi',
-                'PY': 'Puducherry'
-            }
-            
-            
-                    
-            data_xth_std_eng = 0
-            data_twelfth_std_eng = 0
-            data_iti = 0
-
-            state = request.env['res.country.state'].sudo().search(
-                [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
-            
-
-            phone = str(row[8])
-            mobile = str(row[9]) 
-            email = row[10] 
-
-            
             # import wdb; wdb.set_trace()
             
-            xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+            try: 
+                indos_no = row[0]  
+                full_name = row[1] 
+
+                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                date_string = date_value.strftime('%d-%b-%y') 
+                dob = date_value
+
+                street1 = row[3]
+                street2 = row[4]  
+                dist_city = row[5]  # Assuming Dist./City is the fifth column
+                pin_code = int(row[6])  # Assuming Pin code is the seventh column
+                state_value = row[7]  # Assuming State (short) is the sixth column
+
+                # import wdb; wdb.set_trace()
+                
+                state_values = {
+                    'MH': 'Maharashtra',
+                    'AP': 'Andhra Pradesh',
+                    'AR': 'Arunachal Pradesh',
+                    'AS': 'Assam',
+                    'BR': 'Bihar',
+                    'CT': 'Chhattisgarh',
+                    'GA': 'Goa',
+                    'GJ': 'Gujarat',
+                    'HR': 'Haryana',
+                    'HP': 'Himachal Pradesh',
+                    'JH': 'Jharkhand',
+                    'KA': 'Karnataka',
+                    'KL': 'Kerala',
+                    'MP': 'Madhya Pradesh',
+                    'MN': 'Manipur',
+                    'ML': 'Meghalaya',
+                    'MZ': 'Mizoram',
+                    'NL': 'Nagaland',
+                    'OD': 'Odisha',
+                    'PB': 'Punjab',
+                    'RJ': 'Rajasthan',
+                    'SK': 'Sikkim',
+                    'TN': 'Tamil Nadu',
+                    'TG': 'Telangana',
+                    'TR': 'Tripura',
+                    'UP': 'Uttar Pradesh',
+                    'UT': 'Uttarakhand',
+                    'WB': 'West Bengal',
+                    'AN': 'Andaman and Nicobar Islands',
+                    'CH': 'Chandigarh',
+                    'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                    'LD': 'Lakshadweep',
+                    'DL': 'Delhi',
+                    'PY': 'Puducherry'
+                }
+                
+                state = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
+                
+                
+                        
+                data_xth_std_eng = 0
+                data_twelfth_std_eng = 0
+                data_iti = 0
+
+
+                phone = int(row[8])
+                mobile = int(row[9]) 
+                email = row[10] 
+
+                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+                
+                if type(xth_std_eng) in [int, float]:
+                    data_xth_std_eng = float(xth_std_eng)
+                elif type(xth_std_eng) == str:
+                    if xth_std_eng.lower() == 'a+':
+                        data_xth_std_eng = 90
+                    if xth_std_eng.lower() == 'a':
+                        data_xth_std_eng = 80
+                    if xth_std_eng.lower() == 'b+':
+                        data_xth_std_eng = 70
+                    if xth_std_eng.lower() == 'b':
+                        data_xth_std_eng = 60
+                    if xth_std_eng.lower() == 'c+':
+                        data_xth_std_eng = 50
+                    if xth_std_eng.lower() == 'c':
+                        data_xth_std_eng = 40
+                    if xth_std_eng.lower() == 'd+':
+                        data_xth_std_eng = 30
+                    if xth_std_eng.lower() == 'd':
+                        data_xth_std_eng = 20
+                    if xth_std_eng.lower() == 'e':
+                        data_xth_std_eng = 19
+                    else:
+                        data_xth_std_eng = 0
+                else:
+                    raise ValidationError("Invalid marks/percentage")
+
+                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+                if type(twelfth_std_eng) in [int, float]:
+                    data_twelfth_std_eng = float(twelfth_std_eng)
+                elif type(twelfth_std_eng) == str:
+                    if twelfth_std_eng.lower() == 'a+':
+                        data_twelfth_std_eng = 90
+                    if twelfth_std_eng.lower() == 'a':
+                        data_twelfth_std_eng = 80
+                    if twelfth_std_eng.lower() == 'b+':
+                        data_twelfth_std_eng = 70
+                    if twelfth_std_eng.lower() == 'b':
+                        data_twelfth_std_eng = 60
+                    if twelfth_std_eng.lower() == 'c+':
+                        data_twelfth_std_eng = 50
+                    if twelfth_std_eng.lower() == 'c':
+                        data_twelfth_std_eng = 40
+                    if twelfth_std_eng.lower() == 'd+':
+                        data_twelfth_std_eng = 30
+                    if twelfth_std_eng.lower() == 'd':
+                        data_twelfth_std_eng = 20
+                    if twelfth_std_eng.lower() == 'e':
+                        data_twelfth_std_eng = 19
+                    else:
+                        data_twelfth_std_eng = 0
+                else:
+                    raise ValidationError("Invalid marks/percentage")
+
+                iti = row[13] # Assuming %ITI is the twelfth column
+                if type(iti) in [int, float]:
+                    data_iti = float(iti)
+                elif type(iti) == str:
+                    if iti.lower() == 'a+':
+                        data_iti = 90
+                    if iti.lower() == 'a':
+                        data_iti = 80
+                    if iti.lower() == 'b+':
+                        data_iti = 70
+                    if iti.lower() == 'b':
+                        data_iti = 60
+                    if iti.lower() == 'c+':
+                        data_iti = 50
+                    if iti.lower() == 'c':
+                        data_iti = 40
+                    if iti.lower() == 'd+':
+                        data_iti = 30
+                    if iti.lower() == 'd':
+                        data_iti = 20
+                    if iti.lower() == 'e':
+                        data_iti = 19
+                    else:
+                        data_iti = 0
+                else:
+                    raise ValidationError("Invalid marks/percentage")
+
+                candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+
+                new_candidate = request.env['ccmc.candidate'].sudo().create({
+                    'name': full_name,
+                    'institute_id': institute_id,
+                    'indos_no': indos_no,
+                    'dob': dob,
+                    # 'roll_no': roll_no,
+                    # 'candidate_code': code_no,
+                    'institute_batch_id': batch_id,
+                    'street': street1,
+                    'street2': street2,
+                    'phone': phone,
+                    'mobile': mobile,
+                    'email': email,
+
+                    'city': dist_city,
+                    'state_id': state,
+                    'zip': pin_code,
+                    'tenth_percent': data_xth_std_eng,
+                    'twelve_percent': data_twelfth_std_eng,
+                    'iti_percent': data_iti,
+                    'sc_st': candidate_st
+                })
+                
+            except:
+                error_val = "Excel Sheet format incorrect \n "+" There is problem in row no " + str(row_num)
+                raise ValidationError(error_val)
             
-            if type(xth_std_eng) in [int, float]:
-                data_xth_std_eng = float(xth_std_eng)
-            elif type(xth_std_eng) == str:
-                if xth_std_eng.lower() == 'a+':
-                    data_xth_std_eng = 90
-                if xth_std_eng.lower() == 'a':
-                    data_xth_std_eng = 80
-                if xth_std_eng.lower() == 'b+':
-                    data_xth_std_eng = 70
-                if xth_std_eng.lower() == 'b':
-                    data_xth_std_eng = 60
-                if xth_std_eng.lower() == 'c+':
-                    data_xth_std_eng = 50
-                if xth_std_eng.lower() == 'c':
-                    data_xth_std_eng = 40
-                if xth_std_eng.lower() == 'd+':
-                    data_xth_std_eng = 30
-                if xth_std_eng.lower() == 'd':
-                    data_xth_std_eng = 20
-                if xth_std_eng.lower() == 'e':
-                    data_xth_std_eng = 19
-                else:
-                    data_xth_std_eng = 0
-            else:
-                raise ValidationError("Invalid marks/percentage")
-
-            twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
-            if type(twelfth_std_eng) in [int, float]:
-                data_twelfth_std_eng = float(twelfth_std_eng)
-            elif type(twelfth_std_eng) == str:
-                if twelfth_std_eng.lower() == 'a+':
-                    data_twelfth_std_eng = 90
-                if twelfth_std_eng.lower() == 'a':
-                    data_twelfth_std_eng = 80
-                if twelfth_std_eng.lower() == 'b+':
-                    data_twelfth_std_eng = 70
-                if twelfth_std_eng.lower() == 'b':
-                    data_twelfth_std_eng = 60
-                if twelfth_std_eng.lower() == 'c+':
-                    data_twelfth_std_eng = 50
-                if twelfth_std_eng.lower() == 'c':
-                    data_twelfth_std_eng = 40
-                if twelfth_std_eng.lower() == 'd+':
-                    data_twelfth_std_eng = 30
-                if twelfth_std_eng.lower() == 'd':
-                    data_twelfth_std_eng = 20
-                if twelfth_std_eng.lower() == 'e':
-                    data_twelfth_std_eng = 19
-                else:
-                    data_twelfth_std_eng = 0
-            else:
-                raise ValidationError("Invalid marks/percentage")
-
-            iti = row[13] # Assuming %ITI is the twelfth column
-            if type(iti) in [int, float]:
-                data_iti = float(iti)
-            elif type(iti) == str:
-                if iti.lower() == 'a+':
-                    data_iti = 90
-                if iti.lower() == 'a':
-                    data_iti = 80
-                if iti.lower() == 'b+':
-                    data_iti = 70
-                if iti.lower() == 'b':
-                    data_iti = 60
-                if iti.lower() == 'c+':
-                    data_iti = 50
-                if iti.lower() == 'c':
-                    data_iti = 40
-                if iti.lower() == 'd+':
-                    data_iti = 30
-                if iti.lower() == 'd':
-                    data_iti = 20
-                if iti.lower() == 'e':
-                    data_iti = 19
-                else:
-                    data_iti = 0
-            else:
-                raise ValidationError("Invalid marks/percentage")
-
-            candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
-
-            new_candidate = request.env['ccmc.candidate'].sudo().create({
-                'name': full_name,
-                'institute_id': institute_id,
-                'indos_no': indos_no,
-                'dob': dob,
-                # 'roll_no': roll_no,
-                # 'candidate_code': code_no,
-                'institute_batch_id': batch_id,
-                'street': street1,
-                'street2': street2,
-                'phone': phone,
-                'mobile': mobile,
-                'email': email,
-
-                'city': dist_city,
-                'state_id': state,
-                'zip': pin_code,
-                'tenth_percent': data_xth_std_eng,
-                'twelve_percent': data_twelfth_std_eng,
-                'iti_percent': data_iti,
-                'sc_st': candidate_st
-            })
-
         # workbook.close()
 
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
