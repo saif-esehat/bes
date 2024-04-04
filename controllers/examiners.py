@@ -466,8 +466,7 @@ class ExaminerPortal(CustomerPortal):
                 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
-                'mek_practical_draft_confirm': state,
-                'page_name':'mek_practical'
+                'mek_practical_draft_confirm': state
             }
             
             marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])

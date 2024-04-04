@@ -1773,7 +1773,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
 
@@ -1919,7 +1919,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
