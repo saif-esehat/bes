@@ -1022,8 +1022,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area7">Welding (1 Task)</label>
-                                        <input type="number" min="0" max="10" class="form-control" id="subject_area7" name="subject_area7"  t-att-value="mek_prac_marksheet.welding" required="True"/>
-                                        /10
+                                        <input type="number" min="0" max="20" class="form-control" id="subject_area7" name="subject_area7"  t-att-value="mek_prac_marksheet.welding" required="True"/>
+                                        /20
                                     </div>
                                 </div>
 

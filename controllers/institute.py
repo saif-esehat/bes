@@ -1777,7 +1777,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
 
@@ -1923,7 +1923,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST']
+        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
@@ -2029,6 +2029,12 @@ class InstitutePortal(CustomerPortal):
 
         return response
     
+    def remove_after_dot_in_phone_number(self,phone_number):
+        if '.' in phone_number:
+            return phone_number.split('.')[0]  # Split the phone number by dot and return the first part
+        else:
+            return phone_number  # If there's 
+    
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
@@ -2119,8 +2125,24 @@ class InstitutePortal(CustomerPortal):
                 state = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
+<<<<<<< HEAD
                 phone = str(row[8])
                 mobile = str(row[9]) 
+=======
+                # phone = str((row[8]))
+                # print("Phone ",str(row[8] ))
+                if row[8]:
+                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
+                else:
+                    phone = ""
+                
+                if row[9]:
+                    mobile = self.remove_after_dot_in_phone_number(str(row[9]))
+                else:
+                    mobile = ""
+
+                # mobile = str(row[9]) 
+>>>>>>> 97c9590f35e560c2aeaadc9fc48303189f56b3fc
                 email = row[10] 
 
                 
@@ -2242,6 +2264,27 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
 
+    def convert_to_dd_mmm_yy(self,date_str):
+        try:
+            # Parse the input date string to datetime object
+            date_obj = datetime.strptime(date_str, '%Y-%m-%d')  # Assuming input format is YYYY-MM-DD
+        except ValueError:
+            try:
+                date_obj = datetime.strptime(date_str, '%m/%d/%Y')  # Assuming input format is MM/DD/YYYY
+            except ValueError:
+                try:
+                    date_obj = datetime.strptime(date_str, '%d-%m-%Y')  # Assuming input format is DD-MM-YYYY
+                except ValueError:
+                    try:
+                        date_obj = datetime.strptime(date_str, '%d %b %Y')  # Assuming input format is DD MMM YYYY
+                    except ValueError:
+                        return "Invalid date format"
+        
+        # Format the date object to "dd/mmm/yy" format
+        formatted_date = date_obj.strftime('%d/%b/%y').replace('/', '')  # Removing the slashes
+        
+        return formatted_date
+
 
 
     @http.route(['/my/uploadccmccandidatedata'], type="http", auth="user", website=True)
@@ -2274,7 +2317,10 @@ class InstitutePortal(CustomerPortal):
                 indos_no = row[0]  
                 full_name = row[1] 
 
+                
                 date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                formatted_date = self.convert_to_dd_mmm_yy(date_value)
+                print("Formatted date:", formatted_date)
                 date_string = date_value.strftime('%d-%b-%y') 
                 dob = date_value
 
@@ -2333,8 +2379,16 @@ class InstitutePortal(CustomerPortal):
                 data_iti = 0
 
 
-                phone = int(row[8])
-                mobile = int(row[9]) 
+                if row[8]:
+                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
+                else:
+                    phone = ""
+                
+                if row[9]:
+                    mobile = self.remove_after_dot_in_phone_number(str(row[9]))
+                else:
+                    mobile = ""
+                    
                 email = row[10] 
 
                 xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
