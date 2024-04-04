@@ -2370,8 +2370,16 @@ class InstitutePortal(CustomerPortal):
                 data_iti = 0
 
 
-                phone = int(row[8])
-                mobile = int(row[9]) 
+                if row[8]:
+                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
+                else:
+                    phone = ""
+                
+                if row[9]:
+                    mobile = self.remove_after_dot_in_phone_number(str(row[9]))
+                else:
+                    mobile = ""
+                    
                 email = row[10] 
 
                 xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
