@@ -146,6 +146,22 @@ class ExaminerPortal(CustomerPortal):
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
         return json.dumps({"status":"success"})
     
+    @http.route(['/confirm/mek/marksheet'],method=["POST"],type="http", auth="user", website=True)
+    def ConfirmMEKMarksheet(self, **kw):
+        # print("KW Confirm GSK")
+        marksheet_id = kw["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
+        marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
     
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
     def open_candidate_form(self, **rec):
