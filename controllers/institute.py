@@ -233,6 +233,7 @@ class InstitutePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=', candidate_id)])
         batches = candidate.institute_batch_id
+        
         vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
 
@@ -544,6 +545,9 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/gpcandidateform/view/<int:batch_id>'],method=["POST", "GET"], type="http", auth="user", website=True)
     def GPcandidateFormView(self,batch_id, **kw):
+        
+        # import wdb; wdb.set_trace();
+        
         states = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN')])
         
@@ -977,7 +981,7 @@ class InstitutePortal(CustomerPortal):
             
             return request.redirect('/my/gpcandidateprofile/'+str(kw.get("canidate_id")))
             
-            
+        # import wdb; wdb.set_trace() 
         batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
         vals = {'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
@@ -2045,12 +2049,12 @@ class InstitutePortal(CustomerPortal):
         # workbook = xlsxwriter.Workbook(BytesIO(file_content))
         workbook = xlrd.open_workbook(file_contents=file_content)
         # worksheet = workbook.sheet_by_index(0)
-        # import wdb; wdb.set_trace()
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
+            
             
             try:
                 indos_no = row[0]  
@@ -2121,6 +2125,10 @@ class InstitutePortal(CustomerPortal):
                 state = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
+<<<<<<< HEAD
+                phone = str(row[8])
+                mobile = str(row[9]) 
+=======
                 # phone = str((row[8]))
                 # print("Phone ",str(row[8] ))
                 if row[8]:
@@ -2134,6 +2142,7 @@ class InstitutePortal(CustomerPortal):
                     mobile = ""
 
                 # mobile = str(row[9]) 
+>>>>>>> 97c9590f35e560c2aeaadc9fc48303189f56b3fc
                 email = row[10] 
 
                 
@@ -2491,6 +2500,7 @@ class InstitutePortal(CustomerPortal):
                 
             except:
                 error_val = "Excel Sheet format incorrect \n "+" There is problem in row no " + str(row_num)
+                print(row,"errrrrrrrrrrrrrrrrrrrrrrrrrrror")
                 raise ValidationError(error_val)
             
         # workbook.close()
