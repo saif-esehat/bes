@@ -109,7 +109,12 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id,'page_name':'institutes1',}
+        vals = {'assignments':examiner_assignments,
+                'examiner_subject':examiner_subject,
+                'examiner':examiner,
+                'marksheets':marksheets ,
+                'assignment_id':assignment_id, 
+                'batch_id':batch_id,'page_name':'institutes1',}
         
         print(examiner_subject)
         return request.render("bes.examiner_assignment_candidate_list",vals)
@@ -749,6 +754,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.set_column('D2:K2',20, unlocked)
         gsk_practical_sheet.set_column('L2:L2',15, unlocked)
         gsk_practical_sheet.set_column('M2:M2',15, unlocked)
+        gsk_practical_sheet.set_column('N2:N2',15, unlocked)
             
         gsk_practical_sheet.protect()
         
@@ -766,7 +772,7 @@ class ExaminerPortal(CustomerPortal):
           '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
           '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
           '·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight (18 Marks)',
-            'Remarks']
+            'Remarks','Status']
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
         
