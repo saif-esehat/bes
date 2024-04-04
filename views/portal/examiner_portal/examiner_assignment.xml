@@ -396,7 +396,7 @@
                 <thead>
                     <tr >
                         <th class="text-left">Candidate Name</th>
-                        <th class="text-left">Indos No</th>
+                        <th class="text-left">Candidate Code</th>
                         <th class="text-left">Course</th>
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Oral</th>
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
@@ -423,10 +423,10 @@
                             
                             </td>
                             <td class="text-left">
-                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.candidate_code" />
+                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.candidate_code" />
+                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.candidate_code" />
+                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.candidate_code" />
                             </td>
                             <td  class="text-left">
                                 <t t-out="marksheet.examiners_id.prac_oral_id.course.course_code" />

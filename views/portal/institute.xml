@@ -50,7 +50,7 @@
 
 
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/gpbatch/candidates/{{batch_id}}">
+                    <a t-attf-href="/my/gpbatch/candidates/{{batches.id}}">
                         <t t-out="batches.batch_name"/>
                     </a>
                 </li>
@@ -66,7 +66,7 @@
 
 
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/ccmcbatch/candidates/{{batch_id}}">
+                    <a t-attf-href="/my/ccmcbatch/candidates/{{batches.id}}">
                         <t t-out="batches.ccmc_batch_name"/>
                     </a>
                 </li>
@@ -576,7 +576,7 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <t t-if="not candidate.candidate_image or not candidate.indos_no or not candidate.candidate_signature">
+                <t t-if="batches.state == '1-ongoing'">
                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
                 </t>
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -3192,9 +3192,9 @@
             <div class="container py-5">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
-
+                <t t-if="batches.state == '1-ongoing'">
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCcmcCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                </t>
                 <div class="modal fade" id="updateCcmcCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleCcmcModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/updateccmccandidate" enctype="multipart/form-data">

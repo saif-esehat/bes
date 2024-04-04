@@ -202,7 +202,7 @@ class ExaminerPortal(CustomerPortal):
             
             # import wdb; wdb.set_trace()
             
-            # import wdb; wdb.set_trace()
+            import wdb; wdb.set_trace()
             rec_id = rec['rec_id']
             
             marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
@@ -220,6 +220,8 @@ class ExaminerPortal(CustomerPortal):
             practical_record_journals = int(rec['practical_record_journals'])
        
             remarks_oral_gsk = rec['remarks_oral_gsk']
+            
+            total = subject_area1 + subject_area2 + subject_area3 + subject_area4 + subject_area5 + subject_area6
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
@@ -236,11 +238,7 @@ class ExaminerPortal(CustomerPortal):
                 'subject_area_6': subject_area6,
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
-                # 'gsk_oral_exam_date': exam_date,
                 'gsk_oral_remarks': remarks_oral_gsk,
-                # 'assignment_id':assignment_id,
-                # 'batch_id':batch_id,
-                # "page_name": "gsk_oral"
             }
             
             
@@ -262,6 +260,7 @@ class ExaminerPortal(CustomerPortal):
             name=candidate_rec.name
             candidate_image = candidate_rec.candidate_image
             
+            import wdb; wdb.set_trace()
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
             assignment_id = int(rec['assignment_id'])
@@ -275,10 +274,9 @@ class ExaminerPortal(CustomerPortal):
                     'batch_id':batch_id,
                     "page_name": "gsk_oral"}
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
-            # import wdb; wdb.set_trace()
             # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})'exam_date':gsk_marksheet.gsk_oral_exam_date,
-            return request.render("bes.gsk_oral_marks_submit", vals)
+            return request.render("bes.gsk_oral_marks_submit",vals)
 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
