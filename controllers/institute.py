@@ -2053,9 +2053,9 @@ class InstitutePortal(CustomerPortal):
                 date_string = date_value.strftime('%d-%b-%y') 
             except:   
                 raise ValidationError('Date Format Not Correct Please Check Data format')
-            # dob = datetime.strptime(row[2], 'dd-mm-yy').date()  
             
             dob = date_value
+            
             street1 = row[3]
             street2 = row[4]  
             dist_city = row[5]  # Assuming Dist./City is the fifth column
@@ -2280,7 +2280,7 @@ class InstitutePortal(CustomerPortal):
             
             state_value = row[7]  # Assuming State (short) is the sixth column
             
-            import wdb; wdb.set_trace()
+            # import wdb; wdb.set_trace()
 
 
             state_values = {

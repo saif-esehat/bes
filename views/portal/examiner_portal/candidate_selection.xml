@@ -18,7 +18,7 @@
             <t t-if="page_name == 'cooker_bakery_form'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments/open_ccmc_candidate_form?{{rec_id}}">
-                        listttt
+                        <!-- listttt -->
                         <!-- <t t-out="ccmc_assignment.assignment_id.institute_id.name"/> -->
                     </a>
                 </li>
@@ -114,7 +114,7 @@
                                     <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
                                 </td>
                                 <td class="text-left">
-                                    <t t-out="c.gp_candidate.indos_no" readonly="1"/>
+                                    <t t-out="c.gp_candidate.candidate_code" readonly="1"/>
                                 </td>
                                 <td class="text-left">
                                     <t t-out="c.gp_candidate.roll_no" />
