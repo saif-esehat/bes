@@ -50,7 +50,8 @@
 ],
 'assets': {
 		'web.assets_frontend': [
-                        'bes/views/portal/static/src/js/candidate_oral_practical.js'
+                        'bes/views/portal/static/src/js/candidate_oral_practical.js',
+                        'bes/static/js/examiner_portal_marksheet.js'
 		],
                 'web.assets_qweb': [
                         'bes/static/src/xml/gp_exam_tree_button.xml',

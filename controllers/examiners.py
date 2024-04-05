@@ -10,6 +10,7 @@ from datetime import datetime
 import xlsxwriter
 from odoo.exceptions import AccessError
 import xlrd
+import json
 
 from functools import wraps
 
@@ -129,6 +130,39 @@ class ExaminerPortal(CustomerPortal):
     #     ​return decorator
     
     
+    @http.route(['/confirm/gsk/marksheet'],method=["POST"],type="http", auth="user", website=True)
+    def ConfirmGSKMarksheet(self, **kw):
+        print("KW Confirm GSK")
+        marksheet_id = kw["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
+        marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    @http.route(['/confirm/mek/marksheet'],method=["POST"],type="http", auth="user", website=True)
+    def ConfirmMEKMarksheet(self, **kw):
+        # print("KW Confirm GSK")
+        marksheet_id = kw["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
+        marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
     def open_candidate_form(self, **rec):
         
@@ -202,7 +236,6 @@ class ExaminerPortal(CustomerPortal):
             
             # import wdb; wdb.set_trace()
             
-            import wdb; wdb.set_trace()
             rec_id = rec['rec_id']
             
             marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
@@ -260,7 +293,6 @@ class ExaminerPortal(CustomerPortal):
             name=candidate_rec.name
             candidate_image = candidate_rec.candidate_image
             
-            import wdb; wdb.set_trace()
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
             assignment_id = int(rec['assignment_id'])

@@ -2314,8 +2314,8 @@ class InstitutePortal(CustomerPortal):
 
                 
                 date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
-                formatted_date = self.convert_to_dd_mmm_yy(date_value)
-                print("Formatted date:", formatted_date)
+                # formatted_date = self.convert_to_dd_mmm_yy(date_value)
+                # print("Formatted date:", formatted_date)
                 date_string = date_value.strftime('%d-%b-%y') 
                 dob = date_value
 
