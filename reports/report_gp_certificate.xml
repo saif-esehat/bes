@@ -107,7 +107,7 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:10px ;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px;">Date of Examination Passed: </span>
-                                        <span style="font-size:20px;"><t t-esc="doc.dgs_batch.exam_pass_date.strftime('%d-%b-%Y')"/></span>
+                                        <span style="font-size:20px;"><t t-esc="doc.exam_pass_date.strftime('%d-%b-%Y')"/></span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -121,7 +121,7 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ; ">
                                     <div class="col-6" style="text-align:left;">
                                         <span style="color: #4c2d8b; font-size:20px;">Date of Issue of Certificate: </span>
-                                        <span style="font-size:20px;"><t t-esc="doc.dgs_batch.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
+                                        <span style="font-size:20px;"><t t-esc="doc.certificate_issue_date.strftime('%d-%b-%Y')"/></span>
                                     </div>
                                     <div class="col-6" style="text-align:right;">
                                         <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_signature}}" alt="Image" style="width: 160px; height: 55px; position:absolute; top:-60px; right:40px;" />
