@@ -600,7 +600,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_oral_gsk">Total Marks</label>
-                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
+                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-value="gsk_marksheet.gsk_oral_total_marks"/>
                                     </div>
                                 </div>
 
