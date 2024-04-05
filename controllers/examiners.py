@@ -130,26 +130,26 @@ class ExaminerPortal(CustomerPortal):
     #     ​return decorator
     
     
-    @http.route(['/confirm/gsk/marksheet'],method=["POST"],type="http", auth="user", website=True)
+    @http.route(['/confirm/gsk/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmGSKMarksheet(self, **kw):
         print("KW Confirm GSK")
-        marksheet_id = kw["id"]
-# Split the string by underscore and take the last element
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
         last_part = marksheet_id.split('_')[-1]
-
-        # Extract the number from the last part
         marksheet_id = int(last_part)
-
-        
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
         return json.dumps({"status":"success"})
     
-    @http.route(['/confirm/mek/marksheet'],method=["POST"],type="http", auth="user", website=True)
+    @http.route(['/confirm/mek/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmMEKMarksheet(self, **kw):
-        # print("KW Confirm GSK")
-        marksheet_id = kw["id"]
+        print("KW Confirm MEK")
+        
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
 # Split the string by underscore and take the last element
         last_part = marksheet_id.split('_')[-1]
 
