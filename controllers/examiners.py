@@ -10,6 +10,7 @@ from datetime import datetime
 import xlsxwriter
 from odoo.exceptions import AccessError
 import xlrd
+import json
 
 from functools import wraps
 
@@ -99,7 +100,6 @@ class ExaminerPortal(CustomerPortal):
     
     @http.route(['/my/assignments/batches/candidates/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
     def ExaminerAssignmentCandidateListView(self,batch_id,assignment_id, **kw):
-        # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
         batch_id = batch_id
@@ -109,6 +109,9 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
+        
+        
+        # import wdb; wdb.set_trace()
         vals = {'assignments':examiner_assignments,
                 'examiner_subject':examiner_subject,
                 'examiner':examiner,
@@ -127,6 +130,39 @@ class ExaminerPortal(CustomerPortal):
     #     ​	​	​return func(self, *args, **kwargs)
     #     ​	​return wrapper
     #     ​return decorator
+    
+    
+    @http.route(['/confirm/gsk/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmGSKMarksheet(self, **kw):
+        print("KW Confirm GSK")
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+        last_part = marksheet_id.split('_')[-1]
+        marksheet_id = int(last_part)
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
+        marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    @http.route(['/confirm/mek/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmMEKMarksheet(self, **kw):
+        print("KW Confirm MEK")
+        
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
+        marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
     
     
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
@@ -202,7 +238,6 @@ class ExaminerPortal(CustomerPortal):
             
             # import wdb; wdb.set_trace()
             
-            import wdb; wdb.set_trace()
             rec_id = rec['rec_id']
             
             marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
@@ -260,7 +295,6 @@ class ExaminerPortal(CustomerPortal):
             name=candidate_rec.name
             candidate_image = candidate_rec.candidate_image
             
-            import wdb; wdb.set_trace()
             gsk_marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
             
             assignment_id = int(rec['assignment_id'])
@@ -273,6 +307,7 @@ class ExaminerPortal(CustomerPortal):
                     'assignment_id':assignment_id,
                     'batch_id':batch_id,
                     "page_name": "gsk_oral"}
+            
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
             # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})'exam_date':gsk_marksheet.gsk_oral_exam_date,
@@ -325,16 +360,10 @@ class ExaminerPortal(CustomerPortal):
             }
             
             marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
-
             marksheet.write(vals)
             
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
-
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
-
-            # Write to the One2many field using the constructed dictionary
-            # draft_records.write(vals)
-
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
+        
         else:
             # import wdb; wdb.set_trace()
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
@@ -432,7 +461,6 @@ class ExaminerPortal(CustomerPortal):
     def open_practical_mek_form(self, **rec):
        
         candidate = request.env['gp.candidate'].sudo()
-        print("=======================================================",request.httprequest.method)
         
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
@@ -453,9 +481,6 @@ class ExaminerPortal(CustomerPortal):
             mek_practical_remarks = rec['remarks_practical_mek']
             state = rec['state']
 
-            # candidate_rec = candidate.search([('id', '=', rec_id)])
-            # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
-
 
             # Construct the dictionary with integer values
             vals = {
@@ -473,7 +498,6 @@ class ExaminerPortal(CustomerPortal):
             }
             
             marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
-            
             marksheet.write(vals)
             
             return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
