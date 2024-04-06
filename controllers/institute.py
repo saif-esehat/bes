@@ -2125,10 +2125,6 @@ class InstitutePortal(CustomerPortal):
                 state = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
-<<<<<<< HEAD
-                phone = str(row[8])
-                mobile = str(row[9]) 
-=======
                 # phone = str((row[8]))
                 # print("Phone ",str(row[8] ))
                 if row[8]:
@@ -2142,7 +2138,6 @@ class InstitutePortal(CustomerPortal):
                     mobile = ""
 
                 # mobile = str(row[9]) 
->>>>>>> 97c9590f35e560c2aeaadc9fc48303189f56b3fc
                 email = row[10] 
 
                 
