@@ -611,7 +611,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
-                                                    <img src="/bes/static/src/img/150.png" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
+                                                    <img src="https://placehold.co/250x75" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -620,7 +620,37 @@
                                                     <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*" onchange="displaySignImage(this)" />
                                                 </div>
                                             </div>
-
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Full Name</label>
+                                                    <input type="text" class="form-control" id="full_name" name="full_name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">E-mail</label>
+                                                    <input type="text" class="form-control" id="e_mail" name="e_mail" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Phone</label>
+                                                    <input type="text" class="form-control" id="phone" name="phone" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Mobile</label>
+                                                    <input type="text" class="form-control" id="mobile" name="mobile" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Address</label>
+                                                    <input type="text" class="form-control" id="street" name="street" />
+                                                    <input type="text" class="form-control" id="street2" name="street2" />
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>

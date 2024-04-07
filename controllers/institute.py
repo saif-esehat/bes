@@ -972,10 +972,20 @@ class InstitutePortal(CustomerPortal):
                              'candidate_signature_name':  signature_photo_name,
                              })
                 
-            indos_no = kw.get('indos_no')
+            # indos_no = kw.get('indos_no')
+            # candidate_details = {
+            #     'indos_no':kw.get('indos_no'),
+            #     'full_name':kw.get('full_name'),
+            #     'e_mail':kw.get('e_mail'),
+            #     'phone':kw.get('phone'),
+            #     'mobile':kw.get('mobile'),
+            #     'street':kw.get('street'),
+            #     'street2':kw.get('street2'),
+            # }
             
-            if indos_no:
-                candidate.write({'indos_no':indos_no})
+            # for key, value in candidate_details.items():
+            #     if value:
+            #         candidate.write({key: value})
             
             # import wdb; wdb.set_trace()
             
