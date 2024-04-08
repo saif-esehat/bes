@@ -944,7 +944,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/updategpcandidate'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCandidate(self, **kw):
-        # import wdb; wdb.set_trace()
+        import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         

@@ -647,7 +647,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Address</label>
-                                                    <input type="text" class="form-control" id="street" name="street" />
+                                                    <input type="text" class="form-control mb-3" id="street" name="street" />
                                                     <input type="text" class="form-control" id="street2" name="street2" />
                                                 </div>
                                             </div>
