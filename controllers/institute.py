@@ -915,7 +915,7 @@ class InstitutePortal(CustomerPortal):
         vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_faculty_portal_list", vals)
-
+   
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
     
@@ -944,7 +944,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/updategpcandidate'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCandidate(self, **kw):
-        # import wdb; wdb.set_trace()
+        import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         
@@ -1798,7 +1798,7 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
 
-        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
 
         # Add data validation for SC/ST column
@@ -1841,7 +1841,7 @@ class InstitutePortal(CustomerPortal):
                 'TG': 'Telangana',
                 'TR': 'Tripura',
                 'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
+                'UK': 'Uttarakhand',
                 'WB': 'West Bengal',
                 'AN': 'Andaman and Nicobar Islands',
                 'CH': 'Chandigarh',
@@ -1945,7 +1945,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
 
-        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
         state_values2 = ['Jammu and Kashmir','Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
@@ -1990,7 +1990,7 @@ class InstitutePortal(CustomerPortal):
                 'TG': 'Telangana',
                 'TR': 'Tripura',
                 'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
+                'UK': 'Uttarakhand',
                 'WB': 'West Bengal',
                 'AN': 'Andaman and Nicobar Islands',
                 'CH': 'Chandigarh',
@@ -2064,59 +2064,59 @@ class InstitutePortal(CustomerPortal):
             row = worksheet.row_values(row_num)
             
             
-            try:
-                indos_no = row[0]  
-                full_name = row[1] 
-                
-                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
-                date_string = date_value.strftime('%d-%b-%y')             
-                dob = date_value
-                
-                street1 = row[3]
-                street2 = row[4]  
-                dist_city = row[5]  # Assuming Dist./City is the fifth column
+            dob = date_value
+            street1 = row[3]
+            street2 = row[4]  
+            dist_city = row[5]  # Assuming Dist./City is the fifth column
 
-                pin_code = int(row[6])  # Assuming Pin code is the seventh column
-                state_value = row[7]  # Assuming State (short) is the sixth column
+            pin_code = int(row[6])  # Assuming Pin code is the seventh column
+            state_value = row[7]  # Assuming State (short) is the sixth column
 
 
-                state_values = {
-                    'JK': 'Jammu and Kashmir',
-                    'MH': 'Maharashtra',
-                    'AP': 'Andhra Pradesh',
-                    'AR': 'Arunachal Pradesh',
-                    'AS': 'Assam',
-                    'BR': 'Bihar',
-                    'CT': 'Chhattisgarh',
-                    'GA': 'Goa',
-                    'GJ': 'Gujarat',
-                    'HR': 'Haryana',
-                    'HP': 'Himachal Pradesh',
-                    'JH': 'Jharkhand',
-                    'KA': 'Karnataka',
-                    'KL': 'Kerala',
-                    'MP': 'Madhya Pradesh',
-                    'MN': 'Manipur',
-                    'ML': 'Meghalaya',
-                    'MZ': 'Mizoram',
-                    'NL': 'Nagaland',
-                    'OD': 'Odisha',
-                    'PB': 'Punjab',
-                    'RJ': 'Rajasthan',
-                    'SK': 'Sikkim',
-                    'TN': 'Tamil Nadu',
-                    'TG': 'Telangana',
-                    'TR': 'Tripura',
-                    'UP': 'Uttar Pradesh',
-                    'UT': 'Uttarakhand',
-                    'WB': 'West Bengal',
-                    'AN': 'Andaman and Nicobar Islands',
-                    'CH': 'Chandigarh',
-                    'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                    'LD': 'Lakshadweep',
-                    'DL': 'Delhi',
-                    'PY': 'Puducherry'
-                }
+            state_values = {
+                'JK': 'Jammu and Kashmir',
+                'MH': 'Maharashtra',
+                'AP': 'Andhra Pradesh',
+                'AR': 'Arunachal Pradesh',
+                'AS': 'Assam',
+                'BR': 'Bihar',
+                'CT': 'Chhattisgarh',
+                'GA': 'Goa',
+                'GJ': 'Gujarat',
+                'HR': 'Haryana',
+                'HP': 'Himachal Pradesh',
+                'JH': 'Jharkhand',
+                'KA': 'Karnataka',
+                'KL': 'Kerala',
+                'MP': 'Madhya Pradesh',
+                'MN': 'Manipur',
+                'ML': 'Meghalaya',
+                'MZ': 'Mizoram',
+                'NL': 'Nagaland',
+                'OD': 'Odisha',
+                'PB': 'Punjab',
+                'RJ': 'Rajasthan',
+                'SK': 'Sikkim',
+                'TN': 'Tamil Nadu',
+                'TG': 'Telangana',
+                'TR': 'Tripura',
+                'UP': 'Uttar Pradesh',
+                'UK': 'Uttarakhand',
+                'WB': 'West Bengal',
+                'AN': 'Andaman and Nicobar Islands',
+                'CH': 'Chandigarh',
+                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                'LD': 'Lakshadweep',
+                'DL': 'Delhi',
+                'PY': 'Puducherry'
+            }
+
+            # state = False
+            # for code, name in state_values.items():
+            #     if name.lower() == state_value.lower():
+            #         state = code
+            #     else:
+            #         state = False
 
                 # state = False
                 # for code, name in state_values.items():
@@ -2333,53 +2333,48 @@ class InstitutePortal(CustomerPortal):
                 pin_code = int(row[6])  # Assuming Pin code is the seventh column
                 state_value = row[7]  # Assuming State (short) is the sixth column
 
-                # import wdb; wdb.set_trace()
-                
-                state_values = {
-                    'MH': 'Maharashtra',
-                    'AP': 'Andhra Pradesh',
-                    'AR': 'Arunachal Pradesh',
-                    'AS': 'Assam',
-                    'BR': 'Bihar',
-                    'CT': 'Chhattisgarh',
-                    'GA': 'Goa',
-                    'GJ': 'Gujarat',
-                    'HR': 'Haryana',
-                    'HP': 'Himachal Pradesh',
-                    'JH': 'Jharkhand',
-                    'KA': 'Karnataka',
-                    'KL': 'Kerala',
-                    'MP': 'Madhya Pradesh',
-                    'MN': 'Manipur',
-                    'ML': 'Meghalaya',
-                    'MZ': 'Mizoram',
-                    'NL': 'Nagaland',
-                    'OD': 'Odisha',
-                    'PB': 'Punjab',
-                    'RJ': 'Rajasthan',
-                    'SK': 'Sikkim',
-                    'TN': 'Tamil Nadu',
-                    'TG': 'Telangana',
-                    'TR': 'Tripura',
-                    'UP': 'Uttar Pradesh',
-                    'UT': 'Uttarakhand',
-                    'WB': 'West Bengal',
-                    'AN': 'Andaman and Nicobar Islands',
-                    'CH': 'Chandigarh',
-                    'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                    'LD': 'Lakshadweep',
-                    'DL': 'Delhi',
-                    'PY': 'Puducherry'
-                }
-                
-                state = request.env['res.country.state'].sudo().search(
-                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
-                
-                
-                        
-                data_xth_std_eng = 0
-                data_twelfth_std_eng = 0
-                data_iti = 0
+            state_values = {
+                'MH': 'Maharashtra',
+                'AP': 'Andhra Pradesh',
+                'AR': 'Arunachal Pradesh',
+                'AS': 'Assam',
+                'BR': 'Bihar',
+                'CT': 'Chhattisgarh',
+                'GA': 'Goa',
+                'GJ': 'Gujarat',
+                'HR': 'Haryana',
+                'HP': 'Himachal Pradesh',
+                'JH': 'Jharkhand',
+                'KA': 'Karnataka',
+                'KL': 'Kerala',
+                'MP': 'Madhya Pradesh',
+                'MN': 'Manipur',
+                'ML': 'Meghalaya',
+                'MZ': 'Mizoram',
+                'NL': 'Nagaland',
+                'OD': 'Odisha',
+                'PB': 'Punjab',
+                'RJ': 'Rajasthan',
+                'SK': 'Sikkim',
+                'TN': 'Tamil Nadu',
+                'TG': 'Telangana',
+                'TR': 'Tripura',
+                'UP': 'Uttar Pradesh',
+                'UK': 'Uttarakhand',
+                'WB': 'West Bengal',
+                'AN': 'Andaman and Nicobar Islands',
+                'CH': 'Chandigarh',
+                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                'LD': 'Lakshadweep',
+                'DL': 'Delhi',
+                'PY': 'Puducherry'
+            }
+            
+            
+                    
+            data_xth_std_eng = 0
+            data_twelfth_std_eng = 0
+            data_iti = 0
 
 
                 if row[8]:

@@ -15,15 +15,21 @@
                             <t t-else="">
                                 <strong>Admit Card - GP Repeater Candidate</strong>
                             </t>
-                        </div>
-                        <div style="font-size: 20px; text-align:center; margin-bottom: 10px;">
+                        </div>  
+                        <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
                             <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
                         </div>
-                    
+
                     </div>
 
-                   
-                    <div class="container" style="position:relative;top:150px;">
+                    <div class="container" style="position:relative; margin:30px;">
+                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
+                        <t t-if="o.gp_candidate.candidate_signature">
+                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: 175px; right: 8px;" />
+                        </t>
+                        <!-- </div>
+      
+                        <div class="container" style=""> -->
                         <div class="row" style="margin-bottom:4px ; ">
                             <div class="col-6">
                                 <span style="font-size:20px;">Examination: </span>
@@ -85,7 +91,7 @@
                         <t t-if="o.qr_code">
                             <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                         </t>
-                    </div>
+                          <!-- </div> -->
 
                     <div class="container" style="text-align:center;position:relative;top:150px;">
                         <div class="row">
@@ -118,7 +124,6 @@
                             </div>
                         </div>
                     </div>
-                    
 
                     <div class="container" style="text-align:center; margin:0; margin-top:20px;position:relative;top:150px;">
                         <div class="row">
