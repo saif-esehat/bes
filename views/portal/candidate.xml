@@ -345,12 +345,9 @@
                             </td>
 
                             <td t-if="show_certificate" class="text-center">
-                                <!-- <t t-if="exam_region != 'CHENNAI' and exam_region != 'KOLKATTA'">
                                     <a t-attf-href="/my/gpexam/list/download_certificate/{{rec.id}}" class="fa">Download Certificate</a>
+                                <!-- <t t-if="">
                                 </t> -->
-                                <t t-if="institute_code != 'K06' and institute_code != 'M05' and institute_code != 'M11' and institute_code != 'M18'">
-                                    <a t-attf-href="/my/gpexam/list/download_certificate/{{rec.id}}" class="fa">Download Certificate</a>
-                                </t>
 
                             </td>
                              

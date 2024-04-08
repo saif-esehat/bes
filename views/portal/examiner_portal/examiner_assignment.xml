@@ -2,13 +2,13 @@
 
      <template id="portal_breadcrumbs_examiner" inherit_id="portal.portal_breadcrumbs">
         <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
-            <li>
+            <li style="font-size:16px;">
                 <a href="/my/home">
-                    <i class="fa fa-solid fa-home fa-2x" style='margin-right:8px;'></i>
+                    <i class="fa fa-solid fa-home fa" style='margin-right:8px;'> Home/</i>
                 </a>
             </li>
         </xpath>
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" class="fa fa-solid fa-home fa-2x">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" class="fa fa-solid fa-home fa" >
             <t t-if="page_name == 'batches'">
                 
                 <li class="breadcrumb-item">
@@ -396,7 +396,7 @@
                 <thead>
                     <tr >
                         <th class="text-left">Candidate Name</th>
-                        <th class="text-left">Indos No</th>
+                        <th class="text-left">Candidate Code</th>
                         <th class="text-left">Course</th>
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Oral</th>
                         <th t-if="examiner_subject == 'GSK'" class="text-left">Gsk Practical</th>
@@ -423,33 +423,69 @@
                             
                             </td>
                             <td class="text-left">
-                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.indos_no" />
-                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.indos_no" />
+                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.candidate_code" />
+                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.candidate_code" />
+                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.candidate_code" />
+                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.candidate_code" />
                             </td>
                             <td  class="text-left">
                                 <t t-out="marksheet.examiners_id.prac_oral_id.course.course_code" />
                             </td>
 
                             <td t-if="examiner_subject == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}"><span>GSK Oral</span></a>
+                                <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}">
+                                <span><t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/></span></a>
                             </td>
                             <td t-if="examiner_subject == 'GSK'" class="text-left">
-                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>GSK Practical</span></a>
+                                <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span><t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/></span></a>
+                            </td>
+                             <td t-if="examiner_subject == 'GSK'" class="text-left">
+                                <span t-if="marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm'" >
+                                    Confirmed
+                                </span>
+                                <span t-else="" >
+                                    Draft
+                                </span>           
+                            </td>
+                            <td t-if="examiner_subject == 'GSK'" class="text-left">
+                                <span t-if="marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm'" >
+                                </span>
+                                <span t-else="" >
+                                    <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_gsk_marksheet_class">Confirm</button>                            
+                                </span>   
                             </td>
                             <td t-if="examiner_subject == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_mek_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_oral={{marksheet.mek_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>MEK Oral</span></a>
+                                <a t-attf-href="/open_mek_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_oral={{marksheet.mek_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span><t t-out="marksheet.mek_oral.mek_oral_total_marks"/></span></a>
                             </td>
                             <td t-if="examiner_subject == 'MEK'" class="text-left">
-                                <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>MEK Practical</span></a>
+                                <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span><t t-out="marksheet.mek_prac.mek_practical_total_marks"/></span></a>
+                            </td>
+                             <td t-if="examiner_subject == 'MEK'" class="text-left">
+                                <span t-if="marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and marksheet.mek_prac.mek_practical_draft_confirm == 'confirm'" >
+                                    Confirmed
+                                </span>
+                                <span t-else="" >
+                                    Draft
+                                </span>           
+                            </td>
+                            <td t-if="examiner_subject == 'MEK'" class="text-left">
+                                <span t-if="marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and marksheet.mek_prac.mek_practical_draft_confirm == 'confirm'" >
+                                </span>
+                                <span t-else="" >
+                                    <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_mek_marksheet_class">Confirm</button>                            
+                                </span>   
                             </td>
 
                             <td t-if="examiner_subject == 'CCMC GSK Oral'" class="text-left">
-                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Oral</span></a>
+                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span><t t-out="marksheet.ccmc_oral.toal_ccmc_rating"/></span></a>
                             </td>
                             <td t-if="examiner_subject == 'CCMC Oral and Practical'" class="text-left">
-                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" ><span>CCMC Practical</span></a>
+                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span><t t-out="marksheet.cookery_bakery.total_mrks"/></span></a>
                             </td>
                             
                         </tr>

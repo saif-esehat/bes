@@ -10,6 +10,7 @@ from datetime import datetime
 import xlsxwriter
 from odoo.exceptions import AccessError
 import xlrd
+import json
 
 from functools import wraps
 
@@ -99,7 +100,6 @@ class ExaminerPortal(CustomerPortal):
     
     @http.route(['/my/assignments/batches/candidates/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
     def ExaminerAssignmentCandidateListView(self,batch_id,assignment_id, **kw):
-        # import wdb; wdb.set_trace()
 
         user_id = request.env.user.id
         batch_id = batch_id
@@ -109,7 +109,15 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        vals = {'assignments':examiner_assignments,'examiner_subject':examiner_subject,'examiner':examiner,'marksheets':marksheets ,'assignment_id':assignment_id, 'batch_id':batch_id,'page_name':'institutes1',}
+        
+        
+        # import wdb; wdb.set_trace()
+        vals = {'assignments':examiner_assignments,
+                'examiner_subject':examiner_subject,
+                'examiner':examiner,
+                'marksheets':marksheets ,
+                'assignment_id':assignment_id, 
+                'batch_id':batch_id,'page_name':'institutes1',}
         
         print(examiner_subject)
         return request.render("bes.examiner_assignment_candidate_list",vals)
@@ -122,6 +130,39 @@ class ExaminerPortal(CustomerPortal):
     #     ​	​	​return func(self, *args, **kwargs)
     #     ​	​return wrapper
     #     ​return decorator
+    
+    
+    @http.route(['/confirm/gsk/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmGSKMarksheet(self, **kw):
+        print("KW Confirm GSK")
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+        last_part = marksheet_id.split('_')[-1]
+        marksheet_id = int(last_part)
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
+        marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    @http.route(['/confirm/mek/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmMEKMarksheet(self, **kw):
+        print("KW Confirm MEK")
+        
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
+        marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
     
     
     @http.route('/open_candidate_form', type='http', auth="user", website=True)
@@ -197,7 +238,6 @@ class ExaminerPortal(CustomerPortal):
             
             # import wdb; wdb.set_trace()
             
-            # import wdb; wdb.set_trace()
             rec_id = rec['rec_id']
             
             marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
@@ -215,6 +255,8 @@ class ExaminerPortal(CustomerPortal):
             practical_record_journals = int(rec['practical_record_journals'])
        
             remarks_oral_gsk = rec['remarks_oral_gsk']
+            
+            total = subject_area1 + subject_area2 + subject_area3 + subject_area4 + subject_area5 + subject_area6
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
@@ -231,11 +273,7 @@ class ExaminerPortal(CustomerPortal):
                 'subject_area_6': subject_area6,
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
-                # 'gsk_oral_exam_date': exam_date,
                 'gsk_oral_remarks': remarks_oral_gsk,
-                # 'assignment_id':assignment_id,
-                # 'batch_id':batch_id,
-                # "page_name": "gsk_oral"
             }
             
             
@@ -269,11 +307,11 @@ class ExaminerPortal(CustomerPortal):
                     'assignment_id':assignment_id,
                     'batch_id':batch_id,
                     "page_name": "gsk_oral"}
+            
             # draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft')
-            # import wdb; wdb.set_trace()
             # print('recccccccccccccccccccccccccccccccccc',candidate_rec)
             # return request.render("bes.gsk_oral_marks_submit", {'indos': candidate_indos,'gsk_marksheet':gsk_marksheet,'candidate_name':name, 'candidate_image': candidate_image})'exam_date':gsk_marksheet.gsk_oral_exam_date,
-            return request.render("bes.gsk_oral_marks_submit", vals)
+            return request.render("bes.gsk_oral_marks_submit",vals)
 
 
     @http.route('/open_gsk_practical_form', type='http', auth="user", website=True,method=["POST","GET"])
@@ -322,16 +360,10 @@ class ExaminerPortal(CustomerPortal):
             }
             
             marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_practical'])])
-
             marksheet.write(vals)
             
-            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"])
-
-            print('valssssssssssssssssssssssssssssssssssssssssssssssss', vals)
-
-            # Write to the One2many field using the constructed dictionary
-            # draft_records.write(vals)
-
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
+        
         else:
             # import wdb; wdb.set_trace()
             print('enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', rec)
@@ -429,7 +461,6 @@ class ExaminerPortal(CustomerPortal):
     def open_practical_mek_form(self, **rec):
        
         candidate = request.env['gp.candidate'].sudo()
-        print("=======================================================",request.httprequest.method)
         
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
@@ -450,9 +481,6 @@ class ExaminerPortal(CustomerPortal):
             mek_practical_remarks = rec['remarks_practical_mek']
             state = rec['state']
 
-            # candidate_rec = candidate.search([('id', '=', rec_id)])
-            # draft_records = candidate_rec.mek_practical_child_line.filtered(lambda line: line.mek_practical_draft_confirm == 'draft')
-
 
             # Construct the dictionary with integer values
             vals = {
@@ -466,12 +494,10 @@ class ExaminerPortal(CustomerPortal):
                 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
-                'mek_practical_draft_confirm': state,
-                'page_name':'mek_practical'
+                'mek_practical_draft_confirm': state
             }
             
             marksheet = request.env['gp.mek.practical.line'].sudo().search([('id','=',rec['mek_practical'])])
-            
             marksheet.write(vals)
             
             return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
@@ -749,6 +775,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.set_column('D2:K2',20, unlocked)
         gsk_practical_sheet.set_column('L2:L2',15, unlocked)
         gsk_practical_sheet.set_column('M2:M2',15, unlocked)
+        gsk_practical_sheet.set_column('N2:N2',15, unlocked)
             
         gsk_practical_sheet.protect()
         
@@ -766,7 +793,7 @@ class ExaminerPortal(CustomerPortal):
           '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
           '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
           '·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight (18 Marks)',
-            'Remarks']
+            'Remarks','Status']
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
         
@@ -1488,5 +1515,124 @@ class ExaminerPortal(CustomerPortal):
 
         return response
     
-    
+    @http.route('/my/uploadgskmarksheet', type='http', auth="user", website=True)
+    def upload_gsk_marksheet(self,**kw):
+        user_id = request.env.user.id
+        batch_id = int(kw['batch_id'])
+        # import wdb;wdb.set_trace();
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet_oral = workbook.sheet_by_index(0)
+        for row_num in range(2, worksheet_oral.nrows):  # Assuming first row contains headers
+            row = worksheet_oral.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            subject_area_1 = row[3]  
+            subject_area_2 = row[4]  
+            subject_area_3 = row[5]  
+            subject_area_4 = row[6]  
+            subject_area_5 = row[7]  
+            subject_area_6 = row[8] 
+            practical_journal = row[9] 
+            total_marks = 0  # Initialize total_marks to 0
+            if subject_area_1:
+                total_marks += int(subject_area_1)
+            if subject_area_2:
+                total_marks += int(subject_area_2)
+            if subject_area_3:
+                total_marks += int(subject_area_3)
+            if subject_area_4:
+                total_marks += int(subject_area_4)
+            if subject_area_5:
+                total_marks += int(subject_area_5)
+            if subject_area_6:
+                total_marks += int(subject_area_6)
+            if practical_journal:
+                total_marks += int(practical_journal)
+                    
+            remarks = row[10]
+            
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            
+            if candidate and candidate.gsk_oral:
+                candidate.gsk_oral.sudo().write({
+                    'subject_area_1':subject_area_1,
+                    'subject_area_2':subject_area_2,
+                    'subject_area_3':subject_area_3,
+                    'subject_area_4':subject_area_4,
+                    'subject_area_5':subject_area_5,
+                    'subject_area_6':subject_area_6,
+                    'practical_record_journals':practical_journal,
+                    'gsk_oral_total_marks':total_marks,
+                    'gsk_oral_remarks':remarks,
+
+
+                })
+
+        worksheet_practical = workbook.sheet_by_index(1)
+        for row_num in range(2, worksheet_practical.nrows):  # Assuming first row contains headers
+            row = worksheet_practical.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            climbing_mast = row[3]  
+            buoy_flags_recognition = row[4]  
+            bosun_chair = row[5]  
+            rig_stage = row[6]  
+            rig_pilot = row[7]  
+            rig_scaffolding = row[8] 
+            fast_ropes = row[9] 
+            knots_bend = row[10]
+            sounding_rod = row[11] 
+
+            gsk_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if climbing_mast:
+                gsk_practical_total_marks += int(climbing_mast)
+            if buoy_flags_recognition:
+                gsk_practical_total_marks += int(buoy_flags_recognition)
+            if bosun_chair:
+                gsk_practical_total_marks += int(bosun_chair)
+            if rig_stage:
+                gsk_practical_total_marks += int(rig_stage)
+            if rig_pilot:
+                gsk_practical_total_marks += int(rig_pilot)
+            if rig_scaffolding:
+                gsk_practical_total_marks += int(rig_scaffolding)
+            if fast_ropes:
+                gsk_practical_total_marks += int(fast_ropes)
+            if knots_bend:
+                gsk_practical_total_marks += int(knots_bend)
+            if sounding_rod:
+                gsk_practical_total_marks += int(sounding_rod)
+                
+            gsk_practical_remarks = row[12]
+
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            if candidate and candidate.gsk_prac:
+                candidate.gsk_prac.sudo().write({
+                    'climbing_mast':climbing_mast,
+                    'buoy_flags_recognition':buoy_flags_recognition,
+                    'bosun_chair':bosun_chair,
+                    'rig_stage':rig_stage,
+                    'rig_pilot':rig_pilot,
+                    'rig_scaffolding':rig_scaffolding,
+                    'fast_ropes':fast_ropes,
+                    'knots_bend':knots_bend,
+                    'sounding_rod':sounding_rod,
+                    'gsk_practical_total_marks':gsk_practical_total_marks,
+                    'gsk_practical_remarks':gsk_practical_remarks
+
+
+                })
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
+
     

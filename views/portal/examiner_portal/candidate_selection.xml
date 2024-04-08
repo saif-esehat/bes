@@ -18,7 +18,7 @@
             <t t-if="page_name == 'cooker_bakery_form'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments/open_ccmc_candidate_form?{{rec_id}}">
-                        listttt
+                        <!-- listttt -->
                         <!-- <t t-out="ccmc_assignment.assignment_id.institute_id.name"/> -->
                     </a>
                 </li>
@@ -114,7 +114,7 @@
                                     <t t-out="c.assignment_id.institute_id.name" style="white-space:pre-line;" />
                                 </td>
                                 <td class="text-left">
-                                    <t t-out="c.gp_candidate.indos_no" readonly="1"/>
+                                    <t t-out="c.gp_candidate.candidate_code" readonly="1"/>
                                 </td>
                                 <td class="text-left">
                                     <t t-out="c.gp_candidate.roll_no" />
@@ -597,13 +597,14 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class="col-md-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="remarks_oral_gsk">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk"/>
+                                        <label for="remarks_oral_gsk">Total Marks</label>
+                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-value="gsk_marksheet.gsk_oral_total_marks"/>
                                     </div>
-                                </div> -->
-                                 <div class="col-md-6">
+                                </div>
+
+                                <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="state">Status</label>
                                     <select class="form-control" id="state" name="state">
@@ -1021,8 +1022,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area7">Welding (1 Task)</label>
-                                        <input type="number" min="0" max="10" class="form-control" id="subject_area7" name="subject_area7"  t-att-value="mek_prac_marksheet.welding" required="True"/>
-                                        /10
+                                        <input type="number" min="0" max="20" class="form-control" id="subject_area7" name="subject_area7"  t-att-value="mek_prac_marksheet.welding" required="True"/>
+                                        /20
                                     </div>
                                 </div>
 

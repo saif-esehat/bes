@@ -91,8 +91,21 @@ class GPCandidate(models.Model):
     #         capacity = record.institute_batch_id.dgs_approved_capacity
     #         self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',)])
            
-
+    user_state = fields.Selection([
+        ('active', 'Active'),
+        ('inactive', 'Inactive')
+    ], string='User Status',compute="_compute_user_state",default="active")
     
+    
+    
+    @api.depends('user_id')
+    def _compute_user_state(self):
+        for record in self:
+            if record.user_id and record.user_id.active:
+                record.user_state = "active"
+            else:
+                record.user_state = "inactive"
+
     @api.constrains('zip')
     def _check_valid_zip(self):
         for record in self:
@@ -119,6 +132,16 @@ class GPCandidate(models.Model):
             # Check if email has @ symbol
             if record.email and '@' not in record.email:
                 raise ValidationError("Invalid email address. Must contain @ symbol.")
+
+    def user_inactive(self):
+        self.user_id.write({
+            'active':True
+        })
+
+    def user_active(self):
+        self.user_id.write({
+            'active':False
+        })
 
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.candidate_gp_register_exam_wizard').id
@@ -257,7 +280,6 @@ class GPCandidate(models.Model):
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
         # gp_batches = self.institute_batch_id
-
         
         capacity = gp_batches.dgs_approved_capacity - 1
         # capacity = gp_batches.dgs_approved_capacity 
@@ -358,7 +380,8 @@ class GPSTCWCandidate(models.Model):
         ('efa', 'EFA'),
         ('fpff', 'FPFF'),
         ('pssr', 'PSSR'),
-        ('stsdsd', 'STSDSD')
+        ('stsdsd', 'STSDSD'),
+        ('bst', 'BST')
     ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("MTI Number")
@@ -716,7 +739,8 @@ class CCMCSTCWCandidate(models.Model):
         ('efa', 'EFA'),
         ('fpff', 'FPFF'),
         ('pssr', 'PSSR'),
-        ('stsdsd', 'STSDSD')
+        ('stsdsd', 'STSDSD'),
+        ('bst', 'BST')
     ],string="Course")
     institute_name = fields.Many2one("bes.institute","Institute Name")
     marine_training_inst_number = fields.Char("Marine Training Institute Number")

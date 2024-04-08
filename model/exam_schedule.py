@@ -828,14 +828,30 @@ class GPExam(models.Model):
         self.qr_code = qr_image_base64
         
     
+    def check_combination_exists(self,array):
+        
+        target_combinations = [['pst', 'efa', 'fpff', 'pssr', 'stsdsd'], ['bst', 'stsdsd']]
+        
+        for combination in target_combinations:
+            if all(item in array for item in combination):
+                return True
+        
+        return False
+    
+    
     
     @api.depends('gsk_online_status','mek_online_status','mek_oral_prac_status','gsk_oral_prac_status')
     def compute_certificate_criteria(self):
         for record in self:
             all_passed = all(field == 'passed' for field in [record.gsk_online_status, record.mek_online_status, record.mek_oral_prac_status , record.gsk_oral_prac_status])
-            all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
+            # all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
             course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
-            all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            
+
+            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            all_types_exist = self.check_combination_exists(course_type_already)
+            print("Course Type already" + str(all_types_exist))
+
             
             if all_passed:
                 # import wdb; wdb.set_trace();
@@ -1145,11 +1161,9 @@ class GPExam(models.Model):
 
 
     def send_certificate_email(self):
-        print(self,"selffffffffffffffffffffffffffffffffffffffffffff")
         # Replace 'bes.report_gp_certificate' with the correct XML ID of the report template
         report_template = self.env.ref('bes.report_gp_certificate')
         report_pdf = report_template.render_pdf([self.id])
-        print(report_pdf, "reportttttttttttttttttttttttttttttttttttttttttttttt")
         
         # Render the report as PDF
         # generated_report = report_template._render_qweb_pdf(self.id)
@@ -1177,7 +1191,6 @@ class GPExam(models.Model):
             'res_model': 'gp.exam.schedule',
         }
 
-        print(ir_values,"valuessssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         report_attachment = self.env['ir.attachment'].sudo().create(ir_values)
         
         # Get the email template
@@ -1354,6 +1367,9 @@ class CCMCExam(models.Model):
    
     institute_code = fields.Char("Institute code")
     
+    
+    
+    
     @api.depends('ccmc_oral_prac_status','cookery_bakery_prac_status')
     def compute_oral_prac_status(self):
         for record in self:
@@ -1408,10 +1424,11 @@ class CCMCExam(models.Model):
         for record in self:
             
             all_passed = all(field == 'passed' for field in [record.cookery_bakery_prac_status , record.ccmc_online_status, record.ccmc_oral_prac_status])
-            all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
+            # all_course_types = ['pst', 'efa', 'fpff', 'pssr', 'stsdsd']
             course_type_already  = [course.course_name for course in record.ccmc_candidate.stcw_certificate]
-            all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
-
+            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            all_types_exist = self.env['gp.exam.schedule'].check_combination_exists(course_type_already)
+            print("CCMC "+str(all_types_exist))
             # course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
 
             if all_types_exist:

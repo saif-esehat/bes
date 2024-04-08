@@ -180,13 +180,19 @@
                 <form>
                    <header>
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
-                        <!-- <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/> -->
+                        <!-- <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_id.active', '=', True)]}"/> -->
+                        <!-- <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_id.active', '=', False)]}"/> -->
+                        <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
+                        <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="open_gp_candidate_exams" string="Exams" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
+                        
+                        
+
                         <field name="elligiblity_criteria" invisible="1"/>
                         <!-- <widget name="web_ribbon" title="Elligible" bg_color="bg-success" attrs="{'invisible': [('elligiblity_criteria', '=', 'not_elligible')]}"/>
                         <widget name="web_ribbon" title="Not Elligible" bg_color="bg-danger" attrs="{'invisible': [('elligiblity_criteria', '=', 'elligible')]}"/> -->
@@ -225,6 +231,7 @@
                             <field name="institute_id"/>
 
                             <field name="indos_no"/>
+                            <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
 
@@ -424,6 +431,7 @@
             <tree>
                 <field name="name"  optional="show"/>
                 <field name="indos_no"  optional="show"/>
+                <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                 <field name="age" optional="hide"/>
                 <field name="candidate_code"  optional="hide"/>
                 <field name="roll_no"  optional="hide"/>
