@@ -284,11 +284,7 @@
                         <th>Report</th>
                         <th>From Date.</th>
                         <th>To Date.</th>
-<<<<<<< HEAD
-                        <th>DG capacity</th>
-=======
                         <th>DGS Document</th>
->>>>>>> a0da57c448f1ee653451193baa909e591b037793
                     </tr>
                 </thead>
                 <tbody>
@@ -339,22 +335,8 @@
                             <t t-if="batch.state == '2-indos_pending'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
-<<<<<<< HEAD
-                            </td>
-                             </t>
-                            <td class="text-center">
-                                <a t-attf-href="/my/gpcandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" style="margin-top: 10px; margin-bottom: 20px;">DGS Capacity</a>
-                            </td>
-                            <!-- <td class="text-center">
-                                <t t-out="candidate.candidate_code" />
-                            </td>
-                            <td class="text-center">
-                                 <a t-attf-href="/my/gpcandidateform/{{candidate.id}}" class="fa">View</a>
-                            </td> -->
-=======
                                 </td>
                             </t>
->>>>>>> a0da57c448f1ee653451193baa909e591b037793
 
                         </tr>
                     </t>

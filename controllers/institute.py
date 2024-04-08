@@ -935,12 +935,6 @@ class InstitutePortal(CustomerPortal):
     def InstituteDocumentList(self, **kw):
     
         user_id = request.env.user.id
-<<<<<<< HEAD
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)])
-        lod = request.env["lod.institute"].sudo().search(
-            [('institute_id', '=', institute.id)])
-=======
     
         # institute_id = request.env["bes.institute"].sudo().search(
         #     [('user_id', '=', user_id)]).id
@@ -957,7 +951,6 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
     
         
->>>>>>> a0da57c448f1ee653451193baa909e591b037793
         vals = {'lods': lod, 'page_name': 'lod_list'}
     
         return request.render("bes.institute_document_list", vals)
@@ -1797,7 +1790,7 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
 
-        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
 
         # Add data validation for SC/ST column
@@ -1840,7 +1833,7 @@ class InstitutePortal(CustomerPortal):
                 'TG': 'Telangana',
                 'TR': 'Tripura',
                 'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
+                'UK': 'Uttarakhand',
                 'WB': 'West Bengal',
                 'AN': 'Andaman and Nicobar Islands',
                 'CH': 'Chandigarh',
@@ -1928,7 +1921,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
 
-        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UT', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
         state_values2 = ['Jammu and Kashmir','Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
@@ -1973,7 +1966,7 @@ class InstitutePortal(CustomerPortal):
                 'TG': 'Telangana',
                 'TR': 'Tripura',
                 'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
+                'UK': 'Uttarakhand',
                 'WB': 'West Bengal',
                 'AN': 'Andaman and Nicobar Islands',
                 'CH': 'Chandigarh',
@@ -2084,7 +2077,7 @@ class InstitutePortal(CustomerPortal):
                 'TG': 'Telangana',
                 'TR': 'Tripura',
                 'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
+                'UK': 'Uttarakhand',
                 'WB': 'West Bengal',
                 'AN': 'Andaman and Nicobar Islands',
                 'CH': 'Chandigarh',
@@ -2272,7 +2265,7 @@ class InstitutePortal(CustomerPortal):
             
             state_value = row[7]  # Assuming State (short) is the sixth column
             
-            import wdb; wdb.set_trace()
+            # import wdb; wdb.set_trace()
 
 
             state_values = {
@@ -2302,7 +2295,7 @@ class InstitutePortal(CustomerPortal):
                 'TG': 'Telangana',
                 'TR': 'Tripura',
                 'UP': 'Uttar Pradesh',
-                'UT': 'Uttarakhand',
+                'UK': 'Uttarakhand',
                 'WB': 'West Bengal',
                 'AN': 'Andaman and Nicobar Islands',
                 'CH': 'Chandigarh',
@@ -2439,20 +2432,6 @@ class InstitutePortal(CustomerPortal):
 
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
-<<<<<<< HEAD
-    @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
-        # import wdb; wdb.set_trace()
-        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
-        print(batch)
-
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf_data))]
-            return request.make_response(pdf_data, headers=pdfhttpheaders)
-        else:
-            return request.not_found()
-=======
 
     # @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     # def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
@@ -2468,4 +2447,3 @@ class InstitutePortal(CustomerPortal):
     #     else:
     #         return request.not_found()
         
->>>>>>> a0da57c448f1ee653451193baa909e591b037793
