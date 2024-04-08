@@ -2046,77 +2046,71 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
-        user_id = request.env.user.id
-        institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
-        
-        batch_id = int(kw.get("batch_id"))
-        file_content = kw.get("fileUpload").read()
-        filename = kw.get('fileUpload').filename
-
-        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
-        workbook = xlrd.open_workbook(file_contents=file_content)
-        # worksheet = workbook.sheet_by_index(0)
-
-        # worksheet = workbook.get_worksheet_by_name('Candidates')
-        worksheet = workbook.sheet_by_index(0)
-        for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
-            row = worksheet.row_values(row_num)
+        try:
+            user_id = request.env.user.id
+            institute_id = request.env["bes.institute"].sudo().search(
+                [('user_id', '=', user_id)]).id
             
-            
-            dob = date_value
-            street1 = row[3]
-            street2 = row[4]  
-            dist_city = row[5]  # Assuming Dist./City is the fifth column
+            batch_id = int(kw.get("batch_id"))
+            file_content = kw.get("fileUpload").read()
+            filename = kw.get('fileUpload').filename
 
-            pin_code = int(row[6])  # Assuming Pin code is the seventh column
-            state_value = row[7]  # Assuming State (short) is the sixth column
+            # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+            workbook = xlrd.open_workbook(file_contents=file_content)
+            # worksheet = workbook.sheet_by_index(0)
+
+            # worksheet = workbook.get_worksheet_by_name('Candidates')
+            worksheet = workbook.sheet_by_index(0)
+            for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+                row = worksheet.row_values(row_num)
+                
+                
+                dob = date_value
+                street1 = row[3]
+                street2 = row[4]  
+                dist_city = row[5]  # Assuming Dist./City is the fifth column
+
+                pin_code = int(row[6])  # Assuming Pin code is the seventh column
+                state_value = row[7]  # Assuming State (short) is the sixth column
 
 
-            state_values = {
-                'JK': 'Jammu and Kashmir',
-                'MH': 'Maharashtra',
-                'AP': 'Andhra Pradesh',
-                'AR': 'Arunachal Pradesh',
-                'AS': 'Assam',
-                'BR': 'Bihar',
-                'CT': 'Chhattisgarh',
-                'GA': 'Goa',
-                'GJ': 'Gujarat',
-                'HR': 'Haryana',
-                'HP': 'Himachal Pradesh',
-                'JH': 'Jharkhand',
-                'KA': 'Karnataka',
-                'KL': 'Kerala',
-                'MP': 'Madhya Pradesh',
-                'MN': 'Manipur',
-                'ML': 'Meghalaya',
-                'MZ': 'Mizoram',
-                'NL': 'Nagaland',
-                'OD': 'Odisha',
-                'PB': 'Punjab',
-                'RJ': 'Rajasthan',
-                'SK': 'Sikkim',
-                'TN': 'Tamil Nadu',
-                'TG': 'Telangana',
-                'TR': 'Tripura',
-                'UP': 'Uttar Pradesh',
-                'UK': 'Uttarakhand',
-                'WB': 'West Bengal',
-                'AN': 'Andaman and Nicobar Islands',
-                'CH': 'Chandigarh',
-                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                'LD': 'Lakshadweep',
-                'DL': 'Delhi',
-                'PY': 'Puducherry'
-            }
-
-            # state = False
-            # for code, name in state_values.items():
-            #     if name.lower() == state_value.lower():
-            #         state = code
-            #     else:
-            #         state = False
+                state_values = {
+                    'JK': 'Jammu and Kashmir',
+                    'MH': 'Maharashtra',
+                    'AP': 'Andhra Pradesh',
+                    'AR': 'Arunachal Pradesh',
+                    'AS': 'Assam',
+                    'BR': 'Bihar',
+                    'CT': 'Chhattisgarh',
+                    'GA': 'Goa',
+                    'GJ': 'Gujarat',
+                    'HR': 'Haryana',
+                    'HP': 'Himachal Pradesh',
+                    'JH': 'Jharkhand',
+                    'KA': 'Karnataka',
+                    'KL': 'Kerala',
+                    'MP': 'Madhya Pradesh',
+                    'MN': 'Manipur',
+                    'ML': 'Meghalaya',
+                    'MZ': 'Mizoram',
+                    'NL': 'Nagaland',
+                    'OD': 'Odisha',
+                    'PB': 'Punjab',
+                    'RJ': 'Rajasthan',
+                    'SK': 'Sikkim',
+                    'TN': 'Tamil Nadu',
+                    'TG': 'Telangana',
+                    'TR': 'Tripura',
+                    'UP': 'Uttar Pradesh',
+                    'UK': 'Uttarakhand',
+                    'WB': 'West Bengal',
+                    'AN': 'Andaman and Nicobar Islands',
+                    'CH': 'Chandigarh',
+                    'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                    'LD': 'Lakshadweep',
+                    'DL': 'Delhi',
+                    'PY': 'Puducherry'
+                }
 
                 # state = False
                 # for code, name in state_values.items():
@@ -2125,8 +2119,15 @@ class InstitutePortal(CustomerPortal):
                 #     else:
                 #         state = False
 
-                # print("Stateeeeee",state)
-                        
+                    # state = False
+                    # for code, name in state_values.items():
+                    #     if name.lower() == state_value.lower():
+                    #         state = code
+                    #     else:
+                    #         state = False
+
+                    # print("Stateeeeee",state)
+                            
                 data_xth_std_eng = 0
                 data_twelfth_std_eng = 0
                 data_iti = 0
@@ -2258,9 +2259,9 @@ class InstitutePortal(CustomerPortal):
                     'iti_percent': data_iti,
                     'sc_st': candidate_st
                 })
-            except:
-                error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
-                raise ValidationError(error_val)
+        except:
+            error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
+            raise ValidationError(error_val)
 
         # workbook.close()
 
@@ -2333,48 +2334,48 @@ class InstitutePortal(CustomerPortal):
                 pin_code = int(row[6])  # Assuming Pin code is the seventh column
                 state_value = row[7]  # Assuming State (short) is the sixth column
 
-            state_values = {
-                'MH': 'Maharashtra',
-                'AP': 'Andhra Pradesh',
-                'AR': 'Arunachal Pradesh',
-                'AS': 'Assam',
-                'BR': 'Bihar',
-                'CT': 'Chhattisgarh',
-                'GA': 'Goa',
-                'GJ': 'Gujarat',
-                'HR': 'Haryana',
-                'HP': 'Himachal Pradesh',
-                'JH': 'Jharkhand',
-                'KA': 'Karnataka',
-                'KL': 'Kerala',
-                'MP': 'Madhya Pradesh',
-                'MN': 'Manipur',
-                'ML': 'Meghalaya',
-                'MZ': 'Mizoram',
-                'NL': 'Nagaland',
-                'OD': 'Odisha',
-                'PB': 'Punjab',
-                'RJ': 'Rajasthan',
-                'SK': 'Sikkim',
-                'TN': 'Tamil Nadu',
-                'TG': 'Telangana',
-                'TR': 'Tripura',
-                'UP': 'Uttar Pradesh',
-                'UK': 'Uttarakhand',
-                'WB': 'West Bengal',
-                'AN': 'Andaman and Nicobar Islands',
-                'CH': 'Chandigarh',
-                'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                'LD': 'Lakshadweep',
-                'DL': 'Delhi',
-                'PY': 'Puducherry'
-            }
+                state_values = {
+                        'MH': 'Maharashtra',
+                        'AP': 'Andhra Pradesh',
+                        'AR': 'Arunachal Pradesh',
+                        'AS': 'Assam',
+                        'BR': 'Bihar',
+                        'CT': 'Chhattisgarh',
+                        'GA': 'Goa',
+                        'GJ': 'Gujarat',
+                        'HR': 'Haryana',
+                        'HP': 'Himachal Pradesh',
+                        'JH': 'Jharkhand',
+                        'KA': 'Karnataka',
+                        'KL': 'Kerala',
+                        'MP': 'Madhya Pradesh',
+                        'MN': 'Manipur',
+                        'ML': 'Meghalaya',
+                        'MZ': 'Mizoram',
+                        'NL': 'Nagaland',
+                        'OD': 'Odisha',
+                        'PB': 'Punjab',
+                        'RJ': 'Rajasthan',
+                        'SK': 'Sikkim',
+                        'TN': 'Tamil Nadu',
+                        'TG': 'Telangana',
+                        'TR': 'Tripura',
+                        'UP': 'Uttar Pradesh',
+                        'UK': 'Uttarakhand',
+                        'WB': 'West Bengal',
+                        'AN': 'Andaman and Nicobar Islands',
+                        'CH': 'Chandigarh',
+                        'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                        'LD': 'Lakshadweep',
+                        'DL': 'Delhi',
+                        'PY': 'Puducherry'
+                    }
             
             
                     
-            data_xth_std_eng = 0
-            data_twelfth_std_eng = 0
-            data_iti = 0
+                data_xth_std_eng = 0
+                data_twelfth_std_eng = 0
+                data_iti = 0
 
 
                 if row[8]:
