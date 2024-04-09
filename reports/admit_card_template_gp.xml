@@ -3,150 +3,148 @@
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
                 
-                    <div class="header">
-                        <div class="container" style="text-align: center; font-size: 24px; margin-bottom: 10px;">
-                            <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style=" width: 50px; height:50px;"/> 
-                            <strong>Board of Examinations for Seafarers Trust</strong>
-                        </div>
-                        <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
-                            <t t-if="o.attempt_number == 1">
-                                <strong>Admit Card - GP Fresh Candidate</strong>
-                            </t>
-                            <t t-else="">
-                                <strong>Admit Card - GP Repeater Candidate</strong>
-                            </t>
-                        </div>  
-                        <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
-                            <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
-                        </div>
-
+                <div class="header">
+                    <div class="container" style="text-align: center; font-size: 24px; margin-bottom: 10px;">
+                        <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style=" width: 50px; height:50px;"/> 
+                        <strong>Board of Examinations for Seafarers Trust</strong>
                     </div>
-
-                    <div class="container" style="position:relative; margin:30px;">
-                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
-                        <t t-if="o.gp_candidate.candidate_signature">
-                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: 175px; right: 8px;" />
+                    <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
+                        <t t-if="o.attempt_number == 1">
+                            <strong>Admit Card - GP Fresh Candidate</strong>
                         </t>
-                        <!-- </div>
-      
-                        <div class="container" style=""> -->
-                        <div class="row" style="margin-bottom:4px ; ">
-                            <div class="col-6">
-                                <span style="font-size:20px;">Examination: </span>
-                                <span style="font-size:20px;">
-                                    <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%b-%y')"/>
-                                    <t t-esc="formatted_dob"/>
-                                </span>  
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom:4px ; ">
-                            <div class="col-6">
-                                <span style="font-size:20px;">Attemp Nummber:</span>
-                                <span style="font-size:20px;"><t t-esc="o.attempt_number"/></span>  
-                            </div>
-                        </div>
-
-                        <div class="row" style="margin-bottom:4px ; ">
-                            <div class="col-12">
-                                <span style="font-size:20px;">Name as in INDOS:</span>
-                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.name"/></span>  
-                            </div>
-                        </div>
-                        
-                        <div class="row" style="margin-bottom:4px;">
-                            <div class="col-6">
-                                <span style="font-size:20px;">DOB as in INDOS: </span>
-                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.dob"/></span>  
-                            </div>
-                        </div>
-                        
-                        <div class="row" style="margin-bottom:4px;">
-                            <div class="col-6">
-                                <span style="font-size:20px;">INDOs No: </span>
-                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.indos_no"/></span>  
-                            </div>
-                        </div>
-                        
-                        <div class="row" style="margin-bottom:4px;">
-                            <div class="col-6">
-                                <span style="font-size:20px;">Code No: </span>
-                                <span style="font-size:20px;"><t t-esc="o.gp_candidate.candidate_code"/></span>  
-                            </div>
-                        </div>
-                        
-                        <div class="row" style="margin-bottom:4px;">
-                            <div class="col-6">
-                                <span style="font-size:20px;">Roll No: </span>
-                                <span style="font-size:20px;"><t t-esc="o.exam_id"/></span>  
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container" style="position:absolute; margin-top:150px;">
-                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: -250px; right: 15px;"/>
-                        <t t-if="o.gp_candidate.candidate_signature">
-                            <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: -80px; right: 8px;" />
+                        <t t-else="">
+                            <strong>Admit Card - GP Repeater Candidate</strong>
                         </t>
-                        <t t-if="o.qr_code">
-                            <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
-                        </t>
-                          <!-- </div> -->
+                    </div>  
+                    <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
+                        <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
+                    </div>
 
-                    <div class="container" style="text-align:center;position:relative;top:150px;">
-                        <div class="row">
-                            <div class="col-4">
-                                <table class="table" style="border-collapse: collapse;">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                </div>
 
-                                        <tr scope="row" t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
-                                            <td style="border: 1px solid black;">Gsk Oral/Practical</td>
-                                        </tr>
-
-                                        <tr scope="row" t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
-                                            <td style="border: 1px solid black;">Gsk Online</td>
-
-                                        </tr>
-                                        <tr scope="row" t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
-                                            <td style="border: 1px solid black;">Mek Oral/Practical</td>
-
-                                        </tr>
-                                        <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
-                                            <td style="border: 1px solid black;">MeK Online</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                <div class="container" style="position:relative; margin:30px;">
+                    <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
+                    <t t-if="o.gp_candidate.candidate_signature">
+                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: 175px; right: 8px;" />
+                    </t>
+                    <!-- </div>
+    
+                    <div class="container" style=""> -->
+                    <div class="row" style="margin-bottom:4px ; ">
+                        <div class="col-6">
+                            <span style="font-size:20px;">Examination: </span>
+                            <span style="font-size:20px;">
+                                <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%b-%y')"/>
+                                <t t-esc="formatted_dob"/>
+                            </span>  
                         </div>
                     </div>
 
-                    <div class="container" style="text-align:center; margin:0; margin-top:20px;position:relative;top:150px;">
-                        <div class="row">
-                            <div class="col-12">
-                                <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <span style="font-size:22px; font-weight:900; font-family: 'TimesNewRomanBold';">Ravindra Nath Tripathi</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="height:max-content;">
-                                <span style="font-size:22px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <span style="font-size:20px; font-weight:900;">Board of Examinations for Seafarers Trust</span>
-                            </div>
+                    <div class="row" style="margin-bottom:4px ; ">
+                        <div class="col-6">
+                            <span style="font-size:20px;">Attemp Nummber:</span>
+                            <span style="font-size:20px;"><t t-esc="o.attempt_number"/></span>  
                         </div>
                     </div>
+
+                    <div class="row" style="margin-bottom:4px ; ">
+                        <div class="col-12">
+                            <span style="font-size:20px;">Name as in INDOS:</span>
+                            <span style="font-size:20px;"><t t-esc="o.gp_candidate.name"/></span>  
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-bottom:4px;">
+                        <div class="col-6">
+                            <span style="font-size:20px;">DOB as in INDOS: </span>
+                            <span style="font-size:20px;"><t t-esc="o.gp_candidate.dob"/></span>  
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-bottom:4px;">
+                        <div class="col-6">
+                            <span style="font-size:20px;">INDOs No: </span>
+                            <span style="font-size:20px;"><t t-esc="o.gp_candidate.indos_no"/></span>  
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-bottom:4px;">
+                        <div class="col-6">
+                            <span style="font-size:20px;">Code No: </span>
+                            <span style="font-size:20px;"><t t-esc="o.gp_candidate.candidate_code"/></span>  
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-bottom:4px;">
+                        <div class="col-6">
+                            <span style="font-size:20px;">Roll No: </span>
+                            <span style="font-size:20px;"><t t-esc="o.exam_id"/></span>  
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" style="position:absolute; margin-top:150px;">
+                    <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: -250px; right: 15px;"/>
+                    <t t-if="o.gp_candidate.candidate_signature">
+                        <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: -80px; right: 8px;" />
+                    </t>
+                    <t t-if="o.qr_code">
+                        <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
+                    </t>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <table class="table" style="border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr scope="row" t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
+                                        <td style="border: 1px solid black;">Gsk Oral/Practical</td>
+                                    </tr>
+
+                                    <tr scope="row" t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
+                                        <td style="border: 1px solid black;">Gsk Online</td>
+
+                                    </tr>
+                                    <tr scope="row" t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
+                                        <td style="border: 1px solid black;">Mek Oral/Practical</td>
+
+                                    </tr>
+                                    <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
+                                        <td style="border: 1px solid black;">MeK Online</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" style="text-align:center; margin:0; margin-top:20px;position:relative;top:150px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <span style="font-size:22px; font-weight:900; font-family: 'TimesNewRomanBold';">Ravindra Nath Tripathi</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12" style="height:max-content;">
+                            <span style="font-size:22px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <span style="font-size:20px; font-weight:900;">Board of Examinations for Seafarers Trust</span>
+                        </div>
+                    </div>
+                </div>
             </t>
         </t>
     </template>
