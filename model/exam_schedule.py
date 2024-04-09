@@ -374,12 +374,12 @@ class ExamOralPractical(models.Model):
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
     # examiners = fields.Many2one('bes.examiner', string="Examiner")
     # subject = fields.Many2one("course.master.subject","Subject")
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
 
-    start_time = fields.Datetime("Start Time")
-    end_time = fields.Datetime("End Time")
+    # start_time = fields.Datetime("Start Time")
+    # end_time = fields.Datetime("End Time")
     examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Examiners")
    
     
@@ -520,6 +520,7 @@ class ExamOralPracticalExaminers(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False)
     
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False)
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course")
     subject = fields.Many2one("course.master.subject",related='prac_oral_id.subject',string="Subject")
     examiner = fields.Many2one('bes.examiner', string="Examiner")
