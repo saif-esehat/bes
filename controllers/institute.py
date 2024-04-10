@@ -236,7 +236,7 @@ class InstitutePortal(CustomerPortal):
         
         vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
-
+    
     @http.route(['/my/ccmccandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
     def CcmcCandidateProfileView(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
@@ -703,8 +703,10 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            courses_taught = kw.get("courses_taught")
-            
+            courses_id = kw.get("courses_taught")
+            courses_taught = request.env['course.master'].sudo().search([('id','=',int(courses_id))])
+            # import wdb; wdb.set_trace();
+
             faculty_data = {
                 "faculty_name": faculty_name,
                 'gp_batches_id':batch_id,
@@ -714,8 +716,8 @@ class InstitutePortal(CustomerPortal):
                 "designation": designation,
                 "qualification": qualification,
                 "contract_terms": contract_terms,
-                "course_name":course_name
-                # "courses_taught": courses_taught
+                "course_name":course_name,
+                "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();
@@ -914,7 +916,24 @@ class InstitutePortal(CustomerPortal):
             [('ccmc_batches_id', '=', batch_id)])
         vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
-        return request.render("bes.ccmc_faculty_portal_list", vals)
+        return request.render("bes.gp_faculty_portal_list", vals)
+
+
+    @http.route(['/my/gpbatch/faculties/profile/<int:batch_id>/<int:faculties_id>'], type="http", auth="user", website=True)
+    def GPFacultyProfileView(self,batch_id ,faculties_id, **kw):
+        user_id = request.env.user.id
+        
+        gp_batches_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        batches = gp_batches_id.institute_batch_id
+        import wdb; wdb.set_trace()
+        faculties = request.env["institute.faculty"].sudo().search(
+            [('id', '=', faculties_id)])
+        # import wdb; wdb.set_trace()
+        
+        vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id,}
+
+        return request.render("bes.gp_faculty_profile_view", vals)
    
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
@@ -2046,7 +2065,6 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
-        try:
             user_id = request.env.user.id
             institute_id = request.env["bes.institute"].sudo().search(
                 [('user_id', '=', user_id)]).id
@@ -2063,64 +2081,60 @@ class InstitutePortal(CustomerPortal):
             worksheet = workbook.sheet_by_index(0)
             for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
                 row = worksheet.row_values(row_num)
-                
-                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
-                # formatted_date = self.convert_to_dd_mmm_yy(date_value)
-                # print("Formatted date:", formatted_date)
-                date_string = date_value.strftime('%d-%b-%y') 
-                dob = date_value
-                street1 = row[3]
-                street2 = row[4]  
-                dist_city = row[5]  # Assuming Dist./City is the fifth column
+                try:
+                    indos_no = row[0]  
+                    full_name = row[1] 
+                    
+                    date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                    # formatted_date = self.convert_to_dd_mmm_yy(date_value)
+                    # print("Formatted date:", formatted_date)
+                    date_string = date_value.strftime('%d-%b-%y') 
+                    dob = date_value
+                    street1 = row[3]
+                    street2 = row[4]  
+                    dist_city = row[5]  # Assuming Dist./City is the fifth column
 
-                pin_code = int(row[6])  # Assuming Pin code is the seventh column
-                state_value = row[7]  # Assuming State (short) is the sixth column
+                    pin_code = int(row[6])  # Assuming Pin code is the seventh column
+                    state_value = row[7]  # Assuming State (short) is the sixth column
 
 
-                state_values = {
-                    'JK': 'Jammu and Kashmir',
-                    'MH': 'Maharashtra',
-                    'AP': 'Andhra Pradesh',
-                    'AR': 'Arunachal Pradesh',
-                    'AS': 'Assam',
-                    'BR': 'Bihar',
-                    'CT': 'Chhattisgarh',
-                    'GA': 'Goa',
-                    'GJ': 'Gujarat',
-                    'HR': 'Haryana',
-                    'HP': 'Himachal Pradesh',
-                    'JH': 'Jharkhand',
-                    'KA': 'Karnataka',
-                    'KL': 'Kerala',
-                    'MP': 'Madhya Pradesh',
-                    'MN': 'Manipur',
-                    'ML': 'Meghalaya',
-                    'MZ': 'Mizoram',
-                    'NL': 'Nagaland',
-                    'OD': 'Odisha',
-                    'PB': 'Punjab',
-                    'RJ': 'Rajasthan',
-                    'SK': 'Sikkim',
-                    'TN': 'Tamil Nadu',
-                    'TG': 'Telangana',
-                    'TR': 'Tripura',
-                    'UP': 'Uttar Pradesh',
-                    'UK': 'Uttarakhand',
-                    'WB': 'West Bengal',
-                    'AN': 'Andaman and Nicobar Islands',
-                    'CH': 'Chandigarh',
-                    'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-                    'LD': 'Lakshadweep',
-                    'DL': 'Delhi',
-                    'PY': 'Puducherry'
-                }
-
-                # state = False
-                # for code, name in state_values.items():
-                #     if name.lower() == state_value.lower():
-                #         state = code
-                #     else:
-                #         state = False
+                    state_values = {
+                        'JK': 'Jammu and Kashmir',
+                        'MH': 'Maharashtra',
+                        'AP': 'Andhra Pradesh',
+                        'AR': 'Arunachal Pradesh',
+                        'AS': 'Assam',
+                        'BR': 'Bihar',
+                        'CT': 'Chhattisgarh',
+                        'GA': 'Goa',
+                        'GJ': 'Gujarat',
+                        'HR': 'Haryana',
+                        'HP': 'Himachal Pradesh',
+                        'JH': 'Jharkhand',
+                        'KA': 'Karnataka',
+                        'KL': 'Kerala',
+                        'MP': 'Madhya Pradesh',
+                        'MN': 'Manipur',
+                        'ML': 'Meghalaya',
+                        'MZ': 'Mizoram',
+                        'NL': 'Nagaland',
+                        'OD': 'Odisha',
+                        'PB': 'Punjab',
+                        'RJ': 'Rajasthan',
+                        'SK': 'Sikkim',
+                        'TN': 'Tamil Nadu',
+                        'TG': 'Telangana',
+                        'TR': 'Tripura',
+                        'UP': 'Uttar Pradesh',
+                        'UK': 'Uttarakhand',
+                        'WB': 'West Bengal',
+                        'AN': 'Andaman and Nicobar Islands',
+                        'CH': 'Chandigarh',
+                        'DH': 'Dadra and Nagar Haveli and Daman and Diu',
+                        'LD': 'Lakshadweep',
+                        'DL': 'Delhi',
+                        'PY': 'Puducherry'
+                    }
 
                     # state = False
                     # for code, name in state_values.items():
@@ -2129,146 +2143,153 @@ class InstitutePortal(CustomerPortal):
                     #     else:
                     #         state = False
 
-                    # print("Stateeeeee",state)
-                            
-                data_xth_std_eng = 0
-                data_twelfth_std_eng = 0
-                data_iti = 0
-                state = request.env['res.country.state'].sudo().search(
-                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
+                        # state = False
+                        # for code, name in state_values.items():
+                        #     if name.lower() == state_value.lower():
+                        #         state = code
+                        #     else:
+                        #         state = False
 
-                # phone = str((row[8]))
-                # print("Phone ",str(row[8] ))
-                if row[8]:
-                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
-                else:
-                    phone = ""
-                
-                if row[9]:
-                    mobile = self.remove_after_dot_in_phone_number(str(row[9]))
-                else:
-                    mobile = ""
+                        # print("Stateeeeee",state)
+                                
+                    data_xth_std_eng = 0
+                    data_twelfth_std_eng = 0
+                    data_iti = 0
+                    state = request.env['res.country.state'].sudo().search(
+                        [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
-                # mobile = str(row[9]) 
-                email = row[10] 
-
-                
-                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
-                
-                
-                if type(xth_std_eng) in [int, float]:
-                    data_xth_std_eng = float(xth_std_eng)
-                # import wdb; wdb.set_trace()
-                elif type(xth_std_eng) == str:
+                    # phone = str((row[8]))
+                    # print("Phone ",str(row[8] ))
+                    if row[8]:
+                        phone = self.remove_after_dot_in_phone_number(str(row[8]))
+                    else:
+                        phone = ""
                     
-                    if xth_std_eng.lower() == 'a+':
-                        data_xth_std_eng = 90
-                    if xth_std_eng.lower() == 'a':
-                        data_xth_std_eng = 80
-                    if xth_std_eng.lower() == 'b+':
-                        data_xth_std_eng = 70
-                    if xth_std_eng.lower() == 'b':
-                        data_xth_std_eng = 60
-                    if xth_std_eng.lower() == 'c+':
-                        data_xth_std_eng = 50
-                    if xth_std_eng.lower() == 'c':
-                        data_xth_std_eng = 40
-                    if xth_std_eng.lower() == 'd+':
-                        data_xth_std_eng = 30
-                    if xth_std_eng.lower() == 'd':
-                        data_xth_std_eng = 20
-                    if xth_std_eng.lower() == 'e':
-                        data_xth_std_eng = 19
-                
-                else:
+                    if row[9]:
+                        mobile = self.remove_after_dot_in_phone_number(str(row[9]))
+                    else:
+                        mobile = ""
+
+                    # mobile = str(row[9]) 
+                    email = row[10] 
+
+                    
+                    xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+                    
+                    
+                    if type(xth_std_eng) in [int, float]:
+                        data_xth_std_eng = float(xth_std_eng)
                     # import wdb; wdb.set_trace()
-                    raise ValidationError("Invalid marks/percentage")
-
-                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
-                if type(twelfth_std_eng) in [int, float]:
-                    data_twelfth_std_eng = float(twelfth_std_eng)
-                elif type(twelfth_std_eng) == str:
-                    if twelfth_std_eng.lower() == 'a+':
-                        data_twelfth_std_eng = 90
-                    if twelfth_std_eng.lower() == 'a':
-                        data_twelfth_std_eng = 80
-                    if twelfth_std_eng.lower() == 'b+':
-                        data_twelfth_std_eng = 70
-                    if twelfth_std_eng.lower() == 'b':
-                        data_twelfth_std_eng = 60
-                    if twelfth_std_eng.lower() == 'c+':
-                        data_twelfth_std_eng = 50
-                    if twelfth_std_eng.lower() == 'c':
-                        data_twelfth_std_eng = 40
-                    if twelfth_std_eng.lower() == 'd+':
-                        data_twelfth_std_eng = 30
-                    if twelfth_std_eng.lower() == 'd':
-                        data_twelfth_std_eng = 20
-                    if twelfth_std_eng.lower() == 'e':
-                        data_twelfth_std_eng = 19
+                    elif type(xth_std_eng) == str:
+                        
+                        if xth_std_eng.lower() == 'a+':
+                            data_xth_std_eng = 90
+                        if xth_std_eng.lower() == 'a':
+                            data_xth_std_eng = 80
+                        if xth_std_eng.lower() == 'b+':
+                            data_xth_std_eng = 70
+                        if xth_std_eng.lower() == 'b':
+                            data_xth_std_eng = 60
+                        if xth_std_eng.lower() == 'c+':
+                            data_xth_std_eng = 50
+                        if xth_std_eng.lower() == 'c':
+                            data_xth_std_eng = 40
+                        if xth_std_eng.lower() == 'd+':
+                            data_xth_std_eng = 30
+                        if xth_std_eng.lower() == 'd':
+                            data_xth_std_eng = 20
+                        if xth_std_eng.lower() == 'e':
+                            data_xth_std_eng = 19
+                    
                     else:
-                        data_twelfth_std_eng = 0
-                else:
-                    raise ValidationError("Invalid marks/percentage")
+                        # import wdb; wdb.set_trace()
+                        raise ValidationError("Invalid marks/percentage")
 
-                iti = row[13] # Assuming %ITI is the twelfth column
-                if type(iti) in [int, float]:
-                    data_iti = float(iti)
-                elif type(iti) == str:
-                    if iti.lower() == 'a+':
-                        data_iti = 90
-                    if iti.lower() == 'a':
-                        data_iti = 80
-                    if iti.lower() == 'b+':
-                        data_iti = 70
-                    if iti.lower() == 'b':
-                        data_iti = 60
-                    if iti.lower() == 'c+':
-                        data_iti = 50
-                    if iti.lower() == 'c':
-                        data_iti = 40
-                    if iti.lower() == 'd+':
-                        data_iti = 30
-                    if iti.lower() == 'd':
-                        data_iti = 20
-                    if iti.lower() == 'e':
-                        data_iti = 19
+                    twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+                    if type(twelfth_std_eng) in [int, float]:
+                        data_twelfth_std_eng = float(twelfth_std_eng)
+                    elif type(twelfth_std_eng) == str:
+                        if twelfth_std_eng.lower() == 'a+':
+                            data_twelfth_std_eng = 90
+                        if twelfth_std_eng.lower() == 'a':
+                            data_twelfth_std_eng = 80
+                        if twelfth_std_eng.lower() == 'b+':
+                            data_twelfth_std_eng = 70
+                        if twelfth_std_eng.lower() == 'b':
+                            data_twelfth_std_eng = 60
+                        if twelfth_std_eng.lower() == 'c+':
+                            data_twelfth_std_eng = 50
+                        if twelfth_std_eng.lower() == 'c':
+                            data_twelfth_std_eng = 40
+                        if twelfth_std_eng.lower() == 'd+':
+                            data_twelfth_std_eng = 30
+                        if twelfth_std_eng.lower() == 'd':
+                            data_twelfth_std_eng = 20
+                        if twelfth_std_eng.lower() == 'e':
+                            data_twelfth_std_eng = 19
+                        else:
+                            data_twelfth_std_eng = 0
                     else:
-                        data_iti = 0
-                else:
-                    raise ValidationError("Invalid marks/percentage")
+                        raise ValidationError("Invalid marks/percentage")
 
-                candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+                    iti = row[13] # Assuming %ITI is the twelfth column
+                    if type(iti) in [int, float]:
+                        data_iti = float(iti)
+                    elif type(iti) == str:
+                        if iti.lower() == 'a+':
+                            data_iti = 90
+                        if iti.lower() == 'a':
+                            data_iti = 80
+                        if iti.lower() == 'b+':
+                            data_iti = 70
+                        if iti.lower() == 'b':
+                            data_iti = 60
+                        if iti.lower() == 'c+':
+                            data_iti = 50
+                        if iti.lower() == 'c':
+                            data_iti = 40
+                        if iti.lower() == 'd+':
+                            data_iti = 30
+                        if iti.lower() == 'd':
+                            data_iti = 20
+                        if iti.lower() == 'e':
+                            data_iti = 19
+                        else:
+                            data_iti = 0
+                    else:
+                        raise ValidationError("Invalid marks/percentage")
 
-                new_candidate = request.env['gp.candidate'].sudo().create({
-                    'name': full_name,
-                    'institute_id': institute_id,
-                    'indos_no': indos_no,
-                    'dob': dob,
-                    # 'roll_no': roll_no,
-                    # 'candidate_code': code_no,
-                    'institute_batch_id': batch_id,
-                    'street': street1,
-                    'street2': street2,
-                    'phone': phone,
-                    'mobile': mobile,
-                    'email': email,
+                    candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
-                    'city': dist_city,
-                    'state_id': state,
-                    'zip': pin_code,
-                    'tenth_percent': data_xth_std_eng,
-                    'twelve_percent': data_twelfth_std_eng,
-                    'iti_percent': data_iti,
-                    'sc_st': candidate_st
-                })
-        except:
-            error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
-            raise ValidationError(error_val)
+                    new_candidate = request.env['gp.candidate'].sudo().create({
+                        'name': full_name,
+                        'institute_id': institute_id,
+                        'indos_no': indos_no,
+                        'dob': dob,
+                        # 'roll_no': roll_no,
+                        # 'candidate_code': code_no,
+                        'institute_batch_id': batch_id,
+                        'street': street1,
+                        'street2': street2,
+                        'phone': phone,
+                        'mobile': mobile,
+                        'email': email,
 
-        # workbook.close()
+                        'city': dist_city,
+                        'state_id': state,
+                        'zip': pin_code,
+                        'tenth_percent': data_xth_std_eng,
+                        'twelve_percent': data_twelfth_std_eng,
+                        'iti_percent': data_iti,
+                        'sc_st': candidate_st
+                    })
+                except:
+                    error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
+                    raise ValidationError(error_val)
 
-        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
+            # workbook.close()
+
+            return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
 
     def convert_to_dd_mmm_yy(self,date_str):
