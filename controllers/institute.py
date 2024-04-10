@@ -944,7 +944,7 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/updategpcandidate'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateCandidate(self, **kw):
-        import wdb; wdb.set_trace()
+        # import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         
@@ -990,8 +990,8 @@ class InstitutePortal(CustomerPortal):
             return request.redirect('/my/gpcandidateprofile/'+str(kw.get("canidate_id")))
             
         # import wdb; wdb.set_trace() 
-        batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
-        vals = {'batches':batches}
+        # batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
+        vals = {}
         return request.render("bes.gp_candidate_profile_view", vals)
 
 
