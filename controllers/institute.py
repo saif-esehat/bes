@@ -2380,7 +2380,8 @@ class InstitutePortal(CustomerPortal):
                 data_xth_std_eng = 0
                 data_twelfth_std_eng = 0
                 data_iti = 0
-
+                state = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
                 if row[8]:
                     phone = self.remove_after_dot_in_phone_number(str(row[8]))
