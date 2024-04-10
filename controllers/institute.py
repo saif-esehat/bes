@@ -2046,25 +2046,30 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
-        try:
-            user_id = request.env.user.id
-            institute_id = request.env["bes.institute"].sudo().search(
-                [('user_id', '=', user_id)]).id
-            
-            batch_id = int(kw.get("batch_id"))
-            file_content = kw.get("fileUpload").read()
-            filename = kw.get('fileUpload').filename
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        batch_id = int(kw.get("batch_id"))
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
 
-            # workbook = xlsxwriter.Workbook(BytesIO(file_content))
-            workbook = xlrd.open_workbook(file_contents=file_content)
-            # worksheet = workbook.sheet_by_index(0)
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        # worksheet = workbook.sheet_by_index(0)
 
-            # worksheet = workbook.get_worksheet_by_name('Candidates')
-            worksheet = workbook.sheet_by_index(0)
-            for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
-                row = worksheet.row_values(row_num)
+        # worksheet = workbook.get_worksheet_by_name('Candidates')
+        worksheet = workbook.sheet_by_index(0)
+        for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+            row = worksheet.row_values(row_num)
+            try:
+                indos_no = row[0]  
+                full_name = row[1] 
                 
-                
+                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                # formatted_date = self.convert_to_dd_mmm_yy(date_value)
+                # print("Formatted date:", formatted_date)
+                date_string = date_value.strftime('%d-%b-%y') 
                 dob = date_value
                 street1 = row[3]
                 street2 = row[4]  
@@ -2259,14 +2264,13 @@ class InstitutePortal(CustomerPortal):
                     'iti_percent': data_iti,
                     'sc_st': candidate_st
                 })
-        except:
-            error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
-            raise ValidationError(error_val)
+            except:
+                error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
+                raise ValidationError(error_val)
 
-        # workbook.close()
+            # workbook.close()
 
         return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
-
 
     def convert_to_dd_mmm_yy(self,date_str):
         try:
