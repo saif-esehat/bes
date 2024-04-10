@@ -194,9 +194,9 @@
                         <group style="width:50%;">
                             <field name="institute_code"/>
                         </group>
-                         <group style="width:50%;">
-                            <!-- <field name="institute_id"/> -->
-                        </group>
+                        <!-- <group style="width:50%;">
+                            <field name="institute_id"/>
+                        </group> -->
                         <group style="width:50%;">
                             <field name="course" required="1"/>
                         </group>
@@ -307,6 +307,32 @@
         </record>
 
         <record id="view_marksheet_ccmc_form_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ccmc_candidate"/>
+                    <field name="ccmc_marksheet"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_tree_gsk_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ccmc_candidate"/>
+                    <field name="ccmc_marksheet"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_form_gsk_oral" model="ir.ui.view">
             <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">

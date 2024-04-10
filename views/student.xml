@@ -180,8 +180,6 @@
                 <form>
                    <header>
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
-                        <!-- <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_id.active', '=', True)]}"/> -->
-                        <!-- <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_id.active', '=', False)]}"/> -->
                         <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
                         <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
                    </header>
@@ -658,6 +656,20 @@
                                         <field name='institute_id'/>                                       
                                         <field name="ccmc_oral_attempt_no"/>
                                         <field name="ccmc_oral_exam_date"/>
+                                        <field name='gsk_ccmc'/>
+                                        <field name='safety_ccmc'/>
+                                        <field name='toal_ccmc_rating'/> 
+                                        <field name='ccmc_oral_draft_confirm'/>             
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="CCMC GSK Oral">
+                                <field name="ccmc_gsk_oral_child_line" nolabel="1" >
+                                    <tree>
+                                        <field name='exam_id'/>                                       
+                                        <field name='institute_id'/>                                       
+                                        <field name="ccmc_gsk_oral_attempt_no"/>
+                                        <field name="ccmc_gsk_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
                                         <field name='safety_ccmc'/>
                                         <field name='toal_ccmc_rating'/> 
