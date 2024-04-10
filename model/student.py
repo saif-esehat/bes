@@ -492,6 +492,7 @@ class CCMCCandidate(models.Model):
         # Start CCMC rating Oral
 
     ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
+    ccmc_gsk_oral_child_line = fields.One2many("ccmc.gsk.oral.line","ccmc_oral_parent",string="CCMC Oral")
 
     ccmc_online = fields.One2many("survey.user_input","ccmc_candidate",domain=[("survey_id.subject.name", "=", 'CCMC')],string="CCMC Online")
 
@@ -1291,6 +1292,67 @@ class CcmcOralLine(models.Model):
     def _check_attempt_no(self):
         for record in self:
             if record.ccmc_oral_attempt_no > 7:
+                raise ValidationError("A Candidate can't have more than 7 exam attempts in CCMC Oral.")
+
+    # def unlink(self):
+    #     # raise UserError("YOU CAN'T DELETE CANDIDATE EXAM RECORDS.")
+    #     return super(CcmcOralLine, self - undeletable_records).unlink()
+
+
+class CcmcOralLine(models.Model):
+    _name = 'ccmc.gsk.oral.line'
+    _description = 'CCMC GSK Oral Line'
+
+
+    institute_id = fields.Many2one("bes.institute",string="Institute")
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
+    ccmc_gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
+    ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date")
+    gsk_ccmc = fields.Integer("GSK")
+    safety_ccmc = fields.Integer("Safety")
+    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+
+    
+
+    @api.depends(
+        'gsk_ccmc', 'safety_ccmc'
+    )
+    def _compute_ccmc_rating_total(self):
+        for record in self:
+            rating_total = (
+                record.gsk_ccmc +
+                record.safety_ccmc
+            )
+            
+            record.toal_ccmc_rating = rating_total
+
+
+    @api.onchange('gsk_ccmc','safety_ccmc')
+    def _onchange_ccmc_oral_marks_limit(self):
+        if self.gsk_ccmc > 10:
+            raise UserError("In CCMC Oral, GSK marks should not be greater than 10.")
+        if self.safety_ccmc > 10:
+            raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
+
+
+    @api.model
+    def create(self, vals):
+        if vals.get('ccmc_gsk_oral_attempt_no', 0) == 0:
+            # Calculate the next attempt number
+            last_attempt = self.search([
+                ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
+            ], order='ccmc_gsk_oral_attempt_no desc', limit=1)
+            next_attempt = last_attempt.ccmc_gsk_oral_attempt_no + 1 if last_attempt else 1
+            vals['ccmc_oral_attempt_no'] = next_attempt
+        return super(CcmcOralLine, self).create(vals)
+
+
+    @api.constrains('ccmc_gsk_oral_attempt_no')
+    def _check_attempt_no(self):
+        for record in self:
+            if record.ccmc_gsk_oral_attempt_no > 7:
                 raise ValidationError("A Candidate can't have more than 7 exam attempts in CCMC Oral.")
 
     # def unlink(self):

@@ -55,8 +55,8 @@
                             <field name="registered_institute" readonly="1"/>
 
                             
-                            <field name="dgs_batch" readonly="0"/>
-                            <field name="gp_candidate"/>
+                            <field name="dgs_batch" readonly="1"/>
+                            <field name="gp_candidate" readonly="1"/>
                             <!-- <field name="roll_no" readonly="1"/> -->
                             <field name="institute_name" invisible="1" />
                         </group>

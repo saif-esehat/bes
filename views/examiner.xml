@@ -201,6 +201,9 @@
                             <field name="course" required="1"/>
                         </group>
                         <group style="width:50%;">
+                            <field name="exam_region" required="1"/>
+                        </group>
+                        <group style="width:50%;">
                             <field name="subject" domain="[('course_id','=',course)]" required="1" />
                         </group>
                         
@@ -211,8 +214,9 @@
                                 <field name="dgs_batch" required="1" invisible="1"   />
                                 <field name="subject" invisible="1" />
                                 <field name="course" required="1" invisible="1"  />
+                                <field name="exam_region" invisible="1"/>
                                 <field name="examiner" required="1" domain="[('subject_id','=', subject)]"  />
-                                <field name="institute_id" required="1"/>
+                                <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
                                 <field name="exam_date" required="1"  />
                                 <field name="marksheets"  />
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
@@ -303,6 +307,32 @@
         </record>
 
         <record id="view_marksheet_ccmc_form_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ccmc_candidate"/>
+                    <field name="ccmc_marksheet"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_tree_gsk_oral" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ccmc_candidate"/>
+                    <field name="ccmc_marksheet"/>
+                    <field name="cookery_bakery"/>
+                    <field name="ccmc_oral"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_form_gsk_oral" model="ir.ui.view">
             <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
