@@ -914,7 +914,7 @@ class InstitutePortal(CustomerPortal):
             [('ccmc_batches_id', '=', batch_id)])
         vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
-        return request.render("bes.gp_faculty_portal_list", vals)
+        return request.render("bes.ccmc_faculty_portal_list", vals)
    
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
