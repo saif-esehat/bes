@@ -41,12 +41,12 @@
                             <td class="text-center">
                                 <t t-if="survey.exam_state == 'stopped'">
                                     <a class="btn text-white" style="background-color: #3b5998;" t-attf-href="/my/examiner/online_exam/start/{{survey.id}}" role="button">
-                                        <i class="fa fa-play"></i> 
+                                        <i class="fa fa-play"> Play</i> 
                                     </a>
                                 </t>
                                 <t t-elif="survey.exam_state == 'in_progress'">
                                     <a class="btn text-white" style="background-color: #f74040;" t-attf-href="/my/examiner/online_exam/stop/{{survey.id}}" role="button">
-                                        <i class="fa fa-stop"></i> 
+                                        <i class="fa fa-stop">Stop</i> 
                                     </a>
                                  </t>
                                  <t t-elif="survey.exam_state == 'done'">

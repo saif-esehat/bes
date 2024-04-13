@@ -236,7 +236,7 @@ class InstitutePortal(CustomerPortal):
         
         vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
         return request.render("bes.gp_candidate_profile_view", vals)
-
+    
     @http.route(['/my/ccmccandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
     def CcmcCandidateProfileView(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
@@ -691,7 +691,7 @@ class InstitutePortal(CustomerPortal):
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
 
         
-        print("BATCH id2",batch_id)
+        # print("BATCH id2",batch_id)
 
         if request.httprequest.method == 'POST':
             faculty_name = kw.get("faculty_name")
@@ -703,8 +703,10 @@ class InstitutePortal(CustomerPortal):
             qualification = kw.get("qualification")
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
-            courses_taught = kw.get("courses_taught")
-            
+            courses_id = kw.get("courses_taught")
+            courses_taught = request.env['course.master'].sudo().search([('id','=',int(courses_id))])
+            # import wdb; wdb.set_trace();
+
             faculty_data = {
                 "faculty_name": faculty_name,
                 'gp_batches_id':batch_id,
@@ -714,8 +716,8 @@ class InstitutePortal(CustomerPortal):
                 "designation": designation,
                 "qualification": qualification,
                 "contract_terms": contract_terms,
-                "course_name":course_name
-                # "courses_taught": courses_taught
+                "course_name":course_name,
+                "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();
@@ -914,7 +916,28 @@ class InstitutePortal(CustomerPortal):
             [('ccmc_batches_id', '=', batch_id)])
         vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
-        return request.render("bes.ccmc_faculty_portal_list", vals)
+        return request.render("bes.gp_faculty_portal_list", vals)
+
+
+    @http.route(['/my/gpbatch/faculties/profile/<int:batch_id>/<int:faculties_id>'], type="http", auth="user", website=True)
+    def GPFacultyProfileView(self,batch_id ,faculties_id, **kw):
+        user_id = request.env.user.id
+        
+        institute = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)])
+        
+        batches = request.env["institute.gp.batches"].sudo().search(
+            [('id', '=', batch_id)])
+
+        # import wdb; wdb.set_trace()
+        
+        faculties = request.env["institute.faculty"].sudo().search(
+            [('id', '=', faculties_id)])
+        
+        
+        vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id, 'batches':batches}
+
+        return request.render("bes.gp_faculty_profile_view", vals)
    
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
@@ -2078,6 +2101,7 @@ class InstitutePortal(CustomerPortal):
                 pin_code = int(row[6])  # Assuming Pin code is the seventh column
                 state_value = row[7]  # Assuming State (short) is the sixth column
 
+                    
 
                 state_values = {
                     'JK': 'Jammu and Kashmir',
@@ -2160,9 +2184,7 @@ class InstitutePortal(CustomerPortal):
                 
                 if type(xth_std_eng) in [int, float]:
                     data_xth_std_eng = float(xth_std_eng)
-                # import wdb; wdb.set_trace()
                 elif type(xth_std_eng) == str:
-                    
                     if xth_std_eng.lower() == 'a+':
                         data_xth_std_eng = 90
                     if xth_std_eng.lower() == 'a':
@@ -2181,9 +2203,9 @@ class InstitutePortal(CustomerPortal):
                         data_xth_std_eng = 20
                     if xth_std_eng.lower() == 'e':
                         data_xth_std_eng = 19
-                
+                    else:
+                        data_xth_std_eng = 0
                 else:
-                    # import wdb; wdb.set_trace()
                     raise ValidationError("Invalid marks/percentage")
 
                 twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
@@ -2238,8 +2260,8 @@ class InstitutePortal(CustomerPortal):
                     else:
                         data_iti = 0
                 else:
-                    raise ValidationError("Invalid marks/percentage")
-
+                    raise ValidationError("Invalid marks/percentage")  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+                
                 candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
                 new_candidate = request.env['gp.candidate'].sudo().create({
@@ -2545,4 +2567,51 @@ class InstitutePortal(CustomerPortal):
             return request.make_response(pdf_data, headers)
         else:
             return request.not_found()
+        
+    @http.route(['/my/updatefacultydetails'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFacultyDetails(self,**kw):
+        
+        # import wdb; wdb.set_trace() 
+
+        faculties = request.env["institute.faculty"].sudo().search(
+            [('id', '=', kw.get('faculty_id'))])
+        # import wdb; wdb.set_trace() 
+        if request.httprequest.method == 'POST':
+            
+            faculty_details = {
+                'faculty_name':kw.get('full_name'),
+                'dob':kw.get('dob'),
+                'designation':kw.get('designation'),
+                'qualification':kw.get('qualification'),
+                'contract_terms':kw.get('contract'),
+                'courses_taught':kw.get('courses_taught'),
+            }
+            
+            for key, value in faculty_details.items():
+                if value:
+                    faculties.write({key: value})
+
+            # return request.render("bes.gp_faculty_profile_view")
+            return request.redirect('/my/gpbatch/faculties/profile/'+str(kw.get("batch_id")+'/'+str(kw.get("faculty_id"))))
+            
+        
+        # batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
+        vals = {}
+        return request.render("bes.gp_faculty_profile_view", vals)
+    
+
+    @http.route(['/my/deletefaculty'], type="http", auth="user", website=True)
+    def DeleteFaculty(self, **kw):
+
+        user_id = request.env.user.id
+        # import wdb; wdb.set_trace();
+        
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))])
+        candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).user_id
+        if not candidate_user_id:
+            request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).unlink()
+            
+            return request.redirect("/my/gpbatch/candidates/"+str(batch.id))
+        else:
+            raise ValidationError("Not Allowed")
         
