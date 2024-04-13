@@ -194,9 +194,9 @@
                         <group style="width:50%;">
                             <field name="institute_code"/>
                         </group>
-                         <group style="width:50%;">
-                            <!-- <field name="institute_id"/> -->
-                        </group>
+                        <!-- <group style="width:50%;">
+                            <field name="institute_id"/>
+                        </group> -->
                         <group style="width:50%;">
                             <field name="course" required="1"/>
                         </group>

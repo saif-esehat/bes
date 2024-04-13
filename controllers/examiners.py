@@ -1176,7 +1176,21 @@ class ExaminerPortal(CustomerPortal):
             grinder = row[6]  
             electrical = row[7]  
             mek_journal = row[8] 
-            total_marks = row[9]  
+
+            total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if plumbing:
+                total_marks += int(plumbing)
+            if chipping:
+                total_marks += int(chipping)
+            if welding:
+                total_marks += int(welding)
+            if grinder:
+                total_marks += int(grinder)
+            if electrical:
+                total_marks += int(electrical)
+            if mek_journal:
+                total_marks += int(mek_journal)  
+
             remarks = row[9]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
@@ -1210,7 +1224,27 @@ class ExaminerPortal(CustomerPortal):
             lathe = row[10]
             electrical = row[11] 
 
-            mek_practical_total_marks = row[12]  
+            # mek_practical_total_marks = row[12] 
+            mek_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if using_hand_plumbing_tools_task_1:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_1)
+            if using_hand_plumbing_tools_task_2:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_2)
+            if using_hand_plumbing_tools_task_3:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_3)
+            if use_of_chipping_tools_paint_brushes:
+                mek_practical_total_marks += int(use_of_chipping_tools_paint_brushes)
+            if use_of_carpentry:
+                mek_practical_total_marks += int(use_of_carpentry)
+            if use_of_measuring_instruments:
+                mek_practical_total_marks += int(use_of_measuring_instruments) 
+            if welding:
+                mek_practical_total_marks += int(welding) 
+            if lathe:
+                mek_practical_total_marks += int(lathe) 
+            if electrical:
+                mek_practical_total_marks += int(electrical) 
+
             mek_practical_remarks = row[12]
 
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
