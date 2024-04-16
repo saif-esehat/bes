@@ -764,6 +764,8 @@ class GPExam(models.Model):
     rank = fields.Char("Rank",compute='_compute_rank')
     
     institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True)
+    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True)
+    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True)
 
 
     
@@ -804,10 +806,10 @@ class GPExam(models.Model):
 
 
     
-    @api.depends('certificate_criteria','state')
+    @api.depends('state')
     def compute_dgs_visible(self):
         for record in self:
-            if record.certificate_criteria == 'passed' and record.state == '2-done':
+            if record.state == '2-done':
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
@@ -1060,6 +1062,7 @@ class GPExam(models.Model):
                     else:
                         self.mek_oral_prac_status = 'failed'
                 else:
+                    print("Exam_ID" + self.exam_id)
                     raise ValidationError("MEK Oral Or Practical Not Confirmed")
 
             if not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0):
@@ -1094,9 +1097,16 @@ class GPExam(models.Model):
                 else:
                     raise ValidationError("GSK Online Exam Not Done or Confirmed")
             
+            
+            print("MEK ONline")
+            print(not (len(self.mek_online) == 0))
+            
             if not (len(self.mek_online) == 0):
                 if mek_online_done:
-                
+                    
+                    print("In MEK ONline done")
+                    print(self.mek_online)
+                     
                     self.mek_online_marks = self.mek_online.scoring_total
                     self.mek_online_percentage = (self.mek_online_marks/75)*100
                     
@@ -1106,6 +1116,8 @@ class GPExam(models.Model):
                         self.mek_online_status = 'failed'
                 else:
                     raise ValidationError("MEK Online Exam Not Done or Confirmed")
+          
+                
                 
                 
             
@@ -1119,7 +1131,11 @@ class GPExam(models.Model):
             
         
         
+            # if not (len(self.mek_oral) == 0 and len(self.mek_prac) == 0) or not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0) or not (len(self.gsk_online) == 0) or not (len(self.mek_online) == 0)  :
             if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
+
+            # if True:
+
             
                 mek_oral_marks = self.mek_oral.mek_oral_total_marks
                 self.mek_oral_marks = mek_oral_marks
@@ -1186,7 +1202,8 @@ class GPExam(models.Model):
                     
             
             else:
-                raise ValidationError("Not All exam are Confirmed")
+                print("Exam_ID" + self.exam_id)
+                raise ValidationError("Exam ID "+str(self.exam_id)+" Not All exam are Confirmed")
 
     attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
     

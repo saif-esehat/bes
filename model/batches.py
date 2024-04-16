@@ -590,10 +590,11 @@ class BatchesRegisterExamWizard(models.TransientModel):
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
         mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
         gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
-       
+
         for candidate in candidates:
             
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id , 'dgs_batch': self.dgs_batch.id })
+            exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id })
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             

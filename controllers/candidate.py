@@ -31,12 +31,12 @@ class GPCandidatePortal(CustomerPortal):
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).id
             exam_region = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.exam_center.name
             institute_code = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.code
-            registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate)])[-1]
+            registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate),('state','=','3-certified')])
             
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
             # import wdb; wdb.set_trace(); 
-            show_certificate = candidate.certificate_criteria == 'passed' or False
+            show_certificate = candidate.state == '3-certified' or False
             show_admit_card = candidate.state == '1-in_process'
             vals = {"registered_exams":registered_exams,"candidate":registered_exams.gp_candidate,"show_certificate":show_certificate,'show_admit_card':show_admit_card,'exam_region':exam_region,'institute_code':institute_code}
             print(vals)
