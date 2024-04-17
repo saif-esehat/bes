@@ -179,6 +179,7 @@
             <field name="arch" type="xml">
                 <form>
                    <header>
+                   
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
                         <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
                         <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
