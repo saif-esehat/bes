@@ -641,6 +641,41 @@ class OralPracticalExaminersMarksheet(models.Model):
     #         return {'domain':{'examiners':[('id','in',rec.exam_schedule_id.examiners.ids)]}}
    
 
+class ReissueApprovalWizard(models.TransientModel):
+    _name = "certificate.reissue.approval.wizard"
+    
+    
+    
+    
+    marksheet_type = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ], string='Marksheet Type')
+    
+    candidate_image_name = fields.Char("Candidate Image Name")
+    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image')
+    
+    candidate_signature_name = fields.Char("Candidate Signature")
+    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
+    
+    name = fields.Char("Full Name of Candidate as in INDOS")
+    
+    dob = fields.Date("DOB",help="Date of Birth", 
+                      widget="date", 
+                      date_format="%d-%b-%y")
+    
+    def edit_info(self):
+        marksheet_id = self.env.context.get('marksheet_id')
+        if self.marksheet_type == 'gp':
+            marksheet = self.env['gp.exam.schedule'].search([('id','=',marksheet_id)])
+            current_date = datetime.now().date()
+            marksheet.gp_candidate.write({'candidate_image': self.candidate_image , 'candidate_signature': self.candidate_signature , 'name': self.name , 'dob' : self.dob  })
+            marksheet.write({'reissued':True , 'reissued_date' : current_date , 'state': '3-certified'})           
+
+            
+
+
+    
     
     
 class GPExam(models.Model):
@@ -746,7 +781,13 @@ class GPExam(models.Model):
         ('2-done', 'Done'),
         ('3-certified', 'Certified'),
         ('4-pending', 'Pending'),
+        ('5-pending_reissue_approval','Reissue Approval'),
+        ('6-pending_reissue_approved','Approved')
+        
     ], string='State', default='1-in_process')
+    
+    reissued = fields.Boolean("Reissued")
+    reissued_date = fields.Date("Reissued Date")
 
     url = fields.Char("URL",compute="_compute_url")
     qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True)
@@ -766,6 +807,58 @@ class GPExam(models.Model):
     institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True)
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True)
     institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True)
+    
+    
+    def reissue_approval(self):
+        self.state = '5-pending_reissue_approval'
+    
+    
+    def reissue_approved(self):
+        self.state = '6-pending_reissue_approved'
+        
+    
+    
+    
+    def open_reissue_wizard(self):
+        view_id = self.env.ref('bes.certificate_reissue_approval_wizard_form').id
+        
+        gp_candidate = self.gp_candidate
+        
+        
+        return {
+            'name': 'Reissue Approval',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'certificate.reissue.approval.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_marksheet_type' : 'gp',
+                'marksheet_id': self.id ,
+                'default_candidate_image': gp_candidate.candidate_image,
+                'default_candidate_signature': gp_candidate.candidate_signature,
+                'default_dob':gp_candidate.dob,
+                'default_name':gp_candidate.name
+                
+            }
+            
+        }
+        
+        
+    
+    # def open_reissue_wizard(self):
+    #     view_id = self.env.ref('bes.certificate_reissue_approval_wizard_form').id
+        
+    #     return {
+    #         'name': 'Reissue Approval',
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'view_id': view_id,
+    #         'res_model': 'certificate.reissue.approval.wizard',
+    #         'type': 'ir.actions.act_window',
+    #         'target': 'new'
+    #     }
 
 
     
@@ -1332,6 +1425,9 @@ class CCMCExam(models.Model):
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
     
+    reissued = fields.Boolean("Reissued")
+    reissued_date = fields.Date("Reissued Date")
+    
     cookery_practical = fields.Float("Cookery Practical",readonly=True)
     cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
     cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True,digits=(16,2))
@@ -1399,6 +1495,8 @@ class CCMCExam(models.Model):
         ('2-done', 'Done'),
         ('3-certified', 'Certified'),
         ('4-pending', 'Pending'),
+        ('5-pending_reissue_approval','Reissue Approval'),
+        ('6-pending_reissue_approved','Approved')
     ], string='State', default='1-in_process')
     
     certificate_criteria = fields.Selection([
@@ -1420,6 +1518,42 @@ class CCMCExam(models.Model):
     ccmc_rank = fields.Char("Rank",compute='_compute_rank')
    
     institute_code = fields.Char("Institute code")
+    
+    def reissue_approval(self):
+        self.state = '5-pending_reissue_approval'
+    
+    
+    def reissue_approved(self):
+        self.state = '6-pending_reissue_approved'
+        
+    
+    
+    
+    def open_reissue_wizard(self):
+        view_id = self.env.ref('bes.certificate_reissue_approval_wizard_form').id
+        
+        ccmc_candidate = self.ccmc_candidate
+        
+        
+        return {
+            'name': 'Reissue Approval',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'certificate.reissue.approval.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_marksheet_type' : 'ccmc',
+                'marksheet_id': self.id ,
+                'default_candidate_image': ccmc_candidate.candidate_image,
+                'default_candidate_signature': ccmc_candidate.candidate_signature,
+                'default_dob':ccmc_candidate.dob,
+                'default_name':ccmc_candidate.name
+                
+            }
+            
+        }
     
     
     

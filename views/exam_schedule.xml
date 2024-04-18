@@ -2,6 +2,7 @@
 <odoo>
     <data>
         <!-- Exam Schedule -->
+        
 
 
         <record id="bes_gp_exam_action" model="ir.actions.act_window">
@@ -36,6 +37,34 @@
 
 
 
+         <record id="certificate_reissue_approval_wizard_form" model="ir.ui.view">
+            <field name="name">certificate.reissue.approval.wizard.form</field>
+            <field name="model">certificate.reissue.approval.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+
+                       
+                        <group width="100%">
+                            <field name="marksheet_type" readonly="1"/>
+                            <field name="candidate_image" widget="image" class="oe_avatar" />
+                            <field name="candidate_signature" widget="image" class="oe_avatar" />
+                        </group>
+                        <group width="100%">
+                            <field name="name" />
+                            <field name="dob"/>
+                        </group>
+                       
+
+
+                    <footer>
+                        <button string="Edit" type="object" class="oe_highlight" name="edit_info"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
 
         <record id="gp_exam_schedule_form" model="ir.ui.view">
             <field name="name">gp.exam.schedule.form</field>
@@ -47,6 +76,11 @@
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
+                        
+                        <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
+                        <button name="reissue_approved" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
+                        <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
+
                     </header>
                     <sheet>
                         <group>
@@ -54,6 +88,9 @@
                             <field name="institute_code" readonly="1"/>
                             <field name="registered_institute" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
+                            
+                            <field name="reissued" readonly="1"/>
+                            <field name="reissued_date" attrs="{'invisible': [('reissued', '=', False)]}" />
                             
                             <field name="dgs_batch" readonly="1"/>
                             <field name="gp_candidate" readonly="1"/>
