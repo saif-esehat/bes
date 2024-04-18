@@ -637,6 +637,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     def register(self):
         # import wdb; wdb.set_trace(); 
         print(self,"selffffffffffffffffffffffffffffffffffffffffffffff")
+        exam_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
         candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
         print(candidates)
         cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.ccmc_batch_name , 'template' :False })
@@ -647,7 +648,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         for candidate in candidates:
             
             
-            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'dgs_batch': self.dgs_batch.id})
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id})
             print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})

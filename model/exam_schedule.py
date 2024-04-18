@@ -1317,9 +1317,15 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
     certificate_id = fields.Char(string="Certificate ID")
     institute_name = fields.Many2one("bes.institute","Institute Name")
+    
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
     registered_institute = fields.Many2one("bes.institute",string="Registered Institute")
+    
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
+    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code', required=True)
+    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",required=True)
+
+
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online")
@@ -1355,7 +1361,6 @@ class CCMCExam(models.Model):
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='Oral/Prac Status',compute="compute_oral_prac_status")
-    
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
@@ -1426,7 +1431,7 @@ class CCMCExam(models.Model):
             if record.cookery_bakery_prac_status == 'failed' or record.ccmc_oral_prac_status == 'failed':
                 record.oral_prac_status = 'failed'
             else:
-                record.oral_prac_status = ''
+                record.oral_prac_status = 'passed'
                 
             
             

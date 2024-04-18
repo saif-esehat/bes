@@ -71,8 +71,8 @@
                                 <th > DOB</th>
                                 <th>GSK P  O Pass or Fail</th>
                                 <th>MEK P  O Pass or Fail</th>
-                                <th>Online GSK Pass or Fail</th>
                                 <th>Online MEK Pass or Fail</th>
+                                <th>Online GSK Pass or Fail</th>
                                 <th>Final Result</th>
                             </tr>
                         </thead>
