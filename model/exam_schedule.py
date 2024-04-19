@@ -670,7 +670,13 @@ class ReissueApprovalWizard(models.TransientModel):
             marksheet = self.env['gp.exam.schedule'].search([('id','=',marksheet_id)])
             current_date = datetime.now().date()
             marksheet.gp_candidate.write({'candidate_image': self.candidate_image , 'candidate_signature': self.candidate_signature , 'name': self.name , 'dob' : self.dob  })
-            marksheet.write({'reissued':True , 'reissued_date' : current_date , 'state': '3-certified'})           
+            marksheet.write({'reissued':True , 'reissued_date' : current_date , 'state': '3-certified'})  
+        else:
+            marksheet = self.env['ccmc.exam.schedule'].search([('id','=',marksheet_id)])
+            current_date = datetime.now().date()
+            marksheet.ccmc_candidate.write({'candidate_image': self.candidate_image , 'candidate_signature': self.candidate_signature , 'name': self.name , 'dob' : self.dob  })
+            marksheet.write({'reissued':True , 'reissued_date' : current_date , 'state': '3-certified'}) 
+                     
 
             
 
@@ -1521,7 +1527,6 @@ class CCMCExam(models.Model):
     
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
-    
     
     def reissue_approved(self):
         self.state = '6-pending_reissue_approved'

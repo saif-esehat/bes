@@ -292,12 +292,17 @@
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
+                        <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
+                        <button name="reissue_approved" groups="bes.group_certificate_reissue" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
+                        <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
                         <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
                     </header>
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code"/>
+                            <field name="reissued"/>                            
+                            <field name="reissued_date"/>
                             <field name="registered_institute" readonly="1"/>
                             <field name="dgs_batch" readonly="0"/>
                             <field name="ccmc_candidate"/>
