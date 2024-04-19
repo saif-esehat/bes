@@ -586,7 +586,7 @@
                             <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Update Indos and Image</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Modal content goes here -->
@@ -624,6 +624,12 @@
                                                 <div class="form-group">
                                                     <label for="indos_no">Full Name</label>
                                                     <input type="text" class="form-control" id="full_name" name="full_name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Date of Birth</label>
+                                                    <input type="date" class="form-control" id="dob" name="dob" />
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -3237,7 +3243,7 @@
                             <input type="hidden" class="form-control" id="canidate_id" name="canidate_id" t-attf-value="{{candidate.id}}" />
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleCcmcModalLabel">Update Indos and Image</h5>
+                                    <h5 class="modal-title" id="exampleCcmcModalLabel">Update Details</h5>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Modal content goes here -->
@@ -3271,7 +3277,43 @@
                                                     <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*" onchange="displaySignImage(this)" />
                                                 </div>
                                             </div>
-
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Full Name</label>
+                                                    <input type="text" class="form-control" id="full_name" name="full_name" />
+                                                </div>
+                                            </div>
+                                             <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Date of Birth</label>
+                                                    <input type="date" class="form-control" id="dob" name="dob" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">E-mail</label>
+                                                    <input type="text" class="form-control" id="e_mail" name="e_mail" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Phone</label>
+                                                    <input type="text" class="form-control" id="phone" name="phone" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Mobile</label>
+                                                    <input type="text" class="form-control" id="mobile" name="mobile" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="indos_no">Address</label>
+                                                    <input type="text" class="form-control mb-3" id="street" name="street" />
+                                                    <input type="text" class="form-control" id="street2" name="street2" />
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>

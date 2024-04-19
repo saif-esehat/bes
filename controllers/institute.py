@@ -997,6 +997,7 @@ class InstitutePortal(CustomerPortal):
             candidate_details = {
                 'indos_no':kw.get('indos_no'),
                 'name':kw.get('full_name'),
+                'dob':kw.get('dob'),
                 'email':kw.get('e_mail'),
                 'phone':kw.get('phone'),
                 'mobile':kw.get('mobile'),
@@ -1048,10 +1049,20 @@ class InstitutePortal(CustomerPortal):
                              'candidate_signature_name':  signature_photo_name,
                              })
                 
-            indos_no = kw.get('indos_no')
+            candidate_details = {
+                'indos_no':kw.get('indos_no'),
+                'name':kw.get('full_name'),
+                'dob':kw.get('dob'),
+                'email':kw.get('e_mail'),
+                'phone':kw.get('phone'),
+                'mobile':kw.get('mobile'),
+                'street':kw.get('street'),
+                'street2':kw.get('street2'),
+            }
             
-            if indos_no:
-                candidate.write({'indos_no':indos_no})
+            for key, value in candidate_details.items():
+                if value:
+                    candidate.write({key: value})
             
             # import wdb; wdb.set_trace()
             
@@ -2034,13 +2045,151 @@ class InstitutePortal(CustomerPortal):
         # state_cheatsheet.write(1, None, None, {'locked': False})
         # state_cheatsheet.set_row(0, None, None)
       
-        
+        instruction_worksheet = workbook.add_worksheet("Instructions")
+
+        instruction_worksheet.set_column('A:P',20,unlocked)
 
         
-        
-        
+        # instruction_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
+        # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
+        # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
 
+        instruction_worksheet.write_comment('M2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['Sr No','INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
+        for col, value in enumerate(header):
+            instruction_worksheet.write(0, col, value, header_format)
+
+        # Set date format for DOB column
+        instruction_worksheet.set_column('C:C', 20, date_format)
+
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
+        mandatory_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'red',
+            'text_wrap': True
+        })
+
+        instruction_worksheet.write('A3', '1) Description')
+        instruction_worksheet.write('A4', '2) Format')
+        instruction_worksheet.write('A5', '3) Mandatory')
+
+        instruction_worksheet.write('B2', '23GM1234')
+        instruction_worksheet.write('B3', "This field contains the student's Indos number to be used as the student's login in the future", cell_format)
+        instruction_worksheet.write('B4', "The format should be adhered to; wrong Indos or duplicate Indos numbers should be avoided at all costs", cell_format)
+        instruction_worksheet.write('B5', "Mandatory Field", mandatory_format)
+
+        instruction_worksheet.write('C2', 'Lokesh Dalvi')
+        instruction_worksheet.write('C3', 'Name As per Indos Number', cell_format)
+        instruction_worksheet.write('C4', 'The format of the name to be used should be as needed in certificates and future records', cell_format)
+        instruction_worksheet.write('C5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('D2', '14-Apr-02')
+        instruction_worksheet.write('D3', 'This is the date of birth field for students; it should be as per records', cell_format)
+        instruction_worksheet.write('D4', 'The date format to be followed strictly is DD-MMM-YY; do not use "/" or any other special character except as per the format', cell_format)
+        instruction_worksheet.write('D5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('E2', 'Street1')
+        instruction_worksheet.write('E3', 'This is address line 1')
+        instruction_worksheet.write('E4', 'No format is needed; it can be blank as well', cell_format)
+        instruction_worksheet.write('E5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('F2', 'Street2')
+        instruction_worksheet.write('F3', 'This is address line 2')
+        instruction_worksheet.write('F4', 'No format is needed; it can be blank as well', cell_format)
+        instruction_worksheet.write('F5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('G2', 'City')
+        instruction_worksheet.write('G3', 'City name as per address', cell_format)
+        instruction_worksheet.write('G4', 'No format')
+        instruction_worksheet.write('G5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('H2', 123456)
+        instruction_worksheet.write('H3', 'This field is the PIN code of the candidate\'s address', cell_format)
+        instruction_worksheet.write('H4', 'The PIN code should be exactly 6 digits; only numbers are accepted', cell_format)
+        instruction_worksheet.write('H5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('I2', 'MH')
+        instruction_worksheet.write('I3', 'This field is the state code to be selected from dropdown only', cell_format)
+        instruction_worksheet.write('I4', 'Use only the drop-downs to select the state code; please do not enter data manually in this field. Refer to the worksheet "State" for the list', cell_format)
+        instruction_worksheet.write('I5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('J2', 12345678)
+        instruction_worksheet.write('J3', 'This field is the phone number of the candidate', cell_format)
+        instruction_worksheet.write('J4', 'Only numbers accepted; should be 8 digits', cell_format)
+        instruction_worksheet.write('J5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('K2', 1234567890)
+        instruction_worksheet.write('K3', 'This field is the mobile number of the candidate', cell_format)
+        instruction_worksheet.write('K4', 'Only numbers accepted; should be 10 digits', cell_format)
+        instruction_worksheet.write('K5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('L2', 'abc@gmail.com')
+        instruction_worksheet.write('L3', 'This field is the email ID of the candidate', cell_format)
+        instruction_worksheet.write('L4', 'Must contain a "@" and ".com"', cell_format)
+        instruction_worksheet.write('L5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('M2', 61)
+        instruction_worksheet.write('M3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('M4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
+        instruction_worksheet.write('M5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('N2', 61)
+        instruction_worksheet.write('N3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('N4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
+        instruction_worksheet.write('N5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('O2', 61)
+        instruction_worksheet.write('O3', 'Enter marks or grades')
+        instruction_worksheet.write('O4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
+        instruction_worksheet.write('O5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('P2', 'Yes')
+        instruction_worksheet.write('P3', 'This field is to mention if the candidate is from SC/ST/OBC', cell_format)
+        instruction_worksheet.write('P4', 'Use the dropdown to select yes or no; do not enter anything else in this field', cell_format)
+        instruction_worksheet.write('P5', 'Mandatory Field', mandatory_format)
+
+        # Instruction Description
+        merge_format = workbook.add_format({
+                                        'bold': True,
+                                        'align': 'center',
+                                        'valign': 'vcenter',
+                                        'font_size': 15,
+                                        'font_color': 'black',
+                                    })
+
+        instruction_worksheet.merge_range("A13:B13", 'General Instructions:', merge_format)
+        instruction_worksheet.write('A14', 1)
+        instruction_worksheet.write('B14', 'Download this template and use the same to fill data', cell_format)
+        instruction_worksheet.write('A15', 2)
+        instruction_worksheet.write('B15', 'Do not upload your own Excel file', cell_format)
+        instruction_worksheet.write('A16', 3)
+        instruction_worksheet.write('B16', 'Data will be captured from Sheet 1 (Candidates)', cell_format)
+        instruction_worksheet.write('A17', 4)
+        instruction_worksheet.write('B17', 'Do not change the name of the sheet', cell_format)
+        instruction_worksheet.write('A18', 5)
+        instruction_worksheet.write('B18', 'If you are copying and pasting data from some other Excel, please ensure the format of this template is followed', mandatory_format)
+        instruction_worksheet.write('A19', 6)
+        instruction_worksheet.write('B19', 'No rows or columns to be deleted or shifted', mandatory_format)
+
+        instruction_worksheet.protect()
+        
         workbook.close()
 
         # Set the buffer position to the beginning
