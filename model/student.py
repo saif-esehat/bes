@@ -94,7 +94,7 @@ class GPCandidate(models.Model):
     user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
-    ], string='User Status',compute="_compute_user_state",default="active")
+    ], string='User Status',compute="_compute_user_state",default="inactive")
     
     
     
@@ -135,12 +135,12 @@ class GPCandidate(models.Model):
 
     def user_inactive(self):
         self.user_id.write({
-            'active':True
+            'active':False
         })
 
     def user_active(self):
         self.user_id.write({
-            'active':False
+            'active':True
         })
 
     def open_register_for_exam_wizard(self):
@@ -504,6 +504,21 @@ class CCMCCandidate(models.Model):
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
     
+    ccmc_user_state = fields.Selection([
+        ('active', 'Active'),
+        ('inactive', 'Inactive')
+    ], string='User Status',compute="_compute_user_state",default="inactive")
+    
+    
+    
+    @api.depends('user_id')
+    def _compute_user_state(self):
+        for record in self:
+            if record.user_id and record.user_id.active:
+                record.ccmc_user_state = "active"
+            else:
+                record.ccmc_user_state = "inactive"
+                
     @api.depends('dob')
     def _compute_age(self):
         for record in self:
@@ -547,6 +562,18 @@ class CCMCCandidate(models.Model):
     #                 'view_id': False,
     #                 'target': 'new'
     #             }
+
+    def user_inactive(self):
+        print("insavrtttttttttttt")
+        self.user_id.write({
+            'active':False
+        })
+
+    def user_active(self):
+        print("Activeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        self.user_id.write({
+            'active':True
+        })
 
     def unlink(self):
         # users_to_delete = self.mapped('user_id')
