@@ -181,8 +181,8 @@
                    <header>
                    
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
-                        <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
-                        <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
+                        <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
+                        <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -505,6 +505,8 @@
                 <form>
                     <header>
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/>
+                        <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_user_state', '=', 'active')]}"/>
+                        <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_user_state', '=', 'inactive')]}"/>
                         <!-- <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/> -->
                    </header>
                     <sheet>
@@ -540,6 +542,7 @@
                             <field name="institute_id"/>
                             <!-- <field name="name" placeholder="Candidate" required="1"/> -->
                             <field name="indos_no"/>
+                            <field name="ccmc_user_state" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
 
