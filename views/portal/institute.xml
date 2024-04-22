@@ -2030,9 +2030,16 @@
 
 
             <t t-if="batches.state == '1-ongoing'">
-                <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                <div class="d-flex justify-content-between">
+                    <div class="">
+                        <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
+                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>                    
+                    </div>
+                    <div class="">
+                        <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
+                    </div>
+                </div>
 
             </t>
             <!-- <a href="https://drive.google.com/file/d/1agCDcYJvWhSroD0_zK9EqF1MpTl5M70W/view?usp=share_link" target="_blank" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Upload Format</a> -->
@@ -2488,17 +2495,18 @@
 
         <t t-call="portal.portal_layout">
 
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">CCMC Candidate</t>
-            </t>
 
             <t t-if="batches.ccmc_state == '1-ongoing'">     
-                <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-modal-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openccmcUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
-
-                <!-- <a t-attf-href="/my/ccmccandidateform/view/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;"  class="btn btn-primary btn_cta">Add a Candidate</a> -->
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                <div class="d-flex justify-content-between">
+                    <div class="">
+                        <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
+                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-modal-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openccmcUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
+                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                    </div>
+                    <div class="">
+                        <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
+                    </div>
+                </div>
             </t>
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -2741,6 +2749,11 @@
                 </div>
             </div>
 
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">CCMC Candidate</t>
+            </t>
+
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
@@ -2816,6 +2829,15 @@
                                             $('#loader-overlay').show();
                                         });
                                     });
+
+                                    <!-- function onOpenDeleteFacultyModal(button) {
+                                        var dataId = button.getAttribute('faculty-id');
+                                        console.log(dataId);
+                                        document.getElementById('gp_faculty_id').value = dataId;
+                                        var batchId = button.getAttribute('batch-id');
+                                        console.log(batchId);
+                                        document.getElementById('delete_gp_faculty_batch_id').value = batchId;
+                                    } -->
         </script>
         <style>
                                 /* CSS to style the loader and overlay */
@@ -2878,6 +2900,33 @@
                 </div>
             </div> -->
 
+            <!-- <div class="modal fade" id="delete_faculty_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/my/deleteccmccandidate" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Candidate</h5>
+                            </div>
+                            
+                            <input type="hidden" id="ccmc_candidate_id" name="ccmc_candidate_id"/>
+                            <input type="hidden" id="delete_ccmc_candidate_batch_id" name="delete_ccmc_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+
+                                    Are you sure you want to delete this candidate ?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div> -->
+
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
@@ -2914,6 +2963,9 @@
                                     </span>
                                 </t>
                             </td>
+                            <!-- <td class="text-center">
+                                <a href="" data-toggle="modal" t-attf-candidate-id="{{faculty.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_faculty_modal" class="fa">Delete</a>
+                            </td> -->
 
                             <!-- <td class="text-center">
                                  <a t-attf-href="/my/gpcandidateform/{{faculty.id}}" class="fa">View</a>
