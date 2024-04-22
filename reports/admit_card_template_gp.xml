@@ -16,25 +16,23 @@
                             <strong>Admit Card - GP Repeater Candidate</strong>
                         </t>
                     </div>  
-                    <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
+                    <div style="font-size: 20px; text-align: center; margin-bottom: 30px;">
                         <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
                     </div>
 
                 </div>
 
-                <div class="container" style="position:relative; margin:30px;">
+                <div class="container" style="position:relative; margin-bottom:10px;">
                     <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
                     <t t-if="o.gp_candidate.candidate_signature">
                         <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: 175px; right: 8px;" />
                     </t>
-                    <!-- </div>
-    
-                    <div class="container" style=""> -->
+                    
                     <div class="row" style="margin-bottom:4px ; ">
                         <div class="col-6">
                             <span style="font-size:20px;">Examination: </span>
                             <span style="font-size:20px;">
-                                <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%b-%y')"/>
+                                <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%d-%b-%y')"/>
                                 <t t-esc="formatted_dob"/>
                             </span>  
                         </div>
@@ -84,10 +82,10 @@
                 </div>
 
                 <div class="container" style="position:absolute; margin-top:150px;">
-                    <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: -250px; right: 15px;"/>
+                    <!-- <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: -250px; right: 15px;"/>
                     <t t-if="o.gp_candidate.candidate_signature">
                         <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: -80px; right: 8px;" />
-                    </t>
+                    </t> -->
                     <t t-if="o.qr_code">
                         <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                     </t>
