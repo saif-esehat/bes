@@ -44,18 +44,6 @@
         paperformat="bes.dgs_report_landscape"   
     /> -->
 
-<!-- 
-    <record id="report_dgs_gp_fresh_action" model="ir.actions.report">
-        <field name="name" >DGS Report</field>
-        <field name="model">dgs.batches</field>
-        <field name="report_type">qweb-html</field>
-        <field name="report_name">bes.dgs_report</field>
-        <field name="report_file">bes.dgs_report</field>
-        <field name="binding_model_id" ref="bes.model_dgs_batches"/>
-        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
-        <field name="context">{'course': 'GP' ,'report_type':'Fresh'}</field> 
-    </record> -->
-
     <record id="bes.dgs_report_landscape" model="report.paperformat">
         <field name="name">Landscape Format with Custom Margins</field>
         <field name="default" eval="False"/>
@@ -63,12 +51,12 @@
         <field name="page_height">0</field>
         <field name="page_width">0</field>
         <field name="orientation">Landscape</field>
-        <field name="margin_top">10</field> <!-- Adjust as needed -->
+        <field name="margin_top">15</field> <!-- Adjust as needed -->
         <field name="margin_bottom">5</field> <!-- Adjust as needed -->
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
-        <field name="header_spacing">5</field>
+        <field name="header_spacing">15</field>
         <field name="dpi">120</field> <!-- Example DPI, adjust as needed -->
     </record>
 

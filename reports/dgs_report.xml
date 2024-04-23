@@ -17,7 +17,8 @@
         <div t-attf-class="article" t-att-style="report_header_style">
             <t t-out="0" />
         </div>
-        <div t-attf-class="footer o_standard_footer">
+         <!-- o_standard_footer -->
+        <div t-attf-class="footer">
             <div class="row">
                 <div class="col-12 pull-left">
                     <small>
