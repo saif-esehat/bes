@@ -13,7 +13,7 @@
                                         <t t-set="date_format" t-value="doc.reissued_date.strftime('%d %b %Y')" />
                                         <t t-esc="date_format" />
                                     </span>
-                                </t>
+                                </t> 
                                 <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
                                 <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;"/>
                                 <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
