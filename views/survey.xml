@@ -84,6 +84,12 @@
             </xpath>
         </template>
 
+        <template id="survey_selection_key_inherited" inherit_id="survey.survey_selection_key">
+            <xpath expr="//div[@t-if='useKeySelection']" position="replace">
+                
+            </xpath>
+        </template>
+
 
         <record id="survey_form_inherited" model="ir.ui.view">
             <field name="name">survey.survey.inherited</field>
