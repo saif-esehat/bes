@@ -2,13 +2,13 @@
 <odoo>  
 
     <template id="dgs_report_custom_header_footer">
-        <div class="container" t-attf-class="header article" t-att-style="report_header_style">
+        <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
             <div class="row" style="text-align:center; font-size:20px">
                 <div class="col-12">
                   Board of Examinations for Seafarers Trust
                 </div>
             </div >
-            <div class="row" style="text-align:center; font-size:18px">
+            <div class="row" style="text-align:center; font-size:18px;">
                 <div class="col-12">
                     All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px" t-esc="report_type" />Candidates - <span style="margin-left:5px" t-field="doc.batch_name" /><strong><span style="margin-left:5px" t-esc="course" /></strong>
                 </div>
@@ -19,7 +19,7 @@
         </div>
         <div t-attf-class="footer o_standard_footer">
             <div class="row">
-                <div class="col-xs-2 pull-left">
+                <div class="col-12 pull-left">
                     <small>
                         <span>Page</span>
                         <span class="page" />
@@ -41,7 +41,7 @@
                             width: 100%;
                             border: 1px solid black;
                             border-collapse: collapse;
-                            margin-top: 20px;
+                            margin-top: 30px;
                         }
                         th, td , tr {
                             border: 1px solid black;
@@ -62,7 +62,9 @@
                         </style>
                 
 
-                    <table class="black-bordered-table">
+                    <!-- <table class="black-bordered-table" style=""> -->
+                    <table class="black-bordered-table" style="" border="1">
+
                         <thead>
                             <tr>
                                 <th style="vertical-align: bottom;">Sr. No.</th>
