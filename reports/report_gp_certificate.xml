@@ -8,6 +8,12 @@
                     <div class="oe_structure">
                         <div class="oe_report backgroundd" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
                             <div id="header" style="width:100%; text-align: center;">
+                                <t t-if="doc.reissued">
+                                    <span style="font-size: 18px; font-weight: 700; font-family: 'TimesNewRomanBold'; position:absolute; top:50px; left:30px;">Re-Issued on
+                                        <t t-set="date_format" t-value="doc.reissued_date.strftime('%d %b %Y')" />
+                                        <t t-esc="date_format" />
+                                    </span>
+                                </t> 
                                 <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
                                 <img t-attf-src="data:image/png;base64,{{doc.gp_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;"/>
                                 <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
@@ -39,11 +45,11 @@
                             <div class="container" style="text-align:left;font-weight:900; font-family: 'TimesNewRomanBold'; ">
                                 <div class="row" style="padding-left:9px; margin-bottom:15px ;">
                                     <div class="col-4">
-                                        <span style="color: #4c2d8b; font-size:20px;">Roll no:</span>
-                                        <span style="font-size:20px;"><t t-esc="doc.gp_candidate.roll_no"/></span>
+                                        <span style="color: #4c2d8b; font-size:20px;">Roll No:</span>
+                                        <span style="font-size:20px;"><t t-esc="doc.exam_id"/></span>
                                     </div>
                                     <div class="col-4">
-                                        <span style="color: #4c2d8b; font-size:20px;">INDOS No: </span>
+                                        <span style="color: #4c2d8b; font-size:20px;">INDoS No: </span>
                                         <span style="font-size:20px;"><t t-esc="doc.gp_candidate.indos_no"/></span>
                                     </div>
                                     <div class="col-4">
@@ -164,6 +170,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; font-family: 'TimesNewRoman';">E-mail: bestexam@bestrust.in</span>
+                                        <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; left:20px;">Page 1 of 2</span>
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +185,8 @@
                 <div class="oe_structure">
                     <div class="oe_report" style="font-family: 'TimesNewRoman';">
                         <div style="padding: 20px;">
-                            <p style="text-align: left; font-size:18px; margin-top:25px;">The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
+                            <span style="font-size:18px; font-family: 'TimesNewRoman'; text-decoration:underline">Page 2 of 2 of <t t-esc="doc.certificate_id"/></span>
+                            <p style="text-align: left; font-size:18px; margin-top:15px;">The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
 
                             <p style="text-align: left; font-size:18px;">The curriculum for pre-sea training programme includes the following components:</p>
                             <table style="width:100%; text-align: center; border-collapse: collapse; border: 1px solid #000; font-size:18px; margin-bottom:15px;" >
@@ -261,7 +269,7 @@
 
                             <p style="text-align:center; margin-top:65px; font-size:20px;  font-family:'TimesNewRomanBold'; font-weight:900;"><u>Mark Sheet of the Candidate</u></p>
                             
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:130px; font-size:20px; ">
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:120px; font-size:20px; ">
                                 <thead style="border: 1px solid #000; padding: 8px;">
                                     <tr>
                                         <th style="border: 1px solid #000;">S. No</th>

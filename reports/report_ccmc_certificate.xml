@@ -8,6 +8,12 @@
                     <div class="oe_structure">
                         <div class="oe_report backgroundd" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
                             <div id="header" style="width:100%; text-align: center;">
+                                <t t-if="doc.reissued">
+                                        <span style="font-size: 18px; font-weight: 700; font-family: 'TimesNewRomanBold'; position:absolute; top:50px; left:30px;">Re-Issued on
+                                            <t t-set="date_format" t-value="doc.reissued_date.strftime('%d %b %Y')" />
+                                            <t t-esc="date_format" />
+                                        </span>
+                                </t>
                                 <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style="margin-top:5px; width: 175px; height:175px;"/>
                                 <img t-attf-src="data:image/png;base64,{{doc.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 5px; right: 15px;"/>
                                 <img class="img img-responsive" t-attf-src="/bes/static/src/img/bes_name.jpg" alt="" style="margin:0; width:750px; height:70px;"/>
@@ -165,6 +171,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; font-family: 'TimesNewRoman';">E-mail: bestexam@bestrust.in</span>
+                                        <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; left:20px;">Page 1 Of 2</span>
                                     </div>
                                 </div>
                             </div>
@@ -179,6 +186,7 @@
                 <div class="oe_structure">
                     <div class="oe_report" style="font-family: 'TimesNewRoman';">
                         <div style="padding: 20px;">
+                            <span style="font-size:18px; font-family: 'TimesNewRoman';">Page 2 Of 2 of <t t-esc="doc.certificate_id"/></span>
                             <p style="text-align: left; font-size:18px; margin-top:40px;">The All India Exit Examination is conducted in accordance with Training Guidelines 07 of 2010 and Training Circular 04 of 2019 of Directorate General of Shipping, Govt. of India.</p>
 
                             <p style="text-align: left; font-size:18px; margin-top:20px; margin-bottom:20px;">The curriculum for 25 weeks pre-sea Training Programme includes following components:</p>
