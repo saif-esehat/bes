@@ -142,6 +142,7 @@
                     <field name="ccmc_candidate" />
                     <field name="dgs_batch" />
                     <field name="institute_id" />
+                    <field name="examiner" />
                     <field name="examiner_token" />
 
                 </xpath>

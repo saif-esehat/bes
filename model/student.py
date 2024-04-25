@@ -1505,7 +1505,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
         if self.mek_online_status == 'failed':
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = mek_survey_qb_input.generate_unique_string()
-            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'examiner_token': token , 'dgs_batch':dgs_exam  })
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
             mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
@@ -1519,7 +1519,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
         if self.gsk_online_status == 'failed':
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = gsk_survey_qb_input.generate_unique_string()
-            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'examiner_token': token , 'dgs_batch':dgs_exam})
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
             gsk_online_carry_forward = False
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
