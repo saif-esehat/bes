@@ -44,6 +44,10 @@
 
 
 
+        
+
+
+
         <template id="survey_fill_form_done_inherited" inherit_id="survey.survey_fill_form_done">
             <xpath expr="//div[@class='o_survey_finished mt32 mb32']" position="replace">
                 <!-- Your custom content here -->
