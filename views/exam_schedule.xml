@@ -297,7 +297,7 @@
                         <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approved" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
-
+ 
                     </header>
                     <sheet>
                         <group>
