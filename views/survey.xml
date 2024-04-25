@@ -44,6 +44,10 @@
 
 
 
+        
+
+
+
         <template id="survey_fill_form_done_inherited" inherit_id="survey.survey_fill_form_done">
             <xpath expr="//div[@class='o_survey_finished mt32 mb32']" position="replace">
                 <!-- Your custom content here -->
@@ -81,6 +85,12 @@
                     </div>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
                 </div>
+            </xpath>
+        </template>
+
+        <template id="survey_selection_key_inherited" inherit_id="survey.survey_selection_key">
+            <xpath expr="//div[@t-if='useKeySelection']" position="replace">
+                
             </xpath>
         </template>
 

@@ -32,8 +32,8 @@
                         <div class="col-6">
                             <span style="font-size:20px;">Examination: </span>
                             <span style="font-size:20px;">
-                                <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%d-%b-%y')"/>
-                                <t t-esc="formatted_dob"/>
+                                <t t-set="formatted_date" t-value="o.dgs_batch.to_date.strftime('%d-%b-%y')"/>
+                                <t t-esc="formatted_date"/>
                             </span>  
                         </div>
                     </div>
@@ -55,7 +55,9 @@
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
                             <span style="font-size:20px;">DOB as in INDOS: </span>
-                            <span style="font-size:20px;"><t t-esc="o.gp_candidate.dob"/></span>  
+                            <span style="font-size:20px;">
+                            <t t-set="formatted_dob" t-value="o.gp_candidate.dob.strftime('%d-%b-%y')"/>
+                            <t t-esc="formatted_dob"/></span>  
                         </div>
                     </div>
                     

@@ -686,12 +686,21 @@
                                 <h5 class="my-3">
                                     <t t-out="candidate.name" />
                                 </h5>
-                                <p class="text-muted mb-1">
-                                    <t t-out="candidate.street" />
-                                </p>
-                                <p class="text-muted mb-4">
+                                <span class="text-muted mb-0">
+                                    <t t-out="candidate.street"/>
+                                </span>
+                                <span class="text-muted mb-0">
                                     <t t-out="candidate.street2"/>
-                                </p>
+                                </span>
+                                <span class="text-muted mb-0">
+                                    <t t-out="candidate.city"/>
+                                </span>
+                                <span class="text-muted mb-0">
+                                    <t t-out="candidate.state_id.name"/>
+                                </span>
+                                <span class="text-muted mb-0">
+                                    <t t-out="candidate.zip"/>
+                                </span>
                                 <t t-if="candidate.candidate_signature">
                                     <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
                                 </t>
@@ -761,12 +770,21 @@
                                         <p class="mb-0">Address</p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <p class="text-muted mb-0">
+                                        <span class="text-muted mb-0">
                                             <t t-out="candidate.street"/>
-                                        </p>
-                                        <p class="text-muted mb-0">
+                                        </span>
+                                        <span class="text-muted mb-0">
                                             <t t-out="candidate.street2"/>
-                                        </p>
+                                        </span>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.city"/>
+                                        </span>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.state_id.name"/>
+                                        </span>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.zip"/>
+                                        </span>
                                     </div>
                                 </div>
                                 <hr/>
