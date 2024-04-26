@@ -123,7 +123,7 @@
                   action="bes_examiner_oral_practical_duty_action" 
                   sequence="2"/> -->
 
-        <menuitem id="bes_batch_examiner_duty_menus_group_examiner" sequence="0" name="Examiner Practical/Oral Duty" action="bes_examiner_oral_practical_duty_action" groups="bes.group_exam_coordinator" />
+        <menuitem id="bes_batch_examiner_duty_menus_group_examiner" sequence="0" name="Examiner Practical/Oral Duty" action="bes_examiner_oral_practical_duty_action" groups="bes.group_exam_coordinator"   web_icon="bes,static/description/books.png"/>
 
         <menuitem id="exam_center_menu" parent="bes_menu" name="Exam Region" action="exam_center_action" />
 
