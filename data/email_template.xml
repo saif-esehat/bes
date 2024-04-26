@@ -3,9 +3,9 @@
         <record id="indos_check_mail" model="mail.template">
             <field name="name">Indos Check Mail</field>
             <field name="subject">Candidate Information Update: Missing Data</field>
-           
+            <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
             <field name="model_id" ref="bes.model_institute_gp_batches"/>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
 
                
@@ -24,12 +24,13 @@
 
             </field>
         </record>
+        
         <record id="candidate_confirmtion_mail" model="mail.template">
             <field name="name">Candidate Confirmation Mail</field>
             <field name="subject">Enrollment Confirmation and User ID Generation for Candidates</field>
             <field name="model_id" ref="bes.model_institute_gp_batches"/>
             <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
 
                <p>Dear <t t-out="object.institute_id.name"/>, Administration,</p>
@@ -50,7 +51,7 @@
             <field name="name">CCMC Indos Check Mail</field>
             <field name="subject">Candidate Information Update: Missing Data</field>
             <field name="model_id" ref="bes.model_institute_ccmc_batches"/>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
                 <p>We hope this email finds you well. Our records indicate that the following candidate(s) in your system do not have associated data. It is crucial to update their information for our records.</p>
                 <ul> 
@@ -68,7 +69,7 @@
             <field name="subject">Enrollment Confirmation and User ID Generation for Candidates</field>
             <field name="model_id" ref="bes.model_institute_ccmc_batches"/>
             <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
                 <p>Dear <t t-out="object.institute_id.name"/>, Administration,</p>
                 <p>I trust this email finds you well. We are pleased to inform you that the enrollment processes for candidates have been successfully completed. User IDs have been generated for each candidate.</p>
@@ -89,7 +90,7 @@
             <field name="subject">Your Certificate</field>
             <field name="model_id" ref="bes.model_gp_exam_schedule"/>
             <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
                 <p>Dear Candidate,</p>
                 <p>I trust this email finds you well. Please find your certificate attached to this mail with Certificate ID -</p>
@@ -104,7 +105,7 @@
             <field name="subject">Your Certificate</field>
             <field name="model_id" ref="bes.model_gp_exam_schedule"/>
             <field name="partner_to">{{ object.institute_id.user_id.partner_id.id }}</field>
-            <field name="auto_delete" eval="True"/>
+            <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
                 <p>Dear Candidate,</p>
                 <p>I trust this email finds you well. Please find your certificate attached to this mail with Certificate ID -</p>

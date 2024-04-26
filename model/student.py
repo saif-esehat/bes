@@ -10,11 +10,11 @@ class GPCandidate(models.Model):
     _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
-
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute")
     candidate_image_name = fields.Char("Candidate Image Name")
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image')
-    candidate_signature_name = fields.Char("Candidate Signature")
+    candidate_signature_name = fields.Char("Candidate Signature name")
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
     name = fields.Char("Full Name of Candidate as in INDOS",required=True)
     age = fields.Float("Age",compute="_compute_age")
@@ -96,8 +96,24 @@ class GPCandidate(models.Model):
         ('inactive', 'Inactive')
     ], string='User Status',compute="_compute_user_state",default="inactive")
     
+    stcw_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='STCW Criteria' ,default="pending",compute="_check_stcw_certificate")
+
+    ship_visit_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='Ship Visit Criteria',default="pending" ,compute='_check_ship_visit_criteria')
+
+    attendance_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
     
     
+
+
     @api.depends('user_id')
     def _compute_user_state(self):
         for record in self:
@@ -111,6 +127,48 @@ class GPCandidate(models.Model):
         for record in self:
             if record.zip and not record.zip.isdigit() or len(record.zip) != 6:
                 raise ValidationError("Zip code must be 6 digits.")
+
+    def check_combination_exists(self,array):
+        
+        target_combinations = [['pst', 'efa', 'fpff', 'pssr', 'stsdsd'], ['bst', 'stsdsd']]
+        
+        for combination in target_combinations:
+            if all(item in array for item in combination):
+                return True
+        
+        return False
+
+    @api.constrains('stcw_certificate')
+    def _check_stcw_certificate(self):
+         for record in self:
+            course_type_already  = [course.course_name for course in record.stcw_certificate]
+            # import wdb; wdb.set_trace();    
+
+            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            all_types_exist = self.check_combination_exists(course_type_already)
+            if all_types_exist:
+                # import wdb; wdb.set_trace();
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
+        
+    
+    @api.constrains('ship_visits')
+    def _check_ship_visit_criteria(self):
+        for record in self:
+            if len(record.ship_visits) > 0:
+                record.ship_visit_criteria = 'passed'
+            else:
+                record.ship_visit_criteria = 'pending'
+    
+    
+    @api.constrains('attendance_compliance_1','attendance_compliance_2')
+    def _check_attendance_criteria(self):
+       for record in self:
+            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
+                record.attendance_criteria = 'passed'
+            else:
+                record.attendance_criteria = 'pending'
 
     # @api.constrains('phone')
     # def _check_valid_phone(self):
@@ -509,7 +567,23 @@ class CCMCCandidate(models.Model):
         ('inactive', 'Inactive')
     ], string='User Status',compute="_compute_user_state",default="inactive")
     
+    stcw_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='STCW Criteria' ,default="pending",compute="_check_stcw_certificate")
+
+    ship_visit_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='Ship Visit Criteria',default="pending" ,compute='_check_ship_visit_criteria')
+
+    attendance_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
     
+    
+
     
     @api.depends('user_id')
     def _compute_user_state(self):
@@ -519,6 +593,51 @@ class CCMCCandidate(models.Model):
             else:
                 record.ccmc_user_state = "inactive"
                 
+    def check_combination_exists(self,array):
+        
+        target_combinations = [['pst', 'efa', 'fpff', 'pssr', 'stsdsd'], ['bst', 'stsdsd']]
+        
+        for combination in target_combinations:
+            if all(item in array for item in combination):
+                return True
+        
+        return False
+
+    @api.constrains('stcw_certificate')
+    def _check_stcw_certificate(self):
+         for record in self:
+            course_type_already  = [course.course_name for course in record.stcw_certificate]
+            # import wdb; wdb.set_trace();    
+
+            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            all_types_exist = self.check_combination_exists(course_type_already)
+            if all_types_exist:
+                # import wdb; wdb.set_trace();
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
+        
+    
+    @api.constrains('ship_visits')
+    def _check_ship_visit_criteria(self):
+        for record in self:
+            if len(record.ship_visits) > 0:
+                record.ship_visit_criteria = 'passed'
+            else:
+                record.ship_visit_criteria = 'pending'
+    
+    
+    @api.constrains('attendance_compliance_1','attendance_compliance_2')
+    def _check_attendance_criteria(self):
+       for record in self:
+            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
+                record.attendance_criteria = 'passed'
+            else:
+                record.attendance_criteria = 'pending'
+
+
+
+
     @api.depends('dob')
     def _compute_age(self):
         for record in self:

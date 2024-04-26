@@ -76,6 +76,7 @@
                         </group>
                         <group style="width:50%;">
                             <field name="email" required="1"/>
+                            <field name="batch_capacity"/>
                         </group>
                         <group style="width:50%;">
                             <field name="code" required="1"/>
