@@ -34,15 +34,60 @@ class ExaminerPortal(CustomerPortal):
     @check_user_groups("bes.group_examiners")
     def ExamListView(self,**kw):
         user_id = request.env.user.id
+        
         examiner_id = request.env["bes.examiner"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        survey = request.env["survey.survey"].sudo().search(
+        
+        
+        survey = request.env["survey.user_input"].sudo().search(
             [('examiner', '=', examiner_id)])
         
-        vals = {"surveys":survey}
+        dgs_batch = survey.mapped('dgs_batch')
+        
+        # import wdb; wdb.set_trace(); 
+         
+        vals = {"dgs_batches":dgs_batch}
         
         return request.render("bes.examiner_portal_online_exam_list", vals)
+    
+    
+    @http.route(['/my/generatetoken/<int:batch_id>/<int:input_id>'],type="http",auth="user",website=True)
+    @check_user_groups("bes.group_examiners")
+    def GenerateToken(self,batch_id,input_id,**kw):
+        
+        user_input = request.env["survey.user_input"].sudo().search([('id','=',input_id)])
+        
+        token = user_input.sudo().generate_unique_string()
+        
+        user_input.write({'examiner_token':token})
+        
+        
+        return request.redirect("/my/examiner/online_exam/"+str(batch_id))
+
+
+    
+    
+    @http.route(['/my/examiner/online_exam/<int:batch_id>'],type="http",auth="user",website=True)
+    @check_user_groups("bes.group_examiners")
+    def BatchExamListView(self,batch_id,**kw):
+        user_id = request.env.user.id
+        
+        examiner_id = request.env["bes.examiner"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        
+        
+        survey = request.env["survey.user_input"].sudo().search(
+            [('examiner', '=', examiner_id),('dgs_batch','=',batch_id)])
+        
+
+        
+        # import wdb; wdb.set_trace(); 
+         
+        vals = {'survey_user_inputs':survey,'batch_id':batch_id}
+        
+        return request.render("bes.examiner_portal_online_batch_exam_list", vals)
     
     @http.route(['/my/examiner/online_exam/start/<int:survey_id>'],type="http",auth="user",website=True)
     @check_user_groups("bes.group_examiners")
