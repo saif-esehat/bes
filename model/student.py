@@ -111,7 +111,35 @@ class GPCandidate(models.Model):
         ('passed', 'Complied'),
     ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
     
+    candidate_image_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('yes', 'Yes'),
+    ],string="Candidate-Image",default="pending",compute="_check_candidate_image")
+   
+    candidate_signature_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('yes', 'Yes'),
+    ],string="Candidate-Image",default="pending",compute="_check_candidate_signature")
+
+    @api.constrains('candidate_image')
+    def _check_candidate_image(self):
+        for record in self:
+            if record.candidate_image:
+                record.candidate_image_status = 'yes'
+            else:
+                record.candidate_image_status = 'pending'
     
+    @api.constrains('candidate_signature')
+    def _check_candidate_signature(self):
+        for record in self:
+            if record.candidate_signature:
+                record.candidate_signature_status = 'yes'
+            else:
+                record.candidate_signature_status = 'pending'
+
+
+
+
 
 
     @api.depends('user_id')
