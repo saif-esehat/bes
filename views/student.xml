@@ -168,6 +168,10 @@
                 <field name="candidate_code"  />
                 <field name="roll_no" />
                 <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+                <searchpanel>
+                    <field name="institute_id" enable_counters="1"/>
+                    <field name="institute_batch_id" enable_counters="1"/>
+                </searchpanel>
             </search>
             </field>
         </record>
@@ -257,7 +261,8 @@
                         </group>
 
                         <group style="width:100%;">
-                            <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                         <field name="dgs_batch"  />
+                        <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
                         </group>
 
 
@@ -423,60 +428,69 @@
         </record>
 
 
-    <record id="gp_candidate_tree" model="ir.ui.view">
-        <field name="name">gp.candidate.tree</field>
-        <field name="model">gp.candidate</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"  optional="show"/>
-                <field name="indos_no"  optional="show"/>
-                <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
-                <field name="age" optional="hide"/>
-                <field name="candidate_code"  optional="hide"/>
-                <field name="roll_no"  optional="hide"/>
-                <field name="dob"  optional="hide"/>
-                <field name="user_id" optional="hide"/>
-                <field name="street" optional="hide"/>
-                <field name="street2" optional="hide"/>
-                <field name="city"  optional="hide"/>
-                <field name="zip" optional="hide"/>
-                <field name="state_id"  optional="hide"/>
-                <field name="phone" optional="hide"/>
-                <field name="mobile" optional="hide"/>
-                <field name="email"  optional="hide"/>
-                <field name="tenth_percent" optional="hide"/>
-                <field name="twelve_percent" optional="hide"/>
-                <field name="iti_percent"  optional="hide"/>
-                <field name="sc_st"  optional="hide"/>
-            </tree>
-        </field>
-    </record>
-
-
-
-    <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
-            <field name="name">gp.candidate.ship.visits.form</field>
-            <field name="model">gp.candidate.ship.visits</field>
+        <record id="gp_candidate_tree" model="ir.ui.view">
+            <field name="name">gp.candidate.tree</field>
+            <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <group>
-                            <field name="candidate_id"/>
-                        </group>
-                        <group>
-                            <field name="name_of_ships"/>
-                            <field name="imo_no"/>
-                            <field name="name_of_ports_visited"/>
-                            <field name="date_of_visits"/>
-                            <field name="time_spent_on_ship"/>
-                            <field name="bridge"/>
-                            <field name="eng_room"/>
-                            <field name="cargo_area"/>
-                        </group>
-                    </sheet>
-                </form>
+                <tree>
+                    <field name="indos_no"  optional="show"/>
+                    <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="name"  optional="show"/>
+                    <field name="candidate_code"  optional="show"/>
+                    <field name="institute_id"  optional="show"/>
+                    <field name="institute_batch_id"  optional="show"/>
+                    <field name="roll_no"  optional="show"/>
+                    <field name="age" optional="hide"/>
+                    <field name="dob"  optional="hide"/>
+                    <field name="street" optional="hide"/>
+                    <field name="street2" optional="hide"/>
+                    <field name="city"  optional="hide"/>
+                    <field name="zip" optional="hide"/>
+                    <field name="state_id"  optional="hide"/>
+                    <field name="phone" optional="hide"/>
+                    <field name="mobile" optional="hide"/>
+                    <field name="email"  optional="hide"/>
+                    <field name="tenth_percent" optional="hide"/>
+                    <field name="twelve_percent" optional="hide"/>
+                    <field name="iti_percent"  optional="hide"/>
+                    <field name="sc_st"  optional="show"/>
+                    <field name="fees_paid"  optional="show"/>
+                    <field name="candidate_image"  optional="show"/>
+                    <field name="candidate_signature"  optional="show"/>
+                    <field name="stcw_criteria"  optional="show"/>
+                    <field name="attendance_criteria"  optional="show"/>
+                    <field name="ship_visits_count"  optional="show"/>
+                    <field name="ship_visit_criteria"  optional="show"/>
+                </tree>
             </field>
-    </record>
+        </record>
+
+
+
+        <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
+                <field name="name">gp.candidate.ship.visits.form</field>
+                <field name="model">gp.candidate.ship.visits</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="candidate_id"/>
+                            </group>
+                            <group>
+                                <field name="name_of_ships"/>
+                                <field name="imo_no"/>
+                                <field name="name_of_ports_visited"/>
+                                <field name="date_of_visits"/>
+                                <field name="time_spent_on_ship"/>
+                                <field name="bridge"/>
+                                <field name="eng_room"/>
+                                <field name="cargo_area"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+        </record>
 
 
         <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
@@ -699,12 +713,51 @@
             <field name="name">ccmc.candidate.search</field>
             <field name="model">ccmc.candidate</field>
             <field name="arch" type="xml">
-                <search>
+                <search string="CCMC Candidate Search">
                     <field name="name"  />
                     <field name="indos_no"/>
                     <field name="candidate_code"  />
                     <field name="roll_no" />
+                    <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
                 </search>
+            </field>
+        </record>
+
+        <record id="ccmc_candidate_tree" model="ir.ui.view">
+            <field name="name">ccmc.candidate.tree</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="indos_no"  optional="show"/>
+                    <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="name"  optional="show"/>
+                    <field name="candidate_code"  optional="show"/>
+                    <field name="institute_id"  optional="show"/>
+                    <field name="institute_batch_id"  optional="show"/>
+                    <field name="roll_no"  optional="show"/>
+                    <field name="age" optional="hide"/>
+                    <field name="dob"  optional="hide"/>
+                    <field name="street" optional="hide"/>
+                    <field name="street2" optional="hide"/>
+                    <field name="city"  optional="hide"/>
+                    <field name="zip" optional="hide"/>
+                    <field name="state_id"  optional="hide"/>
+                    <field name="phone" optional="hide"/>
+                    <field name="mobile" optional="hide"/>
+                    <field name="email"  optional="hide"/>
+                    <field name="tenth_percent" optional="hide"/>
+                    <field name="twelve_percent" optional="hide"/>
+                    <field name="iti_percent"  optional="hide"/>
+                    <field name="sc_st"  optional="show"/>
+                    <field name="fees_paid"  optional="show"/>
+                    <field name="candidate_image"  optional="show"/>
+                    <field name="candidate_signature"  optional="show"/>
+                    <field name="stcw_criteria"  optional="show"/>
+                    <field name="attendance_criteria"  optional="show"/>
+                    <field name="ship_visits_count"  optional="show"/>
+                    <field name="ship_visit_criteria"  optional="show"/>
+                </tree>
             </field>
         </record>
 

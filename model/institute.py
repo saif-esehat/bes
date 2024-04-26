@@ -58,6 +58,8 @@ class Institute(models.Model):
 
     ccmc_present = fields.Boolean(string='CCMC',compute="_compute_ccmc_present")
     gp_present = fields.Boolean(string='GP',compute="_compute_gp_present")
+    batch_capacity = fields.Char("Batch Capacity")
+
 
     @api.depends('courses')
     def _compute_ccmc_present(self):
