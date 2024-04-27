@@ -6,7 +6,7 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
+ 'depends':['product','hr','hr_expense','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
  'data': [
         'data/roll_no_sequence.xml',
         'data/exam_sequence.xml',
@@ -34,6 +34,7 @@
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
         'views/exam_schedule.xml',
+        'views/hr_employee.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/menu.xml',
