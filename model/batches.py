@@ -1,9 +1,10 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
-
-
+import base64
+from io import BytesIO
+import xlsxwriter
 from datetime import datetime
-
+import xlrd
 
 
 class InstituteGPBatches(models.Model):
@@ -329,7 +330,82 @@ class InstituteGPBatches(models.Model):
         }
     
     
+    def open_faculty_upload_wizard(self):
+        return {
+            'name': 'Upload Faculty',
+            'type': 'ir.actions.act_window',
+            'res_model': 'faculty.upload.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_batch_id': self.id},
+        }
 
+class FacultyUploadWizard(models.TransientModel):
+    _name = 'faculty.upload.wizard'
+    _description = 'Faculty Upload Wizard'
+
+    batch_id = fields.Many2one('institute.gp.batches', string="Batch")
+    faculty_file = fields.Binary(string="Faculty File", required=True)
+    faculty_file_name = fields.Char(string="File Name")
+    faculty_image = fields.Binary(string="Faculty Image")
+
+    def action_upload_faculty(self):
+        file_content = base64.b64decode(self.faculty_file)
+        print(file_content)
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet = workbook.sheet_by_index(0)
+        
+        # import wdb; wdb.set_trace()
+        if not self.faculty_file:
+            raise ValidationError(_("Please select a file to upload."))
+
+        try:
+
+            for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+                row = worksheet.row_values(row_num)
+                faculty_image = row[0]
+                course_name = row[1]
+                faculty_name = row[2]
+                date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
+                date_string = date_value.strftime('%d-%b-%y')
+                dob = date_value
+                designation = row[4]
+                qualification = row[5]
+                contract_terms = row[6]
+                # courses_taught = [self.env['course.master'].search([('name', '=', course)]).id for course in row[7].split(',')]
+
+                # Create or update faculty record
+                faculty = self.env['institute.faculty'].search([('faculty_name', '=', faculty_name)])
+                if faculty:
+                    faculty.write({
+                        'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                        'faculty_photo': faculty_image,
+                        'faculty_name': faculty_name,
+                        'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                        'dob': dob,
+                        'designation': designation,
+                        'qualification': qualification,
+                        'contract_terms': contract_terms,
+                        # 'courses_taught': [(6, 0, courses_taught)],
+                    })
+                else:
+                    self.env['institute.faculty'].create({
+                        'faculty_photo': faculty_image,
+                        'faculty_name': faculty_name,
+                        'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                        'dob': dob,
+                        'designation': designation,
+                        'qualification': qualification,
+                        'contract_terms': contract_terms,
+                        # 'courses_taught': [(6, 0, courses_taught)],
+                       'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                    })
+
+            return {'type': 'ir.actions.act_window_close'}
+        except xlrd.XLRDError as e:
+            raise ValidationError(_("Error reading the Excel file: %s") % str(e))
+        except Exception as e:
+            raise ValidationError(_("Error uploading faculty file: %s") % str(e))
 
 class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"
