@@ -354,16 +354,19 @@ class FacultyUploadWizard(models.TransientModel):
         print(file_content)
         workbook = xlrd.open_workbook(file_contents=file_content)
         worksheet = workbook.sheet_by_index(0)
-        
-        # import wdb; wdb.set_trace()
+
         if not self.faculty_file:
             raise ValidationError(_("Please select a file to upload."))
 
         try:
-
             for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+                print(f"Processing row {row_num}")
                 row = worksheet.row_values(row_num)
-                faculty_image = row[0]
+                try:
+                    faculty_image = row[0]
+                except Exception as e:
+                    print(f"Error processing faculty image in row {row_num}: {str(e)}")
+                    faculty_image = False
                 course_name = row[1]
                 faculty_name = row[2]
                 date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
@@ -377,29 +380,37 @@ class FacultyUploadWizard(models.TransientModel):
                 # Create or update faculty record
                 faculty = self.env['institute.faculty'].search([('faculty_name', '=', faculty_name)])
                 if faculty:
-                    faculty.write({
-                        'gp_batches_id': self.batch_id.id if self.batch_id else False,
-                        'faculty_photo': faculty_image,
-                        'faculty_name': faculty_name,
-                        'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
-                        'dob': dob,
-                        'designation': designation,
-                        'qualification': qualification,
-                        'contract_terms': contract_terms,
-                        # 'courses_taught': [(6, 0, courses_taught)],
-                    })
+                    try:
+                        faculty.write({
+                            'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                            'faculty_photo': faculty_image,
+                            'faculty_name': faculty_name,
+                            'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                            'dob': dob,
+                            'designation': designation,
+                            'qualification': qualification,
+                            'contract_terms': contract_terms,
+                            # 'courses_taught': [(6, 0, courses_taught)],
+                        })
+                    except Exception as e:
+                        print(f"Error updating faculty record for {faculty_name} in row {row_num}: {str(e)}")
+                        continue
                 else:
-                    self.env['institute.faculty'].create({
-                        'faculty_photo': faculty_image,
-                        'faculty_name': faculty_name,
-                        'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
-                        'dob': dob,
-                        'designation': designation,
-                        'qualification': qualification,
-                        'contract_terms': contract_terms,
-                        # 'courses_taught': [(6, 0, courses_taught)],
-                       'gp_batches_id': self.batch_id.id if self.batch_id else False,
-                    })
+                    try:
+                        self.env['institute.faculty'].create({
+                            'faculty_photo': faculty_image,
+                            'faculty_name': faculty_name,
+                            'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                            'dob': dob,
+                            'designation': designation,
+                            'qualification': qualification,
+                            'contract_terms': contract_terms,
+                            # 'courses_taught': [(6, 0, courses_taught)],
+                            'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                        })
+                    except Exception as e:
+                        print(f"Error creating faculty record for {faculty_name} in row {row_num}: {str(e)}")
+                        continue
 
             return {'type': 'ir.actions.act_window_close'}
         except xlrd.XLRDError as e:
