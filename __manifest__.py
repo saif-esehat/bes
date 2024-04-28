@@ -26,6 +26,7 @@
         'views/examiner.xml',
         'views/exam_center.xml',
         'views/student.xml',
+        'views/portal/examiner_portal/expenses.xml',
         'views/courses_master.xml',
         'views/institution.xml',
         'views/survey.xml',
