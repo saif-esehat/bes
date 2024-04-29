@@ -7,69 +7,71 @@ import datetime
 
 class GPCandidate(models.Model):
     _name = 'gp.candidate'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate'
     
-    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
-    institute_id = fields.Many2one("bes.institute",string="Name of Institute")
-    candidate_image_name = fields.Char("Candidate Image Name")
-    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image')
-    candidate_signature_name = fields.Char("Candidate Signature name")
-    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
-    name = fields.Char("Full Name of Candidate as in INDOS",required=True)
-    age = fields.Float("Age",compute="_compute_age")
-    indos_no = fields.Char("Indos No.")
-    candidate_code = fields.Char("GP Candidate Code No.")
-    roll_no = fields.Char("Roll No.")
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True,tracking=True)
+
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
+    candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
+    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image',tracking=True)
+    candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
+    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
+    name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    age = fields.Float("Age",compute="_compute_age",tracking=True)
+    indos_no = fields.Char("Indos No.",tracking=True)
+    candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True)
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
-                      date_format="%d-%b-%y")
-    user_id = fields.Many2one("res.users", "Portal User")
-    street = fields.Char("Street")
-    street2 = fields.Char("Street2")
-    city = fields.Char("City")
-    zip = fields.Char("Zip", validators=[api.constrains('zip')])
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
-    email = fields.Char("Email", validators=[api.constrains('email')])
-    tenth_percent = fields.Integer("% Xth Std in Eng.")
-    twelve_percent = fields.Integer("% 12th Std in Eng.")
-    iti_percent = fields.Integer("% ITI")
-    sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
-    ship_visits_count = fields.Char("No. of Ship Visits")
+                      date_format="%d-%b-%y",tracking=True)
+    user_id = fields.Many2one("res.users", "Portal User",tracking=True)
+    street = fields.Char("Street",tracking=True)
+    street2 = fields.Char("Street2",tracking=True)
+    city = fields.Char("City",tracking=True)
+    zip = fields.Char("Zip", validators=[api.constrains('zip')],tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],tracking=True)
+    phone = fields.Char("Phone",tracking=True)
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
+    email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
+    tenth_percent = fields.Integer("% Xth Std in Eng.",tracking=True)
+    twelve_percent = fields.Integer("% 12th Std in Eng.",tracking=True)
+    iti_percent = fields.Integer("% ITI",tracking=True)
+    sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
+    ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
-    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
+    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible',tracking=True)
     
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Fees Paid", default='no')
+    ],string="Fees Paid", default='no',tracking=True)
     
-    invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
-    batch_exam_registered = fields.Boolean("Batch Registered")
+    invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
+    batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
-    ],string="Qualification", default='tenth')
+    ],string="Qualification", default='tenth',tracking=True)
 
-    candidate_attendance_record = fields.Integer("Candidate Attendance Record")
+    candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
     
     attendance_compliance_1 = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no')
+    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no',tracking=True)
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
          ('no', 'No')
-    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
+    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
-    stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate")
+    stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
     
     
     # attendance_compliance_2 = fields.Boolean([
@@ -78,12 +80,12 @@ class GPCandidate(models.Model):
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
     
-    ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit")
+    ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
     
     
     ## Mek and GSK Online Exam
-    mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online")
-    gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online")
+    mek_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'GSK')],string="MEK Online",tracking=True)
+    gsk_online = fields.One2many("survey.user_input","gp_candidate",domain=[("survey_id.subject.name", "=", 'MEK')],string="GSK Online",tracking=True)
     
     # @api.constrains('institute_batch_id')
     # def _check_record_number_constraint(self):
@@ -94,7 +96,7 @@ class GPCandidate(models.Model):
     user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
-    ], string='User Status',compute="_compute_user_state",default="inactive")
+    ], string='User Status',compute="_compute_user_state",default="inactive",tracking=True)
     
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -457,9 +459,10 @@ class GPCandidate(models.Model):
 
 class GPSTCWCandidate(models.Model):
     _name = 'gp.candidate.stcw.certificate'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'STCW'
     
-    candidate_id = fields.Many2one("gp.candidate","Candidate")
+    candidate_id = fields.Many2one("gp.candidate","Candidate",tracking=True)
 
     course_name =  fields.Selection([
         ('pst', 'PST'),
@@ -468,15 +471,15 @@ class GPSTCWCandidate(models.Model):
         ('pssr', 'PSSR'),
         ('stsdsd', 'STSDSD'),
         ('bst', 'BST')
-    ],string="Course")
-    institute_name = fields.Many2one("bes.institute","Institute Name")
-    marine_training_inst_number = fields.Char("MTI Number")
-    mti_indos_no = fields.Char("Indos No.")
-    candidate_cert_no = fields.Char("Candidate Certificate Number")
-    course_start_date = fields.Date(string="Course Start Date")
-    course_end_date = fields.Date(string="Course End Date")
-    file_name = fields.Char('File Name')
-    certificate_upload = fields.Binary("Certificate Upload")
+    ],string="Course",tracking=True)
+    institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
+    marine_training_inst_number = fields.Char("MTI Number",tracking=True)
+    mti_indos_no = fields.Char("Indos No.",tracking=True)
+    candidate_cert_no = fields.Char("Candidate Certificate Number",tracking=True)
+    course_start_date = fields.Date(string="Course Start Date",tracking=True)
+    course_end_date = fields.Date(string="Course End Date",tracking=True)
+    file_name = fields.Char('File Name',tracking=True)
+    certificate_upload = fields.Binary("Certificate Upload",tracking=True)
     
 
 
@@ -488,79 +491,81 @@ class GPSTCWCandidate(models.Model):
 
 class GPCandidateShipVisits(models.Model):
     _name = 'gp.candidate.ship.visits'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Ship Visits'
-    candidate_id = fields.Many2one("gp.candidate","Candidate")
-    name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus")
-    imo_no = fields.Char("Ship IMO Number")
-    name_of_ports_visited = fields.Char("Name of the Port Visited / Place of SIC")
-    date_of_visits = fields.Date("Date Of Visit")
-    time_spent_on_ship = fields.Float("Hours")
-    bridge = fields.Boolean("Bridge")
-    eng_room = fields.Boolean("Eng. Room")
-    cargo_area = fields.Boolean("Cargo Area")
+    candidate_id = fields.Many2one("gp.candidate","Candidate",tracking=True)
+    name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus",tracking=True)
+    imo_no = fields.Char("Ship IMO Number",tracking=True)
+    name_of_ports_visited = fields.Char("Name of the Port Visited / Place of SIC",tracking=True)
+    date_of_visits = fields.Date("Date Of Visit",tracking=True)
+    time_spent_on_ship = fields.Float("Hours",tracking=True)
+    bridge = fields.Boolean("Bridge",tracking=True)
+    eng_room = fields.Boolean("Eng. Room",tracking=True)
+    cargo_area = fields.Boolean("Cargo Area",tracking=True)
     
     
 
 class CCMCCandidate(models.Model):
     _name = 'ccmc.candidate'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'CCMC Candidate'
     
-    institute_batch_id = fields.Many2one("institute.ccmc.batches","Batch")
-    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True)
-    candidate_image_name = fields.Char("Candidate Image Name")
-    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.')
-    candidate_signature_name = fields.Char("Candidate Signature")
-    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
+    institute_batch_id = fields.Many2one("institute.ccmc.batches","Batch",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True,tracking=True)
+    candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
+    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
+    candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
+    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
     
-    name = fields.Char("Full Name of Candidate as in INDOS",required=True)
-    user_id = fields.Many2one("res.users", "Portal User")    
-    age = fields.Char("Age",compute="_compute_age")
-    indos_no = fields.Char("Indos No.")
-    candidate_code = fields.Char("CCMC Candidate Code No.")
-    roll_no = fields.Char("Roll No.")
+    name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
+    age = fields.Char("Age",compute="_compute_age",tracking=True)
+    indos_no = fields.Char("Indos No.",tracking=True)
+    candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True)
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
-                      date_format="%d-%b-%y")
+                      date_format="%d-%b-%y",tracking=True)
                       
-    street = fields.Char("Street")
-    street2 = fields.Char("Street2")
-    city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
-    phone = fields.Char("Phone", validators=[api.constrains('phone')])
-    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')])
-    email = fields.Char("Email", validators=[api.constrains('email')])
-    tenth_percent = fields.Char("% Xth Std in Eng.")
-    twelve_percent = fields.Char("% 12th Std in Eng.")
-    iti_percent = fields.Char("% ITI")
-    sc_st = fields.Boolean("To be mentioned if Candidate SC/ST")
-    ship_visits_count = fields.Char("No. of Ship Visits")
+    street = fields.Char("Street",tracking=True)
+    street2 = fields.Char("Street2",tracking=True)
+    city = fields.Char("City",required=True,tracking=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')],tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True,tracking=True)
+    phone = fields.Char("Phone", validators=[api.constrains('phone')],tracking=True)
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
+    email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
+    tenth_percent = fields.Char("% Xth Std in Eng.",tracking=True)
+    twelve_percent = fields.Char("% 12th Std in Eng.",tracking=True)
+    iti_percent = fields.Char("% ITI",tracking=True)
+    sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
+    ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
     
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
-    ],string="Qualification", default='tenth')
+    ],string="Qualification", default='tenth',tracking=True)
     
-    candidate_attendance_record = fields.Integer("Candidate Attendance Record")
+    candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
-    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible')
+    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible',tracking=True)
     
     
     attendance_compliance_1 = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no')
+    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no',tracking=True)
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
          ('no', 'No')
-    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
+    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
-    stcw_certificate = fields.One2many("ccmc.candidate.stcw.certificate","candidate_id",string="STCW Certificate")
+    stcw_certificate = fields.One2many("ccmc.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
     
     # attendance_compliance_2 = fields.Boolean([
     #     ('yes', 'Yes'),
@@ -568,32 +573,32 @@ class CCMCCandidate(models.Model):
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
         # Ship Visits
-    ship_visits = fields.One2many("ccmc.candidate.ship.visits","candidate_id",string="Ship Visit")
+    ship_visits = fields.One2many("ccmc.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
 
 
         # Cookery an Bakery
-    cookery_child_line = fields.One2many("ccmc.cookery.bakery.line","cookery_parent",string="Cookery & Bakery")
+    cookery_child_line = fields.One2many("ccmc.cookery.bakery.line","cookery_parent",string="Cookery & Bakery",tracking=True)
     
 
         # Start CCMC rating Oral
 
-    ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral")
-    ccmc_gsk_oral_child_line = fields.One2many("ccmc.gsk.oral.line","ccmc_oral_parent",string="CCMC Oral")
+    ccmc_oral_child_line = fields.One2many("ccmc.oral.line","ccmc_oral_parent",string="CCMC Oral",tracking=True)
+    ccmc_gsk_oral_child_line = fields.One2many("ccmc.gsk.oral.line","ccmc_oral_parent",string="CCMC Oral",tracking=True)
 
-    ccmc_online = fields.One2many("survey.user_input","ccmc_candidate",domain=[("survey_id.subject.name", "=", 'CCMC')],string="CCMC Online")
+    ccmc_online = fields.One2many("survey.user_input","ccmc_candidate",domain=[("survey_id.subject.name", "=", 'CCMC')],string="CCMC Online",tracking=True)
 
 
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Fees Paid", default='no')
+    ],string="Fees Paid", default='no',tracking=True)
 
-    invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True)
+    invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     
     ccmc_user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
-    ], string='User Status',compute="_compute_user_state",default="inactive")
+    ], string='User Status',compute="_compute_user_state",default="inactive",tracking=True)
     
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -906,9 +911,10 @@ class CCMCCandidate(models.Model):
     
 class CCMCSTCWCandidate(models.Model):
     _name = 'ccmc.candidate.stcw.certificate'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'STCW'
     
-    candidate_id = fields.Many2one("ccmc.candidate","Candidate")
+    candidate_id = fields.Many2one("ccmc.candidate","Candidate",tracking=True)
     course_name =  fields.Selection([
         ('pst', 'PST'),
         ('efa', 'EFA'),
@@ -916,59 +922,61 @@ class CCMCSTCWCandidate(models.Model):
         ('pssr', 'PSSR'),
         ('stsdsd', 'STSDSD'),
         ('bst', 'BST')
-    ],string="Course")
-    institute_name = fields.Many2one("bes.institute","Institute Name")
-    marine_training_inst_number = fields.Char("Marine Training Institute Number")
-    mti_indos_no = fields.Char("MTI Indos No.")
-    candidate_cert_no = fields.Char("Candidate Certificate Number")
-    file_name = fields.Char('File Name')
-    certificate_upload = fields.Binary("Certificate Upload")
-    course_start_date = fields.Date(string="Course Start Date")
-    course_end_date = fields.Date(string="Course End Date")
+    ],string="Course",tracking=True)
+    institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
+    marine_training_inst_number = fields.Char("Marine Training Institute Number",tracking=True)
+    mti_indos_no = fields.Char("MTI Indos No.",tracking=True)
+    candidate_cert_no = fields.Char("Candidate Certificate Number",tracking=True)
+    file_name = fields.Char('File Name',tracking=True)
+    certificate_upload = fields.Binary("Certificate Upload",tracking=True)
+    course_start_date = fields.Date(string="Course Start Date",tracking=True)
+    course_end_date = fields.Date(string="Course End Date",tracking=True)
 
 
     
 
 class CCMCCandidateShipVisits(models.Model):
     _name = 'ccmc.candidate.ship.visits'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Ship Visits'
-    candidate_id = fields.Many2one("ccmc.candidate","Candidate")
-    name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus")
-    imo_no = fields.Char("Ship IMO Number")
-    name_of_ports_visited = fields.Char("Name of the Port Visited / Place of SIC")
-    date_of_visits = fields.Date("Date Of Visit")
-    time_spent_on_ship = fields.Float("Hours")
-    bridge = fields.Boolean("Bridge")
-    eng_room = fields.Boolean("Eng. Room")
-    cargo_area = fields.Boolean("Cargo Area")
+    candidate_id = fields.Many2one("ccmc.candidate","Candidate",tracking=True)
+    name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus",tracking=True)
+    imo_no = fields.Char("Ship IMO Number",tracking=True)
+    name_of_ports_visited = fields.Char("Name of the Port Visited / Place of SIC",tracking=True)
+    date_of_visits = fields.Date("Date Of Visit",tracking=True)
+    time_spent_on_ship = fields.Float("Hours",tracking=True)
+    bridge = fields.Boolean("Bridge",tracking=True)
+    eng_room = fields.Boolean("Eng. Room",tracking=True)
+    cargo_area = fields.Boolean("Cargo Area",tracking=True)
 
 class CookeryBakeryLine(models.Model):
     _name = 'ccmc.cookery.bakery.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Cookery and Bakery Line'
 
-    cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent")
-    institute_id = fields.Many2one("bes.institute",string="Name of Institute")
-    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id")
+    cookery_parent = fields.Many2one("ccmc.candidate",string="Cookery & Bakery Parent",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id",tracking=True)
     # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
-    exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True)
-    cookery_exam_date = fields.Date(string="Exam Date")
-    hygien_grooming = fields.Integer("Hygiene & Grooming")
-    appearance = fields.Integer("Appearance(Dish 1)")
-    taste = fields.Integer("Taste(Dish 1)")
-    texture = fields.Integer("Texture(Dish 1)")
-    appearance_2 = fields.Integer("Appearance(Dish 2)")
-    taste_2 = fields.Integer("Taste(Dish 2)")
-    texture_2 = fields.Integer("Texture(Dish 2)")
-    appearance_3 = fields.Integer("Appearance(Dish 3)")
-    taste_3 = fields.Integer("Taste(Dish 3)")
-    texture_3 = fields.Integer("Texture(Dish 3)")
-    identification_ingredians = fields.Integer("identification of ingredients")
-    knowledge_of_menu = fields.Integer("Knowledge of menu")
-    total_mrks = fields.Integer("Total", compute="_compute_total_mrks", store=True)
-    cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
-    cookery_bekary_start_time = fields.Datetime(string="Start Time")
-    cookery_bekary_end_time = fields.Datetime(string="End Time")
-    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
+    cookery_exam_date = fields.Date(string="Exam Date",tracking=True)
+    hygien_grooming = fields.Integer("Hygiene & Grooming",tracking=True)
+    appearance = fields.Integer("Appearance(Dish 1)",tracking=True)
+    taste = fields.Integer("Taste(Dish 1)",tracking=True)
+    texture = fields.Integer("Texture(Dish 1)",tracking=True)
+    appearance_2 = fields.Integer("Appearance(Dish 2)",tracking=True)
+    taste_2 = fields.Integer("Taste(Dish 2)",tracking=True)
+    texture_2 = fields.Integer("Texture(Dish 2)",tracking=True)
+    appearance_3 = fields.Integer("Appearance(Dish 3)",tracking=True)
+    taste_3 = fields.Integer("Taste(Dish 3)",tracking=True)
+    texture_3 = fields.Integer("Texture(Dish 3)",tracking=True)
+    identification_ingredians = fields.Integer("identification of ingredients",tracking=True)
+    knowledge_of_menu = fields.Integer("Knowledge of menu",tracking=True)
+    total_mrks = fields.Integer("Total", compute="_compute_total_mrks", store=True,tracking=True)
+    cookery_examiner = fields.Many2one("bes.examiner",string="Examiner",tracking=True)
+    cookery_bekary_start_time = fields.Datetime(string="Start Time",tracking=True)
+    cookery_bekary_end_time = fields.Datetime(string="End Time",tracking=True)
+    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
 
     
@@ -1049,27 +1057,28 @@ class CookeryBakeryLine(models.Model):
 
 class MekPrcticalLine(models.Model):
     _name = 'gp.mek.practical.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'MEK Practical Line'
 
-    mek_parent = fields.Many2one("gp.candidate",string="Parent")
-    exam_id = fields.Many2one("gp.exam.schedule",string="Exam Id")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    mek_prcatical_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
-    mek_practical_exam_date = fields.Date(string="Exam Date")
-    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
-    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
-    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
-    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes")
-    use_of_carpentry = fields.Integer("Use of Carpentry Tools")
-    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
-    welding = fields.Integer("Welding (1 Task)")
-    lathe = fields.Integer("Lathe Work (1 Task)")
-    electrical = fields.Integer("Electrical (1 Task)")
+    mek_parent = fields.Many2one("gp.candidate",string="Parent",tracking=True)
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam Id",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    mek_prcatical_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
+    mek_practical_exam_date = fields.Date(string="Exam Date",tracking=True)
+    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)",tracking=True)
+    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)",tracking=True)
+    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)",tracking=True)
+    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes",tracking=True)
+    use_of_carpentry = fields.Integer("Use of Carpentry Tools",tracking=True)
+    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments",tracking=True)
+    welding = fields.Integer("Welding (1 Task)",tracking=True)
+    lathe = fields.Integer("Lathe Work (1 Task)",tracking=True)
+    electrical = fields.Integer("Electrical (1 Task)",tracking=True)
     
-    mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True)
+    mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True,tracking=True)
     
-    mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
-    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
+    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
 
 
@@ -1161,24 +1170,25 @@ class MekPrcticalLine(models.Model):
 
 class MekOralLine(models.Model):
     _name = 'gp.mek.oral.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'MEK Oral Line'
 
-    mek_oral_parent = fields.Many2one("gp.candidate", string="Parent")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
-    mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True)
-    mek_oral_exam_date = fields.Date(string="Exam Date")
-    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools")
-    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints")
-    welding = fields.Integer("Welding")
-    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder")
-    electrical = fields.Integer("Electrical")
-    journal = fields.Integer("Journal")
+    mek_oral_parent = fields.Many2one("gp.candidate", string="Parent",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID",tracking=True)
+    mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
+    mek_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
+    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools",tracking=True)
+    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
+    welding = fields.Integer("Welding",tracking=True)
+    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
+    electrical = fields.Integer("Electrical",tracking=True)
+    journal = fields.Integer("Journal",tracking=True)
 
-    mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True)
+    mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True,tracking=True)
 
-    mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak")
-    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak",tracking=True)
+    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
 
     
@@ -1238,27 +1248,28 @@ class MekOralLine(models.Model):
 
 class GskPracticallLine(models.Model):
     _name = 'gp.gsk.practical.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GSK Practical Line'
 
-    gsk_practical_parent = fields.Many2one("gp.candidate", string="Parent")
-    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
-    gsk_practical_exam_date = fields.Date(string="Exam Date")
-    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
-    buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders")
-    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist")
-    rig_stage = fields.Integer("Rig a stage for painting shipside")
-    rig_pilot = fields.Integer("Rig a Pilot Ladder")
-    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height") 
-    fast_ropes = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper")
+    gsk_practical_parent = fields.Many2one("gp.candidate", string="Parent",tracking=True)
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
+    gsk_practical_exam_date = fields.Date(string="Exam Date",tracking=True)
+    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ",tracking=True)
+    buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders",tracking=True)
+    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist",tracking=True)
+    rig_stage = fields.Integer("Rig a stage for painting shipside",tracking=True)
+    rig_pilot = fields.Integer("Rig a Pilot Ladder",tracking=True)
+    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height",tracking=True) 
+    fast_ropes = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper",tracking=True)
     
-    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase")
-    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight")
+    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase",tracking=True)
+    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight",tracking=True)
     
-    gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks",store=True)
-    gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
-    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks",store=True,tracking=True)
+    gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
+    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
 
       
@@ -1324,25 +1335,26 @@ class GskPracticallLine(models.Model):
 
 class GskOralLine(models.Model):
     _name = 'gp.gsk.oral.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GSK Oral Line'
 
-    gsk_oral_parent = fields.Many2one("gp.candidate", string="Parent")
-    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True)
-    gsk_oral_exam_date = fields.Date(string="Exam Date")
-    subject_area_1 = fields.Integer("Subject Area 1")
-    subject_area_2 = fields.Integer("Subject Area 2")
-    subject_area_3 = fields.Integer("Subject Area 3")
-    subject_area_4 = fields.Integer("Subject Area 4")
-    subject_area_5 = fields.Integer("Subject Area 5")
-    subject_area_6 = fields.Integer("Subject Area 6")
-    practical_record_journals = fields.Integer("Practical Record Book and Journal")
+    gsk_oral_parent = fields.Many2one("gp.candidate", string="Parent",tracking=True)
+    exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True,tracking=True)
+    gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
+    subject_area_1 = fields.Integer("Subject Area 1",tracking=True)
+    subject_area_2 = fields.Integer("Subject Area 2",tracking=True)
+    subject_area_3 = fields.Integer("Subject Area 3",tracking=True)
+    subject_area_4 = fields.Integer("Subject Area 4",tracking=True)
+    subject_area_5 = fields.Integer("Subject Area 5",tracking=True)
+    subject_area_6 = fields.Integer("Subject Area 6",tracking=True)
+    practical_record_journals = fields.Integer("Practical Record Book and Journal",tracking=True)
     
     
-    gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True)
-    gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
-    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True,tracking=True)
+    gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
+    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
 
     
@@ -1404,25 +1416,26 @@ class GskOralLine(models.Model):
 
 class CcmcOralLine(models.Model):
     _name = 'ccmc.oral.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'CCMC Oral Line'
 
 
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
-    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
-    ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
-    ccmc_oral_exam_date = fields.Date(string="Exam Date")
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent",tracking=True)
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID",tracking=True)
+    ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
+    ccmc_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
     
-    house_keeping = fields.Integer("House Keeping")
-    f_b = fields.Integer("F & B service Practical")
-    orals_house_keeping = fields.Integer("Orals on Housekeeping and F& B Service")
-    attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism")
-    equipment_identification = fields.Integer("Identification of Equipment")
+    house_keeping = fields.Integer("House Keeping",tracking=True)
+    f_b = fields.Integer("F & B service Practical",tracking=True)
+    orals_house_keeping = fields.Integer("Orals on Housekeeping and F& B Service",tracking=True)
+    attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism",tracking=True)
+    equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
     
-    gsk_ccmc = fields.Integer("GSK")
-    safety_ccmc = fields.Integer("Safety")
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
-    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    gsk_ccmc = fields.Integer("GSK",tracking=True)
+    safety_ccmc = fields.Integer("Safety",tracking=True)
+    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
 
@@ -1476,18 +1489,19 @@ class CcmcOralLine(models.Model):
 
 class CcmcGSKOralLine(models.Model):
     _name = 'ccmc.gsk.oral.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'CCMC GSK Oral Line'
 
 
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent")
-    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID")
-    ccmc_gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True)
-    ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date")
-    gsk_ccmc = fields.Integer("GSK")
-    safety_ccmc = fields.Integer("Safety")
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
-    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    ccmc_oral_parent = fields.Many2one("ccmc.candidate", string="Parent",tracking=True)
+    exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID",tracking=True)
+    ccmc_gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
+    ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
+    gsk_ccmc = fields.Integer("GSK",tracking=True)
+    safety_ccmc = fields.Integer("Safety",tracking=True)
+    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
 
@@ -1538,20 +1552,21 @@ class CcmcGSKOralLine(models.Model):
 
 class CandidateRegisterExamWizard(models.TransientModel):
     _name = 'candidate.gp.register.exam.wizard'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Register Exam'
     
-    exam_region = fields.Many2one("exam.center",string="Exam Region")
-    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    candidate_id = fields.Many2one("gp.candidate",string="Candidate",required=True)
+    exam_region = fields.Many2one("exam.center",string="Exam Region",tracking=True)
+    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    candidate_id = fields.Many2one("gp.candidate",string="Candidate",required=True,tracking=True)
     
-    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
-    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
-    gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True)
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
+    gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True,tracking=True)
     
     
-    previous_attempt =  fields.Integer("Previous Attempt No.")
+    previous_attempt =  fields.Integer("Previous Attempt No.",tracking=True)
     deffereds =  fields.Boolean("Deffered")
     # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
 
@@ -1561,31 +1576,31 @@ class CandidateRegisterExamWizard(models.TransientModel):
         ('mar_jun', 'Mar - Jun'),
         ('jul_aug', 'Jul - Aug'),
         ('sep_nov', 'Sep - Nov'),
-    ], string='Exam Month')
+    ], string='Exam Month',tracking=True)
     
     
     gsk_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='GSK Oral/Practical Status')
+    ], string='GSK Oral/Practical Status',tracking=True)
     
     
-    mek_total = fields.Float("MEK Total",readonly=True)
-    mek_percentage = fields.Float("MEK Percentage",readonly=True)
+    mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
+    mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
     mek_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Oral/Practical Status')
+    ], string='Mek Oral/Practical Status',tracking=True)
     
     mek_online_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Mek Online Status')
+    ], string='Mek Online Status',tracking=True)
     
     gsk_online_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Gsk Online Status')
+    ], string='Gsk Online Status',tracking=True)
     
     
     @api.depends('exam_region')
@@ -1798,22 +1813,23 @@ class CandidateRegisterExamWizard(models.TransientModel):
 
 class CandidateCCMCRegisterExamWizard(models.TransientModel):
     _name = 'candidate.ccmc.register.exam.wizard'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Register Exam'
     
-    exam_region = fields.Many2one("exam.center",string="Exam Region")
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
+    exam_region = fields.Many2one("exam.center",string="Exam Region",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
 
-    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
-    candidate_id = fields.Many2one("ccmc.candidate",string="Candidate",required=True)
+    institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    candidate_id = fields.Many2one("ccmc.candidate",string="Candidate",required=True,tracking=True)
     
-    cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template")
+    cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template",tracking=True)
 
 
-    ccmc_exam = fields.Many2one("ccmc.exam.schedule",string="CCMC Exam",required=True)
+    ccmc_exam = fields.Many2one("ccmc.exam.schedule",string="CCMC Exam",required=True,tracking=True)
     
     
-    previous_attempt =  fields.Integer("Previous Attempt No.")
+    previous_attempt =  fields.Integer("Previous Attempt No.",tracking=True)
     # batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
 
     
@@ -1822,13 +1838,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         ('mar_jun', 'Mar - Jun'),
         ('jul_aug', 'Jul - Aug'),
         ('sep_nov', 'Sep - Nov'),
-    ], string='Exam Month')
+    ], string='Exam Month',tracking=True)
     
     
     cookery_bakery_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Cookery Bakery Oral/Prac Status',compute="_compute_cookery_bakery_status")
+    ], string='Cookery Bakery Oral/Prac Status',compute="_compute_cookery_bakery_status",tracking=True)
     
     
     
@@ -1841,7 +1857,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     ccmc_online = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='CCMC Online',compute="_compute_ccmc_online")
+    ], string='CCMC Online',compute="_compute_ccmc_online",tracking=True)
     
 
     @api.depends('ccmc_exam')
@@ -1977,11 +1993,12 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
             
 class SEPCandidate(models.Model):
     _name = 'sep.candidate'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate'
     
-    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
 
-    gsk_candidate_child_line = fields.One2many("sep.candidate.line","sep_candidate_parent",string="SEP Registration")
+    gsk_candidate_child_line = fields.One2many("sep.candidate.line","sep_candidate_parent",string="SEP Registration",tracking=True)
     def name_get(self):
         result = []
         for record in self:
@@ -1994,28 +2011,29 @@ class SEPCandidate(models.Model):
         
 class SEPCandidateLine(models.Model):
     _name = 'sep.candidate.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate Line'
     rec_name = 'institute_batch_id'
     
-    institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
 
-    sep_candidate_parent = fields.Many2one("sep.candidate",string="SEP Registration Line")
-    name = fields.Char("Name of the Rating's")
+    sep_candidate_parent = fields.Many2one("sep.candidate",string="SEP Registration Line",tracking=True)
+    name = fields.Char("Name of the Rating's",tracking=True)
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
-                      date_format="%d-%b-%y")
-    indos_no= fields.Char("Indos No")
-    cdc_no= fields.Char("CDC No")
-    contact= fields.Char("Contact No")
-    email= fields.Char("Email ID")
-    attendance1= fields.Boolean("1st Day Attendance")
-    attendance2= fields.Boolean("2nd Day Attendance")
-    vaccination= fields.Boolean("Vaccination/RTPCR")
-    remarks= fields.Char("Remark")
+                      date_format="%d-%b-%y",tracking=True)
+    indos_no= fields.Char("Indos No",tracking=True)
+    cdc_no= fields.Char("CDC No",tracking=True)
+    contact= fields.Char("Contact No",tracking=True)
+    email= fields.Char("Email ID",tracking=True)
+    attendance1= fields.Boolean("1st Day Attendance",tracking=True)
+    attendance2= fields.Boolean("2nd Day Attendance",tracking=True)
+    vaccination= fields.Boolean("Vaccination/RTPCR",tracking=True)
+    remarks= fields.Char("Remark",tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-    ],compute='_compute_state', string='Status', default='draft' )
+    ],compute='_compute_state', string='Status', default='draft' ,tracking=True)
 
     @api.depends('attendance1', 'attendance2')
     def _compute_state(self):
@@ -2031,6 +2049,7 @@ class SEPCandidateLine(models.Model):
 
 class SEPCertificateReport(models.AbstractModel):
     _name = 'report.bes.sep_certificate'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'SEP Certificate Report'
 
     @api.model

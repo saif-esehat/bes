@@ -26,6 +26,7 @@
         'views/examiner.xml',
         'views/exam_center.xml',
         'views/student.xml',
+        'views/portal/examiner_portal/expenses.xml',
         'views/courses_master.xml',
         'views/institution.xml',
         'views/survey.xml',
@@ -47,6 +48,7 @@
         'reports/admit_card_template_gp.xml',
         'reports/admit_card_template_ccmc.xml',
         'reports/dgs_report.xml',
+        
         
 ],
 'assets': {

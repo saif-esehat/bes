@@ -11,24 +11,24 @@ class DGSBatch(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
     
-    batch_name = fields.Char("Batch Name",required=True)
-    is_current_batch = fields.Boolean(string='Is Current Batch', default=False)
+    batch_name = fields.Char("Batch Name",required=True,tracking=True)
+    is_current_batch = fields.Boolean(string='Is Current Batch', default=False,tracking=True)
     to_date = fields.Date(string='To Date', 
                       widget="date", 
-                      date_format="%b-%y")
+                      date_format="%b-%y",tracking=True)
     
     from_date = fields.Date(string='From Date', 
                       widget="date", 
-                      date_format="%b-%y")
+                      date_format="%b-%y",tracking=True)
     
-    exam_pass_date = fields.Date(string="Date of Examination Passed:")
-    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
+    exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     
     state = fields.Selection([
         ('1-on_going', 'On-Going'),
         ('2-confirmed', 'Confirmed'),
         ('3-dgs_approved', 'Approved')     
-    ], string='State', default='1-on_going')
+    ], string='State', default='1-on_going',tracking=True)
     
     def move_confirm(self):
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
@@ -114,6 +114,7 @@ class DGSBatch(models.Model):
 
 class DGSBatchReport(models.AbstractModel):
     _name = "report.bes.dgs_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = "DGS Batch Report"
     
     @api.model

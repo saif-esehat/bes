@@ -6,11 +6,12 @@ from datetime import datetime
 class ExamCenter(models.Model):
     _name = "exam.center"
     _rec_name = "name"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = "Exam Region"
     
-    name = fields.Char("Exam Region",required=True)
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True)
-    exam_co_ordinator = fields.Many2one("res.users","Exam Co-ordinator")
+    name = fields.Char("Exam Region",required=True,tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True,tracking=True)
+    exam_co_ordinator = fields.Many2one("res.users","Exam Co-ordinator",tracking=True)
     
     def examiners(self):
         

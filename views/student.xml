@@ -423,6 +423,11 @@
                             
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -468,29 +473,34 @@
 
 
 
-        <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
-                <field name="name">gp.candidate.ship.visits.form</field>
-                <field name="model">gp.candidate.ship.visits</field>
-                <field name="arch" type="xml">
-                    <form>
-                        <sheet>
-                            <group>
-                                <field name="candidate_id"/>
-                            </group>
-                            <group>
-                                <field name="name_of_ships"/>
-                                <field name="imo_no"/>
-                                <field name="name_of_ports_visited"/>
-                                <field name="date_of_visits"/>
-                                <field name="time_spent_on_ship"/>
-                                <field name="bridge"/>
-                                <field name="eng_room"/>
-                                <field name="cargo_area"/>
-                            </group>
-                        </sheet>
-                    </form>
-                </field>
-        </record>
+    <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
+            <field name="name">gp.candidate.ship.visits.form</field>
+            <field name="model">gp.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="candidate_id"/>
+                        </group>
+                        <group>
+                            <field name="name_of_ships"/>
+                            <field name="imo_no"/>
+                            <field name="name_of_ports_visited"/>
+                            <field name="date_of_visits"/>
+                            <field name="time_spent_on_ship"/>
+                            <field name="bridge"/>
+                            <field name="eng_room"/>
+                            <field name="cargo_area"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
+                </form>
+            </field>
+    </record>
 
 
         <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
@@ -705,6 +715,11 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -782,6 +797,11 @@
                             <field name="cargo_area"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -933,6 +953,11 @@
                         </group>
                             
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1020,6 +1045,11 @@
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1129,6 +1159,11 @@
                             <field name="mek_practical_draft_confirm"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1214,6 +1249,11 @@
                             <field name="mek_oral_draft_confirm"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1323,6 +1363,11 @@
                             <field name="gsk_practical_draft_confirm"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1416,6 +1461,11 @@
                         </group>
 
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
