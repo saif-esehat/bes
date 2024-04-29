@@ -473,7 +473,6 @@
 
 
 
-<<<<<<< HEAD
     <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
             <field name="name">gp.candidate.ship.visits.form</field>
             <field name="model">gp.candidate.ship.visits</field>
@@ -502,31 +501,6 @@
                 </form>
             </field>
     </record>
-=======
-        <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
-                <field name="name">gp.candidate.ship.visits.form</field>
-                <field name="model">gp.candidate.ship.visits</field>
-                <field name="arch" type="xml">
-                    <form>
-                        <sheet>
-                            <group>
-                                <field name="candidate_id"/>
-                            </group>
-                            <group>
-                                <field name="name_of_ships"/>
-                                <field name="imo_no"/>
-                                <field name="name_of_ports_visited"/>
-                                <field name="date_of_visits"/>
-                                <field name="time_spent_on_ship"/>
-                                <field name="bridge"/>
-                                <field name="eng_room"/>
-                                <field name="cargo_area"/>
-                            </group>
-                        </sheet>
-                    </form>
-                </field>
-        </record>
->>>>>>> 6bee1a590d1aa2778d28304924c3eef9a03bc39a
 
 
         <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
