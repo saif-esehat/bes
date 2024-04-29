@@ -34,6 +34,7 @@
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
         'views/exam_schedule.xml',
+        'views/employee.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/menu.xml',
@@ -46,6 +47,7 @@
         'reports/admit_card_template_gp.xml',
         'reports/admit_card_template_ccmc.xml',
         'reports/dgs_report.xml',
+        
         
 ],
 'assets': {
