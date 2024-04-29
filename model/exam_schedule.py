@@ -577,12 +577,20 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
+<<<<<<< HEAD
+=======
+    
+>>>>>>> eabf57e4a8371c7807f58e22fb4ad146a778a980
     expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
     status = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> eabf57e4a8371c7807f58e22fb4ad146a778a980
 
     
     def open_marksheet_list(self):
@@ -846,7 +854,15 @@ class GPExam(models.Model):
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True,tracking=True)
     
-    
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True)
+
+
+
+
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
     
