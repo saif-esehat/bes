@@ -101,7 +101,7 @@ class GPCandidate(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria' ,default="pending",compute="_check_stcw_certificate")
+    ], string='STCW Criteria',store=True,default="pending",compute="_check_stcw_certificate")
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
