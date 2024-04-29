@@ -11,7 +11,7 @@ class GPCandidate(models.Model):
     _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)

@@ -57,7 +57,7 @@
             <field name="model">bes.institute</field>
             <field name="arch" type="xml">
                 <form>
-                    <sheet>
+                    <sheet>       
                         
                         <div class="oe_button_box" name="button_box">
                         <!-- attrs="{'invisible':[('ccmc_present','=',False)]}" -->
@@ -76,7 +76,7 @@
                         </group>
                         <group style="width:50%;">
                             <field name="email" required="1"/>
-                            <field name="batch_capacity"/>
+                            <!-- <field name="batch_capacity"/> -->
                         </group>
                         <group style="width:50%;">
                             <field name="code" required="1"/>
