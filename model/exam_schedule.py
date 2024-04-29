@@ -847,7 +847,15 @@ class GPExam(models.Model):
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True,tracking=True)
     
-    
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True)
+
+
+
+
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
     
