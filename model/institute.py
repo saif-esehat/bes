@@ -10,54 +10,55 @@ class Institute(models.Model):
     _name = "bes.institute"
     _description= 'Course Master'
     _rec_name = 'name'
+    _inherit = ['mail.thread','mail.activity.mixin']
 
-    code = fields.Char("Code")
-    name = fields.Char("Name")
+    code = fields.Char("Code",tracking=True)
+    name = fields.Char("Name",tracking=True)
     
-    institute_repeater = fields.Boolean("Repeater Institute")
-    repeater = fields.Boolean("repeaters")
+    institute_repeater = fields.Boolean("Repeater Institute",tracking=True)
+    repeater = fields.Boolean("repeaters",tracking=True)
 
-    email = fields.Char("Email")
-    state = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
-    mti = fields.Char("MTI no.")
-    courses = fields.One2many("institute.courses","institute_id","Courses")
-    user_id = fields.Many2one("res.users", "Portal User")
-    exam_center = fields.Many2one("exam.center", "Exam Region")
-    street = fields.Char("Street")
-    street2 = fields.Char("Street2")
-    city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
+    email = fields.Char("Email",tracking=True)
+    state = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],tracking=True)
+    mti = fields.Char("MTI no.",tracking=True)
+    courses = fields.One2many("institute.courses","institute_id","Courses",tracking=True)
+    user_id = fields.Many2one("res.users", "Portal User",tracking=True)
+    exam_center = fields.Many2one("exam.center", "Exam Region",tracking=True)
+    street = fields.Char("Street",tracking=True)
+    street2 = fields.Char("Street2",tracking=True)
+    city = fields.Char("City",required=True,tracking=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')],tracking=True)
     
-    principal_name = fields.Char("Name of Principal / Trustee of Training Institute")
+    principal_name = fields.Char("Name of Principal / Trustee of Training Institute",tracking=True)
     # ,  validators=[api.constrains('principal_phone')]
     principal_phone = fields.Char("Phone No. of Principal / Trustee of Training Institute" )
-    principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute", validators=[api.constrains('principal_mobile')])
-    principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute", validators=[api.constrains('principal_email')])
+    principal_mobile = fields.Char("Mobile No. of Principal / Trustee of Training Institute", validators=[api.constrains('principal_mobile')],tracking=True)
+    principal_email= fields.Char("E-mail of Principal / Trustee of Training Institute", validators=[api.constrains('principal_email')],tracking=True)
     
-    ip_address = fields.Char("IP Address")
+    ip_address = fields.Char("IP Address",tracking=True)
     #  validators=[api.constrains('admin_phone')]
     
-    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute")
-    admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')])
-    admin_email= fields.Char("E-mail of Admin Officer of Training Institute",  validators=[api.constrains('admin_email')])
+    admin_phone = fields.Char("Phone No. of Admin Officer of Training Institute",tracking=True)
+    admin_mobile = fields.Char("Mobile No. of Admin Officer of Training Institute",  validators=[api.constrains('admin_mobile')],tracking=True)
+    admin_email= fields.Char("E-mail of Admin Officer of Training Institute",  validators=[api.constrains('admin_email')],tracking=True)
     
-    name_of_second_authorized_person = fields.Char("Name of the second authorised person representing the Institute")
+    name_of_second_authorized_person = fields.Char("Name of the second authorised person representing the Institute",tracking=True)
     
-    institute_computer_lab = fields.Boolean("Does the institue have inhouse Computer Lab")
-    computer_lab_pc_count = fields.Integer("How many PC does the computer Lab Have")
-    internet_strength = fields.Char("Strength of Internet connection")
-    institute_approved_conduct_stcw = fields.Boolean("Is the Institute Approved to conduct STCW and Security Courses")
-    is_lab_used_for_stcw_exit_exam = fields.Boolean("IS the Lab being used for STCW exit exams")
-    documents = fields.One2many("lod.institute","institute_id","Documents")
+    institute_computer_lab = fields.Boolean("Does the institue have inhouse Computer Lab",tracking=True)
+    computer_lab_pc_count = fields.Integer("How many PC does the computer Lab Have",tracking=True)
+    internet_strength = fields.Char("Strength of Internet connection",tracking=True)
+    institute_approved_conduct_stcw = fields.Boolean("Is the Institute Approved to conduct STCW and Security Courses",tracking=True)
+    is_lab_used_for_stcw_exit_exam = fields.Boolean("IS the Lab being used for STCW exit exams",tracking=True)
+    documents = fields.One2many("lod.institute","institute_id","Documents",tracking=True)
 
     #------- Faculty
-    faculty_ids= fields.One2many('institute.faculty','institute_id',string="Faculty")
+    faculty_ids= fields.One2many('institute.faculty','institute_id',string="Faculty",tracking=True)
 
     # -------- Payement Slip
-    payment_slip_ids= fields.One2many('institute.payment.slip.line','payment_slip_id',string="Payment Slip")
+    payment_slip_ids= fields.One2many('institute.payment.slip.line','payment_slip_id',string="Payment Slip",tracking=True)
 
-    ccmc_present = fields.Boolean(string='CCMC',compute="_compute_ccmc_present")
-    gp_present = fields.Boolean(string='GP',compute="_compute_gp_present")
+    ccmc_present = fields.Boolean(string='CCMC',compute="_compute_ccmc_present",tracking=True)
+    gp_present = fields.Boolean(string='GP',compute="_compute_gp_present",tracking=True)
 
     @api.depends('courses')
     def _compute_ccmc_present(self):
@@ -306,13 +307,14 @@ class Institute(models.Model):
 
 class ListofDcoument(models.Model):
     _name = "lod.institute"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Institute Document'
     
-    institute_id = fields.Many2one("bes.institute","Institute ID")
-    document_name = fields.Char("Name of Document")
-    upload_date = fields.Date("Upload Date")
-    documents_name = fields.Char("Name of Document")
-    document_file = fields.Binary(string='Upload Document')
+    institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
+    document_name = fields.Char("Name of Document",tracking=True)
+    upload_date = fields.Date("Upload Date",tracking=True)
+    documents_name = fields.Char("Name of Document",tracking=True)
+    document_file = fields.Binary(string='Upload Document',tracking=True)
 
 
 
@@ -321,37 +323,39 @@ class ListofDcoument(models.Model):
 
 class InstituteCourses(models.Model):
     _name = "institute.courses"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Institute Courses'
     _sql_constraints = [
         ('unique_course_per_institute', 'unique(institute_id, course)', 'Course must be unique per institute.'),
     ]
-    institute_id = fields.Many2one("bes.institute","Institute ID")
-    course = fields.Many2one("course.master","Course")
-    approved_capacity = fields.Integer("Approved Capacity")
-    approved_date = fields.Date("Approved Date")
+    institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
+    course = fields.Many2one("course.master","Course",tracking=True)
+    approved_capacity = fields.Integer("Approved Capacity",tracking=True)
+    approved_date = fields.Date("Approved Date",tracking=True)
 
 
 class InstituteFaculty(models.Model):
     _name = "institute.faculty"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Institute Faculty'
     _rec_name = 'faculty_name'
     
-    institute_id = fields.Many2one("bes.institute","Institute ID")
-    gp_or_ccmc_batch = fields.Selection([('gp','GP'),('ccmc','CCMC')],string="GP / CCMC")
-    gp_batches_id = fields.Many2one('institute.gp.batches',string="Batch")
+    institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
+    gp_or_ccmc_batch = fields.Selection([('gp','GP'),('ccmc','CCMC')],string="GP / CCMC",tracking=True)
+    gp_batches_id = fields.Many2one('institute.gp.batches',string="Batch",tracking=True)
 
-    ccmc_batches_id = fields.Many2one('institute.ccmc.batches',string="Batch")
+    ccmc_batches_id = fields.Many2one('institute.ccmc.batches',string="Batch",tracking=True)
 
 
-    course_name = fields.Many2one("course.master","Course")
-    faculty_name = fields.Char(string='Name of the Faculty', required=True)
-    faculty_photo = fields.Binary(string='Faculty Photo')
-    faculty_photo_name = fields.Char(string="Photo name")
-    dob = fields.Date(string='Date of Birth of the Faculty')
-    designation = fields.Char(string='Designation of the Faculty')
-    qualification = fields.Text(string='Qualification of Faculty')
-    contract_terms = fields.Text(string='Contract Terms')
-    courses_taught = fields.Many2many('course.master', string='Courses Being Taught')
+    course_name = fields.Many2one("course.master","Course",tracking=True)
+    faculty_name = fields.Char(string='Name of the Faculty', required=True,tracking=True)
+    faculty_photo = fields.Binary(string='Faculty Photo',tracking=True)
+    faculty_photo_name = fields.Char(string="Photo name",tracking=True)
+    dob = fields.Date(string='Date of Birth of the Faculty',tracking=True)
+    designation = fields.Char(string='Designation of the Faculty',tracking=True)
+    qualification = fields.Text(string='Qualification of Faculty',tracking=True)
+    contract_terms = fields.Text(string='Contract Terms',tracking=True)
+    courses_taught = fields.Many2many('course.master', string='Courses Being Taught',tracking=True)
 
     # @api.model
     # def create(self, values):
@@ -361,17 +365,18 @@ class InstituteFaculty(models.Model):
 
 class InstitutePaymentSlip(models.Model):
     _name = "institute.payment.slip.line"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Institute Payment Slip'
     
-    payment_slip_id = fields.Many2one("bes.institute","Payment Slip ID")
+    payment_slip_id = fields.Many2one("bes.institute","Payment Slip ID",tracking=True)
 
-    sr_no = fields.Integer(string="Sr.No.",readonly=True, copy=False,default="1")
-    name_of_payment = fields.Char('Name Of The Payment')
-    pay_method = fields.Selection([('1','Cheque'),('2','Bank Draft'),('3','Cash'),('4','UPI')],string='Payment Method')
-    pay_date = fields.Date(string="Payment Date") 
-    invoice_generated = fields.Boolean(string="Invoice Generated and Sent")
-    invoice_number = fields.Char("Invoice Number")
-    invoive_date = fields.Date(string="Invoice Date")
+    sr_no = fields.Integer(string="Sr.No.",readonly=True, copy=False,default="1",tracking=True)
+    name_of_payment = fields.Char('Name Of The Payment',tracking=True)
+    pay_method = fields.Selection([('1','Cheque'),('2','Bank Draft'),('3','Cash'),('4','UPI')],string='Payment Method',tracking=True)
+    pay_date = fields.Date(string="Payment Date",tracking=True) 
+    invoice_generated = fields.Boolean(string="Invoice Generated and Sent",tracking=True)
+    invoice_number = fields.Char("Invoice Number",tracking=True)
+    invoive_date = fields.Date(string="Invoice Date",tracking=True)
 
 
 

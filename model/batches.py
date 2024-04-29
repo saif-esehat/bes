@@ -11,20 +11,19 @@ class InstituteGPBatches(models.Model):
     _rec_name = "batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
-    
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
-    batch_name = fields.Char("Batch Name",required=True)
-    faculty_name = fields.Char("Faculty name")
-    candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
-    from_date = fields.Date("From Date")
-    to_date = fields.Date("To Date")
-    course = fields.Many2one("course.master","Course")
-    account_move = fields.Many2one("account.move",string="Invoice")
-    invoice_created = fields.Boolean("Invoice Created")
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
+    batch_name = fields.Char("Batch Name",required=True,tracking=True)
+    faculty_name = fields.Char("Faculty name",tracking=True)
+    candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count",tracking=True)
+    from_date = fields.Date("From Date",tracking=True)
+    to_date = fields.Date("To Date",tracking=True)
+    course = fields.Many2one("course.master","Course",tracking=True)
+    account_move = fields.Many2one("account.move",string="Invoice",tracking=True)
+    invoice_created = fields.Boolean("Invoice Created",tracking=True)
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",
                                                       compute="_compute_invoice_button_visible",
-                                                      store=False,  # This field is not stored in the database
+                                                      store=False,tracking=True # This field is not stored in the database
                                                             )
 
     
@@ -35,24 +34,24 @@ class InstituteGPBatches(models.Model):
         ('4-invoiced', 'Invoiced'),
         ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
-    ], string='State', default='1-ongoing')
+    ], string='State', default='1-ongoing',tracking=True)
     
-    active = fields.Boolean(string="Active",default=True)
+    active = fields.Boolean(string="Active",default=True,tracking=True)
     
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
         ('paid', 'Paid'),
         ('partial', 'Partially Paid')     
-    ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
+    ], string='Payment State', default='not_paid',compute="_compute_payment_state",tracking=True)
     
-    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
-    dgs_approval_state = fields.Boolean(string="DGS Approval Status")
-    dgs_document = fields.Binary(string="DGS Document")
-    document_name = fields.Char("Name of Document")
-    document_file = fields.Binary(string='Upload Document')
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",tracking=True)
+    dgs_approval_state = fields.Boolean(string="DGS Approval Status",tracking=True)
+    dgs_document = fields.Binary(string="DGS Document",tracking=True)
+    document_name = fields.Char("Name of Document",tracking=True)
+    document_file = fields.Binary(string='Upload Document',tracking=True)
     
-    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
-    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
     
     
     @api.model

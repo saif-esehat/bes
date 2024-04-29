@@ -8,58 +8,58 @@ class Examiner(models.Model):
     _name = "bes.examiner"
     _description= 'Examiner'
     _rec_name = 'name'
+    _inherit = ['mail.thread','mail.activity.mixin']
+    examiner_image = fields.Binary(string='Examiner Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
+    user_id = fields.Many2one("res.users", "Portal User",tracking=True)
+    exam_center = fields.Many2one("exam.center", "Exam Region",tracking=True)
 
-    examiner_image = fields.Binary(string='Examiner Image', attachment=True, help='Select an image in JPEG format.')
-    user_id = fields.Many2one("res.users", "Portal User")
-    exam_center = fields.Many2one("exam.center", "Exam Region")
-
-    name = fields.Char("Name",required=True)
-    street = fields.Char("Street")
-    street2 = fields.Char("Street2")
-    city = fields.Char("City",required=True)
-    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')])
-    state_id = fields.Many2one("res.country.state","State",required=True,domain=[('country_id.code','=','IN')])
-    phone = fields.Char("Phone", validators=[api.constrains('phone')])
-    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],required=True )
-    email = fields.Char("Email", validators=[api.constrains('email')],required=True)
+    name = fields.Char("Name",required=True,tracking=True)
+    street = fields.Char("Street",tracking=True)
+    street2 = fields.Char("Street2",tracking=True)
+    city = fields.Char("City",required=True,tracking=True)
+    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')],tracking=True)
+    state_id = fields.Many2one("res.country.state","State",required=True,domain=[('country_id.code','=','IN')],tracking=True)
+    phone = fields.Char("Phone", validators=[api.constrains('phone')],tracking=True)
+    mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],required=True,tracking=True )
+    email = fields.Char("Email", validators=[api.constrains('email')],required=True,tracking=True)
     
-    pan_no = fields.Char("Pan No .",required=True)
+    pan_no = fields.Char("Pan No .",required=True,tracking=True)
     dob = fields.Date("DOB",help="Date of Birth", required=True,
                       widget="date", 
-                      date_format="%d-%b-%y")
+                      date_format="%d-%b-%y",tracking=True)
     present_designation = fields.Text("Present Designation",required=True)
-    name_address_present_employer = fields.Text("Name and address of present employer",required=True)
+    name_address_present_employer = fields.Text("Name and address of present employer",required=True,tracking=True)
     designation = fields.Selection([
         ('master', 'Master Mariner'),
         ('chief', 'Chief Engineer'),
         ('catering','Catering Officer')
-    ], string='Rank',default='master')
-    competency_no = fields.Char("Certificate of competency no.")
-    date_of_issue = fields.Date("Date of Issue",required=True)
+    ], string='Rank',default='master',tracking=True)
+    competency_no = fields.Char("Certificate of competency no.",tracking=True)
+    date_of_issue = fields.Date("Date of Issue",required=True,tracking=True)
     member_of_imei_cmmi = fields.Selection([
         ('imei', 'IMEI'),
         ('cmmi', 'CMMI')
-    ], string='Are you a member of IMEI or CMMI?',default='no')
-    membership_no = fields.Char("Membership No.")
-    institute_association = fields.Boolean("Are you associated with any institute conducting ratings training?")
-    associated_training_institute = fields.Text("Name & address of the training institute to which you were associated")
-    present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?")
-    subject_id = fields.Many2one("course.master.subject","Subject")
-    payment_details = fields.One2many("examiner.assignment","examiner_id","Payment Details")
-    acc_no = fields.Char(string="Account Number")
-    ifsc_code = fields.Char(string="IFSC Code")
-    bank_name = fields.Char(string="Bank Name")
-    exam_coordinator = fields.Boolean("Exam Coordinator")
-    exam_coordinator_id = fields.Boolean("Exam Coordinator ID")
-    assignments = fields.One2many("examiner.assignment","examiner_id","Assignments")
-    exam_assignments = fields.One2many("examiner.assignment","examiner_id",string="Exam Assignments")
+    ], string='Are you a member of IMEI or CMMI?',default='no',tracking=True)
+    membership_no = fields.Char("Membership No.",tracking=True)
+    institute_association = fields.Boolean("Are you associated with any institute conducting ratings training?",tracking=True)
+    associated_training_institute = fields.Text("Name & address of the training institute to which you were associated",tracking=True)
+    present_employer_clearance = fields.Boolean("Have you taken clearance from your present employer to work on part time basis for BES?",tracking=True)
+    subject_id = fields.Many2one("course.master.subject","Subject",tracking=True)
+    payment_details = fields.One2many("examiner.assignment","examiner_id","Payment Details",tracking=True)
+    acc_no = fields.Char(string="Account Number",tracking=True)
+    ifsc_code = fields.Char(string="IFSC Code",tracking=True)
+    bank_name = fields.Char(string="Bank Name",tracking=True)
+    exam_coordinator = fields.Boolean("Exam Coordinator",tracking=True)
+    exam_coordinator_id = fields.Boolean("Exam Coordinator ID",tracking=True)
+    assignments = fields.One2many("examiner.assignment","examiner_id","Assignments",tracking=True)
+    exam_assignments = fields.One2many("examiner.assignment","examiner_id",string="Exam Assignments",tracking=True)
     
     
     
     state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
-    ], string='State',compute="_compute_examiner_state",default="active")
+    ], string='State',compute="_compute_examiner_state",default="active",tracking=True)
     
     
     
@@ -152,30 +152,31 @@ class Examiner(models.Model):
 
 class ExaminerAssignment(models.Model):
     _name = "examiner.assignment"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Examiner Assignment'
     
     
-    examiner_id = fields.Many2one("bes.examiner","Examiner")
-    assignment_date = fields.Date("Assignment Date")
-    exam_region = fields.Many2one('exam.center',"Exam Region")
+    examiner_id = fields.Many2one("bes.examiner","Examiner",tracking=True)
+    assignment_date = fields.Date("Assignment Date",tracking=True)
+    exam_region = fields.Many2one('exam.center',"Exam Region",tracking=True)
     # exam_date = fields.Date("Exam Date")
-    exam_start_time = fields.Datetime("Exam Start Time")
-    exam_end_time = fields.Datetime("Exam End Time")
-    gsk_boolean = fields.Boolean("GSK Boolean" ,compute="_compute_boolean")
-    mek_boolean = fields.Boolean("MEK Boolean" ,compute="_compute_boolean")
+    exam_start_time = fields.Datetime("Exam Start Time",tracking=True)
+    exam_end_time = fields.Datetime("Exam End Time",tracking=True)
+    gsk_boolean = fields.Boolean("GSK Boolean" ,compute="_compute_boolean",tracking=True)
+    mek_boolean = fields.Boolean("MEK Boolean" ,compute="_compute_boolean",tracking=True)
     assigned_to = fields.Selection([
         ('gp_candidate', 'GP Candidate'),
         ('ccmc_candidate', 'CCMC Candidate'),
-    ], string='Assigned to',default="gp_candidate")
-    course = fields.Many2one("course.master","Course")
-    subject_id = fields.Many2one("course.master.subject","Subject")
-    institute_id = fields.Many2one('bes.institute',string="Institute")
-    gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]")
-    gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates")
-    ccmc_batches = fields.Many2one('institute.ccmc.batches',string="CCMC Batches",domain="[('institute_id', '=', institute_id)]")
-    ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate")
-    gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment")
-    ccmc_assignment = fields.One2many("ccmc.candidate.assignment","assignment_id",string="CCMC Assignment")
+    ], string='Assigned to',default="gp_candidate",tracking=True)
+    course = fields.Many2one("course.master","Course",tracking=True)
+    subject_id = fields.Many2one("course.master.subject","Subject",tracking=True)
+    institute_id = fields.Many2one('bes.institute',string="Institute",tracking=True)
+    gp_batches = fields.Many2one('institute.gp.batches',string="GP Batches",domain="[('institute_id', '=', institute_id)]",tracking=True)
+    gp_candidates = fields.Many2many("gp.candidate",string="GP Candidate",compute="_compute_gp_candidates",tracking=True)
+    ccmc_batches = fields.Many2one('institute.ccmc.batches',string="CCMC Batches",domain="[('institute_id', '=', institute_id)]",tracking=True)
+    ccmc_candidates = fields.Many2many("ccmc.candidate",string="CCMC Candidate",tracking=True)
+    gp_oral_prac = fields.One2many("gp.candidate.oral.prac.assignment","assignment_id",string="GP Assignment",tracking=True)
+    ccmc_assignment = fields.One2many("ccmc.candidate.assignment","assignment_id",string="CCMC Assignment",tracking=True)
 
     
     def update_candidate_from_institute(self):
@@ -270,70 +271,75 @@ class ExaminerAssignment(models.Model):
 
 class GPOralPracAssignment(models.Model):
     _name = "gp.candidate.oral.prac.assignment"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'GP Candidate Oral Practical Assignment'
     
-    assignment_id = fields.Many2one("examiner.assignment","Assignment ID")
-    gp_candidate = fields.Many2one("gp.candidate","Candidate")
-    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
-    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
-    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
-    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
+    assignment_id = fields.Many2one("examiner.assignment","Assignment ID",tracking=True)
+    gp_candidate = fields.Many2one("gp.candidate","Candidate",tracking=True)
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
 
 class CCMCOralPracAssignment(models.Model):
     _name = "ccmc.candidate.assignment"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'CCMC Candidate Assignment'
     
-    assignment_id = fields.Many2one("examiner.assignment","Assignment ID")
-    ccmc_candidate = fields.Many2one("ccmc.candidate","Candidate")
-    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery Bakery")
-    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+    assignment_id = fields.Many2one("examiner.assignment","Assignment ID",tracking=True)
+    ccmc_candidate = fields.Many2one("ccmc.candidate","Candidate",tracking=True)
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery Bakery",tracking=True)
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
     
     
 class ExaminerTimeSheet(models.Model):
     _name = "examiner.time.sheet"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Time Sheet'
     
-    examiner_id = fields.Many2one('bes.examiner','Examiner')
-    assignment_id = fields.Many2one('examiner.assignment','Assignment ID')
-    exam_region = fields.Many2one('exam.center', 'Place')
+    examiner_id = fields.Many2one('bes.examiner','Examiner',tracking=True)
+    assignment_id = fields.Many2one('examiner.assignment','Assignment ID',tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Place',tracking=True)
     # date_of_examination = fields.Many2one('')
     remarks = fields.Char('Remakrs')
-    remarks_quality = fields.Char('Remarks on the quality of transport and logistics')
+    remarks_quality = fields.Char('Remarks on the quality of transport and logistics',tracking=True)
     
     state = fields.Selection([
         ('active', '1'),
         ('inactive', '2')
-    ], string='State',default="active")
+    ], string='State',default="active",tracking=True)
     
-    examination_details = fields.One2many('time.sheet.exam','examiner_id','Time Sheet for Examination')
+    examination_details = fields.One2many('time.sheet.exam','examiner_id','Time Sheet for Examination',tracking=True)
     
-    travelling_details = fields.One2many('time.sheet.travel.detail','travel_id',"Travelling Details")
+    travelling_details = fields.One2many('time.sheet.travel.detail','travel_id',"Travelling Details",tracking=True)
     
     
     
 class ExaminerTimeSheetTravelling(models.Model):
     _name = "time.sheet.travel.detail"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Travelling Details'
     
     
     # examiner_id = fields.Many2one('bes.examiner','Examiner')
-    travel_id = fields.Many2one('bes.examiner','Examiner')
+    travel_id = fields.Many2one('bes.examiner','Examiner',tracking=True)
     travel_details = fields.Selection([
         ('left_residence','Left Residence'),
         ('arrival_institute','Arrival at the Institute/Hotel'),
         ('left_institute','Left the Institute/Hotel'),
-        ('arrival_residence','Arrival at Residence')],string='Travelling Details')
-    date_time = fields.Datetime('Date and Time')
-    mode_of_travel = fields.Char('Mode of travel')
+        ('arrival_residence','Arrival at Residence')],string='Travelling Details',tracking=True)
+    date_time = fields.Datetime('Date and Time',tracking=True)
+    mode_of_travel = fields.Char('Mode of travel',tracking=True)
 
 
 class ExaminerTimeSheetExaminatopn(models.Model):
     _name = "time.sheet.exam"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Time Sheet Examination'
     
-    examiner_id = fields.Many2one('bes.examiner','Examiner')
-    arrival_institute = fields.Datetime('Date & Time of arrival at the Institute')
-    exam_start = fields.Datetime('Commencement of Practical/Oral Examination')
-    lunch_break = fields.Datetime('Lunch Break')
-    time_of_completion = fields.Datetime('Time of completion')
-    debriefing_institute = fields.Datetime('Time spent for debriefing the Institute (Last day of examination)')
+    examiner_id = fields.Many2one('bes.examiner','Examiner',tracking=True)
+    arrival_institute = fields.Datetime('Date & Time of arrival at the Institute',tracking=True)
+    exam_start = fields.Datetime('Commencement of Practical/Oral Examination',tracking=True)
+    lunch_break = fields.Datetime('Lunch Break',tracking=True)
+    time_of_completion = fields.Datetime('Time of completion',tracking=True)
+    debriefing_institute = fields.Datetime('Time spent for debriefing the Institute (Last day of examination)',tracking=True)

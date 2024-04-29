@@ -12,21 +12,22 @@ from datetime import datetime , date
 class BesBatches(models.Model):
     _name = "bes.exam.schedule"
     _rec_name = "schedule_name"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Schedule'
-    schedule_name = fields.Char("Schedule Name",required=True)
-    exam_date = fields.Datetime("Exam Date",required=True)
-    course = fields.Many2one("course.master",string="Course",required=True)
+    schedule_name = fields.Char("Schedule Name",required=True,tracking=True)
+    exam_date = fields.Datetime("Exam Date",required=True,tracking=True)
+    course = fields.Many2one("course.master",string="Course",required=True,tracking=True)
     state = fields.Selection([
         ('1-draft', 'Draft'),
         ('2-confirm', 'Confirmed'),
         ('3-examiner_assigned', 'Examiner Assigned'),     
         ('4-exam_planned', 'Exam Planned')        
-    ], string='State', default='1-draft')
-    exam_center = fields.Many2one("exam.center","Exam Region",required=True)
-    examiners = fields.Many2many('bes.examiner', string="Examiners")
+    ], string='State', default='1-draft',tracking=True)
+    exam_center = fields.Many2one("exam.center","Exam Region",required=True,tracking=True)
+    examiners = fields.Many2many('bes.examiner', string="Examiners",tracking=True)
     # exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
     # exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
-    candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count")
+    candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count",tracking=True)
     
     
 
@@ -147,35 +148,36 @@ class BesBatches(models.Model):
         }       
             
 class ExamCandidate(models.Model):
-    _name = 'exam.schedule.bes.candidate'
+    _name = 'exam.schedule.bes.candidate' 
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Exam Candidate'
     
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule",required=True)
-    partner_id = fields.Many2one("res.partner",string="Contacts")
-    name = fields.Char("Name of Candidate",)
-    indos_no = fields.Char("Indos No.")
-    candidate_code = fields.Char("Candidate Code No.")
-    roll_no = fields.Char("Roll No.")
+    partner_id = fields.Many2one("res.partner",string="Contacts",tracking=True)
+    name = fields.Char("Name of Candidate",tracking=True)
+    indos_no = fields.Char("Indos No.",tracking=True)
+    candidate_code = fields.Char("Candidate Code No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True)
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
-                      date_format="%d-%b-%y")
-    street = fields.Char("Street")
-    street2 = fields.Char("Street2")
-    city = fields.Char("City")
-    zip = fields.Char("Zip")
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
-    phone = fields.Char("Phone")
-    mobile = fields.Char("Mobile")
-    email = fields.Char("Email")
+                      date_format="%d-%b-%y",tracking=True)
+    street = fields.Char("Street",tracking=True)
+    street2 = fields.Char("Street2",tracking=True)
+    city = fields.Char("City",tracking=True)
+    zip = fields.Char("Zip",tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],tracking=True)
+    phone = fields.Char("Phone",tracking=True)
+    mobile = fields.Char("Mobile",tracking=True)
+    email = fields.Char("Email",tracking=True)
     
-    mek_practical_id = fields.Many2one("practical.mek","MEK Practical")
-    mek_oral_id = fields.Many2one("oral.mek","MEK Oral Practical")
-    gsk_practical_id = fields.Many2one("practical.gsk","GSK Practical")
-    gsk_oral_id = fields.Many2one("oral.gsk","GSK Oral")
+    mek_practical_id = fields.Many2one("practical.mek","MEK Practical",tracking=True)
+    mek_oral_id = fields.Many2one("oral.mek","MEK Oral Practical",tracking=True)
+    gsk_practical_id = fields.Many2one("practical.gsk","GSK Practical",tracking=True)
+    gsk_oral_id = fields.Many2one("oral.gsk","GSK Oral",tracking=True)
     
     
-    mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity")
-    gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity")
+    mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity",tracking=True)
+    gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity",tracking=True)
     
     
     def compute_mek_gsk_visiblity(self):
@@ -335,12 +337,13 @@ class ExamCandidate(models.Model):
             
 class AssignExaminerWizard(models.TransientModel):
     _name = 'assign.examiner.wizard'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Assign Examiner'
     
-    course = fields.Many2one("course.master",string="Course")
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')])
-    examiners = fields.Many2many('bes.examiner', string="Examiners")
-    candidate_count = fields.Integer(string="Candidate Count")
+    course = fields.Many2one("course.master",string="Course",tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],tracking=True)
+    examiners = fields.Many2many('bes.examiner', string="Examiners",tracking=True)
+    candidate_count = fields.Integer(string="Candidate Count",tracking=True)
     
     
     def assign_examiner(self):
@@ -351,13 +354,14 @@ class AssignExaminerWizard(models.TransientModel):
 class ExamOnline(models.Model):
     _name = 'exam.type.online'
     _rec_name = "examiners"
-    exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
-    examiners = fields.Many2one('bes.examiner', string="Examiner")
-    subject = fields.Many2one("course.master.subject","Subject")
-    start_time_online = fields.Datetime("Start Time")
-    end_time_online = fields.Datetime("End Time")
-    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count")
-    candidates = fields.Many2many("exam.schedule.bes.candidate","exam_type_online_candidate_rel","exam_type_online_id","exam_candidate_id",string="Candidate")
+    _inherit = ['mail.thread','mail.activity.mixin']
+    exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID",tracking=True)
+    examiners = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
+    subject = fields.Many2one("course.master.subject","Subject",tracking=True)
+    start_time_online = fields.Datetime("Start Time",tracking=True)
+    end_time_online = fields.Datetime("End Time",tracking=True)
+    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count",tracking=True)
+    candidates = fields.Many2many("exam.schedule.bes.candidate","exam_type_online_candidate_rel","exam_type_online_id","exam_candidate_id",string="Candidate",tracking=True)
     
     @api.onchange('exam_schedule_id')
     def onchange_exam_schedule_id(self):
@@ -371,29 +375,30 @@ class ExamOnline(models.Model):
       
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
+    _inherit = ['mail.thread','mail.activity.mixin']
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
     # examiners = fields.Many2one('bes.examiner', string="Examiner")
     # subject = fields.Many2one("course.master.subject","Subject")
-    institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
-    exam_region = fields.Many2one('exam.center', 'Exam Region')
+    institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
 
 
     # start_time = fields.Datetime("Start Time")
     # end_time = fields.Datetime("End Time")
-    examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Examiners")
+    examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Examiners",tracking=True)
    
     
-    course = fields.Many2one("course.master",string="Course")
+    course = fields.Many2one("course.master",string="Course",tracking=True)
     
-    subject = fields.Many2one("course.master.subject",string="Subject")
+    subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
 
 
     state = fields.Selection([
         ('1-draft', 'Draft'),
         ('2-confirm', 'Confirmed')     
-    ], string='State', default='1-draft')
+    ], string='State', default='1-draft',tracking=True)
     
     
     def get_institute_id(self):
@@ -541,15 +546,16 @@ class ExamOralPractical(models.Model):
 
 class ExamOralPracticalExaminers(models.Model):
     _name = 'exam.type.oral.practical.examiners'
-    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False)
-    exam_region = fields.Many2one('exam.center', 'Exam Region',related='prac_oral_id.exam_region')
-    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
-    course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course")
-    subject = fields.Many2one("course.master.subject",related='prac_oral_id.subject',string="Subject")
-    examiner = fields.Many2one('bes.examiner', string="Examiner")
-    exam_date = fields.Date("Exam Date")
-    marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates")
+    _inherit = ['mail.thread','mail.activity.mixin']
+    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False,tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Region',related='prac_oral_id.exam_region',tracking=True)
+    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False,tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)
+    subject = fields.Many2one("course.master.subject",related='prac_oral_id.subject',string="Subject",tracking=True)
+    examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
+    exam_date = fields.Date("Exam Date",tracking=True)
+    marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
     
  
 
@@ -589,18 +595,18 @@ class ExamOralPracticalExaminers(models.Model):
         
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
-    
-    examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID")
-    gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate")
-    gp_marksheet = fields.Many2one("gp.exam.schedule",string="GP Marksheet")
-    ccmc_marksheet = fields.Many2one("ccmc.exam.schedule",string="GP Marksheet")
-    ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate")
-    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
-    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
-    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
-    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
-    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
-    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
+    _inherit = ['mail.thread','mail.activity.mixin']
+    examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID",tracking=True)
+    gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate",tracking=True)
+    gp_marksheet = fields.Many2one("gp.exam.schedule",string="GP Marksheet",tracking=True)
+    ccmc_marksheet = fields.Many2one("ccmc.exam.schedule",string="GP Marksheet",tracking=True)
+    ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate",tracking=True)
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
 
     
     
@@ -643,26 +649,26 @@ class OralPracticalExaminersMarksheet(models.Model):
 
 class ReissueApprovalWizard(models.TransientModel):
     _name = "certificate.reissue.approval.wizard"
-    
+    _inherit = ['mail.thread','mail.activity.mixin']
     
     
     
     marksheet_type = fields.Selection([
         ('gp', 'GP'),
         ('ccmc', 'CCMC')
-    ], string='Marksheet Type')
+    ], string='Marksheet Type',tracking=True)
     
-    candidate_image_name = fields.Char("Candidate Image Name")
-    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image')
+    candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
+    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image',tracking=True)
     
-    candidate_signature_name = fields.Char("Candidate Signature")
-    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image')
+    candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
+    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
     
-    name = fields.Char("Full Name of Candidate as in INDOS")
+    name = fields.Char("Full Name of Candidate as in INDOS",tracking=True)
     
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
-                      date_format="%d-%b-%y")
+                      date_format="%d-%b-%y",tracking=True)
     
     def edit_info(self):
         marksheet_id = self.env.context.get('marksheet_id')
@@ -686,100 +692,101 @@ class ReissueApprovalWizard(models.TransientModel):
     
 class GPExam(models.Model):
     _name = "gp.exam.schedule"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _rec_name = "exam_id"
     _description= 'Schedule'
     
-    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True)
+    exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,tracking=True)
 
-    registered_institute = fields.Many2one("bes.institute",string="Registered Institute")
+    registered_institute = fields.Many2one("bes.institute",string="Registered Institute",tracking=True)
     
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
-    certificate_id = fields.Char(string="Certificate ID")
-    gp_candidate = fields.Many2one("gp.candidate","GP Candidate")
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    certificate_id = fields.Char(string="Certificate ID",tracking=True)
+    gp_candidate = fields.Many2one("gp.candidate","GP Candidate",tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
     
-    institute_name = fields.Many2one("bes.institute","Institute Name")
-    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral")
-    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical")
-    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral")
-    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical")
-    gsk_online = fields.Many2one("survey.user_input","GSK Online")
-    mek_online = fields.Many2one("survey.user_input","MEK Online")
-    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
+    institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
+    mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
+    mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
+    gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
+    gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
+    gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
+    mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
+    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     
     
-    gsk_oral_marks = fields.Float("GSK Oral/Journal",readonly=True)
-    mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True)
-    gsk_practical_marks = fields.Float("GSK Practical",readonly=True)
-    mek_practical_marks = fields.Float("MEK Practical",readonly=True)
-    gsk_total = fields.Float("GSK Oral/Practical",readonly=True)
-    gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True)
+    gsk_oral_marks = fields.Float("GSK Oral/Journal",readonly=True,tracking=True)
+    mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True,tracking=True)
+    gsk_practical_marks = fields.Float("GSK Practical",readonly=True,tracking=True)
+    mek_practical_marks = fields.Float("MEK Practical",readonly=True,tracking=True)
+    gsk_total = fields.Float("GSK Oral/Practical",readonly=True,tracking=True)
+    gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True,tracking=True)
     
-    mek_total = fields.Float("MEK Total",readonly=True)
-    mek_percentage = fields.Float("MEK Percentage",readonly=True)
-    mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2))
-    gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2))
-    mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2))
-    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True,digits=(16,2))    
-    mek_total = fields.Float("MEK Oral/Practical",readonly=True)
-    mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True)
-    overall_marks = fields.Float("Overall Marks",readonly=True)
-    overall_percentage = fields.Float("Overall (%)",readonly=True)
+    mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
+    mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
+    mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2),tracking=True)
+    gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2),tracking=True)
+    mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2),tracking=True)
+    gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True,digits=(16,2),tracking=True)    
+    mek_total = fields.Float("MEK Oral/Practical",readonly=True,tracking=True)
+    mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True,tracking=True)
+    overall_marks = fields.Float("Overall Marks",readonly=True,tracking=True)
+    overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='GSK Oral/Practical Status', default='pending')
+    ], string='GSK Oral/Practical Status', default='pending',tracking=True)
     
     mek_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='MEK Oral/Practical Status', default='pending')
+    ], string='MEK Oral/Practical Status', default='pending',tracking=True)
     
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='MEK Online Status', default='pending')
+    ], string='MEK Online Status', default='pending',tracking=True)
     
     gsk_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='GSK Online Status', default='pending')
+    ], string='GSK Online Status', default='pending',tracking=True)
     
     exam_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Exam Criteria' , compute="compute_certificate_criteria")
+    ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria",tracking=True)
 
     
     stcw_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria' , compute="compute_certificate_criteria")
+    ], string='STCW Criteria' , compute="compute_certificate_criteria",tracking=True)
     
     ship_visit_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria' , compute="compute_certificate_criteria")
+    ], string='Ship Visit Criteria' , compute="compute_certificate_criteria",tracking=True)
     
     
     attendance_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria' , compute="compute_certificate_criteria")
+    ], string='Attendance Criteria' , compute="compute_certificate_criteria",tracking=True)
 
     
     state = fields.Selection([
@@ -790,29 +797,29 @@ class GPExam(models.Model):
         ('5-pending_reissue_approval','Reissue Approval'),
         ('6-pending_reissue_approved','Approved')
         
-    ], string='State', default='1-in_process')
+    ], string='State', default='1-in_process',tracking=True)
     
-    reissued = fields.Boolean("Reissued")
-    reissued_date = fields.Date("Reissued Date")
+    reissued = fields.Boolean("Reissued",tracking=True)
+    reissued_date = fields.Date("Reissued Date",tracking=True)
 
-    url = fields.Char("URL",compute="_compute_url")
-    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True)
-    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
+    url = fields.Char("URL",compute="_compute_url",tracking=True)
+    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True,tracking=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url",tracking=True)
     
-    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible",tracking=True)
     
-    gsk_oral_prac_carry_forward = fields.Boolean("GSK Oral/Prac Carry Forward")
-    mek_oral_prac_carry_forward = fields.Boolean("MEK Oral/Prac Carry Forward")
-    mek_online_carry_forward = fields.Boolean("MEK Online Carry Forward")
-    gsk_online_carry_forward = fields.Boolean("GSK Online Carry Forward")
+    gsk_oral_prac_carry_forward = fields.Boolean("GSK Oral/Prac Carry Forward",tracking=True)
+    mek_oral_prac_carry_forward = fields.Boolean("MEK Oral/Prac Carry Forward",tracking=True)
+    mek_online_carry_forward = fields.Boolean("MEK Online Carry Forward",tracking=True)
+    gsk_online_carry_forward = fields.Boolean("GSK Online Carry Forward",tracking=True)
 
-    exam_pass_date = fields.Date(string="Date of Examination Passed:")
-    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
-    rank = fields.Char("Rank",compute='_compute_rank')
+    exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
+    rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
-    institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True)
-    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True)
-    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True)
+    institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True,tracking=True)
     
     
     def reissue_approval(self):
@@ -1364,9 +1371,9 @@ class GPExam(models.Model):
     
 class GPAppearingExam(models.Model):
     _name = 'gp.exam.appear'
-    
-    gp_exam_schedule_id = fields.Many2one('gp.exam.schedule',string="GP Exam ID")
-    subject_name = fields.Char(string="Appearing Exam Lists")
+    _inherit = ['mail.thread','mail.activity.mixin']
+    gp_exam_schedule_id = fields.Many2one('gp.exam.schedule',string="GP Exam ID",tracking=True)
+    subject_name = fields.Char(string="Appearing Exam Lists",tracking=True)
     
     
     
@@ -1392,7 +1399,7 @@ class GPAppearingExam(models.Model):
         
 class GPCertificate(models.AbstractModel):
     _name = 'report.bes.report_general_certificate'
-
+    _inherit = ['mail.thread','mail.activity.mixin']
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
@@ -1411,62 +1418,63 @@ class GPCertificate(models.AbstractModel):
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
     _rec_name = "exam_id"
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Schedule'
     
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
-    certificate_id = fields.Char(string="Certificate ID")
-    institute_name = fields.Many2one("bes.institute","Institute Name")
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    certificate_id = fields.Char(string="Certificate ID",tracking=True)
+    institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     
-    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True)
-    registered_institute = fields.Many2one("bes.institute",string="Registered Institute")
+    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,tracking=True)
+    registered_institute = fields.Many2one("bes.institute",string="Registered Institute",tracking=True)
     
-    ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate")
-    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code', required=True)
-    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",required=True)
+    ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code', required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",required=True,tracking=True)
 
 
-    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery")
-    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral")
-    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online")
+    cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
+    ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
+    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
 
-    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True)
+    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     
-    reissued = fields.Boolean("Reissued")
-    reissued_date = fields.Date("Reissued Date")
+    reissued = fields.Boolean("Reissued",tracking=True)
+    reissued_date = fields.Date("Reissued Date",tracking=True)
     
-    cookery_practical = fields.Float("Cookery Practical",readonly=True)
-    cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True)
-    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True,digits=(16,2))
-    overall_marks = fields.Float("Overall Marks",readonly=True)
-    overall_percentage = fields.Float("Overall Percentage",readonly=True)
-    cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True)
+    cookery_practical = fields.Float("Cookery Practical",readonly=True,tracking=True)
+    cookery_bakery_percentage = fields.Float("Cookery And Bakery Precentage",readonly=True,tracking=True)
+    cookery_gsk_online = fields.Float("Cookery/GSK Online",readonly=True,digits=(16,2),tracking=True)
+    overall_marks = fields.Float("Overall Marks",readonly=True,tracking=True)
+    overall_percentage = fields.Float("Overall Percentage",readonly=True,tracking=True)
+    cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True,tracking=True)
     cookery_bakery_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Cookery And Bakery')
+    ], string='Cookery And Bakery',tracking=True)
     
     
     cookery_bakery_prac_oral_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Cookery And Bakery')
+    ], string='Cookery And Bakery',tracking=True)
     
     
-    cookery_oral = fields.Float("Cookery Oral",readonly=True)
-    ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True)
+    cookery_oral = fields.Float("Cookery Oral",readonly=True,tracking=True)
+    ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='CCMC Oral Status')
+    ], string='CCMC Oral Status',tracking=True)
     
     oral_prac_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Oral/Prac Status',compute="compute_oral_prac_status")
+    ], string='Oral/Prac Status',compute="compute_oral_prac_status",tracking=True)
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Attendance Criteria' , compute="compute_certificate_criteria")
+    ], string='Attendance Criteria' , compute="compute_certificate_criteria",tracking=True)
 
     
     
@@ -1474,24 +1482,24 @@ class CCMCExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Exam Criteria' , compute="compute_certificate_criteria")
+    ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
     
     ccmc_online_status = fields.Selection([
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='CCMC Online Status')
+    ], string='CCMC Online Status',tracking=True)
     
     
     
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='STCW Criteria',compute="compute_certificate_criteria")
+    ], string='STCW Criteria',compute="compute_certificate_criteria",tracking=True)
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Ship Visit Criteria',compute="compute_certificate_criteria")
+    ], string='Ship Visit Criteria',compute="compute_certificate_criteria",tracking=True)
     
     
     
@@ -1503,27 +1511,27 @@ class CCMCExam(models.Model):
         ('4-pending', 'Pending'),
         ('5-pending_reissue_approval','Reissue Approval'),
         ('6-pending_reissue_approved','Approved')
-    ], string='State', default='1-in_process')
+    ], string='State', default='1-in_process',tracking=True)
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria",tracking=True)
     
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
     
-    url = fields.Char("URL",compute="_compute_url")
-    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True)
-    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
+    url = fields.Char("URL",compute="_compute_url",tracking=True)
+    qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True,tracking=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url",tracking=True)
 
-    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible")
+    dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible",tracking=True)
     
-    exam_pass_date = fields.Date(string="Date of Examination Passed:")
-    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:")
-    ccmc_rank = fields.Char("Rank",compute='_compute_rank')
+    exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
+    certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
+    ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
    
-    institute_code = fields.Char("Institute code")
+    institute_code = fields.Char("Institute code",tracking=True)
     
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
@@ -1910,7 +1918,7 @@ class CCMCExam(models.Model):
         # Certificate Logic
 class CcmcCertificate(models.AbstractModel):
     _name = 'report.bes.course_certificate'
-
+    _inherit = ['mail.thread','mail.activity.mixin']
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
