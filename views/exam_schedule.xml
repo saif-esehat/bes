@@ -33,6 +33,8 @@
                     <field name="gp_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>
+                    <!-- <filter string='Passed' name='Passed' domain="[('result_status','=','passed')]"/>
+                    <filter string='Failed' name='Failed' domain="[('result_status','=','failed')]"/> -->
                 </search>
             </field>
         </record>
@@ -257,24 +259,26 @@
                     <header>
                         <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
                     </header>
-                    <field name="exam_id"/>
-                    <field name="gp_candidate"/>
-                    <field name="candidate_code"/>
-                    <field name="registered_institute" readonly="1"/>
-                    <field name="institute_id"/>
-                    <field name="attempt_number"/>
-                    <field name="gsk_total"/>
-                    <field name="mek_total"/>
-                    <field name="gsk_online_marks" />
-                    <field name="mek_online_marks" />
-                    <field name="overall_marks"/>
-                    <field name="exam_criteria"/>
-                    <field name="stcw_criteria" />
-                    <field name="attendance_criteria" />
-                    <field name="ship_visit_criteria" />
-                    <field name="certificate_criteria"/>
-                    <field name="state"/>
-                    <field name="rank"/>
+                    <field name="exam_id" optional="show"/>
+                    <field name="gp_candidate" optional="show"/>
+                    <field name="candidate_code" optional="show"/>
+                    <field name="registered_institute" readonly="1" optional="show"/>
+                    <field name="institute_id" optional="show"/>
+                    <field name="attempt_number" optional="show"/>
+                    <field name="gsk_total" optional="show"/>
+                    <field name="mek_total" optional="show"/>
+                    <field name="gsk_online_marks" optional="show"/>
+                    <field name="mek_online_marks" optional="show"/>
+                    <field name="overall_marks" optional="show"/>
+                    <field name="exam_criteria" optional="show"/>
+                    <field name="stcw_criteria" optional="show"/>
+                    <field name="attendance_criteria" optional="show"/>
+                    <field name="ship_visit_criteria" optional="show"/>
+                    <field name="certificate_criteria" optional="show"/>
+                    <field name="state" optional="show"/>
+                    <field name="rank" optional="show"/>
+                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
+
                 </tree>
             </field>
         </record>

@@ -851,9 +851,15 @@ class GPExam(models.Model):
         ('absent','Absent'),
         ('failed','Failed'),
         ('passed','Passed'),
-    ],string='Result',tracking=True)
+    ],string='Result',tracking=True,compute='_compute_result_status')
 
-
+    @api.depends('certificate_criteria')
+    def _compute_result_status(self):
+        for record in self:
+            if record.certificate_criteria == 'passed':
+                record.result_status = 'passed'
+            else:
+                record.result_status = 'failed'
 
 
     def reissue_approval(self):

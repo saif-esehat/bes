@@ -59,6 +59,14 @@
             web_icon="calendar,static/description/icon.png"
             groups="bes.group_bes_admin"/>
 
+
+        <menuitem
+            id="menu_bes_user"
+            name="Examiner"
+            action="hr.act_employee_from_department"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="1"/>
+
         
 
         
