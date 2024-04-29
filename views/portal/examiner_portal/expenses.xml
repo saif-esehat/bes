@@ -1,0 +1,139 @@
+<odoo>
+    <template id="examiner_expenses" name="Examiner Expenses" >
+       <t t-call="portal.portal_layout">
+
+        <h2>Expense Report Form</h2>
+            <br/><br/>
+            <form action="/submit_expense" method="post" >
+
+                <div class="form-row" >
+                    <div class="form-group" style="display: inline-block; width: 45%;">
+                        <label for="summary" class="form-label">Expense Report Summary:</label><br/>
+                        <span><t t-esc="expense_sheet.name"/></span>
+
+                    </div>
+                    
+                    <div class="form-group" style="display: inline-block; width: 45%;">
+                        <label for="examiner" class="form-label">Examiner:</label><br/>
+                        <span ><t t-esc="expense_sheet.employee_id.name"/></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="display: inline-block; width: 45%;">
+                        <label for="dgs_batch" class="form-label">DGS Batch:</label><br/>
+                        <span ><t t-esc="expense_sheet.dgs_batch.batch_name"/></span>
+                    </div>
+                    
+                    <div class="form-group" style="display: inline-block; width: 45%;">
+                        <label for="institute" class="form-label">Institute:</label><br/>
+                        <span ><t t-esc="expense_sheet.institute_id.name"/></span>
+                    </div>
+                </div>
+
+
+               
+                <div class="table-responsive border rounded border-top-0 ">
+                    <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                        <thead>
+                            <tr>
+                                <th>Expense Date</th>
+                                <th>Product</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="expense_sheet.expense_line_ids" t-as="expense">
+                                <tr>
+                                    <td><t t-esc="expense.date"/></td>
+                                    <td><t t-esc="expense.name"/></td>
+                                    <td><t t-esc="expense.unit_amount"/></td>
+                                    <td><t t-esc="expense.quantity"/></td>
+                                    <td><t t-esc="expense.total_amount"/> ₹</td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#addExpenseModal" class="btn btn-primary btn_cta">Add Expense</a>                    
+
+                
+                <br/>
+                <input type="submit" value="Submit" class="form-submit"/>
+            </form>
+
+            <div class="modal fade" id="addExpenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <form method="post" action="/my/assignments/batches/addexpenses" enctype="multipart/form-data">
+
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="examplpeModalLabela">Add Expense</h5>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" id="expensesheet_id" name="expensesheet_id" t-att-value="expense_sheet.id"/>
+                                <input type="hidden" id="modal_employee_id" name="modal_employee_id" t-att-value="expense_sheet.employee_id.id"/>
+                                <input type="hidden" id="assignment_id" name="assignment_id" t-att-value="assignment_id"/>
+                                <t t-set="expense_product" t-value="env['product.product'].sudo().search([('can_be_expensed','=',True),('default_code','=','EXP_GEN')])"/>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label for="expense_date">Expense Date</label>
+                                        <input type="date" class="form-control" id="expense_date" name="expense_date" required="true"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <!-- <label for="product_id">Product</label>
+                                        <select class="form-control" id="product_id" name="product_id">
+                                            <t t-foreach="product_ids" t-as="product">
+                                                 <option t-attf-value="{{product.id}}">
+                                                    <t t-out="product.name"/>
+                                                </option>
+                                            </t>
+                                        </select> -->
+                                    <input type="hidden" id="product_id" name="product_id" t-att-value="expense_product.id"/>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Expense Description</label>
+                                        <input  type="text" class="form-control" id="name" name="name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="unit_price">Unit Price ₹</label>
+                                        <input style="width:80px;" type="number" class="form-control" id="unit_price" name="unit_price"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="attachments">Select multiple Attachments files:</label><br/>
+                                        <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                           
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                       
+                    </div>
+                </div>
+                </form>
+            </div>
+
+
+        </t>
+
+    </template>
+</odoo>

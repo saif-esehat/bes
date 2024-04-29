@@ -210,7 +210,7 @@
                        
                         <field name="examiners" >
                             <tree editable="bottom"  >
-                            <field name="prac_oral_id" invisible="1"  />
+                                <field name="prac_oral_id" invisible="1"  />
                                 <field name="dgs_batch" required="1" invisible="1"   />
                                 <field name="subject" invisible="1" />
                                 <field name="course" required="1" invisible="1"  />
@@ -218,6 +218,8 @@
                                 <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]"  />
                                 <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
                                 <field name="exam_date" required="1"  />
+                                <field name="expense_sheet" />
+                                <field name="status" />
                                 <field name="marksheets"  />
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
                             </tree>

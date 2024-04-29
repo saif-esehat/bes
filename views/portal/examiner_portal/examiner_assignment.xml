@@ -193,6 +193,7 @@
                     <tr>
                         <th class="text-left">Institute</th>
                         <th class="text-left">Exam Date</th>
+                        <th class="text-left">Expense Sheet</th>
                         <th class="text-left">No of Candidates</th>
                         <th class="text-left">Action</th>
 
@@ -207,6 +208,9 @@
                             </td>
                             <td class="text-left">
                                 <t t-out="assignment.exam_date" />
+                            </td>
+                            <td class="text-left">
+                                <a t-attf-href="/my/assignments/batches/expenses/{{assignment.id}}">Expense Sheet</a>
                             </td>
                             <td class="text-left">
                                 <t t-out="len(assignment.marksheets)" />
