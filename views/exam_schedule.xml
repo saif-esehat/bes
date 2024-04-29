@@ -25,15 +25,17 @@
             </field>
         </record>
 
-        <!-- <record model="ir.ui.view" id="gp_exam_schedul_search">
+        <record model="ir.ui.view" id="gp_exam_schedul_search">
             <field name="name">gp.exam.schedule.search</field>
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
                 <search >
-                    <field name="rank"  />
+                    <field name="gp_candidate"/>
+                    <field name="candidate_code"/>
+                    <field name="institute_id"/>
                 </search>
             </field>
-        </record> -->
+        </record>
 
 
 
@@ -58,7 +60,7 @@
 
                     <footer>
                         <button string="Edit" type="object" class="oe_highlight" name="edit_info"/>
-                    </footer>
+                    </footer>                    
                 </form>
             </field>
         </record>
@@ -237,11 +239,15 @@
                         </notebook>
                         
                     </sheet>
+<<<<<<< HEAD
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
                     </div>
+=======
+                    
+>>>>>>> 6bee1a590d1aa2778d28304924c3eef9a03bc39a
                 </form>
             </field>
         </record>
@@ -413,7 +419,17 @@
             </field>
         </record>
 
-       
+       <record model="ir.ui.view" id="ccmc_exam_schedul_search">
+            <field name="name">ccmc.exam.schedule.search</field>
+            <field name="model">ccmc.exam.schedule</field>
+            <field name="arch" type="xml">
+                <search >
+                    <field name="ccmc_candidate"/>
+                    <field name="candidate_code"/>
+                    <field name="institute_id"/>
+                </search>
+            </field>
+        </record>
 
 
 

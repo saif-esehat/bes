@@ -1,9 +1,10 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
-
-
+import base64
+from io import BytesIO
+import xlsxwriter
 from datetime import datetime
-
+import xlrd
 
 
 class InstituteGPBatches(models.Model):
@@ -52,6 +53,7 @@ class InstituteGPBatches(models.Model):
     
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
+    
     
     
     @api.model
@@ -145,11 +147,34 @@ class InstituteGPBatches(models.Model):
         'target': 'current',  # Open in the current window
         }
     
+    # Added method to generate sequence
+    def generate_sequence(self):
+        current_year = datetime.now().strftime('%y')
+        current_month = datetime.now().strftime('%m')
+        half = '06' if int(current_month) <= 6 else '12'
+        institute_code = self.institute_id.code # Replace this with your actual institute code
+        
+        # import wdb; wdb.set_trace()
+        # Count the number of candidates in the batch
+        candidate_count = 0
+
+        # Generate the sequence number starting from '001'
+        next_sequence_number = str(candidate_count).zfill(3)
+        
+        candidate_count= candidate_count+1
+
+        sequence = f'G{current_year}{half}{institute_code}{next_sequence_number}'
+        return sequence
+
+
+
+
     def confirm_batch(self):
         
-        
+       
         canidate_list_no_indos = []
-        candidate_missing_data_id = [] 
+        candidate_missing_data_id = []
+
         for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
                 
@@ -169,7 +194,6 @@ class InstituteGPBatches(models.Model):
                 canidate_list_no_indos.append(candidate_data)
                 candidate_missing_data_id.append(candidate.id)
         # import wdb; wdb.set_trace()
-        
         if len(canidate_list_no_indos) > 0:
         
             
@@ -188,7 +212,9 @@ class InstituteGPBatches(models.Model):
 
             
             mail_template = self.env.ref('bes.indos_check_mail')
-            mail_template.with_context(ctx).send_mail(self.id, force_send=True)
+            mail_template.with_context(ctx).send_mail(self.id,force_send=True)
+
+            
             
         gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]).ids
         
@@ -207,6 +233,7 @@ class InstituteGPBatches(models.Model):
         # # import wdb; wdb.set_trace()
         group_ids = [self.env.ref(xml_id).id for xml_id in group_xml_ids]
         
+        # import wdb; wdb.set_trace()
         for gp_candidate in gp_candidates:
             user_values = {
             'name': gp_candidate.name,
@@ -215,6 +242,16 @@ class InstituteGPBatches(models.Model):
             'sel_groups_1_9_10':9,
             'groups_id':  [(4, group_id, 0) for group_id in group_ids]
             }
+            # 
+            portal_user = self.env['res.users'].sudo().create(user_values)
+
+            # Generate a unique sequence number for each candidate
+            # sequence = self.generate_sequence()
+            # # '
+            # gp_candidate.write({user_id': portal_user.id,
+            #                     'candidate_code': sequence  # Assign the generated sequence to the partner
+            #                     })
+        
         
             portal_user = self.env['res.users'].sudo().create(user_values)
             gp_candidate.write({'user_id': portal_user.id})
@@ -228,7 +265,9 @@ class InstituteGPBatches(models.Model):
                 'city':gp_candidate.city,
                 'zip':gp_candidate.zip,
                 'state_id':gp_candidate.state_id.id,
-                'category_id':[candidate_tag]})
+                'category_id':[candidate_tag]
+                                    })
+                
              
         self.write({"state":"2-indos_pending"})
         
@@ -290,7 +329,93 @@ class InstituteGPBatches(models.Model):
         }
     
     
+    def open_faculty_upload_wizard(self):
+        return {
+            'name': 'Upload Faculty',
+            'type': 'ir.actions.act_window',
+            'res_model': 'faculty.upload.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_batch_id': self.id},
+        }
 
+class FacultyUploadWizard(models.TransientModel):
+    _name = 'faculty.upload.wizard'
+    _description = 'Faculty Upload Wizard'
+
+    batch_id = fields.Many2one('institute.gp.batches', string="Batch")
+    faculty_file = fields.Binary(string="Faculty File", required=True)
+    faculty_file_name = fields.Char(string="File Name")
+    faculty_image = fields.Binary(string="Faculty Image")
+
+    def action_upload_faculty(self):
+        file_content = base64.b64decode(self.faculty_file)
+        print(file_content)
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet = workbook.sheet_by_index(0)
+
+        if not self.faculty_file:
+            raise ValidationError(_("Please select a file to upload."))
+
+        try:
+            for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+                print(f"Processing row {row_num}")
+                row = worksheet.row_values(row_num)
+                try:
+                    faculty_image = row[0]
+                except Exception as e:
+                    print(f"Error processing faculty image in row {row_num}: {str(e)}")
+                    faculty_image = False
+                course_name = row[1]
+                faculty_name = row[2]
+                date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
+                date_string = date_value.strftime('%d-%b-%y')
+                dob = date_value
+                designation = row[4]
+                qualification = row[5]
+                contract_terms = row[6]
+                # courses_taught = [self.env['course.master'].search([('name', '=', course)]).id for course in row[7].split(',')]
+
+                # Create or update faculty record
+                faculty = self.env['institute.faculty'].search([('faculty_name', '=', faculty_name)])
+                if faculty:
+                    try:
+                        faculty.write({
+                            'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                            'faculty_photo': faculty_image,
+                            'faculty_name': faculty_name,
+                            'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                            'dob': dob,
+                            'designation': designation,
+                            'qualification': qualification,
+                            'contract_terms': contract_terms,
+                            # 'courses_taught': [(6, 0, courses_taught)],
+                        })
+                    except Exception as e:
+                        print(f"Error updating faculty record for {faculty_name} in row {row_num}: {str(e)}")
+                        continue
+                else:
+                    try:
+                        self.env['institute.faculty'].create({
+                            'faculty_photo': faculty_image,
+                            'faculty_name': faculty_name,
+                            'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                            'dob': dob,
+                            'designation': designation,
+                            'qualification': qualification,
+                            'contract_terms': contract_terms,
+                            # 'courses_taught': [(6, 0, courses_taught)],
+                            'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                        })
+                    except Exception as e:
+                        print(f"Error creating faculty record for {faculty_name} in row {row_num}: {str(e)}")
+                        continue
+
+            return {'type': 'ir.actions.act_window_close'}
+        except xlrd.XLRDError as e:
+            raise ValidationError(_("Error reading the Excel file: %s") % str(e))
+        except Exception as e:
+            raise ValidationError(_("Error uploading faculty file: %s") % str(e))
 
 class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"
@@ -574,26 +699,26 @@ class InstituteCcmcBatches(models.Model):
         
 class BatchesRegisterExamWizard(models.TransientModel):
     _name = 'batches.gp.register.exam.wizard'
-    _description = 'Register Exam'
+    _description = 'R egister Exam'
 
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
-    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank Template")
-    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank Template")
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
     
     
     
     def register(self):
         # import wdb; wdb.set_trace(); 
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
-        mek_survey_qb = self.mek_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
-        gsk_survey_qb = self.gsk_survey_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.batch_name , 'template' :False })
+        mek_survey_qb = self.mek_survey_qb
+        gsk_survey_qb = self.gsk_survey_qb
 
         for candidate in candidates:
             
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id })
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id , 'institute_id':self.batch_id.institute_id.id })
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             
@@ -614,12 +739,10 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
 
 
-            mek_survey_qb_input.write({'gp_candidate':candidate.id})
-            gsk_survey_qb_input.write({'gp_candidate':candidate.id})
+            mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':self.dgs_batch.id,'institute_id':self.batch_id.institute_id.id})
+            gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':self.dgs_batch.id,'institute_id':self.batch_id.institute_id.id})
             candidate.write({'batch_exam_registered':True})
             gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
-                        
-
         
         self.batch_id.write({"state":'5-exam_scheduled',"mek_survey_qb":mek_survey_qb.id,"gsk_survey_qb":gsk_survey_qb.id})
 

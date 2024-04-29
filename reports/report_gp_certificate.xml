@@ -86,9 +86,9 @@
                                 <div class="row" style="padding-left:9px; margin-bottom:15px;">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span>
-                                        <span style="font-size:20px;"> <t t-esc="doc.dgs_batch.from_date.strftime('%b-%y')"/> </span>
+                                        <span style="font-size:20px;"> <t t-esc="doc.gp_candidate.institute_batch_id.from_date.strftime('%b-%y')"/> </span>
                                         <span style="color: #4c2d8b; font-size:20px;"> to </span>
-                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.dgs_batch.to_date.strftime('%b-%y')"/>,</span>
+                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.gp_candidate.institute_batch_id.to_date.strftime('%b-%y')"/>,</span>
                                         <span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
                                         <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span>
                                         <span style="font-size:20px;"><t t-esc="doc.dgs_batch.to_date.strftime('%b-%y')"/></span>
@@ -170,7 +170,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; font-family: 'TimesNewRoman';">E-mail: bestexam@bestrust.in</span>
-                                        <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; left:20px;">Page 1 of 2</span>
+                                        <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; right:20px;">Page 1 of 2</span>
                                     </div>
                                 </div>
                             </div>
@@ -184,8 +184,9 @@
 
                 <div class="oe_structure">
                     <div class="oe_report" style="font-family: 'TimesNewRoman';">
-                        <div style="padding: 20px;">
-                            <span style="font-size:18px; font-family: 'TimesNewRoman'; text-decoration:underline">Page 2 of 2 of <t t-esc="doc.certificate_id"/></span>
+                        <div style="padding: 20px; position:relative;">
+                            <span style="font-size:18px; font-family: 'TimesNewRoman'; text-decoration:underline"><t t-esc="doc.certificate_id"/></span>
+                            <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; top:0px; right:20px;">Page 2 of 2</span>
                             <p style="text-align: left; font-size:18px; margin-top:15px;">The All India Exit Examination is conducted in accordance with DG Training Guidelines 01 of 2018 for assessment of competencies as defined in STCW A-II/4, A-II/5, A-III/4, and A-III/5 and in compliance with Regulations II/4, II/5, III/4, and III/5 of STCW as amended in 2010.</p>
 
                             <p style="text-align: left; font-size:18px;">The curriculum for pre-sea training programme includes the following components:</p>
