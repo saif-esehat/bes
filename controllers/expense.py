@@ -13,11 +13,23 @@ class ExpenseController(http.Controller):
     @http.route(['/my/assignments/batches/expenses/<int:assignment_id>'], type="http", auth="user", website=True)
     def ExpenseSheet(self,assignment_id, **kw):
         expense_sheet = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).expense_sheet
-        product_id = request.env['product.product'].sudo().search([('can_be_expensed','=',True),('default_code','!=','gsk_exam')])
+        product_id = request.env['product.product'].sudo().search([('can_be_expensed','=',True),('default_code','not in',('gsk_exam','ccmc_exam','mek_exam','EXP_GEN'))])
         # import wdb;wdb.set_trace();
         
         vals = {'expense_sheet':expense_sheet , 'product_ids':product_id ,'assignment_id':assignment_id}
         return request.render("bes.examiner_expenses",vals)
+    
+    @http.route(['/my/assignments/batches/addexpenses/submit'], type="http", auth="user", website=True)
+    def SubmitExpense(self, **kw):
+        # {'assignment_id': '18', 'expensesheet_id': '9'}
+
+        expensesheet_id = kw.get('expensesheet_id')
+        assignment_id = kw.get('assignment_id')
+        # import wdb;wdb.set_trace();
+        request.env['hr.expense.sheet'].sudo().search([('id','=',expensesheet_id)]).action_submit_sheet()
+        # vals = {}
+        return request.redirect('my/assignments/batches/expenses/'+str(assignment_id))
+        # return request.render("bes.examiner_expenses",vals)
     
     @http.route(['/my/assignments/batches/addexpenses'], type="http", auth="user", website=True)
     def AddExpense(self, **kw):
