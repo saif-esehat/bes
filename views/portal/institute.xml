@@ -2351,7 +2351,7 @@
                         <th>GP Candidate Code No.</th>
                     </tr>
                 </thead>
-                <!-- <tbody>
+                <tbody>
                     <t t-foreach="candidates" t-as="candidate">
                         <tr>
                             <td class="text-center">
@@ -2406,7 +2406,7 @@
                         </tr>
                     </t>
 
-                </tbody> -->
+                </tbody>
             </t>
         </t>
     </template>
