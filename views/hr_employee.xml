@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_employee_form_inherited">
+            <field name="name">hr.employee.form.inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id" string="Related User" domain="[('share', '=', True)]"/>
+                </xpath>
+              
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_hr_expense_sheet_form_inherited">
+            <field name="name">hr.expense.sheet.inherited</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="replace">
+                  
+                    <field name="employee_id" string="Examiner" attrs="{'invisible':[('dgs_exam','=',False)]}" context="{'default_company_id': company_id}" widget="many2one_avatar_employee" />
+
+                    <field name="employee_id" string="Employee" attrs="{'invisible':[('dgs_exam','=',True)]}" context="{'default_company_id': company_id}" widget="many2one_avatar_employee" />
+                    
+                    <field name="dgs_exam" invisible="1" />
+                    <field name="dgs_batch" attrs="{'invisible':[('dgs_exam','=',False)]}" />
+                    <field name="institute_id" attrs="{'invisible':[('dgs_exam','=',False)]}" />
+
+
+                </xpath>              
+            </field>
+        </record>
+
+        <record id="view_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='coach_id']" position="after">
+                        <field name='examiner'/>
+
+                    
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+</odoo>

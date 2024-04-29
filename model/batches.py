@@ -1,9 +1,10 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
-
-
+import base64
+from io import BytesIO
+import xlsxwriter
 from datetime import datetime
-
+import xlrd
 
 
 class InstituteGPBatches(models.Model):
@@ -11,20 +12,19 @@ class InstituteGPBatches(models.Model):
     _rec_name = "batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
-    
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
-    batch_name = fields.Char("Batch Name",required=True)
-    faculty_name = fields.Char("Faculty name")
-    candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
-    from_date = fields.Date("From Date")
-    to_date = fields.Date("To Date")
-    course = fields.Many2one("course.master","Course")
-    account_move = fields.Many2one("account.move",string="Invoice")
-    invoice_created = fields.Boolean("Invoice Created")
+    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
+    batch_name = fields.Char("Batch Name",required=True,tracking=True)
+    faculty_name = fields.Char("Faculty name",tracking=True)
+    candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count",tracking=True)
+    from_date = fields.Date("From Date",tracking=True)
+    to_date = fields.Date("To Date",tracking=True)
+    course = fields.Many2one("course.master","Course",tracking=True)
+    account_move = fields.Many2one("account.move",string="Invoice",tracking=True)
+    invoice_created = fields.Boolean("Invoice Created",tracking=True)
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",
                                                       compute="_compute_invoice_button_visible",
-                                                      store=False,  # This field is not stored in the database
+                                                      store=False,tracking=True # This field is not stored in the database
                                                             )
 
     
@@ -35,24 +35,24 @@ class InstituteGPBatches(models.Model):
         ('4-invoiced', 'Invoiced'),
         ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
-    ], string='State', default='1-ongoing')
+    ], string='State', default='1-ongoing',tracking=True)
     
-    active = fields.Boolean(string="Active",default=True)
+    active = fields.Boolean(string="Active",default=True,tracking=True)
     
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
         ('paid', 'Paid'),
         ('partial', 'Partially Paid')     
-    ], string='Payment State', default='not_paid',compute="_compute_payment_state",)
+    ], string='Payment State', default='not_paid',compute="_compute_payment_state",tracking=True)
     
-    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
-    dgs_approval_state = fields.Boolean(string="DGS Approval Status")
-    dgs_document = fields.Binary(string="DGS Document")
-    document_name = fields.Char("Name of Document")
-    document_file = fields.Binary(string='Upload Document')
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",tracking=True)
+    dgs_approval_state = fields.Boolean(string="DGS Approval Status",tracking=True)
+    dgs_document = fields.Binary(string="DGS Document",tracking=True)
+    document_name = fields.Char("Name of Document",tracking=True)
+    document_file = fields.Binary(string='Upload Document',tracking=True)
     
-    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
-    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
+    mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
+    gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
     
     
     
@@ -329,7 +329,93 @@ class InstituteGPBatches(models.Model):
         }
     
     
+    def open_faculty_upload_wizard(self):
+        return {
+            'name': 'Upload Faculty',
+            'type': 'ir.actions.act_window',
+            'res_model': 'faculty.upload.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_batch_id': self.id},
+        }
 
+class FacultyUploadWizard(models.TransientModel):
+    _name = 'faculty.upload.wizard'
+    _description = 'Faculty Upload Wizard'
+
+    batch_id = fields.Many2one('institute.gp.batches', string="Batch")
+    faculty_file = fields.Binary(string="Faculty File", required=True)
+    faculty_file_name = fields.Char(string="File Name")
+    faculty_image = fields.Binary(string="Faculty Image")
+
+    def action_upload_faculty(self):
+        file_content = base64.b64decode(self.faculty_file)
+        print(file_content)
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet = workbook.sheet_by_index(0)
+
+        if not self.faculty_file:
+            raise ValidationError(_("Please select a file to upload."))
+
+        try:
+            for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+                print(f"Processing row {row_num}")
+                row = worksheet.row_values(row_num)
+                try:
+                    faculty_image = row[0]
+                except Exception as e:
+                    print(f"Error processing faculty image in row {row_num}: {str(e)}")
+                    faculty_image = False
+                course_name = row[1]
+                faculty_name = row[2]
+                date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
+                date_string = date_value.strftime('%d-%b-%y')
+                dob = date_value
+                designation = row[4]
+                qualification = row[5]
+                contract_terms = row[6]
+                # courses_taught = [self.env['course.master'].search([('name', '=', course)]).id for course in row[7].split(',')]
+
+                # Create or update faculty record
+                faculty = self.env['institute.faculty'].search([('faculty_name', '=', faculty_name)])
+                if faculty:
+                    try:
+                        faculty.write({
+                            'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                            'faculty_photo': faculty_image,
+                            'faculty_name': faculty_name,
+                            'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                            'dob': dob,
+                            'designation': designation,
+                            'qualification': qualification,
+                            'contract_terms': contract_terms,
+                            # 'courses_taught': [(6, 0, courses_taught)],
+                        })
+                    except Exception as e:
+                        print(f"Error updating faculty record for {faculty_name} in row {row_num}: {str(e)}")
+                        continue
+                else:
+                    try:
+                        self.env['institute.faculty'].create({
+                            'faculty_photo': faculty_image,
+                            'faculty_name': faculty_name,
+                            'course_name': self.env['course.master'].search([('name', '=', course_name)]).id,
+                            'dob': dob,
+                            'designation': designation,
+                            'qualification': qualification,
+                            'contract_terms': contract_terms,
+                            # 'courses_taught': [(6, 0, courses_taught)],
+                            'gp_batches_id': self.batch_id.id if self.batch_id else False,
+                        })
+                    except Exception as e:
+                        print(f"Error creating faculty record for {faculty_name} in row {row_num}: {str(e)}")
+                        continue
+
+            return {'type': 'ir.actions.act_window_close'}
+        except xlrd.XLRDError as e:
+            raise ValidationError(_("Error reading the Excel file: %s") % str(e))
+        except Exception as e:
+            raise ValidationError(_("Error uploading faculty file: %s") % str(e))
 
 class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"

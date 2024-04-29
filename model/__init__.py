@@ -8,6 +8,7 @@ from . import exam_center
 from . import invoice
 from . import exam_schedule
 from . import admit_card
+from . import expense
 from . import batches_report
 from .marksheets import mek
 from .marksheets import gsk
