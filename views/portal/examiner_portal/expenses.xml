@@ -1,12 +1,70 @@
 <odoo>
     <template id="examiner_expenses" name="Examiner Expenses" >
+        
+
        <t t-call="portal.portal_layout">
+       <!-- <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
+            .container {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                height: 100vh;
+                padding-right: 20px; /* Adjust as needed */
+                box-sizing: border-box;
+            }
+            .total-amount {
+                border: 1px solid #ccc;
+                padding: 10px;
+            }
+        </style> -->
 
         <h2>Expense Report Form</h2>
-            <br/><br/>
-            <form action="/submit_expense" method="post" >
+            <br/>
+                <label style="font-weight: bold;" class="form-label">Status :</label>
+                <t t-if="expense_sheet.state == 'draft'">
+                    <span style="font-size:15px" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success-light" 
+                      name="state">Draft</span>
+                </t>
+                <t t-if="expense_sheet.state == 'submit'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-warning" 
+                      name="state">Submitted</span>
+                </t>
+                <t t-if="expense_sheet.state == 'approve'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success" 
+                      name="state">Approved</span>
+                </t>
+                <t t-if="expense_sheet.state == 'post'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success" 
+                      name="state">Approved</span>
+                </t>
+                <t t-if="expense_sheet.state == 'done'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success" 
+                      name="state">Paid</span>
+                </t>
+                <t t-if="expense_sheet.state == 'cancel'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-danger" 
+                      name="state">Refused</span>
+                </t>
+                
+            <br/>
+            <br/>
+            <form action="/my/assignments/batches/addexpenses/submit" method="post" >
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                <input type="hidden" id="assignment_id" name="assignment_id" t-att-value="assignment_id"/>
 
                 <div class="form-row" >
+                    <input type="hidden" id="expensesheet_id" name="expensesheet_id" t-att-value="expense_sheet.id"/>
                     <div class="form-group" style="display: inline-block; width: 45%;">
                         <label for="summary" class="form-label">Expense Report Summary:</label><br/>
                         <span><t t-esc="expense_sheet.name"/></span>
@@ -29,10 +87,7 @@
                         <label for="institute" class="form-label">Institute:</label><br/>
                         <span ><t t-esc="expense_sheet.institute_id.name"/></span>
                     </div>
-                </div>
-
-
-               
+                </div>      
                 <div class="table-responsive border rounded border-top-0 ">
                     <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                         <thead>
@@ -57,11 +112,25 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#addExpenseModal" class="btn btn-primary btn_cta">Add Expense</a>                    
+                <t t-if="expense_sheet.state == 'draft'">
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#addExpenseModal" class="btn btn-primary btn_cta">Add Expense</a>  
+                </t>
+                <br/>
+                <br/>
+                <div class="container" style="display: flex; justify-content: flex-end;font-weight: bold;">
+                    <div class="total-amount" style="border: 1px solid #ccc; padding: 10px;">
+                        Total Amount: <span ><t t-esc="expense_sheet.total_amount"/>  ₹</span>
+                    </div>
+                </div>
 
                 
                 <br/>
-                <input type="submit" value="Submit" class="form-submit"/>
+                <t t-if="expense_sheet.state == 'draft'">
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+
+                </t>
             </form>
 
             <div class="modal fade" id="addExpenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -91,15 +160,15 @@
                                         <input type="date" class="form-control" id="expense_date" name="expense_date" required="true"/>
                                     </div>
                                     <div class="form-group">
-                                        <!-- <label for="product_id">Product</label>
+                                        <label for="product_id">Product</label>
                                         <select class="form-control" id="product_id" name="product_id">
                                             <t t-foreach="product_ids" t-as="product">
                                                  <option t-attf-value="{{product.id}}">
                                                     <t t-out="product.name"/>
                                                 </option>
                                             </t>
-                                        </select> -->
-                                    <input type="hidden" id="product_id" name="product_id" t-att-value="expense_product.id"/>
+                                        </select>
+                                    <!-- <input type="hidden" id="product_id" name="product_id" t-att-value="expense_product.id"/> -->
 
                                     </div>
                                     <div class="form-group">

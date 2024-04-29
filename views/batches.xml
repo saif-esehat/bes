@@ -13,7 +13,7 @@
                         
                         <!-- <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-pending_invoice'),]}"/> -->
                         <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/> 
-                        <button name="open_faculty_upload_wizard" type="object" string="Upload Faculty" class="btn-primary"/>
+                        <!-- <button name="open_faculty_upload_wizard" type="object" string="Upload Faculty" class="btn-primary"/> -->
                         <!-- <button name="confirm_indos" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-indos_pending')]}"/> -->
                         <!-- <button name="register_for_exam" string="Register Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
@@ -155,7 +155,7 @@
             </field>
         </record>
 
-        <record id="faculty_upload_wizard_view_form" model="ir.ui.view">
+        <!-- <record id="faculty_upload_wizard_view_form" model="ir.ui.view">
             <field name="name">Faculty Upload Wizard</field>
             <field name="model">faculty.upload.wizard</field>
             <field name="arch" type="xml">
@@ -178,7 +178,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context">{'default_batch_id': active_id}</field>
-        </record>
+        </record> -->
 
 
         <record id="gpbatch_form_kanban_action" model="ir.actions.act_window">
