@@ -57,15 +57,9 @@ class Institute(models.Model):
     # -------- Payement Slip
     payment_slip_ids= fields.One2many('institute.payment.slip.line','payment_slip_id',string="Payment Slip",tracking=True)
 
-<<<<<<< HEAD
     ccmc_present = fields.Boolean(string='CCMC',compute="_compute_ccmc_present",tracking=True)
     gp_present = fields.Boolean(string='GP',compute="_compute_gp_present",tracking=True)
-=======
-    ccmc_present = fields.Boolean(string='CCMC',compute="_compute_ccmc_present")
-    gp_present = fields.Boolean(string='GP',compute="_compute_gp_present")
-    batch_capacity = fields.Char("Batch Capacity")
 
->>>>>>> 6bee1a590d1aa2778d28304924c3eef9a03bc39a
 
     @api.depends('courses')
     def _compute_ccmc_present(self):

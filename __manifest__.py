@@ -49,6 +49,7 @@
         'reports/admit_card_template_ccmc.xml',
         'reports/dgs_report.xml',
         
+        
 ],
 'assets': {
 		'web.assets_frontend': [

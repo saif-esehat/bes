@@ -19,7 +19,7 @@ class InheritedSurvey(models.Model):
     examiner_token = fields.Char(string="Examiner Token")
     start_time = fields.Datetime("Start Time")
     end_time = fields.Datetime("End Time")
-    exam_state = fields.Selection([
+    exam_state = fields.Selection([ 
         ('stopped', 'Stopped'),
         ('in_progress', 'In-Progress'),
         ('done', 'Done')     
