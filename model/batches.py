@@ -150,21 +150,22 @@ class InstituteGPBatches(models.Model):
     
     # Added method to generate sequence
     def generate_sequence(self):
-        current_year = datetime.now().strftime('%y')
-        current_month = datetime.now().strftime('%m')
-        half = '06' if int(current_month) <= 6 else '12'
+        # import wdb; wdb.set_trace()
+        batch_year = self.to_date.strftime('%y')
+        batch_month = self.to_date.strftime('%m')
+        half = '06' if int(batch_month) <= 6 else '12'
         institute_code = self.institute_id.code # Replace this with your actual institute code
         
         # import wdb; wdb.set_trace()
         # Count the number of candidates in the batch
-        candidate_count = 0
+        candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_state','=','active')])
 
         # Generate the sequence number starting from '001'
-        next_sequence_number = str(candidate_count).zfill(3)
+        next_sequence_number = str(candidate_count + 1).zfill(3)
         
         candidate_count= candidate_count+1
 
-        sequence = f'G{current_year}{half}{institute_code}{next_sequence_number}'
+        sequence = f'G{batch_year}{half}{institute_code}{next_sequence_number}'
         return sequence
 
 
@@ -172,7 +173,9 @@ class InstituteGPBatches(models.Model):
 
     def confirm_batch(self):
         
-       
+        # import wdb; wdb.set_trace()
+
+        # candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_status','=','active')])
         canidate_list_no_indos = []
         candidate_missing_data_id = []
 
@@ -245,17 +248,18 @@ class InstituteGPBatches(models.Model):
             }
             # 
             portal_user = self.env['res.users'].sudo().create(user_values)
+            
 
             # Generate a unique sequence number for each candidate
-            # sequence = self.generate_sequence()
-            # # '
-            # gp_candidate.write({user_id': portal_user.id,
-            #                     'candidate_code': sequence  # Assign the generated sequence to the partner
-            #                     })
+            sequence = self.generate_sequence()
+            # '
+            gp_candidate.write({'user_id': portal_user.id,
+                                'candidate_code': sequence  # Assign the generated sequence to the partner
+                                })
         
         
             portal_user = self.env['res.users'].sudo().create(user_values)
-            gp_candidate.write({'user_id': portal_user.id})
+            # gp_candidate.write({'user_id': portal_user.id})
             candidate_tag = self.env.ref('bes.candidates_tags').id
             portal_user.partner_id.write({
                 'email': gp_candidate.email,
