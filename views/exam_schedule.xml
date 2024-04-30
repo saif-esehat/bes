@@ -91,6 +91,7 @@
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code" readonly="1"/>
                             <field name="registered_institute" readonly="1"/>
+                            <field name="exam_region" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
                             
                             <field name="reissued" readonly="1"/>

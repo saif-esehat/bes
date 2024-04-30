@@ -736,7 +736,9 @@ class GPExam(models.Model):
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
-    exam_region = fields.Char("Exam Region",related='institute_name.exam_center.name',tracking=True)
+    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+
+    
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
