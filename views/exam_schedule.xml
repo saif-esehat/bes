@@ -118,39 +118,72 @@
                         </group>
                         <group style="width:50%">
                             <field name="mek_online"/>
-                        </group>
-
-                        <group style="width:50%">
-                            <label for="gsk_practical_marks"/>
-                            <div>
-                                <field name="gsk_practical_marks" nolabel="1"/>
-                            / 
-                                <span>100</span>
-                            </div>
-
-                            <label for="mek_practical_marks"/>
-                            <div>
-                                <field name="mek_practical_marks" nolabel="1"/>
-                            / 
-                                <span>100</span>
-                            </div>
-
-                             <label for="gsk_oral_marks"/>
-                            <div>
-                                <field name="gsk_oral_marks" nolabel="1"/>
-                            / 
-                                <span>75</span>
-                            </div>
-
-                            <label for="mek_oral_marks"/>
-                            <div>
-                                <field name="mek_oral_marks" nolabel="1"/>
-                            / 
-                                <span>75</span>
+                            <div style="display:flex">
+                                <h1>Attendance</h1>
                             </div>
                         </group>
-                                            <group style="width:50%">
-                                         </group>      
+
+                        <group style="width:100%">
+                            <group style="width:50%">
+                                <label for="gsk_practical_marks"/>
+                                <div>
+                                    <field name="gsk_practical_marks" nolabel="1"/>
+                                / 
+                                    <span>100</span>
+                                </div>
+
+                                <label for="mek_practical_marks"/>
+                                <div>
+                                    <field name="mek_practical_marks" nolabel="1"/>
+                                / 
+                                    <span>100</span>
+                                </div>
+
+                                <label for="gsk_oral_marks"/>
+                                <div>
+                                    <field name="gsk_oral_marks" nolabel="1"/>
+                                / 
+                                    <span>75</span>
+                                </div>
+
+                                <label for="mek_oral_marks"/>
+                                <div>
+                                    <field name="mek_oral_marks" nolabel="1"/>
+                                / 
+                                    <span>75</span>
+                                </div>
+                            </group>
+
+
+                            <group style="width:50%">
+                                <!-- <div style="display:flex">
+                                    <span>Attendance</span>
+                                </div> -->
+                                <label for="gsk_oral_prac_attendance"/>
+                                <div>
+                                    <field name="gsk_oral_prac_attendance" nolabel="1"/>
+                                </div>
+
+                                <label for="gsk_online_attendance"/>
+                                <div>
+                                    <field name="gsk_online_attendance" nolabel="1"/>
+                                </div>
+
+                                <label for="mekk_oral_prac_attendance"/>
+                                <div>
+                                    <field name="mekk_oral_prac_attendance" nolabel="1"/>
+                                </div>
+
+                                <label for="mek_online_attendance"/>
+                                <div>
+                                    <field name="mek_online_attendance" nolabel="1"/>
+                                </div>
+                            </group>
+                        </group>
+                        
+                        <!-- <group style="width:50%">
+
+                        </group>       -->
 
                         <group style="width:50%">
                         

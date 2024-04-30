@@ -748,8 +748,8 @@ class GPExam(models.Model):
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True,tracking=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True,tracking=True)
     
-    mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
-    mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
+    # mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
+    # mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
     mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2),tracking=True)
     gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2),tracking=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2),tracking=True)
@@ -851,6 +851,53 @@ class GPExam(models.Model):
         ('failed','Failed'),
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
+
+    gsk_oral_prac_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="GSK P&O",compute="_compute_attendance")
+
+    gsk_online_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="GSK Online",compute="_compute_attendance")
+    
+    mekk_oral_prac_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="MEK P&O",compute="_compute_attendance")
+    
+    mek_online_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="MEK Online",compute="_compute_attendance")
+
+    @api.depends('certificate_criteria')
+    def _compute_attendance(self):
+        for record in self:
+            if record.gsk_oral.gskk_oral_remarks.lower() == 'absent' and record.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
+                record.gsk_oral_prac_attendance = 'absent'
+            else:
+                record.gsk_oral_prac_attendance = 'present'
+
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+            
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+            
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' or record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+
+            
+
+
 
     @api.depends('certificate_criteria')
     def _compute_result_status(self):

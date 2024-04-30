@@ -115,19 +115,19 @@ class GPCandidate(models.Model):
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
+        ('done', 'Done'),
     ],string="Candidate-Image",default="pending",compute="_check_candidate_image")
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
+        ('done', 'Done'),
     ],string="Candidate-Sign",default="pending",compute="_check_candidate_signature")
 
     @api.constrains('candidate_image')
     def _check_candidate_image(self):
         for record in self:
             if record.candidate_image:
-                record.candidate_image_status = 'yes'
+                record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
     
@@ -135,7 +135,7 @@ class GPCandidate(models.Model):
     def _check_candidate_signature(self):
         for record in self:
             if record.candidate_signature:
-                record.candidate_signature_status = 'yes'
+                record.candidate_signature_status = 'done'
             else:
                 record.candidate_signature_status = 'pending'
 
