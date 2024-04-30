@@ -91,6 +91,7 @@
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code" readonly="1"/>
                             <field name="registered_institute" readonly="1"/>
+                            <field name="exam_region" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
                             
                             <field name="reissued" readonly="1"/>
@@ -169,9 +170,9 @@
                                     <field name="gsk_online_attendance" nolabel="1"/>
                                 </div>
 
-                                <label for="mekk_oral_prac_attendance"/>
+                                <label for="mek_oral_prac_attendance"/>
                                 <div>
-                                    <field name="mekk_oral_prac_attendance" nolabel="1"/>
+                                    <field name="mek_oral_prac_attendance" nolabel="1"/>
                                 </div>
 
                                 <label for="mek_online_attendance"/>
