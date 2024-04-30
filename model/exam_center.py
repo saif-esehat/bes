@@ -14,7 +14,9 @@ class ExamCenter(models.Model):
     exam_co_ordinator = fields.Many2one("res.users","Exam Co-ordinator",tracking=True)
     mobile = fields.Char("Mobile",related='exam_co_ordinator.partner_id.mobile')
     email = fields.Char("Email",related='exam_co_ordinator.partner_id.email')
-    
+    gp_candidate = fields.Many2one('gp.exam.schedule')
+
+
     def examiners(self):
         
         return {
@@ -45,15 +47,16 @@ class ExamCenter(models.Model):
             }
         }
         
-    def time_sheet(self):
-        
+    def candidates(self):
+        # import wdb; wdb.set_trace();
+
         return {
-        'name': 'Time Sheets',
+        'name': 'Candidate',
         'domain': [('exam_region', '=', self.id)],
         'view_type': 'form',
-        'res_model': 'examiner.time.sheet',
+        'res_model': 'gp.exam.schedule',
         'view_id': False,
-        'view_mode': 'tree,form',
+        'view_mode': 'tree',
         'type': 'ir.actions.act_window',
         'context': {
             'default_exam_coordinator_id': self.id    

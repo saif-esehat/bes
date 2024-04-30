@@ -21,7 +21,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="examiners" string="Examiner" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
                             <button name="assignment" string="Exam Assignments" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
-                            <button name="time_sheet" string="Time Sheets" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+                            <button name="candidates" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
                         </div>
                         <group style="width:100%;">
                             <h1>

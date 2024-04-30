@@ -853,6 +853,7 @@ class GPExam(models.Model):
     ],string='Result',tracking=True,compute='_compute_result_status')
 
     gsk_oral_prac_attendance = fields.Selection([
+        ('',''),
         ('absent','Absent'),
         ('present','Present'),
     ],string="GSK P&O",compute="_compute_attendance")
@@ -860,9 +861,10 @@ class GPExam(models.Model):
     gsk_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK Online",compute="_compute_attendance")
+    ],string="GSK Online")
     
-    mekk_oral_prac_attendance = fields.Selection([
+    mek_oral_prac_attendance = fields.Selection([
+        ('',''),
         ('absent','Absent'),
         ('present','Present'),
     ],string="MEK P&O",compute="_compute_attendance")
@@ -870,30 +872,29 @@ class GPExam(models.Model):
     mek_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK Online",compute="_compute_attendance")
+    ],string="MEK Online")
 
-    @api.depends('certificate_criteria')
+    @api.depends('mek_oral','mek_prac','gsk_oral','gsk_prac')
     def _compute_attendance(self):
         for record in self:
-            if record.gsk_oral.gskk_oral_remarks.lower() == 'absent' and record.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
-                record.gsk_oral_prac_attendance = 'absent'
+            # import wdb; wdb.set_trace();
+            if record.gsk_oral.gsk_oral_remarks and record.gsk_prac.gsk_practical_remarks:
+                if record.gsk_oral.gsk_oral_remarks.lower() == 'absent' and record.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
+                    record.gsk_oral_prac_attendance = 'absent'
+                else:
+                    record.gsk_oral_prac_attendance = 'present'
             else:
-                record.gsk_oral_prac_attendance = 'present'
+                record.gsk_oral_prac_attendance = ''
+            
+            if record.mek_oral.mek_oral_remarks and record.mek_prac.mek_practical_remarks:
+                if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                    record.mek_oral_prac_attendance = 'absent'
+                else:
+                    record.mek_oral_prac_attendance = 'present'
+            else:
+                record.mek_oral_prac_attendance = ''
+            
 
-            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
-                record.mekk_oral_prac_attendance = 'absent'
-            else:
-                record.mekk_oral_prac_attendance = 'present'
-            
-            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
-                record.mekk_oral_prac_attendance = 'absent'
-            else:
-                record.mekk_oral_prac_attendance = 'present'
-            
-            if record.mek_oral.mek_oral_remarks.lower() == 'absent' or record.mek_prac.mek_practical_remarks.lower()  == 'absent':
-                record.mekk_oral_prac_attendance = 'absent'
-            else:
-                record.mekk_oral_prac_attendance = 'present'
 
             
 
