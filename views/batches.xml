@@ -72,7 +72,43 @@
             </field>
         </record>
 
+        <record id="institute_gpbatch_tree" model="ir.ui.view">
+            <field name="name">institute.gp.batches.tree</field>
+            <field name="model">institute.gp.batches</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="batch_name"/>
+                    <field name="institute_id"/>
+                    <field name="code"/>
+                    <field name="from_date"/>
+                    <field name="to_date"/>
+                    <field name="dgs_approved_capacity" readonly="1"/>
+                    <field name="candidate_count"/>
+                    <!-- <field name="course"/> -->
+                </tree>
+            </field>
+        </record>
 
+        <record id="institute_gpbatch_search" model="ir.ui.view">
+            <field name="name">institute.gp.batches.search</field>
+            <field name="model">institute.gp.batches</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="batch_name"/>
+                    <field name="dgs_batch"/>
+                    <field name="institute_id"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'dgs_batch'}" />
+                    </group>
+
+                    <searchpanel>
+                        <field name="institute_id" enable_counters="1"/>
+                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+        
         <record id="gpbatch_form_kanban" model="ir.ui.view">
             <field name="name">institute.gp.batches.kanban</field>
             <field name="model">institute.gp.batches</field>
@@ -119,41 +155,6 @@
             </field>
         </record>
 
-        <record id="institute_gpbatch_tree" model="ir.ui.view">
-            <field name="name">institute.gp.batches.tree</field>
-            <field name="model">institute.gp.batches</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="batch_name"/>
-                    <field name="institute_id"/>
-                    <field name="from_date"/>
-                    <field name="to_date"/>
-                    <field name="dgs_approved_capacity" readonly="1"/>
-                    <field name="candidate_count"/>
-                    <!-- <field name="course"/> -->
-                </tree>
-            </field>
-        </record>
-
-        <record id="institute_gpbatch_search" model="ir.ui.view">
-            <field name="name">institute.gp.batches.search</field>
-            <field name="model">institute.gp.batches</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="batch_name"/>
-                    <field name="dgs_batch"/>
-                    <field name="institute_id"/>
-                    <group expand="0" string="Group By">
-                        <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'dgs_batch'}" />
-                    </group>
-
-                    <searchpanel>
-                        <field name="institute_id" enable_counters="1"/>
-                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
-                    </searchpanel>
-                </search>
-            </field>
-        </record>
 
         <!-- <record id="faculty_upload_wizard_view_form" model="ir.ui.view">
             <field name="name">Faculty Upload Wizard</field>
@@ -185,14 +186,14 @@
             <field name="name">GP Batches</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">institute.gp.batches</field>
-            <field name="view_mode">kanban,form,tree</field>
+            <field name="view_mode">tree,kanban,form</field>
         </record>
 
         <record id="ccmc_batches_action" model="ir.actions.act_window">
             <field name="name">CCMC Batches</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">institute.ccmc.batches</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
         </record>
 
         <record id="dgs_batch_action" model="ir.actions.act_window">
