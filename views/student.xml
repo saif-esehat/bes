@@ -12,6 +12,17 @@
             </field>
         </record>
 
+        <record id="action_to_recompute_fields" model="ir.actions.server">
+            <field name="name">Recompute the fields</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_gp_candidate"/>
+            <field name="state">code</field>
+            <field name="code">
+            for record in records:
+                record._check_criteria()
+            </field>
+        </record>
+
         <!-- <record id="open_view_employee_list_my_examiner" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
@@ -189,10 +200,10 @@
                 <field name="roll_no" />
                 <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
                 <filter string="STCW Pending" name="stcw_pending" domain="[('stcw_criteria','=','pending')]" />
-                <filter string="Candidate Image Pending" name="candidate_image_status" domain="[('candidate_image_status','=','pending')]" />
+                <!-- <filter string="Candidate Image Pending" name="candidate_image_status" domain="[('candidate_image_status','=','pending')]" />
                 <filter string="Candidate Signature Pending" name="candidate_signature_status" domain="[('candidate_signature_status','=','pending')]" />
                 <filter string="Attendance Pending" name="attendance_criteria" domain="[('attendance_criteria','=','pending')]" />
-                <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" />
+                <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" /> -->
 
                 <searchpanel>
                     <field name="dgs_batch" enable_counters="1"/>

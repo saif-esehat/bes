@@ -127,8 +127,12 @@ class GPCandidate(models.Model):
     @api.depends('candidate_image','candidate_signature','stcw_certificate','ship_visits','attendance_compliance_1','attendance_compliance_2')
     def _check_criteria(self):
         for record in self:
+            
+            
             # candidate_image
             if record.candidate_image:
+                
+                
                 record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
