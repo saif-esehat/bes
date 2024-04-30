@@ -381,8 +381,14 @@ class ExamOralPractical(models.Model):
     # subject = fields.Many2one("course.master.subject","Subject")
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
-    exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
+    
+    
+    def get_examiner_region(self):
+        user_id = self.env.user.id
+        region = self.env['exam.center'].sudo().search([('exam_co_ordinator','=',user_id)]).id
+        return region
 
 
     # start_time = fields.Datetime("Start Time")
@@ -748,8 +754,8 @@ class GPExam(models.Model):
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True,tracking=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True,tracking=True)
     
-    mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
-    mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
+    # mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
+    # mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
     mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2),tracking=True)
     gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2),tracking=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2),tracking=True)
@@ -851,6 +857,53 @@ class GPExam(models.Model):
         ('failed','Failed'),
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
+
+    gsk_oral_prac_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="GSK P&O",compute="_compute_attendance")
+
+    gsk_online_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="GSK Online",compute="_compute_attendance")
+    
+    mekk_oral_prac_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="MEK P&O",compute="_compute_attendance")
+    
+    mek_online_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="MEK Online",compute="_compute_attendance")
+
+    @api.depends('certificate_criteria')
+    def _compute_attendance(self):
+        for record in self:
+            if record.gsk_oral.gskk_oral_remarks.lower() == 'absent' and record.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
+                record.gsk_oral_prac_attendance = 'absent'
+            else:
+                record.gsk_oral_prac_attendance = 'present'
+
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+            
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+            
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' or record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+
+            
+
+
 
     @api.depends('certificate_criteria')
     def _compute_result_status(self):

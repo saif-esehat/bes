@@ -87,3 +87,4 @@ bes.ec_access_gp_exam_schedule,access_ec_gp_exam_schedule,bes.model_gp_exam_sche
 bes.group_exam_coordinator_ccmc_oral_line,access_exam_coordinator_ccmc_oral_line,bes.model_ccmc_oral_line,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_ccmc_cookery_bakery_line,access_exam_coordinator_ccmc_cookery_bakery_line,bes.model_ccmc_cookery_bakery_line,bes.group_exam_coordinator,1,1,1,1
 
+bes.ccmc_access_ccmc_candidate,access_ccmc_candidate,bes.model_ccmc_candidate,bes.group_ccmc_candidates,1,1,1,1

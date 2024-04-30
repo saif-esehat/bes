@@ -196,9 +196,9 @@
                             <field name="dgs_batch"/>
                         </group> 
                        
-                        <group style="width:50%;">
+                        <!-- <group style="width:50%;">
                             <field name="institute_code"/>
-                        </group>
+                        </group> -->
                         <!-- <group style="width:50%;">
                             <field name="institute_id"/>
                         </group> -->
@@ -206,7 +206,7 @@
                             <field name="course" required="1"/>
                         </group>
                         <group style="width:50%;">
-                            <field name="exam_region" required="1"/>
+                            <field name="exam_region" readonly="1" required="1"/>
                         </group>
                         <group style="width:50%;">
                             <field name="subject" domain="[('course_id','=',course)]" required="1" />
@@ -363,8 +363,8 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="dgs_batch"/>
-                    <field name="institute_id"/>
                     <field name="course"/>
+                    <field name="exam_region"/>
                     <field name="subject"/>
                 </tree>
             </field>

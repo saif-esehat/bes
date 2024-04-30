@@ -25,12 +25,15 @@
                         </div>
                         <group style="width:100%;">
                             <h1>
-                                <field name="name" placeholder="Exam Region"/>
+                                <field name="name" placeholder="Exam Region"/>   
+                                
                             </h1>
                         </group>
 
                         <group style="width:50%;">
                             <field name="exam_co_ordinator"/>
+                            <field name="mobile"/>
+                            <field name="email" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">

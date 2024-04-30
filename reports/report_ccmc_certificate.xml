@@ -49,7 +49,7 @@
                                         <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.roll_no"/></span>
                                     </div>
                                     <div class="col-4">
-                                        <span style="color: #4c2d8b; font-size:20px;">INDOS No: </span>
+                                        <span style="color: #4c2d8b; font-size:20px;">INDoS No: </span>
                                         <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.indos_no"/></span>
                                     </div>
                                     <div class="col-4">
@@ -89,7 +89,7 @@
                                         <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span>
                                         <span style="font-size:20px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/> </span> 
                                         <span style="color: #4c2d8b; font-size:20px;"> to </span>
-                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/>,</span>
+                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/>,</span>
                                         <span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
                                         <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span>
                                         <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/></span>
@@ -171,7 +171,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span style="color: #4c2d8b; font-size:20px; font-family: 'TimesNewRoman';">E-mail: bestexam@bestrust.in</span>
-                                        <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; left:20px;">Page 1 Of 2</span>
+                                        <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; right:20px;">Page 1 of 2</span>
                                     </div>
                                 </div>
                             </div>
@@ -185,8 +185,8 @@
 
                 <div class="oe_structure">
                     <div class="oe_report" style="font-family: 'TimesNewRoman';">
-                        <div style="padding: 20px;">
-                            <span style="font-size:18px; font-family: 'TimesNewRoman';">Page 2 Of 2 of <t t-esc="doc.certificate_id"/></span>
+                        <div style="padding: 20px; position:relative;">
+                            <span style="font-size:18px; font-family: 'TimesNewRoman'; text-decoration:underline">Certificate No.: <t t-esc="doc.certificate_id"/></span>
                             <p style="text-align: left; font-size:18px; margin-top:40px;">The All India Exit Examination is conducted in accordance with Training Guidelines 07 of 2010 and Training Circular 04 of 2019 of Directorate General of Shipping, Govt. of India.</p>
 
                             <p style="text-align: left; font-size:18px; margin-top:20px; margin-bottom:20px;">The curriculum for 25 weeks pre-sea Training Programme includes following components:</p>
@@ -257,7 +257,7 @@
 
                             <p style="text-align:center; margin-top:65px;font-size:20px;"><u>Mark Sheet of the Candidate</u></p>
                             
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:235px; font-size:20px; ">
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; text-align:center; margin-bottom:190px; font-size:20px; ">
                                 <thead style="border: 1px solid #000; padding: 8px;">
                                     <tr>
                                         <th style="border: 1px solid #000;">S. No</th>
@@ -298,6 +298,7 @@
 
                                 </tbody>
                             </table>
+                            <span style="font-size:18px; font-family: 'TimesNewRoman'; position:absolute; bottom:0px; right:20px;">Page 2 of 2</span>
                         </div>
                     </div>
                 </div>

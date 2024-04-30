@@ -106,41 +106,51 @@ class GPCandidate(models.Model):
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',default="pending" ,compute='_check_ship_visit_criteria')
+    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
+    ], string='Attendance Criteria',store=True,default="pending",compute="_check_attendance_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
-    ],string="Candidate-Image",default="pending",compute="_check_candidate_image")
+        ('done', 'Done'),
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_image")
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
-    ],string="Candidate-Sign",default="pending",compute="_check_candidate_signature")
+        ('done', 'Done'),
 
-    @api.constrains('candidate_image')
-    def _check_candidate_image(self):
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
+
+
+
+
+
+
+
+    @api.depends('candidate_image')
+    def _check_image(self):
         for record in self:
+            
+            
+            # candidate_image
             if record.candidate_image:
-                record.candidate_image_status = 'yes'
+                
+                
+                record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
-    
-    @api.constrains('candidate_signature')
-    def _check_candidate_signature(self):
+
+    @api.depends('candidate_signature')
+    def _check_sign(self):
         for record in self:
+            # candidate-sign
             if record.candidate_signature:
-                record.candidate_signature_status = 'yes'
+                record.candidate_signature_status = 'done'
             else:
                 record.candidate_signature_status = 'pending'
-
-
-
 
 
 
