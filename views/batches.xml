@@ -80,6 +80,7 @@
                     <field name="batch_name"/>
                     <field name="institute_id"/>
                     <field name="code"/>
+                    <field name="exam_region"/>
                     <field name="from_date"/>
                     <field name="to_date"/>
                     <field name="dgs_approved_capacity" readonly="1"/>
@@ -99,6 +100,7 @@
                     <field name="institute_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'dgs_batch'}" />
+                        <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
                     </group>
 
                     <searchpanel>
