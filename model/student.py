@@ -133,8 +133,12 @@ class GPCandidate(models.Model):
     @api.depends('candidate_image')
     def _check_image(self):
         for record in self:
+            
+            
             # candidate_image
             if record.candidate_image:
+                
+                
                 record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
