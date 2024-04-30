@@ -58,5 +58,17 @@
         </record>
 
 
+        <record id="exam_center_registered_candidate_tree" model="ir.ui.view">
+            <field name="name">exam.center.registered.gp.candidate.tree</field>
+            <field name="model">gp.exam.schedule</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
     </data>
 </odoo>
