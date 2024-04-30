@@ -124,7 +124,7 @@ class GPCandidate(models.Model):
 
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_criteria")
 
-
+    @api.depends('candidate_image','candidate_signature','stcw_certificate','ship_visits','attendance_compliance_1','attendance_compliance_2')
     def _check_criteria(self):
         for record in self:
             # candidate_image
@@ -154,20 +154,6 @@ class GPCandidate(models.Model):
                 record.attendance_criteria = 'passed'
             else:
                 record.attendance_criteria = 'pending'
-
-
-
-    # @api.constrains('candidate_signature')
-    # def _check_candidate_signature(self):
-    #     for record in self:
-    #         if record.candidate_signature:
-    #             record.candidate_signature_status = 'done'
-    #         else:
-    #             record.candidate_signature_status = 'pending'
-
-
-
-
 
 
     @api.depends('user_id')
