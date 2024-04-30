@@ -89,7 +89,7 @@
                                         <span style="color: #4c2d8b; font-size:20px; margin-right:10px;">From</span>
                                         <span style="font-size:20px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/> </span> 
                                         <span style="color: #4c2d8b; font-size:20px;"> to </span>
-                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_from_date.strftime('%b-%y')"/>,</span>
+                                        <span style="font-size:20px; margin-right:10px;"> <t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/>,</span>
                                         <span style="color: #4c2d8b; font-size:20px;"> and has successfully passed the All India Exit Examination</span>
                                         <br/><span style="color: #4c2d8b; font-size:20px; margin-right:10px;">held in </span>
                                         <span style="font-size:20px;"><t t-esc="doc.ccmc_candidate.institute_batch_id.ccmc_to_date.strftime('%b-%y')"/></span>
@@ -186,7 +186,7 @@
                 <div class="oe_structure">
                     <div class="oe_report" style="font-family: 'TimesNewRoman';">
                         <div style="padding: 20px; position:relative;">
-                            <span style="font-size:18px; font-family: 'TimesNewRoman'; text-decoration:underline">Certificate No.:<t t-esc="doc.certificate_id"/></span>
+                            <span style="font-size:18px; font-family: 'TimesNewRoman'; text-decoration:underline">Certificate No.: <t t-esc="doc.certificate_id"/></span>
                             <p style="text-align: left; font-size:18px; margin-top:40px;">The All India Exit Examination is conducted in accordance with Training Guidelines 07 of 2010 and Training Circular 04 of 2019 of Directorate General of Shipping, Govt. of India.</p>
 
                             <p style="text-align: left; font-size:18px; margin-top:20px; margin-bottom:20px;">The curriculum for 25 weeks pre-sea Training Programme includes following components:</p>
