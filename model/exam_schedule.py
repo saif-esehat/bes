@@ -381,8 +381,14 @@ class ExamOralPractical(models.Model):
     # subject = fields.Many2one("course.master.subject","Subject")
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
-    exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
+    
+    
+    def get_examiner_region(self):
+        user_id = self.env.user.id
+        region = self.env['exam.center'].sudo().search([('exam_co_ordinator','=',user_id)]).id
+        return region
 
 
     # start_time = fields.Datetime("Start Time")
