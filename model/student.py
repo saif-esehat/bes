@@ -11,7 +11,7 @@ class GPCandidate(models.Model):
     _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
@@ -101,7 +101,7 @@ class GPCandidate(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria' ,store=True,default="pending",compute="_check_stcw_certificate")
+    ], string='STCW Criteria',store=True,default="pending",compute="_check_stcw_certificate")
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -115,19 +115,19 @@ class GPCandidate(models.Model):
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
+        ('done', 'Done'),
     ],string="Candidate-Image",store=True,default="pending",compute="_check_candidate_image")
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
-    ],string="Candidate-Image",store=True,default="pending",compute="_check_candidate_signature")
+        ('done', 'Done'),
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_candidate_signature")
 
     @api.constrains('candidate_image')
     def _check_candidate_image(self):
         for record in self:
             if record.candidate_image:
-                record.candidate_image_status = 'yes'
+                record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
     
@@ -135,7 +135,7 @@ class GPCandidate(models.Model):
     def _check_candidate_signature(self):
         for record in self:
             if record.candidate_signature:
-                record.candidate_signature_status = 'yes'
+                record.candidate_signature_status = 'done'
             else:
                 record.candidate_signature_status = 'pending'
 

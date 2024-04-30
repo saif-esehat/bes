@@ -33,6 +33,8 @@
                     <field name="gp_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>
+                    <!-- <filter string='Passed' name='Passed' domain="[('result_status','=','passed')]"/>
+                    <filter string='Failed' name='Failed' domain="[('result_status','=','failed')]"/> -->
                 </search>
             </field>
         </record>
@@ -116,39 +118,72 @@
                         </group>
                         <group style="width:50%">
                             <field name="mek_online"/>
-                        </group>
-
-                        <group style="width:50%">
-                            <label for="gsk_practical_marks"/>
-                            <div>
-                                <field name="gsk_practical_marks" nolabel="1"/>
-                            / 
-                                <span>100</span>
-                            </div>
-
-                            <label for="mek_practical_marks"/>
-                            <div>
-                                <field name="mek_practical_marks" nolabel="1"/>
-                            / 
-                                <span>100</span>
-                            </div>
-
-                             <label for="gsk_oral_marks"/>
-                            <div>
-                                <field name="gsk_oral_marks" nolabel="1"/>
-                            / 
-                                <span>75</span>
-                            </div>
-
-                            <label for="mek_oral_marks"/>
-                            <div>
-                                <field name="mek_oral_marks" nolabel="1"/>
-                            / 
-                                <span>75</span>
+                            <div style="display:flex">
+                                <h1>Attendance</h1>
                             </div>
                         </group>
-                                            <group style="width:50%">
-                                         </group>      
+
+                        <group style="width:100%">
+                            <group style="width:50%">
+                                <label for="gsk_practical_marks"/>
+                                <div>
+                                    <field name="gsk_practical_marks" nolabel="1"/>
+                                / 
+                                    <span>100</span>
+                                </div>
+
+                                <label for="mek_practical_marks"/>
+                                <div>
+                                    <field name="mek_practical_marks" nolabel="1"/>
+                                / 
+                                    <span>100</span>
+                                </div>
+
+                                <label for="gsk_oral_marks"/>
+                                <div>
+                                    <field name="gsk_oral_marks" nolabel="1"/>
+                                / 
+                                    <span>75</span>
+                                </div>
+
+                                <label for="mek_oral_marks"/>
+                                <div>
+                                    <field name="mek_oral_marks" nolabel="1"/>
+                                / 
+                                    <span>75</span>
+                                </div>
+                            </group>
+
+
+                            <group style="width:50%">
+                                <!-- <div style="display:flex">
+                                    <span>Attendance</span>
+                                </div> -->
+                                <label for="gsk_oral_prac_attendance"/>
+                                <div>
+                                    <field name="gsk_oral_prac_attendance" nolabel="1"/>
+                                </div>
+
+                                <label for="gsk_online_attendance"/>
+                                <div>
+                                    <field name="gsk_online_attendance" nolabel="1"/>
+                                </div>
+
+                                <label for="mekk_oral_prac_attendance"/>
+                                <div>
+                                    <field name="mekk_oral_prac_attendance" nolabel="1"/>
+                                </div>
+
+                                <label for="mek_online_attendance"/>
+                                <div>
+                                    <field name="mek_online_attendance" nolabel="1"/>
+                                </div>
+                            </group>
+                        </group>
+                        
+                        <!-- <group style="width:50%">
+
+                        </group>       -->
 
                         <group style="width:50%">
                         
@@ -257,24 +292,26 @@
                     <header>
                         <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
                     </header>
-                    <field name="exam_id"/>
-                    <field name="gp_candidate"/>
-                    <field name="candidate_code"/>
-                    <field name="registered_institute" readonly="1"/>
-                    <field name="institute_id"/>
-                    <field name="attempt_number"/>
-                    <field name="gsk_total"/>
-                    <field name="mek_total"/>
-                    <field name="gsk_online_marks" />
-                    <field name="mek_online_marks" />
-                    <field name="overall_marks"/>
-                    <field name="exam_criteria"/>
-                    <field name="stcw_criteria" />
-                    <field name="attendance_criteria" />
-                    <field name="ship_visit_criteria" />
-                    <field name="certificate_criteria"/>
-                    <field name="state"/>
-                    <field name="rank"/>
+                    <field name="exam_id" optional="show"/>
+                    <field name="gp_candidate" optional="show"/>
+                    <field name="candidate_code" optional="show"/>
+                    <field name="registered_institute" readonly="1" optional="show"/>
+                    <field name="institute_id" optional="show"/>
+                    <field name="attempt_number" optional="show"/>
+                    <field name="gsk_total" optional="show"/>
+                    <field name="mek_total" optional="show"/>
+                    <field name="gsk_online_marks" optional="show"/>
+                    <field name="mek_online_marks" optional="show"/>
+                    <field name="overall_marks" optional="show"/>
+                    <field name="exam_criteria" optional="show"/>
+                    <field name="stcw_criteria" optional="show"/>
+                    <field name="attendance_criteria" optional="show"/>
+                    <field name="ship_visit_criteria" optional="show"/>
+                    <field name="certificate_criteria" optional="show"/>
+                    <field name="state" optional="show"/>
+                    <field name="rank" optional="show"/>
+                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
+
                 </tree>
             </field>
         </record>

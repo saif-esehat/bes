@@ -577,13 +577,12 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
+    
     expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
     status = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
-    
- 
 
     
     def open_marksheet_list(self):
@@ -749,8 +748,8 @@ class GPExam(models.Model):
     gsk_total = fields.Float("GSK Oral/Practical",readonly=True,tracking=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True,tracking=True)
     
-    mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
-    mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
+    # mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
+    # mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
     mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2),tracking=True)
     gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2),tracking=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2),tracking=True)
@@ -847,7 +846,68 @@ class GPExam(models.Model):
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True,tracking=True)
     
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True,compute='_compute_result_status')
+
+    gsk_oral_prac_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="GSK P&O",compute="_compute_attendance")
+
+    gsk_online_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="GSK Online",compute="_compute_attendance")
     
+    mekk_oral_prac_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="MEK P&O",compute="_compute_attendance")
+    
+    mek_online_attendance = fields.Selection([
+        ('absent','Absent'),
+        ('present','Present'),
+    ],string="MEK Online",compute="_compute_attendance")
+
+    @api.depends('certificate_criteria')
+    def _compute_attendance(self):
+        for record in self:
+            if record.gsk_oral.gskk_oral_remarks.lower() == 'absent' and record.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
+                record.gsk_oral_prac_attendance = 'absent'
+            else:
+                record.gsk_oral_prac_attendance = 'present'
+
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+            
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+            
+            if record.mek_oral.mek_oral_remarks.lower() == 'absent' or record.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                record.mekk_oral_prac_attendance = 'absent'
+            else:
+                record.mekk_oral_prac_attendance = 'present'
+
+            
+
+
+
+    @api.depends('certificate_criteria')
+    def _compute_result_status(self):
+        for record in self:
+            if record.certificate_criteria == 'passed':
+                record.result_status = 'passed'
+            else:
+                record.result_status = 'failed'
+
+
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
     

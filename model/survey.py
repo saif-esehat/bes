@@ -19,7 +19,7 @@ class InheritedSurvey(models.Model):
     examiner_token = fields.Char(string="Examiner Token")
     start_time = fields.Datetime("Start Time")
     end_time = fields.Datetime("End Time")
-    exam_state = fields.Selection([
+    exam_state = fields.Selection([ 
         ('stopped', 'Stopped'),
         ('in_progress', 'In-Progress'),
         ('done', 'Done')     
@@ -106,7 +106,6 @@ class SurveyUserInputInherited(models.Model):
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
-    examiner = fields.Many2one("bes.examiner",string="Examiner")
     
     
     def generate_unique_string(self):
