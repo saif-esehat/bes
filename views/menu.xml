@@ -23,7 +23,9 @@
 
         <menuitem id="institute_menu" parent="bes_menu" name="Institute Master" action="institute_action" sequence="2"/>
 
-        <menuitem id="examiner_menu" parent="bes_menu" name="Examiner Master" action="bes_examiner_action" sequence="3"/>
+        <menuitem id="exam_menu" parent="bes_menu" name="Exam Master"  sequence="3"/>
+        <menuitem id="exam_center_menu" parent="exam_menu" name="Exam Region" action="exam_center_action" />
+        <menuitem id="examiner_menu" parent="exam_menu" name="Examiner Master" action="bes_examiner_action" sequence="2"/>
 
         <menuitem id="candidate_menus" parent="bes_menu" name="Candidate Master"  sequence="4"/>
 
@@ -133,7 +135,6 @@
 
         <menuitem id="bes_batch_examiner_duty_menus_group_examiner" sequence="0" name="Examiner Practical/Oral Duty" action="bes_examiner_oral_practical_duty_action" groups="bes.group_exam_coordinator"   web_icon="bes,static/description/books.png"/>
 
-        <menuitem id="exam_center_menu" parent="bes_menu" name="Exam Region" action="exam_center_action" />
 
         <menuitem id="batches_menu" parent="bes_menu" name="Batches"  />
 

@@ -106,28 +106,25 @@ class GPCandidate(models.Model):
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',default="pending" ,compute='_check_criteria')
+    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',default="pending",compute="_check_criteria")
+    ], string='Attendance Criteria',store=True,default="pending",compute="_check_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Image",default="pending",compute="_check_criteria")
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_criteria")
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Sign",default="pending",compute="_check_criteria")
+
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_criteria")
 
 
-
-
-
-    @api.constrains('candidate_image','candidate_signature','stcw_certificate','ship_visits','attendance_compliance_1','attendance_compliance_2')
     def _check_criteria(self):
         for record in self:
             # candidate_image
