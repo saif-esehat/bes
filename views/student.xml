@@ -163,13 +163,21 @@
         <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
             <search string="GP Candidate Search">
+
                 <field name="name"  />
                 <field name="indos_no"/>
                 <field name="candidate_code"  />
                 <field name="roll_no" />
                 <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+                <filter string="STCW Pending" name="stcw_pending" domain="[('stcw_criteria','=','pending')]" />
+                <filter string="Candidate Image Pending" name="candidate_image_status" domain="[('candidate_image_status','=','pending')]" />
+                <filter string="Candidate Signature Pending" name="candidate_signature_status" domain="[('candidate_signature_status','=','pending')]" />
+                <filter string="Attendance Pending" name="attendance_criteria" domain="[('attendance_criteria','=','pending')]" />
+                <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" />
+
                 <searchpanel>
                     <field name="dgs_batch" enable_counters="1"/>
+
                     <!-- <field name="institute_batch_id" enable_counters="1"/> -->
                 </searchpanel>
             </search>
@@ -470,6 +478,14 @@
                 </tree>
             </field>
         </record>
+
+        <!-- <record id="gp_candidate_search" model="ir.ui.view">
+            <field name="name">gp.candidate.search</field>
+            <field name="model">gp.candidate</field>
+            <field name="arch" type="xml">
+                
+            </field>
+        </record> -->
 
 
 
