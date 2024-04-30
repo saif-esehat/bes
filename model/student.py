@@ -101,31 +101,37 @@ class GPCandidate(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria',store=True,default="pending",compute="_check_criteria")
+    ], string='STCW Criteria',store=True,default="pending",compute="_check_stcw_certificate")
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_criteria')
+    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',store=True,default="pending",compute="_check_criteria")
+    ], string='Attendance Criteria',store=True,default="pending",compute="_check_attendance_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Image",store=True,default="pending",compute="_check_criteria")
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_image")
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
 
-    ],string="Candidate-Sign",store=True,default="pending",compute="_check_criteria")
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
-    @api.depends('candidate_image','candidate_signature','stcw_certificate','ship_visits','attendance_compliance_1','attendance_compliance_2')
-    def _check_criteria(self):
+
+
+
+
+
+
+    @api.depends('candidate_image')
+    def _check_image(self):
         for record in self:
             
             
@@ -136,28 +142,16 @@ class GPCandidate(models.Model):
                 record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
+
+    @api.depends('candidate_signature')
+    def _check_sign(self):
+        for record in self:
             # candidate-sign
             if record.candidate_signature:
                 record.candidate_signature_status = 'done'
             else:
                 record.candidate_signature_status = 'pending'
-    
-            course_type_already  = [course.course_name for course in record.stcw_certificate]
-            all_types_exist = self.check_combination_exists(course_type_already)
-            if all_types_exist:
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
 
-            if len(record.ship_visits) > 0:
-                record.ship_visit_criteria = 'passed'
-            else:
-                record.ship_visit_criteria = 'pending'
-
-            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
-                record.attendance_criteria = 'passed'
-            else:
-                record.attendance_criteria = 'pending'
 
 
     @api.depends('user_id')
@@ -184,37 +178,37 @@ class GPCandidate(models.Model):
         
         return False
 
-    # @api.constrains('stcw_certificate')
-    # def _check_stcw_certificate(self):
-    #      for record in self:
-    #         course_type_already  = [course.course_name for course in record.stcw_certificate]
-    #         # import wdb; wdb.set_trace();    
+    @api.constrains('stcw_certificate')
+    def _check_stcw_certificate(self):
+         for record in self:
+            course_type_already  = [course.course_name for course in record.stcw_certificate]
+            # import wdb; wdb.set_trace();    
 
-    #         # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
-    #         all_types_exist = self.check_combination_exists(course_type_already)
-    #         if all_types_exist:
-    #             # import wdb; wdb.set_trace();
-    #             record.stcw_criteria = 'passed'
-    #         else:
-    #             record.stcw_criteria = 'pending'
+            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            all_types_exist = self.check_combination_exists(course_type_already)
+            if all_types_exist:
+                # import wdb; wdb.set_trace();
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
         
     
-    # @api.constrains('ship_visits')
-    # def _check_ship_visit_criteria(self):
-    #     for record in self:
-    #         if len(record.ship_visits) > 0:
-    #             record.ship_visit_criteria = 'passed'
-    #         else:
-    #             record.ship_visit_criteria = 'pending'
+    @api.constrains('ship_visits')
+    def _check_ship_visit_criteria(self):
+        for record in self:
+            if len(record.ship_visits) > 0:
+                record.ship_visit_criteria = 'passed'
+            else:
+                record.ship_visit_criteria = 'pending'
     
     
-    # @api.constrains('attendance_compliance_1','attendance_compliance_2')
-    # def _check_attendance_criteria(self):
-    #    for record in self:
-    #         if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
-    #             record.attendance_criteria = 'passed'
-    #         else:
-    #             record.attendance_criteria = 'pending'
+    @api.constrains('attendance_compliance_1','attendance_compliance_2')
+    def _check_attendance_criteria(self):
+       for record in self:
+            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
+                record.attendance_criteria = 'passed'
+            else:
+                record.attendance_criteria = 'pending'
 
     # @api.constrains('phone')
     # def _check_valid_phone(self):
