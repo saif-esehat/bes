@@ -49,16 +49,15 @@ class ExamCenter(models.Model):
         
     def candidates(self):
         # import wdb; wdb.set_trace();
-
+        
+        view = self.env.ref('bes.exam_center_registered_candidate_tree').id
+        
         return {
-        'name': 'Candidate',
-        'domain': [('exam_region', '=', self.id)],
-        'view_type': 'form',
-        'res_model': 'gp.exam.schedule',
-        'view_id': False,
-        'view_mode': 'tree',
-        'type': 'ir.actions.act_window',
-        'context': {
-            'default_exam_coordinator_id': self.id    
-            }
+            'name': 'Exam Center Registered Candidates',
+            'type': 'ir.actions.act_window',
+            'res_model': 'gp.exam.schedule',  # Replace 'your.model.name' with the actual model you're working with
+            'view_type': 'tree',
+            'view_mode': 'tree',
+            'view_id': view,
+            'target': 'current',
         }
