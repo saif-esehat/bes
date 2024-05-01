@@ -11,6 +11,19 @@
             </field>
         </record>
 
+        <record id="open_ec_gp_exam_schedule" model="ir.actions.act_window">
+            <field name="name">GP Registered Candidate</field>
+            <field name="res_model">gp.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_registered_candidate_tree"/>
+            <!-- Replace 'module_name' with the actual name of your module -->
+            <field name="context">{}</field>
+        </record>
+        
+
+
+
+
 
         <menuitem id="bes_menu" name="BES" groups="bes.group_bes_admin" sequence="1" web_icon="bes,static/description/icon.png" />
 
@@ -68,6 +81,8 @@
             action="hr.hr_department_kanban_action"
             parent="hr.menu_hr_employee_payroll"
             sequence="1"/>
+        
+        
 
         
 <!-- hr_department_kanban_action -->
@@ -162,24 +177,29 @@
                 action="bes_examiner_oral_practical_duty_action"
                 sequence="1" />
 
-        <menuitem id="examiner_exam_menu" 
+        <menuitem id="examiner_ec_menu" 
                 parent="bes_batch_examiner_duty_menus_group_examiner" 
                 name="Examiner" 
+                groups="group_exam_coordinator"
                 action="bes_examiner_action"
+                
                 sequence="2"/>
 
-        <menuitem id="candidate_exam_menu" 
+        <menuitem id="candidate_ec_menu" 
                 parent="bes_batch_examiner_duty_menus_group_examiner" 
+                groups="group_exam_coordinator"
                 name="Candidates" />
 
-        <menuitem id="candidate_gp_exam_menu" 
-                  parent="candidate_exam_menu" 
+        <menuitem id="candidate_gp_ec_menu" 
+                  parent="candidate_ec_menu" 
+                  groups="group_exam_coordinator"
                   name="GP Candidates"
-                  action="gp_candidate_action"
+                  action="open_ec_gp_exam_schedule"
                   sequence="1" />
         
-        <menuitem id="candidate_ccmc_exam_menu" 
-                  parent="candidate_exam_menu" 
+        <menuitem id="candidate_ccmc_ec_menu" 
+                  parent="candidate_ec_menu" 
+                  groups="group_exam_coordinator"
                   name="CCMC Candidates"
                   action="candidate_ccmc_action"
                   sequence="2" />
