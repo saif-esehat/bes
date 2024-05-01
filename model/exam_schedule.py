@@ -400,6 +400,10 @@ class ExamOralPractical(models.Model):
     
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
 
+    exam_type = fields.Selection([
+        ('practical_oral', 'Practical/Oral'),
+        ('online', 'Online')     
+    ], string='Exam Type', default='practical_oral',tracking=True)
 
     state = fields.Selection([
         ('1-draft', 'Draft'),
@@ -433,51 +437,61 @@ class ExamOralPractical(models.Model):
             if self.course.course_code == 'GP':
                 
                 if self.subject.name == 'GSK':
-                
-                    gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',i),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed'))]).ids
                     
-                    examiners = self.examiners.filtered(lambda r: r.institute_id.id == i).ids
+                    if self.exam_type == 'practical_oral':
+                
+                        gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',i),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed'))]).ids
+                        
+                        examiners = self.examiners.filtered(lambda r: r.institute_id.id == i).ids
+
+                        
+                        assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
 
                     
-                    assignments = {examiner: [] for examiner in examiners}  # Dictionary to store assignments
+                        for i, candidate in enumerate(gp_marksheets):
+                            examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
+                            examiner = examiners[examiner_index]
+                            assignments[examiner].append(candidate)   
+                            
+                        for examiner, assigned_candidates in assignments.items():
+                            # import wdb; wdb.set_trace();
+                            examiner_id = examiner
+                            for c in assigned_candidates:
+                                gp_marksheet = self.env['gp.exam.schedule'].browse(c).id
+                                gsk_oral = self.env['gp.exam.schedule'].browse(c).gsk_oral.id
+                                gsk_prac = self.env['gp.exam.schedule'].browse(c).gsk_prac.id
+                                candidate = self.env['gp.exam.schedule'].browse(c).gp_candidate.id
+                                self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_marksheet':gp_marksheet ,'gp_candidate':candidate , 'gsk_oral':gsk_oral , 'gsk_prac':gsk_prac })
+                            
+                            
+                            examiner_assignment = self.env['exam.type.oral.practical.examiners'].browse(examiner)
+                            # import wdb; wdb.set_trace();
+                            quantity = len(examiner_assignment.marksheets)
+                            user_id = examiner_assignment.examiner.user_id.id
+                            employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+                            product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
+                            child_records = self.env['hr.expense'].create([
+                                    {'product_id': product.id, 'employee_id': employee.id,'name':'GSK Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                                ])
 
-                
-                    for i, candidate in enumerate(gp_marksheets):
-                        examiner_index = i % len(examiners)  # Calculate the index of the examiner using modulo
-                        examiner = examiners[examiner_index]
-                        assignments[examiner].append(candidate)   
-                        
-                    for examiner, assigned_candidates in assignments.items():
-                        # import wdb; wdb.set_trace();
-                        examiner_id = examiner
-                        for c in assigned_candidates:
-                            gp_marksheet = self.env['gp.exam.schedule'].browse(c).id
-                            gsk_oral = self.env['gp.exam.schedule'].browse(c).gsk_oral.id
-                            gsk_prac = self.env['gp.exam.schedule'].browse(c).gsk_prac.id
-                            candidate = self.env['gp.exam.schedule'].browse(c).gp_candidate.id
-                            self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_marksheet':gp_marksheet ,'gp_candidate':candidate , 'gsk_oral':gsk_oral , 'gsk_prac':gsk_prac })
-                        
-                        
-                        examiner_assignment = self.env['exam.type.oral.practical.examiners'].browse(examiner)
-                        # import wdb; wdb.set_trace();
-                        quantity = len(examiner_assignment.marksheets)
-                        user_id = examiner_assignment.examiner.user_id.id
-                        employee = self.env['hr.employee'].search([('user_id','=',user_id)])
-                        product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
-                        child_records = self.env['hr.expense'].create([
-                                {'product_id': product.id, 'employee_id': employee.id,'name':'GSK Exam','unit_amount': product.standard_price ,'quantity': quantity }
-                            ])
-
-                        expense_sheet = self.env['hr.expense.sheet'].create({'name':'GSK Exam',
-                                                             'dgs_exam':True,
-                                                             'dgs_batch': self.dgs_batch.id,
-                                                             'institute_id':examiner_assignment.institute_id.id,
-                                                             'employee_id':employee.id,
-                                                             'expense_line_ids': [(6, 0, child_records.ids)]
-                                                             })
-                        examiner_assignment.write({'status':'confirmed','expense_sheet':expense_sheet})
-                        
-                    self.write({'state':'2-confirm'})       
+                            expense_sheet = self.env['hr.expense.sheet'].create({'name':'GSK Exam',
+                                                                'dgs_exam':True,
+                                                                'dgs_batch': self.dgs_batch.id,
+                                                                'institute_id':examiner_assignment.institute_id.id,
+                                                                'employee_id':employee.id,
+                                                                'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                })
+                            examiner_assignment.write({'status':'confirmed','expense_sheet':expense_sheet})
+                            
+                        self.write({'state':'2-confirm'})
+                    
+                    elif self.exam_type == 'online':
+                        import wdb;wdb.set_trace()
+                        gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',i),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed'))])
+                        for marksheet in gp_marksheets:
+                            marksheet = marksheet
+                            gsk_online = marksheet.gsk_online
+       
                 
                 elif self.subject.name == 'MEK':
                     
@@ -567,7 +581,6 @@ class ExamOralPractical(models.Model):
                             self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_oral':ccmc_oral,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate  })
                     
                     self.write({'state':'2-confirm'})
-                  
 
     
 
@@ -584,11 +597,27 @@ class ExamOralPracticalExaminers(models.Model):
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
     
+    online_from_date = fields.Date("From")
+    online_to_date = fields.Date("To Date")
+    team_lead = fields.Boolean("TL")
+    no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
+    
     expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
     status = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
+    
+    
+    @api.depends('online_from_date', 'online_to_date')
+    def _compute_num_days(self):
+        for record in self:
+            if record.online_from_date and record.online_to_date:
+                delta = record.online_to_date - record.online_from_date
+                record.no_days = delta.days + 1
+            else:
+                record.no_days = 0
+    
 
     
     def open_marksheet_list(self):

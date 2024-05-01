@@ -211,6 +211,9 @@
                         <group style="width:50%;">
                             <field name="subject" domain="[('course_id','=',course)]" required="1" />
                         </group>
+                        <group style="width:50%;">
+                            <field name="exam_type"  required="1" />
+                        </group>
                         
                        
                         <field name="examiners" >
@@ -222,7 +225,11 @@
                                 <field name="exam_region" invisible="1"/>
                                 <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]"  />
                                 <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
-                                <field name="exam_date" required="1"  />
+                                <field name="team_lead" required="1" />
+                                <field name="exam_date" attrs="{'column_invisible': [('parent.exam_type', '==', 'online' )]}"  />
+                                <field name="online_from_date" attrs="{'column_invisible': [('parent.exam_type', '==', 'practical_oral' )]}"  />
+                                <field name="online_to_date" attrs="{'column_invisible': [('parent.exam_type', '==', 'practical_oral' )]}"   />
+                                <field name="no_days"  attrs="{'column_invisible': [('parent.exam_type', '==', 'practical_oral' )]}"/>
                                 <field name="expense_sheet" />
                                 <field name="status" />
                                 <field name="marksheets"  />
@@ -363,6 +370,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="dgs_batch"/>
+                    <field name="exam_type"/>
                     <field name="course"/>
                     <field name="exam_region"/>
                     <field name="subject"/>
