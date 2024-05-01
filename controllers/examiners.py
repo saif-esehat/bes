@@ -149,7 +149,8 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_subject = examiner.subject_id.name
+        examiner_subject  = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).prac_oral_id.subject.name
+        # examiner_subject = examiner.subject_id.name
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
@@ -1594,5 +1595,120 @@ class ExaminerPortal(CustomerPortal):
         return response
     
     
+    @http.route('/my/uploadccmcmarksheet', type='http', auth="user", website=True)
+    def upload_ccmc_marksheet(self,**kw):
+        user_id = request.env.user.id
+        # import wdb;wdb.set_trace();
+        batch_id = int(kw['mek_batch_ids'])
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
 
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet_oral = workbook.sheet_by_index(0)
+        for row_num in range(2, worksheet_oral.nrows):  # Assuming first row contains headers
+            row = worksheet_oral.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            plumbing = row[3]  
+            chipping = row[4]  
+            welding = row[5]  
+            grinder = row[6]  
+            electrical = row[7]  
+            mek_journal = row[8] 
+
+            total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if plumbing:
+                total_marks += int(plumbing)
+            if chipping:
+                total_marks += int(chipping)
+            if welding:
+                total_marks += int(welding)
+            if grinder:
+                total_marks += int(grinder)
+            if electrical:
+                total_marks += int(electrical)
+            if mek_journal:
+                total_marks += int(mek_journal)  
+
+            remarks = row[9]
+            
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            if candidate and candidate.mek_oral:
+                candidate.mek_oral.sudo().write({
+                    'using_hand_plumbing_carpentry_tools':plumbing,
+                    'use_of_chipping_tools_paints':chipping,
+                    'welding':welding,
+                    'lathe_drill_grinder':grinder,
+                    'electrical':electrical,
+                    'journal':mek_journal,
+                    'mek_oral_total_marks':total_marks,
+                    'mek_oral_remarks':remarks,
+
+
+                })
+
+        worksheet_practical = workbook.sheet_by_index(1)
+        for row_num in range(2, worksheet_practical.nrows):  # Assuming first row contains headers
+            row = worksheet_practical.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            using_hand_plumbing_tools_task_1 = row[3]  
+            using_hand_plumbing_tools_task_2 = row[4]  
+            using_hand_plumbing_tools_task_3 = row[5]  
+            use_of_chipping_tools_paint_brushes = row[6]  
+            use_of_carpentry = row[7]  
+            use_of_measuring_instruments = row[8] 
+            welding = row[9] 
+            lathe = row[10]
+            electrical = row[11] 
+
+            # mek_practical_total_marks = row[12] 
+            mek_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if using_hand_plumbing_tools_task_1:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_1)
+            if using_hand_plumbing_tools_task_2:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_2)
+            if using_hand_plumbing_tools_task_3:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_3)
+            if use_of_chipping_tools_paint_brushes:
+                mek_practical_total_marks += int(use_of_chipping_tools_paint_brushes)
+            if use_of_carpentry:
+                mek_practical_total_marks += int(use_of_carpentry)
+            if use_of_measuring_instruments:
+                mek_practical_total_marks += int(use_of_measuring_instruments) 
+            if welding:
+                mek_practical_total_marks += int(welding) 
+            if lathe:
+                mek_practical_total_marks += int(lathe) 
+            if electrical:
+                mek_practical_total_marks += int(electrical) 
+
+            mek_practical_remarks = row[12]
+
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            if candidate and candidate.mek_prac:
+                candidate.mek_prac.sudo().write({
+                    'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
+                    'using_hand_plumbing_tools_task_2':using_hand_plumbing_tools_task_2,
+                    'using_hand_plumbing_tools_task_3':using_hand_plumbing_tools_task_3,
+                    'use_of_chipping_tools_paint_brushes':use_of_chipping_tools_paint_brushes,
+                    'use_of_carpentry':use_of_carpentry,
+                    'use_of_measuring_instruments':use_of_measuring_instruments,
+                    'welding':welding,
+                    'lathe':lathe,
+                    'electrical':electrical,
+                    'mek_practical_total_marks':mek_practical_total_marks,
+                    'mek_practical_remarks':mek_practical_remarks
+
+
+                })
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
     
