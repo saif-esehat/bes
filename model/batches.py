@@ -13,6 +13,9 @@ class InstituteGPBatches(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    
+    code = fields.Char(string="Code",related='institute_id.code',tracking=True)
+    exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
     faculty_name = fields.Char("Faculty name",tracking=True)

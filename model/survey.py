@@ -116,6 +116,10 @@ class SurveyUserInputInherited(models.Model):
         # random_string = ''.join(secrets.choice(characters) for _ in range(10))
 
         return ''.join(random.choices('0123456789', k=6))
+    
+    def generate_token(self):
+        self.examiner_token = self.generate_unique_string()
+        
 
 
 class InheritedSurveyQuestions(models.Model):

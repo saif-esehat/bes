@@ -817,13 +817,13 @@
                     <field name="twelve_percent" optional="hide"/>
                     <field name="iti_percent"  optional="hide"/>
                     <field name="sc_st"  optional="show"/>
-                    <field name="fees_paid"  optional="show"/>
-                    <field name="candidate_image"  optional="show"/>
-                    <field name="candidate_signature"  optional="show"/>
-                    <field name="stcw_criteria"  optional="show"/>
-                    <field name="attendance_criteria"  optional="show"/>
-                    <field name="ship_visits_count"  optional="show"/>
-                    <field name="ship_visit_criteria"  optional="show"/>
+                   <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
+                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
+                    <field name="ship_visits_count"  optional="hide"/>
+                    <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
                 </tree>
             </field>
         </record>

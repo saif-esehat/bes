@@ -44,16 +44,17 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
-    <!-- <record id="examiner_duty_record" model="ir.rule">
-            <field name="name">Examiner Duty Record</field>
+    <record id="examiner_duty_record_rule" model="ir.rule">
+            <field name="name">Examiner Duty Record Rule</field>
             <field ref="model_exam_type_oral_practical" name="model_id"/>
-            <field name="groups" eval="[(4, ref('group_examiners'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="active" eval="True"/>
-    </record> -->
+            <field name="groups" eval="[(4, ref('group_exam_coordinator'))]"/>
+            <field name="domain_force">[('exam_region.exam_co_ordinator','=',user.id)]</field>
+            <!-- <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="active" eval="True"/> -->
+    </record>
 
     
 
