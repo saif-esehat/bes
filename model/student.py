@@ -625,9 +625,36 @@ class CCMCCandidate(models.Model):
         ('passed', 'Complied'),
     ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
     
-    
+    candidate_image_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_image")
+   
+    candidate_signature_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
 
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
     
+    @api.depends('candidate_image')
+    def _check_image(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image:
+                record.candidate_image_status = 'done'
+            else:
+                record.candidate_image_status = 'pending'
+
+    @api.depends('candidate_signature')
+    def _check_sign(self):
+        for record in self:
+            # candidate-sign
+            if record.candidate_signature:
+                record.candidate_signature_status = 'done'
+            else:
+                record.candidate_signature_status = 'pending'
+
+
     @api.depends('user_id')
     def _compute_user_state(self):
         for record in self:

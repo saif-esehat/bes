@@ -505,9 +505,27 @@ class ExamOralPractical(models.Model):
                             candidate = self.env['gp.exam.schedule'].browse(i).gp_candidate.id
                             
                             self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,'gp_marksheet':gp_marksheet,'gp_candidate':candidate , 'mek_oral':gsk_oral , 'mek_prac':gsk_prac })
-                    
-                    self.write({'state':'2-confirm'})
+                        
+                        examiner_assignment = self.env['exam.type.oral.practical.examiners'].browse(examiner)
+                        # import wdb; wdb.set_trace();
+                        quantity = len(examiner_assignment.marksheets)
+                        user_id = examiner_assignment.examiner.user_id.id
+                        employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+                        product =  self.env['product.product'].search([('default_code','=','mek_exam')])
+                        child_records = self.env['hr.expense'].create([
+                                {'product_id': product.id, 'employee_id': employee.id,'name':'MEK Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                            ])
+
+                        expense_sheet = self.env['hr.expense.sheet'].create({'name':'MEK Exam',
+                                                             'dgs_exam':True,
+                                                             'dgs_batch': self.dgs_batch.id,
+                                                             'institute_id':examiner_assignment.institute_id.id,
+                                                             'employee_id':employee.id,
+                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+                                                             })
+                        examiner_assignment.write({'status':'confirmed','expense_sheet':expense_sheet})
                                                 
+                    self.write({'state':'2-confirm'})
 
                     
                 
@@ -540,6 +558,25 @@ class ExamOralPractical(models.Model):
                             candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
                             self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate , 'cookery_bakery':cookery_bakery })
                     
+                        examiner_assignment = self.env['exam.type.oral.practical.examiners'].browse(examiner)
+                        # import wdb; wdb.set_trace();
+                        quantity = len(examiner_assignment.marksheets)
+                        user_id = examiner_assignment.examiner.user_id.id
+                        employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+                        product =  self.env['product.product'].search([('default_code','=','ccmc_exam_oral')])
+                        child_records = self.env['hr.expense'].create([
+                                {'product_id': product.id, 'employee_id': employee.id,'name':'CCMC Oral Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                            ])
+
+                        expense_sheet = self.env['hr.expense.sheet'].create({'name':'CCMC Oral Exam',
+                                                             'dgs_exam':True,
+                                                             'dgs_batch': self.dgs_batch.id,
+                                                             'institute_id':examiner_assignment.institute_id.id,
+                                                             'employee_id':employee.id,
+                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+                                                             })
+                        examiner_assignment.write({'status':'confirmed','expense_sheet':expense_sheet})
+
                     self.write({'state':'2-confirm'})
                 
                 elif self.subject.name == 'CCMC GSK Oral':
@@ -565,7 +602,26 @@ class ExamOralPractical(models.Model):
                             cookery_bakery = self.env['ccmc.exam.schedule'].browse(i).cookery_bakery.id
                             candidate = self.env['ccmc.exam.schedule'].browse(i).ccmc_candidate.id
                             self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id': examiner_id ,'ccmc_oral':ccmc_oral,'ccmc_marksheet':ccmc_marksheet,'ccmc_candidate':candidate  })
-                    
+
+                        examiner_assignment = self.env['exam.type.oral.practical.examiners'].browse(examiner)
+                        # import wdb; wdb.set_trace();
+                        quantity = len(examiner_assignment.marksheets)
+                        user_id = examiner_assignment.examiner.user_id.id
+                        employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+                        product =  self.env['product.product'].search([('default_code','=','ccmc_gsk_oral_exam')])
+                        child_records = self.env['hr.expense'].create([
+                                {'product_id': product.id, 'employee_id': employee.id,'name':'CCMC Oral Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                            ])
+
+                        expense_sheet = self.env['hr.expense.sheet'].create({'name':'CCMC Oral Exam',
+                                                             'dgs_exam':True,
+                                                             'dgs_batch': self.dgs_batch.id,
+                                                             'institute_id':examiner_assignment.institute_id.id,
+                                                             'employee_id':employee.id,
+                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+                                                             })
+                        examiner_assignment.write({'status':'confirmed','expense_sheet':expense_sheet})
+                        
                     self.write({'state':'2-confirm'})
                   
 
@@ -736,7 +792,9 @@ class GPExam(models.Model):
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
-    exam_region = fields.Char("Exam Region",related='institute_name.exam_center.name',tracking=True)
+    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+
+    
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)

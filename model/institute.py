@@ -331,10 +331,17 @@ class InstituteCourses(models.Model):
     ]
     institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
     course = fields.Many2one("course.master","Course",tracking=True)
+    dgs_document = fields.Binary(string='Upload DGS Document',tracking=True)
     batcher_per_year = fields.Integer("Batches per Year",tracking=True)
     intake_capacity = fields.Integer("Intake Capacity",tracking=True)
-    total = fields.Integer('Total',tracking=True)
+    total = fields.Integer('Total',tracking=True, compute='_computer_total')
 
+    @api.constrains('batcher_per_year','intake_capacity')
+    def _computer_total(self):
+        for record in self:
+            record.total = record.batcher_per_year * record.intake_capacity
+            
+            
 
 class InstituteFaculty(models.Model):
     _name = "institute.faculty"

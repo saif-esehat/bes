@@ -133,7 +133,7 @@
                   action="bes_examiner_oral_practical_duty_action" 
                   sequence="2"/> -->
 
-        <menuitem id="bes_batch_examiner_duty_menus_group_examiner" sequence="0" name="Examiner Practical/Oral Duty" action="bes_examiner_oral_practical_duty_action" groups="bes.group_exam_coordinator"   web_icon="bes,static/description/books.png"/>
+        <menuitem id="bes_batch_examiner_duty_menus_group_examiner" sequence="0" name="Examiner Duty" action="bes_examiner_oral_practical_duty_action" groups="bes.group_exam_coordinator"   web_icon="bes,static/description/books.png"/>
 
 
         <menuitem id="batches_menu" parent="bes_menu" name="Batches"  />
@@ -154,6 +154,39 @@
         <record id="survey.menu_survey_form" model="ir.ui.menu">
             <field name="name">Examinations</field>
         </record>
+
+
+        <menuitem id="exam_duty_menu" 
+                parent="bes_batch_examiner_duty_menus_group_examiner" 
+                name="Examiner Duty" 
+                action="bes_examiner_oral_practical_duty_action"
+                sequence="1" />
+
+        <menuitem id="examiner_exam_menu" 
+                parent="bes_batch_examiner_duty_menus_group_examiner" 
+                name="Examiner" 
+                action="bes_examiner_action"
+                sequence="2"/>
+
+        <menuitem id="candidate_exam_menu" 
+                parent="bes_batch_examiner_duty_menus_group_examiner" 
+                name="Candidates" />
+
+        <menuitem id="candidate_gp_exam_menu" 
+                  parent="candidate_exam_menu" 
+                  name="GP Candidates"
+                  action="gp_candidate_action"
+                  sequence="1" />
+        
+        <menuitem id="candidate_ccmc_exam_menu" 
+                  parent="candidate_exam_menu" 
+                  name="CCMC Candidates"
+                  action="candidate_ccmc_action"
+                  sequence="2" />
+
+        
+
+
 
         <!-- <record id="bes.bes_menu" model="ir.ui.menu">
             <field name="groups_id" eval="[(6, 0, [ref('bes.group_examiners')])]"/>
