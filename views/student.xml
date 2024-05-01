@@ -16,10 +16,16 @@
             <field name="name">Recompute the fields</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_gp_candidate"/>
+            <field name="binding_model_id" ref="model_gp_candidate"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
             for record in records:
-                record._check_criteria()
+                record._check_sign()
+                record._check_image()
+                record._check_ship_visit_criteria()
+                record._check_attendance_criteria()
+                record._check_stcw_certificate()
             </field>
         </record>
 
