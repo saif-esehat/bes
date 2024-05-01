@@ -623,8 +623,13 @@ class ExamOralPracticalExaminers(models.Model):
     def open_marksheet_list(self):
         
         if self.prac_oral_id.subject.name == 'GSK':
-            views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_gp_form_gsk").id, 'form')]
+            if self.prac_oral_id.exam_type == 'practical_oral':
+                views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_gp_form_gsk").id, 'form')]
+            elif self.prac_oral_id.exam_type == 'online':
+                views = [(self.env.ref("bes.view_marksheet_gsk_tree_online").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_gp_form_gsk_online").id, 'form')]
+                
         elif self.prac_oral_id.subject.name == 'MEK':
              views = [(self.env.ref("bes.view_marksheet_gp_tree_mek").id, 'tree'),  # Define tree view
                     (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
@@ -667,6 +672,8 @@ class OralPracticalExaminersMarksheet(models.Model):
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
+    gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
+    mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
 
     
     
