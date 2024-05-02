@@ -9,6 +9,11 @@ class BatchInvoice(models.Model):
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
     
+    transaction_id = fields.Char("Transaction ID")
+    bank_name = fields.Char("Bank Name & Address")
+    total_amount =  fields.Float("Total Amount")
+    transaction_slip =  fields.Binary("Transaction Slip")
+    
     
     
     def open_gp_candidate(self):
@@ -57,6 +62,7 @@ class CustomPaymentRegister(models.TransientModel):
         if invoice.gp_batch_ok: #in GP Invoice
             print("gopppppppppppppppppppppppppppppppppppppp")
             batch = invoice.batch
+            batch.confirm_batch()
             batch.write({'state':'4-invoiced'})
         elif invoice.ccmc_batch_ok: #if CCMC Inovice
             print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")

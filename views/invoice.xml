@@ -19,6 +19,16 @@
                     <button attrs="{'invisible': [('ccmc_batch_ok', '=', False)]}" name="open_ccmc_candidate" string="CCMC Candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
                     </button>
                 </xpath>
+                 <xpath expr="//page[@id='other_tab']" position="after">
+                   <page id="transaction_info" string="Transaction Info" name="transaction_info" >
+                        <group>
+                            <field name="transaction_id"/>
+                            <field name="bank_name"/>
+                            <field name="total_amount"/>
+                            <field name="transaction_slip"/>
+                        </group>
+                    </page>
+                </xpath>
             </field>
         </record>
 

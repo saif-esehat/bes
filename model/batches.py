@@ -89,13 +89,18 @@ class InstituteGPBatches(models.Model):
     def compute_candidate_user_invoice_criteria(self):
         for record in self:
             # import wdb; wdb.set_trace()
-            gp_batch_id = record.id
             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
-            candidate_with_correct_data = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id),('candidate_user_invoice_criteria','=',True)])
+
+            if candidate_count > 0 :
             
-            if candidate_count == candidate_with_correct_data:
-                record.candidate_user_invoice_criteria = True
-            else:
+                gp_batch_id = record.id
+                candidate_with_correct_data = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id),('candidate_user_invoice_criteria','=',True)])
+                
+                if candidate_count == candidate_with_correct_data:
+                    record.candidate_user_invoice_criteria = True
+                else:
+                    record.candidate_user_invoice_criteria = False
+            else :
                 record.candidate_user_invoice_criteria = False
  
 

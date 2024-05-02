@@ -124,7 +124,7 @@ class GPCandidate(models.Model):
 
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
-    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria")
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
