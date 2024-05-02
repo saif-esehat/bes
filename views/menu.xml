@@ -194,11 +194,7 @@
                   parent="candidate_ec_menu" 
                   groups="group_exam_coordinator"
                   name="GP Candidates"
-<<<<<<< HEAD
-                  action="bes_gp_exam_action"
-=======
                   action="open_ec_gp_exam_schedule"
->>>>>>> b022b2fe4d72e3918a853225a5e4674399ad2e55
                   sequence="1" />
         
         <menuitem id="candidate_ccmc_ec_menu" 

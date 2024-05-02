@@ -441,7 +441,7 @@
                     <group>
                         <field name="institute_id" invisible="1"/>
                         <field name="batch_id" invisible="1"/>
-                        <field name="dgs_batch" invisible="1"/>
+                        <field name="dgs_batch" invisible="0"/>
 
                         <field name="mek_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','MEK')]" options="{'no_create': True}"/>
                         <field name="gsk_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','GSK')]" options="{'no_create': True}"/>

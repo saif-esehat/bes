@@ -97,6 +97,9 @@ class InstituteGPBatches(models.Model):
         
     
     def register_for_exam(self):
+
+        # import wdb; wdb.set_trace()
+        
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.id)])
         for candidate in candidates:
             gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
@@ -164,9 +167,10 @@ class InstituteGPBatches(models.Model):
 
         # import wdb; wdb.set_trace()
         # Generate the sequence number starting from '001'
+        candidate_count = candidate_count+1
+        
         next_sequence_number = str(candidate_count).zfill(3)
         
-        candidate_count = candidate_count+1
 
         sequence = f'G{batch_year}{half}{institute_code}{next_sequence_number}'
         return sequence
@@ -725,9 +729,10 @@ class BatchesRegisterExamWizard(models.TransientModel):
         gsk_survey_qb = self.gsk_survey_qb
 
         for candidate in candidates:
+            # import wdb; wdb.set_trace(); 
             
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id , 'institute_id':self.batch_id.institute_id.id })
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id , 'institute_name':self.batch_id.institute_id.id ,'registered_institute':self.batch_id.institute_id.id})
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             
@@ -736,7 +741,6 @@ class BatchesRegisterExamWizard(models.TransientModel):
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
             
-            # import wdb; wdb.set_trace(); 
             
             mek_predefined_questions = self.mek_survey_qb._prepare_user_input_predefined_questions()
             gsk_predefined_questions = self.gsk_survey_qb._prepare_user_input_predefined_questions()
