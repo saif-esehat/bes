@@ -284,7 +284,9 @@
                         <th>Report</th>
                         <th>Candidate Count</th>
                         <th>DGS Capacity</th>
-                        <th>DGS Document</th>
+                        <!-- <t t-if="batches[0].state == '1-ongoing'">
+                            <th>DGS Document</th>
+                        </t> -->
                     </tr>
                 </thead>
                 <tbody>

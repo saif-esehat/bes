@@ -21,6 +21,8 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+
+                    
                         <div class="oe_button_box" name="button_box">
                             <button name="open_batch_candidate" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
@@ -38,6 +40,7 @@
                             <field name="institute_id" options="{'no_create':True}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
                         </group>
                         <!-- <group style="width:50%;">
                             <field name="course"/>
