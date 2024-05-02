@@ -56,6 +56,30 @@
             <field name="active" eval="True"/> -->
     </record>
 
+    <record id="ec_examiner_record_rule" model="ir.rule">
+            <field name="name">EC Examiner Record Rule</field>
+            <field ref="model_bes_examiner" name="model_id"/>
+            <field name="groups" eval="[(4, ref('group_exam_coordinator'))]"/>
+            <field name="domain_force">[('exam_center.exam_co_ordinator','=',user.id)]</field>
+            <!-- <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/> -->
+    </record>
+
+     <record id="ec_registered_candidate_record_rule" model="ir.rule">
+            <field name="name">EC Registered Candidate Record Rule</field>
+            <field ref="model_gp_exam_schedule" name="model_id"/>
+            <field name="groups" eval="[(4, ref('group_exam_coordinator'))]"/>
+            <field name="domain_force">[('exam_region.exam_co_ordinator','=',user.id)]</field>
+            <!-- <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/> -->
+    </record>
+
+    
+
     
 
 
