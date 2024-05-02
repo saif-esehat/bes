@@ -35,15 +35,15 @@ class InstitutePortal(CustomerPortal):
         batch_id = int(kw.get('batch_id'))
         capacity = int(kw.get('capacity'))
         
-        file_content = kw.get("approvaldocument").read()
-        filename = kw.get('approvaldocument').filename
+        # file_content = kw.get("approvaldocument").read()
+        # filename = kw.get('approvaldocument').filename
         batch = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
         batch.write({ "dgs_approved_capacity": capacity,
                      "dgs_approval_state":True,
-                     "dgs_document":base64.b64encode(file_content)
+                    #  "dgs_document":base64.b64encode(file_content)
                      })
         
-        return request.redirect("/my/gpbatch")
+        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
     
     
     @http.route(['/my/ccmcbatchbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
@@ -818,10 +818,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=10
+                            step=20
                             )
         candidates = request.env["gp.candidate"].sudo().search(
-            search_domain, limit= 10,offset=page_detail['offset'])
+            search_domain, limit= 20,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
             [('id', '=', batch_id)])
         

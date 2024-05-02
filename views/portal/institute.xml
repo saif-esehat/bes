@@ -235,10 +235,10 @@
                                                 <label for="capacity">DGS Approved Capacity</label>
                                                 <input required="" type="number" class="form-control" id="capacity" name="capacity" min="0" />
                                             </div>
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label for="approvaldocument">Upload Document</label>
                                                 <input required="" type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
-                                            </div>
+                                            </div> -->
                                         </div>
 
 
@@ -246,7 +246,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
@@ -282,9 +282,9 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
-                        <th>Candidate Count</th>
-                        <th>DGS Capacity</th>
-                        <th>DGS Document</th>
+                        <th>No. of Candidate</th>
+                        <th>Batch Capacity</th>
+                        <!-- <th>DGS Document</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -322,15 +322,15 @@
                             
                             <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
-                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Document</a>
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Update Batch Capacity</a>
                                 </td>
                             </t>
                             
-                            <t t-if="batch.state == '1-ongoing'">
+                            <!-- <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
                                     <a t-attf-href="/my/gpcandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" class="fa">Download document</a>
                                 </td>
-                            </t>
+                            </t> -->
 
                             <t t-if="batch.state == '2-indos_pending'">
                                 <td class="text-left">
@@ -577,7 +577,7 @@
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
                 <t t-if="batches.state == '1-ongoing'">
-                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a><span class='p-2'>Please Click on the Update Candidate Button to Update the candidate Details</span>
                 </t>
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -606,7 +606,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Indos No.</label>
-                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" t-att-value ="candidate.indos_no"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -623,38 +623,36 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Full Name</label>
-                                                    <input type="text" class="form-control" id="full_name" name="full_name" />
+                                                    <input type="text" class="form-control" id="full_name" name="full_name"  t-att-value ="candidate.name"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Date of Birth</label>
-                                                    <input type="date" class="form-control" id="dob" name="dob" />
+                                                    <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">E-mail</label>
-                                                    <input type="text" class="form-control" id="e_mail" name="e_mail" />
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="indos_no">Phone</label>
-                                                    <input type="text" class="form-control" id="phone" name="phone" />
+                                                    <input type="text" class="form-control" id="e_mail" name="e_mail" t-att-value ="candidate.email"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Mobile</label>
-                                                    <input type="text" class="form-control" id="mobile" name="mobile" />
+                                                    <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Address</label>
-                                                    <input type="text" class="form-control mb-3" id="street" name="street" />
-                                                    <input type="text" class="form-control" id="street2" name="street2" />
+                                                    <div class="form-group">
+                                                        <label for="">line 1</label><input type="text" class="form-control mb-3" id="street" name="street" t-att-value ="candidate.street"/>
+                                                        <label for="">line 2</label><input type="text" class="form-control" id="street2" name="street2" t-att-value ="candidate.street2"/>
+                                                        <label for="">City</label><input type="text" class="form-control" id="city" name="city" t-att-value ="candidate.city"/>
+                                                        <label for="">Pincode</label><input type="text" class="form-control" id="zip" name="zip" t-att-value ="candidate.zip"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -698,9 +696,9 @@
                                 <span class="text-muted mb-0">
                                     <t t-out="candidate.state_id.name"/>
                                 </span>
-                                <span class="text-muted mb-0">
+                                <p class="text-muted mb-0">
                                     <t t-out="candidate.zip"/>
-                                </span>
+                                </p>
                                 <t t-if="candidate.candidate_signature">
                                     <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
                                 </t>
@@ -734,7 +732,7 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">Indos</p>
+                                        <p class="mb-0">Indos No</p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
@@ -745,11 +743,11 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">Phone</p>
+                                        <p class="mb-0">Date of Birth</p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
-                                            <t t-out="candidate.phone"/>
+                                            <t t-out="candidate.dob.strftime('%d-%b-%y')"/>
                                         </p>
                                     </div>
                                 </div>
@@ -1073,7 +1071,7 @@
 
                                         <!-- Attendance  -->
 
-                                        <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+                                        <!-- <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
                                             <t t-if="batches.state == '6-done'">
                                             </t>
                                             <t t-else="">
@@ -1127,6 +1125,36 @@
                                             </div>
 
 
+                                        </div> -->
+
+                                        <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+                                            <t t-if="batches.state == '6-done'">
+                                            </t>
+                                            <t t-else="">
+                                                <form method="post" action="/my/gpcandidate/addattendance" enctype="multipart/form-data">
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                    <div class="mb-3">
+                                                        <button type="submit" class="btn btn-primary btn_cta">Update</button>
+                                                    </div>
+                                                    <div>
+                                                     <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
+                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:
+                                                            <select name="attendance1">
+                                                                <option value="yes">Yes</option>
+                                                                <option value="no" t-att-selected="1">No</option>
+                                                            </select>
+                                                        </h5>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:
+                                                            <select name="attendance2">
+                                                                <option value="yes">Yes</option>
+                                                                <option value="no" t-att-selected="1">No</option>
+                                                            </select>
+                                                        </h5>
+                                                    </div>
+                                                </form>
+                                            </t>
                                         </div>
 
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
@@ -2349,6 +2377,11 @@
                         <th>Roll No.</th>
                         <th>User Id.</th>
                         <th>GP Candidate Code No.</th>
+                        <th>Image Status</th>
+                        <th>Sign Status</th>
+                        <th>Attendance</th>
+                        <th>Ship Visis</th>
+                        <th>STCW</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2373,6 +2406,46 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_image_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_signature_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.attendance_criteria == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.ship_visit_criteria  == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.stcw_criteria  == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
