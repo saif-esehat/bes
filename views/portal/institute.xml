@@ -265,7 +265,7 @@
                                 <input type="hidden" id="invoice_batch_id" name="invoice_batch_id"/>
                                 <div class="modal-body">
 
-                                    <div class="container mt-5">
+                                    <!-- <div class="container mt-5">
 
 
                                         <div class="col-md-6">
@@ -289,7 +289,9 @@
 
 
 
-                                    </div>
+                                    </div> -->
+
+                                    Are you Sure you want to Generate Invoice ?
 
                                 </div>
                                 <div class="modal-footer">

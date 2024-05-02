@@ -141,6 +141,86 @@
     </template>
 
 
+    <template id="portal_invoice_page_inherited" inherit_id="account.portal_invoice_page">
+            <xpath expr="//div[@class='o_portal_html_view shadow p-3']" position="after">
+
+                <div class="modal fade" id="update_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/updatetransaction" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Transaction Detail</h5>
+                                </div>
+                                <input type="hidden" id="invoice_id" t-att-value="invoice.id" name="invoice_id"/>
+                                <div class="modal-body">
+
+                                    <div class="container mt-5">
+
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="transaction_id">Transaction ID</label>
+                                                <input required="True" type="text" class="form-control" id="transaction_id" name="transaction_id"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="bank_name">Bank Name and Address</label>
+                                                <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="total_amount">Total Amount ₹</label>
+                                                <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="transaction_slip">Upload Transaction Pay Slip</label>
+                                                <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <td class="text-left" style="margin-top: 10px;" >
+                    <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#update_transaction_modal">Generate Invoice</a> -->
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary" data-toggle="modal"  data-target="#update_transaction_modal">Update Transaction Detail</a>
+                </td>
+
+                
+
+                <div t-if="invoice.transaction_id" class="col-md-6">
+                    <div class="form-group">
+                        <label for="transaction_id">Transaction ID : </label>
+                        <span>UTR</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="bank_name">Bank Name and Address : </label>
+                        <span>UTR</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="total_amount">Total Amount ₹ : </label>
+                        <span>UTR</span>
+                    </div>
+                   
+                </div>
+
+                
+
+    
+
+            </xpath>
+      </template>
+
+
+    
+
+
     <!-- <template id="candidate_exam" inherit_id="portal.portal_my_home">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
 
