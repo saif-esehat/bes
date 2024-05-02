@@ -461,7 +461,7 @@ class ExamOralPractical(models.Model):
                                 gsk_oral = self.env['gp.exam.schedule'].browse(c).gsk_oral.id
                                 gsk_prac = self.env['gp.exam.schedule'].browse(c).gsk_prac.id
                                 candidate = self.env['gp.exam.schedule'].browse(c).gp_candidate.id
-                                self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,
+                                self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':examiner_id ,
                                                                                                  'gp_marksheet':gp_marksheet ,
                                                                                                  'gp_candidate':candidate , 
                                                                                                  'gsk_oral':gsk_oral , 
@@ -474,11 +474,11 @@ class ExamOralPractical(models.Model):
                             user_id = examiner_assignment.examiner.user_id.id
                             employee = self.env['hr.employee'].search([('user_id','=',user_id)])
                             product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
-                            child_records = self.env['hr.expense'].create([
+                            child_records = self.env['hr.expense'].sudo().create([
                                     {'product_id': product.id, 'employee_id': employee.id,'name':'GSK Exam','unit_amount': product.standard_price ,'quantity': quantity }
                                 ])
 
-                            expense_sheet = self.env['hr.expense.sheet'].create({'name':'GSK Exam',
+                            expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name':'GSK Exam',
                                                                 'dgs_exam':True,
                                                                 'dgs_batch': self.dgs_batch.id,
                                                                 'institute_id':examiner_assignment.institute_id.id,
@@ -491,7 +491,7 @@ class ExamOralPractical(models.Model):
                     
                     elif self.exam_type == 'online':
                         
-                        gp_marksheets = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',i),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed'))])
+                        gp_marksheets = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.dgs_batch.id),('registered_institute','=',i),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed'))])
                         
                         examiners = self.examiners.filtered(lambda r: r.institute_id.id == i).ids
                         
@@ -510,7 +510,7 @@ class ExamOralPractical(models.Model):
                                 marksheet.gsk_online.generate_token()
                                 gsk_online_id = marksheet.gsk_online.id
                                 gp_candidate_id = marksheet.gp_candidate.id
-                                self.env['exam.type.oral.practical.examiners.marksheet'].create({ 'examiners_id':examiner_id ,
+                                self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':examiner_id ,
                                                                                                  'gp_marksheet':marksheet_id ,
                                                                                                  'gp_candidate':gp_candidate_id , 
                                                                                                  'gsk_online':gsk_online_id })
@@ -521,11 +521,11 @@ class ExamOralPractical(models.Model):
                             user_id = examiner_assignment.examiner.user_id.id
                             employee = self.env['hr.employee'].search([('user_id','=',user_id)])
                             product =  self.env['product.product'].search([('default_code','=','gsk_online_exam')])
-                            child_records = self.env['hr.expense'].create([
+                            child_records = self.env['hr.expense'].sudo().create([
                                     {'product_id': product.id, 'employee_id': employee.id,'name':'GSK Exam','unit_amount': product.standard_price ,'quantity': quantity }
                                 ])
 
-                            expense_sheet = self.env['hr.expense.sheet'].create({'name':'GSK Online Exam',
+                            expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name':'GSK Online Exam',
                                                                 'dgs_exam':True,
                                                                 'dgs_batch': self.dgs_batch.id,
                                                                 'institute_id':examiner_assignment.institute_id.id,
