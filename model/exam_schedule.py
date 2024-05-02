@@ -1132,6 +1132,7 @@ class GPExam(models.Model):
     
     result_status = fields.Selection([
         ('absent','Absent'),
+        ('pending','Pending'),
         ('failed','Failed'),
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
@@ -1187,10 +1188,12 @@ class GPExam(models.Model):
     @api.depends('certificate_criteria')
     def _compute_result_status(self):
         for record in self:
-            if record.certificate_criteria == 'passed':
+            if record.state == '3-certified':
                 record.result_status = 'passed'
-            else:
-                record.result_status = 'failed'
+            elif record.state in ['1-in_process','2-done']:
+                record.result_status = 'pending'
+            elif record.state == '4-pending':
+                 record.result_status = 'failed'
 
 
     def reissue_approval(self):
