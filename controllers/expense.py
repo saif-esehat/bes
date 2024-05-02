@@ -13,7 +13,7 @@ class ExpenseController(http.Controller):
     @http.route(['/my/assignments/batches/expenses/<int:assignment_id>'], type="http", auth="user", website=True)
     def ExpenseSheet(self,assignment_id, **kw):
         expense_sheet = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).expense_sheet
-        product_id = request.env['product.product'].sudo().search([('can_be_expensed','=',True),('default_code','not in',('gsk_exam','ccmc_exam','mek_exam','EXP_GEN'))])
+        product_id = request.env['product.product'].sudo().search([('can_be_expensed','=',True),('default_code','not in',('gsk_exam','gsk_online_exam','ccmc_exam','mek_exam','EXP_GEN'))])
         # import wdb;wdb.set_trace();
         
         vals = {'expense_sheet':expense_sheet , 'product_ids':product_id ,'assignment_id':assignment_id}
