@@ -13,6 +13,9 @@ class BatchInvoice(models.Model):
     bank_name = fields.Char("Bank Name & Address")
     total_amount =  fields.Float("Total Amount")
     transaction_slip =  fields.Binary("Transaction Slip")
+    file_name = fields.Char("Transaction Slip Filename")
+    
+    
     
     
     
@@ -54,7 +57,6 @@ class CustomPaymentRegister(models.TransientModel):
 
     def action_create_payments(self):
         # import wdb;wdb.set_trace()
-
         # Your custom code here before or after calling the super method
         action = super(CustomPaymentRegister, self).action_create_payments()
         account_move_id = self.env.context['active_id']

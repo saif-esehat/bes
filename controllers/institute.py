@@ -256,11 +256,22 @@ class InstitutePortal(CustomerPortal):
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
         # import wdb; wdb.set_trace();
+
+        
         user_id = request.env.user.id
         batch_id = kw.get("invoice_batch_id")
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
+        
+        transaction_id = kw.get('transaction_id')
+        bank_name = kw.get('bank_name')
+        total_amount = int(kw.get('total_amount'))
+        file_content = kw.get("transaction_slip").read()
+        
+        filename = kw.get('transaction_slip').filename
+ 
+
         
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id
@@ -283,7 +294,12 @@ class InstitutePortal(CustomerPortal):
             'invoice_line_ids':line_items,
             'gp_batch_ok':True,
             'batch':batch.id,
-            'l10n_in_gst_treatment':'unregistered'
+            'l10n_in_gst_treatment':'unregistered',
+            'transaction_id': transaction_id,
+            'bank_name': bank_name,
+            'total_amount':total_amount,
+            'transaction_slip': base64.b64encode(file_content)
+            
             # Add other invoice fields as needed
         }
         

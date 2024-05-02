@@ -265,7 +265,31 @@
                                 <input type="hidden" id="invoice_batch_id" name="invoice_batch_id"/>
                                 <div class="modal-body">
 
-                                        Are you sure you want to generate invoice ?
+                                    <div class="container mt-5">
+
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="transaction_id">Transaction ID</label>
+                                                <input required="True" type="text" class="form-control" id="transaction_id" name="transaction_id"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="bank_name">Bank Name and Address</label>
+                                                <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="total_amount">Total Amount ₹</label>
+                                                <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="transaction_slip">Upload Transaction Pay Slip</label>
+                                                <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
 
                                 </div>
                                 <div class="modal-footer">

@@ -380,7 +380,7 @@ class ExamOralPractical(models.Model):
     # examiners = fields.Many2one('bes.examiner', string="Examiner")
     # subject = fields.Many2one("course.master.subject","Subject")
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Batch",required=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     
@@ -393,7 +393,7 @@ class ExamOralPractical(models.Model):
 
     # start_time = fields.Datetime("Start Time")
     # end_time = fields.Datetime("End Time")
-    examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Examiners",tracking=True)
+    examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Assign Examiners",tracking=True)
    
     
     course = fields.Many2one("course.master",string="Course",tracking=True)
@@ -406,7 +406,7 @@ class ExamOralPractical(models.Model):
     ], string='Exam Type', default='practical_oral',tracking=True)
 
     state = fields.Selection([
-        ('1-draft', 'Draft'),
+        ('1-draft', 'Pending'),
         ('2-confirm', 'Confirmed')     
     ], string='State', default='1-draft',tracking=True)
     
