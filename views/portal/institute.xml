@@ -268,7 +268,33 @@
                                 <input type="hidden" id="invoice_batch_id" name="invoice_batch_id"/>
                                 <div class="modal-body">
 
-                                        Are you sure you want to generate invoice ?
+                                    <!-- <div class="container mt-5">
+
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="transaction_id">Transaction ID</label>
+                                                <input required="True" type="text" class="form-control" id="transaction_id" name="transaction_id"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="bank_name">Bank Name and Address</label>
+                                                <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="total_amount">Total Amount ₹</label>
+                                                <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="transaction_slip">Upload Transaction Pay Slip</label>
+                                                <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div> -->
+
+                                    Are you Sure you want to Generate Invoice ?
 
                                 </div>
                                 <div class="modal-footer">
@@ -335,7 +361,7 @@
                                 </td>
                             </t> -->
 
-                            <t t-if="batch.state == '2-indos_pending'">
+                            <t t-if="batch.candidate_user_invoice_criteria == True and batch.state in ['1-ongoing']">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
@@ -2112,6 +2138,18 @@
                 <p class="text-warning">To View or Update the Details of the candidate scroll to the right and click on"View/Update" </p>
             </div>
 
+            <t t-set="correct_data_count" t-value="env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch_id),('candidate_user_invoice_criteria','=',True)])" />
+            <t t-set="not_correct_data_count" t-value="env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch_id),('candidate_user_invoice_criteria','=',False)])" />
+            <t t-set="ins_batch" t-value="env['institute.gp.batches'].sudo().search([('id','=',batch_id)])" />
+            <span >Number of Candidate Details Successfully Filled <strong class="text-success"><t t-out="correct_data_count" /></strong></span> /<strong class="text-warning"><t t-out="ins_batch.candidate_count"/></strong> (total no of candidate)<br/>
+            <span>Number of Candidate Details Data Remaining <strong class="text-danger"><t t-out="not_correct_data_count" /></strong></span> <br/>
+            <strong class="">To generate the invoice Indos No,Candidate Image and Signature must be filled for all the candidates</strong>
+            <t t-if="ins_batch.candidate_user_invoice_criteria">
+                <div class="alert alert-success" role="alert">You have successfully Filled all the candidate required details to generate invoice</div>
+            </t>
+
+
+
             <t t-if="batches.state == '1-ongoing'">
                 <div class="d-flex justify-content-between">
                     <div class="">
@@ -2412,7 +2450,7 @@
                         <th>GP Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
-                        <th>User Id.</th>
+                        <th>Login Id</th>
                         <th>GP Candidate Code No.</th>
                         <th>Image Status</th>
                         <th>Sign Status</th>

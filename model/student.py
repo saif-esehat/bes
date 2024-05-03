@@ -124,7 +124,7 @@ class GPCandidate(models.Model):
 
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
-    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria")
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
@@ -185,7 +185,7 @@ class GPCandidate(models.Model):
         
         return False
 
-    @api.constrains('stcw_certificate')
+    @api.depends('stcw_certificate')
     def _check_stcw_certificate(self):
          for record in self:
             course_type_already  = [course.course_name for course in record.stcw_certificate]
@@ -200,16 +200,17 @@ class GPCandidate(models.Model):
                 record.stcw_criteria = 'pending'
         
     
-    @api.constrains('ship_visits')
+    @api.depends('ship_visits')
     def _check_ship_visit_criteria(self):
         for record in self:
+            # import wdb; wdb.set_trace();
             if len(record.ship_visits) > 0:
                 record.ship_visit_criteria = 'passed'
             else:
                 record.ship_visit_criteria = 'pending'
     
     
-    @api.constrains('attendance_compliance_1','attendance_compliance_2')
+    @api.depends('attendance_compliance_1','attendance_compliance_2')
     def _check_attendance_criteria(self):
        for record in self:
             if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':

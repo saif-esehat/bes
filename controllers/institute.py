@@ -252,15 +252,56 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         state_data = [{'id': state.id, 'name': state.name} for state in states]
         return json.dumps(state_data)
+    
+    @http.route(['/my/downloadtransactionslip/<int:invoice_id>'],method=["POST"], type="http", auth="user", website=True)
+    def DownloadTransactionSlip(self,invoice_id,**kw):
+        invoice = request.env['account.move'].sudo().search([('id','=',invoice_id)])
+        transaction_slip = base64.b64decode(invoice.transaction_slip)  # Decoding file data
+        file_name = invoice.file_name
+        headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
+        return request.make_response(transaction_slip, headers)
+
+    @http.route(['/my/updatetransaction'],method=["POST"], type="http", auth="user", website=True)
+    def UpdateTransaction(self, **kw):
+        
+        
+        invoice_id = kw.get('invoice_id')
+        transaction_id = kw.get('transaction_id')
+        bank_name = kw.get('bank_name')
+        total_amount = int(kw.get('total_amount'))
+        file_content = kw.get("transaction_slip").read()
+        filename = kw.get('transaction_slip').filename
+        
+        invoice = request.env['account.move'].sudo().search([('id','=',invoice_id)])
+        invoice.write({
+            'transaction_id': transaction_id,
+            'bank_name': bank_name,
+            'total_amount':total_amount,
+            'transaction_slip': base64.b64encode(file_content),
+            'file_name':filename
+        })
+        # import wdb; wdb.set_trace();
+ 
+        
+        return request.redirect("/my/invoices/"+str(invoice_id))
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
         # import wdb; wdb.set_trace();
+        
+        
+        
+
+        
         user_id = request.env.user.id
         batch_id = kw.get("invoice_batch_id")
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
+        
+        
+      
+
         
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id
@@ -283,7 +324,9 @@ class InstitutePortal(CustomerPortal):
             'invoice_line_ids':line_items,
             'gp_batch_ok':True,
             'batch':batch.id,
-            'l10n_in_gst_treatment':'unregistered'
+            'l10n_in_gst_treatment':'unregistered',
+            
+            
             # Add other invoice fields as needed
         }
         
@@ -1711,6 +1754,8 @@ class InstitutePortal(CustomerPortal):
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+ 
+ 
     
 
     @http.route(['/my/gpcandidates/download_gp_certificate/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -2213,6 +2258,8 @@ class InstitutePortal(CustomerPortal):
             return phone_number.split('.')[0]  # Split the phone number by dot and return the first part
         else:
             return phone_number  # If there's 
+        
+    
     
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)

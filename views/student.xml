@@ -266,6 +266,7 @@
                         </group>
                         <group>
                             <field name="candidate_signature" widget="image" class="oe_avatar" />
+                            
                         </group>
                         <group style="width:100%;">
 
@@ -281,6 +282,9 @@
                             <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+
+                            
 
                         </group>
 
