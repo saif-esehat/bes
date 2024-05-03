@@ -187,34 +187,86 @@
                     </div>
                 </div>
 
-                <td class="text-left" style="margin-top: 10px;" >
+                <div style="margin-top: 10px;">
+                <td class="text-left" style="margin-top: 14px;" >
                     <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#update_transaction_modal">Generate Invoice</a> -->
-                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary" data-toggle="modal"  data-target="#update_transaction_modal">Update Transaction Detail</a>
+                    <strong>Kindly submit your transaction details by clicking the button below</strong>
+                    <div style="margin-top: 10px;">
+                        <a href="" class="btn btn-primary" data-toggle="modal" data-target="#update_transaction_modal">Update Transaction Detail</a>
+                    </div>
                 </td>
+                </div>
 
                 
 
-                <div t-if="invoice.transaction_id" class="col-md-6">
+                <!-- <div t-if="invoice.transaction_id" style="margin-top: 10px;" class="col-md-6">
                     <div class="form-group">
-                        <label for="transaction_id">Transaction ID : </label>
-                        <span>UTR</span>
+                          <strong><label for="transaction_id">Transaction ID : </label></strong>
+                        <span><t t-out="invoice.transaction_id"/></span>
                     </div>
                     <div class="form-group">
-                        <label for="bank_name">Bank Name and Address : </label>
-                        <span>UTR</span>
+                        <strong><label for="bank_name">Bank Name and Address : </label></strong>
+                        <span><t t-out="invoice.bank_name"/></span>
                     </div>
                     <div class="form-group">
-                        <label for="total_amount">Total Amount ₹ : </label>
-                        <span>UTR</span>
+                        <strong><label for="total_amount">Total Amount ₹ : </label></strong>
+                        <span><t t-out="invoice.total_amount"/></span>
+                    </div>
+                    <div class="form-group">
+                        <strong><label for="total_amount">Transaction Slip : </label></strong>
+                        
+                        <span><a t-attf-href="/my/downloadtransactionslip/{{invoice.id}}">Download</a></span>
                     </div>
                    
+                </div> -->
+
+                <div t-if="invoice.transaction_id" style="margin-top: 10px;border: 3px solid #ccc; padding: 5px;"  class="col-md-10">
+                    <strong>Submitted Transaction Details :</strong>
+                    <div class="form-group" style="margin-top: 14px; padding: 10px">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <strong><label for="transaction_id">Transaction ID : </label></strong>
+                                <span><t t-out="invoice.transaction_id"/></span>
+                            </div>
+                            <div class="col-md-5">
+                                <strong><label for="bank_name">Bank Name and Address : </label></strong>
+                                <span><t t-out="invoice.bank_name"/></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 14px; padding: 10px">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <strong><label for="total_amount">Total Amount ₹ : </label></strong>
+                                <span><t t-out="invoice.total_amount"/></span>
+                            </div>
+                            <div class="col-md-5">
+                                <strong><label for="total_amount">Transaction Slip : </label></strong>
+                                <span><a t-attf-href="/my/downloadtransactionslip/{{invoice.id}}">Download</a></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
 
                 
 
     
 
             </xpath>
+            <xpath expr="//div[@class='small mb-1']" position="replace">
+            
+            </xpath>
+
+            <xpath expr="//a[@href='#discussion']" position="replace">
+            
+            </xpath>
+
+            <!-- <xpath expr="//t[@t-set='entries']" position="replace">
+            
+            </xpath> -->
+            
+
       </template>
 
 
