@@ -215,6 +215,9 @@
 
         </script>
         <t t-call="portal.portal_layout">
+            <div class="container">
+                <p class="text-warning">To access the batch please fill the batch capacity by clicking on the "Update Batch Capacity" after updating you will be redirected inside the batches</p>
+            </div>
             <t t-call="portal.portal_table">
                 <div class="modal fade" id="dgs_approval_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -369,6 +372,9 @@
         
         </script>
         <t t-call="portal.portal_layout">
+            <div class="container">
+                <p class="text-warning">To access the batch please fill the batch capacity by clicking on the "Update Batch Capacity" after updating you will be redirected inside the batches</p>
+            </div>
             <t t-call="portal.portal_table">
                 <div class="modal fade" id="dgs_approval_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -503,6 +509,10 @@
 
     <template id="gp_candidate_profile_view" name="GP Candidate">
         <t t-call="portal.portal_layout">
+            <div class="container">
+                <p class="text-warning">Please check the details of the candidate</p>
+                <p class="text-warning">To Update the details click on "Update Candidate" button</p>
+            </div>
             <script>
                 
                 function displayImage(input) {
@@ -573,7 +583,7 @@
                         }
             </style>
 
-            <div class="container py-5">
+            <div class="container">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
                 <t t-if="batches.state == '1-ongoing'">
@@ -594,7 +604,12 @@
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
-                                                    <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                                    <t t-if="candidate.candidate_image">
+                                                        <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                                    </t>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -611,7 +626,12 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
-                                                    <img src="https://placehold.co/250x75" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
+                                                    <t t-if="candidate.candidate_signature">
+                                                        <img t-attf-src="data:image/png;base64,{{candidate.candidate_signature}}" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
+                                                    </t>
+                                                    <t t-else="">
+                                                        <img src="https://placehold.co/250x75" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
+                                                    </t>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -2073,7 +2093,24 @@
         </style> -->
 
         <t t-call="portal.portal_layout">
-
+            <div class="container">
+                <p class="text-warning">To Upload the candidate details in bulk 
+                    <ol>
+                        <li>
+                            <span>Download the candidate format by clicking on the "Download Candidate Format" Button</span>
+                        </li>
+                        <li>
+                            <span>Fill the candidate details and follow the instruction provide within the excel sheet named "Instructions"</span>
+                        </li>
+                        <li>
+                            <span>Save your excel file and navigate back to this page and click on "Upload Bulk Candidate"</span>
+                        </li>
+                        
+                    </ol>
+                </p>
+                <p class="text-warning">To Add a single Candidate you can use "Add Candidate" button" </p>
+                <p class="text-warning">To View or Update the Details of the candidate scroll to the right and click on"View/Update" </p>
+            </div>
 
             <t t-if="batches.state == '1-ongoing'">
                 <div class="d-flex justify-content-between">
@@ -3282,7 +3319,51 @@
 
 
                     </div>
-
+                    <div class="container">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Upload Document</th>
+                                    <th>Batches per Year</th>
+                                    <th>Candidates per Batch</th>
+                                    <th>Total Intake Capacity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="institutes" t-as="institute">
+                                    <tr>
+                                        <!-- <td><t t-esc="institute.courses.name"/></td> -->
+                                        <td>
+                                            <t t-foreach="institute.courses" t-as="course">
+                                                <t t-esc="course.course.name"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="institute.courses" t-as="course">
+                                                <t t-esc="course.dgs_document"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="institute.courses" t-as="course">
+                                                <t t-esc="course.batcher_per_year"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="institute.courses" t-as="course">
+                                                <t t-esc="course.intake_capacity"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="institute.courses" t-as="course">
+                                                <t t-esc="course.total"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="form-group row">
                         <div class="col-sm-10">

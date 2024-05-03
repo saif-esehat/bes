@@ -1933,20 +1933,19 @@ class InstitutePortal(CustomerPortal):
         unlocked = workbook.add_format({'locked':False})
         candidate_worksheet.set_column('A:XDF', None, unlocked)
         
-        candidate_worksheet.set_column('A:A',15,unlocked)
-        candidate_worksheet.set_column('B:B',30,unlocked)
-        candidate_worksheet.set_column('D:D',30,unlocked)
-        candidate_worksheet.set_column('E:E',30,unlocked)
-        candidate_worksheet.set_column('F:F',20,unlocked)
-        candidate_worksheet.set_column('G:G',15,unlocked)
-        candidate_worksheet.set_column('H:H',10,unlocked)
-        candidate_worksheet.set_column('I:I',20,unlocked)
-        candidate_worksheet.set_column('J:J',20,unlocked)
-        candidate_worksheet.set_column('K:K',20,unlocked)
+        candidate_worksheet.set_column('A:A',15,unlocked) #indos
+        candidate_worksheet.set_column('B:B',30,unlocked) #name 
+        candidate_worksheet.set_column('C:C',15,unlocked) #dob
+        candidate_worksheet.set_column('D:D',35,unlocked) #line 1
+        candidate_worksheet.set_column('E:E',35,unlocked) #line2
+        candidate_worksheet.set_column('F:F',20,unlocked) #city
+        candidate_worksheet.set_column('G:G',10,unlocked) #state
+        candidate_worksheet.set_column('H:H',15,unlocked) #pin
+        candidate_worksheet.set_column('I:I',20,unlocked) #mobile 
+        candidate_worksheet.set_column('J:J',20,unlocked) #email
+        candidate_worksheet.set_column('K:K',10,unlocked)
         candidate_worksheet.set_column('L:L',10,unlocked)
         candidate_worksheet.set_column('M:M',10,unlocked)
-        candidate_worksheet.set_column('N:N',10,unlocked)
-        candidate_worksheet.set_column('O:O',10,unlocked)
         
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -1954,7 +1953,7 @@ class InstitutePortal(CustomerPortal):
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
-        candidate_worksheet.write_comment('L2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
+        candidate_worksheet.write_comment('K2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
 
         header_format = workbook.add_format({
             'bold': True,
@@ -1965,7 +1964,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
+        header = ['INDOS NO', 'NAME', 'DOB DD MMM YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
@@ -1988,7 +1987,7 @@ class InstitutePortal(CustomerPortal):
                                                 'source': dropdown_values })
         
 
-        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        candidate_worksheet.data_validation('G2:G1048576', {'validate': 'list', 'source': state_values})
         
 
 
@@ -2068,7 +2067,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['Sr No','INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
+        header = ['INDOS NO', 'NAME', 'DOB DD MMM YYYY', 'Address Line 1', 'Address Line 2', 'CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -2247,8 +2246,8 @@ class InstitutePortal(CustomerPortal):
                 street2 = row[4]  
                 dist_city = row[5]  # Assuming Dist./City is the fifth column
 
-                pin_code = int(row[6])  # Assuming Pin code is the seventh column
-                state_value = row[7]  # Assuming State (short) is the sixth column
+                state_value = row[6]  # Assuming State (short) is the sixth column
+                pin_code = int(row[7])  # Assuming Pin code is the seventh column
 
                     
 
@@ -2314,21 +2313,21 @@ class InstitutePortal(CustomerPortal):
 
                 # phone = str((row[8]))
                 # print("Phone ",str(row[8] ))
-                if row[8]:
-                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
-                else:
-                    phone = ""
+                # if row[8]:
+                #     phone = self.remove_after_dot_in_phone_number(str(row[8]))
+                # else:
+                #     phone = ""
                 
-                if row[9]:
+                if row[8]:
                     mobile = self.remove_after_dot_in_phone_number(str(row[9]))
                 else:
                     mobile = ""
 
                 # mobile = str(row[9]) 
-                email = row[10] 
+                email = row[9] 
 
                 
-                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+                xth_std_eng = row[10]  # Assuming %  Xth Std in Eng. is the tenth column
                 
                 
                 if type(xth_std_eng) in [int, float]:
@@ -2357,7 +2356,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+                twelfth_std_eng = row[11]  # Assuming %12th Std in Eng. is the eleventh column
                 if type(twelfth_std_eng) in [int, float]:
                     data_twelfth_std_eng = float(twelfth_std_eng)
                 elif type(twelfth_std_eng) == str:
@@ -2384,7 +2383,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                iti = row[13] # Assuming %ITI is the twelfth column
+                iti = row[12] # Assuming %ITI is the twelfth column
                 if type(iti) in [int, float]:
                     data_iti = float(iti)
                 elif type(iti) == str:
@@ -2411,7 +2410,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
                 
-                candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+                # candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
                 new_candidate = request.env['gp.candidate'].sudo().create({
                     'name': full_name,
@@ -2423,7 +2422,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,
-                    'phone': phone,
+                    # 'phone': phone,
                     'mobile': mobile,
                     'email': email,
 
@@ -2433,7 +2432,7 @@ class InstitutePortal(CustomerPortal):
                     'tenth_percent': data_xth_std_eng,
                     'twelve_percent': data_twelfth_std_eng,
                     'iti_percent': data_iti,
-                    'sc_st': candidate_st
+                    # 'sc_st': candidate_st
                 })
             except:
                 error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
