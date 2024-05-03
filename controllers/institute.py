@@ -2975,3 +2975,36 @@ class InstitutePortal(CustomerPortal):
         excel_buffer.close()
 
         return response
+
+
+
+    # method=["POST", "GET"]
+
+
+    # @http.route(['/my/update/inscap'], method=["POST", "GET"] ,type="http", auth="user", website=True)
+    # def UpdateInstituteCapacity(self,**kw ):
+    #     import wdb; wdb.set_trace();
+    #     request.redirect('my/editinstitute')
+
+
+    @http.route(['/my/update/inscap'],method=["POST"], type="http", auth="user", website=True)
+    def UpdateInstituteCapacits(self, **kw):
+        # import wdb; wdb.set_trace();
+        batch_per_year = kw.get('batch_per_year')
+        candidate_per_batch = kw.get('candidate_per_batch')
+        file_content = kw.get("approvaldocument").read()
+
+        filename = kw.get('approvaldocument').filename
+        
+        # approvaldocument = kw.get('approvaldocument')
+        course_id = kw.get('course_id')
+        course = request.env['institute.courses'].sudo().search([('id','=',course_id)])
+        course.write({
+            'batcher_per_year':batch_per_year,
+            'intake_capacity':candidate_per_batch,
+            'batcher_per_year':batch_per_year,
+            "dgs_document":base64.b64encode(file_content)
+        })
+
+        return request.redirect('/my/editinstitute')
+        
