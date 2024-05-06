@@ -78,6 +78,18 @@
             <field name="perm_unlink" eval="False"/> -->
     </record>
 
+    <record id="record_rule_allow_all_egistered_candidate" model="ir.rule">
+        <field name="name">Allow Access to All Partners</field>
+        <field name="model_id" ref="model_gp_exam_schedule"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('group_bes_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+
     
 
     

@@ -240,12 +240,12 @@ class GPCandidate(models.Model):
                 raise ValidationError("Invalid email address. Must contain @ symbol.")
 
     def user_inactive(self):
-        self.user_id.write({
+        self.user_id.sudo().write({
             'active':False
         })
 
     def user_active(self):
-        self.user_id.write({
+        self.user_id.sudo().write({
             'active':True
         })
 
