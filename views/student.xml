@@ -12,6 +12,42 @@
             </field>
         </record>
 
+        <record id="action_to_recompute_fields" model="ir.actions.server">
+            <field name="name">Recompute the fields</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_gp_candidate"/>
+            <field name="binding_model_id" ref="model_gp_candidate"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+            for record in records:
+                record._check_sign()
+                record._check_image()
+                record._check_ship_visit_criteria()
+                record._check_attendance_criteria()
+                record._check_stcw_certificate()
+            </field>
+        </record>
+
+        <!-- <record id="open_view_employee_list_my_examiner" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="domain">[('examiner','=',True)]</field>
+            <field name="context">{'chat_icon': True}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_employee_filter"/>
+            <field name="help" type="html">
+             <p class="o_view_nocontent_smiling_face">
+               Add a new employee
+             </p><p>
+               With just a quick glance on the Odoo employee screen, you
+               can easily find all the information you need for each person;
+               contact data, job position, availability, etc.
+             </p>
+            </field>
+        </record> -->
+
          <!-- <record id="candidate_cc_rating_action" model="ir.actions.act_window">
             <field name="name">CC Candidate</field>
             <field name="type">ir.actions.act_window</field>
@@ -163,13 +199,21 @@
         <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
             <search string="GP Candidate Search">
+
                 <field name="name"  />
                 <field name="indos_no"/>
                 <field name="candidate_code"  />
                 <field name="roll_no" />
                 <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+                <filter string="STCW Pending" name="stcw_pending" domain="[('stcw_criteria','=','pending')]" />
+                <!-- <filter string="Candidate Image Pending" name="candidate_image_status" domain="[('candidate_image_status','=','pending')]" />
+                <filter string="Candidate Signature Pending" name="candidate_signature_status" domain="[('candidate_signature_status','=','pending')]" />
+                <filter string="Attendance Pending" name="attendance_criteria" domain="[('attendance_criteria','=','pending')]" />
+                <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" /> -->
+
                 <searchpanel>
                     <field name="dgs_batch" enable_counters="1"/>
+
                     <!-- <field name="institute_batch_id" enable_counters="1"/> -->
                 </searchpanel>
             </search>
@@ -222,6 +266,7 @@
                         </group>
                         <group>
                             <field name="candidate_signature" widget="image" class="oe_avatar" />
+                            
                         </group>
                         <group style="width:100%;">
 
@@ -237,6 +282,9 @@
                             <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+
+                            
 
                         </group>
 
@@ -460,16 +508,24 @@
                     <field name="twelve_percent" optional="hide"/>
                     <field name="iti_percent"  optional="hide"/>
                     <field name="sc_st"  optional="show"/>
-                    <field name="fees_paid"  optional="show"/>
-                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success="candidate_image_status == 'yes'"  decoration-danger="candidate_image_status == 'pending'"/>
-                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success="candidate_signature_status == 'yes'"  decoration-danger="candidate_signature_status == 'pending'"/>
-                    <field name="stcw_criteria"  optional="show"/>
-                    <field name="attendance_criteria"  optional="show"/>
-                    <field name="ship_visits_count"  optional="show"/>
-                    <field name="ship_visit_criteria"  optional="show"/>
+                    <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
+                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
+                    <field name="ship_visits_count"  optional="hide"/>
+                    <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
                 </tree>
             </field>
         </record>
+
+        <!-- <record id="gp_candidate_search" model="ir.ui.view">
+            <field name="name">gp.candidate.search</field>
+            <field name="model">gp.candidate</field>
+            <field name="arch" type="xml">
+                
+            </field>
+        </record> -->
 
 
 
@@ -765,13 +821,13 @@
                     <field name="twelve_percent" optional="hide"/>
                     <field name="iti_percent"  optional="hide"/>
                     <field name="sc_st"  optional="show"/>
-                    <field name="fees_paid"  optional="show"/>
-                    <field name="candidate_image"  optional="show"/>
-                    <field name="candidate_signature"  optional="show"/>
-                    <field name="stcw_criteria"  optional="show"/>
-                    <field name="attendance_criteria"  optional="show"/>
-                    <field name="ship_visits_count"  optional="show"/>
-                    <field name="ship_visit_criteria"  optional="show"/>
+                   <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
+                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
+                    <field name="ship_visits_count"  optional="hide"/>
+                    <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
                 </tree>
             </field>
         </record>

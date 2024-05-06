@@ -10,6 +10,7 @@ class GPCandidate(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate'
     
+<<<<<<< HEAD
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute")
@@ -22,6 +23,21 @@ class GPCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
+=======
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
+
+    institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
+    candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
+    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image',tracking=True)
+    candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
+    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
+    name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    age = fields.Float("Age",compute="_compute_age",tracking=True)
+    indos_no = fields.Char("Indos No.",tracking=True)
+    candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True)
+>>>>>>> 72cda1e0d04907146f6d2cbf1e7c1f4e939be85d
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -105,41 +121,58 @@ class GPCandidate(models.Model):
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',default="pending" ,compute='_check_ship_visit_criteria')
+    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
+    ], string='Attendance Criteria',store=True,default="pending",compute="_check_attendance_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
-    ],string="Candidate-Image",default="pending",compute="_check_candidate_image")
+        ('done', 'Done'),
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_image")
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
-        ('yes', 'Yes'),
-    ],string="Candidate-Sign",default="pending",compute="_check_candidate_signature")
+        ('done', 'Done'),
 
-    @api.constrains('candidate_image')
-    def _check_candidate_image(self):
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
+
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+
+    @api.depends('candidate_signature_status','candidate_image_status','indos_no')
+    def _check_criteria(self):
         for record in self:
+            # candidate_image
+            if record.candidate_image_status == 'done' and record.candidate_signature_status == 'done' and record.indos_no:
+                record.candidate_user_invoice_criteria = True
+            else:
+                record.candidate_user_invoice_criteria = False
+
+
+
+    @api.depends('candidate_image')
+    def _check_image(self):
+        for record in self:
+            
+            
+            # candidate_image
             if record.candidate_image:
-                record.candidate_image_status = 'yes'
+                
+                
+                record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
-    
-    @api.constrains('candidate_signature')
-    def _check_candidate_signature(self):
+
+    @api.depends('candidate_signature')
+    def _check_sign(self):
         for record in self:
+            # candidate-sign
             if record.candidate_signature:
-                record.candidate_signature_status = 'yes'
+                record.candidate_signature_status = 'done'
             else:
                 record.candidate_signature_status = 'pending'
-
-
-
 
 
 
@@ -167,7 +200,7 @@ class GPCandidate(models.Model):
         
         return False
 
-    @api.constrains('stcw_certificate')
+    @api.depends('stcw_certificate')
     def _check_stcw_certificate(self):
          for record in self:
             course_type_already  = [course.course_name for course in record.stcw_certificate]
@@ -182,16 +215,17 @@ class GPCandidate(models.Model):
                 record.stcw_criteria = 'pending'
         
     
-    @api.constrains('ship_visits')
+    @api.depends('ship_visits')
     def _check_ship_visit_criteria(self):
         for record in self:
+            # import wdb; wdb.set_trace();
             if len(record.ship_visits) > 0:
                 record.ship_visit_criteria = 'passed'
             else:
                 record.ship_visit_criteria = 'pending'
     
     
-    @api.constrains('attendance_compliance_1','attendance_compliance_2')
+    @api.depends('attendance_compliance_1','attendance_compliance_2')
     def _check_attendance_criteria(self):
        for record in self:
             if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
@@ -221,12 +255,12 @@ class GPCandidate(models.Model):
                 raise ValidationError("Invalid email address. Must contain @ symbol.")
 
     def user_inactive(self):
-        self.user_id.write({
+        self.user_id.sudo().write({
             'active':False
         })
 
     def user_active(self):
-        self.user_id.write({
+        self.user_id.sudo().write({
             'active':True
         })
 
@@ -614,9 +648,36 @@ class CCMCCandidate(models.Model):
         ('passed', 'Complied'),
     ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
     
-    
+    candidate_image_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_image")
+   
+    candidate_signature_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
 
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
     
+    @api.depends('candidate_image')
+    def _check_image(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image:
+                record.candidate_image_status = 'done'
+            else:
+                record.candidate_image_status = 'pending'
+
+    @api.depends('candidate_signature')
+    def _check_sign(self):
+        for record in self:
+            # candidate-sign
+            if record.candidate_signature:
+                record.candidate_signature_status = 'done'
+            else:
+                record.candidate_signature_status = 'pending'
+
+
     @api.depends('user_id')
     def _compute_user_state(self):
         for record in self:

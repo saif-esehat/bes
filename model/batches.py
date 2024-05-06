@@ -13,10 +13,14 @@ class InstituteGPBatches(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    
+    code = fields.Char(string="Code",related='institute_id.code',tracking=True)
+    exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
     faculty_name = fields.Char("Faculty name",tracking=True)
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count",tracking=True)
+    candidate_user_invoice_criteria = fields.Boolean("Invoice Criteria",compute="compute_candidate_user_invoice_criteria")
     from_date = fields.Date("From Date",tracking=True)
     to_date = fields.Date("To Date",tracking=True)
     course = fields.Many2one("course.master","Course",tracking=True)
@@ -80,7 +84,30 @@ class InstituteGPBatches(models.Model):
     def _compute_invoice_button_visible(self):
         for record in self:
             record.create_invoice_button_invisible = (record.state == '3-pending_invoice' and not record.invoice_created)
-  
+    
+    @api.depends("candidate_user_invoice_criteria")
+    def compute_candidate_user_invoice_criteria(self):
+        for record in self:
+            # import wdb; wdb.set_trace()
+            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
+
+            if candidate_count > 0 :
+            
+                gp_batch_id = record.id
+                candidate_with_correct_data = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id),('candidate_user_invoice_criteria','=',True)])
+                
+                if candidate_count == candidate_with_correct_data:
+                    record.candidate_user_invoice_criteria = True
+                else:
+                    record.candidate_user_invoice_criteria = False
+            else :
+                record.candidate_user_invoice_criteria = False
+ 
+
+
+            
+    
+    
     @api.depends("candidate_count")
     def _compute_candidate_count(self):
         for rec in self:
@@ -94,6 +121,9 @@ class InstituteGPBatches(models.Model):
         
     
     def register_for_exam(self):
+
+        # import wdb; wdb.set_trace()
+        
         candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.id)])
         for candidate in candidates:
             gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id})
@@ -161,9 +191,10 @@ class InstituteGPBatches(models.Model):
 
         # import wdb; wdb.set_trace()
         # Generate the sequence number starting from '001'
+        candidate_count = candidate_count+1
+        
         next_sequence_number = str(candidate_count).zfill(3)
         
-        candidate_count = candidate_count+1
 
         sequence = f'G{batch_year}{half}{institute_code}{next_sequence_number}'
         return sequence
@@ -722,9 +753,10 @@ class BatchesRegisterExamWizard(models.TransientModel):
         gsk_survey_qb = self.gsk_survey_qb
 
         for candidate in candidates:
+            # import wdb; wdb.set_trace(); 
             
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id , 'institute_id':self.batch_id.institute_id.id })
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id , 'institute_name':self.batch_id.institute_id.id ,'registered_institute':self.batch_id.institute_id.id})
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             
@@ -733,7 +765,6 @@ class BatchesRegisterExamWizard(models.TransientModel):
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
             
-            # import wdb; wdb.set_trace(); 
             
             mek_predefined_questions = self.mek_survey_qb._prepare_user_input_predefined_questions()
             gsk_predefined_questions = self.gsk_survey_qb._prepare_user_input_predefined_questions()

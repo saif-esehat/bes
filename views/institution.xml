@@ -166,8 +166,10 @@
                                 <field name="courses"  nolabel="1">
                                     <tree editable="bottom">
                                         <field name="course" options="{'no_create': True}" />
-                                        <!-- <field name="approved_capacity" />
-                                        <field name="approved_date" /> -->
+                                        <field name="dgs_document" />
+                                        <field name="batcher_per_year" />
+                                        <field name="intake_capacity" />
+                                        <field name="total" />
                                     </tree>
                                 </field>
                             </page>
