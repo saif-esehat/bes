@@ -55,6 +55,18 @@
             <field name="perm_unlink" eval="True"/>
             <field name="active" eval="True"/> -->
     </record>
+     <record id="examiner_duty_record_rule_bes_admin" model="ir.rule">
+            <field name="name">Examiner Duty Record Rule</field>
+            <field ref="model_exam_type_oral_practical" name="model_id"/>
+            <field name="groups" eval="[(4, ref('group_bes_admin'))]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <!-- <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="active" eval="True"/> -->
+    </record>
+
 
     <record id="ec_examiner_record_rule" model="ir.rule">
             <field name="name">EC Examiner Record Rule</field>
