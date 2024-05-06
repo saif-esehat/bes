@@ -10,21 +10,6 @@ class GPCandidate(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate'
     
-<<<<<<< HEAD
-    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
-
-    institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
-    candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
-    candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image',tracking=True)
-    candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
-    candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
-    name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
-    age = fields.Float("Age",compute="_compute_age",tracking=True)
-    indos_no = fields.Char("Indos No.",tracking=True)
-    candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
-=======
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch")
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute")
@@ -37,7 +22,6 @@ class GPCandidate(models.Model):
     indos_no = fields.Char("Indos No.")
     candidate_code = fields.Char("GP Candidate Code No.")
     roll_no = fields.Char("Roll No.")
->>>>>>> eabf57e4a8371c7807f58e22fb4ad146a778a980
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)

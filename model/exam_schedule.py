@@ -577,20 +577,12 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
-<<<<<<< HEAD
-=======
     
->>>>>>> eabf57e4a8371c7807f58e22fb4ad146a778a980
     expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
     status = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> eabf57e4a8371c7807f58e22fb4ad146a778a980
 
     
     def open_marksheet_list(self):
