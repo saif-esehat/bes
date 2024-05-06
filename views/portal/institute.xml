@@ -2454,6 +2454,7 @@
                         <th>GP Candidate Code No.</th>
                         <th>Image Status</th>
                         <th>Sign Status</th>
+                        <th>Fees Paid</th>
                         <th>Attendance</th>
                         <th>Ship Visis</th>
                         <th>STCW</th>
@@ -2493,6 +2494,14 @@
                             <td class="text-center">
                                 <t t-if="candidate.candidate_signature_status == 'done'">
                                     <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.fees_paid == 'yes'">
+                                    <span class="text-success">Complied</span>
                                 </t>
                                 <t t-else="">
                                     <span class="text-danger">Pending</span>
