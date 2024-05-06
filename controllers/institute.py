@@ -2009,7 +2009,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB DD MMM YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        header = ['INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
@@ -2112,7 +2112,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB DD MMM YYYY', 'Address Line 1', 'Address Line 2', 'CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        header = ['SR No','INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -2164,50 +2164,40 @@ class InstitutePortal(CustomerPortal):
         instruction_worksheet.write('G4', 'No format')
         instruction_worksheet.write('G5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('H2', 123456)
-        instruction_worksheet.write('H3', 'This field is the PIN code of the candidate\'s address', cell_format)
-        instruction_worksheet.write('H4', 'The PIN code should be exactly 6 digits; only numbers are accepted', cell_format)
+        instruction_worksheet.write('H2', 'MH')
+        instruction_worksheet.write('H3', 'This field is the state code to be selected from dropdown only', cell_format)
+        instruction_worksheet.write('H4', 'Use only the drop-downs to select the state code; please do not enter data manually in this field. Refer to the worksheet "State" for the list', cell_format)
         instruction_worksheet.write('H5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('I2', 'MH')
-        instruction_worksheet.write('I3', 'This field is the state code to be selected from dropdown only', cell_format)
-        instruction_worksheet.write('I4', 'Use only the drop-downs to select the state code; please do not enter data manually in this field. Refer to the worksheet "State" for the list', cell_format)
+        instruction_worksheet.write('I2', 123456)
+        instruction_worksheet.write('I3', 'This field is the PIN code of the candidate\'s address', cell_format)
+        instruction_worksheet.write('I4', 'The PIN code should be exactly 6 digits; only numbers are accepted', cell_format)
         instruction_worksheet.write('I5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('J2', 12345678)
-        instruction_worksheet.write('J3', 'This field is the phone number of the candidate', cell_format)
-        instruction_worksheet.write('J4', 'Only numbers accepted; should be 8 digits', cell_format)
+        instruction_worksheet.write('J2', 1234567890)
+        instruction_worksheet.write('J3', 'This field is the mobile number of the candidate', cell_format)
+        instruction_worksheet.write('J4', 'Only numbers accepted; should be 10 digits', cell_format)
         instruction_worksheet.write('J5', 'Not mandatory but advisable to have', cell_format)
 
-        instruction_worksheet.write('K2', 1234567890)
-        instruction_worksheet.write('K3', 'This field is the mobile number of the candidate', cell_format)
-        instruction_worksheet.write('K4', 'Only numbers accepted; should be 10 digits', cell_format)
-        instruction_worksheet.write('K5', 'Not mandatory but advisable to have', cell_format)
+        instruction_worksheet.write('K2', 'abc@gmail.com')
+        instruction_worksheet.write('K3', 'This field is the email ID of the candidate', cell_format)
+        instruction_worksheet.write('K4', 'Must contain a "@" and ".com"', cell_format)
+        instruction_worksheet.write('K5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('L2', 'abc@gmail.com')
-        instruction_worksheet.write('L3', 'This field is the email ID of the candidate', cell_format)
-        instruction_worksheet.write('L4', 'Must contain a "@" and ".com"', cell_format)
+        instruction_worksheet.write('L2', 61)
+        instruction_worksheet.write('L3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('L4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
         instruction_worksheet.write('L5', 'Mandatory Field', mandatory_format)
 
         instruction_worksheet.write('M2', 61)
         instruction_worksheet.write('M3', 'This field should contain marks or grade of English subject', cell_format)
         instruction_worksheet.write('M4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
-        instruction_worksheet.write('M5', 'Mandatory Field', mandatory_format)
+        instruction_worksheet.write('M5', 'Not mandatory but advisable to have', cell_format)
 
         instruction_worksheet.write('N2', 61)
-        instruction_worksheet.write('N3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('N3', 'Enter marks or grades')
         instruction_worksheet.write('N4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
         instruction_worksheet.write('N5', 'Not mandatory but advisable to have', cell_format)
-
-        instruction_worksheet.write('O2', 61)
-        instruction_worksheet.write('O3', 'Enter marks or grades')
-        instruction_worksheet.write('O4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
-        instruction_worksheet.write('O5', 'Not mandatory but advisable to have', cell_format)
-
-        instruction_worksheet.write('P2', 'Yes')
-        instruction_worksheet.write('P3', 'This field is to mention if the candidate is from SC/ST/OBC', cell_format)
-        instruction_worksheet.write('P4', 'Use the dropdown to select yes or no; do not enter anything else in this field', cell_format)
-        instruction_worksheet.write('P5', 'Mandatory Field', mandatory_format)
 
         # Instruction Description
         merge_format = workbook.add_format({
