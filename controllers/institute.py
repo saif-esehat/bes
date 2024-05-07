@@ -1256,6 +1256,14 @@ class InstitutePortal(CustomerPortal):
         }
         
         request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
+        
+          # request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
         # import wdb; wdb.set_trace()
 
         # Create a record in the 'gp.candidate' model
@@ -1293,7 +1301,8 @@ class InstitutePortal(CustomerPortal):
         request.env['ccmc.candidate.ship.visits'].sudo().create(candidate_data)
         # import wdb; wdb.set_trace()
 
-        # Create a record in the 'gp.candidate' model
+      
+        
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
         
@@ -1332,6 +1341,8 @@ class InstitutePortal(CustomerPortal):
         
         file_content = certificate_upload.read()
         filename = certificate_upload.filename
+        
+        
 
         stcw_data = {
             'candidate_id' : candidate_id,
@@ -1346,6 +1357,13 @@ class InstitutePortal(CustomerPortal):
             'certificate_upload': base64.b64encode(file_content)
         }
         request.env["gp.candidate.stcw.certificate"].sudo().create(stcw_data)
+        # request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
 
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
@@ -1388,6 +1406,7 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/gpcandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateFees(self, **kw):
+        # import wdb; wdb.set_trace();
         candidate_id = kw.get('candidate_id')
         fees_paid = kw.get('fees_paid')
         
@@ -1398,6 +1417,22 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'fees_paid':fees_paid})
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+    
+    
+    @http.route(['/my/gpcandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
+    def UpdateFees2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        fees_paid = data['fees_paid']
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return json.dumps({"status":"success"})
 
 
     @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -1414,6 +1449,13 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'attendance_compliance_1':attendance1})
         candidate.write({'attendance_compliance_2':attendance2})
 
+        # request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
 
