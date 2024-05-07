@@ -32,7 +32,7 @@
                         <div class="col-6">
                             <span style="font-size:20px;">Examination: </span>
                             <span style="font-size:20px;">
-                                <t t-set="formatted_date" t-value="o.dgs_batch.to_date.strftime('%d-%b-%y')"/>
+                                <t t-set="formatted_date" t-value="o.dgs_batch.to_date.strftime('%b-%y')"/>
                                 <t t-esc="formatted_date"/>
                             </span>  
                         </div>
@@ -47,14 +47,14 @@
 
                     <div class="row" style="margin-bottom:4px ; ">
                         <div class="col-12">
-                            <span style="font-size:20px;">Name as in INDOS:</span>
+                            <span style="font-size:20px;">Name:</span>
                             <span style="font-size:20px;"><t t-esc="o.gp_candidate.name"/></span>  
                         </div>
                     </div>
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
-                            <span style="font-size:20px;">DOB as in INDOS: </span>
+                            <span style="font-size:20px;">DOB: </span>
                             <span style="font-size:20px;">
                             <t t-set="formatted_dob" t-value="o.gp_candidate.dob.strftime('%d-%b-%y')"/>
                             <t t-esc="formatted_dob"/></span>  
@@ -91,7 +91,9 @@
                     <t t-if="o.qr_code">
                         <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                     </t>
-
+                    </div>
+                     
+             <div class="container" style="text-align:center;">
                     <div class="row">
                         <div class="col-4">
                             <table class="table" style="border-collapse: collapse;">
@@ -117,6 +119,7 @@
                                     <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
                                         <td style="border: 1px solid black;">MeK Online</td>
                                     </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>

@@ -649,7 +649,9 @@
                         </group>
 
                         <group style="width:100%;">
-                            <field name="institute_batch_id"/>
+                              <field name="dgs_batch"  />
+                             <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                            <!-- <field name="institute_batch_id"/> -->
                         </group>
 
 
@@ -790,6 +792,11 @@
                     <field name="candidate_code"  />
                     <field name="roll_no" />
                     <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+                     <searchpanel>
+                    <field name="dgs_batch" enable_counters="1"/>
+
+                    <!-- <field name="institute_batch_id" enable_counters="1"/> -->
+                </searchpanel>
                 </search>
             </field>
         </record>

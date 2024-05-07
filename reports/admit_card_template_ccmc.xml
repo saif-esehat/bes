@@ -50,14 +50,14 @@
 
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-12">
-                            <span style="font-size:20px;">Name as in INDOS:</span>
+                            <span style="font-size:20px;">Name:</span>
                             <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.name"/></span>  
                         </div>
                     </div>
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
-                            <span style="font-size:20px;">DOB as in INDOS: </span>
+                            <span style="font-size:20px;">DOB: </span>
                             <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.dob"/></span>  
                         </div>
                     </div>
