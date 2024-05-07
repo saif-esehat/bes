@@ -61,6 +61,10 @@ class Institute(models.Model):
     gp_present = fields.Boolean(string='GP',compute="_compute_gp_present",tracking=True)
     batch_capacity = fields.Char("Batch Capacity")
     
+<<<<<<< HEAD
+=======
+
+>>>>>>> 89e4350736f72642fdc6371f6cac13c43fd58c67
     @api.depends('courses')
     def _compute_ccmc_present(self):
         for record in self:

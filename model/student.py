@@ -101,17 +101,17 @@ class GPCandidate(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria',store=True,default="pending",compute="_check_stcw_certificate")
+    ], string='STCW Criteria',store=True,compute="_check_stcw_certificate")
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_ship_visit_criteria')
+    ], string='Ship Visit Criteria',store=True ,compute='_check_ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',store=True,default="pending",compute="_check_attendance_criteria")
+    ], string='Attendance Criteria',store=True,compute="_check_attendance_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
@@ -189,10 +189,9 @@ class GPCandidate(models.Model):
     def _check_stcw_certificate(self):
          for record in self:
             course_type_already  = [course.course_name for course in record.stcw_certificate]
-            # import wdb; wdb.set_trace();    
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
-            all_types_exist = self.check_combination_exists(course_type_already)
+            all_types_exist = record.check_combination_exists(course_type_already)
             if all_types_exist:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
