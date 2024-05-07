@@ -1184,7 +1184,7 @@
                                                     </div>
                                                     <div>
                                                      <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
-                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:
+                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:
                                                             <select name="attendance1">
                                                                 <option value="yes">Yes</option>
                                                                 <option value="no" t-att-selected="1">No</option>
@@ -1192,7 +1192,7 @@
                                                         </h5>
                                                     </div>
                                                     <div>
-                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:
+                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:
                                                             <select name="attendance2">
                                                                 <option value="yes">Yes</option>
                                                                 <option value="no" t-att-selected="1">No</option>
@@ -2870,6 +2870,8 @@
                 </form>
             </div>
 
+
+
             <div class="modal fade" id="delete_ccmc_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <form method="post" action="/my/deleteccmccandidate" enctype="multipart/form-data">
@@ -3154,6 +3156,8 @@
     </template>
 
 
+
+    
 
     <template id="institute_document_list" name="Document">
         <t t-call="portal.portal_layout">
@@ -4028,13 +4032,13 @@
 
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#AddAttendance" class="btn btn-primary btn_cta">Update</a>
                                             <div>
-                                                <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
+                                                <h5 class="my-3">Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC :
 
                                                     <t t-out="candidate.attendance_compliance_1" />
                                                 </h5>
                                             </div>
                                             <div>
-                                                <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS :
+                                                <h5 class="my-3">Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS :
                                                     <t t-out="candidate.attendance_compliance_2" />
                                                 </h5>
                                             </div>
@@ -4050,14 +4054,14 @@
 
                                                             <div class="modal-body">
                                                                 <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
-                                                                <label for="attendance1">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO):</label>
+                                                                <label for="attendance1">Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO):</label>
 
                                                                 <select id="attendance1" name="attendance1">
                                                                     <option value="yes">Yes</option>
                                                                     <option value="no" t-att-selected="1">No</option>
                                                                 </select>
 
-                                                                <label for="attendance2">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO):</label>
+                                                                <label for="attendance2">Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO):</label>
 
                                                                 <select id="attendance2" name="attendance2">
                                                                     <option value="yes">Yes</option>
