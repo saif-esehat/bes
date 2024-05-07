@@ -837,21 +837,16 @@ class ExamOralPracticalExaminers(models.Model):
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
     
-<<<<<<< HEAD
-=======
     online_from_date = fields.Date("From")
     online_to_date = fields.Date("To Date")
     team_lead = fields.Boolean("TL")
     no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
     
->>>>>>> 72cda1e0d04907146f6d2cbf1e7c1f4e939be85d
     expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
     status = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
-<<<<<<< HEAD
-=======
     
     
     @api.depends('online_from_date', 'online_to_date')
@@ -863,7 +858,6 @@ class ExamOralPracticalExaminers(models.Model):
             else:
                 record.no_days = 0
     
->>>>>>> 72cda1e0d04907146f6d2cbf1e7c1f4e939be85d
 
     
     def open_marksheet_list(self):
