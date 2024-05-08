@@ -251,7 +251,7 @@ class InstituteGPBatches(models.Model):
 
             
             
-        gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]).ids
+        gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]).ids
         
         set1 = set(gp_candidates)
         set2 = set(candidate_missing_data_id)
@@ -464,6 +464,8 @@ class InstituteCcmcBatches(models.Model):
     ccmc_batch_name = fields.Char("Batch Name",required=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     ccmc_faculty_name = fields.Char("Faculty name")
+    candidate_user_invoice_criteria = fields.Boolean("Invoice Criteria",compute="compute_candidate_user_invoice_criteria")
+
     ccmc_candidate_count = fields.Integer("Candidate Count",compute="ccmc_compute_candidate_count")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     ccmc_from_date = fields.Date("From Date")
@@ -501,6 +503,26 @@ class InstituteCcmcBatches(models.Model):
     document_file = fields.Binary(string='Upload Document')
     
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
+    
+    
+    
+    @api.depends("candidate_user_invoice_criteria")
+    def compute_candidate_user_invoice_criteria(self):
+        for record in self:
+            # import wdb; wdb.set_trace()
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', record.id)])
+
+            if candidate_count > 0 :
+            
+                ccmc_batch_id = record.id
+                candidate_with_correct_data = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', ccmc_batch_id),('candidate_user_invoice_criteria','=',True)])
+                
+                if candidate_count == candidate_with_correct_data:
+                    record.candidate_user_invoice_criteria = True
+                else:
+                    record.candidate_user_invoice_criteria = False
+            else :
+                record.candidate_user_invoice_criteria = False
     
     @api.depends("candidate_count")
     def _compute_candidate_count(self):
@@ -624,7 +646,7 @@ class InstituteCcmcBatches(models.Model):
             mail_template = self.env.ref('bes.ccmc_indos_check_mail')
             mail_template.with_context(ctx).send_mail(self.id, force_send=True)
 
-        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id)]).ids
+        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id),('fees_paid','=','yes')]).ids
             
         set1 = set(ccmc_candidates)
         set2 = set(candidate_missing_data_id)    

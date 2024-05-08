@@ -651,6 +651,8 @@
                         <group style="width:100%;">
                               <field name="dgs_batch"  />
                              <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+
                             <!-- <field name="institute_batch_id"/> -->
                         </group>
 
