@@ -796,7 +796,7 @@
                     <field name="dgs_batch" enable_counters="1"/>
 
                     <!-- <field name="institute_batch_id" enable_counters="1"/> -->
-                </searchpanel>
+                </searchpanel> 
                 </search>
             </field>
         </record>
