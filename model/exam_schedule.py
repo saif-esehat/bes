@@ -1905,6 +1905,18 @@ class CCMCExam(models.Model):
         ('passed', 'Complied'),
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria",tracking=True)
     
+    user_state = fields.Selection([
+        ('active', 'Active'),
+        ('inactive', 'Inactive')
+    ], string='User Status', related='ccmc_candidate.ccmc_user_state', required=True,tracking=True)
+
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('pending','Pending'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True,compute='_compute_result_status')
+
     # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
     # def compute_certificate_criteria(self):
     
@@ -1926,7 +1938,15 @@ class CCMCExam(models.Model):
     def reissue_approved(self):
         self.state = '6-pending_reissue_approved'
         
-    
+    @api.depends('certificate_criteria')
+    def _compute_result_status(self):
+        for record in self:
+            if record.state == '3-certified':
+                record.result_status = 'passed'
+            elif record.state in ['1-in_process','2-done']:
+                record.result_status = 'pending'
+            elif record.state == '4-pending':
+                 record.result_status = 'failed'
     
     
     def open_reissue_wizard(self):

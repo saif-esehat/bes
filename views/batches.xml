@@ -366,6 +366,10 @@
                     <group expand="0" string="Group By">
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'ccmc_batch_name'}" />
                     </group>
+                    <searchpanel>
+                        <field name="institute_id" enable_counters="1"/>
+                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
+                    </searchpanel>
                 </search>
 
             </field>
