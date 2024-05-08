@@ -1194,12 +1194,19 @@ class GPExam(models.Model):
     @api.depends('certificate_criteria')
     def _compute_result_status(self):
         for record in self:
+            print(record.state)
             if record.state == '3-certified':
                 record.result_status = 'passed'
             elif record.state in ['1-in_process','2-done']:
                 record.result_status = 'pending'
             elif record.state == '4-pending':
                  record.result_status = 'failed'
+            elif record.state == '5-pending_reissue_approval':
+                record.result_status = 'pending'
+            elif record.state == '6-pending_reissue_approved':
+                record.result_status = 'pending'
+                
+
 
 
     def reissue_approval(self):
