@@ -2197,7 +2197,7 @@
             <t t-set="ins_batch" t-value="env['institute.gp.batches'].sudo().search([('id','=',batch_id)])" />
             <span >Number of Candidate Details Successfully Filled <strong class="text-success"><t t-out="correct_data_count" /></strong></span> /<strong class="text-warning"><t t-out="ins_batch.candidate_count"/></strong> (total no of candidate)<br/>
             <span>Number of Candidate Details Data Remaining <strong class="text-danger"><t t-out="not_correct_data_count" /></strong></span> <br/>
-            <strong class="">To generate the invoice Indos No,Candidate Image and Signature must be filled for all the candidates</strong>
+            <strong class="">To generate the invoice Indos No,Candidate Image and Signature also Fees Paid to be marked as yes must be filled for all the candidates</strong>
             <t t-if="ins_batch.candidate_user_invoice_criteria">
                 <div class="alert alert-success" role="alert">You have successfully Filled all the candidate required details to generate invoice</div>
             </t>
