@@ -644,6 +644,18 @@ class CCMCCandidate(models.Model):
 
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
     
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+
+    @api.depends('candidate_signature_status','candidate_image_status','indos_no')
+    def _check_criteria(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image_status == 'done' and record.candidate_signature_status == 'done' and record.indos_no:
+                record.candidate_user_invoice_criteria = True
+            else:
+                record.candidate_user_invoice_criteria = False
+
+
     @api.depends('candidate_image')
     def _check_image(self):
         for record in self:
