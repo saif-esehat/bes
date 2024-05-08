@@ -1257,7 +1257,7 @@ class InstitutePortal(CustomerPortal):
         
         request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
         
-          # request.env.cr.commit()
+        request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()
@@ -1313,6 +1313,14 @@ class InstitutePortal(CustomerPortal):
         visit_id = kw.get("visit_id")
         request.env['gp.candidate.ship.visits'].sudo().search([('id','=',visit_id)]).unlink()
         
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
 
@@ -1357,7 +1365,7 @@ class InstitutePortal(CustomerPortal):
             'certificate_upload': base64.b64encode(file_content)
         }
         request.env["gp.candidate.stcw.certificate"].sudo().create(stcw_data)
-        # request.env.cr.commit()
+        request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()
@@ -1449,7 +1457,7 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'attendance_compliance_1':attendance1})
         candidate.write({'attendance_compliance_2':attendance2})
 
-        # request.env.cr.commit()
+        request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()

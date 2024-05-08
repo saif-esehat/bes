@@ -1184,18 +1184,18 @@
                                                     </div>
                                                     <div>
                                                      <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
-                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:
+                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP:
                                                             <select name="attendance1">
-                                                                <option value="yes">Yes</option>
-                                                                <option value="no" t-att-selected="1">No</option>
+                                                                <option value="yes" t-att-selected="candidate.attendance_compliance_1 == 'yes'">Yes</option>
+                                                                <option value="no"  t-att-selected="candidate.attendance_compliance_1 == 'no'">No</option>
                                                             </select>
                                                         </h5>
                                                     </div>
                                                     <div>
-                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:
+                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP and whether same has been informed to the DGS:
                                                             <select name="attendance2">
-                                                                <option value="yes">Yes</option>
-                                                                <option value="no" t-att-selected="1">No</option>
+                                                                <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'">Yes</option>
+                                                                <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'">No</option>
                                                             </select>
                                                         </h5>
                                                     </div>
@@ -2197,7 +2197,7 @@
             <t t-set="ins_batch" t-value="env['institute.gp.batches'].sudo().search([('id','=',batch_id)])" />
             <span >Number of Candidate Details Successfully Filled <strong class="text-success"><t t-out="correct_data_count" /></strong></span> /<strong class="text-warning"><t t-out="ins_batch.candidate_count"/></strong> (total no of candidate)<br/>
             <span>Number of Candidate Details Data Remaining <strong class="text-danger"><t t-out="not_correct_data_count" /></strong></span> <br/>
-            <strong class="">To generate the invoice Indos No,Candidate Image and Signature must be filled for all the candidates</strong>
+            <strong class="">To generate the invoice Indos No,Candidate Image and Signature also Fees Paid to be marked as yes must be filled for all the candidates</strong>
             <t t-if="ins_batch.candidate_user_invoice_criteria">
                 <div class="alert alert-success" role="alert">You have successfully Filled all the candidate required details to generate invoice</div>
             </t>
