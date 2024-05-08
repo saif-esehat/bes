@@ -69,6 +69,7 @@ class CustomPaymentRegister(models.TransientModel):
         elif invoice.ccmc_batch_ok: #if CCMC Inovice
             print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
             batch = invoice.ccmc_batch
+            batch.confirm_batch_ccmc()
             batch.write({'ccmc_state':'4-invoiced'})
         # Your custom code here after calling the super method
             # For CCMC

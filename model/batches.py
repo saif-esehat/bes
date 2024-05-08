@@ -210,7 +210,7 @@ class InstituteGPBatches(models.Model):
         canidate_list_no_indos = []
         candidate_missing_data_id = []
 
-        for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
+        for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
                 
                 missing_data=""
@@ -586,7 +586,7 @@ class InstituteCcmcBatches(models.Model):
 
         candidate_list_no_indos = []
         candidate_missing_data_id = []
-        for candidate in self.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',self.id)]):
+        for candidate in self.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature:
                 
                 missing_data = ""

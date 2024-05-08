@@ -225,7 +225,7 @@
                         <!-- <button name="confirm_indos_ccmc" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '2-indos_pending')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
-                        <field name="ccmc_state" widget="statusbar"/>
+                        <field name="ccmc_state" widget="statusbar"  statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
