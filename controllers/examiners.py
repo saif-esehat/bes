@@ -736,9 +736,9 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('A2:A2',35, unlocked)
         gsk_oral_sheet.set_column('B2:B2',10, unlocked)
         gsk_oral_sheet.set_column('C2:C2',20, unlocked)
-        gsk_oral_sheet.set_column('D2:I2',20, unlocked)
-        gsk_oral_sheet.set_column('J2:J2',30, unlocked)
-        gsk_oral_sheet.set_column('K:K',15, unlocked)
+        gsk_oral_sheet.set_column('D2:E2',25, unlocked)
+        gsk_oral_sheet.set_column('F2:F2',30, unlocked)
+        gsk_oral_sheet.set_column('G:G',15, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -760,15 +760,11 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                             })
 
-        gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          'Subject Area 1 \n Minimum 3 Questions \n 9 Marks',
-          'Subject Area 2 \n Minimum 2 Questions \n 6 Marks',
-          'Subject Area 3 \n Minimum 3 Questions \n 9 Marks',
-          'Subject Area 4 \n Minimum 3 Questions \n 9 Marks',
-          'Subject Area 5 \n Minimum 4 Questions \n 12 Marks',
-          'Subject Area 6 \n Minimum 2 Questions \n 5 Marks',
+          'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
+          'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
           'Practical Record Book and Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
             gsk_oral_sheet.write(1, col, value, header_format)
@@ -802,13 +798,9 @@ class ExaminerPortal(CustomerPortal):
         marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_6 })
-        gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_5 })
-        gsk_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
         gsk_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
@@ -827,7 +819,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
@@ -871,7 +863,7 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
 
-        date = marksheets[0].examiners_id.exam_date
+        date = examiner_assignments.exam_date
         
         file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
         
@@ -950,7 +942,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        mek_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        mek_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
@@ -1011,7 +1003,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
@@ -1056,7 +1048,7 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
         
-        date = marksheets[0].examiners_id.exam_date
+        date = examiner_assignments.exam_date
         
         file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
 
@@ -1381,7 +1373,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-House keeping Practical \n 20 Marks',
@@ -1505,7 +1497,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Hygiene & Grooming \n 10 Marks', 

@@ -56,7 +56,7 @@
                         <div class="col-6">
                             <span style="font-size:20px;">DOB: </span>
                             <span style="font-size:20px;">
-                            <t t-set="formatted_dob" t-value="o.gp_candidate.dob.strftime('%d-%b-%y')"/>
+                            <t t-set="formatted_dob" t-value="o.gp_candidate.dob.strftime('%d-%b-%Y')"/>
                             <t t-esc="formatted_dob"/></span>  
                         </div>
                     </div>
