@@ -1442,6 +1442,21 @@ class InstitutePortal(CustomerPortal):
         
         return json.dumps({"status":"success"})
 
+    @http.route(['/my/ccmccandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
+    def UpdateFees2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        fees_paid = data['fees_paid']
+        
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return json.dumps({"status":"success"})
+
 
     @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateGpAttendance(self, **kw):
