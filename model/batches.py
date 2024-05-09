@@ -21,6 +21,8 @@ class InstituteGPBatches(models.Model):
     faculty_name = fields.Char("Faculty name",tracking=True)
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count",tracking=True)
     candidate_user_invoice_criteria = fields.Boolean("Invoice Criteria",compute="compute_candidate_user_invoice_criteria")
+    all_invoice_generated = fields.Boolean("All Invoice Generated",compute="compute_all_invoice_generated")
+
     from_date = fields.Date("From Date",tracking=True)
     to_date = fields.Date("To Date",tracking=True)
     course = fields.Many2one("course.master","Course",tracking=True)
@@ -84,6 +86,24 @@ class InstituteGPBatches(models.Model):
     def _compute_invoice_button_visible(self):
         for record in self:
             record.create_invoice_button_invisible = (record.state == '3-pending_invoice' and not record.invoice_created)
+    
+    @api.depends("all_invoice_generated")
+    def compute_all_invoice_generated(self):
+        for record in self:
+             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
+
+             if candidate_count > 0:
+               
+               candidate_with_generated_invoice = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
+               
+               if candidate_with_generated_invoice == candidate_count:
+                    record.all_invoice_generated = True
+               else: 
+                   record.all_invoice_generated = False
+                 
+             else:
+                 record.all_invoice_generated = False
+                 
     
     @api.depends("candidate_user_invoice_criteria")
     def compute_candidate_user_invoice_criteria(self):

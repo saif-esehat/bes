@@ -292,9 +292,6 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         
-        
-
-        
         user_id = request.env.user.id
         batch_id = kw.get("invoice_batch_id")
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
@@ -308,8 +305,8 @@ class InstitutePortal(CustomerPortal):
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id
         product_price = batch.course.exam_fees.lst_price
-        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
-        
+        candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
+        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
         # qty = batch.candidate_count
         # import wdb; wdb.set_trace();
         line_items = [(0, 0, {
@@ -321,6 +318,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         invoice_vals = {
+            'gp_candidates':candidates.ids,
             'partner_id': partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
@@ -335,6 +333,7 @@ class InstitutePortal(CustomerPortal):
         
         
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        candidates.write({'invoice_generated': True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
         batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
