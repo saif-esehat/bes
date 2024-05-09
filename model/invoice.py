@@ -8,7 +8,8 @@ class BatchInvoice(models.Model):
     batch = fields.Many2one("institute.gp.batches","Batch")
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
-    
+    gp_candidates = fields.Many2many('gp.candidate', string='GP Candidate')
+    ccmc_candidates = fields.Many2many('ccmc.candidate', string='CCMC Candidate')
     transaction_id = fields.Char("Transaction ID")
     bank_name = fields.Char("Bank Name & Address")
     total_amount =  fields.Float("Total Amount")
