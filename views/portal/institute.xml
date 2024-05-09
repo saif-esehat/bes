@@ -2696,7 +2696,59 @@
                                         });
 
                                     
-                                    }                                   
+                                    }  
+
+                                    function feesPaid(selectField) {
+
+                                
+                                var selectId = selectField.id;
+                                let candidate_id = selectId.match(/\d+$/)[0];
+                                let fees_paid = selectField.value;
+                                var data = {
+                                                "candidate_id": candidate_id,
+                                                "fees_paid": fees_paid
+                                        }
+
+
+                                $.ajax({
+                                type: "POST",
+                                url: '/my/gpcandidate/updatefees2',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+
+                                
+                                <!-- $.ajax({
+                                            url: "/my/gpcandidate/updatefees2", // Update the URL with your actual route
+                                            method: "POST",
+                                            dataType: "json",
+                                            data: JSON.stringify(data),
+                                            success: function(data) {
+                                            // Handle the successful response
+                                            console.log(data)
+                                            },
+                                            error: function(xhr, status, error) {
+                                            // Handle errors
+                                            console.error("Error loading data:", status, error);
+                                            }
+                                        }); -->
+
+                                
+
+                        }                                 
 
                                     
 
@@ -2996,6 +3048,7 @@
                         <th>Roll No.</th>
                         <th>User Id.</th>
                         <th>CCMC Candidate Code No.</th>
+                        <th>Fees Paid</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -3020,6 +3073,12 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
+                            </td>
+                            <td class="text-center">
+                                <select t-attf-value="{{candidate.fees_paid}}"  t-attf-id="fees_paid_{{candidate.id}}" onchange="feesPaid(this)"> 
+                                    <option value="yes"  t-att-selected="candidate.fees_paid == 'yes'" >Yes</option>
+                                    <option value="no"  t-att-selected="candidate.fees_paid == 'no'">No</option>
+                                </select>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
