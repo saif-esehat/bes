@@ -2696,7 +2696,6 @@
                                         });
 
                                     
-<<<<<<< HEAD
                                     }   
                                     
                                     function feesPaid(selectField) {
@@ -2750,61 +2749,6 @@
                                         
         
                                 }
-=======
-                                    }  
-
-                                    function feesPaid(selectField) {
-
-                                
-                                var selectId = selectField.id;
-                                let candidate_id = selectId.match(/\d+$/)[0];
-                                let fees_paid = selectField.value;
-                                var data = {
-                                                "candidate_id": candidate_id,
-                                                "fees_paid": fees_paid
-                                        }
-
-
-                                $.ajax({
-                                type: "POST",
-                                url: '/my/ccmccandidate/updatefees2',
-                                data: JSON.stringify(data),
-                                contentType: 'application/json',
-                                success: function (response) {
-                                    <!-- debugger -->
-                                    console.log("POST request successful:", response);
-
-                                    // if response["status"]
-                                    // Handle success response
-                                },
-                                    error: function (xhr, status, error) {
-                                        debugger
-                                        console.error("POST request failed:", error);
-                                        
-                                        // Handle error
-                                    }
-                                });
-
-                                
-                                <!-- $.ajax({
-                                            url: "/my/gpcandidate/updatefees2", // Update the URL with your actual route
-                                            method: "POST",
-                                            dataType: "json",
-                                            data: JSON.stringify(data),
-                                            success: function(data) {
-                                            // Handle the successful response
-                                            console.log(data)
-                                            },
-                                            error: function(xhr, status, error) {
-                                            // Handle errors
-                                            console.error("Error loading data:", status, error);
-                                            }
-                                        }); -->
-
-                                
-
-                        }                                 
->>>>>>> b9b359aa3271ba241b4feacbc6838b901d9ba6f7
 
                                     
 
@@ -3105,14 +3049,11 @@
                         <th>Login Id.</th>
                         <th>CCMC Candidate Code No.</th>
                         <th>Fees Paid</th>
-<<<<<<< HEAD
                         <th>Image Status</th>
                         <th>Sign Status</th>
                         <th>Attendance</th>
                         <th>Ship Visis</th>
                         <th>STCW</th>
-=======
->>>>>>> b9b359aa3271ba241b4feacbc6838b901d9ba6f7
                     </tr>
                 </thead>
                 <tbody>
@@ -3145,7 +3086,6 @@
                                 </select>
                             </td>
                             <td class="text-center">
-<<<<<<< HEAD
                                 <t t-if="candidate.candidate_image_status == 'done'">
                                     <span class="text-success">Done</span>
                                 </t>
@@ -3186,8 +3126,6 @@
                                 </t>
                             </td>
                             <td class="text-center">
-=======
->>>>>>> b9b359aa3271ba241b4feacbc6838b901d9ba6f7
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
                             <td class="text-center">
