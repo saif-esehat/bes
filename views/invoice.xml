@@ -25,6 +25,7 @@
                             <field name="transaction_id"/>
                             <field name="bank_name"/>
                             <field name="total_amount"/>
+                            <field name="transaction_date"/>
                             <field name="transaction_slip" filename="file_name" widget="binary"/>
                             <field name="file_name" invisible="1"/>
 

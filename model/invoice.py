@@ -14,7 +14,7 @@ class BatchInvoice(models.Model):
     total_amount =  fields.Float("Total Amount")
     transaction_slip =  fields.Binary("Transaction Slip")
     file_name = fields.Char("Transaction Slip Filename")
-    
+    transaction_date = fields.Date("Transaction Date")
     
     
     

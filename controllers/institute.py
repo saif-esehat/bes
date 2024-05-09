@@ -267,6 +267,7 @@ class InstitutePortal(CustomerPortal):
         
         invoice_id = kw.get('invoice_id')
         transaction_id = kw.get('transaction_id')
+        transaction_date = kw.get('transaction_date')
         bank_name = kw.get('bank_name')
         total_amount = int(kw.get('total_amount'))
         file_content = kw.get("transaction_slip").read()
@@ -275,6 +276,7 @@ class InstitutePortal(CustomerPortal):
         invoice = request.env['account.move'].sudo().search([('id','=',invoice_id)])
         invoice.write({
             'transaction_id': transaction_id,
+            'transaction_date': transaction_date,
             'bank_name': bank_name,
             'total_amount':total_amount,
             'transaction_slip': base64.b64encode(file_content),
@@ -412,13 +414,15 @@ class InstitutePortal(CustomerPortal):
     def CreateGPcandidate(self, **kw):
 
         user_id = request.env.user.id
-        batch_id = kw.get("batch_id")
+        batch_id = int(kw.get("batch_id"))
 
         
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        
+        # import wdb; wdb.set_trace();
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
@@ -464,7 +468,7 @@ class InstitutePortal(CustomerPortal):
     def CreateCCMCcandidate(self, **kw):
         user_id = request.env.user.id
 
-        batch_id = kw.get("ccmc_candidate_batch_id")
+        batch_id = int(kw.get("ccmc_candidate_batch_id"))
         
         batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
         
@@ -861,10 +865,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=20
+                            step=40
                             )
         candidates = request.env["gp.candidate"].sudo().search(
-            search_domain, limit= 20,offset=page_detail['offset'])
+            search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
             [('id', '=', batch_id)])
         
@@ -912,10 +916,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=10
+                            step=40
                             )
         
-        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 10,offset=page_detail['offset'])
+        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.ccmc.batches"].sudo().search(
             [('id', '=', batch_id)])
         vals = {'candidates': candidates,
@@ -1341,7 +1345,7 @@ class InstitutePortal(CustomerPortal):
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
-        mti_indos_no = kw.get('mti_indos_no')
+        # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
         course_start_date = kw.get('course_start_date')
         course_end_date = kw.get('course_end_date')
@@ -1357,7 +1361,7 @@ class InstitutePortal(CustomerPortal):
             'course_name': course_name,
             'institute_name': institute_name,
             'marine_training_inst_number': marine_training_inst_number,
-            'mti_indos_no': mti_indos_no,
+            # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
             'course_start_date': course_start_date,
             'course_end_date': course_end_date,
@@ -1385,7 +1389,7 @@ class InstitutePortal(CustomerPortal):
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
-        mti_indos_no = kw.get('mti_indos_no')
+        # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
         course_start_date = kw.get('course_start_date')
         course_end_date = kw.get('course_end_date')
@@ -1399,7 +1403,7 @@ class InstitutePortal(CustomerPortal):
             'course_name': course_name,
             'institute_name': institute_name,
             'marine_training_inst_number': marine_training_inst_number,
-            'mti_indos_no': mti_indos_no,
+            # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
             'course_start_date': course_start_date,
             'course_end_date': course_end_date,
