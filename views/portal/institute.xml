@@ -361,7 +361,13 @@
                                 </td>
                             </t> -->
 
-                            <t t-if="batch.candidate_user_invoice_criteria == True and batch.state in ['1-ongoing']">
+                            <!-- <t t-if="batch.candidate_user_invoice_criteria == True and batch.state in ['1-ongoing']">
+                                <td class="text-left">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                </td>
+                            </t> -->
+
+                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
@@ -471,7 +477,7 @@
                         <th>Report</th>
                         <th>Candidate Count</th>
                         <th>DGS Capacity</th>
-                        <th>DGS Document</th>
+                        <!-- <th>DGS Document</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -511,18 +517,18 @@
                                 </td>
                             </t>
 
-                            <t t-if="batch.ccmc_state == '1-ongoing'">
+                            <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
                                     <a t-attf-href="/my/ccmccandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" class="fa">Download Document</a>
                                 </td>
-                            </t>
+                            </t> -->
 
                             <!-- <t t-if="batch.ccmc_state == '2-indos_pending'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t> -->
-                             <t t-if="batch.candidate_user_invoice_criteria == True and batch.ccmc_state in ['1-ongoing']">
+                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
@@ -1264,12 +1270,12 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-md-6">
+                                                                    <!-- <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="mti_indos_no">Indos No.</label>
                                                                             <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
@@ -1317,7 +1323,7 @@
                                                             <th>Course</th>
                                                             <th>Institute Name</th>
                                                             <th>MTI Number</th>
-                                                            <th>INDOS No.</th>
+                                                            <!-- <th>INDOS No.</th> -->
                                                             <th>Candidate Certificate Number</th>
                                                             <th>Certificate Docs</th>
                                                             <th>Start Date</th>
@@ -1336,9 +1342,9 @@
                                                                 <td>
                                                                     <t t-out="stcw_certificate.marine_training_inst_number" />
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                     <t t-out="stcw_certificate.mti_indos_no" />
-                                                                </td>
+                                                                </td> -->
                                                                 <td>
                                                                     <t t-out="stcw_certificate.candidate_cert_no" />
                                                                 </td>
@@ -2303,7 +2309,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
-                                                <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                <input type="text" class="form-control" id="indos_no" name="indos_no" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -2696,59 +2702,59 @@
                                         });
 
                                     
-                                    }  
-
+                                    }   
+                                    
                                     function feesPaid(selectField) {
 
                                 
-                                var selectId = selectField.id;
-                                let candidate_id = selectId.match(/\d+$/)[0];
-                                let fees_paid = selectField.value;
-                                var data = {
-                                                "candidate_id": candidate_id,
-                                                "fees_paid": fees_paid
-                                        }
-
-
-                                $.ajax({
-                                type: "POST",
-                                url: '/my/ccmccandidate/updatefees2',
-                                data: JSON.stringify(data),
-                                contentType: 'application/json',
-                                success: function (response) {
-                                    <!-- debugger -->
-                                    console.log("POST request successful:", response);
-
-                                    // if response["status"]
-                                    // Handle success response
-                                },
-                                    error: function (xhr, status, error) {
-                                        debugger
-                                        console.error("POST request failed:", error);
-                                        
-                                        // Handle error
-                                    }
-                                });
-
-                                
-                                <!-- $.ajax({
-                                            url: "/my/gpcandidate/updatefees2", // Update the URL with your actual route
-                                            method: "POST",
-                                            dataType: "json",
-                                            data: JSON.stringify(data),
-                                            success: function(data) {
-                                            // Handle the successful response
-                                            console.log(data)
-                                            },
-                                            error: function(xhr, status, error) {
-                                            // Handle errors
-                                            console.error("Error loading data:", status, error);
+                                        var selectId = selectField.id;
+                                        let candidate_id = selectId.match(/\d+$/)[0];
+                                        let fees_paid = selectField.value;
+                                        var data = {
+                                                        "candidate_id": candidate_id,
+                                                        "fees_paid": fees_paid
+                                                }
+        
+        
+                                        $.ajax({
+                                        type: "POST",
+                                        url: '/my/gpcandidate/updatefees2',
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+                                            <!-- debugger -->
+                                            console.log("POST request successful:", response);
+        
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                debugger
+                                                console.error("POST request failed:", error);
+                                                
+                                                // Handle error
                                             }
-                                        }); -->
-
-                                
-
-                        }                                 
+                                        });
+        
+                                        
+                                        <!-- $.ajax({
+                                                    url: "/my/gpcandidate/updatefees2", // Update the URL with your actual route
+                                                    method: "POST",
+                                                    dataType: "json",
+                                                    data: JSON.stringify(data),
+                                                    success: function(data) {
+                                                    // Handle the successful response
+                                                    console.log(data)
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                    // Handle errors
+                                                    console.error("Error loading data:", status, error);
+                                                    }
+                                                }); -->
+        
+                                        
+        
+                                }
 
                                     
 
@@ -3046,9 +3052,14 @@
                         <th>CCMC Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
-                        <th>User Id.</th>
+                        <th>Login Id.</th>
                         <th>CCMC Candidate Code No.</th>
                         <th>Fees Paid</th>
+                        <th>Image Status</th>
+                        <th>Sign Status</th>
+                        <th>Attendance</th>
+                        <th>Ship Visis</th>
+                        <th>STCW</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -3079,6 +3090,46 @@
                                     <option value="yes"  t-att-selected="candidate.fees_paid == 'yes'" >Yes</option>
                                     <option value="no"  t-att-selected="candidate.fees_paid == 'no'">No</option>
                                 </select>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_image_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_signature_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.attendance_criteria == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.ship_visit_criteria  == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.stcw_criteria  == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
@@ -4250,12 +4301,12 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-md-6">
+                                                                    <!-- <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="mti_indos_no">Indos No.</label>
                                                                             <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">

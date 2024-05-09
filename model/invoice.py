@@ -8,13 +8,14 @@ class BatchInvoice(models.Model):
     batch = fields.Many2one("institute.gp.batches","Batch")
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
-    
+    gp_candidates = fields.Many2many('gp.candidate', string='GP Candidate')
+    ccmc_candidates = fields.Many2many('ccmc.candidate', string='CCMC Candidate')
     transaction_id = fields.Char("Transaction ID")
     bank_name = fields.Char("Bank Name & Address")
     total_amount =  fields.Float("Total Amount")
     transaction_slip =  fields.Binary("Transaction Slip")
     file_name = fields.Char("Transaction Slip Filename")
-    
+    transaction_date = fields.Date("Transaction Date")
     
     
     
@@ -59,17 +60,20 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb;wdb.set_trace()
         # Your custom code here before or after calling the super method
         action = super(CustomPaymentRegister, self).action_create_payments()
+        # import wdb;wdb.set_trace();
         account_move_id = self.env.context['active_id']
         invoice = self.env['account.move'].sudo().search([('id','=',account_move_id)])
         if invoice.gp_batch_ok: #in GP Invoice
             print("gopppppppppppppppppppppppppppppppppppppp")
+            gp_candidates = invoice.gp_candidates.ids
             batch = invoice.batch
-            batch.confirm_batch()
+            batch.confirm_batch(gp_candidates)
             batch.write({'state':'4-invoiced'})
         elif invoice.ccmc_batch_ok: #if CCMC Inovice
+            ccmc_candidates = invoice.ccmc_candidates.ids
             print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
             batch = invoice.ccmc_batch
-            batch.confirm_batch_ccmc()
+            batch.confirm_batch_ccmc(ccmc_candidates)
             batch.write({'ccmc_state':'4-invoiced'})
         # Your custom code here after calling the super method
             # For CCMC
