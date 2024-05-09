@@ -289,12 +289,12 @@ class ExaminerPortal(CustomerPortal):
             marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
 
             # Convert string values to integers
-            subject_area1 = int(rec['subject_area1'])
-            subject_area2 = int(rec['subject_area2'])
-            subject_area3 = int(rec['subject_area3'])
-            subject_area4 = int(rec['subject_area4'])
-            subject_area5 = int(rec['subject_area5'])
-            subject_area6 = int(rec['subject_area6'])
+            subject_area_1_2_3 = int(rec['subject_area_1_2_3'])
+            subject_area_4_5_6 = int(rec['subject_area_4_5_6'])
+            # subject_area3 = int(rec['subject_area3'])
+            # subject_area4 = int(rec['subject_area4'])
+            # subject_area5 = int(rec['subject_area5'])
+            # subject_area6 = int(rec['subject_area6'])
             state=rec['state']
 
             # exam_date = rec['exam_date']
@@ -302,7 +302,7 @@ class ExaminerPortal(CustomerPortal):
        
             remarks_oral_gsk = rec['remarks_oral_gsk']
             
-            total = subject_area1 + subject_area2 + subject_area3 + subject_area4 + subject_area5 + subject_area6
+            total = subject_area_1_2_3 + subject_area_4_5_6
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
@@ -311,12 +311,12 @@ class ExaminerPortal(CustomerPortal):
             # batch_id = int(rec['batch_id'])
             # Construct the dictionary with integer values
             vals = {
-                'subject_area_1': subject_area1,                
-                'subject_area_2': subject_area2,
-                'subject_area_3': subject_area3,
-                'subject_area_4': subject_area4,
-                'subject_area_5': subject_area5, 
-                'subject_area_6': subject_area6,
+                'subject_area_1_2_3': subject_area_1_2_3,                
+                'subject_area_4_5_6': subject_area_4_5_6,
+                # 'subject_area_3': subject_area3,
+                # 'subject_area_4': subject_area4,
+                # 'subject_area_5': subject_area5, 
+                # 'subject_area_6': subject_area6,
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
                 'gsk_oral_remarks': remarks_oral_gsk,
@@ -759,9 +759,16 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_size': 20,
                                                 'font_color': 'black',
                                             })
+        instruction = workbook.add_format({
+                                                'bold':     True,
+                                                # 'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 10,
+                                                'font_color': 'red',
+                                            })
 
-        gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        
+        gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        gsk_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
           'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
