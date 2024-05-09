@@ -248,6 +248,7 @@
                             <field name="ccmc_from_date"/>
                             <field name="ccmc_to_date"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
+                            <field name="all_invoice_generated" invisible="1"/>
                         </group>
                         <!-- <group style="width:50%;">
                             <field name="course"/>

@@ -357,7 +357,11 @@ class InstitutePortal(CustomerPortal):
         
         product_price = batch.ccmc_course.exam_fees.lst_price
         
-        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
+        candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
+        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
+
+        
+        # qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
         # qty = batch.candidate_count
         # import wdb; wdb.set_trace();
@@ -370,6 +374,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         invoice_vals = {
+            'ccmc_candidates':candidates.ids,
             'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
@@ -382,6 +387,7 @@ class InstitutePortal(CustomerPortal):
         
         
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        candidates.write({'invoice_generated': True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
         batch.write({"ccmc_invoice_created":True,"ccmc_account_move":new_invoice.id,'ccmc_state': '3-pending_invoice'})

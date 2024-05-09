@@ -537,6 +537,8 @@ class CCMCCandidate(models.Model):
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    
+    invoice_generated = fields.Boolean("Invoice Generated")
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
     age = fields.Char("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
