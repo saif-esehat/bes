@@ -11,6 +11,8 @@
                     <field name="batch" attrs="{'invisible': [('gp_batch_ok', '=', False)]}" />
                     <field name="ccmc_batch_ok" invisible="1"/>
                     <field name="ccmc_batch" attrs="{'invisible': [('ccmc_batch_ok', '=', False)]}" />
+                    <field name="gp_candidates" invisible="1" />
+                    <field name="ccmc_candidates" invisible="1" />
 
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">

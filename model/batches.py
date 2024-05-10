@@ -21,6 +21,8 @@ class InstituteGPBatches(models.Model):
     faculty_name = fields.Char("Faculty name",tracking=True)
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count",tracking=True)
     candidate_user_invoice_criteria = fields.Boolean("Invoice Criteria",compute="compute_candidate_user_invoice_criteria")
+    all_invoice_generated = fields.Boolean("All Invoice Generated",compute="compute_all_invoice_generated")
+
     from_date = fields.Date("From Date",tracking=True)
     to_date = fields.Date("To Date",tracking=True)
     course = fields.Many2one("course.master","Course",tracking=True)
@@ -84,6 +86,24 @@ class InstituteGPBatches(models.Model):
     def _compute_invoice_button_visible(self):
         for record in self:
             record.create_invoice_button_invisible = (record.state == '3-pending_invoice' and not record.invoice_created)
+    
+    @api.depends("all_invoice_generated")
+    def compute_all_invoice_generated(self):
+        for record in self:
+             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
+
+             if candidate_count > 0:
+               
+               candidate_with_generated_invoice = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
+               
+               if candidate_with_generated_invoice == candidate_count:
+                    record.all_invoice_generated = True
+               else: 
+                   record.all_invoice_generated = False
+                 
+             else:
+                 record.all_invoice_generated = False
+                 
     
     @api.depends("candidate_user_invoice_criteria")
     def compute_candidate_user_invoice_criteria(self):
@@ -202,15 +222,18 @@ class InstituteGPBatches(models.Model):
 
 
 
-    def confirm_batch(self):
+    def confirm_batch(self,candidate_ids):
         
-        
+        # import wdb;wdb.set_trace();
 
         # candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_status','=','active')])
         canidate_list_no_indos = []
         candidate_missing_data_id = []
+        
+        candidates = self.env['gp.candidate'].sudo().browse(candidate_ids)
 
-        for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
+        for candidate in candidates:
+        # for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
                 
                 missing_data=""
@@ -251,7 +274,7 @@ class InstituteGPBatches(models.Model):
 
             
             
-        gp_candidates = self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]).ids
+        gp_candidates = candidates.ids
         
         set1 = set(gp_candidates)
         set2 = set(candidate_missing_data_id)
@@ -465,7 +488,7 @@ class InstituteCcmcBatches(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     ccmc_faculty_name = fields.Char("Faculty name")
     candidate_user_invoice_criteria = fields.Boolean("Invoice Criteria",compute="compute_candidate_user_invoice_criteria")
-
+    all_invoice_generated = fields.Boolean("All Invoice Generated",compute="compute_all_invoice_generated")
     ccmc_candidate_count = fields.Integer("Candidate Count",compute="ccmc_compute_candidate_count")
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count")
     ccmc_from_date = fields.Date("From Date")
@@ -506,6 +529,8 @@ class InstituteCcmcBatches(models.Model):
     
     
     
+    
+    
     @api.depends("candidate_user_invoice_criteria")
     def compute_candidate_user_invoice_criteria(self):
         for record in self:
@@ -523,6 +548,23 @@ class InstituteCcmcBatches(models.Model):
                     record.candidate_user_invoice_criteria = False
             else :
                 record.candidate_user_invoice_criteria = False
+    
+    @api.depends("all_invoice_generated")
+    def compute_all_invoice_generated(self):
+        for record in self:
+             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
+
+             if candidate_count > 0:
+               
+               candidate_with_generated_invoice = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
+               
+               if candidate_with_generated_invoice == candidate_count:
+                    record.all_invoice_generated = True
+               else: 
+                   record.all_invoice_generated = False
+                 
+             else:
+                 record.all_invoice_generated = False
     
     @api.depends("candidate_count")
     def _compute_candidate_count(self):
@@ -558,6 +600,8 @@ class InstituteCcmcBatches(models.Model):
         if self.payment_state == 'not_paid':
             raise ValidationError("Invoice is not Paid")
         self.write({"ccmc_state":'4-invoiced'})
+        
+        
 
           
     
@@ -602,13 +646,18 @@ class InstituteCcmcBatches(models.Model):
         
     #     self.write({"ccmc_state":"2-indos_pending"})
     
-    def confirm_batch_ccmc(self):
+    def confirm_batch_ccmc(self,candidate_ids):
 
         print(self,"selfffffffffffffffffffffffffffffffffffffffffffffffffffff")
 
         candidate_list_no_indos = []
         candidate_missing_data_id = []
-        for candidate in self.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
+        
+        candidates = self.env['ccmc.candidate'].sudo().browse(candidate_ids)
+
+        
+        
+        for candidate in candidates:
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature:
                 
                 missing_data = ""
@@ -646,7 +695,7 @@ class InstituteCcmcBatches(models.Model):
             mail_template = self.env.ref('bes.ccmc_indos_check_mail')
             mail_template.with_context(ctx).send_mail(self.id, force_send=True)
 
-        ccmc_candidates = self.env['ccmc.candidate'].sudo().search([('institute_batch_id', '=', self.id),('fees_paid','=','yes')]).ids
+        ccmc_candidates = candidates.ids
             
         set1 = set(ccmc_candidates)
         set2 = set(candidate_missing_data_id)    
