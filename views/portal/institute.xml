@@ -361,7 +361,13 @@
                                 </td>
                             </t> -->
 
-                            <t t-if="batch.candidate_user_invoice_criteria == True and batch.state in ['1-ongoing']">
+                            <!-- <t t-if="batch.candidate_user_invoice_criteria == True and batch.state in ['1-ongoing']">
+                                <td class="text-left">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                </td>
+                            </t> -->
+
+                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
@@ -471,7 +477,7 @@
                         <th>Report</th>
                         <th>Candidate Count</th>
                         <th>DGS Capacity</th>
-                        <th>DGS Document</th>
+                        <!-- <th>DGS Document</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -511,13 +517,18 @@
                                 </td>
                             </t>
 
-                            <t t-if="batch.ccmc_state == '1-ongoing'">
+                            <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
                                     <a t-attf-href="/my/ccmccandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" class="fa">Download Document</a>
                                 </td>
-                            </t>
+                            </t> -->
 
-                            <t t-if="batch.ccmc_state == '2-indos_pending'">
+                            <!-- <t t-if="batch.ccmc_state == '2-indos_pending'">
+                                <td class="text-left">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                </td>
+                            </t> -->
+                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
@@ -537,7 +548,7 @@
         <t t-call="portal.portal_layout">
             <div class="container">
                 <p class="text-warning">Please check the details of the candidate</p>
-                <p class="text-warning">To Update the details click on "Update Candidate" button</p>
+                <p class="text-warning">To Update the details click on "Update Candidate" button <strong class="text-danger p-2">This button will dissapper once the batch is confirmed</strong></p>
             </div>
             <script>
                 
@@ -583,6 +594,17 @@
 
                 }
 
+                function openSTCWDeleteModal(button) {
+                    <!-- debugger -->
+                    // Retrieve the data-id attribute value from the clicked button
+                    var dataId = button.getAttribute('data-id');
+                    var candidate_id = button.getAttribute('candidate-id');
+                    // Update the content of the modal with the retrieved data
+                    document.getElementById('stcw_id').value = dataId;
+                    document.getElementById('candidate_id').value = candidate_id;
+    
+                    }
+
                 
             </script>
             <style>
@@ -612,9 +634,10 @@
             <div class="container">
 
                 <!-- <a style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Update Image and Indos</a> -->
-                <t t-if="batches.state == '1-ongoing'">
-                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a><span class='p-2'>Please Click on the Update Candidate Button to Update the candidate Details</span>
-                </t>
+                <!-- <t t-if="batches.state == '1-ongoing'"> -->
+                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateCandidateIndos" class="btn btn-primary btn_cta">Update Candidate</a>
+                    <span class='p-2'>Please Click on the Update Candidate Button to Update the candidate Details</span>
+                <!-- </t> -->
                 <div class="modal fade" id="updateCandidateIndos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/updategpcandidate" enctype="multipart/form-data">
@@ -625,6 +648,7 @@
                                     <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
                                 </div>
                                 <div class="modal-body">
+                                    <span class='p-2'>Candidate Image and Signature should be same as INDoS</span>
                                     <!-- Modal content goes here -->
                                     <div class="container mt-5">
                                         <div class="row">
@@ -1184,18 +1208,18 @@
                                                     </div>
                                                     <div>
                                                      <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
-                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC:
+                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP:
                                                             <select name="attendance1">
-                                                                <option value="yes">Yes</option>
-                                                                <option value="no" t-att-selected="1">No</option>
+                                                                <option value="yes" t-att-selected="candidate.attendance_compliance_1 == 'yes'">Yes</option>
+                                                                <option value="no"  t-att-selected="candidate.attendance_compliance_1 == 'no'">No</option>
                                                             </select>
                                                         </h5>
                                                     </div>
                                                     <div>
-                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS:
+                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP and whether same has been informed to the DGS:
                                                             <select name="attendance2">
-                                                                <option value="yes">Yes</option>
-                                                                <option value="no" t-att-selected="1">No</option>
+                                                                <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'">Yes</option>
+                                                                <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'">No</option>
                                                             </select>
                                                         </h5>
                                                     </div>
@@ -1204,6 +1228,29 @@
                                         </div>
 
                                         <div class="tab-pane fade" id="stcw_certificates" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+
+                                            <div class="modal fade" id="DeleteSTCW" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/stcw/delete" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete STCW</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete ?
+                                                                <input type="hidden" id="stcw_id" name="stcw_id"/>
+                                                                <input type="hidden" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}"/>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
 
                                             <t t-if="batches.state == '6-done'">
                                             </t>
@@ -1259,12 +1306,12 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-md-6">
+                                                                    <!-- <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="mti_indos_no">Indos No.</label>
                                                                             <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
@@ -1309,12 +1356,13 @@
                                                 <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                                                     <thead>
                                                         <tr>
+                                                            <th>Action</th>
                                                             <th>Course</th>
                                                             <th>Institute Name</th>
                                                             <th>MTI Number</th>
                                                             <th>INDOS No.</th>
                                                             <th>Candidate Certificate Number</th>
-                                                            <th>Certificate Docs</th>
+                                                            <!-- <th>Certificate Docs</th> -->
                                                             <th>Start Date</th>
                                                             <th>End Date</th>
                                                         </tr>
@@ -1322,6 +1370,20 @@
                                                     <tbody>
                                                         <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                                             <tr>
+                                                                
+                                                                <td>
+                                                                    <t t-if="batches.state == '6-done'">
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
+                                                                
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </t>
+                                                                </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_name" />
                                                                 </td>
@@ -1332,14 +1394,14 @@
                                                                     <t t-out="stcw_certificate.marine_training_inst_number" />
                                                                 </td>
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.mti_indos_no" />
+                                                                    <t t-out="stcw_certificate.candidate_id.indos_no" />
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.candidate_cert_no" />
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                         Download
-                                                                </td>
+                                                                </td> -->
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_start_date" />
                                                                 </td>
@@ -2197,7 +2259,7 @@
             <t t-set="ins_batch" t-value="env['institute.gp.batches'].sudo().search([('id','=',batch_id)])" />
             <span >Number of Candidate Details Successfully Filled <strong class="text-success"><t t-out="correct_data_count" /></strong></span> /<strong class="text-warning"><t t-out="ins_batch.candidate_count"/></strong> (total no of candidate)<br/>
             <span>Number of Candidate Details Data Remaining <strong class="text-danger"><t t-out="not_correct_data_count" /></strong></span> <br/>
-            <strong class="">To generate the invoice Indos No,Candidate Image and Signature must be filled for all the candidates</strong>
+            <strong class="">To generate the invoice Indos No,Candidate Image and Signature also Fees Paid to be marked as yes must be filled for all the candidates</strong>
             <t t-if="ins_batch.candidate_user_invoice_criteria">
                 <div class="alert alert-success" role="alert">You have successfully Filled all the candidate required details to generate invoice</div>
             </t>
@@ -2298,7 +2360,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
-                                                <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                <input type="text" class="form-control" id="indos_no" name="indos_no" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -2583,6 +2645,9 @@
                                     <span class="text-danger">Pending</span>
                                 </t>
                             </td>
+                            4
+
+                            
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
@@ -2691,7 +2756,59 @@
                                         });
 
                                     
-                                    }                                   
+                                    }   
+                                    
+                                    function feesPaid(selectField) {
+
+                                
+                                        var selectId = selectField.id;
+                                        let candidate_id = selectId.match(/\d+$/)[0];
+                                        let fees_paid = selectField.value;
+                                        var data = {
+                                                        "candidate_id": candidate_id,
+                                                        "fees_paid": fees_paid
+                                                }
+        
+        
+                                        $.ajax({
+                                        type: "POST",
+                                        url: '/my/gpcandidate/updatefees2',
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+                                            <!-- debugger -->
+                                            console.log("POST request successful:", response);
+        
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                debugger
+                                                console.error("POST request failed:", error);
+                                                
+                                                // Handle error
+                                            }
+                                        });
+        
+                                        
+                                        <!-- $.ajax({
+                                                    url: "/my/gpcandidate/updatefees2", // Update the URL with your actual route
+                                                    method: "POST",
+                                                    dataType: "json",
+                                                    data: JSON.stringify(data),
+                                                    success: function(data) {
+                                                    // Handle the successful response
+                                                    console.log(data)
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                    // Handle errors
+                                                    console.error("Error loading data:", status, error);
+                                                    }
+                                                }); -->
+        
+                                        
+        
+                                }
 
                                     
 
@@ -2989,8 +3106,14 @@
                         <th>CCMC Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
-                        <th>User Id.</th>
+                        <th>Login Id.</th>
                         <th>CCMC Candidate Code No.</th>
+                        <th>Fees Paid</th>
+                        <th>Image Status</th>
+                        <th>Sign Status</th>
+                        <th>Attendance</th>
+                        <th>Ship Visis</th>
+                        <th>STCW</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -3015,6 +3138,52 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.candidate_code" />
+                            </td>
+                            <td class="text-center">
+                                <select t-attf-value="{{candidate.fees_paid}}"  t-attf-id="fees_paid_{{candidate.id}}" onchange="feesPaid(this)"> 
+                                    <option value="yes"  t-att-selected="candidate.fees_paid == 'yes'" >Yes</option>
+                                    <option value="no"  t-att-selected="candidate.fees_paid == 'no'">No</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_image_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_signature_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.attendance_criteria == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.ship_visit_criteria  == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.stcw_criteria  == 'passed'">
+                                    <span class="text-success">Complied</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
@@ -3436,7 +3605,7 @@
                             <thead>
                                 <tr>
                                     <th>Course</th>
-                                    <!-- <th>Upload Document</th> -->
+                                    <th>Upload Document</th>
                                     <th>Batches per Year</th>
                                     <th>Candidates per Batch</th>
                                     <th>Total Intake Capacity</th>
@@ -3451,6 +3620,18 @@
                                                 <t t-esc="course.course.name"/>
                                             
                                         </td>
+                                        <t t-if="course.dgs_document">
+                                            <td>
+                                                <!-- <a href="/my/download/{{ course.id }}"> -->
+                                                    <!-- <t t-esc="course.dgs_document"/> -->
+                                                    <t t-esc="course.dgs_document_name"/>
+                                                <!-- </a> -->
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td>
+                                            </td>
+                                        </t>
                                         <!-- <td>
                                                 <t t-esc="course.dgs_document"/>
                                         </td> -->
@@ -3574,6 +3755,17 @@
                     reader.readAsDataURL(file);
                     }
                 }
+
+                function openSTCWDeleteModal(button) {
+                    <!-- debugger -->
+                    // Retrieve the data-id attribute value from the clicked button
+                    var dataId = button.getAttribute('data-id');
+                    var candidate_id = button.getAttribute('candidate-id');
+                    // Update the content of the modal with the retrieved data
+                    document.getElementById('stcw_ccmc_id').value = dataId;
+                    document.getElementById('candidate_ccmc_id').value = candidate_id;
+    
+                    }
 
 
 
@@ -4186,12 +4378,12 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-md-6">
+                                                                    <!-- <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="mti_indos_no">Indos No.</label>
                                                                             <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
@@ -4232,10 +4424,33 @@
                                                     </form>
                                                 </div>
                                             </div>
+                                            <div class="modal fade" id="DeleteSTCW" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmcstcw/delete" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete STCW</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete ?
+                                                                <input type="hidden" id="stcw_ccmc_id" name="stcw_ccmc_id"/>
+                                                                <input type="hidden" id="candidate_ccmc_id" name="candidate_ccmc_id" t-attf-value="{{candidate.id}}"/>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                             <div class="table-responsive border rounded border-top-0 ">
                                                 <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                                                     <thead>
                                                         <tr>
+                                                            <th>Action</th>
                                                             <th>Course</th>
                                                             <th>Institute Name</th>
                                                             <th>MTI Number</th>
@@ -4247,8 +4462,23 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">5
                                                             <tr>
+                                                                
+                                                                <td>
+                                                                    <t t-if="batches.ccmc_state == '6-done'">
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
+                                                                
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </t>
+                                                                </td>
+
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_name" />
                                                                 </td>
@@ -4259,14 +4489,14 @@
                                                                     <t t-out="stcw_certificate.marine_training_inst_number" />
                                                                 </td>
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.mti_indos_no" />
+                                                                    <t t-out="stcw_certificate.candidate_id.indos_no" />
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.candidate_cert_no" />
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                         Download
-                                                                </td>
+                                                                </td> -->
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_start_date" />
                                                                 </td>

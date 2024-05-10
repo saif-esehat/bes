@@ -52,6 +52,7 @@ class GPCandidate(models.Model):
     
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
+    invoice_generated = fields.Boolean("Invoice Generated")
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
@@ -536,6 +537,8 @@ class CCMCCandidate(models.Model):
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    
+    invoice_generated = fields.Boolean("Invoice Generated")
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
     age = fields.Char("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
@@ -644,6 +647,18 @@ class CCMCCandidate(models.Model):
 
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
     
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+
+    @api.depends('candidate_signature_status','candidate_image_status','indos_no')
+    def _check_criteria(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image_status == 'done' and record.candidate_signature_status == 'done' and record.indos_no:
+                record.candidate_user_invoice_criteria = True
+            else:
+                record.candidate_user_invoice_criteria = False
+
+
     @api.depends('candidate_image')
     def _check_image(self):
         for record in self:
@@ -1388,12 +1403,13 @@ class GskOralLine(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True,tracking=True)
     gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
-    subject_area_1 = fields.Integer("Subject Area 1",tracking=True)
-    subject_area_2 = fields.Integer("Subject Area 2",tracking=True)
-    subject_area_3 = fields.Integer("Subject Area 3",tracking=True)
-    subject_area_4 = fields.Integer("Subject Area 4",tracking=True)
-    subject_area_5 = fields.Integer("Subject Area 5",tracking=True)
-    subject_area_6 = fields.Integer("Subject Area 6",tracking=True)
+
+    subject_area_1_2_3 = fields.Integer("Subject Area 1, 2, 3 ",tracking=True)
+    # subject_area_2 = fields.Integer("Subject Area 2",tracking=True)
+    # subject_area_3 = fields.Integer("Subject Area 3",tracking=True)
+    subject_area_4_5_6 = fields.Integer("Subject Area 4, 5, 6",tracking=True)
+    # subject_area_5 = fields.Integer("Subject Area 5",tracking=True)
+    # subject_area_6 = fields.Integer("Subject Area 6",tracking=True)
     practical_record_journals = fields.Integer("Practical Record Book and Journal",tracking=True)
     
     
@@ -1404,36 +1420,36 @@ class GskOralLine(models.Model):
 
     
 
-    @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    @api.depends('subject_area_1_2_3', 'subject_area_4_5_6', 'practical_record_journals')
     def _compute_gsk_oral_total_marks(self):
         for record in self:
             total_marks = sum([
-                record.subject_area_1,
-                record.subject_area_2,
-                record.subject_area_3,
-                record.subject_area_4,
-                record.subject_area_5,
-                record.subject_area_6,
+                record.subject_area_1_2_3,
+                record.subject_area_4_5_6,
+                # record.subject_area_3,
+                # record.subject_area_4,
+                # record.subject_area_5,
+                # record.subject_area_6,
                 record.practical_record_journals,
             ])
 
             record.gsk_oral_total_marks = total_marks
     
 
-    @api.onchange('subject_area_1','subject_area_2','subject_area_3','subject_area_4','subject_area_5','subject_area_6','practical_record_journals')
+    @api.onchange('subject_area_1_2_3','subject_area_4_5_6','practical_record_journals')
     def _onchange_gsk_oral__marks_limit(self):
-        if self.subject_area_1 > 9:
+        if self.subject_area_1_2_3 > 25:
             raise UserError("Subject Area 1 marks should not be greater than 9.")
-        if self.subject_area_2 > 6:
+        if self.subject_area_4_5_6 > 25:
             raise UserError("Subject Area 2 marks should not be greater than 6.")
-        if self.subject_area_3 > 9:
-            raise UserError("Subject Area 3 marks should not be greater than 9.")
-        if self.subject_area_4 > 9:
-            raise UserError("Subject Area 4 marks should not be greater than 9.")
-        if self.subject_area_5 > 12:
-            raise UserError("Subject Area 5 marks should not be greater than 12.")
-        if self.subject_area_6 > 5:
-            raise UserError("Subject Area 6 marks should not be greater than 5.")
+        # if self.subject_area_3 > 9:
+        #     raise UserError("Subject Area 3 marks should not be greater than 9.")
+        # if self.subject_area_4 > 9:
+        #     raise UserError("Subject Area 4 marks should not be greater than 9.")
+        # if self.subject_area_5 > 12:
+        #     raise UserError("Subject Area 5 marks should not be greater than 12.")
+        # if self.subject_area_6 > 5:
+        #     raise UserError("Subject Area 6 marks should not be greater than 5.")
         if self.practical_record_journals > 25:
             raise UserError("Practical Record Book and Journal marks should not be greater than 25.")
 

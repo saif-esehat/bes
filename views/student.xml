@@ -438,12 +438,12 @@
                                         <field name='gsk_oral_exam_date'/>
                                         <field name='institute_id'/>
                                         <field name='exam_id'/>
-                                        <field name='subject_area_1'/>
-                                        <field name="subject_area_2"/>
-                                        <field name='subject_area_3'/>
+                                        <field name='subject_area_1_2_3'/>
+                                        <field name="subject_area_4_5_6"/>
+                                        <!-- <field name='subject_area_3'/>
                                         <field name="subject_area_4"/>
                                         <field name="subject_area_5"/>
-                                        <field name="subject_area_6"/>
+                                        <field name="subject_area_6"/> -->
                                         <field name="practical_record_journals"/>
                                         <field name="gsk_oral_total_marks"/>
                                         <field name="gsk_oral_remarks"/>
@@ -651,6 +651,8 @@
                         <group style="width:100%;">
                               <field name="dgs_batch"  />
                              <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+
                             <!-- <field name="institute_batch_id"/> -->
                         </group>
 
@@ -1450,24 +1452,24 @@
                         </group>
                         
                         <group>
-                            <label for="subject_area_1" />
+                            <label for="subject_area_1_2_3" />
                             <div>
-                                <field name="subject_area_1" nolabel="1"/>
+                                <field name="subject_area_1_2_3" nolabel="1"/>
                             / 
-                                <span>9 Marks</span>
+                                <span>25 Marks</span>
                             </div>
                         </group>
 
                         <group>
-                            <label for="subject_area_2" />
+                            <label for="subject_area_4_5_6" />
                             <div>
-                                <field name="subject_area_2" nolabel="1"/>
+                                <field name="subject_area_4_5_6" nolabel="1"/>
                             / 
-                                <span>6 Marks</span>
+                                <span>25 Marks</span>
                             </div>
                         </group>
 
-                        <group>
+                        <!-- <group>
                             <label for="subject_area_3" />
                             <div>
                                 <field name="subject_area_3" nolabel="1"/>
@@ -1501,7 +1503,7 @@
                             / 
                                 <span>5 Marks</span>
                             </div>
-                        </group>
+                        </group> -->
 
                         <group>
                             <label for="practical_record_journals" />

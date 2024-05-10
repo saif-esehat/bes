@@ -267,6 +267,7 @@ class InstitutePortal(CustomerPortal):
         
         invoice_id = kw.get('invoice_id')
         transaction_id = kw.get('transaction_id')
+        transaction_date = kw.get('transaction_date')
         bank_name = kw.get('bank_name')
         total_amount = int(kw.get('total_amount'))
         file_content = kw.get("transaction_slip").read()
@@ -275,6 +276,7 @@ class InstitutePortal(CustomerPortal):
         invoice = request.env['account.move'].sudo().search([('id','=',invoice_id)])
         invoice.write({
             'transaction_id': transaction_id,
+            'transaction_date': transaction_date,
             'bank_name': bank_name,
             'total_amount':total_amount,
             'transaction_slip': base64.b64encode(file_content),
@@ -290,9 +292,6 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         
-        
-
-        
         user_id = request.env.user.id
         batch_id = kw.get("invoice_batch_id")
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
@@ -306,8 +305,8 @@ class InstitutePortal(CustomerPortal):
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id
         product_price = batch.course.exam_fees.lst_price
-        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
-        
+        candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
+        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
         # qty = batch.candidate_count
         # import wdb; wdb.set_trace();
         line_items = [(0, 0, {
@@ -319,6 +318,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         invoice_vals = {
+            'gp_candidates':candidates.ids,
             'partner_id': partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
@@ -333,6 +333,7 @@ class InstitutePortal(CustomerPortal):
         
         
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        candidates.write({'invoice_generated': True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
         batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
@@ -356,7 +357,11 @@ class InstitutePortal(CustomerPortal):
         
         product_price = batch.ccmc_course.exam_fees.lst_price
         
-        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
+        candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
+        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
+
+        
+        # qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
         # qty = batch.candidate_count
         # import wdb; wdb.set_trace();
@@ -369,6 +374,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         invoice_vals = {
+            'ccmc_candidates':candidates.ids,
             'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
@@ -381,6 +387,7 @@ class InstitutePortal(CustomerPortal):
         
         
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        candidates.write({'invoice_generated': True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
         batch.write({"ccmc_invoice_created":True,"ccmc_account_move":new_invoice.id,'ccmc_state': '3-pending_invoice'})
@@ -412,13 +419,15 @@ class InstitutePortal(CustomerPortal):
     def CreateGPcandidate(self, **kw):
 
         user_id = request.env.user.id
-        batch_id = kw.get("batch_id")
+        batch_id = int(kw.get("batch_id"))
 
         
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        
+        # import wdb; wdb.set_trace();
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
@@ -464,7 +473,7 @@ class InstitutePortal(CustomerPortal):
     def CreateCCMCcandidate(self, **kw):
         user_id = request.env.user.id
 
-        batch_id = kw.get("ccmc_candidate_batch_id")
+        batch_id = int(kw.get("ccmc_candidate_batch_id"))
         
         batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
         
@@ -861,10 +870,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=20
+                            step=40
                             )
         candidates = request.env["gp.candidate"].sudo().search(
-            search_domain, limit= 20,offset=page_detail['offset'])
+            search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
             [('id', '=', batch_id)])
         
@@ -912,10 +921,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=10
+                            step=40
                             )
         
-        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 10,offset=page_detail['offset'])
+        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.ccmc.batches"].sudo().search(
             [('id', '=', batch_id)])
         vals = {'candidates': candidates,
@@ -1257,7 +1266,7 @@ class InstitutePortal(CustomerPortal):
         
         request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
         
-          # request.env.cr.commit()
+        request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()
@@ -1313,8 +1322,51 @@ class InstitutePortal(CustomerPortal):
         visit_id = kw.get("visit_id")
         request.env['gp.candidate.ship.visits'].sudo().search([('id','=',visit_id)]).unlink()
         
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+    
+    @http.route(['/my/stcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DeleteStcw(self, **kw):
+        # import wdb; wdb.set_trace();
+        stcw_id = kw.get("stcw_id")
+        request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+ 
+    @http.route(['/my/ccmcstcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DeleteccmcStcw(self, **kw):
+        print (kw)
+        # import wdb; wdb.set_trace();
+        stcw_id = kw.get("stcw_ccmc_id")
+        request.env['ccmc.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        candidate = request.env["ccmc.candidate"].sudo().search([('id','=',kw.get("candidate_ccmc_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        
+        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_ccmc_id")))
 
     @http.route(['/my/ccmcshipvisit/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DeleteCcmcShipVisits(self, **kw):
@@ -1333,7 +1385,7 @@ class InstitutePortal(CustomerPortal):
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
-        mti_indos_no = kw.get('mti_indos_no')
+        # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
         course_start_date = kw.get('course_start_date')
         course_end_date = kw.get('course_end_date')
@@ -1349,7 +1401,7 @@ class InstitutePortal(CustomerPortal):
             'course_name': course_name,
             'institute_name': institute_name,
             'marine_training_inst_number': marine_training_inst_number,
-            'mti_indos_no': mti_indos_no,
+            # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
             'course_start_date': course_start_date,
             'course_end_date': course_end_date,
@@ -1357,7 +1409,7 @@ class InstitutePortal(CustomerPortal):
             'certificate_upload': base64.b64encode(file_content)
         }
         request.env["gp.candidate.stcw.certificate"].sudo().create(stcw_data)
-        # request.env.cr.commit()
+        request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()
@@ -1377,7 +1429,7 @@ class InstitutePortal(CustomerPortal):
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
-        mti_indos_no = kw.get('mti_indos_no')
+        # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
         course_start_date = kw.get('course_start_date')
         course_end_date = kw.get('course_end_date')
@@ -1391,7 +1443,7 @@ class InstitutePortal(CustomerPortal):
             'course_name': course_name,
             'institute_name': institute_name,
             'marine_training_inst_number': marine_training_inst_number,
-            'mti_indos_no': mti_indos_no,
+            # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
             'course_start_date': course_start_date,
             'course_end_date': course_end_date,
@@ -1434,6 +1486,21 @@ class InstitutePortal(CustomerPortal):
         
         return json.dumps({"status":"success"})
 
+    @http.route(['/my/ccmccandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
+    def UpdateFees2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        fees_paid = data['fees_paid']
+        
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return json.dumps({"status":"success"})
+
 
     @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateGpAttendance(self, **kw):
@@ -1449,7 +1516,7 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'attendance_compliance_1':attendance1})
         candidate.write({'attendance_compliance_2':attendance2})
 
-        # request.env.cr.commit()
+        request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()
@@ -3021,7 +3088,6 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/update/inscap'],method=["POST"], type="http", auth="user", website=True)
     def UpdateInstituteCapacits(self, **kw):
-        # import wdb; wdb.set_trace();
         batch_per_year = kw.get('batch_per_year')
         candidate_per_batch = kw.get('candidate_per_batch')
         file_content = kw.get("approvaldocument").read()
@@ -3030,13 +3096,32 @@ class InstitutePortal(CustomerPortal):
         
         # approvaldocument = kw.get('approvaldocument')
         course_id = kw.get('course_id')
+        # import wdb; wdb.set_trace();
         course = request.env['institute.courses'].sudo().search([('id','=',course_id)])
         course.write({
             'batcher_per_year':batch_per_year,
             'intake_capacity':candidate_per_batch,
             'batcher_per_year':batch_per_year,
+            'dgs_document_name':filename,
             "dgs_document":base64.b64encode(file_content)
         })
 
         return request.redirect('/my/editinstitute')
+    
+
+    @http.route(['/my/download/<int:course_id>'], type='http', auth="user", website=True)
+    def download_dgs_document(self,course_id):
+        # import wdb; wdb.set_trace();
+        course = request.env['institute.courses'].sudo().browse(course_id)
+        if course:
+            # Retrieve the file content
+            content = base64.b64decode(course.dgs_document_content)
+            if content:
+                # Return the file as attachment
+                headers = [
+                    ('Content-Type', 'application/octet-stream'),
+                    ('Content-Disposition', 'attachment; filename="%s"' % course.dgs_document)
+                ]
+                return request.make_response(content, headers=headers)
+        return request.not_found()
         

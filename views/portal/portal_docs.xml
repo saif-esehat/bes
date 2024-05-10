@@ -168,11 +168,15 @@
                                                 <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
                                             </div>
                                             <div class="form-group">
+                                                <label for="transaction_date">Transaction Date</label>
+                                                <input required="True" type="date" class="form-control" id="transaction_date" name="transaction_date" />
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="total_amount">Total Amount ₹</label>
                                                 <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
                                             </div>
                                             <div class="form-group">
-                                                <label for="transaction_slip">Upload Transaction Pay Slip</label>
+                                                <label for="transaction_slip">Upload Transaction Pay Slip/ Screenshot</label>
                                                 <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
                                             </div>
                                         </div>
@@ -231,6 +235,10 @@
                             <div class="col-md-5">
                                 <strong><label for="bank_name">Bank Name and Address : </label></strong>
                                 <span><t t-out="invoice.bank_name"/></span>
+                            </div>
+                            <div class="col-md-5">
+                                <strong><label for="transaction_date"></label>Transaction Date : </strong>
+                                <span><t t-out="invoice.transaction_date.strftime('%d-%b-%Y')"/></span>
                             </div>
                         </div>
                     </div>
