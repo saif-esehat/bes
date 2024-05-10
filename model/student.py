@@ -1439,9 +1439,9 @@ class GskOralLine(models.Model):
     @api.onchange('subject_area_1_2_3','subject_area_4_5_6','practical_record_journals')
     def _onchange_gsk_oral__marks_limit(self):
         if self.subject_area_1_2_3 > 25:
-            raise UserError("Subject Area 1 marks should not be greater than 9.")
+            raise UserError("Subject Area 1 marks should not be greater than 25.")
         if self.subject_area_4_5_6 > 25:
-            raise UserError("Subject Area 2 marks should not be greater than 6.")
+            raise UserError("Subject Area 2 marks should not be greater than 25.")
         # if self.subject_area_3 > 9:
         #     raise UserError("Subject Area 3 marks should not be greater than 9.")
         # if self.subject_area_4 > 9:
