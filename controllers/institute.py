@@ -1334,10 +1334,10 @@ class InstitutePortal(CustomerPortal):
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
     @http.route(['/my/stcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DeleteShipVisits(self, **kw):
-        
+    def DeleteStcw(self, **kw):
+        # import wdb; wdb.set_trace();
         stcw_id = kw.get("stcw_id")
-        request.env['gp.candidate.ship.visits'].sudo().search([('id','=',stcw_id)]).unlink()
+        request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
         
         request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
