@@ -273,9 +273,26 @@
             <!-- <xpath expr="//t[@t-set='entries']" position="replace">
             
             </xpath> -->
-            
+      </template>
+
+      <template id="portal_report_invoice_document_inherited" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//th[@name='th_quantity']" position="replace">
+            <th name="th_quantity" class="text-right"><span>Number</span></th>
+        </xpath>
 
       </template>
+
+      <template id="portal_record_sidebar_inherited" inherit_id="portal.portal_record_sidebar">
+
+        <xpath expr="//div[@class='card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block']" position="replace">
+            <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                    Powered by <a target="_blank" href="https://esehat.in" >eSehat</a>
+                </div>
+        </xpath>
+
+      </template>
+
 
 
     
