@@ -1399,9 +1399,7 @@
                                                                 <td>
                                                                     <t t-out="stcw_certificate.candidate_cert_no" />
                                                                 </td>
-                                                                <!-- <td>
-                                                                        Download
-                                                                </td> -->
+                                                                <!--   -->
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_start_date" />
                                                                 </td>
@@ -3614,15 +3612,15 @@
                                 <t t-foreach="courses" t-as="course">
                                     <tr>
                                         <td>
-                                                <t t-esc="course.course.name"/>
+                                            <t t-esc="course.course.name"/>
                                             
                                         </td>
                                         <t t-if="course.dgs_document">
                                             <td>
-                                                <!-- <a href="/my/download/{{ course.id }}"> -->
+                                                <a href="/my/download/{{ course.id }}">
                                                     <!-- <t t-esc="course.dgs_document"/> -->
                                                     <t t-esc="course.dgs_document_name"/>
-                                                <!-- </a> -->
+                                                </a>
                                             </td>
                                         </t>
                                         <t t-else="">
@@ -3907,8 +3905,17 @@
                                 <p class="text-muted mb-1">
                                     <t t-out="candidate.street" />
                                 </p>
-                                <p class="text-muted mb-4">
+                                <span class="text-muted mb-4">
                                     <t t-out="candidate.street2"/>
+                                </span>
+                                <span class="text-muted mb-0">
+                                    <t t-out="candidate.city"/>
+                                </span>
+                                <span class="text-muted mb-0">
+                                    <t t-out="candidate.state_id.name"/>
+                                </span>
+                                <p class="text-muted mb-0">
+                                    <t t-out="candidate.zip"/>
                                 </p>
                                 <t t-if="candidate.candidate_signature">
                                     <img t-attf-src="data:image/png; base64, {{candidate.candidate_signature}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
@@ -3979,12 +3986,21 @@
                                         <p class="mb-0">Address</p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <p class="text-muted mb-0">
+                                        <span class="text-muted mb-0">
                                             <t t-out="candidate.street"/>
-                                        </p>
-                                        <p class="text-muted mb-0">
+                                        </span>
+                                        <span class="text-muted mb-0">
                                             <t t-out="candidate.street2"/>
-                                        </p>
+                                        </span>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.city"/>
+                                        </span>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.state_id.name"/>
+                                        </span>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.zip"/>
+                                        </span>
                                     </div>
                                 </div>
                                 <hr/>
