@@ -2184,24 +2184,79 @@
                                         // Handle error
                                     }
                                 });
+     
+
+                        }
+
+                        function attendanceCompliance1(selectField) {
 
                                 
-                                <!-- $.ajax({
-                                            url: "/my/gpcandidate/updatefees2", // Update the URL with your actual route
-                                            method: "POST",
-                                            dataType: "json",
-                                            data: JSON.stringify(data),
-                                            success: function(data) {
-                                            // Handle the successful response
-                                            console.log(data)
-                                            },
-                                            error: function(xhr, status, error) {
-                                            // Handle errors
-                                            console.error("Error loading data:", status, error);
-                                            }
-                                        }); -->
+                                var selectId = selectField.id;
+                                let candidate_id = selectId.match(/\d+$/)[0];
+                                let attendance1 = selectField.value;
+                                <!-- debugger -->
+                                var data = {
+                                                "candidate_id": candidate_id,
+                                                "attendance_compliance_1": attendance1,
+                                        }
+
+
+                                $.ajax({
+                                type: "POST",
+                                url: '/my/gpcandidate/attendance_compliance_1',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+     
+
+                        }
+
+                        function attendanceCompliance2(selectField) {
 
                                 
+                                var selectId = selectField.id;
+                                let candidate_id = selectId.match(/\d+$/)[0];
+                                let attendance2 = selectField.value;
+                                <!-- debugger -->
+                                var data = {
+                                                "candidate_id": candidate_id,
+                                                "attendance_compliance_2": attendance2,
+                                        }
+
+
+                                $.ajax({
+                                type: "POST",
+                                url: '/my/gpcandidate/attendance_compliance_2',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+     
 
                         }
                                                                 
@@ -2519,6 +2574,52 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="attendance_compliance_1_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/confirmgpuser" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Attendance 1</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_gp_candidate_id" name="confirm_gp_candidate_id"/>
+                            <input type="hidden" id="confirm_gp_candidate_batch_id" name="confirm_gp_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+                                Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP
+                            </div>
+                        
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal fade" id="attendance_compliance_2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/confirmgpuser" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Attendance 2</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_gp_candidate_id" name="confirm_gp_candidate_id"/>
+                            <input type="hidden" id="confirm_gp_candidate_batch_id" name="confirm_gp_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+                            Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP and whether same has been informed to the DGS                            
+                            </div>
+                        
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            
+
             <div class="modal fade" id="confirm_gp_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <form method="post" action="/confirmgpuser" enctype="multipart/form-data">
@@ -2567,9 +2668,12 @@
                         <th>Login Id</th>
                         <th>GP Candidate Code No.</th>
                         <th>Fees Paid</th>
+                        <th style="text-align: center;">Attendance 1 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_1_modal"  data-toggle="modal">More Info</a></th>
+                        <th style="text-align: center;">Attendance 2 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_2_modal"  data-toggle="modal">More Info</a></th>
+
                         <th>Image Status</th>
                         <th>Sign Status</th>
-                        <th>Attendance</th>
+                        <!-- <th>Attendance</th> -->
                         <th>Ship Visis</th>
                         <th>STCW</th>
                     </tr>
@@ -2598,11 +2702,24 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                <select t-attf-value="{{candidate.fees_paid}}"  t-attf-id="fees_paid_{{candidate.id}}" onchange="feesPaid(this)"> 
+                                <select t-attf-value="{{candidate.fees_paid}}"  t-att-disabled="candidate.invoice_generated == True" t-attf-id="fees_paid_{{candidate.id}}" onchange="feesPaid(this)"> 
                                     <option value="yes"  t-att-selected="candidate.fees_paid == 'yes'" >Yes</option>
                                     <option value="no"  t-att-selected="candidate.fees_paid == 'no'">No</option>
                                 </select>
                             </td>
+                            <td class="text-center">
+                                <select t-attf-id="attendance_compliance1_{{candidate.id}}" onchange="attendanceCompliance1(this)"> 
+                                    <option value="yes"  t-att-selected="candidate.attendance_compliance_1 == 'yes'" >Yes</option>
+                                    <option value="no" t-att-selected="candidate.attendance_compliance_1 == 'no'" >No</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select t-attf-id="attendance_compliance2_{{candidate.id}}" onchange="attendanceCompliance2(this)"> 
+                                    <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'"  >Yes</option>
+                                    <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'" >No</option>
+                                </select>
+                            </td>
+
                             <td class="text-center">
                                 <t t-if="candidate.candidate_image_status == 'done'">
                                     <span class="text-success">Done</span>
@@ -2619,14 +2736,14 @@
                                     <span class="text-danger">Pending</span>
                                 </t>
                             </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <t t-if="candidate.attendance_criteria == 'passed'">
                                     <span class="text-success">Complied</span>
                                 </t>
                                 <t t-else="">
                                     <span class="text-danger">Pending</span>
                                 </t>
-                            </td>
+                            </td> -->
                             <td class="text-center">
                                 <t t-if="candidate.ship_visit_criteria  == 'passed'">
                                     <span class="text-success">Complied</span>
@@ -2767,7 +2884,7 @@
         
                                         $.ajax({
                                         type: "POST",
-                                        url: '/my/gpcandidate/updatefees2',
+                                        url: '/my/ccmccandidate/updatefees2',
                                         data: JSON.stringify(data),
                                         contentType: 'application/json',
                                         success: function (response) {
@@ -2804,6 +2921,78 @@
                                         
         
                                 }
+
+                                function attendanceCompliance1(selectField) {
+
+                                
+                                var selectId = selectField.id;
+                                let candidate_id = selectId.match(/\d+$/)[0];
+                                let attendance1 = selectField.value;
+                                <!-- debugger -->
+                                var data = {
+                                                "candidate_id": candidate_id,
+                                                "attendance_compliance_1": attendance1,
+                                        }
+
+
+                                $.ajax({
+                                type: "POST",
+                                url: '/my/ccmccandidate/attendance_compliance_1',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+     
+
+                        }
+
+                        function attendanceCompliance2(selectField) {
+
+                                
+                                var selectId = selectField.id;
+                                let candidate_id = selectId.match(/\d+$/)[0];
+                                let attendance2 = selectField.value;
+                                <!-- debugger -->
+                                var data = {
+                                                "candidate_id": candidate_id,
+                                                "attendance_compliance_2": attendance2,
+                                        }
+
+
+                                $.ajax({
+                                type: "POST",
+                                url: '/my/ccmccandidate/attendance_compliance_2',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+     
+
+                        }
 
                                     
 
@@ -3034,6 +3223,50 @@
                 </form>
             </div>
 
+            <div class="modal fade" id="attendance_compliance_1_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/confirmgpuser" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Attendance 1</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_gp_candidate_id" name="confirm_gp_candidate_id"/>
+                            <input type="hidden" id="confirm_gp_candidate_batch_id" name="confirm_gp_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+                                Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC                           
+                            </div>
+                        
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal fade" id="attendance_compliance_2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/confirmgpuser" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Attendance 2</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_gp_candidate_id" name="confirm_gp_candidate_id"/>
+                            <input type="hidden" id="confirm_gp_candidate_batch_id" name="confirm_gp_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+                            Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS           
+                            </div>
+                        
+                        </div>
+                    </form>
+                </div>
+            </div>
+
 
 
             <div class="modal fade" id="delete_ccmc_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -3104,9 +3337,10 @@
                         <th>Login Id.</th>
                         <th>CCMC Candidate Code No.</th>
                         <th>Fees Paid</th>
+                        <th style="text-align: center;">Attendance 1 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_1_modal"  data-toggle="modal">More Info</a></th>
+                        <th style="text-align: center;">Attendance 2 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_2_modal"  data-toggle="modal">More Info</a></th>
                         <th>Image Status</th>
                         <th>Sign Status</th>
-                        <th>Attendance</th>
                         <th>Ship Visis</th>
                         <th>STCW</th>
                     </tr>
@@ -3135,9 +3369,21 @@
                                 <t t-out="candidate.candidate_code" />
                             </td>
                             <td class="text-center">
-                                <select t-attf-value="{{candidate.fees_paid}}"  t-attf-id="fees_paid_{{candidate.id}}" onchange="feesPaid(this)"> 
+                                <select t-attf-value="{{candidate.fees_paid}}"  t-att-disabled="candidate.invoice_generated == True" t-attf-id="fees_paid_{{candidate.id}}" onchange="feesPaid(this)"> 
                                     <option value="yes"  t-att-selected="candidate.fees_paid == 'yes'" >Yes</option>
                                     <option value="no"  t-att-selected="candidate.fees_paid == 'no'">No</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select t-attf-id="attendance_compliance1_{{candidate.id}}" onchange="attendanceCompliance1(this)"> 
+                                    <option value="yes"  t-att-selected="candidate.attendance_compliance_1 == 'yes'" >Yes</option>
+                                    <option value="no" t-att-selected="candidate.attendance_compliance_1 == 'no'" >No</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select t-attf-id="attendance_compliance2_{{candidate.id}}" onchange="attendanceCompliance2(this)"> 
+                                    <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'"  >Yes</option>
+                                    <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'" >No</option>
                                 </select>
                             </td>
                             <td class="text-center">
@@ -3156,14 +3402,14 @@
                                     <span class="text-danger">Pending</span>
                                 </t>
                             </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <t t-if="candidate.attendance_criteria == 'passed'">
                                     <span class="text-success">Complied</span>
                                 </t>
                                 <t t-else="">
                                     <span class="text-danger">Pending</span>
                                 </t>
-                            </td>
+                            </td> -->
                             <td class="text-center">
                                 <t t-if="candidate.ship_visit_criteria  == 'passed'">
                                     <span class="text-success">Complied</span>
