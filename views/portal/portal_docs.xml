@@ -168,7 +168,7 @@
                                                 <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
                                             </div>
                                             <div class="form-group">
-                                                <label for="bank_name">Transaction Date</label>
+                                                <label for="transaction_date">Transaction Date</label>
                                                 <input required="True" type="date" class="form-control" id="transaction_date" name="transaction_date" />
                                             </div>
                                             <div class="form-group">
@@ -235,6 +235,10 @@
                             <div class="col-md-5">
                                 <strong><label for="bank_name">Bank Name and Address : </label></strong>
                                 <span><t t-out="invoice.bank_name"/></span>
+                            </div>
+                            <div class="col-md-5">
+                                <strong><label for="transaction_date"></label>Transaction Date : </strong>
+                                <span><t t-out="invoice.transaction_date.strftime('%d-%b-%Y')"/></span>
                             </div>
                         </div>
                     </div>

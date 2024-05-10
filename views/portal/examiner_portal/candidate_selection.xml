@@ -533,21 +533,21 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject_area1">Subject Area 1</label>
-                                            <input type="number" class="form-control"  min="0" max="9" id="subject_area1" required="True" name="subject_area1" t-att-value="gsk_marksheet.subject_area_1"/>
-                                            / 9 Marks
+                                        <label for="subject_area1">Subject Area 1, 2, 3 </label>
+                                            <input type="number" class="form-control"  min="0" max="25" id="subject_area_1_2_3" required="True" name="subject_area_1_2_3" t-att-value="gsk_marksheet.subject_area_1_2_3"/>
+                                            / 25 Marks
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject_area2">Subject Area 2</label>
-                                        <input type="number" class="form-control"  min="0" max="6" id="subject_area2" required="True" name="subject_area2" t-att-value="gsk_marksheet.subject_area_2"/>
-                                        / 6 Marks
+                                        <label for="subject_area2">Subject Area 4, 5, 6</label>
+                                        <input type="number" class="form-control"  min="0" max="25" id="subject_area_4_5_6" required="True" name="subject_area_4_5_6" t-att-value="gsk_marksheet.subject_area_4_5_6"/>
+                                        / 25 Marks
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area3">Subject Area 3</label>
                                         <input type="number"  min="0" max="9" class="form-control" id="subject_area3" required="True" name="subject_area3" t-att-value="gsk_marksheet.subject_area_3"/>
@@ -577,7 +577,7 @@
                                             <input type="number" min="0" max="5" class="form-control" id="subject_area6" required="True" name="subject_area6" t-att-value="gsk_marksheet.subject_area_6"/>
                                             / 5 Marks
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">

@@ -332,6 +332,7 @@ class InstituteCourses(models.Model):
     ]
     institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
     course = fields.Many2one("course.master","Course",tracking=True)
+    dgs_document_name = fields.Char('Document Name')
     dgs_document = fields.Binary(string='Upload DGS Document',tracking=True)
     batcher_per_year = fields.Integer("Batches per Year",tracking=True)
     intake_capacity = fields.Integer("Intake Capacity",tracking=True)

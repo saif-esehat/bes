@@ -1332,6 +1332,23 @@ class InstitutePortal(CustomerPortal):
         
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+    
+    @http.route(['/my/stcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DeleteStcw(self, **kw):
+        # import wdb; wdb.set_trace();
+        stcw_id = kw.get("stcw_id")
+        request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
 
     @http.route(['/my/ccmcshipvisit/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DeleteCcmcShipVisits(self, **kw):
@@ -3053,7 +3070,6 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/update/inscap'],method=["POST"], type="http", auth="user", website=True)
     def UpdateInstituteCapacits(self, **kw):
-        # import wdb; wdb.set_trace();
         batch_per_year = kw.get('batch_per_year')
         candidate_per_batch = kw.get('candidate_per_batch')
         file_content = kw.get("approvaldocument").read()
@@ -3062,13 +3078,32 @@ class InstitutePortal(CustomerPortal):
         
         # approvaldocument = kw.get('approvaldocument')
         course_id = kw.get('course_id')
+        # import wdb; wdb.set_trace();
         course = request.env['institute.courses'].sudo().search([('id','=',course_id)])
         course.write({
             'batcher_per_year':batch_per_year,
             'intake_capacity':candidate_per_batch,
             'batcher_per_year':batch_per_year,
+            'dgs_document_name':filename,
             "dgs_document":base64.b64encode(file_content)
         })
 
         return request.redirect('/my/editinstitute')
+    
+
+    @http.route(['/my/download/<int:course_id>'], type='http', auth="user", website=True)
+    def download_dgs_document(self,course_id):
+        # import wdb; wdb.set_trace();
+        course = request.env['institute.courses'].sudo().browse(course_id)
+        if course:
+            # Retrieve the file content
+            content = base64.b64decode(course.dgs_document_content)
+            if content:
+                # Return the file as attachment
+                headers = [
+                    ('Content-Type', 'application/octet-stream'),
+                    ('Content-Disposition', 'attachment; filename="%s"' % course.dgs_document)
+                ]
+                return request.make_response(content, headers=headers)
+        return request.not_found()
         
