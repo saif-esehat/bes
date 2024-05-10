@@ -139,7 +139,7 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-        
+        # import wdb; wdb.set_trace()
         vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'institutes'}
         return request.render("bes.examiner_assignment_institute_list",vals)
     
@@ -826,7 +826,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
@@ -870,7 +870,7 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
 
-        date = examiner_assignments.exam_date
+        date = examiner_assignments[0].exam_date
         
         file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
         
@@ -948,9 +948,17 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                             })
         
-        # Merge 3 cells over two rows.
-        mek_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        
+        instruction = workbook.add_format({
+                                                'bold':     True,
+                                                # 'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 10,
+                                                'font_color': 'red',
+                                            })
+
+        mek_oral_sheet.merge_range("A1:D1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+       
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
           'Use of chipping Tools & Brushes & Paints \n 10 Marks',
@@ -1055,7 +1063,7 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
         
-        date = examiner_assignments.exam_date
+        date = examiner_assignments[0].exam_date
         
         file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
 
