@@ -43,7 +43,7 @@
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
-                            <span style="font-size:20px;">Attemp Nummber:</span>
+                            <span style="font-size:20px;">Attempt Number:</span>
                             <span style="font-size:20px;"><t t-esc="o.attempt_number"/></span>  
                         </div>
                     </div>
