@@ -273,7 +273,13 @@
             <!-- <xpath expr="//t[@t-set='entries']" position="replace">
             
             </xpath> -->
-            
+      </template>
+
+      <template id="portal_report_invoice_document_inherited" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//th[@name='th_quantity']" position="replace">
+            <th name="th_quantity" class="text-right"><span>Number</span></th>
+        </xpath>
 
       </template>
 
