@@ -52,12 +52,12 @@ class InstitutePortal(CustomerPortal):
         batch_id = int(kw.get('batch_id'))
         capacity = int(kw.get('capacity'))
         
-        file_content = kw.get("approvaldocument").read()
-        filename = kw.get('approvaldocument').filename
+        # file_content = kw.get("approvaldocument").read()
+        # filename = kw.get('approvaldocument').filename
         batch = request.env["institute.ccmc.batches"].sudo().search([('id','=',batch_id)])
         batch.write({ "dgs_approved_capacity": capacity,
                      "dgs_approval_state":True,
-                     "dgs_document":base64.b64encode(file_content)
+                    #  "dgs_document":base64.b64encode(file_content)
                      })
         
         return request.redirect("/my/ccmcbatch")
@@ -1437,7 +1437,7 @@ class InstitutePortal(CustomerPortal):
     
     
     @http.route(['/my/gpcandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
-    def UpdateFees2(self, **kw):
+    def UpdateFeesGP(self, **kw):
         # import wdb; wdb.set_trace();
         data = request.jsonrequest
         candidate_id = data['candidate_id']
@@ -1452,7 +1452,7 @@ class InstitutePortal(CustomerPortal):
         return json.dumps({"status":"success"})
 
     @http.route(['/my/ccmccandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
-    def UpdateFees2(self, **kw):
+    def UpdateFeesccmc(self, **kw):
         # import wdb; wdb.set_trace();
         data = request.jsonrequest
         candidate_id = data['candidate_id']

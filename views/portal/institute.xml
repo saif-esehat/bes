@@ -2718,7 +2718,7 @@
         
                                         $.ajax({
                                         type: "POST",
-                                        url: '/my/gpcandidate/updatefees2',
+                                        url: '/my/ccmccandidate/updatefees2',
                                         data: JSON.stringify(data),
                                         contentType: 'application/json',
                                         success: function (response) {
