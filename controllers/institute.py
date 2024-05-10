@@ -1482,6 +1482,75 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'fees_paid':fees_paid})
         
         return json.dumps({"status":"success"})
+    
+    
+    
+    @http.route(['/my/gpcandidate/attendance_compliance_1'], method=["POST", "GET"], type="json", auth="user")
+    def GPAttendanceCompliance1(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_1 = data['attendance_compliance_1']
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        
+        
+        candidate.write({'attendance_compliance_1':attendance_compliance_1})
+        candidate._check_attendance_criteria()
+        
+        return json.dumps({"status":"success"})
+    
+    
+    @http.route(['/my/gpcandidate/attendance_compliance_2'], method=["POST", "GET"], type="json", auth="user")
+    def GPAttendanceCompliance2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_2 = data['attendance_compliance_2']
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'attendance_compliance_2':attendance_compliance_2})
+        candidate._check_attendance_criteria()
+        
+        return json.dumps({"status":"success"})
+    
+    @http.route(['/my/ccmccandidate/attendance_compliance_1'], method=["POST", "GET"], type="json", auth="user")
+    def CCMCAttendanceCompliance1(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_1 = data['attendance_compliance_1']
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        
+        
+        candidate.write({'attendance_compliance_1':attendance_compliance_1})
+        candidate._check_attendance_criteria()
+        
+        return json.dumps({"status":"success"})
+    
+    @http.route(['/my/ccmccandidate/attendance_compliance_2'], method=["POST", "GET"], type="json", auth="user")
+    def CCMCAttendanceCompliance2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_2 = data['attendance_compliance_2']
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        
+        
+        candidate.write({'attendance_compliance_2':attendance_compliance_2})
+        candidate._check_attendance_criteria()
+        
+        return json.dumps({"status":"success"})
 
 
     @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
