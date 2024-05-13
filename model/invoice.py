@@ -37,7 +37,7 @@ class BatchInvoice(models.Model):
         
     def open_ccmc_candidate(self):
         
-        batch_id  = self.batch.id
+        batch_id  = self.ccmc_batch.id
         return {
                     'name': 'CCMC Candidate',
                     'domain': [('institute_batch_id', '=',batch_id)],
