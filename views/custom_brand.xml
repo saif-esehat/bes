@@ -4,7 +4,7 @@
 <template id="custom_brand_promotion_message" inherit_id="web.brand_promotion_message" name="Custom Brand Promotion Message">
     <xpath expr="//a[@class='badge badge-light']" position="replace">
         <!-- Remove the Odoo logo by not including it -->
-        eSehat
+        <a target="_blank" href="https://esehat.in" >eSehat</a>
     </xpath>
 </template>
 

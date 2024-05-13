@@ -1349,6 +1349,24 @@ class InstitutePortal(CustomerPortal):
         
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+ 
+    @http.route(['/my/ccmcstcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DeleteccmcStcw(self, **kw):
+        print (kw)
+        # import wdb; wdb.set_trace();
+        stcw_id = kw.get("stcw_ccmc_id")
+        request.env['ccmc.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        candidate = request.env["ccmc.candidate"].sudo().search([('id','=',kw.get("candidate_ccmc_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        
+        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_ccmc_id")))
 
     @http.route(['/my/ccmcshipvisit/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DeleteCcmcShipVisits(self, **kw):

@@ -2760,6 +2760,9 @@
                                     <span class="text-danger">Pending</span>
                                 </t>
                             </td>
+                            4
+
+                            
                             <td class="text-center">
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
@@ -4001,6 +4004,17 @@
                     }
                 }
 
+                function openSTCWDeleteModal(button) {
+                    <!-- debugger -->
+                    // Retrieve the data-id attribute value from the clicked button
+                    var dataId = button.getAttribute('data-id');
+                    var candidate_id = button.getAttribute('candidate-id');
+                    // Update the content of the modal with the retrieved data
+                    document.getElementById('stcw_ccmc_id').value = dataId;
+                    document.getElementById('candidate_ccmc_id').value = candidate_id;
+    
+                    }
+
 
 
                         function openDeleteModal(button) {
@@ -4709,10 +4723,33 @@
                                                     </form>
                                                 </div>
                                             </div>
+                                            <div class="modal fade" id="DeleteSTCW" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" action="/my/ccmcstcw/delete" enctype="multipart/form-data">
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Delete STCW</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete ?
+                                                                <input type="hidden" id="stcw_ccmc_id" name="stcw_ccmc_id"/>
+                                                                <input type="hidden" id="candidate_ccmc_id" name="candidate_ccmc_id" t-attf-value="{{candidate.id}}"/>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                             <div class="table-responsive border rounded border-top-0 ">
                                                 <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                                                     <thead>
                                                         <tr>
+                                                            <th>Action</th>
                                                             <th>Course</th>
                                                             <th>Institute Name</th>
                                                             <th>MTI Number</th>
@@ -4724,8 +4761,23 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                                        <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">5
                                                             <tr>
+                                                                
+                                                                <td>
+                                                                    <t t-if="batches.ccmc_state == '6-done'">
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
+                                                                
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </t>
+                                                                </td>
+
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_name" />
                                                                 </td>
@@ -4741,9 +4793,9 @@
                                                                 <td>
                                                                     <t t-out="stcw_certificate.candidate_cert_no" />
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                         Download
-                                                                </td>
+                                                                </td> -->
                                                                 <td>
                                                                     <t t-out="stcw_certificate.course_start_date" />
                                                                 </td>
