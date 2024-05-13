@@ -106,11 +106,16 @@
                     <group expand="0" string="Group By">
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'dgs_batch'}" />
                         <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                        <!-- <filter name="" string="State" context="{'state':'exam_region'}" /> -->
+                        <filter string="Invoice Pending" name="group_by_state" context="{'group_by':'state'}"  domain="[('state', '=', '3-pending_invoice')]"/>
+                        <filter string="Paid" name="group_by_state" context="{'group_by':'state'}" domain="[('state', '=', '4-invoiced')]"/>
+
                     </group>
 
                     <searchpanel>
-                        <field name="institute_id" enable_counters="1"/>
-                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <field name="state" enable_counters="1" icon="fa fa-user"/>
+                        <!-- <field name="institute_id" enable_counters="1"/> -->
                     </searchpanel>
                 </search>
             </field>
