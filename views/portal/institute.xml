@@ -3869,12 +3869,16 @@
                                             
                                         </td>
                                         <t t-if="course.dgs_document">
-                                            <td>
-                                                <a href="/my/download/{{ course.id }}">
-                                                    <!-- <t t-esc="course.dgs_document"/> -->
-                                                    <t t-esc="course.dgs_document_name"/>
-                                                </a>
-                                            </td>
+                                            <t t-if="course.course.id == 1">
+                                                <td>
+                                                    <a t-attf-href="/my/gp/download_dgs_capacity/{{course.course.id}}/{{institutes[0].id}}" class="fa"><t t-esc="course.dgs_document_name"/></a>
+                                                </td>
+                                            </t>
+                                            <t t-else="course.course.id == 2">
+                                                <td>
+                                                    <a t-attf-href="/my/ccmc/download_dgs_capacity/{{course.course.id}}/{{institutes[0].id}}" class="fa"><t t-esc="course.dgs_document_name"/></a>
+                                                </td>
+                                            </t>
                                         </t>
                                         <t t-else="">
                                             <td>

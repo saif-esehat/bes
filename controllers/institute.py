@@ -3026,34 +3026,38 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
 
-    @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+    @http.route(['/my/gp/download_dgs_capacity/<int:cousre_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacityCard(self,cousre_id,institute_id,**kw ):
+        # import wdb; wdb.set_trace()
         
-        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        # batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        
+        cousre = request.env['course.master'].sudo().search([('id','=',cousre_id)])
         institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
         
         # import wdb; wdb.set_trace()
         
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
-            file_name = institute.name + "-" + batch.batch_name + "-" + "DGS Document" + ".pdf"
+        # institute.courses[0].course.name
+        if institute.courses[0].dgs_document:
+            pdf_data = base64.b64decode(institute.courses[0].dgs_document)  # Decoding file data
+            file_name = institute.courses[0].dgs_document_name + ".pdf"
 
             headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
             return request.make_response(pdf_data, headers)
         else:
             return request.not_found()
    
-    @http.route(['/my/ccmccandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacity(self,batch_id,institute_id,**kw ):
+    @http.route(['/my/ccmc/download_dgs_capacity/<int:cousre_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacity(self,cousre_id,institute_id,**kw ):
         
-        batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
+        cousre = request.env['course.master'].sudo().search([('id','=',cousre_id)])
         institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
-        
+         
         # import wdb; wdb.set_trace()
-        
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
-            file_name = institute.name + "-" + batch.ccmc_batch_name + "-" + "DGS Document" + ".pdf"
+        # institute.courses[0].course.name
+        if institute.courses[1].dgs_document:
+            pdf_data = base64.b64decode(institute.courses[1].dgs_document)  # Decoding file data
+            file_name = institute.courses[1].dgs_document_name + ".pdf"
 
             headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
             return request.make_response(pdf_data, headers)
