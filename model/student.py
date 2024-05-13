@@ -127,6 +127,11 @@ class GPCandidate(models.Model):
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
 
+    state =  fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], string='User Withdrawn',default="no",tracking=True)
+
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
         for record in self:
