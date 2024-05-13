@@ -645,7 +645,29 @@ class InstituteCcmcBatches(models.Model):
     # def confirm_batch_ccmc(self):
         
     #     self.write({"ccmc_state":"2-indos_pending"})
-    
+    # Added method to generate sequence
+    def generate_sequence(self):
+        # import wdb; wdb.set_trace()
+        batch_year = self.ccmc_to_date.strftime('%y')
+        batch_month = self.ccmc_to_date.strftime('%m')
+        half = '06' if int(batch_month) <= 6 else '12'
+        institute_code = self.institute_id.code # Replace this with your actual institute code
+        
+        # Count the number of candidates in the batch
+        # candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_id','=',True)])
+        candidate_count = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_id','!=',None)])
+
+        # import wdb; wdb.set_trace()
+        # Generate the sequence number starting from '001'
+        candidate_count = candidate_count+1
+        
+        next_sequence_number = str(candidate_count).zfill(3)
+        
+
+        sequence = f'C{batch_year}{half}{institute_code}{next_sequence_number}'
+        return sequence
+
+
     def confirm_batch_ccmc(self,candidate_ids):
 
         print(self,"selfffffffffffffffffffffffffffffffffffffffffffffffffffff")
@@ -720,7 +742,13 @@ class InstituteCcmcBatches(models.Model):
             }
 
             portal_user = self.env['res.users'].sudo().create(user_values)
-            ccmc_candidate.write({'user_id': portal_user.id})
+
+            candidate_count = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',self.id)])
+            sequence = self.generate_sequence()
+            ccmc_candidate.write({'user_id': portal_user.id,
+                                'candidate_code': sequence  # Assign the generated sequence to the partner
+            
+                                })
             # You may need to adjust the following fields based on your actual field names in ccmc_candidate
             ccmc_candidate_tag = self.env.ref('bes.candidates_tags').id
 

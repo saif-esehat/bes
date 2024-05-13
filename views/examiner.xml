@@ -203,7 +203,7 @@
                             <field name="institute_id"/>
                         </group> -->
                         <group style="width:50%;">
-                            <field name="course" required="1"/>
+                            <field name="course" required="1" />
                         </group>
                         <group style="width:50%;">
                             <field name="exam_region" readonly="1" required="1"/>
