@@ -33,7 +33,7 @@ class InstitutePortal(CustomerPortal):
     def UpdateBatchApprovalCapacity(self, **kw):
         
         batch_id = int(kw.get('batch_id'))
-        capacity = int(kw.get('capacity'))
+        capacity = int(kw.get('capacity'))  
         
         # file_content = kw.get("approvaldocument").read()
         # filename = kw.get('approvaldocument').filename
@@ -3100,7 +3100,7 @@ class InstitutePortal(CustomerPortal):
     def DeleteFaculty(self, **kw):
 
         user_id = request.env.user.id
-        # import wdb; wdb.set_trace();
+        # import wdb; wdb.set_trace(); 
         
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))])
         candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).user_id
