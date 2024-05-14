@@ -127,7 +127,7 @@ class GPCandidate(models.Model):
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
 
-    state =  fields.Selection([
+    withdrawn_state =  fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
     ], string='User Withdrawn',default="no",tracking=True)
@@ -1243,10 +1243,10 @@ class MekOralLine(models.Model):
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID",tracking=True)
     mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
     mek_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
-    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools",tracking=True)
-    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
-    welding = fields.Integer("Welding",tracking=True)
-    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
+    using_of_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints",tracking=True)
+    # use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
+    welding_lathe_drill_grinder = fields.Integer("Welding & Lathe/Drill/Grinder",tracking=True)
+    # lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
     electrical = fields.Integer("Electrical",tracking=True)
     journal = fields.Integer("Journal",tracking=True)
 
@@ -1258,29 +1258,29 @@ class MekOralLine(models.Model):
 
     
 
-    @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.depends('using_of_tools', 'welding_lathe_drill_grinder', 'electrical', 'journal')
     def _compute_mek_oral_total_marks(self):
         for record in self:
             total = (
-                record.using_hand_plumbing_carpentry_tools +
-                record.use_of_chipping_tools_paints +
-                record.welding +
-                record.lathe_drill_grinder +
+                record.using_of_tools +
+                record.welding_lathe_drill_grinder +
+                # record.welding +
+                # record.lathe_drill_grinder +
                 record.electrical +
                 record.journal
             )
             record.mek_oral_total_marks = total
 
-    @api.onchange('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.onchange('using_of_tools', 'welding_lathe_drill_grinder','electrical', 'journal')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.using_hand_plumbing_carpentry_tools > 10:
-            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools Marks cannot exceed 10.")
-        if self.use_of_chipping_tools_paints > 10:
-            raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
-        if self.welding > 10:
-            raise UserError("In MEK Oral, Welding Marks cannot exceed 10.")
-        if self.lathe_drill_grinder > 10:
-            raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
+        if self.using_of_tools > 20:
+            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints Marks cannot exceed 20.")
+        # if self.use_of_chipping_tools_paints > 10:
+        #     raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
+        if self.welding_lathe_drill_grinder > 20:
+            raise UserError("In MEK Oral, Welding & Lathe/Drill/Grinder Marks cannot exceed 20.")
+        # if self.lathe_drill_grinder > 10:
+        #     raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
         if self.electrical > 10:
             raise UserError("In MEK Oral, Electrical Marks cannot exceed 10.")
         if self.journal > 25:

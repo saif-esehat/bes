@@ -206,7 +206,7 @@
                         <tr>
                             <td class="text-left">
                                 <!-- <t t-out="assignment.institute_id.name" /> -->
-                                <t t-out="assignment.prac_oral_id.institute_id.name" />
+                                <t t-out="assignment.institute_id.name" />
                             </td>
                             <td class="text-left">
                                 <t t-if="assignment.prac_oral_id.exam_type == 'practical_oral'">
@@ -303,8 +303,24 @@
                                         /* Adjust as needed */
                                     }
         </style>
-
         <t t-call="portal.portal_layout">
+            <div class="container">
+                <ol class='text-warning'>    
+                    <li>
+                        <span>Download the Excel sheet using the "Download Marksheet" button</span>
+                    </li>
+                    <li>
+                        <span>Fill the marks and save the excel file in you computer</span>
+                    </li>
+                    <li>
+                        <span>Navigate back to this same page and use the "Upload Marksheet" button to upload the marks</span>
+                    </li>
+                    <li>
+                        <span>To edit the marks use the "Edit" button and click on "Confirm" button to lock in the marks</span>
+                    </li>
+                    
+                </ol>
+            </div>
            <t t-call="portal.portal_table">
             <!-- Upload GSK marksheet  -->
                 <div class="modal fade" id="uploadGskMarksheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

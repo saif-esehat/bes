@@ -118,39 +118,21 @@
                     <field name="exam_bes_candidate_id" invisible="1"/>
 
                     <group>
-                        <label for="using_hand_plumbing_carpentry_tools" />
+                        <label for="using_of_tools" />
                             <div>
-                                <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                                <field name="using_of_tools" nolabel="1"/>
                                 / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                     </group>
 
                     <group>
-                        <label for="use_of_chipping_tools_paints" />
-                            <div>
-                                <field name="use_of_chipping_tools_paints" nolabel="1"/>
-                                / 
-                                <span>10 Marks</span>
-                            </div>
-                    </group>
-
-                    <group>
-                        <label for="welding" />
-                            <div>
-                                <field name="welding" nolabel="1"/>
-                                / 
-                                <span>10 Marks</span>
-                            </div>
-                    </group>
-
-                    <group>
-                        <label for="lathe_drill_grinder" />
-                            <div>
-                                <field name="lathe_drill_grinder" nolabel="1"/>
-                                / 
-                                <span>10 Marks</span>
-                            </div>
+                        <label for="welding_lathe_drill_grinder" />
+                        <div>
+                            <field name="welding_lathe_drill_grinder" nolabel="1"/>
+                    / 
+                            <span>20 Marks</span>
+                        </div>
                     </group>
 
 
