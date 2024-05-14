@@ -63,6 +63,7 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb;wdb.set_trace();
         account_move_id = self.env.context['active_id']
         invoice = self.env['account.move'].sudo().search([('id','=',account_move_id)])
+        print("gopppppppppppppppppppppppppppppppppppppp")
         if invoice.gp_batch_ok: #in GP Invoice
             print("gopppppppppppppppppppppppppppppppppppppp")
             gp_candidates = invoice.gp_candidates.ids
