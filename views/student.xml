@@ -323,6 +323,11 @@
                             <field name="candidate_attendance_record"/>
                             <field name="fees_paid"/>
                             <field name="invoice_no"/>
+                            <field name="withdrawn_state"/>
+                            <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
+
+                            
+                            
 
                         </group>
                         

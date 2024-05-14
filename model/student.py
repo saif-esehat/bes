@@ -132,6 +132,8 @@ class GPCandidate(models.Model):
         ('no', 'No')
     ], string='User Withdrawn',default="no",tracking=True)
 
+    withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
+
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
         for record in self:
