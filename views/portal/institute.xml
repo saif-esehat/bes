@@ -3024,7 +3024,7 @@
         </style>
 
         <t t-call="portal.portal_layout">
-                      <div class="container">
+            <div class="container">
                 <p class="text-warning">To Upload the candidate details in bulk 
                     <ol>
                         <li>

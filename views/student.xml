@@ -393,10 +393,10 @@
                                         <field name='mek_oral_exam_date'/> 
                                         <field name='institute_id'/>                             
                                         <field name='exam_id'/>
-                                        <field name='using_hand_plumbing_carpentry_tools'/>
-                                        <field name="use_of_chipping_tools_paints"/>
-                                        <field name='welding'/>
-                                        <field name="lathe_drill_grinder"/>
+                                        <field name='using_of_tools'/>
+                                        <field name="welding_lathe_drill_grinder"/>
+                                        <!-- <field name='welding'/>
+                                        <field name="lathe_drill_grinder"/> -->
 
                                         <field name="electrical"/>
                                         <field name="journal"/>
@@ -1249,24 +1249,24 @@
                             <field name='exam_id'/>
                         </group>
                         <group>
-                            <label for="using_hand_plumbing_carpentry_tools" />
+                            <label for="using_of_tools" />
                             <div>
-                                <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                                <field name="using_of_tools" nolabel="1"/>
                         / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
 
                         <group>
-                            <label for="use_of_chipping_tools_paints" />
+                            <label for="welding_lathe_drill_grinder" />
                             <div>
-                                <field name="use_of_chipping_tools_paints" nolabel="1"/>
+                                <field name="welding_lathe_drill_grinder" nolabel="1"/>
                         / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
 
-                        <group>
+                        <!-- <group>
                             <label for="welding" />
                             <div>
                                 <field name="welding" nolabel="1"/>
@@ -1282,7 +1282,7 @@
                         / 
                                 <span>10 Marks</span>
                             </div>
-                        </group>
+                        </group> -->
 
 
                         <group>

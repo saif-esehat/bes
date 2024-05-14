@@ -83,10 +83,9 @@ class MekOral(models.Model):
     
     exam_bes_candidate_id = fields.Many2one("exam.schedule.bes.candidate",string="Exam BES Candidate",required=True)
     marksheet_name = fields.Char("Marksheet Name",default="Oral MEK Marksheet")
-    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools")
-    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints")
-    welding = fields.Integer("Welding")
-    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder")
+    using_of_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints",tracking=True)
+    # use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
+    welding_lathe_drill_grinder = fields.Integer("Welding & Lathe/Drill/Grinder",tracking=True)
     electrical = fields.Integer("Electrical")
     journal = fields.Integer("Journal")
     
@@ -103,14 +102,14 @@ class MekOral(models.Model):
         return mek_oral
     
     
-    @api.constrains('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.constrains('using_of_tools', 'welding_lathe_drill_grinder', 'electrical', 'journal')
     def _check_field_limits(self):
          for record in self:
             field_names = {
-                'using_hand_plumbing_carpentry_tools': record.using_hand_plumbing_carpentry_tools,
-                'use_of_chipping_tools_paints': record.use_of_chipping_tools_paints,
-                'welding': record.welding,
-                'lathe_drill_grinder': record.lathe_drill_grinder,
+                'using_of_tools': record.using_of_tools,
+                'welding_lathe_drill_grinder': record.welding_lathe_drill_grinder,
+                # 'welding': record.welding,
+                # 'lathe_drill_grinder': record.lathe_drill_grinder,
                 'electrical': record.electrical,
                 'journal': record.journal,
             }
@@ -120,14 +119,14 @@ class MekOral(models.Model):
                 if field_value > 25 and field_name == 'journal':
                     raise ValidationError(f"{self._fields[field_name].string} value cannot exceed 25.")
     
-    @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.depends('using_of_tools', 'welding_lathe_drill_grinder', 'electrical', 'journal')
     def _compute_total_marks(self):
         for record in self:
             total = (
-                record.using_hand_plumbing_carpentry_tools +
-                record.use_of_chipping_tools_paints +
-                record.welding +
-                record.lathe_drill_grinder +
+                record.using_of_tools +
+                record.welding_lathe_drill_grinder +
+                # record.welding +
+                # record.lathe_drill_grinder +
                 record.electrical +
                 record.journal
             )
