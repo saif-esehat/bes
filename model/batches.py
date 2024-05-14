@@ -225,13 +225,13 @@ class InstituteGPBatches(models.Model):
     def confirm_batch(self,candidate_ids):
         
         # import wdb;wdb.set_trace();
-
         # candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_status','=','active')])
         canidate_list_no_indos = []
         candidate_missing_data_id = []
         
         candidates = self.env['gp.candidate'].sudo().browse(candidate_ids)
-
+        print("Candidates")
+        print(candidates)
         for candidate in candidates:
         # for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
@@ -275,7 +275,8 @@ class InstituteGPBatches(models.Model):
             
             
         gp_candidates = candidates.ids
-        
+        print("Candidates IDs " + str(gp_candidates) )
+
         set1 = set(gp_candidates)
         set2 = set(candidate_missing_data_id)
         
@@ -283,7 +284,7 @@ class InstituteGPBatches(models.Model):
         array1_without_common = list(set1 - set2)
 
         gp_candidates = self.env['gp.candidate'].sudo().browse(array1_without_common)
-        
+        print("gp_candidates s " + str(gp_candidates))
         group_xml_ids = [
         'bes.group_gp_candidates',
         'base.group_portal'
