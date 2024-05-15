@@ -6,6 +6,8 @@ import xlsxwriter
 from datetime import datetime
 import xlrd
 
+    
+
 
 class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
@@ -553,11 +555,11 @@ class InstituteCcmcBatches(models.Model):
     @api.depends("all_invoice_generated")
     def compute_all_invoice_generated(self):
         for record in self:
-             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
+             candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', record.id)])
 
              if candidate_count > 0:
                
-               candidate_with_generated_invoice = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
+               candidate_with_generated_invoice = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
                
                if candidate_with_generated_invoice == candidate_count:
                     record.all_invoice_generated = True
