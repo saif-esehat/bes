@@ -133,6 +133,8 @@ class GPCandidate(models.Model):
         ('yes', 'Yes'),
         ('no', 'No')
     ], string='User Withdrawn',default="no",tracking=True)
+    
+    exam_registered = fields.Boolean("Exam Registered")
 
     withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
 
@@ -576,6 +578,9 @@ class CCMCCandidate(models.Model):
         ('twelve', '12th std'),
         ('iti', 'ITI')
     ],string="Qualification", default='tenth',tracking=True)
+    
+    batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
+
     
     candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
