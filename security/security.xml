@@ -83,7 +83,7 @@
             <field name="name">EC Registered Candidate Record Rule</field>
             <field ref="model_gp_exam_schedule" name="model_id"/>
             <field name="groups" eval="[(4, ref('group_exam_coordinator'))]"/>
-            <field name="domain_force">[('registered_institute.exam_center.exam_co_ordinator','=',user.id)]</field>
+            <field name="domain_force">[('exam_region.exam_co_ordinator','=',user.id)]</field>
             <!-- <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>

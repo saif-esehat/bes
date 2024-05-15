@@ -1005,7 +1005,7 @@ class GPExam(models.Model):
     
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,tracking=True)
 
-    registered_institute = fields.Many2one("bes.institute",string="Registered Institute",tracking=True)
+    registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
