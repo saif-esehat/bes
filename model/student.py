@@ -592,7 +592,8 @@ class CCMCCandidate(models.Model):
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
+         ('no', 'No'),
+         ('na', 'N/A')
     ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("ccmc.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
