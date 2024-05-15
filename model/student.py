@@ -40,6 +40,7 @@ class GPCandidate(models.Model):
     iti_percent = fields.Integer("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
+    
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
@@ -69,7 +70,8 @@ class GPCandidate(models.Model):
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
+         ('no', 'No'),
+         ('na', 'N/A')
     ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)

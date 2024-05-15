@@ -6,6 +6,8 @@ import xlsxwriter
 from datetime import datetime
 import xlrd
 
+    
+
 
 class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
