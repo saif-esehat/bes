@@ -444,12 +444,15 @@
                 <thead>
                     <tr >
                         <th class="text-left">Candidate Name</th>
-                        <th class="text-left">Candidate Code</th>
+                        <!-- <th class="text-left">Candidate Code</th> -->
                         <th class="text-left">Roll No.</th>
-                        <th class="text-left">Course</th>
+                        <!-- <th class="text-left">Course</th> -->
                         <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-left">Online Subject</th>
                         <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-left">Token</th>
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Oral</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 1, 2, 3</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 4, 5, 6</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Journal</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Oral total</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Gsk Practical</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Oral</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Practical</th>
@@ -470,12 +473,12 @@
 
                             
                             </td>
-                            <td class="text-left">
+                            <!-- <td class="text-left">
                                 <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.candidate_code" />
                                 <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.candidate_code" />
                                 <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.candidate_code" />
                                 <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.candidate_code" />
-                            </td>
+                            </td> -->
 
                             <td  class="text-left">
                                 <t t-if="examiner_subject == 'GSK'">
@@ -486,9 +489,9 @@
                                 </t>
                             </td>
 
-                            <td  class="text-left">
+                            <!-- <td  class="text-left">
                                 <t t-out="marksheet.examiners_id.prac_oral_id.course.course_code" />
-                            </td>
+                            </td> -->
                             
                             <td  t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">
                                 <t t-out="examiner_subject" />
@@ -503,7 +506,16 @@
                                 </t>
                                 
                             </td>
-
+                            <td  class="text-left">
+                                <t t-out="marksheet.gsk_oral.subject_area_1_2_3"/>
+                            </td>
+                            <td  class="text-left">
+                                <t t-out="marksheet.gsk_oral.subject_area_4_5_6"/>
+                            </td>
+                            <td  class="text-left">
+                                <t t-out="marksheet.gsk_oral.practical_record_journals"/>
+                            </td>
+                            
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
                                 <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}">
