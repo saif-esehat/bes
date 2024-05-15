@@ -133,6 +133,8 @@ class GPCandidate(models.Model):
         ('yes', 'Yes'),
         ('no', 'No')
     ], string='User Withdrawn',default="no",tracking=True)
+    
+    exam_registered = fields.Boolean("Exam Registered")
 
     withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
 
@@ -577,6 +579,9 @@ class CCMCCandidate(models.Model):
         ('iti', 'ITI')
     ],string="Qualification", default='tenth',tracking=True)
     
+    batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
+
+    
     candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
     elligiblity_criteria = fields.Selection([
@@ -592,7 +597,8 @@ class CCMCCandidate(models.Model):
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
+         ('no', 'No'),
+         ('na', 'N/A')
     ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("ccmc.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
