@@ -364,7 +364,7 @@
                         <group style="width:50%">
                             <field name="cookery_bakery"/>
                             <field name="ccmc_oral"/>
-                            
+                            <field name="ccmc_gsk_oral"/>
                             <field name="ccmc_online"/>
                         </group>
                         

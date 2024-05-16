@@ -1503,20 +1503,20 @@ class CcmcOralLine(models.Model):
     equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
     
     gsk_ccmc = fields.Integer("GSK",tracking=True)
-    safety_ccmc = fields.Integer("Safety",tracking=True)
+    # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
 
     @api.depends(
-        'gsk_ccmc', 'safety_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
+        'gsk_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
     )
     def _compute_ccmc_rating_total(self):
         for record in self:
             rating_total = (
                 record.gsk_ccmc +
-                record.safety_ccmc+
+                # record.safety_ccmc+
                 record.house_keeping+
                 record.attitude_proffessionalism+
                 record.equipment_identification
@@ -1525,12 +1525,12 @@ class CcmcOralLine(models.Model):
             record.toal_ccmc_rating = rating_total
 
 
-    @api.onchange('gsk_ccmc','safety_ccmc')
+    @api.onchange('gsk_ccmc')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.gsk_ccmc > 10:
-            raise UserError("In CCMC Oral, GSK marks should not be greater than 10.")
-        if self.safety_ccmc > 10:
-            raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
+        if self.gsk_ccmc > 20:
+            raise UserError("In CCMC Oral, GSK marks should not be greater than 20.")
+        # if self.safety_ccmc > 10:
+        #     raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
 
 
     @api.model
@@ -1570,7 +1570,7 @@ class CcmcGSKOralLine(models.Model):
     ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
     gsk_ccmc = fields.Integer("GSK",tracking=True)
     safety_ccmc = fields.Integer("Safety",tracking=True)
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
+    toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
@@ -1585,7 +1585,7 @@ class CcmcGSKOralLine(models.Model):
                 record.safety_ccmc
             )
             
-            record.toal_ccmc_rating = rating_total
+            record.toal_ccmc_oral_rating = rating_total
 
 
     @api.onchange('gsk_ccmc','safety_ccmc')

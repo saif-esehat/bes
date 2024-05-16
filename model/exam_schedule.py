@@ -1822,6 +1822,7 @@ class CCMCExam(models.Model):
 
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
+    ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)

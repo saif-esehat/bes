@@ -656,7 +656,7 @@ class ExaminerPortal(CustomerPortal):
 
             # Convert string values to integers                    
             subject_area1 = int(rec['ccmc_gsk'])
-            subject_area2 = int(rec['safety_ccmc'])
+            # subject_area2 = int(rec['safety_ccmc'])
             subject_area3 = int(rec['house_keeping'])
             subject_area4 = int(rec['f_b'])
             subject_area5 = int(rec['orals_house_keeping'])
@@ -666,7 +666,7 @@ class ExaminerPortal(CustomerPortal):
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': subject_area1,
-                'safety_ccmc': subject_area2,
+                # 'safety_ccmc': subject_area2,
                 'house_keeping': subject_area3,
                 'f_b': subject_area4,
                 'orals_house_keeping': subject_area5,

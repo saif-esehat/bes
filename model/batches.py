@@ -913,6 +913,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
             print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
             ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})
             cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
             
