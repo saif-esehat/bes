@@ -1812,6 +1812,8 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     
+    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,tracking=True)
     registered_institute = fields.Many2one("bes.institute",string="Registered Institute",tracking=True)
     

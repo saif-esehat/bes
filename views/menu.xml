@@ -19,6 +19,15 @@
             <!-- Replace 'module_name' with the actual name of your module -->
             <field name="context">{}</field>
         </record>
+
+        <record id="open_ec_ccmc_exam_schedule" model="ir.actions.act_window">
+            <field name="name">CCMC Registered Candidate</field>
+            <field name="res_model">ccmc.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree"/>
+            <!-- Replace 'module_name' with the actual name of your module -->
+            <field name="context">{}</field>
+        </record>
         
 
 
@@ -201,7 +210,7 @@
                   parent="candidate_ec_menu" 
                   groups="group_exam_coordinator"
                   name="CCMC Candidates"
-                  action="bes_ccmc_exam_action"
+                  action="open_ec_ccmc_exam_schedule"
                   sequence="2" />
 
         
