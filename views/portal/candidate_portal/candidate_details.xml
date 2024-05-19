@@ -139,7 +139,173 @@
 
 
     </template>
+        
+    <template id="exam_application_form_template" name="Exam Application Form">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Repeater Application for GP Rating</h1>
+                <form action="/my/application/view/" method="post">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label for="exam_month">Month appearing the Exam</label>
+                            <select name="exam_month" id="exam_month" class="form-control">
+                                <option value="March">March</option>
+                                <option value="June">June</option>
+                                <option value="September">September</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="exam_year">Year</label>
+                            <input type="text" name="exam_year" id="exam_year" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="exam_centre">Exam Centre Selected</label>
+                            <select name="exam_centre" id="exam_centre" class="form-control">
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Chennai">Chennai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name as in the INDoS</label>
+                        <input type="text" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="candidate_code">Candidate Code No.</label>
+                        <input type="text" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="attempts">No. of Attempts</label>
+                        <input type="number" name="attempts" id="attempts" class="form-control" t-att-value="candidate.name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="training_institute">Training Institute Name</label>
+                        <input type="text" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                        <div class="form-check">
+                            <input type="checkbox" name="exam_parts" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                            <label for="gsk_online" class="form-check-label">GSK Online (Fees Rs.300/-)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="exam_parts" value="MEK Online" id="mek_online" class="form-check-input"/>
+                            <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="exam_parts" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                            <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="exam_parts" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                            <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label for="upi_utr_no">UPI or UTR No.</label>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="amount">Amount</label>
+                            <input type="number" name="amount" id="amount" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="payment_date">Date</label>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
 
 
+    <template id="exam_application_view" name="Exam Application View">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Your Application</h1>
+                <div class="form-group">
+                    <label for="exam_month">Month appearing the Exam</label>
+                    <input type="text" id="exam_month" t-att-value="application.exam_month" class="form-control" t-att-readonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="exam_year">Year</label>
+                    <input type="text" id="exam_year" t-att-value="application.exam_year" class="form-control" t-att-readonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="exam_centre">Exam Centre Selected</label>
+                    <input type="text" id="exam_centre" t-att-value="application.exam_centre" class="form-control" t-att-readonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name as in the INDoS</label>
+                    <input type="text" id="name" t-att-value="application.name" class="form-control" t-att-readonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="candidate_code">Candidate Code No.</label>
+                    <input type="text" id="candidate_code" t-att-value="application.candidate_code" class="form-control" rt-att-eadonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="attempts">No. of Attempts</label>
+                    <input type="number" id="attempts" t-att-value="application.attempt_number" class="form-control" t-att-readonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="training_institute">Training Institute Name</label>
+                    <input type="text" id="training_institute" t-att-value="application.institute_id.name" class="form-control" t-att-readonly='1'/>
+                </div>
+                <div class="form-group">
+                    <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                    <div t-foreach="application.exam_parts" t-as="part">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" checked="checked" t-att-readonly='1'/>
+                            <label class="form-check-label"><t t-esc="part"/></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="upi_utr_no">UPI or UTR No.</label>
+                    <input type="text" id="upi_utr_no" t-att-value="application.upi_utr_no" class="form-control" t-att-readonly="1"/>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" t-att-value="application.amount" class="form-control" t-att-readonly="1"/>
+                </div>
+                <div class="form-group">
+                    <label for="payment_date">Date</label>
+                    <input type="date" id="payment_date" t-att-value="application.payment_date" class="form-control" t-att-readonly="1"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="candidate_not_found" name="Candidate Not Found">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Candidate Not Found</h1>
+                <p>Sorry, we could not find a candidate with the provided candidate code. Please check the code and try again.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="no_previous_exam_found" name="No Previous Exam Found">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>No Previous Exam Found</h1>
+                <p>No previous exam records found. This candidate must be registered through batches.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="exam_in_process" name="Exam In Process">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Exam In Process</h1>
+                <p>The last exam is still in process. Please wait for it to complete before registering for a new exam.</p>
+            </div>
+        </t>
+    </template>
 
 </odoo>

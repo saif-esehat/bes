@@ -216,4 +216,139 @@ class GPCandidatePortal(CustomerPortal):
         }
         print(result)
         return result
+    
+    @http.route(['/my/application'], type="http", auth="user", website=True)
+    def applyExam(self, **kw):
+        partner_id = request.env.user.id
+        candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
+        courses = request.env['course.master'].sudo().search([])
+        vals = {
+            'candidate': candidate,
+            'courses': courses
+        }
+        return request.render("bes.exam_application_form_template", vals)
         
+    @http.route('/submit_exam_application', type='http', auth='user', methods=['POST'], website=True)
+    def submit_exam_application(self, **kwargs):
+        import wdb; wdb.set_trace()
+        candidate_code = kwargs.get('candidate_code')
+        candidate = request.env['gp.candidate'].search([('candidate_code', '=', candidate_code)], limit=1)
+
+        if not candidate:
+            return request.render('bes.candidate_not_found')
+
+        last_exam_record = request.env['gp.exam.schedule'].search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        if not last_exam_record:
+            return request.render('bes.no_previous_exam_found')
+
+        if last_exam_record.state == '1-in_process':
+            return request.render('bes.exam_in_process')
+
+        exam_month = kwargs.get('exam_month')
+        exam_year = kwargs.get('exam_year')
+        exam_centre = kwargs.get('exam_centre')
+        name = kwargs.get('name')
+        attempts = kwargs.get('attempts')
+        training_institute = kwargs.get('training_institute')
+        exam_parts = kwargs.getlist('exam_parts')  # Handling multiple checkbox inputs
+        upi_utr_no = kwargs.get('upi_utr_no')
+        amount = kwargs.get('amount')
+        payment_date = kwargs.get('payment_date')
+
+        # Create a new exam schedule record
+        new_exam_schedule = request.env['gp.exam.schedule'].create({
+            'gp_candidate': candidate.id,
+            'attempt_number': attempts,
+            'exam_month': exam_month,
+            'exam_year': exam_year,
+            'exam_centre': exam_centre,
+            'name': name,
+            'candidate_code': candidate_code,
+            'training_institute': training_institute,
+            'exam_parts': exam_parts,
+            # 'upi_utr_no': upi_utr_no,
+            # 'amount': amount,
+            # 'payment_date': payment_date,
+            # Other necessary fields
+        })
+
+        return request.env['ir.actions.act_window']._for_xml_id('bes.candidate_gp_register_exam_wizard').with_context(wizard_context).read()[0]
+    
+    def detect_current_month(self):
+        # Get the current month as an integer (1 for January, 2 for February, etc.)
+        current_month = datetime.datetime.now().month
+        
+        # Define the month ranges
+        winter_months = [12, 1, 2]
+        spring_months = [3, 4, 5, 6]
+        summer_months = [7, 8]
+        fall_months = [9, 10, 11]
+
+        # Check which range the current month falls into
+        if current_month in winter_months:
+            return "dec_feb"
+        elif current_month in spring_months:
+            return "mar_jun"
+        elif current_month in summer_months:
+            return "jul_aug"
+        elif current_month in fall_months:
+            return "sep_nov"
+        else:
+            return "Invalid month."
+
+    @http.route('/my/application/view/', type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def view_application(self, **kwargs):
+        import wdb; wdb.set_trace()
+        if request.httprequest.method == 'POST':
+            # Process form data
+            candidate_code = kwargs.get('candidate_code')
+            candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
+
+            if not candidate:
+                return request.render('bes.candidate_not_found')
+
+            last_exam_record = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+            if not last_exam_record:
+                return request.render('bes.no_previous_exam_found')
+
+            if last_exam_record.state == '1-in_process':
+                return request.render('bes.exam_in_process')
+
+            exam_month = kwargs.get('exam_month')
+            exam_year = kwargs.get('exam_year')
+            exam_centre = kwargs.get('exam_centre')
+            name = kwargs.get('name')
+            attempts = kwargs.get('attempts')
+            training_institute = kwargs.get('training_institute')
+            exam_parts = kwargs.getlist('exam_parts')  # Handling multiple checkbox inputs
+            upi_utr_no = kwargs.get('upi_utr_no')
+            amount = kwargs.get('amount')
+            payment_date = kwargs.get('payment_date')
+
+            # Create a new exam schedule record
+            new_exam_schedule = request.env['gp.exam.schedule'].create({
+                'gp_candidate': candidate.id,
+                'attempt_number': attempts,
+                'exam_month': exam_month,
+                'exam_year': exam_year,
+                'exam_centre': exam_centre,
+                'name': name,
+                'candidate_code': candidate_code,
+                'training_institute': training_institute,
+                'exam_parts': exam_parts,
+                'upi_utr_no': upi_utr_no,
+                'amount': amount,
+                'payment_date': payment_date,
+            })
+
+            return request.render('bes.exam_application_view', {'application': new_exam_schedule})
+        else:
+            # Render the form
+            partner_id = request.env.user.id
+            candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)], limit=1)
+            courses = request.env['course.master'].sudo().search([])
+            vals = {
+                'candidate': candidate,
+                'courses': courses
+            }
+            return request.render("bes.exam_application_form_template", vals)
