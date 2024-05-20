@@ -144,22 +144,11 @@
         <t t-call="website.layout">
             <div class="container mt16">
                 <h1>Repeater Application for GP Rating</h1>
-                <form action="/my/application/view/" method="post">
+                <form action="/my/application/view" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <input type="hidden" name="batch_id" t-att-value="batch.id" />
                     <div class="form-group row">
-                        <div class="col-md-4">
-                            <label for="exam_month">Month appearing the Exam</label>
-                            <select name="exam_month" id="exam_month" class="form-control">
-                                <option value="March">March</option>
-                                <option value="June">June</option>
-                                <option value="September">September</option>
-                                <option value="December">December</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="exam_year">Year</label>
-                            <input type="text" name="exam_year" id="exam_year" class="form-control"/>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
                             <select name="exam_centre" id="exam_centre" class="form-control">
                                 <option value="Mumbai">Mumbai</option>
@@ -167,40 +156,81 @@
                                 <option value="Chennai">Chennai</option>
                             </select>
                         </div>
+                        <div class="col-md-6">
+                            <label for="training_institute">Training Institute Name</label>
+                            <input type="text" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="name">Name as in the INDoS</label>
-                        <input type="text" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_code">Candidate Code No.</label>
-                        <input type="text" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="name">Name as in the INDoS</label>
+                            <input type="text" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="candidate_code">Candidate Code No.</label>
+                            <input type="text" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="attempts">No. of Attempts</label>
                         <input type="number" name="attempts" id="attempts" class="form-control" t-att-value="candidate.name"/>
                     </div>
-                    <div class="form-group">
-                        <label for="training_institute">Training Institute Name</label>
-                        <input type="text" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="exam_parts">Applied for Examination / Examinations</label><br/>
-                        <div class="form-check">
-                            <input type="checkbox" name="exam_parts" value="GSK Online" id="gsk_online" class="form-check-input"/>
-                            <label for="gsk_online" class="form-check-label">GSK Online (Fees Rs.300/-)</label>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                            <div class="form-check">
+                                <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                <label for="gsk_online" class="form-check-label">GSK Online (Fees Rs.300/-)</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="exam_parts" value="MEK Online" id="mek_online" class="form-check-input"/>
-                            <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="exam_parts" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
-                            <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="exam_parts" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
-                            <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                        <div class="col-md-6">
+                            <label for="exams">Previous Exam Status</label><br/>
+                            <span>Red means Failed</span><br/>
+                            <div class="form-check">
+                                <t t-if="exam.gsk_online_status == 'failed'">
+                                    <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="gsk_online_status" class="badge badge-success">GSK Online</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.mek_online_status == 'failed'">
+                                    <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="mek_online_status" class="badge badge-success">MEK Online</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.gsk_oral_prac_status == 'failed'">
+                                    <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="gsk_oral_prac_status" class="badge badge-success">GSK Practical &amp; Oral</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.mek_oral_prac_status == 'failed'">
+                                    <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="mek_oral_prac_status" class="badge badge-success">MEK Practical &amp; Oral</span>
+                                </t>
+                            </div>
+
                         </div>
                     </div>
                     <div class="form-group row">
@@ -224,18 +254,19 @@
     </template>
 
 
+
     <template id="exam_application_view" name="Exam Application View">
         <t t-call="website.layout">
             <div class="container mt16">
                 <h1>Your Application</h1>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="exam_month">Month appearing the Exam</label>
                     <input type="text" id="exam_month" t-att-value="application.exam_month" class="form-control" t-att-readonly='1'/>
                 </div>
                 <div class="form-group">
                     <label for="exam_year">Year</label>
                     <input type="text" id="exam_year" t-att-value="application.exam_year" class="form-control" t-att-readonly='1'/>
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="exam_centre">Exam Centre Selected</label>
                     <input type="text" id="exam_centre" t-att-value="application.exam_centre" class="form-control" t-att-readonly='1'/>

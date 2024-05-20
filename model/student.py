@@ -1690,7 +1690,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
     
     def register_exam(self):
         
-        
+        import wdb; wdb.set_trace()
         dgs_exam = self.dgs_batch.id
         
         exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
