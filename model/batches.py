@@ -305,7 +305,11 @@ class InstituteGPBatches(models.Model):
             }
             # import wdb; wdb.set_trace()
             # 
-            portal_user = self.env['res.users'].sudo().create(user_values)
+            try:
+                portal_user = self.env['res.users'].sudo().create(user_values)
+            except:
+                print("Duplicate")
+                print(user_values)
             
             candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id)]) 
             
@@ -848,8 +852,9 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     
-    def register(self,batch_id):
-        candidates = self.env["gp.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
+    def register(self,batch_id,candidates_ids):
+        # candidates = self.env["gp.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
+        candidates = self.env["gp.candidate"].sudo().browse(candidates_ids)
 
         mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK MasterQ')])
         gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK MasterQ')])
@@ -893,9 +898,9 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     
     
-    def register(self,batch_id):
+    def register(self,batch_id,candidates_ids):
   
-        candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
+        candidates = self.env["ccmc.candidate"].sudo().browse(candidates_ids)
         
 
         # print(candidates)
