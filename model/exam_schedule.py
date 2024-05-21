@@ -580,10 +580,12 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
                     
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'gsk_oral_prac_assignment':True})
                         gp_marksheet = marksheet
                         gsk_oral = marksheet.gsk_oral.id
                         gsk_prac = marksheet.gsk_prac.id
                         candidate = marksheet.gp_candidate.id
+                        
                         # import wdb;wdb.set_trace()
 
                         self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
@@ -612,6 +614,7 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
                     
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'gsk_online_assignment':True})
                         gp_marksheet = marksheet
                         gsk_online_id = marksheet.gsk_online.id
                         candidate = marksheet.gp_candidate.id
@@ -649,6 +652,7 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         'exam_type':exam_type      
                                                                                         })
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'mek_oral_prac_assignment':True})
                         # import wdb;wdb.set_trace()
                         gp_marksheet = marksheet
                         mek_oral = marksheet.mek_oral.id
@@ -679,6 +683,7 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
 
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'mek_online_assignment':True})
                         gp_marksheet = marksheet
                         mek_online_id = marksheet.mek_online.id
                         candidate = marksheet.gp_candidate.id
@@ -1320,29 +1325,34 @@ class ExamOralPracticalExaminers(models.Model):
     
     def open_marksheet_list(self):
         
-        if self.prac_oral_id.subject.name == 'GSK':
-            if self.prac_oral_id.exam_type == 'practical_oral':
+        if self.subject.name == 'GSK':
+            if self.exam_type == 'practical_oral':
                 views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
                         (self.env.ref("bes.view_marksheet_gp_form_gsk").id, 'form')]
-            elif self.prac_oral_id.exam_type == 'online':
+            elif self.exam_type == 'online':
                 views = [(self.env.ref("bes.view_marksheet_gsk_tree_online").id, 'tree'),  # Define tree view
                         (self.env.ref("bes.view_marksheet_gp_form_gsk_online").id, 'form')]
                 
-        elif self.prac_oral_id.subject.name == 'MEK':
+        elif self.subject.name == 'MEK':
+            if self.exam_type == 'practical_oral':
              views = [(self.env.ref("bes.view_marksheet_gp_tree_mek").id, 'tree'),  # Define tree view
                     (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
+            elif self.exam_type == 'online':
+                views = [(self.env.ref("bes.view_marksheet_mek_tree_online").id, 'tree'),  # Define tree view
+                      (self.env.ref("bes.view_marksheet_gp_form_mek_online").id, 'form')]
         
-        elif self.prac_oral_id.subject.name == 'CCMC Oral':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
-        
-        elif self.prac_oral_id.subject.name == 'CCMC Oral and Practical':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
+        elif self.subject.name == 'CCMC':
+            if self.exam_type == 'practical_oral':
+                views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
+            elif self.exam_type == 'online':
+                views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_online").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_ccmc_form_gsk_online").id, 'form')]
+
         
         elif self.prac_oral_id.subject.name == 'CCMC GSK Oral':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral").id, 'form')]
+            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
             
         
         
@@ -1368,10 +1378,17 @@ class OralPracticalExaminersMarksheet(models.Model):
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
+    
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
+    ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
+    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
+
+
+    
     gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
     mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
+    
 
     
     
@@ -1506,11 +1523,15 @@ class GPExam(models.Model):
         ('passed', 'Passed'),
     ], string='GSK Oral/Practical Status', default='pending',tracking=True)
     
+    gsk_oral_prac_assignment = fields.Boolean('gsk_oral_prac_assignment')
+    
     mek_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='MEK Oral/Practical Status', default='pending',tracking=True)
+    
+    mek_oral_prac_assignment = fields.Boolean('mek_oral_prac_assignment')
     
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
@@ -1518,11 +1539,15 @@ class GPExam(models.Model):
         ('passed', 'Passed'),
     ], string='MEK Online Status', default='pending',tracking=True)
     
+    mek_online_assignment = fields.Boolean('mek_online_assignment')
+    
     gsk_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='GSK Online Status', default='pending',tracking=True)
+    
+    gsk_online_assignment = fields.Boolean('gsk_online_assignment')
     
     exam_criteria = fields.Selection([
         ('', ''),

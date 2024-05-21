@@ -282,29 +282,76 @@ class GPCandidatePortal(CustomerPortal):
                 exam_id  = request.env['ir.sequence'].sudo().next_by_code("ccmc.exam.schedule")
         
                 # Marks
-                cookery_practical = exam.cookery_practical
-                cookery_oral = exam.cookery_oral
-                cookery_gsk_online = exam.cookery_gsk_online
-                overall_marks = exam.overall_marks
+                # cookery_practical = exam.cookery_practical
+                # cookery_oral = exam.cookery_oral
+                # cookery_gsk_online = exam.cookery_gsk_online
+                # overall_marks = exam.overall_marks
                 
-                #Mark Percentage
-                cookery_bakery_percentage = exam.cookery_bakery_percentage
-                ccmc_oral_percentage = exam.ccmc_oral_percentage
-                cookery_gsk_online_percentage = exam.cookery_gsk_online_percentage
-                overall_percentage = exam.overall_percentage
+                # #Mark Percentage
+                # cookery_bakery_percentage = exam.cookery_bakery_percentage
+                # ccmc_oral_percentage = exam.ccmc_oral_percentage
+                # cookery_gsk_online_percentage = exam.cookery_gsk_online_percentage
+                # overall_percentage = exam.overall_percentage
                 
-                if exam.cookery_bakery_prac_status == 'failed':
-                    cookery_bakery = request.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': candidate.institute_id.id})
-                    ccmc_oral = request.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                if exam.cookery_bakery_prac_oral_status == 'failed' and kwargs.get('cookery_practical'):
+                    cookery_practical = exam.env["gp.gsk.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                    gsk_oral = exam.env["gp.gsk.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                
+                    gsk_practical_marks = exam.gsk_practical_marks
+                    gsk_oral_marks = exam.gsk_oral_marks
+                    gsk_total = exam.gsk_total
+                    gsk_percentage = exam.gsk_percentage
+                    gsk_oral_prac_carry_forward = False
+                    gsk_oral_prac_status = 'pending'
+                
                 else:
-                    cookery_bakery = exam.cookery_bakery
-                    ccmc_oral =exam.ccmc_oral
+                    gsk_practical = exam.gsk_prac
+                    gsk_oral =exam.gsk_oral
+                    
+                    gsk_oral_prac_status = exam.gsk_oral_prac_status
+                    gsk_practical_marks = exam.gsk_practical_marks
+                    gsk_oral_marks = exam.gsk_oral_marks
+                    gsk_total = exam.gsk_total
+                    gsk_percentage = exam.gsk_percentage
+                    gsk_oral_prac_carry_forward = True
+
                 
-                if exam.ccmc_online_status == 'failed':
-                    cookery_bakery_qb_input = exam.cookery_bakery_qb._create_answer(user=self.candidate_id.user_id)
-                    cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
+                
+                if exam.mek_oral_prac_status == 'failed' and kwargs.get('mek_practical_oral'):
+                    mek_practical = request.env["gp.mek.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                    mek_oral = request.env["gp.mek.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                    mek_practical_marks = exam.mek_practical_marks
+                    mek_oral_marks = exam.mek_oral_marks
+                    mek_total = exam.mek_total
+                    mek_percentage = exam.mek_percentage
+                    mek_oral_prac_carry_forward = False
+                    mek_oral_prac_status = 'pending'
+                    
                 else:
-                    cookery_bakery_qb_input = exam.ccmc_online
+                    mek_practical = exam.mek_prac
+                    mek_oral =exam.mek_oral
+                    mek_oral_prac_carry_forward = True
+                    mek_practical_marks = exam.mek_practical_marks
+                    mek_oral_marks = exam.mek_oral_marks
+                    mek_total = exam.mek_total
+                    mek_percentage = exam.mek_percentage
+                    mek_oral_prac_status = exam.mek_oral_prac_status
+                
+                
+                if exam.mek_online_status == 'failed' and kwargs.get('mek_online'):
+                    mek_survey_qb_input = exam.mek_survey_qb._create_answer(user=candidate.user_id)
+                    token = mek_survey_qb_input.generate_unique_string()
+                    mek_survey_qb_input.write({'gp_candidate':candidate.id ,'dgs_batch':dgs_exam  })
+                    mek_online_carry_forward = False
+                    mek_online_marks = exam.mek_online_marks
+                    mek_online_percentage = exam.mek_online_percentage
+                    mek_online_status = 'pending'
+                else:
+                    mek_survey_qb_input = exam.mek_online
+                    mek_online_carry_forward = True
+                    mek_online_marks = exam.mek_online_marks
+                    mek_online_percentage = exam.mek_online_percentage
+                    mek_online_status = exam.mek_online_status
                 
 
                     
