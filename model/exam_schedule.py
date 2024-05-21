@@ -399,22 +399,40 @@ class ExaminerAssignmentWizard(models.TransientModel):
         
         records = self.examiner_lines_ids
         unique_exam_dates = list(set(record.exam_date for record in records))
+        
         candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','in',('pending','failed'))]).ids
         candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','=','passed')]).ids
         candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','=','passed'),('mek_oral_prac_status','in',('pending','failed'))]).ids
         
-        examiners_gsk = records.filtered(lambda r: r.subject.name == 'GSK').ids
+        candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','in',('pending','failed'))]).ids
+        candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','=','passed')]).ids
+        candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','=','passed'),('mek_online_status','in',('pending','failed'))]).ids
+
+
+        examiners_gsk = records.filtered(lambda r: r.subject.name == 'GSK' and r.exam_type == 'practical_oral').ids
         gsk_assignments = {examiner: [] for examiner in examiners_gsk}
         num_examiners_gsk = len(examiners_gsk)
         
-        examiners_mek = records.filtered(lambda r: r.subject.name == 'MEK').ids
+        
+        examiners_gsk_online = records.filtered(lambda r: r.subject.name == 'GSK' and r.exam_type == 'online').ids
+        online_gsk_assignments = {examiner: [] for examiner in examiners_gsk_online}
+        num_examiners_gsk_online = len(examiners_gsk_online)
+        
+        
+        examiners_mek = records.filtered(lambda r: r.subject.name == 'MEK' and r.exam_type == 'practical_oral').ids
         mek_assignments = {examiner: [] for examiner in examiners_mek}
         num_examiners_mek = len(examiners_mek)
         
+
+        examiners_mek_online = records.filtered(lambda r: r.subject.name == 'MEK' and r.exam_type == 'online').ids
+        online_mek_assignments = {examiner: [] for examiner in examiners_mek_online}
+        num_examiners_mek_online = len(examiners_mek_online)
         
         
-        #Distribute candidates with both GSK and MEK
+
         
+        
+        #Distribute candidates with both GSK and MEK     
         for idx, candidate in enumerate(candidate_with_gsk_mek):
             try:
                 gsk_examiner_index = idx % num_examiners_gsk
@@ -429,6 +447,31 @@ class ExaminerAssignmentWizard(models.TransientModel):
                 mek_assignments[examiner_mek].append(candidate)
             except ZeroDivisionError:
                 raise ValidationError("Please Add Atleast One MEK Examiner")
+        
+        # import wdb;wdb.set_trace();
+
+        #Distribute candidates with both GSK and MEK Online     
+        for idx, candidate in enumerate(candidate_with_gsk_mek_online):
+            try:
+                
+                online_gsk_examiner_index = idx % num_examiners_gsk_online
+                examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
+                online_gsk_assignments[examiner_gsk_online].append(candidate)
+            except ZeroDivisionError:
+                raise ValidationError("Please Add Atleast One GSK Online Examiner")
+            
+            
+            try:    
+                online_mek_examiner_index = idx % num_examiners_mek_online
+                examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
+                online_mek_assignments[examiner_mek_online].append(candidate)
+            except ZeroDivisionError:
+                raise ValidationError("Please Add Atleast One MEK Online Examiner")
+            
+        # import wdb;wdb.set_trace();
+        
+        
+        
             
         # Distribute candidates with only GSK
         for idx, candidate in enumerate(candidate_with_gsk):
@@ -438,6 +481,15 @@ class ExaminerAssignmentWizard(models.TransientModel):
                 gsk_assignments[examiner_gsk].append(candidate)
             except ZeroDivisionError:
                 raise ValidationError("Please Add Atleast One GSK Examiner")
+            
+         # Distribute candidates with only GSK Online
+        for idx, candidate in enumerate(candidate_with_gsk_online):
+            try:
+                online_gsk_examiner_index = idx % num_examiners_gsk_online
+                examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
+                online_gsk_assignments[examiner_gsk_online].append(candidate)
+            except ZeroDivisionError:
+                raise ValidationError("Please Add Atleast One GSK Online Examiner")
         
         
         # Distribute candidates with only MEK
@@ -447,12 +499,28 @@ class ExaminerAssignmentWizard(models.TransientModel):
                 examiner_mek = examiners_mek[mek_examiner_index]
                 mek_assignments[examiners_mek].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One GSK Examiner")
+                raise ValidationError("Please Add Atleast One MEK Examiner")
+        
+        
+        # Distribute candidates with only MEK Online
+        for idx, candidate in enumerate(candidate_with_mek_online):
+            try:    
+                online_mek_examiner_index = idx % num_examiners_mek_online
+                examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
+                online_mek_assignments[examiner_mek_online].append(candidate)
+            except ZeroDivisionError:
+                raise ValidationError("Please Add Atleast One MEK Online Examiner")
 
-            
             
         ### GSK ASSIGNMENTS    
         for examiner, assigned_candidates in gsk_assignments.items():
+            examiner_id = examiner
+            assignment = records.filtered(lambda r: r.id == examiner_id)
+            assignment.gp_marksheet_ids = assigned_candidates
+            
+        
+         ### GSK Online ASSIGNMENTS    
+        for examiner, assigned_candidates in online_gsk_assignments.items():
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
             assignment.gp_marksheet_ids = assigned_candidates
@@ -460,6 +528,11 @@ class ExaminerAssignmentWizard(models.TransientModel):
         
         ### MEK ASSIGNMENTS    
         for examiner, assigned_candidates in mek_assignments.items():
+            examiner_id = examiner
+            assignment = records.filtered(lambda r: r.id == examiner_id)
+            assignment.gp_marksheet_ids = assigned_candidates
+        
+        for examiner, assigned_candidates in online_mek_assignments.items():
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
             assignment.gp_marksheet_ids = assigned_candidates
@@ -481,68 +554,139 @@ class ExaminerAssignmentWizard(models.TransientModel):
         records = self.examiner_lines_ids
         
         for record in records:
-            if record.subject.name == 'GSK':
-                prac_oral_id = self.exam_duty.id
-                institute_id = self.institute_id.id
-                subject = record.subject.id
-                examiner = record.examiner.id
-                exam_date = record.exam_date
-                exam_type = record.exam_type
-                assignment = self.env["exam.type.oral.practical.examiners"].create({
-                                                                                     'prac_oral_id':prac_oral_id,
-                                                                                     'institute_id':institute_id,
-                                                                                     'subject':subject,
-                                                                                     'examiner':examiner,
-                                                                                     'exam_date':exam_date,
-                                                                                     'exam_type':exam_type      
-                                                                                    })
-                
-                for marksheet in record.gp_marksheet_ids:
-                    gp_marksheet = marksheet
-                    gsk_oral = marksheet.gsk_oral.id
-                    gsk_prac = marksheet.gsk_prac.id
-                    candidate = marksheet.gp_candidate.id
-                    # import wdb;wdb.set_trace()
+            
+            
 
-                    self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
+            
+            if record.subject.name == 'GSK':
+                if record.exam_type == 'practical_oral':
+                    
+                    if record.no_candidates > 25:
+                        raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
+                    
+                    prac_oral_id = self.exam_duty.id
+                    institute_id = self.institute_id.id
+                    subject = record.subject.id
+                    examiner = record.examiner.id
+                    exam_date = record.exam_date
+                    exam_type = record.exam_type
+                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                                                                                        'prac_oral_id':prac_oral_id,
+                                                                                        'institute_id':institute_id,
+                                                                                        'subject':subject,
+                                                                                        'examiner':examiner,
+                                                                                        'exam_date':exam_date,
+                                                                                        'exam_type':exam_type      
+                                                                                        })
+                    
+                    for marksheet in record.gp_marksheet_ids:
+                        gp_marksheet = marksheet
+                        gsk_oral = marksheet.gsk_oral.id
+                        gsk_prac = marksheet.gsk_prac.id
+                        candidate = marksheet.gp_candidate.id
+                        # import wdb;wdb.set_trace()
+
+                        self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
+                                                                                                    'gp_marksheet':gp_marksheet.id ,
+                                                                                                    'gp_candidate':candidate , 
+                                                                                                    'gsk_oral':gsk_oral , 
+                                                                                                    'gsk_prac':gsk_prac 
+                                                                                                    })
+                
+                elif record.exam_type == 'online':
+                    
+                    prac_oral_id = self.exam_duty.id
+                    institute_id = self.institute_id.id
+                    subject = record.subject.id
+                    examiner = record.examiner.id
+                    exam_date = record.exam_date
+                    exam_type = record.exam_type
+                    
+                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                                                                                        'prac_oral_id':prac_oral_id,
+                                                                                        'institute_id':institute_id,
+                                                                                        'subject':subject,
+                                                                                        'examiner':examiner,
+                                                                                        'exam_date':exam_date,
+                                                                                        'exam_type':exam_type      
+                                                                                        })
+                    
+                    for marksheet in record.gp_marksheet_ids:
+                        gp_marksheet = marksheet
+                        gsk_online_id = marksheet.gsk_online.id
+                        candidate = marksheet.gp_candidate.id
+                        
+                        self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
                                                                                                  'gp_marksheet':gp_marksheet.id ,
                                                                                                  'gp_candidate':candidate , 
-                                                                                                 'gsk_oral':gsk_oral , 
-                                                                                                 'gsk_prac':gsk_prac 
-                                                                                                 })
+                                                                                                 'gsk_online':gsk_online_id })
+
+                    
+                    
+                
+                        
 
                                     
                 
                 
             elif record.subject.name == 'MEK':
-                prac_oral_id = self.exam_duty.id
-                institute_id = self.institute_id.id
-                subject = record.subject.id
-                exam_date = record.exam_date
-                examiner = record.examiner.id
-                exam_type = record.exam_type
-                assignment = self.env["exam.type.oral.practical.examiners"].create({
-                                                                                     'prac_oral_id':prac_oral_id,
-                                                                                     'institute_id':institute_id,
-                                                                                     'subject':subject,
-                                                                                     'examiner':examiner,
-                                                                                      'exam_date':exam_date,
-                                                                                     'exam_type':exam_type      
-                                                                                    })
-                for marksheet in record.gp_marksheet_ids:
-                    # import wdb;wdb.set_trace()
-                    gp_marksheet = marksheet
-                    mek_oral = marksheet.mek_oral.id
-                    mek_prac = marksheet.mek_prac.id
-                    candidate = marksheet.gp_candidate.id
+                if record.exam_type == 'practical_oral':
+                    if record.no_candidates > 25:
+                        raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
                     
-                    self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
+                    prac_oral_id = self.exam_duty.id
+                    institute_id = self.institute_id.id
+                    subject = record.subject.id
+                    exam_date = record.exam_date
+                    examiner = record.examiner.id
+                    exam_type = record.exam_type
+                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                                                                                        'prac_oral_id':prac_oral_id,
+                                                                                        'institute_id':institute_id,
+                                                                                        'subject':subject,
+                                                                                        'examiner':examiner,
+                                                                                        'exam_date':exam_date,
+                                                                                        'exam_type':exam_type      
+                                                                                        })
+                    for marksheet in record.gp_marksheet_ids:
+                        # import wdb;wdb.set_trace()
+                        gp_marksheet = marksheet
+                        mek_oral = marksheet.mek_oral.id
+                        mek_prac = marksheet.mek_prac.id
+                        candidate = marksheet.gp_candidate.id
+                        
+                        self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
+                                                                                                    'gp_marksheet':gp_marksheet.id ,
+                                                                                                    'gp_candidate':candidate , 
+                                                                                                    'mek_oral':mek_oral , 
+                                                                                                    'mek_prac':mek_prac 
+                                                                                                    })
+                elif record.exam_type == 'online':
+                    prac_oral_id = self.exam_duty.id
+                    institute_id = self.institute_id.id
+                    subject = record.subject.id
+                    examiner = record.examiner.id
+                    exam_date = record.exam_date
+                    exam_type = record.exam_type
+                    
+                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                                                                                        'prac_oral_id':prac_oral_id,
+                                                                                        'institute_id':institute_id,
+                                                                                        'subject':subject,
+                                                                                        'examiner':examiner,
+                                                                                        'exam_date':exam_date,
+                                                                                        'exam_type':exam_type      
+                                                                                        })
+
+                    for marksheet in record.gp_marksheet_ids:
+                        gp_marksheet = marksheet
+                        mek_online_id = marksheet.mek_online.id
+                        candidate = marksheet.gp_candidate.id
+                        
+                        self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
                                                                                                  'gp_marksheet':gp_marksheet.id ,
                                                                                                  'gp_candidate':candidate , 
-                                                                                                 'mek_oral':mek_oral , 
-                                                                                                 'mek_prac':mek_prac 
-                                                                                                 })
-                
+                                                                                                 'mek_online':mek_online_id })
                 
 
         
@@ -631,6 +775,17 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
+    
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
+    
+    
+    @api.depends('gp_marksheet_ids')
+    def _compute_candidate_no(self):
+        for record in self:
+            record.no_candidates = len(record.gp_marksheet_ids)
+    
+    
+    
 
 
 
@@ -1131,6 +1286,25 @@ class ExamOralPracticalExaminers(models.Model):
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
+    
+    
+    @api.constrains('examiner', 'exam_date')
+    def _check_duplicate_examiner_on_date(self):
+        for record in self:
+            if record.examiner and record.exam_date:
+                # Check if there are any other records with the same examiner and exam date
+                duplicate_records = self.search([
+                    ('examiner', '=', record.examiner.id),
+                    ('exam_date', '=', record.exam_date),
+                    ('id', '!=', record.id)  # Exclude the current record
+                ])
+                if duplicate_records:
+                    # Get the name of the examiner
+                    examiner_name = record.examiner.name
+                    # Format the validation error message to include the examiner's name and exam date
+                    error_msg = _("Examiner '%s' is already assigned on %s!") % (examiner_name, record.exam_date)
+                    raise ValidationError(error_msg)
+
     
     
     @api.depends('online_from_date', 'online_to_date')
