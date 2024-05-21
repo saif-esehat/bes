@@ -235,12 +235,19 @@ class GPCandidatePortal(CustomerPortal):
        
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
-        import wdb; wdb.set_trace()
+        # import wdb; wdb.set_trace()
         if request.httprequest.method == 'POST':
+            mek_practical_oral = kwargs.get('mek_practical_oral')
+            gsk_practical_oral = kwargs.get('gsk_practical_oral')
+            mek_online = kwargs.get('mek_online')
+            gsk_online = kwargs.get('gsk_online')
+
             candidate_code = kwargs.get('candidate_code')
             candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
             exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
             exams_register = request.env['candidate.gp.register.exam.wizard'].sudo().search([])
+            exams_register.register_exam()
+
             data = {
                 'candidate_id':candidate,
             }
@@ -254,7 +261,7 @@ class GPCandidatePortal(CustomerPortal):
                 gp_exam_schedule = request.env["gp.exam.schedule"].sudo().create({'gp_candidate':candidate.id , "dgs_batch": dgs_exam  , "exam_id":exam_id })
 
                 
-                if exam.gsk_oral_prac_status == 'failed':
+                if exam.gsk_oral_prac_status == 'failed' and kwargs.get('gsk_practical_oral'):
                     gsk_practical = exam.env["gp.gsk.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': candidate.institute_id.id})
                     gsk_oral = exam.env["gp.gsk.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
                 
@@ -276,7 +283,7 @@ class GPCandidatePortal(CustomerPortal):
 
                 
                 
-                if exam.mek_oral_prac_status == 'failed':
+                if exam.mek_oral_prac_status == 'failed' and kwargs.get('mek_practical_oral'):
                     mek_practical = request.env["gp.mek.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': candidate.institute_id.id})
                     mek_oral = request.env["gp.mek.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
                     mek_practical_marks = exam.mek_practical_marks
@@ -295,7 +302,7 @@ class GPCandidatePortal(CustomerPortal):
                     mek_percentage = exam.mek_percentage
                 
                 
-                if exam.mek_online_status == 'failed':
+                if exam.mek_online_status == 'failed' and kwargs.get('mek_online'):
                     mek_survey_qb_input = exam.mek_survey_qb._create_answer(user=candidate.user_id)
                     token = mek_survey_qb_input.generate_unique_string()
                     mek_survey_qb_input.write({'gp_candidate':candidate.id ,'dgs_batch':dgs_exam  })
@@ -309,7 +316,7 @@ class GPCandidatePortal(CustomerPortal):
                     mek_online_percentage = exam.mek_online_percentage
                 
                 
-                if exam.gsk_online_status == 'failed':
+                if exam.gsk_online_status == 'failed' and kwargs.get('gsk_online'):
                     gsk_survey_qb_input = exam.gsk_survey_qb._create_answer(user=candidate.user_id)
                     token = gsk_survey_qb_input.generate_unique_string()
                     gsk_survey_qb_input.write({'gp_candidate':candidate.id , 'dgs_batch':dgs_exam})
@@ -356,7 +363,6 @@ class GPCandidatePortal(CustomerPortal):
                                         "gsk_online_carry_forward":gsk_online_carry_forward
                                         
                                         })
-                # exams.register_exam(data)
 
             # return request.render('bes.exam_application_view', {'application': candidate})
             return request.redirect("/my/home")
