@@ -188,9 +188,6 @@
                         <field name="institute_id" domain="[('exam_center','=', exam_region)]"/>
                         <field name="course"/>
                         
-                        
-
-                        
                     </group>
                     <group style="width: 50%">
                         <field name="gsk_prac_oral_candidates"/>

@@ -580,10 +580,12 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
                     
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'gsk_oral_prac_assignment':True})
                         gp_marksheet = marksheet
                         gsk_oral = marksheet.gsk_oral.id
                         gsk_prac = marksheet.gsk_prac.id
                         candidate = marksheet.gp_candidate.id
+                        
                         # import wdb;wdb.set_trace()
 
                         self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
@@ -612,6 +614,7 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
                     
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'gsk_online_assignment':True})
                         gp_marksheet = marksheet
                         gsk_online_id = marksheet.gsk_online.id
                         candidate = marksheet.gp_candidate.id
@@ -649,6 +652,7 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         'exam_type':exam_type      
                                                                                         })
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'mek_oral_prac_assignment':True})
                         # import wdb;wdb.set_trace()
                         gp_marksheet = marksheet
                         mek_oral = marksheet.mek_oral.id
@@ -679,6 +683,7 @@ class ExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
 
                     for marksheet in record.gp_marksheet_ids:
+                        marksheet.write({'mek_online_assignment':True})
                         gp_marksheet = marksheet
                         mek_online_id = marksheet.mek_online.id
                         candidate = marksheet.gp_candidate.id
@@ -1518,11 +1523,15 @@ class GPExam(models.Model):
         ('passed', 'Passed'),
     ], string='GSK Oral/Practical Status', default='pending',tracking=True)
     
+    gsk_oral_prac_assignment = fields.Boolean('gsk_oral_prac_assignment')
+    
     mek_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='MEK Oral/Practical Status', default='pending',tracking=True)
+    
+    mek_oral_prac_assignment = fields.Boolean('mek_oral_prac_assignment')
     
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
@@ -1530,11 +1539,15 @@ class GPExam(models.Model):
         ('passed', 'Passed'),
     ], string='MEK Online Status', default='pending',tracking=True)
     
+    mek_online_assignment = fields.Boolean('mek_online_assignment')
+    
     gsk_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='GSK Online Status', default='pending',tracking=True)
+    
+    gsk_online_assignment = fields.Boolean('gsk_online_assignment')
     
     exam_criteria = fields.Selection([
         ('', ''),
