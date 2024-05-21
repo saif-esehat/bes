@@ -1604,14 +1604,16 @@ class CcmcGSKOralLine(models.Model):
 
     @api.model
     def create(self, vals):
+        # import wdb;wdb.set_trace();
         if vals.get('ccmc_gsk_oral_attempt_no', 0) == 0:
+            
             # Calculate the next attempt number
             last_attempt = self.search([
                 ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
             ], order='ccmc_gsk_oral_attempt_no desc', limit=1)
             next_attempt = last_attempt.ccmc_gsk_oral_attempt_no + 1 if last_attempt else 1
-            vals['ccmc_oral_attempt_no'] = next_attempt
-        return super(CcmcOralLine, self).create(vals)
+            vals['ccmc_gsk_oral_attempt_no'] = next_attempt
+        return super(CcmcGSKOralLine, self).create(vals)
 
 
     @api.constrains('ccmc_gsk_oral_attempt_no')
