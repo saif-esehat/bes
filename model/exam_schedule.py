@@ -1320,29 +1320,34 @@ class ExamOralPracticalExaminers(models.Model):
     
     def open_marksheet_list(self):
         
-        if self.prac_oral_id.subject.name == 'GSK':
-            if self.prac_oral_id.exam_type == 'practical_oral':
+        if self.subject.name == 'GSK':
+            if self.exam_type == 'practical_oral':
                 views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
                         (self.env.ref("bes.view_marksheet_gp_form_gsk").id, 'form')]
-            elif self.prac_oral_id.exam_type == 'online':
+            elif self.exam_type == 'online':
                 views = [(self.env.ref("bes.view_marksheet_gsk_tree_online").id, 'tree'),  # Define tree view
                         (self.env.ref("bes.view_marksheet_gp_form_gsk_online").id, 'form')]
                 
-        elif self.prac_oral_id.subject.name == 'MEK':
+        elif self.subject.name == 'MEK':
+            if self.exam_type == 'practical_oral':
              views = [(self.env.ref("bes.view_marksheet_gp_tree_mek").id, 'tree'),  # Define tree view
                     (self.env.ref("bes.view_marksheet_gp_form_mek").id, 'form')]
+            elif self.exam_type == 'online':
+                views = [(self.env.ref("bes.view_marksheet_mek_tree_online").id, 'tree'),  # Define tree view
+                      (self.env.ref("bes.view_marksheet_gp_form_mek_online").id, 'form')]
         
-        elif self.prac_oral_id.subject.name == 'CCMC Oral':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
-        
-        elif self.prac_oral_id.subject.name == 'CCMC Oral and Practical':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
+        elif self.subject.name == 'CCMC':
+            if self.exam_type == 'practical_oral':
+                views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
+            elif self.exam_type == 'online':
+                views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_online").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_ccmc_form_gsk_online").id, 'form')]
+
         
         elif self.prac_oral_id.subject.name == 'CCMC GSK Oral':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral").id, 'form')]
+            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
+                    (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
             
         
         
@@ -1368,10 +1373,17 @@ class OralPracticalExaminersMarksheet(models.Model):
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
+    
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
+    ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
+    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
+
+
+    
     gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
     mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
+    
 
     
     
