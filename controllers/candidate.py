@@ -230,9 +230,115 @@ class GPCandidatePortal(CustomerPortal):
             'exam': exam,
             'batch':batch
         }
-        return request.render("bes.exam_application_form_template", vals)
+        if exam:
+            return request.render("bes.exam_in_process", vals)
+        else:
+            return request.render("bes.exam_application_form_template", vals)
+    
+    @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
+    def applyCCMCExam(self,batch_id, **kw):
+        batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
+        
+        partner_id = request.env.user.id
+        candidate = request.env["ccmc.candidate"].sudo().search([('user_id', '=', partner_id)])
+        exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        # import wdb; wdb.set_trace()
+        # last_exam_record = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',self.id)], order='attempt_number desc', limit=1)
+        
+        
+        vals = {
+            'candidate': candidate,
+            'exam': exam,
+            'batch':batch
+        }
+
+        # if len(exam) <= 0:
+        #     # raise ValidationError("No previous Exam Found .Candidate Must be registered through batches")
+        #     return request.render("bes.no_previous_exam_found", vals)
+        
+        if exam.state == '1-in_process':
+            return request.render("bes.exam_in_process", vals)
+        else:
+            return request.render("bes.ccmc_exam_application_form_template", vals)
 
        
+    @http.route('/my/ccmcapplication/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def viewCCMCApplication(self, **kwargs):
+        import wdb; wdb.set_trace()
+        if request.httprequest.method == 'POST':
+            cookery_practical = kwargs.get('cookery_practical')
+            cookery_oral = kwargs.get('cookery_oral')
+            cookery_gsk_online = kwargs.get('cookery_gsk_online')
+
+            candidate_code = kwargs.get('candidate_code')
+            candidate = request.env['ccmc.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
+            exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+            # exams_register = request.env['candidate.gp.register.exam.wizard'].sudo().search([('candidate_id','=',candidate.id)])
+            dgs_batch_id = kwargs.get('batch_id')
+            if candidate:
+                candidate.dgs_batch = request.env['dgs.batches'].sudo().search([('id', '=', kwargs.get('batch_id'))], limit=1)
+                dgs_exam = candidate.dgs_batch.id
+
+                exam_id  = request.env['ir.sequence'].sudo().next_by_code("ccmc.exam.schedule")
+        
+                # Marks
+                cookery_practical = exam.cookery_practical
+                cookery_oral = exam.cookery_oral
+                cookery_gsk_online = exam.cookery_gsk_online
+                overall_marks = exam.overall_marks
+                
+                #Mark Percentage
+                cookery_bakery_percentage = exam.cookery_bakery_percentage
+                ccmc_oral_percentage = exam.ccmc_oral_percentage
+                cookery_gsk_online_percentage = exam.cookery_gsk_online_percentage
+                overall_percentage = exam.overall_percentage
+                
+                if exam.cookery_bakery_prac_status == 'failed':
+                    cookery_bakery = request.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                    ccmc_oral = request.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                else:
+                    cookery_bakery = exam.cookery_bakery
+                    ccmc_oral =exam.ccmc_oral
+                
+                if exam.ccmc_online_status == 'failed':
+                    cookery_bakery_qb_input = exam.cookery_bakery_qb._create_answer(user=self.candidate_id.user_id)
+                    cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
+                else:
+                    cookery_bakery_qb_input = exam.ccmc_online
+                
+
+                    
+                
+                ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,"ccmc_oral":ccmc_oral.id,"ccmc_online":cookery_bakery_qb_input.id})
+                ccmc_exam_schedule = request.env["ccmc.exam.schedule"].sudo().create({
+                    'registered_institute':candidate.institute_id.id,
+                    'ccmc_candidate':candidate.id,
+                    'exam_id':exam_id,
+                    'dgs_batch':dgs_batch,
+                    'cookery_practical':cookery_practical,
+                    'cookery_oral':cookery_oral,
+                    'cookery_gsk_online':cookery_gsk_online,
+                    'overall_marks':overall_marks ,
+                    'cookery_bakery_percentage':cookery_bakery_percentage,
+                    'ccmc_oral_percentage':ccmc_oral_percentage,
+                    'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
+                    'overall_percentage':overall_percentage,
+                    'cookery_bakery_prac_status':exam.cookery_bakery_prac_status,
+                    'ccmc_oral_prac_status':exam.ccmc_oral_prac_status
+                    
+                    })
+                return request.redirect("/my/home")
+            else:
+                partner_id = request.env.user.id
+                candidate = request.env["ccmc.candidate"].sudo().search([('user_id', '=', partner_id)], limit=1)
+                courses = request.env['course.master'].sudo().search([])
+                vals = {
+                    'candidate': candidate,
+                    'courses': courses
+                }
+                return request.render("bes.ccmc_exam_application_form_template", vals)
+
+
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
         # import wdb; wdb.set_trace()
@@ -245,12 +351,9 @@ class GPCandidatePortal(CustomerPortal):
             candidate_code = kwargs.get('candidate_code')
             candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
             exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
-            exams_register = request.env['candidate.gp.register.exam.wizard'].sudo().search([])
-            exams_register.register_exam()
-
-            data = {
-                'candidate_id':candidate,
-            }
+            # exams_register = request.env['candidate.gp.register.exam.wizard'].sudo().search([('candidate_id','=',candidate.id)])
+            dgs_batch_id = kwargs.get('batch_id')
+            # exams_register.register_exam_web(dgs_batch_id,candidate)
             if candidate:
                 candidate.dgs_batch = request.env['dgs.batches'].sudo().search([('id', '=', kwargs.get('batch_id'))], limit=1)
                 dgs_exam = candidate.dgs_batch.id
@@ -270,11 +373,13 @@ class GPCandidatePortal(CustomerPortal):
                     gsk_total = exam.gsk_total
                     gsk_percentage = exam.gsk_percentage
                     gsk_oral_prac_carry_forward = False
+                    gsk_oral_prac_status = 'pending'
                 
                 else:
                     gsk_practical = exam.gsk_prac
                     gsk_oral =exam.gsk_oral
                     
+                    gsk_oral_prac_status = exam.gsk_oral_prac_status
                     gsk_practical_marks = exam.gsk_practical_marks
                     gsk_oral_marks = exam.gsk_oral_marks
                     gsk_total = exam.gsk_total
@@ -291,6 +396,7 @@ class GPCandidatePortal(CustomerPortal):
                     mek_total = exam.mek_total
                     mek_percentage = exam.mek_percentage
                     mek_oral_prac_carry_forward = False
+                    mek_oral_prac_status = 'pending'
                     
                 else:
                     mek_practical = exam.mek_prac
@@ -300,6 +406,7 @@ class GPCandidatePortal(CustomerPortal):
                     mek_oral_marks = exam.mek_oral_marks
                     mek_total = exam.mek_total
                     mek_percentage = exam.mek_percentage
+                    mek_oral_prac_status = exam.mek_oral_prac_status
                 
                 
                 if exam.mek_online_status == 'failed' and kwargs.get('mek_online'):
@@ -309,11 +416,13 @@ class GPCandidatePortal(CustomerPortal):
                     mek_online_carry_forward = False
                     mek_online_marks = exam.mek_online_marks
                     mek_online_percentage = exam.mek_online_percentage
+                    mek_online_status = 'pending'
                 else:
                     mek_survey_qb_input = exam.mek_online
                     mek_online_carry_forward = True
                     mek_online_marks = exam.mek_online_marks
                     mek_online_percentage = exam.mek_online_percentage
+                    mek_online_status = exam.mek_online_status
                 
                 
                 if exam.gsk_online_status == 'failed' and kwargs.get('gsk_online'):
@@ -323,11 +432,13 @@ class GPCandidatePortal(CustomerPortal):
                     gsk_online_carry_forward = False
                     gsk_online_marks = exam.gsk_online_marks
                     gsk_online_percentage = exam.gsk_online_percentage
+                    gsk_online_status = 'pending'
                 else:
                     gsk_survey_qb_input = exam.gsk_online
                     gsk_online_marks = exam.gsk_online_marks
                     gsk_online_percentage = exam.gsk_online_percentage
                     gsk_online_carry_forward = True
+                    gsk_online_status = exam.gsk_online_status
                     
                 overall_marks = exam.overall_marks
                 
@@ -336,7 +447,7 @@ class GPCandidatePortal(CustomerPortal):
                     
                 
                 gp_exam_schedule.write({
-                                        "registered_institute":candidate.institute_id.id,
+                                        # "registered_institute":candidate.institute_id.id,
                                         "mek_oral":mek_oral.id,
                                         "mek_prac":mek_practical.id,
                                         "gsk_oral":gsk_oral.id,
@@ -360,11 +471,14 @@ class GPCandidatePortal(CustomerPortal):
                                         "gsk_oral_prac_carry_forward":gsk_oral_prac_carry_forward,
                                         "mek_oral_prac_carry_forward":mek_oral_prac_carry_forward,
                                         "mek_online_carry_forward":mek_online_carry_forward,
-                                        "gsk_online_carry_forward":gsk_online_carry_forward
+                                        "gsk_online_carry_forward":gsk_online_carry_forward,
+                                        "gsk_oral_prac_status":gsk_oral_prac_status,
+                                        "mek_oral_prac_status":mek_oral_prac_status,
+                                        "mek_online_status":mek_online_status,
+                                        "gsk_online_status":gsk_online_status
                                         
                                         })
 
-            # return request.render('bes.exam_application_view', {'application': candidate})
             return request.redirect("/my/home")
         else:
             partner_id = request.env.user.id
@@ -397,60 +511,3 @@ class GPCandidatePortal(CustomerPortal):
             return "sep_nov"
         else:
             return "Invalid month."
-
-    @http.route('/my/application/view/', type='http', auth="user", website=True, methods=['GET', 'POST'])
-    def view_application(self, **kwargs):
-        import wdb; wdb.set_trace()
-        if request.httprequest.method == 'POST':
-            # Process form data
-            # candidate_code = kwargs.get('candidate_code')
-            # candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
-
-            # if not candidate:
-            #     return request.render('bes.candidate_not_found')
-
-            # last_exam_record = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
-            # if not last_exam_record:
-            #     return request.render('bes.no_previous_exam_found')
-
-            # if last_exam_record.state == '1-in_process':
-            #     return request.render('bes.exam_in_process')
-
-            # exam_month = kwargs.get('exam_month')
-            # exam_year = kwargs.get('exam_year')
-            # exam_centre = kwargs.get('exam_centre')
-            # name = kwargs.get('name')
-            # attempts = kwargs.get('attempts')
-            # training_institute = kwargs.get('training_institute')
-            # exam_parts = kwargs.getlist('exam_parts')  # Handling multiple checkbox inputs
-            # upi_utr_no = kwargs.get('upi_utr_no')
-            # amount = kwargs.get('amount')
-            # payment_date = kwargs.get('payment_date')
-
-            # # Create a new exam schedule record
-            # new_exam_schedule = request.env['gp.exam.schedule'].create({
-            #     'gp_candidate': candidate.id,
-            #     'attempt_number': attempts,
-            #     'exam_month': exam_month,
-            #     'exam_year': exam_year,
-            #     'exam_centre': exam_centre,
-            #     'name': name,
-            #     'candidate_code': candidate_code,
-            #     'training_institute': training_institute,
-            #     'exam_parts': exam_parts,
-            #     'upi_utr_no': upi_utr_no,
-            #     'amount': amount,
-            #     'payment_date': payment_date,
-            # })
-
-            return request.render('bes.exam_application_view', {'application': new_exam_schedule})
-        else:
-            # Render the form
-            partner_id = request.env.user.id
-            candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)], limit=1)
-            courses = request.env['course.master'].sudo().search([])
-            vals = {
-                'candidate': candidate,
-                'courses': courses
-            }
-            return request.render("bes.exam_application_form_template", vals)

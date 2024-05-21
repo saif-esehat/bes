@@ -31,7 +31,8 @@ class DGSBatch(models.Model):
     ], string='State', default='1-on_going',tracking=True)
 
     repeater_batch = fields.Boolean("Is Repeater Batch",default=False,tracking=True)
-    url = fields.Char('URL',compute="_compute_url")
+    gp_url = fields.Char('URL for GP candidates',compute="_compute_url")
+    ccmc_url = fields.Char('URL for ccmc candidates',compute="_compute_ccmc_url")
     form_deadline = fields.Date(string="Registration Form Dead Line",tracking=True)
 
     @api.depends('repeater_batch')
@@ -40,9 +41,19 @@ class DGSBatch(models.Model):
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             new_url = base_url +"/gpcandidate/repeater/"+str(self.id)
             if record.repeater_batch:
-                record.url = new_url
+                record.gp_url = new_url
             else:
-                record.url = "Default URL" 
+                record.gp_url = "Default URL" 
+    
+    @api.depends('repeater_batch')
+    def _compute_ccmc_url(self):
+        for record in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            new_url = base_url +"/ccmccandidate/repeater/"+str(self.id)
+            if record.repeater_batch:
+                record.ccmc_url = new_url
+            else:
+                record.ccmc_url = "Default URL" 
 
     def move_confirm(self):
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])

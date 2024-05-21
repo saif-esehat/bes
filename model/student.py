@@ -1828,7 +1828,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
                                 "gsk_online_carry_forward":gsk_online_carry_forward
                                 
                                 })
-        
+
         # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
     
     # def register_exam(self):
