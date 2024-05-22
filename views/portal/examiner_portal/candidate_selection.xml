@@ -1426,12 +1426,12 @@
                                         <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_oral.gsk_ccmc" required="True"/>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="safety_ccmc">Safety</label>
                                         <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_oral.safety_ccmc" required="True"/>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="state">Status</label>

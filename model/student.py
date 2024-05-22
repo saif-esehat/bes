@@ -1509,20 +1509,20 @@ class CcmcOralLine(models.Model):
     equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
     
     gsk_ccmc = fields.Integer("GSK",tracking=True)
-    safety_ccmc = fields.Integer("Safety",tracking=True)
+    # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
 
     @api.depends(
-        'gsk_ccmc', 'safety_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
+        'gsk_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
     )
     def _compute_ccmc_rating_total(self):
         for record in self:
             rating_total = (
                 record.gsk_ccmc +
-                record.safety_ccmc+
+                # record.safety_ccmc+
                 record.house_keeping+
                 record.attitude_proffessionalism+
                 record.equipment_identification
@@ -1531,12 +1531,12 @@ class CcmcOralLine(models.Model):
             record.toal_ccmc_rating = rating_total
 
 
-    @api.onchange('gsk_ccmc','safety_ccmc')
+    @api.onchange('gsk_ccmc')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.gsk_ccmc > 10:
-            raise UserError("In CCMC Oral, GSK marks should not be greater than 10.")
-        if self.safety_ccmc > 10:
-            raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
+        if self.gsk_ccmc > 20:
+            raise UserError("In CCMC Oral, GSK marks should not be greater than 20.")
+        # if self.safety_ccmc > 10:
+        #     raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
 
 
     @api.model
@@ -1576,7 +1576,7 @@ class CcmcGSKOralLine(models.Model):
     ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
     gsk_ccmc = fields.Integer("GSK",tracking=True)
     safety_ccmc = fields.Integer("Safety",tracking=True)
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
+    toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
@@ -1591,7 +1591,7 @@ class CcmcGSKOralLine(models.Model):
                 record.safety_ccmc
             )
             
-            record.toal_ccmc_rating = rating_total
+            record.toal_ccmc_oral_rating = rating_total
 
 
     @api.onchange('gsk_ccmc','safety_ccmc')
@@ -1604,14 +1604,16 @@ class CcmcGSKOralLine(models.Model):
 
     @api.model
     def create(self, vals):
+        # import wdb;wdb.set_trace();
         if vals.get('ccmc_gsk_oral_attempt_no', 0) == 0:
+            
             # Calculate the next attempt number
             last_attempt = self.search([
                 ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
             ], order='ccmc_gsk_oral_attempt_no desc', limit=1)
             next_attempt = last_attempt.ccmc_gsk_oral_attempt_no + 1 if last_attempt else 1
-            vals['ccmc_oral_attempt_no'] = next_attempt
-        return super(CcmcOralLine, self).create(vals)
+            vals['ccmc_gsk_oral_attempt_no'] = next_attempt
+        return super(CcmcGSKOralLine, self).create(vals)
 
 
     @api.constrains('ccmc_gsk_oral_attempt_no')
@@ -1687,10 +1689,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
             record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
             
     
+            
+    
     
     def register_exam(self):
         
-        
+        # import wdb; wdb.set_trace()
         dgs_exam = self.dgs_batch.id
         
         exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
@@ -1738,34 +1742,59 @@ class CandidateRegisterExamWizard(models.TransientModel):
             mek_oral_marks = self.gp_exam.mek_oral_marks
             mek_total = self.gp_exam.mek_total
             mek_percentage = self.gp_exam.mek_percentage
+            
         
-        
-        if self.mek_online_status == 'failed':
+        if self.mek_online_status == 'failed' and  self.gsk_online_status == 'failed':
+            
+            ## MEK QB Assigning
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = mek_survey_qb_input.generate_unique_string()
             mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
             mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
-        else:
-            mek_survey_qb_input = self.gp_exam.mek_online
-            mek_online_carry_forward = True
-            mek_online_marks = self.gp_exam.mek_online_marks
-            mek_online_percentage = self.gp_exam.mek_online_percentage
-        
-        
-        if self.gsk_online_status == 'failed':
+            
+            ## GSK QB Assigning
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = gsk_survey_qb_input.generate_unique_string()
             gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
             gsk_online_carry_forward = False
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
-        else:
+        
+        elif self.gsk_online_status == 'failed' and not self.mek_online_status == 'failed':
+            
+            ## GSK QB Assigning
+            gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = gsk_survey_qb_input.generate_unique_string()
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
+            gsk_online_carry_forward = False
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            
+            ## MEK Marks Forwarding
+            mek_survey_qb_input = self.gp_exam.mek_online
+            mek_online_carry_forward = True
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+            
+        elif not self.gsk_online_status == 'failed' and  self.mek_online_status == 'failed':
+            
+            ## GSK Marks Forwarding
             gsk_survey_qb_input = self.gp_exam.gsk_online
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
             gsk_online_carry_forward = True
+            
+            ## MEK QB Assigning
+            
+            mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = mek_survey_qb_input.generate_unique_string()
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
+            mek_online_carry_forward = False
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+
             
         overall_marks = self.gp_exam.overall_marks
         
@@ -1801,7 +1830,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
                                 "gsk_online_carry_forward":gsk_online_carry_forward
                                 
                                 })
-        
+
         # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
     
     # def register_exam(self):
@@ -2005,17 +2034,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         if self.cookery_bakery_status == 'failed':
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
         
         
-        # if self.mek_oral_prac_status == 'failed':
-        #     mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        #     mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        # else:
-        #     mek_practical = self.gp_exam.mek_prac
-        #     mek_oral =self.gp_exam.mek_oral
         
         
         if self.ccmc_online == 'failed':
