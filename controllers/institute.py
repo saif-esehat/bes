@@ -1471,6 +1471,32 @@ class InstitutePortal(CustomerPortal):
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
     
     
+    @http.route(['/my/gpcandidate/updatefeesall'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFeesGPAll(self, **kw):
+        # import wdb; wdb.set_trace();
+        batch_id = int(kw.get('confirm_gp_candidate_batch_id'))
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('institute_batch_id', '=', int(batch_id))])
+        
+        candidate.write({'fees_paid':'yes'})
+
+        
+        return request.redirect('/my/gpbatch/candidates/'+str(batch_id))
+    
+    @http.route(['/my/ccmccandidate/updatefeesall'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFeesCCMCAll(self, **kw):
+        batch_id = int(kw.get('ccmc_batch_id'))
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('institute_batch_id', '=', int(batch_id))])
+        
+        candidate.write({'fees_paid':'yes'})
+
+        
+        return request.redirect('/my/ccmcbatch/candidates/'+str(batch_id))
+    
+    
     @http.route(['/my/gpcandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
     def UpdateFeesGP(self, **kw):
         # import wdb; wdb.set_trace();
@@ -1509,16 +1535,20 @@ class InstitutePortal(CustomerPortal):
         data = request.jsonrequest
         candidate_id = data['candidate_id']
         attendance_compliance_1 = data['attendance_compliance_1']
-        
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=', int(candidate_id))])
         
+        # import wdb; wdb.set_trace();
+        if attendance_compliance_1 == 'yes':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 ,'attendance_compliance_2':'na' })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id, 'attendance_compliance_1':attendance_compliance_1 })
+        elif attendance_compliance_1 == 'no':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 , 'attendance_compliance_2':'no'  })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
         
         
-        candidate.write({'attendance_compliance_1':attendance_compliance_1})
-        candidate._check_attendance_criteria()
-        
-        return json.dumps({"status":"success"})
     
     
     @http.route(['/my/gpcandidate/attendance_compliance_2'], method=["POST", "GET"], type="json", auth="user")
@@ -1548,10 +1578,14 @@ class InstitutePortal(CustomerPortal):
         
         
         
-        candidate.write({'attendance_compliance_1':attendance_compliance_1})
-        candidate._check_attendance_criteria()
-        
-        return json.dumps({"status":"success"})
+        if attendance_compliance_1 == 'yes':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 ,'attendance_compliance_2':'na' })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id, 'attendance_compliance_1':attendance_compliance_1 })
+        elif attendance_compliance_1 == 'no':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 , 'attendance_compliance_2':'no'  })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
     
     @http.route(['/my/ccmccandidate/attendance_compliance_2'], method=["POST", "GET"], type="json", auth="user")
     def CCMCAttendanceCompliance2(self, **kw):
@@ -3026,34 +3060,38 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
 
-    @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+    @http.route(['/my/gp/download_dgs_capacity/<int:cousre_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacityCard(self,cousre_id,institute_id,**kw ):
+        # import wdb; wdb.set_trace()
         
-        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        # batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        
+        cousre = request.env['course.master'].sudo().search([('id','=',cousre_id)])
         institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
         
         # import wdb; wdb.set_trace()
         
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
-            file_name = institute.name + "-" + batch.batch_name + "-" + "DGS Document" + ".pdf"
+        # institute.courses[0].course.name
+        if institute.courses[0].dgs_document:
+            pdf_data = base64.b64decode(institute.courses[0].dgs_document)  # Decoding file data
+            file_name = institute.courses[0].dgs_document_name + ".pdf"
 
             headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
             return request.make_response(pdf_data, headers)
         else:
             return request.not_found()
    
-    @http.route(['/my/ccmccandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacity(self,batch_id,institute_id,**kw ):
+    @http.route(['/my/ccmc/download_dgs_capacity/<int:cousre_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacity(self,cousre_id,institute_id,**kw ):
         
-        batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
+        cousre = request.env['course.master'].sudo().search([('id','=',cousre_id)])
         institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
-        
+         
         # import wdb; wdb.set_trace()
-        
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
-            file_name = institute.name + "-" + batch.ccmc_batch_name + "-" + "DGS Document" + ".pdf"
+        # institute.courses[0].course.name
+        if institute.courses[1].dgs_document:
+            pdf_data = base64.b64decode(institute.courses[1].dgs_document)  # Decoding file data
+            file_name = institute.courses[1].dgs_document_name + ".pdf"
 
             headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
             return request.make_response(pdf_data, headers)

@@ -63,18 +63,26 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb;wdb.set_trace();
         account_move_id = self.env.context['active_id']
         invoice = self.env['account.move'].sudo().search([('id','=',account_move_id)])
+        print("gopppppppppppppppppppppppppppppppppppppp")
+        # import wdb; wdb.set_trace(); 
         if invoice.gp_batch_ok: #in GP Invoice
             print("gopppppppppppppppppppppppppppppppppppppp")
             gp_candidates = invoice.gp_candidates.ids
             batch = invoice.batch
+            self.env['batches.gp.register.exam.wizard'].sudo().register(batch.id,gp_candidates)
             batch.confirm_batch(gp_candidates)
             batch.write({'state':'4-invoiced'})
+            batch.write({'state':'5-exam_scheduled'})
+            
+            # import wdb; wdb.set_trace(); 
         elif invoice.ccmc_batch_ok: #if CCMC Inovice
             ccmc_candidates = invoice.ccmc_candidates.ids
             print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
             batch = invoice.ccmc_batch
-            batch.confirm_batch_ccmc(ccmc_candidates)
+            self.env['batches.ccmc.register.exam.wizard'].sudo().register(batch.id,ccmc_candidates)
+            batch.confirm_batch_ccmc(ccmc_candidates) # Disable For some time
             batch.write({'ccmc_state':'4-invoiced'})
+            batch.write({'ccmc_state':'5-exam_scheduled'})
         # Your custom code here after calling the super method
             # For CCMC
             return action

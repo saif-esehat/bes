@@ -528,7 +528,7 @@
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t> -->
-                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
+                            <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
@@ -2209,9 +2209,19 @@
                                 success: function (response) {
                                     <!-- debugger -->
                                     console.log("POST request successful:", response);
+                                    response = JSON.parse(response['result'])
+                                    if(response.attendance_compliance_1=='yes'){
+                                        var candidate_id = response.candidate_id
+                                        var attendance_2 = $('#attendance_compliance2_'+candidate_id)
+                                        attendance_2.val('na')
+                                        attendance_2.prop('disabled', true);
+                                    }else{
+                                        var candidate_id = response.candidate_id
+                                        var attendance_2 = $('#attendance_compliance2_'+candidate_id)
+                                        attendance_2.val('no')
+                                        attendance_2.prop('disabled', false);
 
-                                    // if response["status"]
-                                    // Handle success response
+                                    }
                                 },
                                     error: function (xhr, status, error) {
                                         debugger
@@ -2646,7 +2656,32 @@
                 </div>
             </div>
 
-            
+            <div class="modal fade" id="pay_all_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/my/gpcandidate/updatefeesall" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Pay All</h5>
+                            </div>
+                            
+                            <input type="hidden" id="confirm_gp_candidate_id" name="confirm_gp_candidate_id"/>
+                            <input type="hidden" id="confirm_gp_candidate_batch_id"  t-att-value="batch_id" name="confirm_gp_candidate_batch_id"/>
+
+                            
+                            <div class="modal-body">
+
+                                    Are You Sure You want to Mark All Candidate Fees Paid as Yes ?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
 
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
@@ -2666,7 +2701,7 @@
                         <th>Roll No.</th>
                         <th>Login Id</th>
                         <th>GP Candidate Code No.</th>
-                        <th>Fees Paid</th>
+                        <th style="text-align: center;">Fees Paid<br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#pay_all_modal"  data-toggle="modal">Pay All</a></th>
                         <th style="text-align: center;">Attendance 1 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_1_modal"  data-toggle="modal">More Info</a></th>
                         <th style="text-align: center;">Attendance 2 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_2_modal"  data-toggle="modal">More Info</a></th>
 
@@ -2713,9 +2748,10 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select t-attf-id="attendance_compliance2_{{candidate.id}}" onchange="attendanceCompliance2(this)"> 
+                                <select t-attf-id="attendance_compliance2_{{candidate.id}}" t-att-disabled="candidate.attendance_compliance_1 == 'yes'" onchange="attendanceCompliance2(this)"> 
                                     <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'"  >Yes</option>
                                     <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'" >No</option>
+                                    <option value="na" t-att-selected="candidate.attendance_compliance_2 == 'na'" >N/A</option>
                                 </select>
                             </td>
 
@@ -2924,7 +2960,7 @@
         
                                 }
 
-                                function attendanceCompliance1(selectField) {
+                            function attendanceCompliance1(selectField) {
 
                                 
                                 var selectId = selectField.id;
@@ -2945,9 +2981,19 @@
                                 success: function (response) {
                                     <!-- debugger -->
                                     console.log("POST request successful:", response);
+                                    response = JSON.parse(response['result'])
+                                    if(response.attendance_compliance_1=='yes'){
+                                        var candidate_id = response.candidate_id
+                                        var attendance_2 = $('#attendance_compliance2_'+candidate_id)
+                                        attendance_2.val('na')
+                                        attendance_2.prop('disabled', true);
+                                    }else{
+                                        var candidate_id = response.candidate_id
+                                        var attendance_2 = $('#attendance_compliance2_'+candidate_id)
+                                        attendance_2.val('no')
+                                        attendance_2.prop('disabled', false);
 
-                                    // if response["status"]
-                                    // Handle success response
+                                    }
                                 },
                                     error: function (xhr, status, error) {
                                         debugger
@@ -3024,7 +3070,7 @@
         </style>
 
         <t t-call="portal.portal_layout">
-                      <div class="container">
+            <div class="container">
                 <p class="text-warning">To Upload the candidate details in bulk 
                     <ol>
                         <li>
@@ -3295,6 +3341,33 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="pay_all_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/my/ccmccandidate/updatefeesall" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Pay All</h5>
+                            </div>
+                            
+                            <input type="hidden" t-att-value="batch_id" id="ccmc_batch_id" name="ccmc_batch_id"/>
+
+
+                            
+                            <div class="modal-body">
+
+                                    Are You Sure You want to Mark All Candidate Fees Paid as Yes ?
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
 
 
             <div class="modal fade" id="delete_ccmc_candidate_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -3364,7 +3437,7 @@
                         <th>Roll No.</th>
                         <th>Login Id.</th>
                         <th>CCMC Candidate Code No.</th>
-                        <th>Fees Paid</th>
+                        <th style="text-align: center;">Fees Paid<br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#pay_all_modal"  data-toggle="modal">Pay All</a></th>
                         <th style="text-align: center;">Attendance 1 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_1_modal"  data-toggle="modal">More Info</a></th>
                         <th style="text-align: center;">Attendance 2 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_2_modal"  data-toggle="modal">More Info</a></th>
                         <th>Image Status</th>
@@ -3409,9 +3482,11 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select t-attf-id="attendance_compliance2_{{candidate.id}}" onchange="attendanceCompliance2(this)"> 
+                                <select t-attf-id="attendance_compliance2_{{candidate.id}}" t-att-disabled="candidate.attendance_compliance_1 == 'yes'" onchange="attendanceCompliance2(this)"> 
                                     <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'"  >Yes</option>
                                     <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'" >No</option>
+                                    <option value="na" t-att-selected="candidate.attendance_compliance_2 == 'na'" >N/A</option>
+
                                 </select>
                             </td>
                             <td class="text-center">
@@ -3894,12 +3969,16 @@
                                             
                                         </td>
                                         <t t-if="course.dgs_document">
-                                            <td>
-                                                <a href="/my/download/{{ course.id }}">
-                                                    <!-- <t t-esc="course.dgs_document"/> -->
-                                                    <t t-esc="course.dgs_document_name"/>
-                                                </a>
-                                            </td>
+                                            <t t-if="course.course.id == 1">
+                                                <td>
+                                                    <a t-attf-href="/my/gp/download_dgs_capacity/{{course.course.id}}/{{institutes[0].id}}" class="fa"><t t-esc="course.dgs_document_name"/></a>
+                                                </td>
+                                            </t>
+                                            <t t-else="course.course.id == 2">
+                                                <td>
+                                                    <a t-attf-href="/my/ccmc/download_dgs_capacity/{{course.course.id}}/{{institutes[0].id}}" class="fa"><t t-esc="course.dgs_document_name"/></a>
+                                                </td>
+                                            </t>
                                         </t>
                                         <t t-else="">
                                             <td>

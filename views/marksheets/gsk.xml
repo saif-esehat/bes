@@ -114,24 +114,24 @@
                     <field name="exam_bes_candidate_id" invisible="1"/>
 
                     <group>
-                        <label for="subject_area_1" />
+                        <label for="subject_area_1_2_3" />
                         <div>
-                            <field name="subject_area_1"  nolabel="1"/>
+                            <field name="subject_area_1_2_3"  nolabel="1"/>
                                     / 
-                            <span>9 Marks</span>
+                            <span>25 Marks</span>
                         </div>
                     </group>
 
                     <group>
-                        <label for="subject_area_2" />
+                        <label for="subject_area_4_5_6" />
                         <div>
-                            <field name="subject_area_2"  nolabel="1"/>
+                            <field name="subject_area_4_5_6"  nolabel="1"/>
                                     / 
-                            <span>6 Marks</span>
+                            <span>25 Marks</span>
                         </div>
                     </group>
 
-                    <group>
+                    <!-- <group>
                         <label for="subject_area_3" />
                         <div>
                             <field name="subject_area_3"  nolabel="1"/>
@@ -165,7 +165,7 @@
                                     / 
                             <span>5 Marks</span>
                         </div>
-                    </group>
+                    </group> -->
 
                     <group>
                         <label for="practical_record_journals" />

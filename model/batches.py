@@ -6,6 +6,8 @@ import xlsxwriter
 from datetime import datetime
 import xlrd
 
+    
+
 
 class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
@@ -14,7 +16,7 @@ class InstituteGPBatches(models.Model):
     _description= 'Batches'
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
     
-    code = fields.Char(string="Code",related='institute_id.code',tracking=True)
+    code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
     exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
@@ -37,8 +39,8 @@ class InstituteGPBatches(models.Model):
     state = fields.Selection([
         ('1-ongoing', 'On-Going'),
         ('2-indos_pending', 'Confirmed'),
-        ('3-pending_invoice', 'Invoice Pending'),
-        ('4-invoiced', 'Invoiced'),
+        ('3-pending_invoice', 'Invoiced'),
+        ('4-invoiced', 'Paid'),
         ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing',tracking=True)
@@ -225,13 +227,13 @@ class InstituteGPBatches(models.Model):
     def confirm_batch(self,candidate_ids):
         
         # import wdb;wdb.set_trace();
-
         # candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_status','=','active')])
         canidate_list_no_indos = []
         candidate_missing_data_id = []
         
         candidates = self.env['gp.candidate'].sudo().browse(candidate_ids)
-
+        print("Candidates")
+        print(candidates)
         for candidate in candidates:
         # for candidate in self.env['gp.candidate'].sudo().search([('institute_batch_id','=',self.id),('fees_paid','=','yes')]):
             if not candidate.indos_no or not candidate.candidate_image or not candidate.candidate_signature :
@@ -275,7 +277,8 @@ class InstituteGPBatches(models.Model):
             
             
         gp_candidates = candidates.ids
-        
+        print("Candidates IDs " + str(gp_candidates) )
+
         set1 = set(gp_candidates)
         set2 = set(candidate_missing_data_id)
         
@@ -283,7 +286,7 @@ class InstituteGPBatches(models.Model):
         array1_without_common = list(set1 - set2)
 
         gp_candidates = self.env['gp.candidate'].sudo().browse(array1_without_common)
-        
+        print("gp_candidates s " + str(gp_candidates))
         group_xml_ids = [
         'bes.group_gp_candidates',
         'base.group_portal'
@@ -302,7 +305,11 @@ class InstituteGPBatches(models.Model):
             }
             # import wdb; wdb.set_trace()
             # 
-            portal_user = self.env['res.users'].sudo().create(user_values)
+            try:
+                portal_user = self.env['res.users'].sudo().create(user_values)
+            except:
+                print("Duplicate")
+                print(user_values)
             
             candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id)]) 
             
@@ -484,6 +491,8 @@ class InstituteCcmcBatches(models.Model):
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
+    exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     ccmc_batch_name = fields.Char("Batch Name",required=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     ccmc_faculty_name = fields.Char("Faculty name")
@@ -552,11 +561,11 @@ class InstituteCcmcBatches(models.Model):
     @api.depends("all_invoice_generated")
     def compute_all_invoice_generated(self):
         for record in self:
-             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id','=', record.id)])
+             candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', record.id)])
 
              if candidate_count > 0:
                
-               candidate_with_generated_invoice = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
+               candidate_with_generated_invoice = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',record.id),('fees_paid','=','yes'),('invoice_generated','=',True)]) 
                
                if candidate_with_generated_invoice == candidate_count:
                     record.all_invoice_generated = True
@@ -645,7 +654,29 @@ class InstituteCcmcBatches(models.Model):
     # def confirm_batch_ccmc(self):
         
     #     self.write({"ccmc_state":"2-indos_pending"})
-    
+    # Added method to generate sequence
+    def generate_sequence(self):
+        # import wdb; wdb.set_trace()
+        batch_year = self.ccmc_to_date.strftime('%y')
+        batch_month = self.ccmc_to_date.strftime('%m')
+        half = '06' if int(batch_month) <= 6 else '12'
+        institute_code = self.institute_id.code # Replace this with your actual institute code
+        
+        # Count the number of candidates in the batch
+        # candidate_count = self.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_id','=',True)])
+        candidate_count = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',self.id),('user_id','!=',None)])
+
+        # import wdb; wdb.set_trace()
+        # Generate the sequence number starting from '001'
+        candidate_count = candidate_count+1
+        
+        next_sequence_number = str(candidate_count).zfill(3)
+        
+
+        sequence = f'C{batch_year}{half}{institute_code}{next_sequence_number}'
+        return sequence
+
+
     def confirm_batch_ccmc(self,candidate_ids):
 
         print(self,"selfffffffffffffffffffffffffffffffffffffffffffffffffffff")
@@ -720,7 +751,13 @@ class InstituteCcmcBatches(models.Model):
             }
 
             portal_user = self.env['res.users'].sudo().create(user_values)
-            ccmc_candidate.write({'user_id': portal_user.id})
+
+            candidate_count = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',self.id)])
+            sequence = self.generate_sequence()
+            ccmc_candidate.write({'user_id': portal_user.id,
+                                'candidate_code': sequence  # Assign the generated sequence to the partner
+            
+                                })
             # You may need to adjust the following fields based on your actual field names in ccmc_candidate
             ccmc_candidate_tag = self.env.ref('bes.candidates_tags').id
 
@@ -807,7 +844,7 @@ class InstituteCcmcBatches(models.Model):
         
 class BatchesRegisterExamWizard(models.TransientModel):
     _name = 'batches.gp.register.exam.wizard'
-    _description = 'R egister Exam'
+    _description = 'Register Exam'
 
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
@@ -817,28 +854,28 @@ class BatchesRegisterExamWizard(models.TransientModel):
     
     
     
-    def register(self):
-        # import wdb; wdb.set_trace(); 
-        candidates = self.env["gp.candidate"].search([('institute_batch_id','=',self.batch_id.id),('fees_paid','=','yes')])
-        mek_survey_qb = self.mek_survey_qb
-        gsk_survey_qb = self.gsk_survey_qb
+    def register(self,batch_id,candidates_ids):
+        # candidates = self.env["gp.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
+        candidates = self.env["gp.candidate"].sudo().browse(candidates_ids)
+
+        mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK MasterQ')])
+        gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK MasterQ')])
+        batch = self.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        # batch =   
 
         for candidate in candidates:
-            # import wdb; wdb.set_trace(); 
             
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id , 'institute_name':self.batch_id.institute_id.id ,'registered_institute':self.batch_id.institute_id.id})
-            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': self.institute_id.id})
-            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': self.institute_id.id})
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id})
+            mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': batch.institute_id.id})
+            mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             
-            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': self.institute_id.id})
-            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': self.institute_id.id})
+            gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': batch.institute_id.id})
+            gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
-            
-            
-            mek_predefined_questions = self.mek_survey_qb._prepare_user_input_predefined_questions()
-            gsk_predefined_questions = self.gsk_survey_qb._prepare_user_input_predefined_questions()
+            mek_predefined_questions = mek_survey_qb._prepare_user_input_predefined_questions()
+            gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
             
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
             mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
@@ -847,11 +884,10 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
 
 
-            mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':self.dgs_batch.id,'institute_id':self.batch_id.institute_id.id})
-            gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':self.dgs_batch.id,'institute_id':self.batch_id.institute_id.id})
+            mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
+            gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
             candidate.write({'batch_exam_registered':True})
             gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
-        
         self.batch_id.write({"state":'5-exam_scheduled',"mek_survey_qb":mek_survey_qb.id,"gsk_survey_qb":gsk_survey_qb.id})
 
 class CCMCBatchesRegisterExamWizard(models.TransientModel):
@@ -864,37 +900,42 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     
     
-    def register(self):
-        # import wdb; wdb.set_trace(); 
-        print(self,"selffffffffffffffffffffffffffffffffffffffffffffff")
-        exam_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
-        candidates = self.env["ccmc.candidate"].search([('institute_batch_id','=',self.batch_id.id)])
-        print(candidates)
-        cookery_bakery_qb = self.cookery_bakery_qb.copy({'institute':self.institute_id.id, 'title': self.batch_id.ccmc_batch_name , 'template' :False })
-        print(cookery_bakery_qb.id,"cookeryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+    def register(self,batch_id,candidates_ids):
+  
+        candidates = self.env["ccmc.candidate"].sudo().browse(candidates_ids)
         
+
+        # print(candidates)
+        cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC MasterQ')])
+        batch = self.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
+
+
+
         # import wdb; wdb.set_trace(); 
+
         
         for candidate in candidates:
+            exam_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
             
-            
-            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': self.dgs_batch.id})
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id })
             print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
-            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
-            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
-            ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': batch.institute_id.id})
+            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
+            ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id ,'ccmc_gsk_oral':ccmc_gsk_oral.id, 'ccmc_oral':ccmc_oral.id})
             cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
             
             cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
 
             
             ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
+            candidate.write({'batch_exam_registered':True})
 
             
                         
 
         
-        self.batch_id.write({"ccmc_state":'5-exam_scheduled',"cookery_bakery_qb":cookery_bakery_qb.id})
+        batch.write({"ccmc_state":'5-exam_scheduled',"cookery_bakery_qb":cookery_bakery_qb.id})
 
 class BatchFaculty(models.Model):
     _name = 'batches.faculty'

@@ -139,7 +139,304 @@
 
 
     </template>
+        
+    <template id="exam_application_form_template" name="Exam Application Form">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Repeater Application for GP Rating</h1>
+                <form action="/my/application/view" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <input type="hidden" name="batch_id" t-att-value="batch.id" />
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="exam_centre">Exam Centre Selected</label>
+                            <select name="exam_centre" id="exam_centre" class="form-control">
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Chennai">Chennai</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="training_institute">Training Institute Name</label>
+                            <input type="text" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="name">Name as in the INDoS</label>
+                            <input type="text" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="candidate_code">Candidate Code No.</label>
+                            <input type="text" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                            <t t-if="exam.gsk_online_status == 'failed'">
+                                <div class="form-check">
+                                    <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <label for="gsk_online" class="form-check-label">GSK Online (Fees Rs.300/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <label for="gsk_online" class="form-check-label">GSK Online</label>
+                                </div>                            </t>
+
+                            <t t-if="exam.mek_online_status == 'failed'">
+                                <div class="form-check">
+                                    <input type="checkbox" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
+                                </div>                            
+                            </t>
+
+                            <t t-if="exam.gsk_oral_prac_status == 'failed'">
+                                <div class="form-check">
+                                    <input type="checkbox" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                </div>
+                            </t>
+
+                            <t t-if="exam.mek_oral_prac_status == 'failed'">
+                                <div class="form-check">
+                                    <input type="checkbox" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                </div>
+                            </t>
+
+                        </div>
+                        <div class="col-md-6">
+                            <label for="exams">Previous Exam Status</label><br/>
+                            <span>Red means Failed</span><br/>
+                            <div class="form-check">
+                                <t t-if="exam.gsk_online_status == 'failed'">
+                                    <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="gsk_online_status" class="badge badge-success">GSK Online</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.mek_online_status == 'failed'">
+                                    <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="mek_online_status" class="badge badge-success">MEK Online</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.gsk_oral_prac_status == 'failed'">
+                                    <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="gsk_oral_prac_status" class="badge badge-success">GSK Practical &amp; Oral</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.mek_oral_prac_status == 'failed'">
+                                    <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="mek_oral_prac_status" class="badge badge-success">MEK Practical &amp; Oral</span>
+                                </t>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label for="upi_utr_no">UPI or UTR No.</label>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="amount">Amount</label>
+                            <input type="number" name="amount" id="amount" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="payment_date">Date</label>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="ccmc_exam_application_form_template" name="Exam Application Form">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Repeater Application for GP Rating</h1>
+                <form action="/my/ccmcapplication/view" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                    <input type="hidden" name="batch_id" t-att-value="batch.id" />
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="exam_centre">Exam Centre Selected</label>
+                            <select name="exam_centre" id="exam_centre" class="form-control">
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Chennai">Chennai</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="training_institute">Training Institute Name</label>
+                            <input type="text" t-att-disabled="1" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="name">Name as in the INDoS</label>
+                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="candidate_code">Candidate Code No.</label>
+                            <input type="hidden" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                            <input type="text" t-att-disabled="1" class="form-control" t-att-value="candidate.candidate_code"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                            <t t-if="exam.cookery_bakery_prac_status == 'failed'">
+                                <div class="form-check">
+                               <div class="col-md-4">
+                                <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/CCMC_Repeater.jpg" style="width: 175px; height:175px;"/>
+                               </div>
+                                    <input type="checkbox" name="cookery_practical" value="Cookery And Bakery" id="cookery_practical" class="form-check-input"/>
+                                    <label for="cookery_practical" class="form-check-label">Cookery And Bakery (Fees Rs.566/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="Cookery And Bakery" id="cookery_practical" class="form-check-input"/>
+                                    <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
+                                </div>                            
+                            </t>
+
+                            <t t-if="exam.ccmc_oral_prac_status == 'failed'">
+                                <div class="form-check">
+                                    <input type="checkbox" name="cookery_oral" value="Cookery Oral" id="cookery_oral" class="form-check-input"/>
+                                    <label for="cookery_oral" class="form-check-label">Cookery Oral (Fees Rs. 566/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1" name="Cookery Oral" value="MEK Online" id="cookery_oral" class="form-check-input"/>
+                                    <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
+                                </div>                            
+                            </t>
+
+                            <t t-if="exam.ccmc_online_status == 'failed'">
+                                <div class="form-check">
+                                    <input type="checkbox" name="cookery_gsk_online" value="Cookery/GSK Online" id="cookery_gsk_online" class="form-check-input"/>
+                                    <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online (Fee Rs.568/-)</label>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-check">
+                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="Cookery/GSK Online" id="cookery_gsk_online" class="form-check-input"/>
+                                    <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="exams">Previous Exam Status</label><br/>
+                            <span>Red means Failed</span><br/>
+                            <div class="form-check">
+                                <t t-if="exam.cookery_bakery_prac_status == 'failed'">
+                                    <span id="cookery_bakery_prac_status" class="badge badge-danger">Cookery And Bakery</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="cookery_bakery_prac_status" class="badge badge-success">Cookery And Bakery</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.ccmc_oral_prac_status == 'failed'">
+                                    <span id="ccmc_oral_prac_status" class="badge badge-danger">Cookery Oral</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="ccmc_oral_prac_status" class="badge badge-success">Cookery Oral</span>
+                                </t>
+                            </div>
+                            <div class="form-check">
+                                <t t-if="exam.ccmc_online_status == 'failed'">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t>
+                                <t t-else="">
+                                    <span id="ccmc_online_status" class="badge badge-success">Cookery/GSK Online</span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label for="upi_utr_no">UPI or UTR No.</label>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="amount">Amount</label>
+                            <input type="number" name="amount" id="amount" class="form-control"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="payment_date">Date</label>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
 
 
+
+    <template id="candidate_not_found" name="Candidate Not Found">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Candidate Not Found</h1>
+                <p>Sorry, we could not find a candidate with the provided candidate code. Please check the code and try again.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="no_previous_exam_found" name="No Previous Exam Found">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>No Previous Exam Found</h1>
+                <p>No previous exam records found. This candidate must be registered through batches.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="exam_in_process" name="Exam In Process">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Exam In Process</h1>
+                <p>The last exam is still in process. Please wait for it to complete before registering for a new exam.</p>
+            </div>
+        </t>
+    </template>
 
 </odoo>

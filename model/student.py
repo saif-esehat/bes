@@ -40,6 +40,7 @@ class GPCandidate(models.Model):
     iti_percent = fields.Integer("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
+    
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
@@ -69,7 +70,8 @@ class GPCandidate(models.Model):
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
+         ('no', 'No'),
+         ('na', 'N/A')
     ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
@@ -126,6 +128,15 @@ class GPCandidate(models.Model):
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+
+    withdrawn_state =  fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], string='User Withdrawn',default="no",tracking=True)
+    
+    exam_registered = fields.Boolean("Exam Registered")
+
+    withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
@@ -568,6 +579,9 @@ class CCMCCandidate(models.Model):
         ('iti', 'ITI')
     ],string="Qualification", default='tenth',tracking=True)
     
+    batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
+
+    
     candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
     elligiblity_criteria = fields.Selection([
@@ -583,7 +597,8 @@ class CCMCCandidate(models.Model):
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
+         ('no', 'No'),
+         ('na', 'N/A')
     ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("ccmc.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
@@ -1238,10 +1253,10 @@ class MekOralLine(models.Model):
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID",tracking=True)
     mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
     mek_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
-    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools",tracking=True)
-    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
-    welding = fields.Integer("Welding",tracking=True)
-    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
+    using_of_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints",tracking=True)
+    # use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
+    welding_lathe_drill_grinder = fields.Integer("Welding & Lathe/Drill/Grinder",tracking=True)
+    # lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
     electrical = fields.Integer("Electrical",tracking=True)
     journal = fields.Integer("Journal",tracking=True)
 
@@ -1253,29 +1268,29 @@ class MekOralLine(models.Model):
 
     
 
-    @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.depends('using_of_tools', 'welding_lathe_drill_grinder', 'electrical', 'journal')
     def _compute_mek_oral_total_marks(self):
         for record in self:
             total = (
-                record.using_hand_plumbing_carpentry_tools +
-                record.use_of_chipping_tools_paints +
-                record.welding +
-                record.lathe_drill_grinder +
+                record.using_of_tools +
+                record.welding_lathe_drill_grinder +
+                # record.welding +
+                # record.lathe_drill_grinder +
                 record.electrical +
                 record.journal
             )
             record.mek_oral_total_marks = total
 
-    @api.onchange('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.onchange('using_of_tools', 'welding_lathe_drill_grinder','electrical', 'journal')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.using_hand_plumbing_carpentry_tools > 10:
-            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools Marks cannot exceed 10.")
-        if self.use_of_chipping_tools_paints > 10:
-            raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
-        if self.welding > 10:
-            raise UserError("In MEK Oral, Welding Marks cannot exceed 10.")
-        if self.lathe_drill_grinder > 10:
-            raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
+        if self.using_of_tools > 20:
+            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints Marks cannot exceed 20.")
+        # if self.use_of_chipping_tools_paints > 10:
+        #     raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
+        if self.welding_lathe_drill_grinder > 20:
+            raise UserError("In MEK Oral, Welding & Lathe/Drill/Grinder Marks cannot exceed 20.")
+        # if self.lathe_drill_grinder > 10:
+        #     raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
         if self.electrical > 10:
             raise UserError("In MEK Oral, Electrical Marks cannot exceed 10.")
         if self.journal > 25:
@@ -1494,20 +1509,20 @@ class CcmcOralLine(models.Model):
     equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
     
     gsk_ccmc = fields.Integer("GSK",tracking=True)
-    safety_ccmc = fields.Integer("Safety",tracking=True)
+    # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
 
     @api.depends(
-        'gsk_ccmc', 'safety_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
+        'gsk_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
     )
     def _compute_ccmc_rating_total(self):
         for record in self:
             rating_total = (
                 record.gsk_ccmc +
-                record.safety_ccmc+
+                # record.safety_ccmc+
                 record.house_keeping+
                 record.attitude_proffessionalism+
                 record.equipment_identification
@@ -1516,12 +1531,12 @@ class CcmcOralLine(models.Model):
             record.toal_ccmc_rating = rating_total
 
 
-    @api.onchange('gsk_ccmc','safety_ccmc')
+    @api.onchange('gsk_ccmc')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.gsk_ccmc > 10:
-            raise UserError("In CCMC Oral, GSK marks should not be greater than 10.")
-        if self.safety_ccmc > 10:
-            raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
+        if self.gsk_ccmc > 20:
+            raise UserError("In CCMC Oral, GSK marks should not be greater than 20.")
+        # if self.safety_ccmc > 10:
+        #     raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
 
 
     @api.model
@@ -1561,7 +1576,7 @@ class CcmcGSKOralLine(models.Model):
     ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
     gsk_ccmc = fields.Integer("GSK",tracking=True)
     safety_ccmc = fields.Integer("Safety",tracking=True)
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
+    toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
@@ -1576,7 +1591,7 @@ class CcmcGSKOralLine(models.Model):
                 record.safety_ccmc
             )
             
-            record.toal_ccmc_rating = rating_total
+            record.toal_ccmc_oral_rating = rating_total
 
 
     @api.onchange('gsk_ccmc','safety_ccmc')
@@ -1589,14 +1604,16 @@ class CcmcGSKOralLine(models.Model):
 
     @api.model
     def create(self, vals):
+        # import wdb;wdb.set_trace();
         if vals.get('ccmc_gsk_oral_attempt_no', 0) == 0:
+            
             # Calculate the next attempt number
             last_attempt = self.search([
                 ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
             ], order='ccmc_gsk_oral_attempt_no desc', limit=1)
             next_attempt = last_attempt.ccmc_gsk_oral_attempt_no + 1 if last_attempt else 1
-            vals['ccmc_oral_attempt_no'] = next_attempt
-        return super(CcmcOralLine, self).create(vals)
+            vals['ccmc_gsk_oral_attempt_no'] = next_attempt
+        return super(CcmcGSKOralLine, self).create(vals)
 
 
     @api.constrains('ccmc_gsk_oral_attempt_no')
@@ -1672,10 +1689,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
             record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
             
     
+            
+    
     
     def register_exam(self):
         
-        
+        import wdb; wdb.set_trace()
         dgs_exam = self.dgs_batch.id
         
         exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
@@ -1723,34 +1742,59 @@ class CandidateRegisterExamWizard(models.TransientModel):
             mek_oral_marks = self.gp_exam.mek_oral_marks
             mek_total = self.gp_exam.mek_total
             mek_percentage = self.gp_exam.mek_percentage
+            
         
-        
-        if self.mek_online_status == 'failed':
+        if self.mek_online_status == 'failed' and  self.gsk_online_status == 'failed':
+            
+            ## MEK QB Assigning
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = mek_survey_qb_input.generate_unique_string()
             mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
             mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
-        else:
-            mek_survey_qb_input = self.gp_exam.mek_online
-            mek_online_carry_forward = True
-            mek_online_marks = self.gp_exam.mek_online_marks
-            mek_online_percentage = self.gp_exam.mek_online_percentage
-        
-        
-        if self.gsk_online_status == 'failed':
+            
+            ## GSK QB Assigning
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = gsk_survey_qb_input.generate_unique_string()
             gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
             gsk_online_carry_forward = False
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
-        else:
+        
+        elif self.gsk_online_status == 'failed' and not self.mek_online_status == 'failed':
+            
+            ## GSK QB Assigning
+            gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = gsk_survey_qb_input.generate_unique_string()
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
+            gsk_online_carry_forward = False
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            
+            ## MEK Marks Forwarding
+            mek_survey_qb_input = self.gp_exam.mek_online
+            mek_online_carry_forward = True
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+            
+        elif not self.gsk_online_status == 'failed' and  self.mek_online_status == 'failed':
+            
+            ## GSK Marks Forwarding
             gsk_survey_qb_input = self.gp_exam.gsk_online
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
             gsk_online_carry_forward = True
+            
+            ## MEK QB Assigning
+            
+            mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = mek_survey_qb_input.generate_unique_string()
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
+            mek_online_carry_forward = False
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+
             
         overall_marks = self.gp_exam.overall_marks
         
@@ -1786,7 +1830,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
                                 "gsk_online_carry_forward":gsk_online_carry_forward
                                 
                                 })
-        
+
         # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
     
     # def register_exam(self):

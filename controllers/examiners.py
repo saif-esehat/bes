@@ -447,9 +447,9 @@ class ExaminerPortal(CustomerPortal):
 
             # Convert string values to integers
             subject_area1 = int(rec['subject_area1'])
-            subject_area2 = int(rec['subject_area2'])
-            subject_area3 = int(rec['subject_area3'])
-            subject_area4 = int(rec['subject_area4'])
+            subject_area2 = int(rec['subject_area3'])
+            # subject_area3 = int(rec['subject_area3'])
+            # subject_area4 = int(rec['subject_area4'])
             subject_area5 = int(rec['subject_area5'])
             subject_area6 = int(rec['subject_area6'])
             mek_oral_remarks = rec['remarks_oral_mek']
@@ -461,10 +461,10 @@ class ExaminerPortal(CustomerPortal):
 
             # Construct the dictionary with integer values
             vals = {
-                'using_hand_plumbing_carpentry_tools': subject_area1,
-                'use_of_chipping_tools_paints': subject_area2,
-                'welding': subject_area3,
-                'lathe_drill_grinder': subject_area4,
+                'using_of_tools': subject_area1,
+                'welding_lathe_drill_grinder': subject_area2,
+                # 'welding': subject_area3,
+                # 'lathe_drill_grinder': subject_area4,
                 'electrical': subject_area5,
                 'journal': subject_area6,
                 'mek_oral_remarks': mek_oral_remarks,
@@ -656,7 +656,7 @@ class ExaminerPortal(CustomerPortal):
 
             # Convert string values to integers                    
             subject_area1 = int(rec['ccmc_gsk'])
-            subject_area2 = int(rec['safety_ccmc'])
+            # subject_area2 = int(rec['safety_ccmc'])
             subject_area3 = int(rec['house_keeping'])
             subject_area4 = int(rec['f_b'])
             subject_area5 = int(rec['orals_house_keeping'])
@@ -666,7 +666,7 @@ class ExaminerPortal(CustomerPortal):
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': subject_area1,
-                'safety_ccmc': subject_area2,
+                # 'safety_ccmc': subject_area2,
                 'house_keeping': subject_area3,
                 'f_b': subject_area4,
                 'orals_house_keeping': subject_area5,
@@ -810,7 +810,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
-        gsk_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
+        gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': remarks })
 
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -924,9 +924,9 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.set_column('A2:A2',35, unlocked)
         mek_oral_sheet.set_column('B2:B2',10, unlocked)
         mek_oral_sheet.set_column('C2:C2',20, unlocked)
-        mek_oral_sheet.set_column('D2:I2',20, unlocked)
-        mek_oral_sheet.set_column('J2:J2',15, unlocked)
-        mek_oral_sheet.set_column('K2:K2',15, unlocked)
+        mek_oral_sheet.set_column('D2:F2',20, unlocked)
+        mek_oral_sheet.set_column('G2:G2',15, unlocked)
+        mek_oral_sheet.set_column('H2:H2',15, unlocked)
             
         mek_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -956,15 +956,13 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'red',
                                             })
 
-        mek_oral_sheet.merge_range("A1:D1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
        
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
-          'Use of chipping Tools & Brushes & Paints \n 10 Marks',
-          'Welding \n 10 Marks',
-          'Lathe /Drill/Grinder \n 10 Marks',
-          'Electrical  \n 12 Marks',
+          'Uses of Hand/ Plumbing/Carpentry Tools \n Use of chipping Tools & Brushes & Paints \n 20 Marks',
+          'Welding \n Lathe /Drill/Grinder \n 20 Marks',
+          'Electrical  \n 10 Marks',
           'Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
             mek_oral_sheet.write(1, col, value, header_format)
@@ -992,19 +990,18 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write('C{}'.format(i+3), code, locked)
         
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
+        mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
+        # mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        # mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        mek_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_25 })
+        mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
-        mek_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': remarks })
+        mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -1100,41 +1097,41 @@ class ExaminerPortal(CustomerPortal):
             
             roll_no = row[1]
             candidate_code_no = row[2]  
-            subject_area_1 = row[3]  
-            subject_area_2 = row[4]  
-            subject_area_3 = row[5]  
-            subject_area_4 = row[6]  
-            subject_area_5 = row[7]  
-            subject_area_6 = row[8] 
-            practical_journal = row[9] 
+            subject_area_1_2_3 = row[3]  
+            subject_area_4_5_6 = row[4]  
+            # subject_area_3 = row[5]  
+            # subject_area_4 = row[6]  
+            # subject_area_5 = row[7]  
+            # subject_area_6 = row[8] 
+            practical_journal = row[5] 
             total_marks = 0  # Initialize total_marks to 0
-            if subject_area_1:
-                total_marks += int(subject_area_1)
-            if subject_area_2:
-                total_marks += int(subject_area_2)
-            if subject_area_3:
-                total_marks += int(subject_area_3)
-            if subject_area_4:
-                total_marks += int(subject_area_4)
-            if subject_area_5:
-                total_marks += int(subject_area_5)
-            if subject_area_6:
-                total_marks += int(subject_area_6)
+            if subject_area_1_2_3:
+                total_marks += int(subject_area_1_2_3)
+            if subject_area_4_5_6:
+                total_marks += int(subject_area_4_5_6)
+            # if subject_area_3:
+            #     total_marks += int(subject_area_3)
+            # if subject_area_4:
+            #     total_marks += int(subject_area_4)
+            # if subject_area_5:
+            #     total_marks += int(subject_area_5)
+            # if subject_area_6:
+            #     total_marks += int(subject_area_6)
             if practical_journal:
                 total_marks += int(practical_journal)
                     
-            remarks = row[10]
+            remarks = row[6]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             
             if candidate and candidate.gsk_oral:
                 candidate.gsk_oral.sudo().write({
-                    'subject_area_1':subject_area_1,
-                    'subject_area_2':subject_area_2,
-                    'subject_area_3':subject_area_3,
-                    'subject_area_4':subject_area_4,
-                    'subject_area_5':subject_area_5,
-                    'subject_area_6':subject_area_6,
+                    'subject_area_1_2_3':subject_area_1_2_3,
+                    'subject_area_4_5_6':subject_area_4_5_6,
+                    # 'subject_area_3':subject_area_3,
+                    # 'subject_area_4':subject_area_4,
+                    # 'subject_area_5':subject_area_5,
+                    # 'subject_area_6':subject_area_6,
                     'practical_record_journals':practical_journal,
                     'gsk_oral_total_marks':total_marks,
                     'gsk_oral_remarks':remarks,
@@ -1222,36 +1219,36 @@ class ExaminerPortal(CustomerPortal):
             
             roll_no = row[1]
             candidate_code_no = row[2]  
-            plumbing = row[3]  
-            chipping = row[4]  
-            welding = row[5]  
-            grinder = row[6]  
-            electrical = row[7]  
-            mek_journal = row[8] 
+            using_of_tools = row[3]  
+            welding_more = row[4]  
+            # welding = row[5]  
+            # grinder = row[6]  
+            electrical = row[5]  
+            mek_journal = row[6] 
 
             total_marks = 0  # Initialize gsk_practical_total_marks to 0
-            if plumbing:
-                total_marks += int(plumbing)
-            if chipping:
-                total_marks += int(chipping)
-            if welding:
-                total_marks += int(welding)
-            if grinder:
-                total_marks += int(grinder)
+            if using_of_tools:
+                total_marks += int(using_of_tools)
+            if welding_more:
+                total_marks += int(welding_more)
+            # if welding:
+            #     total_marks += int(welding)
+            # if grinder:
+            #     total_marks += int(grinder)
             if electrical:
                 total_marks += int(electrical)
             if mek_journal:
                 total_marks += int(mek_journal)  
 
-            remarks = row[9]
+            remarks = row[7]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.mek_oral:
                 candidate.mek_oral.sudo().write({
-                    'using_hand_plumbing_carpentry_tools':plumbing,
-                    'use_of_chipping_tools_paints':chipping,
-                    'welding':welding,
-                    'lathe_drill_grinder':grinder,
+                    'using_of_tools':using_of_tools,
+                    'welding_lathe_drill_grinder':welding_more,
+                    # 'welding':welding,
+                    # 'lathe_drill_grinder':grinder,
                     'electrical':electrical,
                     'journal':mek_journal,
                     'mek_oral_total_marks':total_marks,

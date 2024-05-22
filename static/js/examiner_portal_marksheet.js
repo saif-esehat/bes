@@ -31,7 +31,7 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     contentType: 'application/json',
                     success: function (response) {
 
-                        debugger
+                        // debugger
                         console.log("POST request successful:", response);
                         location.reload();
 
@@ -39,7 +39,7 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                         // Handle success response
                     },
                     error: function (xhr, status, error) {
-                        debugger
+                        // debugger
                         console.error("POST request failed:", error);
                         
                         // Handle error
@@ -75,7 +75,7 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     data: JSON.stringify(postData) ,
                     contentType: 'application/json',                    
                     success: function (response) {
-                        debugger
+                        // debugger
                         console.log("POST request successful:", response);
                         location.reload();
 

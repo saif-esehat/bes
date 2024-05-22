@@ -106,11 +106,16 @@
                     <group expand="0" string="Group By">
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'dgs_batch'}" />
                         <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                        <!-- <filter name="" string="State" context="{'state':'exam_region'}" /> -->
+                        <filter string="Invoice Pending" name="group_by_state" context="{'group_by':'state'}"  domain="[('state', '=', '3-pending_invoice')]"/>
+                        <filter string="Paid" name="group_by_state" context="{'group_by':'state'}" domain="[('state', '=', '4-invoiced')]"/>
+
                     </group>
 
                     <searchpanel>
-                        <field name="institute_id" enable_counters="1"/>
-                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <field name="state" enable_counters="1" icon="fa fa-user"/>
+                        <!-- <field name="institute_id" enable_counters="1"/> -->
                     </searchpanel>
                 </search>
             </field>
@@ -350,6 +355,8 @@
                 <tree>
                     <field name="ccmc_batch_name"/>
                     <field name="institute_id"/>
+                    <field name="code"/>
+                    <field name="exam_region"/>
                     <field name="ccmc_from_date"/>
                     <field name="ccmc_to_date"/>
                     <field name="candidate_count"/>
@@ -371,8 +378,9 @@
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'ccmc_batch_name'}" />
                     </group>
                     <searchpanel>
-                        <field name="institute_id" enable_counters="1"/>
-                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
+                        <field name="ccmc_state" enable_counters="1" icon="fa fa-user"/>
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <!-- <field name="institute_id" enable_counters="1"/> -->
                     </searchpanel>
                 </search>
 
@@ -412,6 +420,10 @@
                         <group>
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
+                            <field name="repeater_batch"/>
+                            <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
                         </group>

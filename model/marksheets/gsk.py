@@ -99,45 +99,43 @@ class GSKOral(models.Model):
     
     marksheet_name = fields.Char("Marksheet Name",default="Oral GSK Marksheet")
     exam_bes_candidate_id = fields.Many2one("exam.schedule.bes.candidate",string="Exam BES Candidate",required=True)
-    subject_area_1 = fields.Integer("Subject Area 1")
-    subject_area_2 = fields.Integer("Subject Area 2")
-    subject_area_3 = fields.Integer("Subject Area 3")
-    subject_area_4 = fields.Integer("Subject Area 4")
-    subject_area_5 = fields.Integer("Subject Area 5")
-    subject_area_6 = fields.Integer("Subject Area 6")
+    subject_area_1_2_3 = fields.Integer("Subject Area 1, 2, 3 ",tracking=True)
+    # subject_area_2 = fields.Integer("Subject Area 2",tracking=True)
+    # subject_area_3 = fields.Integer("Subject Area 3",tracking=True)
+    subject_area_4_5_6 = fields.Integer("Subject Area 4, 5, 6",tracking=True)
     practical_record_journals = fields.Integer("Practical Record Book and Journal")
     
     
     total_marks = fields.Integer("Total Marks",compute='_compute_total_marks', store=True)
     remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
     
-    @api.constrains('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    @api.constrains('subject_area_1_2_3', 'subject_area_4_5_6', 'practical_record_journals')
     def _check_max_value(self):
         for record in self:
             fields_to_check = {
-                'subject_area_1': record._fields['subject_area_1'].string,
-                'subject_area_2': record._fields['subject_area_2'].string,
-                'subject_area_3': record._fields['subject_area_3'].string,
-                'subject_area_4': record._fields['subject_area_4'].string,
-                'subject_area_5': record._fields['subject_area_5'].string,
-                'subject_area_6': record._fields['subject_area_6'].string,
+                'subject_area_1_2_3': record._fields['subject_area_1_2_3'].string,
+                'subject_area_4_5_6': record._fields['subject_area_4_5_6'].string,
+                # 'subject_area_3': record._fields['subject_area_3'].string,
+                # 'subject_area_4': record._fields['subject_area_4'].string,
+                # 'subject_area_5': record._fields['subject_area_5'].string,
+                # 'subject_area_6': record._fields['subject_area_6'].string,
                 'practical_record_journals': record._fields['practical_record_journals'].string,
             }
 
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
-                if field_name == 'subject_area_1' and field_value > 9:
-                    raise ValidationError(f"{field_label} value cannot exceed 9.")
-                elif field_name == 'subject_area_2' and field_value > 6:
-                    raise ValidationError(f"{field_label} value cannot exceed 6.")
-                elif field_name == 'subject_area_3' and field_value > 9:
-                    raise ValidationError(f"{field_label} value cannot exceed 9.")
-                elif field_name == 'subject_area_4' and field_value > 9:
-                    raise ValidationError(f"{field_label} value cannot exceed 9.")
-                elif field_name == 'subject_area_5' and field_value > 12:
-                    raise ValidationError(f"{field_label} value cannot exceed 12.")
-                elif field_name == 'subject_area_6' and field_value > 5:
-                    raise ValidationError(f"{field_label} value cannot exceed 5.")
+                if field_name == 'subject_area_1_2_3' and field_value > 25:
+                    raise ValidationError(f"{field_label} value cannot exceed 25.")
+                elif field_name == 'subject_area_4_5_6' and field_value > 25:
+                    raise ValidationError(f"{field_label} value cannot exceed 25.")
+                # elif field_name == 'subject_area_3' and field_value > 9:
+                #     raise ValidationError(f"{field_label} value cannot exceed 9.")
+                # elif field_name == 'subject_area_4' and field_value > 9:
+                #     raise ValidationError(f"{field_label} value cannot exceed 9.")
+                # elif field_name == 'subject_area_5' and field_value > 12:
+                #     raise ValidationError(f"{field_label} value cannot exceed 12.")
+                # elif field_name == 'subject_area_6' and field_value > 5:
+                    # raise ValidationError(f"{field_label} value cannot exceed 5.")
                 elif field_name == 'practical_record_journals' and field_value > 25:
                     raise ValidationError(f"{field_label} value cannot exceed 25.")
 
@@ -151,16 +149,16 @@ class GSKOral(models.Model):
         return gsk_oral
 
     
-    @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    @api.depends('subject_area_1_2_3', 'subject_area_4_5_6', 'practical_record_journals')
     def _compute_total_marks(self):
         for record in self:
             total_marks = sum([
-                record.subject_area_1,
-                record.subject_area_2,
-                record.subject_area_3,
-                record.subject_area_4,
-                record.subject_area_5,
-                record.subject_area_6,
+                record.subject_area_1_2_3,
+                record.subject_area_4_5_6,
+                # record.subject_area_3,
+                # record.subject_area_4,
+                # record.subject_area_5,
+                # record.subject_area_6,
                 record.practical_record_journals,
             ])
 

@@ -17,6 +17,9 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
                                 Raise a Query
                         </a>
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/5" >
+                                Apply for Exam
+                        </a>
                     </div>
                    
                 </t>
@@ -33,6 +36,9 @@
                         </a>
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
                                 Raise a Query
+                        </a>
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/ccmccandidate/repeater/5" >
+                                Apply for Exam
                         </a>
                     </div>
                 </t>

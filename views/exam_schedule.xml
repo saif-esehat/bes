@@ -350,6 +350,7 @@
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
+                            <field name="exam_region" readonly="1"/>
                             <field name="institute_code"/>
                             <field name="reissued"/>                            
                             <field name="reissued_date"/>
@@ -364,7 +365,7 @@
                         <group style="width:50%">
                             <field name="cookery_bakery"/>
                             <field name="ccmc_oral"/>
-                            
+                            <field name="ccmc_gsk_oral"/>
                             <field name="ccmc_online"/>
                         </group>
                         

@@ -323,6 +323,11 @@
                             <field name="candidate_attendance_record"/>
                             <field name="fees_paid"/>
                             <field name="invoice_no"/>
+                            <field name="withdrawn_state"/>
+                            <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
+
+                            
+                            
 
                         </group>
                         
@@ -393,10 +398,10 @@
                                         <field name='mek_oral_exam_date'/> 
                                         <field name='institute_id'/>                             
                                         <field name='exam_id'/>
-                                        <field name='using_hand_plumbing_carpentry_tools'/>
-                                        <field name="use_of_chipping_tools_paints"/>
-                                        <field name='welding'/>
-                                        <field name="lathe_drill_grinder"/>
+                                        <field name='using_of_tools'/>
+                                        <field name="welding_lathe_drill_grinder"/>
+                                        <!-- <field name='welding'/>
+                                        <field name="lathe_drill_grinder"/> -->
 
                                         <field name="electrical"/>
                                         <field name="journal"/>
@@ -745,7 +750,7 @@
                                         <field name="ccmc_oral_attempt_no"/>
                                         <field name="ccmc_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
-                                        <field name='safety_ccmc'/>
+                                        <!-- <field name='safety_ccmc'/> -->
                                         <field name='toal_ccmc_rating'/> 
                                         <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
@@ -760,7 +765,7 @@
                                         <field name="ccmc_gsk_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
                                         <field name='safety_ccmc'/>
-                                        <field name='toal_ccmc_rating'/> 
+                                        <field name='toal_ccmc_oral_rating'/> 
                                         <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
                                 </field>
@@ -1087,6 +1092,58 @@
                             <div>
                                 <field name="gsk_ccmc" nolabel="1"/>
                                         / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+                        <!-- <group>
+                            <label for="safety_ccmc"/>
+                            <div>
+                                <field name="safety_ccmc" nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group> -->
+                        <group>
+                            <label for="toal_ccmc_rating" />
+                            <div>
+                                <field name="toal_ccmc_rating" nolabel="1"/>
+                                        / 
+                                <span>100 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <field name='ccmc_oral_draft_confirm'/> 
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- CCMC GSK Oral -->
+        <record id="ccmc_oral_gsk_eaxm_form" model="ir.ui.view">
+            <field name="name">ccmc.gsk.oral.line.form</field>
+            <field name="model">ccmc.gsk.oral.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_gsk_oral_attempt_no"/>
+                            <field name="ccmc_gsk_oral_exam_date"/>
+                        </group>
+                        <span>
+                            <h2>
+                                <Strong>Marks for Oral</Strong>
+                            </h2>
+                        </span>
+                        <group>
+                            <label for="gsk_ccmc" />
+                            <div>
+                                <field name="gsk_ccmc" nolabel="1"/>
+                                        / 
                                 <span>10 Marks</span>
                             </div>
                         </group>
@@ -1099,11 +1156,11 @@
                             </div>
                         </group>
                         <group>
-                            <label for="toal_ccmc_rating" />
+                            <label for="toal_ccmc_oral_rating" />
                             <div>
-                                <field name="toal_ccmc_rating" nolabel="1"/>
+                                <field name="toal_ccmc_oral_rating" nolabel="1"/>
                                         / 
-                                <span>100 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
                         <group>
@@ -1249,24 +1306,24 @@
                             <field name='exam_id'/>
                         </group>
                         <group>
-                            <label for="using_hand_plumbing_carpentry_tools" />
+                            <label for="using_of_tools" />
                             <div>
-                                <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                                <field name="using_of_tools" nolabel="1"/>
                         / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
 
                         <group>
-                            <label for="use_of_chipping_tools_paints" />
+                            <label for="welding_lathe_drill_grinder" />
                             <div>
-                                <field name="use_of_chipping_tools_paints" nolabel="1"/>
+                                <field name="welding_lathe_drill_grinder" nolabel="1"/>
                         / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
 
-                        <group>
+                        <!-- <group>
                             <label for="welding" />
                             <div>
                                 <field name="welding" nolabel="1"/>
@@ -1282,7 +1339,7 @@
                         / 
                                 <span>10 Marks</span>
                             </div>
-                        </group>
+                        </group> -->
 
 
                         <group>
