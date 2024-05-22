@@ -220,7 +220,7 @@
                                 <field name="gp_marksheet_ids"  options="{'no_create':True}"/>
                                 <field name="no_candidates"/>
                             </tree>
-                        </field>
+                    </field>
                     <footer>
                         <button string="Confirm" type="object" name="confirm" class="btn-primary"/>
                     </footer>
@@ -238,12 +238,46 @@
                         <field name="exam_duty" invisible="1"/>
                         <field name="exam_region" invisible="1"/>
                         <field name="institute_id" domain="[('exam_center','=', exam_region)]"/>
-                        <field name="course"/>                        
+                        <field name="course"/>  
+                        <!-- <field name="ccmc_gsk_oral_candidates"/> -->
+                      
                     </group>
+                    <group style="width: 50%">
+                        <field name="ccmc_prac_oral_candidates"/>
+                        <field name="ccmc_gsk_oral_candidates"/>
+                    </group>
+                    <group style="width: 50%">
+                        <field name="ccmc_online_candidates"/>
+                    </group>
+
+                    <group>
+                        <field name="no_of_days"/>
+                    </group>
+
+                    <group colspan="8" col="4">
+                        <field name="examiner_required_ccmc_prac_oral"/>
+                        <field name="examiner_required_ccmc_gsk_oral"/>
+                    </group>
+                    <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
+
+                    <field name="examiner_lines_ids" >
+                            <tree editable="bottom">
+                                <field name="exam_date" />
+                                <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
+                                <field name="exam_type"/>
+                                <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
+                                <field name="ccmc_marksheet_ids"  options="{'no_create':True}"/>
+                                <field name="no_candidates"/>
+                            </tree>
+                    </field>
+
+
+
            
 
                     <footer>
-                        <!-- <button string="Confirm" type="object" name="confirm" class="btn-primary"/> -->
+                        <button string="Confirm" type="object" class="oe_highlight" name="confirm"/>
+                    
                     </footer>
                 </form>
             </field>

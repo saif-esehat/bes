@@ -69,8 +69,10 @@ class CustomPaymentRegister(models.TransientModel):
             print("gopppppppppppppppppppppppppppppppppppppp")
             gp_candidates = invoice.gp_candidates.ids
             batch = invoice.batch
-            self.env['batches.gp.register.exam.wizard'].sudo().register(batch.id,gp_candidates)
-            batch.confirm_batch(gp_candidates)
+            # self.env['batches.gp.register.exam.wizard'].sudo().register(batch.id)
+            # batch.confirm_batch(gp_candidates)
+            # self.env['batches.gp.register.exam.wizard'].sudo().register(batch.id,gp_candidates)
+            # batch.confirm_batch(gp_candidates)
             batch.write({'state':'4-invoiced'})
             batch.write({'state':'5-exam_scheduled'})
             
@@ -79,8 +81,10 @@ class CustomPaymentRegister(models.TransientModel):
             ccmc_candidates = invoice.ccmc_candidates.ids
             print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
             batch = invoice.ccmc_batch
-            self.env['batches.ccmc.register.exam.wizard'].sudo().register(batch.id,ccmc_candidates)
-            batch.confirm_batch_ccmc(ccmc_candidates) # Disable For some time
+            # self.env['batches.ccmc.register.exam.wizard'].sudo().register(batch.id)
+            # batch.confirm_batch_ccmc(ccmc_candidates) # Disable For some time
+            # self.env['batches.ccmc.register.exam.wizard'].sudo().register(batch.id,ccmc_candidates)
+            # batch.confirm_batch_ccmc(ccmc_candidates) # Disable For some time
             batch.write({'ccmc_state':'4-invoiced'})
             batch.write({'ccmc_state':'5-exam_scheduled'})
         # Your custom code here after calling the super method
