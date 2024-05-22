@@ -230,7 +230,7 @@ class GPCandidatePortal(CustomerPortal):
             'exam': exam,
             'batch':batch
         }
-        if exam:
+        if exam.state == '1-in_process':
             return request.render("bes.exam_in_process", vals)
         else:
             return request.render("bes.exam_application_form_template", vals)
@@ -266,9 +266,10 @@ class GPCandidatePortal(CustomerPortal):
     def viewCCMCApplication(self, **kwargs):
         # import wdb; wdb.set_trace()
         if request.httprequest.method == 'POST':
-            cookery_practical = kwargs.get('cookery_practical')
+            cookery_prac = kwargs.get('cookery_practical')
             cookery_oral = kwargs.get('cookery_oral')
             cookery_gsk_online = kwargs.get('cookery_gsk_online')
+            exam_region = request.env["exam.center"].sudo().search([('name','=',kwargs.get('exam_centre'))])
 
             candidate_code = kwargs.get('candidate_code')
             candidate = request.env['ccmc.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
@@ -302,11 +303,13 @@ class GPCandidatePortal(CustomerPortal):
                     # gsk_oral = exam.env["gp.gsk.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
                 
                     cookery_practical = exam.cookery_practical
+                    cookery_bakery = exam.cookery_bakery
                     cookery_bakery_percentage = exam.cookery_bakery_percentage
                     cookery_prac_carry_forward = False
                     cookery_bakery_prac_status = 'pending'                
                 else:
                     cookery_practical = exam.cookery_practical
+                    cookery_bakery = exam.cookery_bakery
                     cookery_bakery_percentage = exam.cookery_bakery_percentage
                     cookery_prac_carry_forward = True
                     cookery_bakery_prac_status = exam.cookery_bakery_prac_status
@@ -318,11 +321,13 @@ class GPCandidatePortal(CustomerPortal):
                     ccmc_gsk_oral = exam.env["ccmc.gsk.oral.line"].sudo().create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
                     
                     cookery_oral = exam.cookery_oral
+                    ccmc_oral = exam.ccmc_oral
                     ccmc_oral_percentage = exam.ccmc_oral_percentage
                     cookery_oral_carry_forward = False
                     ccmc_oral_prac_status = 'pending'      
                 else:
                     cookery_oral = exam.cookery_oral
+                    ccmc_oral = exam.ccmc_oral
                     ccmc_oral_percentage = exam.ccmc_oral_percentage
                     cookery_oral_carry_forward = True
                     ccmc_oral_prac_status = exam.ccmc_oral_prac_status     
@@ -337,6 +342,7 @@ class GPCandidatePortal(CustomerPortal):
                     cookery_gsk_online_carry_forward = False
                     ccmc_online_status = 'pending'
                 else:
+                    cookery_bakery_qb_input = exam.ccmc_online
                     cookery_gsk_online = exam.cookery_gsk_online
                     cookery_gsk_online_percentage = exam.cookery_gsk_online_percentage
                     cookery_gsk_online_carry_forward = True
@@ -348,6 +354,7 @@ class GPCandidatePortal(CustomerPortal):
                     'registered_institute':candidate.institute_id.id,
                     'ccmc_candidate':candidate.id,
                     'exam_id':exam_id,
+                    'exam_region':exam_region.id,
                     'dgs_batch':dgs_exam,
                     'cookery_practical':cookery_practical,
                     'cookery_oral':cookery_oral,
@@ -388,6 +395,7 @@ class GPCandidatePortal(CustomerPortal):
             gsk_practical_oral = kwargs.get('gsk_practical_oral')
             mek_online = kwargs.get('mek_online')
             gsk_online = kwargs.get('gsk_online')
+            exam_region = request.env["exam.center"].sudo().search([('name','=',kwargs.get('exam_centre'))])
 
             candidate_code = kwargs.get('candidate_code')
             candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
@@ -449,7 +457,24 @@ class GPCandidatePortal(CustomerPortal):
                     mek_percentage = exam.mek_percentage
                     mek_oral_prac_status = exam.mek_oral_prac_status
                 
-                
+                # if self.mek_online_status == 'failed' and  self.gsk_online_status == 'failed':
+            
+                #     ## MEK QB Assigning
+                #     mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+                #     token = mek_survey_qb_input.generate_unique_string()
+                #     mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
+                #     mek_online_carry_forward = False
+                #     mek_online_marks = self.gp_exam.mek_online_marks
+                #     mek_online_percentage = self.gp_exam.mek_online_percentage
+                    
+                #     ## GSK QB Assigning
+                #     gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+                #     token = gsk_survey_qb_input.generate_unique_string()
+                #     gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
+                #     gsk_online_carry_forward = False
+                #     gsk_online_marks = self.gp_exam.gsk_online_marks
+                #     gsk_online_percentage = self.gp_exam.gsk_online_percentage
+
                 if exam.mek_online_status == 'failed' and kwargs.get('mek_online'):
                     mek_survey_qb_input = exam.mek_survey_qb._create_answer(user=candidate.user_id)
                     token = mek_survey_qb_input.generate_unique_string()
@@ -492,6 +517,7 @@ class GPCandidatePortal(CustomerPortal):
                                         "mek_oral":mek_oral.id,
                                         "mek_prac":mek_practical.id,
                                         "gsk_oral":gsk_oral.id,
+                                        'exam_region':exam_region.id,
                                         "gsk_prac":gsk_practical.id , 
                                         "gsk_online":gsk_survey_qb_input.id, 
                                         "mek_online":mek_survey_qb_input.id,
