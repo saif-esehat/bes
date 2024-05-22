@@ -294,8 +294,8 @@ class GPCandidatePortal(CustomerPortal):
                 # overall_percentage = exam.overall_percentage
                 
                 if exam.cookery_bakery_prac_oral_status == 'failed' and kwargs.get('cookery_practical'):
-                    cookery_practical = exam.env["gp.gsk.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': candidate.institute_id.id})
-                    gsk_oral = exam.env["gp.gsk.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                    cookery_practical = exam.env["ccmc.cookery.bakery.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': candidate.institute_id.id})
+                    # gsk_oral = exam.env["gp.gsk.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': candidate.institute_id.id})
                 
                     gsk_practical_marks = exam.gsk_practical_marks
                     gsk_oral_marks = exam.gsk_oral_marks

@@ -355,6 +355,8 @@
                 <tree>
                     <field name="ccmc_batch_name"/>
                     <field name="institute_id"/>
+                    <field name="code"/>
+                    <field name="exam_region"/>
                     <field name="ccmc_from_date"/>
                     <field name="ccmc_to_date"/>
                     <field name="candidate_count"/>

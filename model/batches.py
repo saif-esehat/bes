@@ -16,7 +16,7 @@ class InstituteGPBatches(models.Model):
     _description= 'Batches'
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
     
-    code = fields.Char(string="Code",related='institute_id.code',tracking=True)
+    code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
     exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
@@ -491,6 +491,8 @@ class InstituteCcmcBatches(models.Model):
     _description= 'Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
+    code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
+    exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     ccmc_batch_name = fields.Char("Batch Name",required=True)
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
     ccmc_faculty_name = fields.Char("Faculty name")
@@ -917,10 +919,10 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
             
             ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id })
             print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
-            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': self.institute_id.id})
-            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
-            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': self.institute_id.id})
-            ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id , 'ccmc_oral':ccmc_oral.id})
+            cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': batch.institute_id.id})
+            ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
+            ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id ,'ccmc_gsk_oral':ccmc_gsk_oral.id, 'ccmc_oral':ccmc_oral.id})
             cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
             
             cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
@@ -933,7 +935,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
                         
 
         
-        self.batch_id.write({"ccmc_state":'5-exam_scheduled',"cookery_bakery_qb":cookery_bakery_qb.id})
+        batch.write({"ccmc_state":'5-exam_scheduled',"cookery_bakery_qb":cookery_bakery_qb.id})
 
 class BatchFaculty(models.Model):
     _name = 'batches.faculty'
