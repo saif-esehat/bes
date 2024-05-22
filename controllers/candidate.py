@@ -28,6 +28,7 @@ class GPCandidatePortal(CustomerPortal):
         print(parameter_value)
         if parameter_value:
             partner_id = request.env.user.id
+            print(partner_id)
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).id
             exam_region = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.exam_center.name
             institute_code = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.code
