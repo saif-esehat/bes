@@ -378,10 +378,23 @@ class ExamOnline(models.Model):
 class CCMCExaminerAssignmentWizard(models.TransientModel):
     _name = 'ccmc.examiner.assignment.wizard'
     _description = 'Examiner Assignment Wizard'
+    
     exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty")
     institute_id = fields.Many2one("bes.institute",string="Institute")
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region')
+    
+    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates")
+    ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates")
+    ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_online_candidates")
+    
+    @api.depends('institute_id')
+    def _compute_gsk_prac_oral_candidates(self):
+        for record in self:
+            # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
+            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('gsk_oral_prac_assignment','=',False)])
+
+    
 
 
 class GPExaminerAssignmentWizard(models.TransientModel):
@@ -2356,12 +2369,14 @@ class CCMCExam(models.Model):
     overall_percentage = fields.Float("Overall Percentage",readonly=True,tracking=True)
     cookery_gsk_online_percentage = fields.Float("Cookery/GSK Online Percentage",readonly=True,tracking=True)
     cookery_bakery_prac_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Cookery And Bakery',tracking=True)
+    ], string='Cookery And Bakery',default="pending",tracking=True)
     
     
     cookery_bakery_prac_oral_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='Cookery And Bakery',tracking=True)
@@ -2370,14 +2385,17 @@ class CCMCExam(models.Model):
     cookery_oral = fields.Float("Cookery Oral",readonly=True,tracking=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_oral_prac_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='CCMC Oral Status',tracking=True)
+    ], string='CCMC Oral Status',default="pending",tracking=True)
     
     oral_prac_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='Oral/Prac Status',compute="compute_oral_prac_status",tracking=True)
+    
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
@@ -2392,9 +2410,10 @@ class CCMCExam(models.Model):
     ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
     
     ccmc_online_status = fields.Selection([
+        ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='CCMC Online Status',tracking=True)
+    ], string='CCMC Online Status',default="pending",tracking=True)
     
     
     
@@ -2502,7 +2521,9 @@ class CCMCExam(models.Model):
     def compute_oral_prac_status(self):
         for record in self:
             # import wdb; wdb.set_trace()
-            if record.cookery_bakery_prac_status == 'failed' or record.ccmc_oral_prac_status == 'failed':
+            if record.cookery_bakery_prac_status == 'pending' and record.ccmc_oral_prac_status == 'pending':
+                record.oral_prac_status = 'pending'
+            elif record.cookery_bakery_prac_status == 'failed' or record.ccmc_oral_prac_status == 'failed':
                 record.oral_prac_status = 'failed'
             else:
                 record.oral_prac_status = 'passed'
