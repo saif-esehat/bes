@@ -2471,6 +2471,10 @@ class CCMCExam(models.Model):
    
     institute_code = fields.Char("Institute code",tracking=True)
     
+    cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
+    cookery_oral_carry_forward = fields.Boolean("Cookery Oral Carry Forward",tracking=True)
+    cookery_gsk_online_carry_forward = fields.Boolean("Cookery/GSK Online Carry Forward",tracking=True)
+    
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
     
