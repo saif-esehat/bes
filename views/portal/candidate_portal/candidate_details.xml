@@ -151,24 +151,25 @@
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
                             <select name="exam_centre" id="exam_centre" class="form-control">
-                                <option value="Mumbai">Mumbai</option>
-                                <option value="Kolkata">Kolkata</option>
-                                <option value="Chennai">Chennai</option>
+                                <option value="MUMBAI">MUMBAI</option>
+                                <option value="KOLKATA">KOLKATTA</option>
+                                <option value="CHENNAI">CHENNAI</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="training_institute">Training Institute Name</label>
-                            <input type="text" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="name">Name as in the INDoS</label>
-                            <input type="text" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
+                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
                         </div>
                         <div class="col-md-6">
                             <label for="candidate_code">Candidate Code No.</label>
-                            <input type="text" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                            <input type="hidden" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
+                            <input type="text" t-att-disabled="1" class="form-control" t-att-value="candidate.candidate_code"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -195,7 +196,7 @@
                             <t t-else="">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
-                                    <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
+                                    <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
 
@@ -208,7 +209,7 @@
                             <t t-else="">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
-                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
 
@@ -221,7 +222,7 @@
                             <t t-else="">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
-                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
 
@@ -270,19 +271,19 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="upi_utr_no">UPI or UTR No.</label>
+                            <label for="upi_utr_no">Transaction ID/ UTR No.</label>
                             <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
                         </div>
                         <div class="col-md-4">
                             <label for="amount">Amount</label>
-                            <input type="number" name="amount" id="amount" class="form-control"/>
+                            <input type="number" name="amount" id="amount" class="form-control" />
                         </div>
                         <div class="col-md-4">
                             <label for="payment_date">Date</label>
-                            <input type="date" name="payment_date" id="payment_date" class="form-control"/>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control" />
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
         </t>
@@ -299,9 +300,9 @@
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
                             <select name="exam_centre" id="exam_centre" class="form-control">
-                                <option value="Mumbai">Mumbai</option>
-                                <option value="Kolkata">Kolkata</option>
-                                <option value="Chennai">Chennai</option>
+                                <option value="MUMBAI">MUMBAI</option>
+                                <option value="KOLKATA">KOLKATTA</option>
+                                <option value="CHENNAI">CHENNAI</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -397,7 +398,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="upi_utr_no">UPI or UTR No.</label>
+                            <label for="upi_utr_no">Transaction ID/ UTR No.</label>
                             <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
                         </div>
                         <div class="col-md-4">
@@ -409,7 +410,7 @@
                             <input type="date" name="payment_date" id="payment_date" class="form-control"/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in the details before submission</strong>
                 </form>
             </div>
         </t>
