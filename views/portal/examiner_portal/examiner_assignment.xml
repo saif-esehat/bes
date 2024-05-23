@@ -514,9 +514,35 @@
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 4, 5, 6</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Journal</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Oral total</th>
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Gsk Practical</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Oral</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Practical</th>
+
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Climb the mast with safe practices ,<br/> Prepare and throw Heaving Line </th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rigging Bosun's Chair and self lower and hoist</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rig a stage for painting shipside</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rig a Pilot Ladder</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rig scaffolding to work at a height</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> .Reeve 3- fold / 2 fold purchase</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Gsk Practical Total</th>
+
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Uses of Hand/Plumbing/Carpentry Tools <br/> Chipping Tools <br/> Brushes &amp; Paints</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding <br/> Lathe/Drill/Grinder</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Electrical</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Journal</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Oral Total</th>
+
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 1)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 2)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 3)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Chipping Tools &amp; paint Brushes</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Carpentry Tools</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Measuring Instruments</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding (1 Task)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Lathe Work (1 Task)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Electrical (1 Task)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Practical Total</th>
+
                         <th t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">CCMC Oral</th>
                         <th t-if="examiner_subject == 'CCMC Oral and Practical' and exam_type == 'practical_oral'" class="text-left">CCMC Practical</th>
                     </tr>
@@ -567,36 +593,50 @@
                                 </t>
                                 
                             </td>
-                            <td class="text-center">
-                                <input type="number" t-attf-id="subject_area_1_2_3_{{marksheet.gp_candidate.id}}" t-att-value="marksheet.gsk_oral.subject_area_1_2_3" onchange="updateMarks(this, 'marksheet.gsk_oral.subject_area_1_2_3')"/>
-                            </td>
-                            <td class="text-center">
-                                <input type="number" t-attf-id="subject_area_4_5_6_{{marksheet.gp_candidate.id}}" t-att-value="marksheet.gsk_oral.subject_area_4_5_6" onchange="updateMarks(this, 'marksheet.gsk_oral.subject_area_4_5_6')"/>
-                            </td>
-                            <td class="text-center">
-                                <input type="number" t-attf-id="practical_record_journals_{{marksheet.gp_candidate.id}}" t-att-value="marksheet.gsk_oral.practical_record_journals" onchange="updateMarks(this, 'marksheet.gsk_oral.practical_record_journals')"/>
-                            </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <span id="gsk_oral_total_marks_{{marksheet.gp_candidate.id}}">
-                                    <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
-                                </span>
-                            </td>
-                            <!-- <td  class="text-left">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'"  class="text-center">
                                 <t t-out="marksheet.gsk_oral.subject_area_1_2_3"/>
                             </td>
-                            <td  class="text-left">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_oral.subject_area_4_5_6"/>
                             </td>
-                            <td  class="text-left">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_oral.practical_record_journals"/>
                             </td>
                             
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
                                 <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}">
-                                <span class='p-2'>Edit</span></a>
-                            </td> -->
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">
+                                <span class='p-2'>Edit oral</span></a>
+                            </td>
+
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.climbing_mast"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.buoy_flags_recognition"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.bosun_chair"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.rig_stage"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.rig_pilot"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.rig_scaffolding"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.fast_ropes"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.knots_bend"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gsk_prac.sounding_rod"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                                 <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span class='p-2'>Edit</span></a>
@@ -616,11 +656,54 @@
                                     <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_gsk_marksheet_class">Confirm</button>                            
                                 </span>   
                             </td>
+                            
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_oral.using_of_tools"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_oral.welding_lathe_drill_grinder"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_oral.electrical"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_oral.journal"/>
+                            </td>
+                            
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-out="marksheet.mek_oral.mek_oral_total_marks"/>
                                 <a t-attf-href="/open_mek_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_oral={{marksheet.mek_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span class='p-2'>Edit</span></a>
                             </td>
+                            
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.using_hand_plumbing_tools_task_1"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.using_hand_plumbing_tools_task_2"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.using_hand_plumbing_tools_task_3"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.use_of_chipping_tools_paint_brushes"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.use_of_carpentry"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.use_of_measuring_instruments"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.welding"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.lathe"/>
+                            </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.electrical"/>
+                            </td>
+
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                                 <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
