@@ -128,6 +128,13 @@ class GPCandidate(models.Model):
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+    gp_exam= fields.Many2one("gp.exam.schedule",string="Exam",tracking=True)
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('pending','Pending'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True,related="gp_exam.result_status")
 
     withdrawn_state =  fields.Selection([
         ('yes', 'Yes'),
@@ -1694,7 +1701,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
     
     def register_exam(self):
         
-        import wdb; wdb.set_trace()
+        # import wdb; wdb.set_trace()
         dgs_exam = self.dgs_batch.id
         
         exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
@@ -2034,17 +2041,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         if self.cookery_bakery_status == 'failed':
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
         
         
-        # if self.mek_oral_prac_status == 'failed':
-        #     mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        #     mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        # else:
-        #     mek_practical = self.gp_exam.mek_prac
-        #     mek_oral =self.gp_exam.mek_oral
         
         
         if self.ccmc_online == 'failed':

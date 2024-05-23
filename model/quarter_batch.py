@@ -39,7 +39,7 @@ class DGSBatch(models.Model):
     def _compute_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_url = base_url +"/gpcandidate/repeater/"+str(self.id)
+            new_url = base_url +"/gpcandidate/repeater/"+str(record.id)
             if record.repeater_batch:
                 record.gp_url = new_url
             else:
