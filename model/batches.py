@@ -514,7 +514,7 @@ class InstituteCcmcBatches(models.Model):
         ('1-ongoing', 'On-Going'),
         ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Pending'),
-        ('4-invoiced', 'Invoiced'),
+        ('4-invoiced', 'Paid'),
         ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing')
