@@ -22,7 +22,7 @@ class GPCandidate(models.Model):
     age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -128,7 +128,7 @@ class GPCandidate(models.Model):
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
-    gp_exam = fields.Many2one("gp.exam.schedule",string="Exam",tracking=True)
+    gp_exam = fields.Many2many("gp.exam.schedule",string="Exam",tracking=True)
     result_status = fields.Selection([
         ('absent','Absent'),
         ('pending','Pending'),
@@ -155,6 +155,27 @@ class GPCandidate(models.Model):
                 record.candidate_user_invoice_criteria = False
 
 
+
+    @api.depends('gp_exam')
+    def _update_rollno(self):
+        # import wdb; wdb.set_trace();
+        for record in self:
+            # Initialize roll_no to None
+            record.roll_no = None
+            # Get the latest exam attempt record for the current candidate
+            last_exam_record = self.env['gp.exam.schedule'].search(
+                [('gp_candidate', '=', record.id)],
+                order='attempt_number desc',
+                limit=1
+            )
+
+            if last_exam_record:
+                # Check if the latest exam attempt is certified
+                if last_exam_record.state == "3-certified":
+                    record.roll_no = last_exam_record.exam_id
+                else:
+                    # Set roll_no to the latest attempt's exam_id even if not certified
+                    record.roll_no = last_exam_record.exam_id
 
     @api.depends('candidate_image')
     def _check_image(self):
@@ -561,7 +582,7 @@ class CCMCCandidate(models.Model):
     age = fields.Char("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -579,7 +600,7 @@ class CCMCCandidate(models.Model):
     iti_percent = fields.Char("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
-    
+    ccmc_exam = fields.Many2many("ccmc.exam.schedule",string="Exam",tracking=True)
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
@@ -679,6 +700,27 @@ class CCMCCandidate(models.Model):
                 record.candidate_user_invoice_criteria = True
             else:
                 record.candidate_user_invoice_criteria = False
+
+    @api.depends('ccmc_exam')
+    def _update_rollno(self):
+        # import wdb; wdb.set_trace();
+        for record in self:
+            # Initialize roll_no to None
+            record.roll_no = None
+            # Get the latest exam attempt record for the current candidate
+            last_exam_record = self.env['ccmc.exam.schedule'].search(
+                [('ccmc_candidate', '=', record.id)],
+                order='attempt_number desc',
+                limit=1
+            )
+
+            if last_exam_record:
+                # Check if the latest exam attempt is certified
+                if last_exam_record.state == "3-certified":
+                    record.roll_no = last_exam_record.exam_id
+                else:
+                    # Set roll_no to the latest attempt's exam_id even if not certified
+                    record.roll_no = last_exam_record.exam_id
 
 
     @api.depends('candidate_image')
