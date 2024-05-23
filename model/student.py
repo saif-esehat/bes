@@ -22,7 +22,7 @@ class GPCandidate(models.Model):
     age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -128,6 +128,13 @@ class GPCandidate(models.Model):
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+    gp_exam = fields.Many2many("gp.exam.schedule",string="Exam",tracking=True)
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('pending','Pending'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True,related="gp_exam.result_status")
 
     withdrawn_state =  fields.Selection([
         ('yes', 'Yes'),
@@ -148,6 +155,27 @@ class GPCandidate(models.Model):
                 record.candidate_user_invoice_criteria = False
 
 
+
+    @api.depends('gp_exam')
+    def _update_rollno(self):
+        # import wdb; wdb.set_trace();
+        for record in self:
+            # Initialize roll_no to None
+            record.roll_no = None
+            # Get the latest exam attempt record for the current candidate
+            last_exam_record = self.env['gp.exam.schedule'].search(
+                [('gp_candidate', '=', record.id)],
+                order='attempt_number desc',
+                limit=1
+            )
+
+            if last_exam_record:
+                # Check if the latest exam attempt is certified
+                if last_exam_record.state == "3-certified":
+                    record.roll_no = last_exam_record.exam_id
+                else:
+                    # Set roll_no to the latest attempt's exam_id even if not certified
+                    record.roll_no = last_exam_record.exam_id
 
     @api.depends('candidate_image')
     def _check_image(self):
@@ -554,7 +582,7 @@ class CCMCCandidate(models.Model):
     age = fields.Char("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -572,7 +600,7 @@ class CCMCCandidate(models.Model):
     iti_percent = fields.Char("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
-    
+    ccmc_exam = fields.Many2many("ccmc.exam.schedule",string="Exam",tracking=True)
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
@@ -672,6 +700,27 @@ class CCMCCandidate(models.Model):
                 record.candidate_user_invoice_criteria = True
             else:
                 record.candidate_user_invoice_criteria = False
+
+    @api.depends('ccmc_exam')
+    def _update_rollno(self):
+        # import wdb; wdb.set_trace();
+        for record in self:
+            # Initialize roll_no to None
+            record.roll_no = None
+            # Get the latest exam attempt record for the current candidate
+            last_exam_record = self.env['ccmc.exam.schedule'].search(
+                [('ccmc_candidate', '=', record.id)],
+                order='attempt_number desc',
+                limit=1
+            )
+
+            if last_exam_record:
+                # Check if the latest exam attempt is certified
+                if last_exam_record.state == "3-certified":
+                    record.roll_no = last_exam_record.exam_id
+                else:
+                    # Set roll_no to the latest attempt's exam_id even if not certified
+                    record.roll_no = last_exam_record.exam_id
 
 
     @api.depends('candidate_image')
@@ -1604,14 +1653,16 @@ class CcmcGSKOralLine(models.Model):
 
     @api.model
     def create(self, vals):
+        # import wdb;wdb.set_trace();
         if vals.get('ccmc_gsk_oral_attempt_no', 0) == 0:
+            
             # Calculate the next attempt number
             last_attempt = self.search([
                 ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
             ], order='ccmc_gsk_oral_attempt_no desc', limit=1)
             next_attempt = last_attempt.ccmc_gsk_oral_attempt_no + 1 if last_attempt else 1
-            vals['ccmc_oral_attempt_no'] = next_attempt
-        return super(CcmcOralLine, self).create(vals)
+            vals['ccmc_gsk_oral_attempt_no'] = next_attempt
+        return super(CcmcGSKOralLine, self).create(vals)
 
 
     @api.constrains('ccmc_gsk_oral_attempt_no')
@@ -1687,10 +1738,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
             record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
             
     
+            
+    
     
     def register_exam(self):
         
-        
+        # import wdb; wdb.set_trace()
         dgs_exam = self.dgs_batch.id
         
         exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
@@ -1738,34 +1791,59 @@ class CandidateRegisterExamWizard(models.TransientModel):
             mek_oral_marks = self.gp_exam.mek_oral_marks
             mek_total = self.gp_exam.mek_total
             mek_percentage = self.gp_exam.mek_percentage
+            
         
-        
-        if self.mek_online_status == 'failed':
+        if self.mek_online_status == 'failed' and  self.gsk_online_status == 'failed':
+            
+            ## MEK QB Assigning
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = mek_survey_qb_input.generate_unique_string()
             mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
             mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
-        else:
-            mek_survey_qb_input = self.gp_exam.mek_online
-            mek_online_carry_forward = True
-            mek_online_marks = self.gp_exam.mek_online_marks
-            mek_online_percentage = self.gp_exam.mek_online_percentage
-        
-        
-        if self.gsk_online_status == 'failed':
+            
+            ## GSK QB Assigning
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = gsk_survey_qb_input.generate_unique_string()
             gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
             gsk_online_carry_forward = False
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
-        else:
+        
+        elif self.gsk_online_status == 'failed' and not self.mek_online_status == 'failed':
+            
+            ## GSK QB Assigning
+            gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = gsk_survey_qb_input.generate_unique_string()
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
+            gsk_online_carry_forward = False
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            
+            ## MEK Marks Forwarding
+            mek_survey_qb_input = self.gp_exam.mek_online
+            mek_online_carry_forward = True
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+            
+        elif not self.gsk_online_status == 'failed' and  self.mek_online_status == 'failed':
+            
+            ## GSK Marks Forwarding
             gsk_survey_qb_input = self.gp_exam.gsk_online
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
             gsk_online_carry_forward = True
+            
+            ## MEK QB Assigning
+            
+            mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = mek_survey_qb_input.generate_unique_string()
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
+            mek_online_carry_forward = False
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+
             
         overall_marks = self.gp_exam.overall_marks
         
@@ -1801,7 +1879,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
                                 "gsk_online_carry_forward":gsk_online_carry_forward
                                 
                                 })
-        
+
         # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
     
     # def register_exam(self):
@@ -2005,17 +2083,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         if self.cookery_bakery_status == 'failed':
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
         
         
-        # if self.mek_oral_prac_status == 'failed':
-        #     mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        #     mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        # else:
-        #     mek_practical = self.gp_exam.mek_prac
-        #     mek_oral =self.gp_exam.mek_oral
         
         
         if self.ccmc_online == 'failed':

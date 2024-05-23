@@ -355,6 +355,8 @@
                 <tree>
                     <field name="ccmc_batch_name"/>
                     <field name="institute_id"/>
+                    <field name="code"/>
+                    <field name="exam_region"/>
                     <field name="ccmc_from_date"/>
                     <field name="ccmc_to_date"/>
                     <field name="candidate_count"/>
@@ -418,6 +420,10 @@
                         <group>
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
+                            <field name="repeater_batch"/>
+                            <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
                         </group>

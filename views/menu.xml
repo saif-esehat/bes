@@ -20,6 +20,14 @@
             <field name="context">{}</field>
         </record>
 
+        <!-- <record id="open_ec_gp_exam_schedule_form" model="ir.actions.act_window">
+            <field name="name">GP Registered Candidate</field>
+            <field name="res_model">gp.exam.schedule</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="bes.exam_center_registered_candidate_form"/>
+            <field name="context">{}</field>
+        </record> -->
+
         <record id="open_ec_ccmc_exam_schedule" model="ir.actions.act_window">
             <field name="name">CCMC Registered Candidate</field>
             <field name="res_model">ccmc.exam.schedule</field>
@@ -162,7 +170,9 @@
 
         <menuitem id="batches_menu" parent="bes_menu" name="Batches"  />
 
-        <menuitem id="gp_batches_menu" parent="batches_menu" name="GP Batch" action="gpbatch_form_kanban_action"/>
+        <menuitem id="gp_batches_menu" 
+        parent="batches_menu" name="GP Batch" 
+        action="gpbatch_form_kanban_action"/>
 
         <menuitem id="ccmc_batches_menu" parent="batches_menu" name="CCMC Batch" action="ccmc_batches_action"/>
 
