@@ -128,7 +128,7 @@ class GPCandidate(models.Model):
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
-    gp_exam= fields.Many2one("gp.exam.schedule",string="Exam",tracking=True)
+    gp_exam = fields.Many2one("gp.exam.schedule",string="Exam",tracking=True)
     result_status = fields.Selection([
         ('absent','Absent'),
         ('pending','Pending'),

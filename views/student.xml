@@ -282,6 +282,7 @@
                             <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
+                            <field name="result_status"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
 
                             
@@ -309,7 +310,7 @@
                         </group>
 
                         <group style="width:100%;">
-                         <field name="dgs_batch"  />
+                         <field name="dgs_batch" />
                         <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
                         </group>
 

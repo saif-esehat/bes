@@ -265,12 +265,12 @@ class GPCandidatePortal(CustomerPortal):
        
     @http.route('/my/ccmcapplication/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewCCMCApplication(self, **kwargs):
-        # import wdb; wdb.set_trace()
         if request.httprequest.method == 'POST':
             cookery_prac = kwargs.get('cookery_practical')
             cookery_oral = kwargs.get('cookery_oral')
             cookery_gsk_online = kwargs.get('cookery_gsk_online')
             exam_region = request.env["exam.center"].sudo().search([('name','=',kwargs.get('exam_centre'))])
+            import wdb; wdb.set_trace()
 
             candidate_code = kwargs.get('candidate_code')
             candidate = request.env['ccmc.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)
@@ -390,13 +390,13 @@ class GPCandidatePortal(CustomerPortal):
 
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
-        # import wdb; wdb.set_trace()
         if request.httprequest.method == 'POST':
             mek_practical_oral = kwargs.get('mek_practical_oral')
             gsk_practical_oral = kwargs.get('gsk_practical_oral')
             mek_online = kwargs.get('mek_online')
             gsk_online = kwargs.get('gsk_online')
             exam_region = request.env["exam.center"].sudo().search([('name','=',kwargs.get('exam_centre'))])
+            # import wdb; wdb.set_trace()
 
             candidate_code = kwargs.get('candidate_code')
             candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', candidate_code)], limit=1)

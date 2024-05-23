@@ -1948,6 +1948,40 @@ class GPExam(models.Model):
         ('present','Present'),
     ],string="MEK Online")
 
+    candidate_image_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Image",compute="_check_image",default="pending")
+   
+    candidate_signature_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Sign",compute="_check_sign",default="pending")
+
+    @api.depends('gp_candidate')
+    def _check_image(self):
+        for record in self:
+            
+            
+            # candidate_image
+            if record.gp_candidate.candidate_image:
+                
+                
+                record.candidate_image_status = 'done'
+            else:
+                record.candidate_image_status = 'pending'
+
+    @api.depends('gp_candidate')
+    def _check_sign(self):
+        for record in self:
+            # candidate-sign
+            if record.gp_candidate.candidate_signature:
+                record.candidate_signature_status = 'done'
+            else:
+                record.candidate_signature_status = 'pending'
+
+
+
     @api.depends('mek_oral','mek_prac','gsk_oral','gsk_prac')
     def _compute_attendance(self):
         for record in self:
@@ -2596,10 +2630,10 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     
-    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+    exam_region = fields.Many2one('exam.center',string='Exam Region',store=True)
 
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,tracking=True)
-    registered_institute = fields.Many2one("bes.institute",string="Registered Institute",tracking=True)
+    registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
     candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code', required=True,tracking=True)
