@@ -14,7 +14,11 @@ class InstituteGPBatches(models.Model):
     _rec_name = "batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Batches'
+    
+    
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    
+    
     
     code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
     exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
@@ -30,6 +34,12 @@ class InstituteGPBatches(models.Model):
     course = fields.Many2one("course.master","Course",tracking=True)
     account_move = fields.Many2one("account.move",string="Invoice",tracking=True)
     invoice_created = fields.Boolean("Invoice Created",tracking=True)
+    
+    admit_card_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('issued', 'Issued')
+    ],default="pending", string='Admit Card Status')
+    
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",
                                                       compute="_compute_invoice_button_visible",
                                                       store=False,tracking=True # This field is not stored in the database
@@ -341,6 +351,9 @@ class InstituteGPBatches(models.Model):
     
     def confirm_indos(self):
         self.write({"state":"3-pending_invoice"})
+    
+    def issue_admit_card(self):
+        self.write({"admit_card_status":"issued"})
         
 
 
@@ -527,6 +540,10 @@ class InstituteCcmcBatches(models.Model):
     
     active = fields.Boolean(string="Active",default=True)
 
+    admit_card_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('issued', 'Issued')
+    ],default="pending", string='Admit Card Status')
     
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
@@ -537,7 +554,8 @@ class InstituteCcmcBatches(models.Model):
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     
     
-    
+    def issue_admit_card(self):
+        self.write({"admit_card_status":"issued"})
     
     
     @api.depends("candidate_user_invoice_criteria")

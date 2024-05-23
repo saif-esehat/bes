@@ -18,6 +18,8 @@
                         <!-- <button name="register_for_exam" string="Register Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('create_invoice_button_invisible', '=', False)]}"/>
+                        <button name="issue_admit_card" string="Issue Admit Card" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', '5-exam_scheduled'), ('admit_card_status', '=', 'issued')]}"/>
+
                         <field name="state" widget="statusbar" statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
                     <sheet>
@@ -65,6 +67,10 @@
                             <field name="active" invisible="1"/>
                             <!-- <field name="document_name" />
                             <field name="document_file" widget="binary" filename="documents_name"/> -->
+                        </group>
+
+                        <group style="width:50%;">
+                            <field name="admit_card_status"/>
                         </group>
 
                     </sheet>
@@ -231,6 +237,9 @@
                         <button name="confirm_batch_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '1-ongoing')]}"/>
                         <!-- <button name="confirm_indos_ccmc" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '2-indos_pending')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '4-invoiced')]}"/>
+
+                        <button name="issue_admit_card" string="Issue Admit Card" type="object" class="btn-primary" attrs="{'invisible': ['|', ('ccmc_state', '!=', '5-exam_scheduled'), ('admit_card_status', '=', 'issued')]}"/>
+
                         <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
                         <field name="ccmc_state" widget="statusbar"  statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
@@ -274,6 +283,10 @@
                             <field name="dgs_approval_state" readonly="0"/>
                             <field name="dgs_document"/>
                             <field name="active" invisible="1"/>
+                        </group>
+                        
+                        <group style="width:50%;">
+                            <field name="admit_card_status"/>
                         </group>
 
                     </sheet>

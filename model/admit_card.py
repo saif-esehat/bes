@@ -62,7 +62,7 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
         
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
         # docs1 = self.env['gp.exam.schedule'].sudo().search([('id','=',docids)])
-        print("doc_idsss")
+        # print("doc_idsss")
         
         
         for docs in docs1:
