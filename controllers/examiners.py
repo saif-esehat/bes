@@ -1,5 +1,5 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import http
 from werkzeug.utils import secure_filename
 import base64
@@ -1716,3 +1716,42 @@ class ExaminerPortal(CustomerPortal):
             
         return request.redirect("/my/assignments/batches/"+str(batch_id))
     
+
+    # @http.route('/my/gpcandidate/update_marks', type='json', auth='user', methods=["POST"])
+    # def update_marks(self, **post):
+    #     try:
+    #         candidate_id = post.get('candidate_id')
+    #         subject_area = post.get('subject_area')
+    #         marks = post.get('marks')
+
+    #         if not candidate_id or not subject_area or marks is None:
+    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
+
+    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
+    #         if candidate:
+    #             candidate.write({subject_area: int(marks)})
+    #             return json.dumps({'result': 'success'})
+    #         else:
+    #             return json.dumps({'result': 'error', 'message': 'Candidate not found'})
+    #     except Exception as e:
+    #         return json.dumps({'result': 'error', 'message': str(e)})
+    #     # return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
+        
+
+    # @http.route('/my/gpcandidate/update_total_marks', type='json', auth='user', methods=["POST"])
+    # def update_total_marks(self, **post):
+    #     try:
+    #         candidate_id = post.get('candidate_id')
+    #         total_marks = post.get('gsk_oral_total_marks')
+
+    #         if not candidate_id or total_marks is None:
+    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
+
+    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
+    #         if candidate:
+    #             candidate.write({'gsk_oral_total_marks': int(total_marks)})
+    #             return {'result': 'success'}
+    #         else:
+    #             return {'result': 'error', 'message': 'Candidate not found'}
+    #     except Exception as e:
+    #         return {'result': 'error', 'message': str(e)}

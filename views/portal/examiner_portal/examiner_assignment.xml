@@ -280,6 +280,67 @@
 
 
                                     }
+
+                                    function updateMarks(inputField, subjectArea) {
+                                        var inputId = inputField.id;
+                                        let candidate_id = inputId.match(/\d+$/)[0];
+                                        let marks = parseFloat(inputField.value) || 0;
+                                    
+                                        var data = {
+                                            candidate_id: candidate_id,
+                                            subject_area: subjectArea,
+                                            marks: marks
+                                        };
+                                    
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '/my/gpcandidate/update_marks',
+                                            data: JSON.stringify(data),
+                                            contentType: 'application/json',
+                                            dataType: 'json',
+                                            success: function (response) {
+                                                console.log("POST request successful:", response);
+                                    
+                                                if (response.result === 'success') {
+                                                    // Recalculate total marks
+                                                    var subject1 = parseFloat($('#subject_area_1_2_3_' + candidate_id).val()) || 0;
+                                                    var subject2 = parseFloat($('#subject_area_4_5_6_' + candidate_id).val()) || 0;
+                                                    var subject3 = parseFloat($('#practical_record_journals_' + candidate_id).val()) || 0;
+                                                    var total = subject1 + subject2 + subject3;
+                                    
+                                                    $('#gsk_oral_total_marks_' + candidate_id).text(total);
+                                    
+                                                    // Update total marks in the backend
+                                                    var totalData = {
+                                                        candidate_id: candidate_id,
+                                                        gsk_oral_total_marks: total
+                                                    };
+                                    
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: '/my/gpcandidate/update_total_marks',
+                                                        data: JSON.stringify(totalData),
+                                                        contentType: 'application/json',
+                                                        dataType: 'json',
+                                                        success: function (response) {
+                                                            console.log("Total marks updated successfully:", response);
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error("Failed to update total marks:", error);
+                                                        }
+                                                    });
+                                                } else {
+                                                    console.error("Failed to update marks:", response.message);
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error("POST request failed:", error);
+                                            }
+                                        });
+                                    }
+                                    
+                                    
+                                    
         </script>
         <style>
                                 /* CSS to style the loader and overlay */
@@ -506,7 +567,21 @@
                                 </t>
                                 
                             </td>
-                            <td  class="text-left">
+                            <td class="text-center">
+                                <input type="number" t-attf-id="subject_area_1_2_3_{{marksheet.gp_candidate.id}}" t-att-value="marksheet.gsk_oral.subject_area_1_2_3" onchange="updateMarks(this, 'marksheet.gsk_oral.subject_area_1_2_3')"/>
+                            </td>
+                            <td class="text-center">
+                                <input type="number" t-attf-id="subject_area_4_5_6_{{marksheet.gp_candidate.id}}" t-att-value="marksheet.gsk_oral.subject_area_4_5_6" onchange="updateMarks(this, 'marksheet.gsk_oral.subject_area_4_5_6')"/>
+                            </td>
+                            <td class="text-center">
+                                <input type="number" t-attf-id="practical_record_journals_{{marksheet.gp_candidate.id}}" t-att-value="marksheet.gsk_oral.practical_record_journals" onchange="updateMarks(this, 'marksheet.gsk_oral.practical_record_journals')"/>
+                            </td>
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <span id="gsk_oral_total_marks_{{marksheet.gp_candidate.id}}">
+                                    <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
+                                </span>
+                            </td>
+                            <!-- <td  class="text-left">
                                 <t t-out="marksheet.gsk_oral.subject_area_1_2_3"/>
                             </td>
                             <td  class="text-left">
@@ -520,7 +595,7 @@
                                 <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
                                 <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}">
                                 <span class='p-2'>Edit</span></a>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                                 <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
