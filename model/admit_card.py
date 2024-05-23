@@ -18,8 +18,19 @@ class CandidateAdmitCardGp(models.AbstractModel):
             print("doc_idsss",docids)
             
             # import wdb; wdb.set_trace();
-            if docs1.attendance_criteria == 'pending' and docs1.ship_visit_criteria == 'pending' and  docs1.stcw_criteria == 'pending' :
-                raise ValidationError("Admit Card Not Generated Due to  Criteria not Complied")
+            # if docs1.attendance_criteria == 'pending' or docs1.ship_visit_criteria == 'pending' or  docs1.stcw_criteria == 'pending' :
+            # if docs1.attendance_criteria == 'pending' or docs1.ship_visit_criteria == 'pending':
+            #     raise ValidationError("Admit Card Not Generated Due to  Criteria not Complied")
+            
+            if docs1.attendance_criteria == 'pending' :
+                raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
+        
+        
+            if docs1.ship_visit_criteria == 'pending' :
+                raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+            
+            if docs1.stcw_criteria == 'pending':
+                raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # candidate_image = base64.b64encode(docs1.candidate_image).decode()
             
@@ -45,11 +56,19 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
-        print("doc_idsss",docids)
+        print("doc_idsss")
         
         
-        if docs1.attendance_criteria == 'pending' and docs1.ship_visit_criteria == 'pending' and  docs1.stcw_criteria == 'pending' :
-            raise ValidationError("Admit Card Not Generated Due to  Criteria not Complied")
+        if docs1.attendance_criteria == 'pending' :
+            raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
+        
+        
+        if docs1.ship_visit_criteria == 'pending' :
+            raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+        
+        if   docs1.stcw_criteria == 'pending':
+            raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
+
         # import wdb; wdb.set_trace();
         
         # candidate_image = base64.b64encode(docs1.candidate_image).decode()
