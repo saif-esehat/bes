@@ -786,7 +786,7 @@ class ExaminerPortal(CustomerPortal):
             roll_no.append(candidate.gp_marksheet.exam_id)
             candidate_code.append(candidate.gp_candidate.candidate_code)
         
-        # # import wdb;wdb.set_trace();
+        # import wdb;wdb.set_trace();
         
         for i, candidate in enumerate(candidate_list):
             gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
@@ -826,7 +826,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
