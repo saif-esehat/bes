@@ -456,6 +456,8 @@
                     <field name="state"/>
                     <field name="ccmc_rank"/> 
                     <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
 
                 </tree>

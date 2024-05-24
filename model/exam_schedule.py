@@ -1593,6 +1593,7 @@ class ExamOralPracticalExaminers(models.Model):
     ], string='Status',default="draft" )
     
     
+    
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
@@ -2771,6 +2772,38 @@ class CCMCExam(models.Model):
     cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
     cookery_oral_carry_forward = fields.Boolean("Cookery Oral Carry Forward",tracking=True)
     cookery_gsk_online_carry_forward = fields.Boolean("Cookery/GSK Online Carry Forward",tracking=True)
+
+    candidate_image_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Image",compute="_check_image",default="pending")
+   
+    candidate_signature_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Sign",compute="_check_sign",default="pending")
+
+    @api.depends('ccmc_candidate')
+    def _check_image(self):
+        for record in self:
+            
+            
+            # candidate_image
+            if record.ccmc_candidate.candidate_image:
+                
+                
+                record.candidate_image_status = 'done'
+            else:
+                record.candidate_image_status = 'pending'
+
+    @api.depends('ccmc_candidate')
+    def _check_sign(self):
+        for record in self:
+            # candidate-sign
+            if record.ccmc_candidate.candidate_signature:
+                record.candidate_signature_status = 'done'
+            else:
+                record.candidate_signature_status = 'pending'
     
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'

@@ -280,6 +280,13 @@
 
 
                                     }
+ 
+                                    function openUploadMarksheetImage(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('marks-batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('marksheet_id').value = dataId;
+                                    }
 
                                     function updateMarks(inputField, subjectArea) {
                                         var inputId = inputField.id;
@@ -471,6 +478,36 @@
                         </div>
                     </div>
                 </div>
+           
+                <!-- Upload CCMC Marksheet  -->
+                <div class="modal fade" id="uploadMarksheetImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Image of Marksheet</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+
+                                    <form method="post" action="/my/uploadmarksheetimg" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="marksheet_id" name="marksheet_id" />
+                                        <div class="form-group">
+                                            <label for="fileUpload">XLSX Upload</label>
+                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                        </div>
+                                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
 
            
             <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).prac_oral_id.exam_type"/>
@@ -490,14 +527,19 @@
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'"> -->
                 <t t-if="examiner_subject== 'CCMC GSK Oral'">
                     <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC GSK Oral Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC GSK Oral Marksheet</a>
+                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC GSK Oral Marksheet</a>
                 </t>
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'"> -->
                 <t t-if="examiner_subject == 'CCMC Oral and Practical'">
                     <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral and Practical Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
+                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
                 </t>
+               
+                <!-- <t t-if=""> -->
+                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-marks-batch-id="{{batch_id}}" onclick="openUploadMarksheetImage(this)" data-target="#uploadMarksheetImageModal" class="btn btn-primary btn_cta">Upload Marksheet Image</a>
+                    <!-- <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral and Practical Marksheet</a> -->
+                <!-- </t> -->
             
             </t>
 

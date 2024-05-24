@@ -1755,3 +1755,16 @@ class ExaminerPortal(CustomerPortal):
     #             return {'result': 'error', 'message': 'Candidate not found'}
     #     except Exception as e:
     #         return {'result': 'error', 'message': str(e)}
+
+    @http.route('/my/uploadmarksheetimg', type='http', auth="user", website=True)
+    def upload_marksheet_img(self,**kw):
+        user_id = request.env.user.id
+        batch_id = int(kw['batch_id'])
+        import wdb;wdb.set_trace();
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
