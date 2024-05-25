@@ -94,7 +94,7 @@
                         </t>
                         </div>
                         
-                <div class="container" style="text-align:center;">
+                    <div class="container" style="text-align:center;">
                         <div class="row">
                             <div class="col-4">
                                 <table class="table" style="border-collapse: collapse;">
@@ -149,8 +149,11 @@
                             </div>
                         </div>
                     </div>
+                    <p style="page-break-before:always;"> </p>
+
                 </t>
             </div>
+
         </t>
     </template>
 </odoo>
