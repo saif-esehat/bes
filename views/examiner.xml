@@ -210,7 +210,11 @@
 
                     
                     <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
-                  
+                    
+                    <group>
+                        <span>Click on The Update Button to Update the Candidate in List Below and Confirm the Assignment By Clicking Confirm Button</span>  
+                    </group>
+
                     <field name="examiner_lines_ids" >
                             <tree editable="bottom">
                                 <field name="exam_date" />
@@ -258,7 +262,12 @@
                         <field name="examiner_required_ccmc_prac_oral"/>
                         <field name="examiner_required_ccmc_gsk_oral"/>
                     </group>
+                    
                     <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
+                    
+                    <group>
+                        <span>Click on The Update Button to Update the Candidate in List Below and Confirm the Assignment By Clicking Confirm Button</span>  
+                    </group>
 
                     <field name="examiner_lines_ids" >
                             <tree editable="bottom">
@@ -290,10 +299,10 @@
             <field name="model">exam.type.oral.practical</field>
             <field name="arch" type="xml">
                 <form>
-                    <header>
+                    <!-- <header>
                             <field name="state" widget="statusbar"/>
                             <button name="confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-draft')]}"  />
-                    </header>
+                    </header> -->
                     <sheet>
                          <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
