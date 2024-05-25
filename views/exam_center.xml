@@ -65,11 +65,17 @@
                 <search >
                     <searchpanel>
                         <field name="dgs_batch"/>
+                        <field name="exam_region"/>
                     </searchpanel>
-
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                    </group>
                     <field name="gp_candidate"/>
                     <field name="candidate_code"/>
+                    <field name="indos_no"/>
                     <field name="institute_id"/>
+                    <field name="exam_region"/>
+                    <field name="dgs_batch"/>
             
                 </search>
             </field>

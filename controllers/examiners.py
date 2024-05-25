@@ -1,5 +1,5 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import http
 from werkzeug.utils import secure_filename
 import base64
@@ -149,15 +149,15 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_subject  = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).prac_oral_id.subject.name
+        examiner_subject  = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).subject.name
         # examiner_subject = examiner.subject_id.name
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        
-        
         # import wdb; wdb.set_trace()
+        
+        
         vals = {'assignments':examiner_assignments,
                 'examiner_subject':examiner_subject,
                 'examiner':examiner,
@@ -786,7 +786,7 @@ class ExaminerPortal(CustomerPortal):
             roll_no.append(candidate.gp_marksheet.exam_id)
             candidate_code.append(candidate.gp_candidate.candidate_code)
         
-        # # import wdb;wdb.set_trace();
+        # import wdb;wdb.set_trace();
         
         for i, candidate in enumerate(candidate_list):
             gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
@@ -826,7 +826,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
@@ -1716,3 +1716,57 @@ class ExaminerPortal(CustomerPortal):
             
         return request.redirect("/my/assignments/batches/"+str(batch_id))
     
+
+    # @http.route('/my/gpcandidate/update_marks', type='json', auth='user', methods=["POST"])
+    # def update_marks(self, **post):
+    #     try:
+    #         candidate_id = post.get('candidate_id')
+    #         subject_area = post.get('subject_area')
+    #         marks = post.get('marks')
+
+    #         if not candidate_id or not subject_area or marks is None:
+    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
+
+    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
+    #         if candidate:
+    #             candidate.write({subject_area: int(marks)})
+    #             return json.dumps({'result': 'success'})
+    #         else:
+    #             return json.dumps({'result': 'error', 'message': 'Candidate not found'})
+    #     except Exception as e:
+    #         return json.dumps({'result': 'error', 'message': str(e)})
+    #     # return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
+        
+
+    # @http.route('/my/gpcandidate/update_total_marks', type='json', auth='user', methods=["POST"])
+    # def update_total_marks(self, **post):
+    #     try:
+    #         candidate_id = post.get('candidate_id')
+    #         total_marks = post.get('gsk_oral_total_marks')
+
+    #         if not candidate_id or total_marks is None:
+    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
+
+    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
+    #         if candidate:
+    #             candidate.write({'gsk_oral_total_marks': int(total_marks)})
+    #             return {'result': 'success'}
+    #         else:
+    #             return {'result': 'error', 'message': 'Candidate not found'}
+    #     except Exception as e:
+    #         return {'result': 'error', 'message': str(e)}
+
+    @http.route('/my/uploadmarksheetimg', type='http', auth="user", website=True)
+    def upload_marksheet_img(self,**kw):
+        user_id = request.env.user.id
+        batch_id = int(kw['marksheet_id'])
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner.user_id','=',user_id)])
+        examiner_assignments.sudo().write({'marksheet_image':file_content,"marksheet_image_name":filename})
+        # import wdb;wdb.set_trace();
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
