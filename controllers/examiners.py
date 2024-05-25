@@ -11,6 +11,9 @@ import xlsxwriter
 from odoo.exceptions import AccessError
 import xlrd
 import json
+from odoo.exceptions import UserError
+from odoo.tools import html_escape
+import mimetypes
 
 from functools import wraps
 
@@ -1757,16 +1760,42 @@ class ExaminerPortal(CustomerPortal):
     #         return {'result': 'error', 'message': str(e)}
 
     @http.route('/my/uploadmarksheetimg', type='http', auth="user", website=True)
-    def upload_marksheet_img(self,**kw):
+    def upload_marksheet_img(self, **kw):
         user_id = request.env.user.id
         batch_id = int(kw['marksheet_id'])
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('dgs_batch.id', '=', batch_id),
+            ('examiner.user_id', '=', user_id)
+        ])
+        examiner_assignments.sudo().write({
+            'marksheet_image':  base64.b64encode(file_content),
+            'marksheet_image_name': filename
+        })
 
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner.user_id','=',user_id)])
-        examiner_assignments.sudo().write({'marksheet_image':file_content,"marksheet_image_name":filename})
-        # import wdb;wdb.set_trace();
-        
-            
-        return request.redirect("/my/assignments/batches/"+str(batch_id))
+        return request.redirect("/my/assignments/batches/" + str(batch_id))
+
+    @http.route('/my/viewmarksheetimg/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
+    def view_marksheet_img(self, batch_id, assignment_id, **kw):
+        user_id = request.env.user.id
+
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('dgs_batch.id', '=', batch_id),
+            ('id', '=', assignment_id),
+            ('examiner.user_id', '=', user_id)
+        ], limit=1)
+
+        if not examiner_assignment:
+            return request.not_found()
+
+        file_content = examiner_assignment.marksheet_image
+        if not file_content:
+            raise UserError("No marksheet image found for this assignment.")
+
+        # Convert the binary image data to base64 for rendering in the template
+        image_base64 = base64.b64encode(file_content).decode('utf-8')
+        image_data = f"data:image/jpeg;base64,{image_base64}"
+
+        return request.render("bes.view_marksheet_image_template", {'image_data': image_data,'examiner_assignment':examiner_assignment})

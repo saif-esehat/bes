@@ -494,8 +494,10 @@
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="marksheet_id" name="marksheet_id" />
                                         <div class="form-group">
+                                            <!-- <label for="fileUpload">Image Upload</label>
+                                            <input type="file" class="form-control-file" accept=".png,.jpeg" name="fileUpload" id="fileUpload"/> -->
                                             <label for="fileUpload">Image Upload</label>
-                                            <input type="file" class="form-control-file" accept=".png,.jpeg" name="fileUpload" id="fileUpload"/>
+                                            <input type="file" class="form-control-file" accept="image/*" name="fileUpload" id="fileUpload"/>
                                         </div>
                                         <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
                                     </form>
@@ -536,10 +538,10 @@
                     <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
                 </t>
                
-                <!-- <t t-if=""> -->
+                <t t-if="not assignments.marksheet_image">
                     <a href="" style="margin:10px;" data-toggle="modal" t-attf-marks-batch-id="{{batch_id}}" onclick="openUploadMarksheetImage(this)" data-target="#uploadMarksheetImageModal" class="btn btn-primary btn_cta">Upload Marksheet Image</a>
-                    <!-- <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral and Practical Marksheet</a> -->
-                <!-- </t> -->
+                </t>
+                    <a t-attf-href="/my/viewmarksheetimg/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary">View Marksheet Image</a>
             
             </t>
 
@@ -781,6 +783,20 @@
 
                 </tbody>
             </t>
+        </t>
+    </template>
+    <template id="view_marksheet_image_template" name="View Marksheet Image">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2>Marksheet</h2>
+                        <img t-attf-src="data:image/png; base64, {{examiner_assignment.marksheet_image}}" alt="Marksheet Image" class="img-fluid" style="max-width: 100%; height: auto;"/>
+                        <!-- <img t-attf-src="data:image/png; base64, {{examiner_assignment.marksheet_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/> -->
+                            
+                    </div>
+                </div>
+            </div>
         </t>
     </template>
 </odoo>
