@@ -27,7 +27,6 @@ class CandidateAdmitCardGp(models.AbstractModel):
                 if docs.attendance_criteria == 'pending' :
                     raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
             
-            
                 if docs.ship_visit_criteria == 'pending' :
                     raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
                 
