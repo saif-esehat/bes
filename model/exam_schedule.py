@@ -1592,7 +1592,8 @@ class ExamOralPracticalExaminers(models.Model):
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
     
-    
+    marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
+    marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
@@ -1666,6 +1667,8 @@ class ExamOralPracticalExaminers(models.Model):
             'views': views,
             'target': 'current',
         }
+    
+
         
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
@@ -2631,7 +2634,7 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     
-    exam_region = fields.Many2one('exam.center',string='Exam Region',store=True)
+    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
 
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,tracking=True)
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
@@ -2767,7 +2770,8 @@ class CCMCExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
    
-    institute_code = fields.Char("Institute code",tracking=True)
+    institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no', required=True,tracking=True)
     
     cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
     cookery_oral_carry_forward = fields.Boolean("Cookery Oral Carry Forward",tracking=True)

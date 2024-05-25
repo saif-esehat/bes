@@ -494,8 +494,8 @@
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="marksheet_id" name="marksheet_id" />
                                         <div class="form-group">
-                                            <label for="fileUpload">XLSX Upload</label>
-                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                            <label for="fileUpload">Image Upload</label>
+                                            <input type="file" class="form-control-file" accept=".png,.jpeg" name="fileUpload" id="fileUpload"/>
                                         </div>
                                         <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
                                     </form>

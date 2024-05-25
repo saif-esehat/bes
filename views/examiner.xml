@@ -345,6 +345,7 @@
                                 <field name="status" invisible="1" />
                                 <field name="marksheets"  />
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+                                <field name="marksheet_image"  />
                             </tree>
                         </field>
 

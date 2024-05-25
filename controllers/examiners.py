@@ -1759,12 +1759,14 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/my/uploadmarksheetimg', type='http', auth="user", website=True)
     def upload_marksheet_img(self,**kw):
         user_id = request.env.user.id
-        batch_id = int(kw['batch_id'])
-        import wdb;wdb.set_trace();
+        batch_id = int(kw['marksheet_id'])
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
-        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner.user_id','=',user_id)])
+        examiner_assignments.sudo().write({'marksheet_image':file_content,"marksheet_image_name":filename})
+        # import wdb;wdb.set_trace();
         
             
         return request.redirect("/my/assignments/batches/"+str(batch_id))
