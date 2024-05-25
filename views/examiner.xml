@@ -212,7 +212,7 @@
                     <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
                     
                     <group>
-                        <span>Click on The Update Button to Update the Candidate in List Below and Confirm the Assignment By Clicking Confirm Button</span>  
+                        <span>Click on The Update Button to Update the Candidate After Adding Exam Date,Subject and Exam Type in List Below and Confirm the Assignment By Clicking Confirm Button</span>  
                     </group>
 
                     <field name="examiner_lines_ids" >
@@ -266,7 +266,7 @@
                     <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
                     
                     <group>
-                        <span>Click on The Update Button to Update the Candidate in List Below and Confirm the Assignment By Clicking Confirm Button</span>  
+                        <span>Click on The Update Button to Update the Candidate After Adding Exam Date,Subject and Exam Type in List Below and Confirm the Assignment By Clicking Confirm Button</span>
                     </group>
 
                     <field name="examiner_lines_ids" >
