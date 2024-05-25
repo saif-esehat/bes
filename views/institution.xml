@@ -166,7 +166,7 @@
                                 <field name="courses"  nolabel="1">
                                     <tree editable="bottom">
                                         <field name="course" options="{'no_create': True}" />
-                                        <field name="dgs_document" />
+                                        <field name="dgs_document" widget="binary" filename="dgs_document_name"/>
                                         <field name="batcher_per_year" />
                                         <field name="intake_capacity" />
                                         <field name="total" />
