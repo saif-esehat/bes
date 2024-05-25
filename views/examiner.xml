@@ -354,7 +354,7 @@
                                 <field name="status" invisible="1" />
                                 <field name="marksheets"  />
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
-                                <field name="marksheet_image"  />
+                                <field name="marksheet_image" widget="binary" filename="marksheet_image_name" />
                             </tree>
                         </field>
 
