@@ -10,16 +10,18 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">gp.exam.schedule</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_group_by_exam_region':1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">GP Exam</p>
             </field>
         </record>
-
+        
         <record id="bes_ccmc_exam_action" model="ir.actions.act_window">
             <field name="name">CCMC Exam</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ccmc.exam.schedule</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_group_by_exam_region':1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">CCMC Exam</p>
             </field>
@@ -29,15 +31,23 @@
             <field name="name">gp.exam.schedule.search</field>
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
-                <search >
+                <search>
+                    <searchpanel>
+                        <field name="dgs_batch"/>
+                        <field name="exam_region"/>
+                    </searchpanel>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                    </group>
                     <field name="gp_candidate"/>
                     <field name="candidate_code"/>
+                    <field name="indos_no"/>
                     <field name="institute_id"/>
-                    <!-- <filter string='Passed' name='Passed' domain="[('result_status','=','passed')]"/>
-                    <filter string='Failed' name='Failed' domain="[('result_status','=','failed')]"/> -->
+                    <field name="exam_region"/>
+                    <field name="dgs_batch"/>
                 </search>
             </field>
-        </record>
+        </record>        
 
 
 
@@ -100,6 +110,7 @@
                             <field name="dgs_batch" readonly="1"/>
                             <field name="gp_candidate" readonly="1"/>
                             <field name="candidate_code" readonly="1"/>
+                            <field name="indos_no" readonly="1"/>
                             <field name="institute_name" invisible="1" />
                         </group>
                         <group>
@@ -297,6 +308,7 @@
                     <field name="gp_candidate" optional="show"/>
                     <field name="candidate_code" optional="show"/>
                     <field name="registered_institute" readonly="1" optional="show"/>
+                    <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
                     <field name="gsk_total" optional="show"/>
@@ -311,6 +323,9 @@
                     <field name="certificate_criteria" optional="show"/>
                     <field name="state" optional="show"/>
                     <field name="rank" optional="show"/>
+                    <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
 
                 </tree>
@@ -348,11 +363,18 @@
                         <group>
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code"/>
+                            <field name="registered_institute" readonly="1"/>
+                            <field name="exam_region" readonly="1"/>
+                            <field name="institute_id"/>
+
                             <field name="reissued"/>                            
                             <field name="reissued_date"/>
-                            <field name="registered_institute" readonly="1"/>
+                            
                             <field name="dgs_batch" readonly="0"/>
                             <field name="ccmc_candidate"/>
+                            <field name="candidate_code" readonly="1"/>
+                            <field name="indos_no" readonly="1"/>
+                            <field name="institute_name" invisible="1" />
                             <!-- <field name="roll_no" readonly="1"/> -->
                         </group>
                         <group>
@@ -361,7 +383,7 @@
                         <group style="width:50%">
                             <field name="cookery_bakery"/>
                             <field name="ccmc_oral"/>
-                            
+                            <field name="ccmc_gsk_oral"/>
                             <field name="ccmc_online"/>
                         </group>
                         
@@ -416,7 +438,7 @@
                             <field name="certificate_criteria" readonly="1"/>
                             <field name="certificate_id" readonly="1" attrs="{'invisible': [('state', '!=', '2-done'), ('certificate_criteria', '!=', 'passed')]}"/>
                             <field name="exam_pass_date" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
-                            <field name="certificate_issue_date" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
+                            <field name="certificate_issue_date" readonly="0" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                             <field name="ccmc_rank" readonly="1" attrs="{'invisible': [('state', '!=', '3-certified')]}" />
                         </group>
                         <group style="width:50%">
@@ -440,6 +462,7 @@
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="registered_institute"/>
+                    <field name="exam_region"/>
                     <field name="institute_id"/>
                     <field name="cookery_practical"/> 
                     <field name="cookery_oral"/> 
@@ -448,7 +471,12 @@
                     <field name="exam_criteria"/>
                     <field name="certificate_criteria"/>
                     <field name="state"/>
-                    <field name="ccmc_rank"/>
+                    <field name="ccmc_rank"/> 
+                    <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
+                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
+
                 </tree>
             </field>
         </record>
@@ -458,6 +486,13 @@
             <field name="model">ccmc.exam.schedule</field>
             <field name="arch" type="xml">
                 <search >
+                   <searchpanel>
+                        <field name="dgs_batch"/>
+                        <field name="exam_region"/>
+                    </searchpanel>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                    </group>
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>

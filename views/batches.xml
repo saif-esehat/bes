@@ -12,15 +12,19 @@
                     <header>
                         
                         <!-- <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-pending_invoice'),]}"/> -->
-                        <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/> 
+                        <!-- <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/>  -->
                         <!-- <button name="open_faculty_upload_wizard" type="object" string="Upload Faculty" class="btn-primary"/> -->
                         <!-- <button name="confirm_indos" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-indos_pending')]}"/> -->
                         <!-- <button name="register_for_exam" string="Register Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('create_invoice_button_invisible', '=', False)]}"/>
-                        <field name="state" widget="statusbar"/>
+                        <button name="issue_admit_card" string="Issue Admit Card" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', '5-exam_scheduled'), ('admit_card_status', '=', 'issued')]}"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
                     <sheet>
+
+                    
                         <div class="oe_button_box" name="button_box">
                             <button name="open_batch_candidate" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
@@ -38,6 +42,9 @@
                             <field name="institute_id" options="{'no_create':True}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+                            <field name="all_invoice_generated" invisible="1"/>
+                            
                         </group>
                         <!-- <group style="width:50%;">
                             <field name="course"/>
@@ -60,6 +67,10 @@
                             <field name="active" invisible="1"/>
                             <!-- <field name="document_name" />
                             <field name="document_file" widget="binary" filename="documents_name"/> -->
+                        </group>
+
+                        <group style="width:50%;">
+                            <field name="admit_card_status"/>
                         </group>
 
                     </sheet>
@@ -101,11 +112,16 @@
                     <group expand="0" string="Group By">
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'dgs_batch'}" />
                         <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                        <!-- <filter name="" string="State" context="{'state':'exam_region'}" /> -->
+                        <filter string="Invoice Pending" name="group_by_state" context="{'group_by':'state'}"  domain="[('state', '=', '3-pending_invoice')]"/>
+                        <filter string="Paid" name="group_by_state" context="{'group_by':'state'}" domain="[('state', '=', '4-invoiced')]"/>
+
                     </group>
 
                     <searchpanel>
-                        <field name="institute_id" enable_counters="1"/>
-                        <!-- <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/> -->
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <field name="state" enable_counters="1" icon="fa fa-user"/>
+                        <!-- <field name="institute_id" enable_counters="1"/> -->
                     </searchpanel>
                 </search>
             </field>
@@ -221,8 +237,11 @@
                         <button name="confirm_batch_ccmc" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '1-ongoing')]}"/>
                         <!-- <button name="confirm_indos_ccmc" string="Confirm Indos" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '2-indos_pending')]}"/> -->
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '4-invoiced')]}"/>
+
+                        <button name="issue_admit_card" string="Issue Admit Card" type="object" class="btn-primary" attrs="{'invisible': ['|', ('ccmc_state', '!=', '5-exam_scheduled'), ('admit_card_status', '=', 'issued')]}"/>
+
                         <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
-                        <field name="ccmc_state" widget="statusbar"/>
+                        <field name="ccmc_state" widget="statusbar"  statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -242,6 +261,8 @@
                             <field name="institute_id" options="{'no_create':True}"/>
                             <field name="ccmc_from_date"/>
                             <field name="ccmc_to_date"/>
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+                            <field name="all_invoice_generated" invisible="1"/>
                         </group>
                         <!-- <group style="width:50%;">
                             <field name="course"/>
@@ -262,6 +283,10 @@
                             <field name="dgs_approval_state" readonly="0"/>
                             <field name="dgs_document"/>
                             <field name="active" invisible="1"/>
+                        </group>
+                        
+                        <group style="width:50%;">
+                            <field name="admit_card_status"/>
                         </group>
 
                     </sheet>
@@ -343,6 +368,8 @@
                 <tree>
                     <field name="ccmc_batch_name"/>
                     <field name="institute_id"/>
+                    <field name="code"/>
+                    <field name="exam_region"/>
                     <field name="ccmc_from_date"/>
                     <field name="ccmc_to_date"/>
                     <field name="candidate_count"/>
@@ -363,6 +390,11 @@
                     <group expand="0" string="Group By">
                         <filter name="group_by_dgs_batch" string="DGS Batch" context="{'group_by':'ccmc_batch_name'}" />
                     </group>
+                    <searchpanel>
+                        <field name="ccmc_state" enable_counters="1" icon="fa fa-user"/>
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <!-- <field name="institute_id" enable_counters="1"/> -->
+                    </searchpanel>
                 </search>
 
             </field>
@@ -401,6 +433,10 @@
                         <group>
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
+                            <field name="repeater_batch"/>
+                            <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
                         </group>
@@ -441,7 +477,7 @@
                     <group>
                         <field name="institute_id" invisible="1"/>
                         <field name="batch_id" invisible="1"/>
-                        <field name="dgs_batch" invisible="1"/>
+                        <field name="dgs_batch" invisible="0"/>
 
                         <field name="mek_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','MEK')]" options="{'no_create': True}"/>
                         <field name="gsk_survey_qb" required="1" domain="[('template', '=', True ),('subject.name','=','GSK')]" options="{'no_create': True}"/>

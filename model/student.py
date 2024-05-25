@@ -22,7 +22,7 @@ class GPCandidate(models.Model):
     age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -40,6 +40,7 @@ class GPCandidate(models.Model):
     iti_percent = fields.Integer("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
+    
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
@@ -52,6 +53,7 @@ class GPCandidate(models.Model):
     
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
+    invoice_generated = fields.Boolean("Invoice Generated")
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
@@ -64,12 +66,13 @@ class GPCandidate(models.Model):
     attendance_compliance_1 = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no',tracking=True)
+    ],string="Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no',tracking=True)
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
-    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
+         ('no', 'No'),
+         ('na', 'N/A')
+    ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("gp.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
     
@@ -101,17 +104,17 @@ class GPCandidate(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria',store=True,default="pending",compute="_check_stcw_certificate")
+    ], string='STCW Criteria',store=True,compute="_check_stcw_certificate")
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_ship_visit_criteria')
+    ], string='Ship Visit Criteria',store=True ,compute='_check_ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',store=True,default="pending",compute="_check_attendance_criteria")
+    ], string='Attendance Criteria',store=True,compute="_check_attendance_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
@@ -124,11 +127,55 @@ class GPCandidate(models.Model):
 
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
 
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+    gp_exam = fields.Many2many("gp.exam.schedule",string="Exam",tracking=True)
+    result_status = fields.Selection([
+        ('absent','Absent'),
+        ('pending','Pending'),
+        ('failed','Failed'),
+        ('passed','Passed'),
+    ],string='Result',tracking=True,related="gp_exam.result_status")
+
+    withdrawn_state =  fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], string='User Withdrawn',default="no",tracking=True)
+    
+    exam_registered = fields.Boolean("Exam Registered")
+
+    withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
+
+    @api.depends('candidate_signature_status','candidate_image_status','indos_no')
+    def _check_criteria(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image_status == 'done' and record.candidate_signature_status == 'done' and record.indos_no:
+                record.candidate_user_invoice_criteria = True
+            else:
+                record.candidate_user_invoice_criteria = False
 
 
 
+    @api.depends('gp_exam')
+    def _update_rollno(self):
+        # import wdb; wdb.set_trace();
+        for record in self:
+            # Initialize roll_no to None
+            record.roll_no = None
+            # Get the latest exam attempt record for the current candidate
+            last_exam_record = self.env['gp.exam.schedule'].search(
+                [('gp_candidate', '=', record.id)],
+                order='attempt_number desc',
+                limit=1
+            )
 
-
+            if last_exam_record:
+                # Check if the latest exam attempt is certified
+                if last_exam_record.state == "3-certified":
+                    record.roll_no = last_exam_record.exam_id
+                else:
+                    # Set roll_no to the latest attempt's exam_id even if not certified
+                    record.roll_no = last_exam_record.exam_id
 
     @api.depends('candidate_image')
     def _check_image(self):
@@ -178,14 +225,13 @@ class GPCandidate(models.Model):
         
         return False
 
-    @api.constrains('stcw_certificate')
+    @api.depends('stcw_certificate')
     def _check_stcw_certificate(self):
          for record in self:
             course_type_already  = [course.course_name for course in record.stcw_certificate]
-            # import wdb; wdb.set_trace();    
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
-            all_types_exist = self.check_combination_exists(course_type_already)
+            all_types_exist = record.check_combination_exists(course_type_already)
             if all_types_exist:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
@@ -193,16 +239,17 @@ class GPCandidate(models.Model):
                 record.stcw_criteria = 'pending'
         
     
-    @api.constrains('ship_visits')
+    @api.depends('ship_visits')
     def _check_ship_visit_criteria(self):
         for record in self:
+            # import wdb; wdb.set_trace();
             if len(record.ship_visits) > 0:
                 record.ship_visit_criteria = 'passed'
             else:
                 record.ship_visit_criteria = 'pending'
     
     
-    @api.constrains('attendance_compliance_1','attendance_compliance_2')
+    @api.depends('attendance_compliance_1','attendance_compliance_2')
     def _check_attendance_criteria(self):
        for record in self:
             if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
@@ -232,12 +279,12 @@ class GPCandidate(models.Model):
                 raise ValidationError("Invalid email address. Must contain @ symbol.")
 
     def user_inactive(self):
-        self.user_id.write({
+        self.user_id.sudo().write({
             'active':False
         })
 
     def user_active(self):
-        self.user_id.write({
+        self.user_id.sudo().write({
             'active':True
         })
 
@@ -521,6 +568,7 @@ class CCMCCandidate(models.Model):
     _description = 'CCMC Candidate'
     
     institute_batch_id = fields.Many2one("institute.ccmc.batches","Batch",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True,tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
@@ -528,11 +576,13 @@ class CCMCCandidate(models.Model):
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
     
     name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    
+    invoice_generated = fields.Boolean("Invoice Generated")
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
     age = fields.Char("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
-    roll_no = fields.Char("Roll No.",tracking=True)
+    roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
@@ -550,12 +600,15 @@ class CCMCCandidate(models.Model):
     iti_percent = fields.Char("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
-    
+    ccmc_exam = fields.Many2many("ccmc.exam.schedule",string="Exam",tracking=True)
     qualification = fields.Selection([
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
     ],string="Qualification", default='tenth',tracking=True)
+    
+    batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
+
     
     candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
@@ -568,12 +621,13 @@ class CCMCCandidate(models.Model):
     attendance_compliance_1 = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no',tracking=True)
+    ],string="Whether Attendance record of the candidate comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC (YES/ NO)", default='no',tracking=True)
     
     attendance_compliance_2 = fields.Selection([
          ('yes', 'Yes'),
-         ('no', 'No')
-    ], string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
+         ('no', 'No'),
+         ('na', 'N/A')
+    ], string="Attendance record of the candidate not comply with DGS training circular 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no',tracking=True)
 
     stcw_certificate = fields.One2many("ccmc.candidate.stcw.certificate","candidate_id",string="STCW Certificate",tracking=True)
     
@@ -625,9 +679,69 @@ class CCMCCandidate(models.Model):
         ('passed', 'Complied'),
     ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
     
-    
+    candidate_image_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
+    ],string="Candidate-Image",store=True,default="pending",compute="_check_image")
+   
+    candidate_signature_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('done', 'Done'),
 
+    ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
     
+    candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
+
+    @api.depends('candidate_signature_status','candidate_image_status','indos_no')
+    def _check_criteria(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image_status == 'done' and record.candidate_signature_status == 'done' and record.indos_no:
+                record.candidate_user_invoice_criteria = True
+            else:
+                record.candidate_user_invoice_criteria = False
+
+    @api.depends('ccmc_exam')
+    def _update_rollno(self):
+        # import wdb; wdb.set_trace();
+        for record in self:
+            # Initialize roll_no to None
+            record.roll_no = None
+            # Get the latest exam attempt record for the current candidate
+            last_exam_record = self.env['ccmc.exam.schedule'].search(
+                [('ccmc_candidate', '=', record.id)],
+                order='attempt_number desc',
+                limit=1
+            )
+
+            if last_exam_record:
+                # Check if the latest exam attempt is certified
+                if last_exam_record.state == "3-certified":
+                    record.roll_no = last_exam_record.exam_id
+                else:
+                    # Set roll_no to the latest attempt's exam_id even if not certified
+                    record.roll_no = last_exam_record.exam_id
+
+
+    @api.depends('candidate_image')
+    def _check_image(self):
+        for record in self:
+            # candidate_image
+            if record.candidate_image:
+                record.candidate_image_status = 'done'
+            else:
+                record.candidate_image_status = 'pending'
+
+    @api.depends('candidate_signature')
+    def _check_sign(self):
+        for record in self:
+            # candidate-sign
+            if record.candidate_signature:
+                record.candidate_signature_status = 'done'
+            else:
+                record.candidate_signature_status = 'pending'
+
+
     @api.depends('user_id')
     def _compute_user_state(self):
         for record in self:
@@ -1188,10 +1302,10 @@ class MekOralLine(models.Model):
     exam_id = fields.Many2one("gp.exam.schedule",string="Exam ID",tracking=True)
     mek_oral_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
     mek_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
-    using_hand_plumbing_carpentry_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools",tracking=True)
-    use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
-    welding = fields.Integer("Welding",tracking=True)
-    lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
+    using_of_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints",tracking=True)
+    # use_of_chipping_tools_paints = fields.Integer("Use of Chipping Tools & Brushes & Paints",tracking=True)
+    welding_lathe_drill_grinder = fields.Integer("Welding & Lathe/Drill/Grinder",tracking=True)
+    # lathe_drill_grinder = fields.Integer("Lathe/Drill/Grinder",tracking=True)
     electrical = fields.Integer("Electrical",tracking=True)
     journal = fields.Integer("Journal",tracking=True)
 
@@ -1203,29 +1317,29 @@ class MekOralLine(models.Model):
 
     
 
-    @api.depends('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.depends('using_of_tools', 'welding_lathe_drill_grinder', 'electrical', 'journal')
     def _compute_mek_oral_total_marks(self):
         for record in self:
             total = (
-                record.using_hand_plumbing_carpentry_tools +
-                record.use_of_chipping_tools_paints +
-                record.welding +
-                record.lathe_drill_grinder +
+                record.using_of_tools +
+                record.welding_lathe_drill_grinder +
+                # record.welding +
+                # record.lathe_drill_grinder +
                 record.electrical +
                 record.journal
             )
             record.mek_oral_total_marks = total
 
-    @api.onchange('using_hand_plumbing_carpentry_tools', 'use_of_chipping_tools_paints', 'welding', 'lathe_drill_grinder', 'electrical', 'journal')
+    @api.onchange('using_of_tools', 'welding_lathe_drill_grinder','electrical', 'journal')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.using_hand_plumbing_carpentry_tools > 10:
-            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools Marks cannot exceed 10.")
-        if self.use_of_chipping_tools_paints > 10:
-            raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
-        if self.welding > 10:
-            raise UserError("In MEK Oral, Welding Marks cannot exceed 10.")
-        if self.lathe_drill_grinder > 10:
-            raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
+        if self.using_of_tools > 20:
+            raise UserError("In MEK Oral, Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints Marks cannot exceed 20.")
+        # if self.use_of_chipping_tools_paints > 10:
+        #     raise UserError("In MEK Oral, Use of Chipping Tools & Brushes & Paints Marks cannot exceed 10.")
+        if self.welding_lathe_drill_grinder > 20:
+            raise UserError("In MEK Oral, Welding & Lathe/Drill/Grinder Marks cannot exceed 20.")
+        # if self.lathe_drill_grinder > 10:
+        #     raise UserError("In MEK Oral, Lathe/Drill/Grinder Marks cannot exceed 10.")
         if self.electrical > 10:
             raise UserError("In MEK Oral, Electrical Marks cannot exceed 10.")
         if self.journal > 25:
@@ -1353,12 +1467,13 @@ class GskOralLine(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0,readonly=True,tracking=True)
     gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
-    subject_area_1 = fields.Integer("Subject Area 1",tracking=True)
-    subject_area_2 = fields.Integer("Subject Area 2",tracking=True)
-    subject_area_3 = fields.Integer("Subject Area 3",tracking=True)
-    subject_area_4 = fields.Integer("Subject Area 4",tracking=True)
-    subject_area_5 = fields.Integer("Subject Area 5",tracking=True)
-    subject_area_6 = fields.Integer("Subject Area 6",tracking=True)
+
+    subject_area_1_2_3 = fields.Integer("Subject Area 1, 2, 3 ",tracking=True)
+    # subject_area_2 = fields.Integer("Subject Area 2",tracking=True)
+    # subject_area_3 = fields.Integer("Subject Area 3",tracking=True)
+    subject_area_4_5_6 = fields.Integer("Subject Area 4, 5, 6",tracking=True)
+    # subject_area_5 = fields.Integer("Subject Area 5",tracking=True)
+    # subject_area_6 = fields.Integer("Subject Area 6",tracking=True)
     practical_record_journals = fields.Integer("Practical Record Book and Journal",tracking=True)
     
     
@@ -1369,36 +1484,36 @@ class GskOralLine(models.Model):
 
     
 
-    @api.depends('subject_area_1', 'subject_area_2', 'subject_area_3', 'subject_area_4', 'subject_area_5', 'subject_area_6', 'practical_record_journals')
+    @api.depends('subject_area_1_2_3', 'subject_area_4_5_6', 'practical_record_journals')
     def _compute_gsk_oral_total_marks(self):
         for record in self:
             total_marks = sum([
-                record.subject_area_1,
-                record.subject_area_2,
-                record.subject_area_3,
-                record.subject_area_4,
-                record.subject_area_5,
-                record.subject_area_6,
+                record.subject_area_1_2_3,
+                record.subject_area_4_5_6,
+                # record.subject_area_3,
+                # record.subject_area_4,
+                # record.subject_area_5,
+                # record.subject_area_6,
                 record.practical_record_journals,
             ])
 
             record.gsk_oral_total_marks = total_marks
     
 
-    @api.onchange('subject_area_1','subject_area_2','subject_area_3','subject_area_4','subject_area_5','subject_area_6','practical_record_journals')
+    @api.onchange('subject_area_1_2_3','subject_area_4_5_6','practical_record_journals')
     def _onchange_gsk_oral__marks_limit(self):
-        if self.subject_area_1 > 9:
-            raise UserError("Subject Area 1 marks should not be greater than 9.")
-        if self.subject_area_2 > 6:
-            raise UserError("Subject Area 2 marks should not be greater than 6.")
-        if self.subject_area_3 > 9:
-            raise UserError("Subject Area 3 marks should not be greater than 9.")
-        if self.subject_area_4 > 9:
-            raise UserError("Subject Area 4 marks should not be greater than 9.")
-        if self.subject_area_5 > 12:
-            raise UserError("Subject Area 5 marks should not be greater than 12.")
-        if self.subject_area_6 > 5:
-            raise UserError("Subject Area 6 marks should not be greater than 5.")
+        if self.subject_area_1_2_3 > 25:
+            raise UserError("Subject Area 1 marks should not be greater than 25.")
+        if self.subject_area_4_5_6 > 25:
+            raise UserError("Subject Area 2 marks should not be greater than 25.")
+        # if self.subject_area_3 > 9:
+        #     raise UserError("Subject Area 3 marks should not be greater than 9.")
+        # if self.subject_area_4 > 9:
+        #     raise UserError("Subject Area 4 marks should not be greater than 9.")
+        # if self.subject_area_5 > 12:
+        #     raise UserError("Subject Area 5 marks should not be greater than 12.")
+        # if self.subject_area_6 > 5:
+        #     raise UserError("Subject Area 6 marks should not be greater than 5.")
         if self.practical_record_journals > 25:
             raise UserError("Practical Record Book and Journal marks should not be greater than 25.")
 
@@ -1443,20 +1558,20 @@ class CcmcOralLine(models.Model):
     equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
     
     gsk_ccmc = fields.Integer("GSK",tracking=True)
-    safety_ccmc = fields.Integer("Safety",tracking=True)
+    # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
 
     @api.depends(
-        'gsk_ccmc', 'safety_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
+        'gsk_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
     )
     def _compute_ccmc_rating_total(self):
         for record in self:
             rating_total = (
                 record.gsk_ccmc +
-                record.safety_ccmc+
+                # record.safety_ccmc+
                 record.house_keeping+
                 record.attitude_proffessionalism+
                 record.equipment_identification
@@ -1465,12 +1580,12 @@ class CcmcOralLine(models.Model):
             record.toal_ccmc_rating = rating_total
 
 
-    @api.onchange('gsk_ccmc','safety_ccmc')
+    @api.onchange('gsk_ccmc')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.gsk_ccmc > 10:
-            raise UserError("In CCMC Oral, GSK marks should not be greater than 10.")
-        if self.safety_ccmc > 10:
-            raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
+        if self.gsk_ccmc > 20:
+            raise UserError("In CCMC Oral, GSK marks should not be greater than 20.")
+        # if self.safety_ccmc > 10:
+        #     raise UserError("In CCMC Oral, Safety marks should not be greater than 10.")
 
 
     @api.model
@@ -1510,7 +1625,7 @@ class CcmcGSKOralLine(models.Model):
     ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
     gsk_ccmc = fields.Integer("GSK",tracking=True)
     safety_ccmc = fields.Integer("Safety",tracking=True)
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
+    toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
 
     
@@ -1525,7 +1640,7 @@ class CcmcGSKOralLine(models.Model):
                 record.safety_ccmc
             )
             
-            record.toal_ccmc_rating = rating_total
+            record.toal_ccmc_oral_rating = rating_total
 
 
     @api.onchange('gsk_ccmc','safety_ccmc')
@@ -1538,14 +1653,16 @@ class CcmcGSKOralLine(models.Model):
 
     @api.model
     def create(self, vals):
+        # import wdb;wdb.set_trace();
         if vals.get('ccmc_gsk_oral_attempt_no', 0) == 0:
+            
             # Calculate the next attempt number
             last_attempt = self.search([
                 ('ccmc_oral_parent', '=', vals.get('ccmc_oral_parent')),
             ], order='ccmc_gsk_oral_attempt_no desc', limit=1)
             next_attempt = last_attempt.ccmc_gsk_oral_attempt_no + 1 if last_attempt else 1
-            vals['ccmc_oral_attempt_no'] = next_attempt
-        return super(CcmcOralLine, self).create(vals)
+            vals['ccmc_gsk_oral_attempt_no'] = next_attempt
+        return super(CcmcGSKOralLine, self).create(vals)
 
 
     @api.constrains('ccmc_gsk_oral_attempt_no')
@@ -1621,10 +1738,12 @@ class CandidateRegisterExamWizard(models.TransientModel):
             record.institute_ids = self.env["bes.institute"].search([('exam_center','=',exam_region)])
             
     
+            
+    
     
     def register_exam(self):
         
-        
+        # import wdb; wdb.set_trace()
         dgs_exam = self.dgs_batch.id
         
         exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
@@ -1672,34 +1791,59 @@ class CandidateRegisterExamWizard(models.TransientModel):
             mek_oral_marks = self.gp_exam.mek_oral_marks
             mek_total = self.gp_exam.mek_total
             mek_percentage = self.gp_exam.mek_percentage
+            
         
-        
-        if self.mek_online_status == 'failed':
+        if self.mek_online_status == 'failed' and  self.gsk_online_status == 'failed':
+            
+            ## MEK QB Assigning
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = mek_survey_qb_input.generate_unique_string()
             mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
             mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
-        else:
-            mek_survey_qb_input = self.gp_exam.mek_online
-            mek_online_carry_forward = True
-            mek_online_marks = self.gp_exam.mek_online_marks
-            mek_online_percentage = self.gp_exam.mek_online_percentage
-        
-        
-        if self.gsk_online_status == 'failed':
+            
+            ## GSK QB Assigning
             gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
             token = gsk_survey_qb_input.generate_unique_string()
             gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
             gsk_online_carry_forward = False
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
-        else:
+        
+        elif self.gsk_online_status == 'failed' and not self.mek_online_status == 'failed':
+            
+            ## GSK QB Assigning
+            gsk_survey_qb_input = self.gsk_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = gsk_survey_qb_input.generate_unique_string()
+            gsk_survey_qb_input.write({'gp_candidate':self.candidate_id.id , 'dgs_batch':dgs_exam})
+            gsk_online_carry_forward = False
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            
+            ## MEK Marks Forwarding
+            mek_survey_qb_input = self.gp_exam.mek_online
+            mek_online_carry_forward = True
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+            
+        elif not self.gsk_online_status == 'failed' and  self.mek_online_status == 'failed':
+            
+            ## GSK Marks Forwarding
             gsk_survey_qb_input = self.gp_exam.gsk_online
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
             gsk_online_carry_forward = True
+            
+            ## MEK QB Assigning
+            
+            mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
+            token = mek_survey_qb_input.generate_unique_string()
+            mek_survey_qb_input.write({'gp_candidate':self.candidate_id.id ,'dgs_batch':dgs_exam  })
+            mek_online_carry_forward = False
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+
             
         overall_marks = self.gp_exam.overall_marks
         
@@ -1735,7 +1879,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
                                 "gsk_online_carry_forward":gsk_online_carry_forward
                                 
                                 })
-        
+
         # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
     
     # def register_exam(self):
@@ -1939,17 +2083,13 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
         if self.cookery_bakery_status == 'failed':
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+            ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
+
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
         
         
-        # if self.mek_oral_prac_status == 'failed':
-        #     mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        #     mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-        # else:
-        #     mek_practical = self.gp_exam.mek_prac
-        #     mek_oral =self.gp_exam.mek_oral
         
         
         if self.ccmc_online == 'failed':

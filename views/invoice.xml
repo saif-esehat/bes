@@ -11,6 +11,8 @@
                     <field name="batch" attrs="{'invisible': [('gp_batch_ok', '=', False)]}" />
                     <field name="ccmc_batch_ok" invisible="1"/>
                     <field name="ccmc_batch" attrs="{'invisible': [('ccmc_batch_ok', '=', False)]}" />
+                    <field name="gp_candidates" invisible="1" />
+                    <field name="ccmc_candidates" invisible="1" />
 
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
@@ -19,6 +21,38 @@
                     <button attrs="{'invisible': [('ccmc_batch_ok', '=', False)]}" name="open_ccmc_candidate" string="CCMC Candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
                     </button>
                 </xpath>
+                 <xpath expr="//page[@id='other_tab']" position="after">
+                   <page id="transaction_info" string="Transaction Info" name="transaction_info" >
+                        <group>
+                            <field name="transaction_id"/>
+                            <field name="bank_name"/>
+                            <field name="total_amount"/>
+                            <field name="transaction_date"/>
+                            <field name="transaction_slip" filename="file_name" widget="binary"/>
+                            <field name="file_name" invisible="1"/>
+
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="account_invoice_inherit_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree.inherited</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="transaction_id"/>
+                    <field name="bank_name"/>
+                    <field name="total_amount"/>
+                    <field name="transaction_slip" widget="binary"/>
+
+                    
+                </xpath>
+                
+                
             </field>
         </record>
 

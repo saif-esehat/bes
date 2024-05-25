@@ -16,10 +16,16 @@
             <field name="name">Recompute the fields</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_gp_candidate"/>
+            <field name="binding_model_id" ref="model_gp_candidate"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
             for record in records:
-                record._check_criteria()
+                record._check_sign()
+                record._check_image()
+                record._check_ship_visit_criteria()
+                record._check_attendance_criteria()
+                record._check_stcw_certificate()
             </field>
         </record>
 
@@ -260,6 +266,7 @@
                         </group>
                         <group>
                             <field name="candidate_signature" widget="image" class="oe_avatar" />
+                            
                         </group>
                         <group style="width:100%;">
 
@@ -275,6 +282,10 @@
                             <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
+                            <field name="result_status"/>
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+
+                            
 
                         </group>
 
@@ -299,7 +310,7 @@
                         </group>
 
                         <group style="width:100%;">
-                         <field name="dgs_batch"  />
+                         <field name="dgs_batch" />
                         <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
                         </group>
 
@@ -313,6 +324,11 @@
                             <field name="candidate_attendance_record"/>
                             <field name="fees_paid"/>
                             <field name="invoice_no"/>
+                            <field name="withdrawn_state"/>
+                            <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
+
+                            
+                            
 
                         </group>
                         
@@ -383,10 +399,10 @@
                                         <field name='mek_oral_exam_date'/> 
                                         <field name='institute_id'/>                             
                                         <field name='exam_id'/>
-                                        <field name='using_hand_plumbing_carpentry_tools'/>
-                                        <field name="use_of_chipping_tools_paints"/>
-                                        <field name='welding'/>
-                                        <field name="lathe_drill_grinder"/>
+                                        <field name='using_of_tools'/>
+                                        <field name="welding_lathe_drill_grinder"/>
+                                        <!-- <field name='welding'/>
+                                        <field name="lathe_drill_grinder"/> -->
 
                                         <field name="electrical"/>
                                         <field name="journal"/>
@@ -428,12 +444,12 @@
                                         <field name='gsk_oral_exam_date'/>
                                         <field name='institute_id'/>
                                         <field name='exam_id'/>
-                                        <field name='subject_area_1'/>
-                                        <field name="subject_area_2"/>
-                                        <field name='subject_area_3'/>
+                                        <field name='subject_area_1_2_3'/>
+                                        <field name="subject_area_4_5_6"/>
+                                        <!-- <field name='subject_area_3'/>
                                         <field name="subject_area_4"/>
                                         <field name="subject_area_5"/>
-                                        <field name="subject_area_6"/>
+                                        <field name="subject_area_6"/> -->
                                         <field name="practical_record_journals"/>
                                         <field name="gsk_oral_total_marks"/>
                                         <field name="gsk_oral_remarks"/>
@@ -505,6 +521,7 @@
                     <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
                     <field name="ship_visits_count"  optional="hide"/>
                     <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
+                    <field name="result_status"  optional="show" widget="badge" decoration-success= " result_status == 'passed'" decoration-danger=" result_status == 'failed'"/>
                 </tree>
             </field>
         </record>
@@ -639,7 +656,11 @@
                         </group>
 
                         <group style="width:100%;">
-                            <field name="institute_batch_id"/>
+                              <field name="dgs_batch"  />
+                             <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                            <field name="candidate_user_invoice_criteria" invisible="1"/>
+
+                            <!-- <field name="institute_batch_id"/> -->
                         </group>
 
 
@@ -731,7 +752,7 @@
                                         <field name="ccmc_oral_attempt_no"/>
                                         <field name="ccmc_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
-                                        <field name='safety_ccmc'/>
+                                        <!-- <field name='safety_ccmc'/> -->
                                         <field name='toal_ccmc_rating'/> 
                                         <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
@@ -746,7 +767,7 @@
                                         <field name="ccmc_gsk_oral_exam_date"/>
                                         <field name='gsk_ccmc'/>
                                         <field name='safety_ccmc'/>
-                                        <field name='toal_ccmc_rating'/> 
+                                        <field name='toal_ccmc_oral_rating'/> 
                                         <field name='ccmc_oral_draft_confirm'/>             
                                     </tree>
                                 </field>
@@ -780,6 +801,11 @@
                     <field name="candidate_code"  />
                     <field name="roll_no" />
                     <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+                     <searchpanel>
+                    <field name="dgs_batch" enable_counters="1"/>
+
+                    <!-- <field name="institute_batch_id" enable_counters="1"/> -->
+                </searchpanel> 
                 </search>
             </field>
         </record>
@@ -811,13 +837,13 @@
                     <field name="twelve_percent" optional="hide"/>
                     <field name="iti_percent"  optional="hide"/>
                     <field name="sc_st"  optional="show"/>
-                    <field name="fees_paid"  optional="show"/>
-                    <field name="candidate_image"  optional="show"/>
-                    <field name="candidate_signature"  optional="show"/>
-                    <field name="stcw_criteria"  optional="show"/>
-                    <field name="attendance_criteria"  optional="show"/>
-                    <field name="ship_visits_count"  optional="show"/>
-                    <field name="ship_visit_criteria"  optional="show"/>
+                   <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
+                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
+                    <field name="ship_visits_count"  optional="hide"/>
+                    <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
                 </tree>
             </field>
         </record>
@@ -1068,6 +1094,58 @@
                             <div>
                                 <field name="gsk_ccmc" nolabel="1"/>
                                         / 
+                                <span>20 Marks</span>
+                            </div>
+                        </group>
+                        <!-- <group>
+                            <label for="safety_ccmc"/>
+                            <div>
+                                <field name="safety_ccmc" nolabel="1"/>
+                                        / 
+                                <span>10 Marks</span>
+                            </div>
+                        </group> -->
+                        <group>
+                            <label for="toal_ccmc_rating" />
+                            <div>
+                                <field name="toal_ccmc_rating" nolabel="1"/>
+                                        / 
+                                <span>100 Marks</span>
+                            </div>
+                        </group>
+                        <group>
+                            <field name='ccmc_oral_draft_confirm'/> 
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- CCMC GSK Oral -->
+        <record id="ccmc_oral_gsk_eaxm_form" model="ir.ui.view">
+            <field name="name">ccmc.gsk.oral.line.form</field>
+            <field name="model">ccmc.gsk.oral.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_gsk_oral_attempt_no"/>
+                            <field name="ccmc_gsk_oral_exam_date"/>
+                        </group>
+                        <span>
+                            <h2>
+                                <Strong>Marks for Oral</Strong>
+                            </h2>
+                        </span>
+                        <group>
+                            <label for="gsk_ccmc" />
+                            <div>
+                                <field name="gsk_ccmc" nolabel="1"/>
+                                        / 
                                 <span>10 Marks</span>
                             </div>
                         </group>
@@ -1080,11 +1158,11 @@
                             </div>
                         </group>
                         <group>
-                            <label for="toal_ccmc_rating" />
+                            <label for="toal_ccmc_oral_rating" />
                             <div>
-                                <field name="toal_ccmc_rating" nolabel="1"/>
+                                <field name="toal_ccmc_oral_rating" nolabel="1"/>
                                         / 
-                                <span>100 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
                         <group>
@@ -1230,24 +1308,24 @@
                             <field name='exam_id'/>
                         </group>
                         <group>
-                            <label for="using_hand_plumbing_carpentry_tools" />
+                            <label for="using_of_tools" />
                             <div>
-                                <field name="using_hand_plumbing_carpentry_tools" nolabel="1"/>
+                                <field name="using_of_tools" nolabel="1"/>
                         / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
 
                         <group>
-                            <label for="use_of_chipping_tools_paints" />
+                            <label for="welding_lathe_drill_grinder" />
                             <div>
-                                <field name="use_of_chipping_tools_paints" nolabel="1"/>
+                                <field name="welding_lathe_drill_grinder" nolabel="1"/>
                         / 
-                                <span>10 Marks</span>
+                                <span>20 Marks</span>
                             </div>
                         </group>
 
-                        <group>
+                        <!-- <group>
                             <label for="welding" />
                             <div>
                                 <field name="welding" nolabel="1"/>
@@ -1263,7 +1341,7 @@
                         / 
                                 <span>10 Marks</span>
                             </div>
-                        </group>
+                        </group> -->
 
 
                         <group>
@@ -1433,24 +1511,24 @@
                         </group>
                         
                         <group>
-                            <label for="subject_area_1" />
+                            <label for="subject_area_1_2_3" />
                             <div>
-                                <field name="subject_area_1" nolabel="1"/>
+                                <field name="subject_area_1_2_3" nolabel="1"/>
                             / 
-                                <span>9 Marks</span>
+                                <span>25 Marks</span>
                             </div>
                         </group>
 
                         <group>
-                            <label for="subject_area_2" />
+                            <label for="subject_area_4_5_6" />
                             <div>
-                                <field name="subject_area_2" nolabel="1"/>
+                                <field name="subject_area_4_5_6" nolabel="1"/>
                             / 
-                                <span>6 Marks</span>
+                                <span>25 Marks</span>
                             </div>
                         </group>
 
-                        <group>
+                        <!-- <group>
                             <label for="subject_area_3" />
                             <div>
                                 <field name="subject_area_3" nolabel="1"/>
@@ -1484,7 +1562,7 @@
                             / 
                                 <span>5 Marks</span>
                             </div>
-                        </group>
+                        </group> -->
 
                         <group>
                             <label for="practical_record_journals" />

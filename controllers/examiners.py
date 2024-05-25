@@ -1,5 +1,5 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import http
 from werkzeug.utils import secure_filename
 import base64
@@ -139,7 +139,7 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-        
+        # import wdb; wdb.set_trace()
         vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'institutes'}
         return request.render("bes.examiner_assignment_institute_list",vals)
     
@@ -149,14 +149,15 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_subject = examiner.subject_id.name
+        examiner_subject  = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).subject.name
+        # examiner_subject = examiner.subject_id.name
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
-        
-        
         # import wdb; wdb.set_trace()
+        
+        
         vals = {'assignments':examiner_assignments,
                 'examiner_subject':examiner_subject,
                 'examiner':examiner,
@@ -288,12 +289,12 @@ class ExaminerPortal(CustomerPortal):
             marksheet = request.env['gp.gsk.oral.line'].sudo().search([('id','=',rec['gsk_oral'])])
 
             # Convert string values to integers
-            subject_area1 = int(rec['subject_area1'])
-            subject_area2 = int(rec['subject_area2'])
-            subject_area3 = int(rec['subject_area3'])
-            subject_area4 = int(rec['subject_area4'])
-            subject_area5 = int(rec['subject_area5'])
-            subject_area6 = int(rec['subject_area6'])
+            subject_area_1_2_3 = int(rec['subject_area_1_2_3'])
+            subject_area_4_5_6 = int(rec['subject_area_4_5_6'])
+            # subject_area3 = int(rec['subject_area3'])
+            # subject_area4 = int(rec['subject_area4'])
+            # subject_area5 = int(rec['subject_area5'])
+            # subject_area6 = int(rec['subject_area6'])
             state=rec['state']
 
             # exam_date = rec['exam_date']
@@ -301,7 +302,7 @@ class ExaminerPortal(CustomerPortal):
        
             remarks_oral_gsk = rec['remarks_oral_gsk']
             
-            total = subject_area1 + subject_area2 + subject_area3 + subject_area4 + subject_area5 + subject_area6
+            total = subject_area_1_2_3 + subject_area_4_5_6
 
             candidate_rec = candidate.search([('id', '=', rec_id)])
             draft_records = candidate_rec.gsk_oral_child_line.filtered(lambda line: line.gsk_oral_draft_confirm == 'draft') 
@@ -310,12 +311,12 @@ class ExaminerPortal(CustomerPortal):
             # batch_id = int(rec['batch_id'])
             # Construct the dictionary with integer values
             vals = {
-                'subject_area_1': subject_area1,                
-                'subject_area_2': subject_area2,
-                'subject_area_3': subject_area3,
-                'subject_area_4': subject_area4,
-                'subject_area_5': subject_area5, 
-                'subject_area_6': subject_area6,
+                'subject_area_1_2_3': subject_area_1_2_3,                
+                'subject_area_4_5_6': subject_area_4_5_6,
+                # 'subject_area_3': subject_area3,
+                # 'subject_area_4': subject_area4,
+                # 'subject_area_5': subject_area5, 
+                # 'subject_area_6': subject_area6,
                 'practical_record_journals': practical_record_journals,
                 'gsk_oral_draft_confirm': state,
                 'gsk_oral_remarks': remarks_oral_gsk,
@@ -446,9 +447,9 @@ class ExaminerPortal(CustomerPortal):
 
             # Convert string values to integers
             subject_area1 = int(rec['subject_area1'])
-            subject_area2 = int(rec['subject_area2'])
-            subject_area3 = int(rec['subject_area3'])
-            subject_area4 = int(rec['subject_area4'])
+            subject_area2 = int(rec['subject_area3'])
+            # subject_area3 = int(rec['subject_area3'])
+            # subject_area4 = int(rec['subject_area4'])
             subject_area5 = int(rec['subject_area5'])
             subject_area6 = int(rec['subject_area6'])
             mek_oral_remarks = rec['remarks_oral_mek']
@@ -460,10 +461,10 @@ class ExaminerPortal(CustomerPortal):
 
             # Construct the dictionary with integer values
             vals = {
-                'using_hand_plumbing_carpentry_tools': subject_area1,
-                'use_of_chipping_tools_paints': subject_area2,
-                'welding': subject_area3,
-                'lathe_drill_grinder': subject_area4,
+                'using_of_tools': subject_area1,
+                'welding_lathe_drill_grinder': subject_area2,
+                # 'welding': subject_area3,
+                # 'lathe_drill_grinder': subject_area4,
                 'electrical': subject_area5,
                 'journal': subject_area6,
                 'mek_oral_remarks': mek_oral_remarks,
@@ -655,7 +656,7 @@ class ExaminerPortal(CustomerPortal):
 
             # Convert string values to integers                    
             subject_area1 = int(rec['ccmc_gsk'])
-            subject_area2 = int(rec['safety_ccmc'])
+            # subject_area2 = int(rec['safety_ccmc'])
             subject_area3 = int(rec['house_keeping'])
             subject_area4 = int(rec['f_b'])
             subject_area5 = int(rec['orals_house_keeping'])
@@ -665,7 +666,7 @@ class ExaminerPortal(CustomerPortal):
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': subject_area1,
-                'safety_ccmc': subject_area2,
+                # 'safety_ccmc': subject_area2,
                 'house_keeping': subject_area3,
                 'f_b': subject_area4,
                 'orals_house_keeping': subject_area5,
@@ -735,9 +736,9 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('A2:A2',35, unlocked)
         gsk_oral_sheet.set_column('B2:B2',10, unlocked)
         gsk_oral_sheet.set_column('C2:C2',20, unlocked)
-        gsk_oral_sheet.set_column('D2:I2',20, unlocked)
-        gsk_oral_sheet.set_column('J2:J2',30, unlocked)
-        gsk_oral_sheet.set_column('K:K',15, unlocked)
+        gsk_oral_sheet.set_column('D2:E2',25, unlocked)
+        gsk_oral_sheet.set_column('F2:F2',30, unlocked)
+        gsk_oral_sheet.set_column('G:G',15, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -758,16 +759,19 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_size': 20,
                                                 'font_color': 'black',
                                             })
+        instruction = workbook.add_format({
+                                                'bold':     True,
+                                                # 'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 10,
+                                                'font_color': 'red',
+                                            })
 
-        gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        
+        gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        gsk_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          'Subject Area 1 \n Minimum 3 Questions \n 9 Marks',
-          'Subject Area 2 \n Minimum 2 Questions \n 6 Marks',
-          'Subject Area 3 \n Minimum 3 Questions \n 9 Marks',
-          'Subject Area 4 \n Minimum 3 Questions \n 9 Marks',
-          'Subject Area 5 \n Minimum 4 Questions \n 12 Marks',
-          'Subject Area 6 \n Minimum 2 Questions \n 5 Marks',
+          'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
+          'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
           'Practical Record Book and Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
             gsk_oral_sheet.write(1, col, value, header_format)
@@ -782,7 +786,7 @@ class ExaminerPortal(CustomerPortal):
             roll_no.append(candidate.gp_marksheet.exam_id)
             candidate_code.append(candidate.gp_candidate.candidate_code)
         
-        # # import wdb;wdb.set_trace();
+        # import wdb;wdb.set_trace();
         
         for i, candidate in enumerate(candidate_list):
             gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
@@ -801,16 +805,12 @@ class ExaminerPortal(CustomerPortal):
         marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_6 })
-        gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        gsk_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_5 })
-        gsk_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_25 })
+        gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
-        gsk_oral_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
+        gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': remarks })
 
         #For GSK Practical Marksheet
         gsk_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -826,7 +826,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
@@ -870,7 +870,7 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
 
-        date = marksheets[0].examiners_id.exam_date
+        date = examiner_assignments[0].exam_date
         
         file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
         
@@ -924,9 +924,9 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.set_column('A2:A2',35, unlocked)
         mek_oral_sheet.set_column('B2:B2',10, unlocked)
         mek_oral_sheet.set_column('C2:C2',20, unlocked)
-        mek_oral_sheet.set_column('D2:I2',20, unlocked)
-        mek_oral_sheet.set_column('J2:J2',15, unlocked)
-        mek_oral_sheet.set_column('K2:K2',15, unlocked)
+        mek_oral_sheet.set_column('D2:F2',20, unlocked)
+        mek_oral_sheet.set_column('G2:G2',15, unlocked)
+        mek_oral_sheet.set_column('H2:H2',15, unlocked)
             
         mek_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -948,15 +948,21 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                             })
         
-        # Merge 3 cells over two rows.
-        mek_oral_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
-        
+        instruction = workbook.add_format({
+                                                'bold':     True,
+                                                # 'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 10,
+                                                'font_color': 'red',
+                                            })
+
+        mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+       
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          'Uses of Hand/ Plumbing/Carpentry Tools \n 10 Marks',
-          'Use of chipping Tools & Brushes & Paints \n 10 Marks',
-          'Welding \n 10 Marks',
-          'Lathe /Drill/Grinder \n 10 Marks',
-          'Electrical  \n 12 Marks',
+          'Uses of Hand/ Plumbing/Carpentry Tools \n Use of chipping Tools & Brushes & Paints \n 20 Marks',
+          'Welding \n Lathe /Drill/Grinder \n 20 Marks',
+          'Electrical  \n 10 Marks',
           'Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
             mek_oral_sheet.write(1, col, value, header_format)
@@ -984,19 +990,18 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write('C{}'.format(i+3), code, locked)
         
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         
-        mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
+        mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
+        # mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        # mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_12 })
-        mek_oral_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_25 })
+        mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_25 })
         
         remarks = ['Absent','Good','Average','Weak']
-        mek_oral_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': remarks })
+        mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
         mek_practical_sheet.set_column('A:XDF',None, unlocked)
@@ -1010,7 +1015,7 @@ class ExaminerPortal(CustomerPortal):
         
         
         # Merge 3 cells over two rows.
-        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
@@ -1055,7 +1060,7 @@ class ExaminerPortal(CustomerPortal):
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
         
-        date = marksheets[0].examiners_id.exam_date
+        date = examiner_assignments[0].exam_date
         
         file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
 
@@ -1092,41 +1097,41 @@ class ExaminerPortal(CustomerPortal):
             
             roll_no = row[1]
             candidate_code_no = row[2]  
-            subject_area_1 = row[3]  
-            subject_area_2 = row[4]  
-            subject_area_3 = row[5]  
-            subject_area_4 = row[6]  
-            subject_area_5 = row[7]  
-            subject_area_6 = row[8] 
-            practical_journal = row[9] 
+            subject_area_1_2_3 = row[3]  
+            subject_area_4_5_6 = row[4]  
+            # subject_area_3 = row[5]  
+            # subject_area_4 = row[6]  
+            # subject_area_5 = row[7]  
+            # subject_area_6 = row[8] 
+            practical_journal = row[5] 
             total_marks = 0  # Initialize total_marks to 0
-            if subject_area_1:
-                total_marks += int(subject_area_1)
-            if subject_area_2:
-                total_marks += int(subject_area_2)
-            if subject_area_3:
-                total_marks += int(subject_area_3)
-            if subject_area_4:
-                total_marks += int(subject_area_4)
-            if subject_area_5:
-                total_marks += int(subject_area_5)
-            if subject_area_6:
-                total_marks += int(subject_area_6)
+            if subject_area_1_2_3:
+                total_marks += int(subject_area_1_2_3)
+            if subject_area_4_5_6:
+                total_marks += int(subject_area_4_5_6)
+            # if subject_area_3:
+            #     total_marks += int(subject_area_3)
+            # if subject_area_4:
+            #     total_marks += int(subject_area_4)
+            # if subject_area_5:
+            #     total_marks += int(subject_area_5)
+            # if subject_area_6:
+            #     total_marks += int(subject_area_6)
             if practical_journal:
                 total_marks += int(practical_journal)
                     
-            remarks = row[10]
+            remarks = row[6]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             
             if candidate and candidate.gsk_oral:
                 candidate.gsk_oral.sudo().write({
-                    'subject_area_1':subject_area_1,
-                    'subject_area_2':subject_area_2,
-                    'subject_area_3':subject_area_3,
-                    'subject_area_4':subject_area_4,
-                    'subject_area_5':subject_area_5,
-                    'subject_area_6':subject_area_6,
+                    'subject_area_1_2_3':subject_area_1_2_3,
+                    'subject_area_4_5_6':subject_area_4_5_6,
+                    # 'subject_area_3':subject_area_3,
+                    # 'subject_area_4':subject_area_4,
+                    # 'subject_area_5':subject_area_5,
+                    # 'subject_area_6':subject_area_6,
                     'practical_record_journals':practical_journal,
                     'gsk_oral_total_marks':total_marks,
                     'gsk_oral_remarks':remarks,
@@ -1214,36 +1219,36 @@ class ExaminerPortal(CustomerPortal):
             
             roll_no = row[1]
             candidate_code_no = row[2]  
-            plumbing = row[3]  
-            chipping = row[4]  
-            welding = row[5]  
-            grinder = row[6]  
-            electrical = row[7]  
-            mek_journal = row[8] 
+            using_of_tools = row[3]  
+            welding_more = row[4]  
+            # welding = row[5]  
+            # grinder = row[6]  
+            electrical = row[5]  
+            mek_journal = row[6] 
 
             total_marks = 0  # Initialize gsk_practical_total_marks to 0
-            if plumbing:
-                total_marks += int(plumbing)
-            if chipping:
-                total_marks += int(chipping)
-            if welding:
-                total_marks += int(welding)
-            if grinder:
-                total_marks += int(grinder)
+            if using_of_tools:
+                total_marks += int(using_of_tools)
+            if welding_more:
+                total_marks += int(welding_more)
+            # if welding:
+            #     total_marks += int(welding)
+            # if grinder:
+            #     total_marks += int(grinder)
             if electrical:
                 total_marks += int(electrical)
             if mek_journal:
                 total_marks += int(mek_journal)  
 
-            remarks = row[9]
+            remarks = row[7]
             
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.mek_oral:
                 candidate.mek_oral.sudo().write({
-                    'using_hand_plumbing_carpentry_tools':plumbing,
-                    'use_of_chipping_tools_paints':chipping,
-                    'welding':welding,
-                    'lathe_drill_grinder':grinder,
+                    'using_of_tools':using_of_tools,
+                    'welding_lathe_drill_grinder':welding_more,
+                    # 'welding':welding,
+                    # 'lathe_drill_grinder':grinder,
                     'electrical':electrical,
                     'journal':mek_journal,
                     'mek_oral_total_marks':total_marks,
@@ -1380,7 +1385,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-House keeping Practical \n 20 Marks',
@@ -1504,7 +1509,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.prac_oral_id.institute_id.name, merge_format)
+        ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Hygiene & Grooming \n 10 Marks', 
@@ -1594,5 +1599,174 @@ class ExaminerPortal(CustomerPortal):
         return response
     
     
+    @http.route('/my/uploadccmcmarksheet', type='http', auth="user", website=True)
+    def upload_ccmc_marksheet(self,**kw):
+        user_id = request.env.user.id
+        # import wdb;wdb.set_trace();
+        batch_id = int(kw['mek_batch_ids'])
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
 
+        # workbook = xlsxwriter.Workbook(BytesIO(file_content))
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet_oral = workbook.sheet_by_index(0)
+        for row_num in range(2, worksheet_oral.nrows):  # Assuming first row contains headers
+            row = worksheet_oral.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            plumbing = row[3]  
+            chipping = row[4]  
+            welding = row[5]  
+            grinder = row[6]  
+            electrical = row[7]  
+            mek_journal = row[8] 
+
+            total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if plumbing:
+                total_marks += int(plumbing)
+            if chipping:
+                total_marks += int(chipping)
+            if welding:
+                total_marks += int(welding)
+            if grinder:
+                total_marks += int(grinder)
+            if electrical:
+                total_marks += int(electrical)
+            if mek_journal:
+                total_marks += int(mek_journal)  
+
+            remarks = row[9]
+            
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            if candidate and candidate.mek_oral:
+                candidate.mek_oral.sudo().write({
+                    'using_hand_plumbing_carpentry_tools':plumbing,
+                    'use_of_chipping_tools_paints':chipping,
+                    'welding':welding,
+                    'lathe_drill_grinder':grinder,
+                    'electrical':electrical,
+                    'journal':mek_journal,
+                    'mek_oral_total_marks':total_marks,
+                    'mek_oral_remarks':remarks,
+
+
+                })
+
+        worksheet_practical = workbook.sheet_by_index(1)
+        for row_num in range(2, worksheet_practical.nrows):  # Assuming first row contains headers
+            row = worksheet_practical.row_values(row_num)
+            
+            roll_no = row[1]
+            candidate_code_no = row[2]  
+            using_hand_plumbing_tools_task_1 = row[3]  
+            using_hand_plumbing_tools_task_2 = row[4]  
+            using_hand_plumbing_tools_task_3 = row[5]  
+            use_of_chipping_tools_paint_brushes = row[6]  
+            use_of_carpentry = row[7]  
+            use_of_measuring_instruments = row[8] 
+            welding = row[9] 
+            lathe = row[10]
+            electrical = row[11] 
+
+            # mek_practical_total_marks = row[12] 
+            mek_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
+            if using_hand_plumbing_tools_task_1:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_1)
+            if using_hand_plumbing_tools_task_2:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_2)
+            if using_hand_plumbing_tools_task_3:
+                mek_practical_total_marks += int(using_hand_plumbing_tools_task_3)
+            if use_of_chipping_tools_paint_brushes:
+                mek_practical_total_marks += int(use_of_chipping_tools_paint_brushes)
+            if use_of_carpentry:
+                mek_practical_total_marks += int(use_of_carpentry)
+            if use_of_measuring_instruments:
+                mek_practical_total_marks += int(use_of_measuring_instruments) 
+            if welding:
+                mek_practical_total_marks += int(welding) 
+            if lathe:
+                mek_practical_total_marks += int(lathe) 
+            if electrical:
+                mek_practical_total_marks += int(electrical) 
+
+            mek_practical_remarks = row[12]
+
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            if candidate and candidate.mek_prac:
+                candidate.mek_prac.sudo().write({
+                    'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
+                    'using_hand_plumbing_tools_task_2':using_hand_plumbing_tools_task_2,
+                    'using_hand_plumbing_tools_task_3':using_hand_plumbing_tools_task_3,
+                    'use_of_chipping_tools_paint_brushes':use_of_chipping_tools_paint_brushes,
+                    'use_of_carpentry':use_of_carpentry,
+                    'use_of_measuring_instruments':use_of_measuring_instruments,
+                    'welding':welding,
+                    'lathe':lathe,
+                    'electrical':electrical,
+                    'mek_practical_total_marks':mek_practical_total_marks,
+                    'mek_practical_remarks':mek_practical_remarks
+
+
+                })
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
     
+
+    # @http.route('/my/gpcandidate/update_marks', type='json', auth='user', methods=["POST"])
+    # def update_marks(self, **post):
+    #     try:
+    #         candidate_id = post.get('candidate_id')
+    #         subject_area = post.get('subject_area')
+    #         marks = post.get('marks')
+
+    #         if not candidate_id or not subject_area or marks is None:
+    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
+
+    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
+    #         if candidate:
+    #             candidate.write({subject_area: int(marks)})
+    #             return json.dumps({'result': 'success'})
+    #         else:
+    #             return json.dumps({'result': 'error', 'message': 'Candidate not found'})
+    #     except Exception as e:
+    #         return json.dumps({'result': 'error', 'message': str(e)})
+    #     # return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
+        
+
+    # @http.route('/my/gpcandidate/update_total_marks', type='json', auth='user', methods=["POST"])
+    # def update_total_marks(self, **post):
+    #     try:
+    #         candidate_id = post.get('candidate_id')
+    #         total_marks = post.get('gsk_oral_total_marks')
+
+    #         if not candidate_id or total_marks is None:
+    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
+
+    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
+    #         if candidate:
+    #             candidate.write({'gsk_oral_total_marks': int(total_marks)})
+    #             return {'result': 'success'}
+    #         else:
+    #             return {'result': 'error', 'message': 'Candidate not found'}
+    #     except Exception as e:
+    #         return {'result': 'error', 'message': str(e)}
+
+    @http.route('/my/uploadmarksheetimg', type='http', auth="user", website=True)
+    def upload_marksheet_img(self,**kw):
+        user_id = request.env.user.id
+        batch_id = int(kw['marksheet_id'])
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner.user_id','=',user_id)])
+        examiner_assignments.sudo().write({'marksheet_image':file_content,"marksheet_image_name":filename})
+        # import wdb;wdb.set_trace();
+        
+            
+        return request.redirect("/my/assignments/batches/"+str(batch_id))

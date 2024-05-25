@@ -12,24 +12,39 @@ class CandidateAdmitCardGp(models.AbstractModel):
     
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
-        print("doc_idsss",docids)
+            
+            # import wdb; wdb.set_trace();
         
-        # import wdb; wdb.set_trace();
-        if docs1.attendance_criteria == 'pending' and docs1.ship_visit_criteria == 'pending' :
-            raise ValidationError("Admit Card Not Generated Due to Attendance criteria not Complied")
-        
-        # candidate_image = base64.b64encode(docs1.candidate_image).decode()
-        
-        # try:
-        #     docs1.candidate_image.decode('utf-8')
-        # except QWebException:
-        #     docs1.candidate_image = None
-        return {
-            'doc_ids': docids,
-            'doc_model': 'gp.exam.schedule',
-            'docs': docs1
-            }
+            # docs1 = self.env['gp.exam.schedule'].sudo().search([('id','=',docids)])
+            
+            docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
+            
+            print("doc_idsss",docids)
+            
+
+            
+            for docs in docs1:
+                if docs.attendance_criteria == 'pending' :
+                    raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
+            
+                if docs.ship_visit_criteria == 'pending' :
+                    raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+                
+                if docs.stcw_criteria == 'pending':
+                    raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
+            
+            # candidate_image = base64.b64encode(docs1.candidate_image).decode()
+            
+            # try:
+            #     docs1.candidate_image.decode('utf-8')
+            # except QWebException:
+            #     docs1.candidate_image = None
+            # import wdb; wdb.set_trace();
+            return {
+                'doc_ids': docids,
+                'doc_model': 'gp.exam.schedule',
+                'docs': docs1
+                }
 
 
 class CandidateAdmitCardCcmc(models.AbstractModel):
@@ -42,9 +57,24 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
     
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
-        print("doc_idsss",docids)
         
+        
+        docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
+        # docs1 = self.env['gp.exam.schedule'].sudo().search([('id','=',docids)])
+        # print("doc_idsss")
+        
+        
+        for docs in docs1:
+            if docs.attendance_criteria == 'pending' :
+                raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
+            
+            
+            if docs.ship_visit_criteria == 'pending' :
+                raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+                
+            if docs.stcw_criteria == 'pending':
+                raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
+
         # import wdb; wdb.set_trace();
         
         # candidate_image = base64.b64encode(docs1.candidate_image).decode()

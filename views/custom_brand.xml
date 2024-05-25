@@ -4,21 +4,21 @@
 <template id="custom_brand_promotion_message" inherit_id="web.brand_promotion_message" name="Custom Brand Promotion Message">
     <xpath expr="//a[@class='badge badge-light']" position="replace">
         <!-- Remove the Odoo logo by not including it -->
-        eSehat
+        <a target="_blank" href="https://esehat.in" >eSehat</a>
     </xpath>
 </template>
 
-<template id="custom_website_sale_brand_promotion" inherit_id="website_sale.brand_promotion">
-    <xpath expr="//t[@t-set='_message']" position="replace"/>
-</template>
+    <template id="custom_website_sale_brand_promotion" inherit_id="website_sale.brand_promotion">
+        <xpath expr="//t[@t-set='_message']" position="replace"/>
+    </template>
 
-<template id="custom_web_login" inherit_id="web.login" name="Login">
-    <xpath expr="//div[@class='form-group field-login']" position="replace">
-       <div class="form-group field-login">
-            <label for="login">Login ID</label>
-            <input type="text" placeholder="Login ID" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
-        </div>
-    </xpath>
-</template>
+    <template id="custom_web_login" inherit_id="web.login" name="Login">
+        <xpath expr="//div[@class='form-group field-login']" position="replace">
+        <div class="form-group field-login">
+                <label for="login">Login ID</label>
+                <input type="text" placeholder="Login ID" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
+            </div>
+        </xpath>
+    </template>
 
 </odoo>

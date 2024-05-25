@@ -33,17 +33,17 @@ class InstitutePortal(CustomerPortal):
     def UpdateBatchApprovalCapacity(self, **kw):
         
         batch_id = int(kw.get('batch_id'))
-        capacity = int(kw.get('capacity'))
+        capacity = int(kw.get('capacity'))  
         
-        file_content = kw.get("approvaldocument").read()
-        filename = kw.get('approvaldocument').filename
+        # file_content = kw.get("approvaldocument").read()
+        # filename = kw.get('approvaldocument').filename
         batch = request.env["institute.gp.batches"].sudo().search([('id','=',batch_id)])
         batch.write({ "dgs_approved_capacity": capacity,
                      "dgs_approval_state":True,
-                     "dgs_document":base64.b64encode(file_content)
+                    #  "dgs_document":base64.b64encode(file_content)
                      })
         
-        return request.redirect("/my/gpbatch")
+        return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
     
     
     @http.route(['/my/ccmcbatchbatch/updatebatchcapacity'],method=['POST'], type="http", auth="user", website=True)
@@ -52,12 +52,12 @@ class InstitutePortal(CustomerPortal):
         batch_id = int(kw.get('batch_id'))
         capacity = int(kw.get('capacity'))
         
-        file_content = kw.get("approvaldocument").read()
-        filename = kw.get('approvaldocument').filename
+        # file_content = kw.get("approvaldocument").read()
+        # filename = kw.get('approvaldocument').filename
         batch = request.env["institute.ccmc.batches"].sudo().search([('id','=',batch_id)])
         batch.write({ "dgs_approved_capacity": capacity,
                      "dgs_approval_state":True,
-                     "dgs_document":base64.b64encode(file_content)
+                    #  "dgs_document":base64.b64encode(file_content)
                      })
         
         return request.redirect("/my/ccmcbatch")
@@ -252,21 +252,61 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         state_data = [{'id': state.id, 'name': state.name} for state in states]
         return json.dumps(state_data)
+    
+    @http.route(['/my/downloadtransactionslip/<int:invoice_id>'],method=["POST"], type="http", auth="user", website=True)
+    def DownloadTransactionSlip(self,invoice_id,**kw):
+        invoice = request.env['account.move'].sudo().search([('id','=',invoice_id)])
+        transaction_slip = base64.b64decode(invoice.transaction_slip)  # Decoding file data
+        file_name = invoice.file_name
+        headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
+        return request.make_response(transaction_slip, headers)
+
+    @http.route(['/my/updatetransaction'],method=["POST"], type="http", auth="user", website=True)
+    def UpdateTransaction(self, **kw):
+        
+        
+        invoice_id = kw.get('invoice_id')
+        transaction_id = kw.get('transaction_id')
+        transaction_date = kw.get('transaction_date')
+        bank_name = kw.get('bank_name')
+        total_amount = int(kw.get('total_amount'))
+        file_content = kw.get("transaction_slip").read()
+        filename = kw.get('transaction_slip').filename
+        
+        invoice = request.env['account.move'].sudo().search([('id','=',invoice_id)])
+        invoice.write({
+            'transaction_id': transaction_id,
+            'transaction_date': transaction_date,
+            'bank_name': bank_name,
+            'total_amount':total_amount,
+            'transaction_slip': base64.b64encode(file_content),
+            'file_name':filename
+        })
+        # import wdb; wdb.set_trace();
+ 
+        
+        return request.redirect("/my/invoices/"+str(invoice_id))
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
         # import wdb; wdb.set_trace();
+        
+        
         user_id = request.env.user.id
         batch_id = kw.get("invoice_batch_id")
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
         
+        
+      
+
+        
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id
         product_price = batch.course.exam_fees.lst_price
-        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
-        
+        candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
+        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
         # qty = batch.candidate_count
         # import wdb; wdb.set_trace();
         line_items = [(0, 0, {
@@ -278,18 +318,22 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         invoice_vals = {
+            'gp_candidates':candidates.ids,
             'partner_id': partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
             'gp_batch_ok':True,
             'batch':batch.id,
-            'l10n_in_gst_treatment':'unregistered'
+            'l10n_in_gst_treatment':'unregistered',
+            
+            
             # Add other invoice fields as needed
         }
         
         
         
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        candidates.write({'invoice_generated': True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
         batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
@@ -313,7 +357,11 @@ class InstitutePortal(CustomerPortal):
         
         product_price = batch.ccmc_course.exam_fees.lst_price
         
-        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
+        candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
+        qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
+
+        
+        # qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
         # qty = batch.candidate_count
         # import wdb; wdb.set_trace();
@@ -326,6 +374,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
         
         invoice_vals = {
+            'ccmc_candidates':candidates.ids,
             'partner_id': ccmc_partner_id,  # Replace with the partner ID for the customer
             'move_type': 'out_invoice',
             'invoice_line_ids':line_items,
@@ -338,6 +387,7 @@ class InstitutePortal(CustomerPortal):
         
         
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
+        candidates.write({'invoice_generated': True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
         batch.write({"ccmc_invoice_created":True,"ccmc_account_move":new_invoice.id,'ccmc_state': '3-pending_invoice'})
@@ -369,13 +419,15 @@ class InstitutePortal(CustomerPortal):
     def CreateGPcandidate(self, **kw):
 
         user_id = request.env.user.id
-        batch_id = kw.get("batch_id")
+        batch_id = int(kw.get("batch_id"))
 
         
         batch_name = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)]).batch_name
         
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        
+        # import wdb; wdb.set_trace();
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
@@ -421,7 +473,7 @@ class InstitutePortal(CustomerPortal):
     def CreateCCMCcandidate(self, **kw):
         user_id = request.env.user.id
 
-        batch_id = kw.get("ccmc_candidate_batch_id")
+        batch_id = int(kw.get("ccmc_candidate_batch_id"))
         
         batch_name = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)]).ccmc_batch_name
         
@@ -818,10 +870,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=10
+                            step=40
                             )
         candidates = request.env["gp.candidate"].sudo().search(
-            search_domain, limit= 10,offset=page_detail['offset'])
+            search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
             [('id', '=', batch_id)])
         
@@ -869,10 +921,10 @@ class InstitutePortal(CustomerPortal):
                             total=candidates_count,
                             url_args={'search_in':search_in,'search':search},
                             page=page,
-                            step=10
+                            step=40
                             )
         
-        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 10,offset=page_detail['offset'])
+        candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.ccmc.batches"].sudo().search(
             [('id', '=', batch_id)])
         vals = {'candidates': candidates,
@@ -1213,6 +1265,14 @@ class InstitutePortal(CustomerPortal):
         }
         
         request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
+        
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
         # import wdb; wdb.set_trace()
 
         # Create a record in the 'gp.candidate' model
@@ -1250,7 +1310,8 @@ class InstitutePortal(CustomerPortal):
         request.env['ccmc.candidate.ship.visits'].sudo().create(candidate_data)
         # import wdb; wdb.set_trace()
 
-        # Create a record in the 'gp.candidate' model
+      
+        
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
         
@@ -1261,8 +1322,51 @@ class InstitutePortal(CustomerPortal):
         visit_id = kw.get("visit_id")
         request.env['gp.candidate.ship.visits'].sudo().search([('id','=',visit_id)]).unlink()
         
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+    
+    @http.route(['/my/stcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DeleteStcw(self, **kw):
+        # import wdb; wdb.set_trace();
+        stcw_id = kw.get("stcw_id")
+        request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+ 
+    @http.route(['/my/ccmcstcw/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DeleteccmcStcw(self, **kw):
+        print (kw)
+        # import wdb; wdb.set_trace();
+        stcw_id = kw.get("stcw_ccmc_id")
+        request.env['ccmc.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        candidate = request.env["ccmc.candidate"].sudo().search([('id','=',kw.get("candidate_ccmc_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        
+        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_ccmc_id")))
 
     @http.route(['/my/ccmcshipvisit/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DeleteCcmcShipVisits(self, **kw):
@@ -1281,7 +1385,7 @@ class InstitutePortal(CustomerPortal):
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
-        mti_indos_no = kw.get('mti_indos_no')
+        # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
         course_start_date = kw.get('course_start_date')
         course_end_date = kw.get('course_end_date')
@@ -1289,13 +1393,15 @@ class InstitutePortal(CustomerPortal):
         
         file_content = certificate_upload.read()
         filename = certificate_upload.filename
+        
+        
 
         stcw_data = {
             'candidate_id' : candidate_id,
             'course_name': course_name,
             'institute_name': institute_name,
             'marine_training_inst_number': marine_training_inst_number,
-            'mti_indos_no': mti_indos_no,
+            # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
             'course_start_date': course_start_date,
             'course_end_date': course_end_date,
@@ -1303,6 +1409,13 @@ class InstitutePortal(CustomerPortal):
             'certificate_upload': base64.b64encode(file_content)
         }
         request.env["gp.candidate.stcw.certificate"].sudo().create(stcw_data)
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
 
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
@@ -1316,7 +1429,7 @@ class InstitutePortal(CustomerPortal):
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
-        mti_indos_no = kw.get('mti_indos_no')
+        # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
         course_start_date = kw.get('course_start_date')
         course_end_date = kw.get('course_end_date')
@@ -1330,7 +1443,7 @@ class InstitutePortal(CustomerPortal):
             'course_name': course_name,
             'institute_name': institute_name,
             'marine_training_inst_number': marine_training_inst_number,
-            'mti_indos_no': mti_indos_no,
+            # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
             'course_start_date': course_start_date,
             'course_end_date': course_end_date,
@@ -1345,6 +1458,7 @@ class InstitutePortal(CustomerPortal):
     
     @http.route(['/my/gpcandidate/updatefees'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateFees(self, **kw):
+        # import wdb; wdb.set_trace();
         candidate_id = kw.get('candidate_id')
         fees_paid = kw.get('fees_paid')
         
@@ -1355,6 +1469,140 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'fees_paid':fees_paid})
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+    
+    
+    @http.route(['/my/gpcandidate/updatefeesall'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFeesGPAll(self, **kw):
+        # import wdb; wdb.set_trace();
+        batch_id = int(kw.get('confirm_gp_candidate_batch_id'))
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('institute_batch_id', '=', int(batch_id))])
+        
+        candidate.write({'fees_paid':'yes'})
+
+        
+        return request.redirect('/my/gpbatch/candidates/'+str(batch_id))
+    
+    @http.route(['/my/ccmccandidate/updatefeesall'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateFeesCCMCAll(self, **kw):
+        batch_id = int(kw.get('ccmc_batch_id'))
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('institute_batch_id', '=', int(batch_id))])
+        
+        candidate.write({'fees_paid':'yes'})
+
+        
+        return request.redirect('/my/ccmcbatch/candidates/'+str(batch_id))
+    
+    
+    @http.route(['/my/gpcandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
+    def UpdateFeesGP(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        fees_paid = data['fees_paid']
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return json.dumps({"status":"success"})
+
+    @http.route(['/my/ccmccandidate/updatefees2'], method=["POST", "GET"], type="json", auth="user")
+    def UpdateFeesccmc(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        fees_paid = data['fees_paid']
+        
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'fees_paid':fees_paid})
+        
+        return json.dumps({"status":"success"})
+    
+    
+    
+    @http.route(['/my/gpcandidate/attendance_compliance_1'], method=["POST", "GET"], type="json", auth="user")
+    def GPAttendanceCompliance1(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_1 = data['attendance_compliance_1']
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        # import wdb; wdb.set_trace();
+        if attendance_compliance_1 == 'yes':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 ,'attendance_compliance_2':'na' })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id, 'attendance_compliance_1':attendance_compliance_1 })
+        elif attendance_compliance_1 == 'no':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 , 'attendance_compliance_2':'no'  })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
+        
+        
+    
+    
+    @http.route(['/my/gpcandidate/attendance_compliance_2'], method=["POST", "GET"], type="json", auth="user")
+    def GPAttendanceCompliance2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_2 = data['attendance_compliance_2']
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'attendance_compliance_2':attendance_compliance_2})
+        candidate._check_attendance_criteria()
+        
+        return json.dumps({"status":"success"})
+    
+    @http.route(['/my/ccmccandidate/attendance_compliance_1'], method=["POST", "GET"], type="json", auth="user")
+    def CCMCAttendanceCompliance1(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_1 = data['attendance_compliance_1']
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        
+        
+        if attendance_compliance_1 == 'yes':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 ,'attendance_compliance_2':'na' })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id, 'attendance_compliance_1':attendance_compliance_1 })
+        elif attendance_compliance_1 == 'no':
+            candidate.write({'attendance_compliance_1':attendance_compliance_1 , 'attendance_compliance_2':'no'  })
+            candidate._check_attendance_criteria()
+            return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
+    
+    @http.route(['/my/ccmccandidate/attendance_compliance_2'], method=["POST", "GET"], type="json", auth="user")
+    def CCMCAttendanceCompliance2(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        candidate_id = data['candidate_id']
+        attendance_compliance_2 = data['attendance_compliance_2']
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        
+        
+        candidate.write({'attendance_compliance_2':attendance_compliance_2})
+        candidate._check_attendance_criteria()
+        
+        return json.dumps({"status":"success"})
 
 
     @http.route(['/my/gpcandidate/addattendance'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -1371,6 +1619,13 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'attendance_compliance_1':attendance1})
         candidate.write({'attendance_compliance_2':attendance2})
 
+        request.env.cr.commit()
+        candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
 
@@ -1711,6 +1966,8 @@ class InstitutePortal(CustomerPortal):
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
+ 
+ 
     
 
     @http.route(['/my/gpcandidates/download_gp_certificate/<int:candidate_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -1788,20 +2045,20 @@ class InstitutePortal(CustomerPortal):
         unlocked = workbook.add_format({'locked':False})
         candidate_worksheet.set_column('A:XDF', None, unlocked)
 
-        candidate_worksheet.set_column('A:A',15,unlocked)
-        candidate_worksheet.set_column('B:B',30,unlocked)
-        candidate_worksheet.set_column('D:D',30,unlocked)
-        candidate_worksheet.set_column('E:E',30,unlocked)
-        candidate_worksheet.set_column('F:F',20,unlocked)
-        candidate_worksheet.set_column('G:G',15,unlocked)
-        candidate_worksheet.set_column('H:H',10,unlocked)
-        candidate_worksheet.set_column('I:I',20,unlocked)
-        candidate_worksheet.set_column('J:J',20,unlocked)
-        candidate_worksheet.set_column('K:K',20,unlocked)
+        candidate_worksheet.set_column('A:A',15,unlocked) #indos
+        candidate_worksheet.set_column('B:B',30,unlocked) #name 
+        candidate_worksheet.set_column('C:C',15,unlocked) #dob
+        candidate_worksheet.set_column('D:D',35,unlocked) #line 1
+        candidate_worksheet.set_column('E:E',35,unlocked) #line2
+        candidate_worksheet.set_column('F:F',20,unlocked) #city
+        candidate_worksheet.set_column('G:G',10,unlocked) #state
+        candidate_worksheet.set_column('H:H',15,unlocked) #pin
+        candidate_worksheet.set_column('I:I',20,unlocked) #mobile 
+        candidate_worksheet.set_column('J:J',20,unlocked) #email
+        candidate_worksheet.set_column('K:K',10,unlocked)
         candidate_worksheet.set_column('L:L',10,unlocked)
         candidate_worksheet.set_column('M:M',10,unlocked)
-        candidate_worksheet.set_column('N:N',10,unlocked)
-        candidate_worksheet.set_column('O:O',10,unlocked)
+
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
@@ -1819,7 +2076,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
+        header = ['INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
 
@@ -1839,7 +2096,7 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
                                                 'source': dropdown_values })
         
-        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list',
+        candidate_worksheet.data_validation('G2:G1048576', {'validate': 'list',
                                         'source': state_values })
         
 
@@ -1898,7 +2155,141 @@ class InstitutePortal(CustomerPortal):
         # candidate_worksheet.protect()
         # candidate_worksheet.write(1, None, None, {'locked': False})
         # candidate_worksheet.set_row(0, None, None)
+        instruction_worksheet = workbook.add_worksheet("Instructions")
 
+        instruction_worksheet.set_column('A:P',20,unlocked)
+
+        
+        # instruction_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
+        # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
+
+        # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
+
+        instruction_worksheet.write_comment('M2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['SR No','INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        for col, value in enumerate(header):
+            instruction_worksheet.write(0, col, value, header_format)
+
+        # Set date format for DOB column
+        instruction_worksheet.set_column('C:C', 20, date_format)
+
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
+        mandatory_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'red',
+            'text_wrap': True
+        })
+
+        instruction_worksheet.write('A3', '1) Description')
+        instruction_worksheet.write('A4', '2) Format')
+        instruction_worksheet.write('A5', '3) Mandatory')
+
+        instruction_worksheet.write('B2', '23GM1234')
+        instruction_worksheet.write('B3', "This field contains the student's Indos number to be used as the student's login in the future", cell_format)
+        instruction_worksheet.write('B4', "The format should be adhered to; wrong Indos or duplicate Indos numbers should be avoided at all costs", cell_format)
+        instruction_worksheet.write('B5', "Mandatory Field", mandatory_format)
+
+        instruction_worksheet.write('C2', 'Lokesh Dalvi')
+        instruction_worksheet.write('C3', 'Name As per Indos Number', cell_format)
+        instruction_worksheet.write('C4', 'The format of the name to be used should be as needed in certificates and future records', cell_format)
+        instruction_worksheet.write('C5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('D2', '14-Apr-02')
+        instruction_worksheet.write('D3', 'This is the date of birth field for students; it should be as per records', cell_format)
+        instruction_worksheet.write('D4', 'The date format to be followed strictly is DD-MMM-YY; do not use "/" or any other special character except as per the format', cell_format)
+        instruction_worksheet.write('D5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('E2', 'Street1')
+        instruction_worksheet.write('E3', 'This is address line 1')
+        instruction_worksheet.write('E4', 'No format is needed; it can be blank as well', cell_format)
+        instruction_worksheet.write('E5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('F2', 'Street2')
+        instruction_worksheet.write('F3', 'This is address line 2')
+        instruction_worksheet.write('F4', 'No format is needed; it can be blank as well', cell_format)
+        instruction_worksheet.write('F5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('G2', 'City')
+        instruction_worksheet.write('G3', 'City name as per address', cell_format)
+        instruction_worksheet.write('G4', 'No format')
+        instruction_worksheet.write('G5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('H2', 'MH')
+        instruction_worksheet.write('H3', 'This field is the state code to be selected from dropdown only', cell_format)
+        instruction_worksheet.write('H4', 'Use only the drop-downs to select the state code; please do not enter data manually in this field. Refer to the worksheet "State" for the list', cell_format)
+        instruction_worksheet.write('H5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('I2', 123456)
+        instruction_worksheet.write('I3', 'This field is the PIN code of the candidate\'s address', cell_format)
+        instruction_worksheet.write('I4', 'The PIN code should be exactly 6 digits; only numbers are accepted', cell_format)
+        instruction_worksheet.write('I5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('J2', 1234567890)
+        instruction_worksheet.write('J3', 'This field is the mobile number of the candidate', cell_format)
+        instruction_worksheet.write('J4', 'Only numbers accepted; should be 10 digits', cell_format)
+        instruction_worksheet.write('J5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('K2', 'abc@gmail.com')
+        instruction_worksheet.write('K3', 'This field is the email ID of the candidate', cell_format)
+        instruction_worksheet.write('K4', 'Must contain a "@" and ".com"', cell_format)
+        instruction_worksheet.write('K5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('L2', 61)
+        instruction_worksheet.write('L3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('L4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
+        instruction_worksheet.write('L5', 'Mandatory Field', mandatory_format)
+
+        instruction_worksheet.write('M2', 61)
+        instruction_worksheet.write('M3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('M4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
+        instruction_worksheet.write('M5', 'Not mandatory but advisable to have', cell_format)
+
+        instruction_worksheet.write('N2', 61)
+        instruction_worksheet.write('N3', 'Enter marks or grades')
+        instruction_worksheet.write('N4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
+        instruction_worksheet.write('N5', 'Not mandatory but advisable to have', cell_format)
+
+        # Instruction Description
+        merge_format = workbook.add_format({
+                                        'bold': True,
+                                        'align': 'center',
+                                        'valign': 'vcenter',
+                                        'font_size': 15,
+                                        'font_color': 'black',
+                                    })
+
+        instruction_worksheet.merge_range("A13:B13", 'General Instructions:', merge_format)
+        instruction_worksheet.write('A14', 1)
+        instruction_worksheet.write('B14', 'Download this template and use the same to fill data', cell_format)
+        instruction_worksheet.write('A15', 2)
+        instruction_worksheet.write('B15', 'Do not upload your own Excel file', cell_format)
+        instruction_worksheet.write('A16', 3)
+        instruction_worksheet.write('B16', 'Data will be captured from Sheet 1 (Candidates)', cell_format)
+        instruction_worksheet.write('A17', 4)
+        instruction_worksheet.write('B17', 'Do not change the name of the sheet', cell_format)
+        instruction_worksheet.write('A18', 5)
+        instruction_worksheet.write('B18', 'If you are copying and pasting data from some other Excel, please ensure the format of this template is followed', mandatory_format)
+        instruction_worksheet.write('A19', 6)
+        instruction_worksheet.write('B19', 'No rows or columns to be deleted or shifted', mandatory_format)
+
+        instruction_worksheet.protect()
+        
 
         workbook.close()
 
@@ -1933,20 +2324,19 @@ class InstitutePortal(CustomerPortal):
         unlocked = workbook.add_format({'locked':False})
         candidate_worksheet.set_column('A:XDF', None, unlocked)
         
-        candidate_worksheet.set_column('A:A',15,unlocked)
-        candidate_worksheet.set_column('B:B',30,unlocked)
-        candidate_worksheet.set_column('D:D',30,unlocked)
-        candidate_worksheet.set_column('E:E',30,unlocked)
-        candidate_worksheet.set_column('F:F',20,unlocked)
-        candidate_worksheet.set_column('G:G',15,unlocked)
-        candidate_worksheet.set_column('H:H',10,unlocked)
-        candidate_worksheet.set_column('I:I',20,unlocked)
-        candidate_worksheet.set_column('J:J',20,unlocked)
-        candidate_worksheet.set_column('K:K',20,unlocked)
+        candidate_worksheet.set_column('A:A',15,unlocked) #indos
+        candidate_worksheet.set_column('B:B',30,unlocked) #name 
+        candidate_worksheet.set_column('C:C',15,unlocked) #dob
+        candidate_worksheet.set_column('D:D',35,unlocked) #line 1
+        candidate_worksheet.set_column('E:E',35,unlocked) #line2
+        candidate_worksheet.set_column('F:F',20,unlocked) #city
+        candidate_worksheet.set_column('G:G',10,unlocked) #state
+        candidate_worksheet.set_column('H:H',15,unlocked) #pin
+        candidate_worksheet.set_column('I:I',20,unlocked) #mobile 
+        candidate_worksheet.set_column('J:J',20,unlocked) #email
+        candidate_worksheet.set_column('K:K',10,unlocked)
         candidate_worksheet.set_column('L:L',10,unlocked)
         candidate_worksheet.set_column('M:M',10,unlocked)
-        candidate_worksheet.set_column('N:N',10,unlocked)
-        candidate_worksheet.set_column('O:O',10,unlocked)
         
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -1954,7 +2344,7 @@ class InstitutePortal(CustomerPortal):
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
         # bold_format = workbook.add_format({'bold': True, 'border': 1,'font_size': 16})
-        candidate_worksheet.write_comment('L2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
+        candidate_worksheet.write_comment('K2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
 
         header_format = workbook.add_format({
             'bold': True,
@@ -1965,7 +2355,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
+        header = ['INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
@@ -1988,7 +2378,7 @@ class InstitutePortal(CustomerPortal):
                                                 'source': dropdown_values })
         
 
-        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        candidate_worksheet.data_validation('G2:G1048576', {'validate': 'list', 'source': state_values})
         
 
 
@@ -2068,7 +2458,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['Sr No','INDOS NO', 'NAME', 'DOB', 'STREET', 'STREET2', 'CITY', 'ZIP', 'STATE', 'PHONE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI', 'SC/ST/OBC']
+        header = ['SR No','INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -2120,50 +2510,40 @@ class InstitutePortal(CustomerPortal):
         instruction_worksheet.write('G4', 'No format')
         instruction_worksheet.write('G5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('H2', 123456)
-        instruction_worksheet.write('H3', 'This field is the PIN code of the candidate\'s address', cell_format)
-        instruction_worksheet.write('H4', 'The PIN code should be exactly 6 digits; only numbers are accepted', cell_format)
+        instruction_worksheet.write('H2', 'MH')
+        instruction_worksheet.write('H3', 'This field is the state code to be selected from dropdown only', cell_format)
+        instruction_worksheet.write('H4', 'Use only the drop-downs to select the state code; please do not enter data manually in this field. Refer to the worksheet "State" for the list', cell_format)
         instruction_worksheet.write('H5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('I2', 'MH')
-        instruction_worksheet.write('I3', 'This field is the state code to be selected from dropdown only', cell_format)
-        instruction_worksheet.write('I4', 'Use only the drop-downs to select the state code; please do not enter data manually in this field. Refer to the worksheet "State" for the list', cell_format)
+        instruction_worksheet.write('I2', 123456)
+        instruction_worksheet.write('I3', 'This field is the PIN code of the candidate\'s address', cell_format)
+        instruction_worksheet.write('I4', 'The PIN code should be exactly 6 digits; only numbers are accepted', cell_format)
         instruction_worksheet.write('I5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('J2', 12345678)
-        instruction_worksheet.write('J3', 'This field is the phone number of the candidate', cell_format)
-        instruction_worksheet.write('J4', 'Only numbers accepted; should be 8 digits', cell_format)
+        instruction_worksheet.write('J2', 1234567890)
+        instruction_worksheet.write('J3', 'This field is the mobile number of the candidate', cell_format)
+        instruction_worksheet.write('J4', 'Only numbers accepted; should be 10 digits', cell_format)
         instruction_worksheet.write('J5', 'Not mandatory but advisable to have', cell_format)
 
-        instruction_worksheet.write('K2', 1234567890)
-        instruction_worksheet.write('K3', 'This field is the mobile number of the candidate', cell_format)
-        instruction_worksheet.write('K4', 'Only numbers accepted; should be 10 digits', cell_format)
-        instruction_worksheet.write('K5', 'Not mandatory but advisable to have', cell_format)
+        instruction_worksheet.write('K2', 'abc@gmail.com')
+        instruction_worksheet.write('K3', 'This field is the email ID of the candidate', cell_format)
+        instruction_worksheet.write('K4', 'Must contain a "@" and ".com"', cell_format)
+        instruction_worksheet.write('K5', 'Mandatory Field', mandatory_format)
 
-        instruction_worksheet.write('L2', 'abc@gmail.com')
-        instruction_worksheet.write('L3', 'This field is the email ID of the candidate', cell_format)
-        instruction_worksheet.write('L4', 'Must contain a "@" and ".com"', cell_format)
+        instruction_worksheet.write('L2', 61)
+        instruction_worksheet.write('L3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('L4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
         instruction_worksheet.write('L5', 'Mandatory Field', mandatory_format)
 
         instruction_worksheet.write('M2', 61)
         instruction_worksheet.write('M3', 'This field should contain marks or grade of English subject', cell_format)
         instruction_worksheet.write('M4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
-        instruction_worksheet.write('M5', 'Mandatory Field', mandatory_format)
+        instruction_worksheet.write('M5', 'Not mandatory but advisable to have', cell_format)
 
         instruction_worksheet.write('N2', 61)
-        instruction_worksheet.write('N3', 'This field should contain marks or grade of English subject', cell_format)
+        instruction_worksheet.write('N3', 'Enter marks or grades')
         instruction_worksheet.write('N4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
         instruction_worksheet.write('N5', 'Not mandatory but advisable to have', cell_format)
-
-        instruction_worksheet.write('O2', 61)
-        instruction_worksheet.write('O3', 'Enter marks or grades')
-        instruction_worksheet.write('O4', 'Only numbers and grades (a, a+, b, b+, c, c+, d, d+) are accepted ,symbols like "%" are not allowed', cell_format)
-        instruction_worksheet.write('O5', 'Not mandatory but advisable to have', cell_format)
-
-        instruction_worksheet.write('P2', 'Yes')
-        instruction_worksheet.write('P3', 'This field is to mention if the candidate is from SC/ST/OBC', cell_format)
-        instruction_worksheet.write('P4', 'Use the dropdown to select yes or no; do not enter anything else in this field', cell_format)
-        instruction_worksheet.write('P5', 'Mandatory Field', mandatory_format)
 
         # Instruction Description
         merge_format = workbook.add_format({
@@ -2214,6 +2594,8 @@ class InstitutePortal(CustomerPortal):
             return phone_number.split('.')[0]  # Split the phone number by dot and return the first part
         else:
             return phone_number  # If there's 
+        
+    
     
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
@@ -2247,8 +2629,8 @@ class InstitutePortal(CustomerPortal):
                 street2 = row[4]  
                 dist_city = row[5]  # Assuming Dist./City is the fifth column
 
-                pin_code = int(row[6])  # Assuming Pin code is the seventh column
-                state_value = row[7]  # Assuming State (short) is the sixth column
+                state_value = row[6]  # Assuming State (short) is the sixth column
+                pin_code = int(row[7])  # Assuming Pin code is the seventh column
 
                     
 
@@ -2314,21 +2696,21 @@ class InstitutePortal(CustomerPortal):
 
                 # phone = str((row[8]))
                 # print("Phone ",str(row[8] ))
-                if row[8]:
-                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
-                else:
-                    phone = ""
+                # if row[8]:
+                #     phone = self.remove_after_dot_in_phone_number(str(row[8]))
+                # else:
+                #     phone = ""
                 
-                if row[9]:
+                if row[8]:
                     mobile = self.remove_after_dot_in_phone_number(str(row[9]))
                 else:
                     mobile = ""
 
                 # mobile = str(row[9]) 
-                email = row[10] 
+                email = row[9] 
 
                 
-                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+                xth_std_eng = row[10]  # Assuming %  Xth Std in Eng. is the tenth column
                 
                 
                 if type(xth_std_eng) in [int, float]:
@@ -2357,7 +2739,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+                twelfth_std_eng = row[11]  # Assuming %12th Std in Eng. is the eleventh column
                 if type(twelfth_std_eng) in [int, float]:
                     data_twelfth_std_eng = float(twelfth_std_eng)
                 elif type(twelfth_std_eng) == str:
@@ -2384,7 +2766,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                iti = row[13] # Assuming %ITI is the twelfth column
+                iti = row[12] # Assuming %ITI is the twelfth column
                 if type(iti) in [int, float]:
                     data_iti = float(iti)
                 elif type(iti) == str:
@@ -2411,7 +2793,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
                 
-                candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+                # candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
                 new_candidate = request.env['gp.candidate'].sudo().create({
                     'name': full_name,
@@ -2423,7 +2805,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,
-                    'phone': phone,
+                    # 'phone': phone,
                     'mobile': mobile,
                     'email': email,
 
@@ -2433,7 +2815,7 @@ class InstitutePortal(CustomerPortal):
                     'tenth_percent': data_xth_std_eng,
                     'twelve_percent': data_twelfth_std_eng,
                     'iti_percent': data_iti,
-                    'sc_st': candidate_st
+                    # 'sc_st': candidate_st
                 })
             except:
                 error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
@@ -2506,8 +2888,8 @@ class InstitutePortal(CustomerPortal):
                 street1 = row[3]
                 street2 = row[4]  
                 dist_city = row[5]  # Assuming Dist./City is the fifth column
-                pin_code = int(row[6])  # Assuming Pin code is the seventh column
-                state_value = row[7]  # Assuming State (short) is the sixth column
+                state_value = row[6]  # Assuming State (short) is the sixth column
+                pin_code = int(row[7])  # Assuming Pin code is the seventh column
 
                 state_values = {
                         'MH': 'Maharashtra',
@@ -2555,18 +2937,13 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
                 if row[8]:
-                    phone = self.remove_after_dot_in_phone_number(str(row[8]))
-                else:
-                    phone = ""
-                
-                if row[9]:
                     mobile = self.remove_after_dot_in_phone_number(str(row[9]))
                 else:
                     mobile = ""
                     
-                email = row[10] 
+                email = row[9] 
 
-                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
+                xth_std_eng = row[10]  # Assuming %  Xth Std in Eng. is the tenth column
                 
                 if type(xth_std_eng) in [int, float]:
                     data_xth_std_eng = float(xth_std_eng)
@@ -2594,7 +2971,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
+                twelfth_std_eng = row[11]  # Assuming %12th Std in Eng. is the eleventh column
                 if type(twelfth_std_eng) in [int, float]:
                     data_twelfth_std_eng = float(twelfth_std_eng)
                 elif type(twelfth_std_eng) == str:
@@ -2621,7 +2998,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                iti = row[13] # Assuming %ITI is the twelfth column
+                iti = row[12] # Assuming %ITI is the twelfth column
                 if type(iti) in [int, float]:
                     data_iti = float(iti)
                 elif type(iti) == str:
@@ -2648,7 +3025,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+                # candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
 
                 new_candidate = request.env['ccmc.candidate'].sudo().create({
                     'name': full_name,
@@ -2660,7 +3037,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,
-                    'phone': phone,
+                    # 'phone': phone,
                     'mobile': mobile,
                     'email': email,
 
@@ -2670,7 +3047,7 @@ class InstitutePortal(CustomerPortal):
                     'tenth_percent': data_xth_std_eng,
                     'twelve_percent': data_twelfth_std_eng,
                     'iti_percent': data_iti,
-                    'sc_st': candidate_st
+                    # 'sc_st': candidate_st
                 })
                 
             except:
@@ -2683,34 +3060,38 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
 
-    @http.route(['/my/gpcandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacityCard(self,batch_id,institute_id,**kw ):
+    @http.route(['/my/gp/download_dgs_capacity/<int:cousre_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacityCard(self,cousre_id,institute_id,**kw ):
+        # import wdb; wdb.set_trace()
         
-        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        # batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        
+        cousre = request.env['course.master'].sudo().search([('id','=',cousre_id)])
         institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
         
         # import wdb; wdb.set_trace()
         
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
-            file_name = institute.name + "-" + batch.batch_name + "-" + "DGS Document" + ".pdf"
+        # institute.courses[0].course.name
+        if institute.courses[0].dgs_document:
+            pdf_data = base64.b64decode(institute.courses[0].dgs_document)  # Decoding file data
+            file_name = institute.courses[0].dgs_document_name + ".pdf"
 
             headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
             return request.make_response(pdf_data, headers)
         else:
             return request.not_found()
    
-    @http.route(['/my/ccmccandidates/download_dgs_capacity/<int:batch_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
-    def DownloadsGgsCapacity(self,batch_id,institute_id,**kw ):
+    @http.route(['/my/ccmc/download_dgs_capacity/<int:cousre_id>/<int:institute_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadsGgsCapacity(self,cousre_id,institute_id,**kw ):
         
-        batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
+        cousre = request.env['course.master'].sudo().search([('id','=',cousre_id)])
         institute = request.env['bes.institute'].sudo().search([('id','=',institute_id)])
-        
+         
         # import wdb; wdb.set_trace()
-        
-        if batch.dgs_document:
-            pdf_data = base64.b64decode(batch.dgs_document)  # Decoding file data
-            file_name = institute.name + "-" + batch.ccmc_batch_name + "-" + "DGS Document" + ".pdf"
+        # institute.courses[0].course.name
+        if institute.courses[1].dgs_document:
+            pdf_data = base64.b64decode(institute.courses[1].dgs_document)  # Decoding file data
+            file_name = institute.courses[1].dgs_document_name + ".pdf"
 
             headers = [('Content-Type', 'application/octet-stream'), ('Content-Disposition', f'attachment; filename="{file_name}"')]
             return request.make_response(pdf_data, headers)
@@ -2753,7 +3134,7 @@ class InstitutePortal(CustomerPortal):
     def DeleteFaculty(self, **kw):
 
         user_id = request.env.user.id
-        # import wdb; wdb.set_trace();
+        # import wdb; wdb.set_trace(); 
         
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',kw.get("candidate_batch_id"))])
         candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('candidate_id'))]).user_id
@@ -2929,3 +3310,54 @@ class InstitutePortal(CustomerPortal):
         excel_buffer.close()
 
         return response
+
+
+
+    # method=["POST", "GET"]
+
+
+    # @http.route(['/my/update/inscap'], method=["POST", "GET"] ,type="http", auth="user", website=True)
+    # def UpdateInstituteCapacity(self,**kw ):
+    #     import wdb; wdb.set_trace();
+    #     request.redirect('my/editinstitute')
+
+
+    @http.route(['/my/update/inscap'],method=["POST"], type="http", auth="user", website=True)
+    def UpdateInstituteCapacits(self, **kw):
+        batch_per_year = kw.get('batch_per_year')
+        candidate_per_batch = kw.get('candidate_per_batch')
+        file_content = kw.get("approvaldocument").read()
+
+        filename = kw.get('approvaldocument').filename
+        
+        # approvaldocument = kw.get('approvaldocument')
+        course_id = kw.get('course_id')
+        # import wdb; wdb.set_trace();
+        course = request.env['institute.courses'].sudo().search([('id','=',course_id)])
+        course.write({
+            'batcher_per_year':batch_per_year,
+            'intake_capacity':candidate_per_batch,
+            'batcher_per_year':batch_per_year,
+            'dgs_document_name':filename,
+            "dgs_document":base64.b64encode(file_content)
+        })
+
+        return request.redirect('/my/editinstitute')
+    
+
+    @http.route(['/my/download/<int:course_id>'], type='http', auth="user", website=True)
+    def download_dgs_document(self,course_id):
+        # import wdb; wdb.set_trace();
+        course = request.env['institute.courses'].sudo().browse(course_id)
+        if course:
+            # Retrieve the file content
+            content = base64.b64decode(course.dgs_document_content)
+            if content:
+                # Return the file as attachment
+                headers = [
+                    ('Content-Type', 'application/octet-stream'),
+                    ('Content-Disposition', 'attachment; filename="%s"' % course.dgs_document)
+                ]
+                return request.make_response(content, headers=headers)
+        return request.not_found()
+        

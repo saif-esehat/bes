@@ -43,22 +43,22 @@
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
-                            <span style="font-size:20px;">Attemp Nummber:</span>
+                            <span style="font-size:20px;">Attempt Number:</span>
                             <span style="font-size:20px;"><t t-esc="o.attempt_number"/></span>  
                         </div>
                     </div>
 
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-12">
-                            <span style="font-size:20px;">Name as in INDOS:</span>
+                            <span style="font-size:20px;">Name:</span>
                             <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.name"/></span>  
                         </div>
                     </div>
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
-                            <span style="font-size:20px;">DOB as in INDOS: </span>
-                            <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.dob"/></span>  
+                            <span style="font-size:20px;">DOB: </span>
+                            <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.dob.strftime('%d-%b-%Y')"/></span>  
                         </div>
                     </div>
                     
@@ -147,7 +147,9 @@
                         </div>
                     </div>
                 </div>
+                <p style="page-break-before:always;"> </p>
             </t>
+
         </t>
     </template>
 </odoo>
