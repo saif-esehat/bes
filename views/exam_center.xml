@@ -70,6 +70,8 @@
                     </searchpanel>
                     <group expand="0" string="Group By">
                         <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                        <filter name="group_by_registered_institute" string="Examination Center" context="{'group_by':'registered_institute'}" />
+
                     </group>
                     <field name="gp_candidate"/>
                     <field name="candidate_code"/>
