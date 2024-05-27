@@ -64,7 +64,7 @@
                         
                         <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
-                                <span style="font-size:20px;">INDOs No: </span>
+                                <span style="font-size:20px;">INDoS No: </span>
                                 <span style="font-size:20px;"><t t-esc="o.gp_candidate.indos_no"/></span>  
                             </div>
                         </div>
