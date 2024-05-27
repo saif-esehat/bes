@@ -512,7 +512,7 @@
                 </div>
 
            
-            <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).prac_oral_id.exam_type"/>
+            <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
 
             <t t-if="exam_type == 'practical_oral'">
 
