@@ -896,16 +896,20 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
             
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
+            mek_survey_qb_input.generate_unique_string()
             mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
             
             gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            gsk_survey_qb_input.generate_unique_string()
             gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
+            
 
 
             mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
             gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
             candidate.write({'batch_exam_registered':True})
             gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+        
         self.batch_id.write({"state":'5-exam_scheduled',"mek_survey_qb":mek_survey_qb.id,"gsk_survey_qb":gsk_survey_qb.id})
 
 class CCMCBatchesRegisterExamWizard(models.TransientModel):
