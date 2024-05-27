@@ -91,8 +91,13 @@
                         </t> -->
                         <!-- <t t-if="o.qr_code"> -->
                             <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
+<<<<<<< HEAD
                         <!-- </t> -->
                         </div>
+=======
+                        </t>
+                    </div>
+>>>>>>> ee15e2d26abac03f124d45e815a6c06f8c1f9180
                         
                     <div class="container" style="text-align:center;">
                         <div class="row">

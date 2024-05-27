@@ -40,7 +40,8 @@ class GPCandidate(models.Model):
     iti_percent = fields.Integer("% ITI",tracking=True)
     sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
-    
+    exam_region = fields.Many2one("exam.center",string="Exam Region",store=True,related="institute_id.exam_center",tracking=True)
+
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
@@ -608,7 +609,7 @@ class CCMCCandidate(models.Model):
     ],string="Qualification", default='tenth',tracking=True)
     
     batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
-
+    exam_region = fields.Many2one("exam.center",string="Exam Region",store=True,related="institute_id.exam_center",tracking=True)
     
     candidate_attendance_record = fields.Integer("Candidate Attendance Record",tracking=True)
     
