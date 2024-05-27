@@ -73,7 +73,7 @@ class CustomPaymentRegister(models.TransientModel):
             # batch.confirm_batch(gp_candidates)
             
             self.env['batches.gp.register.exam.wizard'].sudo().register(batch.id,gp_candidates)
-            batch.confirm_batch(gp_candidates)
+            # batch.confirm_batch(gp_candidates)
             batch.write({'state':'4-invoiced'})
             batch.write({'state':'5-exam_scheduled'})
             
