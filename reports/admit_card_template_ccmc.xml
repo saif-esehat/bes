@@ -64,7 +64,7 @@
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
-                            <span style="font-size:20px;">INDOs No: </span>
+                            <span style="font-size:20px;">INDoS No: </span>
                             <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.indos_no"/></span>  
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
 
-                <div class="container" style="position:relative; margin:0;">
+                <div class="container" style="position:relative; margin-top:150px;">
                     <t t-if="o.qr_code">
                         <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                     </t>

@@ -66,21 +66,21 @@ class ExamCenter(models.Model):
         }
         return action
    
-    # def candidates(self):
-    #     # import wdb; wdb.set_trace();
+    def ccmccandidates(self):
+        # import wdb; wdb.set_trace();
         
-    #     view_id = self.env.ref('bes.exam_center_registered_candidate_tree').id
-    #     search_id = self.env.ref('bes.exam_center_gp_exam_schedule_search').id
-    #     # search_view exam_center_gp_exam_schedule_search
+        view_id = self.env.ref('bes.exam_center_registered_candidate_tree').id
+        search_id = self.env.ref('bes.exam_center_gp_exam_schedule_search').id
+        # search_view exam_center_gp_exam_schedule_search
         
-    #     action = {
-    #         'name': 'Exam Center Registered Candidates',
-    #         'domain': [('exam_region', '=', self.id)],
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'gp.exam.schedule',
-    #         'view_mode': 'tree',
-    #         'view_id': view_id,  # Optional if view is not specifically needed
-    #         'target': 'current',  # Opens in the current window
-    #         'search_view_id': search_id,
-    #     }
-    #     return action
+        action = {
+            'name': 'Exam Center Registered Candidates',
+            'domain': [('exam_region', '=', self.id)],
+            'type': 'ir.actions.act_window',
+            'res_model': 'ccmc.exam.schedule',
+            'view_mode': 'tree',
+            'view_id': view_id,  # Optional if view is not specifically needed
+            'target': 'current',  # Opens in the current window
+            'search_view_id': search_id,
+        }
+        return action

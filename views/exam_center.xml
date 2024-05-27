@@ -20,8 +20,9 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="examiners" string="Examiner" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
-                            <button name="assignment" string="Exam Assignments" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
-                            <button name="candidates" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+                            <!-- <button name="assignment" string="Exam Assignments" type="object" class="oe_stat_button" icon="fa-align-justify"></button> -->
+                            <!-- <button name="candidates" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+                            <button name="ccmccandidates" string="Candidates" type="object" class="oe_stat_button" icon="fa-align-justify"></button> -->
                         </div>
                         <group style="width:100%;">
                             <h1>
@@ -69,6 +70,8 @@
                     </searchpanel>
                     <group expand="0" string="Group By">
                         <filter name="group_by_exam_region" string="Exam Region" context="{'group_by':'exam_region'}" />
+                        <filter name="group_by_registered_institute" string="Examination Center" context="{'group_by':'registered_institute'}" />
+
                     </group>
                     <field name="gp_candidate"/>
                     <field name="candidate_code"/>

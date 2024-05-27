@@ -2710,6 +2710,9 @@
                         <!-- <th>Attendance</th> -->
                         <th>Ship Visis</th>
                         <th>STCW</th>
+                        <th>View / Update</th>
+                        <th>Admit Card</th>
+                        <th>Certificate</th>
                     </tr>
                 </thead>
                 <tbody>

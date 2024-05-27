@@ -1568,7 +1568,7 @@ class ExamOralPracticalExaminers(models.Model):
     _name = 'exam.type.oral.practical.examiners'
     _inherit = ['mail.thread','mail.activity.mixin']
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False,tracking=True)
-    exam_region = fields.Many2one('exam.center', 'Exam Region',related='prac_oral_id.exam_region',tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',tracking=True)
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)
@@ -1898,7 +1898,7 @@ class GPExam(models.Model):
     reissued = fields.Boolean("Reissued",tracking=True)
     reissued_date = fields.Date("Reissued Date",tracking=True)
 
-    url = fields.Char("URL",compute="_compute_url",tracking=True)
+    url = fields.Char("URL",compute="_compute_url",store=True,tracking=True)
     qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True,tracking=True)
     certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url",tracking=True)
     
@@ -1955,14 +1955,14 @@ class GPExam(models.Model):
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Image",compute="_check_image",default="pending")
+    ],string="Candidate-Image",compute="_check_image",default="pending",store=True)
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Sign",compute="_check_sign",default="pending")
+    ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
 
-    @api.depends('gp_candidate')
+    @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
             
@@ -1975,7 +1975,7 @@ class GPExam(models.Model):
             else:
                 record.candidate_image_status = 'pending'
 
-    @api.depends('gp_candidate')
+    @api.depends('gp_candidate.candidate_signature')
     def _check_sign(self):
         for record in self:
             # candidate-sign
@@ -2634,7 +2634,7 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     
-    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Center',store=True)
 
     exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,tracking=True)
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
@@ -2780,14 +2780,14 @@ class CCMCExam(models.Model):
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Image",compute="_check_image",default="pending")
+    ],string="Candidate-Image",compute="_check_image",default="pending",store=True)
    
     candidate_signature_status = fields.Selection([
         ('pending', 'Pending'),
         ('done', 'Done'),
-    ],string="Candidate-Sign",compute="_check_sign",default="pending")
+    ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
 
-    @api.depends('ccmc_candidate')
+    @api.depends('ccmc_candidate.candidate_image')
     def _check_image(self):
         for record in self:
             
@@ -2800,7 +2800,7 @@ class CCMCExam(models.Model):
             else:
                 record.candidate_image_status = 'pending'
 
-    @api.depends('ccmc_candidate')
+    @api.depends('ccmc_candidate.candidate_signature')
     def _check_sign(self):
         for record in self:
             # candidate-sign
