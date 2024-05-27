@@ -1898,7 +1898,7 @@ class GPExam(models.Model):
     reissued = fields.Boolean("Reissued",tracking=True)
     reissued_date = fields.Date("Reissued Date",tracking=True)
 
-    url = fields.Char("URL",compute="_compute_url",tracking=True)
+    url = fields.Char("URL",compute="_compute_url",store=True,tracking=True)
     qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True,tracking=True)
     certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url",tracking=True)
     

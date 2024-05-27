@@ -89,9 +89,9 @@
                         <t t-if="o.gp_candidate.candidate_signature">
                             <img t-attf-src="data:image/png;base64,{{o.gp_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: -80px; right: 8px;" />
                         </t> -->
-                        <t t-if="o.qr_code">
+                        <!-- <t t-if="o.qr_code"> -->
                             <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
-                        </t>
+                        <!-- </t> -->
                         </div>
                         
                     <div class="container" style="text-align:center;">
