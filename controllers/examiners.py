@@ -1199,6 +1199,10 @@ class ExaminerPortal(CustomerPortal):
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments.write({
+            'marksheet_uploaded' : True 
+        })
+
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             
@@ -1318,6 +1322,9 @@ class ExaminerPortal(CustomerPortal):
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments.write({
+            'marksheet_uploaded' : True 
+        })
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             

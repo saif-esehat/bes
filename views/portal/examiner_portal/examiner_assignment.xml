@@ -209,18 +209,18 @@
                                 <t t-out="assignment.institute_id.name" />
                             </td>
                             <td class="text-left">
-                                <t t-if="assignment.prac_oral_id.exam_type == 'practical_oral'">
+                                <t t-if="assignment.exam_type == 'practical_oral'">
                                     Practical/Oral
                                 </t>
-                                <t t-else="assignment.prac_oral_id.exam_type == 'online'">
+                                <t t-else="assignment.exam_type == 'online'">
                                     Online
                                 </t>
                             </td>
                             <td class="text-center">
-                                <t t-if="assignment.prac_oral_id.exam_type == 'practical_oral'">
+                                <t t-if="assignment.exam_type == 'practical_oral'">
                                     <t t-out="assignment.exam_date" />
                                 </t>
-                                <t t-else="assignment.prac_oral_id.exam_type == 'online'">
+                                <t t-else="assignment.exam_type == 'online'">
                                     <t t-out="assignment.online_from_date" /> to <t t-out="assignment.online_to_date" />
                                 </t>
                             </td>
@@ -518,12 +518,16 @@
 
                 <t t-if="examiner_subject == 'GSK'">
                     <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px; " class="btn btn-primary btn_cta">Download GSK Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                    <t t-if="not assignments.marksheet_uploaded">
+                        <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                    </t>
                 </t>
                 
                 <t t-if="examiner_subject == 'MEK'">
                     <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                    <t t-if="not assignments.marksheet_uploaded">
+                        <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                    </t>
                 </t>
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'"> -->
@@ -550,10 +554,10 @@
                     <tr >
                         <th class="text-left">Candidate Name</th>
                         <!-- <th class="text-left">Candidate Code</th> -->
-                        <th class="text-left">Roll No.</th>
+                        <th class="text-center">Roll No.</th>
                         <!-- <th class="text-left">Course</th> -->
-                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-left">Online Subject</th>
-                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-left">Token</th>
+                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Online Subject</th>
+                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Token</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 1, 2, 3</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 4, 5, 6</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Journal</th>
@@ -611,7 +615,7 @@
                                 <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.candidate_code" />
                             </td> -->
 
-                            <td  class="text-left">
+                            <td  class="text-center">
                                 <t t-if="examiner_subject == 'GSK'">
                                     <t t-out="marksheet.gp_marksheet.exam_id" />
                                 </t>
