@@ -513,19 +513,21 @@
 
            
             <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
+            <t t-set="marksheet_uploaded" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_uploaded"/>
+            <t t-set="marksheet_image" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_image"/>
 
             <t t-if="exam_type == 'practical_oral'">
-
+                
                 <t t-if="examiner_subject == 'GSK'">
                     <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px; " class="btn btn-primary btn_cta">Download GSK Marksheet</a>
-                    <t t-if="not assignments.marksheet_uploaded">
+                    <t t-if="not marksheet_uploaded">
                         <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
                     </t>
                 </t>
                 
                 <t t-if="examiner_subject == 'MEK'">
                     <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
-                    <t t-if="not assignments.marksheet_uploaded">
+                    <t t-if="not marksheet_uploaded">
                         <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
                     </t>
                 </t>
@@ -542,7 +544,7 @@
                     <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
                 </t>
                
-                <t t-if="not assignments.marksheet_image">
+                <t t-if="not marksheet_image">
                     <a href="" style="margin:10px;" data-toggle="modal" t-attf-marks-batch-id="{{batch_id}}" onclick="openUploadMarksheetImage(this)" data-target="#uploadMarksheetImageModal" class="btn btn-primary btn_cta">Upload Marksheet Image</a>
                 </t>
                     <a t-attf-href="/my/viewmarksheetimg/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary">View Marksheet Image</a>
