@@ -892,23 +892,23 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
-            mek_predefined_questions = mek_survey_qb._prepare_user_input_predefined_questions()
-            gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
             
-            mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
-            mek_survey_qb_input.generate_token()
-            mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
-            
-            gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
-            gsk_survey_qb_input.generate_token()
-            gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
-            
-
-
-            mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
-            gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
             candidate.write({'batch_exam_registered':True})
-            gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+            # mek_predefined_questions = mek_survey_qb._prepare_user_input_predefined_questions()
+            # gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
+            
+            # mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
+            # mek_survey_qb_input.generate_token()
+            # mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
+            
+            # gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            # gsk_survey_qb_input.generate_token()
+            # gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
+            
+            # mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
+            # gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
+            # candidate.write({'batch_exam_registered':True})
+            # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
         
         self.batch_id.write({"state":'5-exam_scheduled',"mek_survey_qb":mek_survey_qb.id,"gsk_survey_qb":gsk_survey_qb.id})
 
