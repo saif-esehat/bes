@@ -294,9 +294,9 @@
                                 <div class="col-md-6">
                                     <!-- onchange="validateClimbingMast(this)" -->
                                     <div class="form-group">
-                                        <label for="climbing_mast">Climb the mast with safe practices, Prepare and throw Heaving Line </label>
-                                        <input type="number" min="0" max="12" class="form-control" id="climbing_mast" name="climbing_mast" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.climbing_mast" required="True"/>
-                                        / 12 Marks
+                                        <label for="climbing_mast_bosun_chair">Climb the mast with safe practices, Prepare and throw Heaving Line </label>
+                                        <input type="number" min="0" max="30" class="form-control" id="climbing_mast_bosun_chair" name="climbing_mast_bosun_chair" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.climbing_mast_bosun_chair" required="True"/>
+                                        / 30 Marks
                                         <small id="marks_error" style="color: red;"></small>
                                     </div>
 
@@ -309,13 +309,13 @@
                                         /12
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="bosun_chair">Rigging Bosun's Chair and self lower and hoist</label>
                                         <input type="number" min="0" max="8" class="form-control" id="bosun_chair" name="bosun_chair" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.bosun_chair" required="True"/>
                                         /08
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rig_stage">Rig a stage for painting shipside</label>

@@ -1381,9 +1381,10 @@ class GskPracticallLine(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
     gsk_practical_exam_date = fields.Date(string="Exam Date",tracking=True)
-    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ",tracking=True)
+    climbing_mast_bosun_chair = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ,Rigging Bosun's Chair and self lower and hoist",tracking=True)
+    # bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist",tracking=True)
+
     buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders",tracking=True)
-    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist",tracking=True)
     rig_stage = fields.Integer("Rig a stage for painting shipside",tracking=True)
     rig_pilot = fields.Integer("Rig a Pilot Ladder",tracking=True)
     rig_scaffolding = fields.Integer("Rig scaffolding to work at a height",tracking=True) 

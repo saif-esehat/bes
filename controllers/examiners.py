@@ -375,9 +375,9 @@ class ExaminerPortal(CustomerPortal):
             indos = rec['indos']
 
             # Convert string values to integers
-            climbing_mast = int(rec['climbing_mast'])
+            climbing_mast_bosun_chair = int(rec['climbing_mast'])
             buoy_flags_recognition = int(rec['buoy_flags_recognition'])
-            bosun_chair = int(rec['bosun_chair'])
+            # bosun_chair = int(rec['bosun_chair'])
             rig_stage = int(rec['rig_stage'])
             rig_pilot = int(rec['rig_pilot'])
             rig_scoffolding = int(rec['rig_scoffolding'])
@@ -395,9 +395,9 @@ class ExaminerPortal(CustomerPortal):
 
             # Construct the dictionary with integer values
             vals = {
-                'climbing_mast': climbing_mast,
+                'climbing_mast_bosun_chair': climbing_mast_bosun_chair,
                 'buoy_flags_recognition': buoy_flags_recognition,
-                'bosun_chair': bosun_chair,
+                # 'bosun_chair': bosun_chair,
                 'rig_stage': rig_stage,
                 'rig_pilot': rig_pilot,
                 'rig_scaffolding': rig_scoffolding,
@@ -1183,7 +1183,7 @@ class ExaminerPortal(CustomerPortal):
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.gsk_prac:
                 candidate.gsk_prac.sudo().write({
-                    'climbing_mast':climbing_mast,
+                    'climbing_mast_bosun_chair':climbing_mast,
                     'buoy_flags_recognition':buoy_flags_recognition,
                     'bosun_chair':bosun_chair,
                     'rig_stage':rig_stage,

@@ -13,9 +13,9 @@ class GSKPractical(models.Model):
     
     exam_bes_candidate_id = fields.Many2one("exam.schedule.bes.candidate",string="Exam BES Candidate",required=True)
     marksheet_name = fields.Char("Marksheet Name",default="Practical GSK Marksheet")
-    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
+    climbing_mast_bosun_chair = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ,Rigging Bosun's Chair and self lower and hoist")
     buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders")
-    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
+    # bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
     rig_stage = fields.Integer("Rig a stage for painting shipside ")
     rig_pilot = fields.Integer("Rig a Pilot Ladder ")
     rig_scaffolding = fields.Integer("Rig scaffolding to work at a height ") 
@@ -28,13 +28,13 @@ class GSKPractical(models.Model):
     remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
     
     
-    @api.constrains('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    @api.constrains('climbing_mast_bosun_chair', 'buoy_flags_recognition', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
     def _check_max_value(self):
         for record in self:
             fields_to_check = {
-                'climbing_mast': "Climb the mast with safe practices, Prepare and throw Heaving Line",
+                'climbing_mast_bosun_chair': "Climb the mast with safe practices, Prepare and throw Heaving Line,Rigging Bosun's Chair and self lower and hoist",
                 'buoy_flags_recognition': "Recognise buyos and flags, Hoisting a Flag correctly, Steering and Helm Orders",
-                'bosun_chair': "Rigging Bosun's Chair and self lower and hoist",
+                # 'bosun_chair': "Rigging Bosun's Chair and self lower and hoist",
                 'rig_stage': "Rig a stage for painting shipside",
                 'rig_pilot': "Rig a Pilot Ladder",
                 'rig_scaffolding': "Rig scaffolding to work at a height",
@@ -45,12 +45,14 @@ class GSKPractical(models.Model):
             
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
-                if field_name == 'climbing_mast' and field_value > 12:
-                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                if field_name == 'climbing_mast_bosun_chair' and field_value > 30:
+                    raise ValidationError(f"{field_label} value cannot exceed 30.")
                 elif field_name == 'buoy_flags_recognition' and field_value > 12:
                     raise ValidationError(f"{field_label} value cannot exceed 12.")
-                elif field_name == 'bosun_chair' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
+               
+                # elif field_name == 'bosun_chair' and field_value > 8:
+                #     raise ValidationError(f"{field_label} value cannot exceed 8.")
+               
                 elif field_name == 'rig_stage' and field_value > 8:
                     raise ValidationError(f"{field_label} value cannot exceed 8.")
                 elif field_name == 'rig_pilot' and field_value > 8:
