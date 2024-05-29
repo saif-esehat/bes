@@ -1381,16 +1381,16 @@ class GskPracticallLine(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     gsk_practical_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
     gsk_practical_exam_date = fields.Date(string="Exam Date",tracking=True)
-    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ",tracking=True)
+    climbing_mast_bosun_chair= fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line,Rigging Bosun's Chair and self lower and hoist",tracking=True)
     buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders",tracking=True)
-    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist",tracking=True)
-    rig_stage = fields.Integer("Rig a stage for painting shipside",tracking=True)
-    rig_pilot = fields.Integer("Rig a Pilot Ladder",tracking=True)
-    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height",tracking=True) 
-    fast_ropes = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper",tracking=True)
+    # bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist",tracking=True)
+    rig_stage_rig_pilot_rig_scaffolding = fields.Integer("Rig a stage for painting shipside,Rig a Pilot Ladder,Rig scaffolding to work at a height",tracking=True)
+    # rig_pilot = fields.Integer("Rig a Pilot Ladder",tracking=True)
+    # rig_scaffolding = fields.Integer("Rig scaffolding to work at a height",tracking=True) 
+    fast_ropes_knots_bend_sounding_rod = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight",tracking=True)
     
-    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase",tracking=True)
-    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight",tracking=True)
+    # knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase",tracking=True)
+    # sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight",tracking=True)
     
     gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks",store=True,tracking=True)
     gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
@@ -1398,41 +1398,41 @@ class GskPracticallLine(models.Model):
 
 
       
-    @api.depends('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    @api.depends('climbing_mast_bosun_chair', 'buoy_flags_recognition','rig_stage_rig_pilot_rig_scaffolding', 'fast_ropes_knots_bend_sounding_rod')
     def _compute_gsk_practical_total_marks(self):
         for record in self:
             total_marks = 0
-            total_marks += record.climbing_mast
+            total_marks += record.climbing_mast_bosun_chair
             total_marks += record.buoy_flags_recognition
-            total_marks += record.bosun_chair
-            total_marks += record.rig_stage
-            total_marks += record.rig_pilot
-            total_marks += record.rig_scaffolding
-            total_marks += record.fast_ropes
-            total_marks += record.knots_bend
-            total_marks += record.sounding_rod
+            # total_marks += record.bosun_chair
+            total_marks += record.rig_stage_rig_pilot_rig_scaffolding
+            # total_marks += record.rig_pilot
+            # total_marks += record.rig_scaffolding
+            total_marks += record.fast_ropes_knots_bend_sounding_rod
+            # total_marks += record.knots_bend
+            # total_marks += record.sounding_rod
             record.gsk_practical_total_marks = total_marks
 
-    @api.onchange('climbing_mast','buoy_flags_recognition','bosun_chair','rig_stage','rig_pilot','rig_scaffolding','fast_ropes','knots_bend','sounding_rod')
+    @api.onchange('climbing_mast_bosun_chair','buoy_flags_recognition','rig_stage_rig_pilot_rig_scaffolding','fast_ropes_knots_bend_sounding_rod')
     def _onchange_gsk_practicals_marks_limit(self):
-        if self.climbing_mast > 12:
+        if self.climbing_mast_bosun_chair> 30:
             raise UserError("Climb the mast with safe practices , Prepare and throw Heaving Line marks should not be greater than 12.")
         if self.buoy_flags_recognition > 12:
             raise UserError("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders marks should not be greater than 12.")
-        if self.bosun_chair > 8:
-            raise UserError("Rigging Bosun's Chair and self lower and hoist marks should not be greater than 8.")
-        if self.rig_stage > 8:
-            raise UserError("Rig a stage for painting shipside marks should not be greater than 8.")
-        if self.rig_pilot > 8:
-            raise UserError("Rig a Pilot Ladder marks should not be greater than 8.")
-        if self.rig_scaffolding > 8:
-            raise UserError("Rig scaffolding to work at a height marks should not be greater than 8.")
-        if self.fast_ropes > 8:
-            raise UserError("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper marks should not be greater than 8.")
-        if self.knots_bend > 18:
-            raise UserError(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase marks should not be greater than 18.")
-        if self.sounding_rod > 18:
-            raise UserError("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight marks should not be greater than 18.")
+        # if self.bosun_chair > 8:
+        #     raise UserError("Rigging Bosun's Chair and self lower and hoist marks should not be greater than 8.")
+        if self.rig_stage_rig_pilot_rig_scaffolding > 30:
+            raise UserError("Rig a stage for painting shipside marks should not be greater than 30.")
+        # if self.rig_pilot > 8:
+        #     raise UserError("Rig a Pilot Ladder marks should not be greater than 8.")
+        # if self.rig_scaffolding > 8:
+        #     raise UserError("Rig scaffolding to work at a height marks should not be greater than 8.")
+        if self.fast_ropes_knots_bend_sounding_rod > 30:
+            raise UserError("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper marks should not be greater than 30.")
+        # if self.knots_bend > 18:
+        #     raise UserError(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase marks should not be greater than 18.")
+        # if self.sounding_rod > 18:
+        #     raise UserError("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight marks should not be greater than 18.")
 
     
     @api.model

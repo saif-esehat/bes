@@ -3,6 +3,7 @@
     <template id="candidate_admit_card_ccmc">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
+
                 <div class="header">
                     <div class="container" style="text-align: center; font-size: 24px;  margin:0; margin-bottom: 10px;">
                         <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_bes.jpg" style=" width: 50px; height:50px;"/> 
@@ -19,18 +20,27 @@
                     <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
                         <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
                     </div>
-                
                 </div>
+<<<<<<< HEAD
                 <div class="container" style="position:relative; margin-bottom:10px;">
+=======
+
+                <div class="container" style="position:relative; margin-bottom:10px; top:10px">
+
+>>>>>>> cfe733c0ff3b67ffecf59f904f2df6e9c4e0867a
                     <t t-if="o.ccmc_candidate.candidate_image">
                         <img t-attf-src="data:image/png;base64,{{o.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
                     </t>
                     <t t-if="o.ccmc_candidate.candidate_signature">
                         <img t-attf-src="data:image/png;base64,{{o.ccmc_candidate.candidate_signature}}" style="width: 250px; height: 50px; position: absolute; top: 175px; right: 8px;" />
                     </t>
+<<<<<<< HEAD
                     <!-- </div> -->
                 
                     <!-- <div class="container" style=""> -->
+=======
+                
+>>>>>>> cfe733c0ff3b67ffecf59f904f2df6e9c4e0867a
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
                             <span style="font-size:20px;">Examination: </span>
@@ -84,6 +94,7 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <div class="container" style="position:relative; margin-top:10px;">
                     <t t-if="o.qr_code">
                         <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
@@ -91,6 +102,15 @@
                     <!-- </div> -->
 
                     <!-- <div class="container" style="text-align:center;"> -->
+=======
+                <!-- <div class="container" style="position:relative; margin-top:150px;">
+                </div> -->
+                
+                <div class="container" style="position:relative; text-align:center; top:10px;">
+                    <t t-if="o.qr_code">
+                        <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
+                    </t>
+>>>>>>> cfe733c0ff3b67ffecf59f904f2df6e9c4e0867a
                     <div class="row">
                         <div class="col-4">
                             <table class="table" style="border-collapse: collapse;">
@@ -109,10 +129,10 @@
                                         <td style="border: 1px solid black;">Oral</td>
 
                                     </tr>
-                                    <tr scope="row" t-if="o.oral_prac_status == 'pending' or o.oral_prac_status == 'failed'">
+                                    <!-- <tr scope="row" t-if="o.oral_prac_status == 'pending' or o.oral_prac_status == 'failed'">
                                         <td style="border: 1px solid black;">Oral/Practical</td>
 
-                                    </tr>
+                                    </tr> -->
                                     <tr scope="row" t-if="o.ccmc_online_status == 'pending' or o.ccmc_online_status == 'failed'">
                                         <td style="border: 1px solid black;">CCMC Online</td>
 
@@ -125,7 +145,11 @@
 
 
 
+<<<<<<< HEAD
                 <div class="container" style="text-align:center; margin:0; margin-top:20px;">
+=======
+                <div class="container" style="text-align:center; margin:0; margin-top:20px; position:relative; top:10px;">
+>>>>>>> cfe733c0ff3b67ffecf59f904f2df6e9c4e0867a
                     <div class="row">
                         <div class="col-12">
                             <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>

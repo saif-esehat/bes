@@ -1594,6 +1594,7 @@ class ExamOralPracticalExaminers(models.Model):
     
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
+    marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
     
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):

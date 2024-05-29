@@ -209,18 +209,18 @@
                                 <t t-out="assignment.institute_id.name" />
                             </td>
                             <td class="text-left">
-                                <t t-if="assignment.prac_oral_id.exam_type == 'practical_oral'">
+                                <t t-if="assignment.exam_type == 'practical_oral'">
                                     Practical/Oral
                                 </t>
-                                <t t-else="assignment.prac_oral_id.exam_type == 'online'">
+                                <t t-else="assignment.exam_type == 'online'">
                                     Online
                                 </t>
                             </td>
                             <td class="text-center">
-                                <t t-if="assignment.prac_oral_id.exam_type == 'practical_oral'">
+                                <t t-if="assignment.exam_type == 'practical_oral'">
                                     <t t-out="assignment.exam_date" />
                                 </t>
-                                <t t-else="assignment.prac_oral_id.exam_type == 'online'">
+                                <t t-else="assignment.exam_type == 'online'">
                                     <t t-out="assignment.online_from_date" /> to <t t-out="assignment.online_to_date" />
                                 </t>
                             </td>
@@ -512,18 +512,24 @@
                 </div>
 
            
-            <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).prac_oral_id.exam_type"/>
+            <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
+            <t t-set="marksheet_uploaded" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_uploaded"/>
+            <t t-set="marksheet_image" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_image"/>
 
             <t t-if="exam_type == 'practical_oral'">
-
+                
                 <t t-if="examiner_subject == 'GSK'">
                     <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px; " class="btn btn-primary btn_cta">Download GSK Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                    <t t-if="not marksheet_uploaded">
+                        <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                    </t>
                 </t>
                 
                 <t t-if="examiner_subject == 'MEK'">
                     <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                    <t t-if="not marksheet_uploaded">
+                        <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                    </t>
                 </t>
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'"> -->
@@ -538,7 +544,7 @@
                     <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
                 </t>
                
-                <t t-if="not assignments.marksheet_image">
+                <t t-if="not marksheet_image">
                     <a href="" style="margin:10px;" data-toggle="modal" t-attf-marks-batch-id="{{batch_id}}" onclick="openUploadMarksheetImage(this)" data-target="#uploadMarksheetImageModal" class="btn btn-primary btn_cta">Upload Marksheet Image</a>
                 </t>
                     <a t-attf-href="/my/viewmarksheetimg/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary">View Marksheet Image</a>
@@ -550,10 +556,10 @@
                     <tr >
                         <th class="text-left">Candidate Name</th>
                         <!-- <th class="text-left">Candidate Code</th> -->
-                        <th class="text-left">Roll No.</th>
+                        <th class="text-center">Roll No.</th>
                         <!-- <th class="text-left">Course</th> -->
-                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-left">Online Subject</th>
-                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-left">Token</th>
+                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Online Subject</th>
+                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Token</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 1, 2, 3</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 4, 5, 6</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Journal</th>
@@ -611,7 +617,7 @@
                                 <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.candidate_code" />
                             </td> -->
 
-                            <td  class="text-left">
+                            <td  class="text-center">
                                 <t t-if="examiner_subject == 'GSK'">
                                     <t t-out="marksheet.gp_marksheet.exam_id" />
                                 </t>
@@ -654,32 +660,32 @@
                             </td>
 
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gsk_prac.climbing_mast"/>
+                                <t t-out="marksheet.gsk_prac.climbing_mast_bosun_chair"/>
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.buoy_flags_recognition"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.bosun_chair"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gsk_prac.rig_stage"/>
+                                <t t-out="marksheet.gsk_prac.rig_stage_rig_pilot_rig_scaffolding"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.rig_pilot"/>
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.rig_scaffolding"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gsk_prac.fast_ropes"/>
+                                <t t-out="marksheet.gsk_prac.fast_ropes_knots_bend_sounding_rod"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.knots_bend"/>
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.sounding_rod"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                                 <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
