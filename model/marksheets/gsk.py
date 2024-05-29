@@ -13,54 +13,54 @@ class GSKPractical(models.Model):
     
     exam_bes_candidate_id = fields.Many2one("exam.schedule.bes.candidate",string="Exam BES Candidate",required=True)
     marksheet_name = fields.Char("Marksheet Name",default="Practical GSK Marksheet")
-    climbing_mast = fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line ")
+    climbing_mast_bosun_chair= fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line,Rigging Bosun's Chair and self lower and hoist")
     buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders")
-    bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
-    rig_stage = fields.Integer("Rig a stage for painting shipside ")
-    rig_pilot = fields.Integer("Rig a Pilot Ladder ")
-    rig_scaffolding = fields.Integer("Rig scaffolding to work at a height ") 
-    fast_ropes = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper   ")
+    # bosun_chair = fields.Integer("Rigging Bosun's Chair and self lower and hoist ")
+    rig_stage_rig_pilot_rig_scaffolding = fields.Integer("Rig a stage for painting shipside,Rig a Pilot Ladder,Rig scaffolding to work at a height")
+    # rig_pilot = fields.Integer("Rig a Pilot Ladder ")
+    # rig_scaffolding = fields.Integer("Rig scaffolding to work at a height ") 
+    fast_ropes_knots_bend_sounding_rod = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper,.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase,·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight")
     
-    knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase ")
-    sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight ")
+    # knots_bend = fields.Integer(".Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase ")
+    # sounding_rod = fields.Integer("·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight ")
     
     total_marks = fields.Integer("Total Marks",compute="_compute_total_marks")
     remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ")
     
     
-    @api.constrains('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    @api.constrains('climbing_mast_bosun_chair', 'buoy_flags_recognition', 'rig_stage_rig_pilot_rig_scaffolding', ' fast_ropes_knots_bend_sounding_rod')
     def _check_max_value(self):
         for record in self:
             fields_to_check = {
-                'climbing_mast': "Climb the mast with safe practices, Prepare and throw Heaving Line",
+                'climbing_mast_bosun_chair': "Climb the mast with safe practices, Prepare and throw Heaving Line,Rigging Bosun's Chair and self lower and hoist",
                 'buoy_flags_recognition': "Recognise buyos and flags, Hoisting a Flag correctly, Steering and Helm Orders",
-                'bosun_chair': "Rigging Bosun's Chair and self lower and hoist",
-                'rig_stage': "Rig a stage for painting shipside",
-                'rig_pilot': "Rig a Pilot Ladder",
-                'rig_scaffolding': "Rig scaffolding to work at a height",
-                'fast_ropes': "Making fast Ropes and Wires, Use Rope-Stopper / Chain Stopper",
-                'knots_bend': "Knots, Bends, Hitches, Whippings/Seizing/Splicing Ropes/Wires, Reeve 3-fold / 2-fold purchase",
-                'sounding_rod': "Taking Soundings with sounding rod / sounding taps, Reading of Draft, Manual lifting of weight",
+                # 'bosun_chair': "Rigging Bosun's Chair and self lower and hoist",
+                'rig_stage_rig_pilot_rig_scaffolding': "Rig a stage for painting shipside,Rig a Pilot Ladder,Rig scaffolding to work at a height",
+                # 'rig_pilot': "Rig a Pilot Ladder",
+                # 'rig_scaffolding': "Rig scaffolding to work at a height",
+                'fast_ropes_knots_bend_sounding_rod': "Making fast Ropes and Wires, Use Rope-Stopper / Chain Stopper",
+                # 'knots_bend': "Knots, Bends, Hitches, Whippings/Seizing/Splicing Ropes/Wires, Reeve 3-fold / 2-fold purchase",
+                # 'sounding_rod': "Taking Soundings with sounding rod / sounding taps, Reading of Draft, Manual lifting of weight",
             }
             
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
-                if field_name == 'climbing_mast' and field_value > 12:
-                    raise ValidationError(f"{field_label} value cannot exceed 12.")
+                if field_name == 'climbing_mast_bosun_chair' and field_value > 30:
+                    raise ValidationError(f"{field_label} value cannot exceed 30.")
                 elif field_name == 'buoy_flags_recognition' and field_value > 12:
                     raise ValidationError(f"{field_label} value cannot exceed 12.")
-                elif field_name == 'bosun_chair' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
-                elif field_name == 'rig_stage' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
-                elif field_name == 'rig_pilot' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
-                elif field_name == 'rig_scaffolding' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
-                elif field_name == 'fast_ropes' and field_value > 8:
-                    raise ValidationError(f"{field_label} value cannot exceed 8.")
-                elif field_name == 'knots_bend' and field_value > 18:
-                    raise ValidationError(f"{field_label} value cannot exceed 18.")
+                # elif field_name == 'bosun_chair' and field_value > 8:
+                #     raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'rig_stage_rig_pilot_rig_scaffolding' and field_value > 30:
+                    raise ValidationError(f"{field_label} value cannot exceed 30.")
+                # elif field_name == 'rig_pilot' and field_value > 8:
+                #     raise ValidationError(f"{field_label} value cannot exceed 8.")
+                # elif field_name == 'rig_scaffolding' and field_value > 8:
+                #     raise ValidationError(f"{field_label} value cannot exceed 8.")
+                elif field_name == 'fast_ropes_knots_bend_sounding_rod' and field_value > 30:
+                    raise ValidationError(f"{field_label} value cannot exceed 30.")
+                # elif field_name == 'knots_bend' and field_value > 18:
+                #     raise ValidationError(f"{field_label} value cannot exceed 18.")
 
 
 
@@ -75,19 +75,19 @@ class GSKPractical(models.Model):
     
     
             
-    @api.depends('climbing_mast', 'buoy_flags_recognition', 'bosun_chair', 'rig_stage', 'rig_pilot', 'rig_scaffolding', 'fast_ropes', 'knots_bend', 'sounding_rod')
+    @api.depends('climbing_mast_bosun_chair', 'buoy_flags_recognition', 'rig_stage_rig_pilot_rig_scaffolding', 'fast_ropes_knots_bend_sounding_rod')
     def _compute_total_marks(self):
         for record in self:
             total_marks = 0
-            total_marks += record.climbing_mast
+            total_marks += record.climbing_mast_bosun_chair
             total_marks += record.buoy_flags_recognition
-            total_marks += record.bosun_chair
-            total_marks += record.rig_stage
-            total_marks += record.rig_pilot
-            total_marks += record.rig_scaffolding
-            total_marks += record.fast_ropes
-            total_marks += record.knots_bend
-            total_marks += record.sounding_rod
+            # total_marks += record.bosun_chair
+            total_marks += record.rig_stage_rig_pilot_rig_scaffolding
+            # total_marks += record.rig_pilot
+            # total_marks += record.rig_scaffolding
+            total_marks += record.fast_ropes_knots_bend_sounding_rod
+            # total_marks += record.knots_bend
+            # total_marks += record.sounding_rod
             record.total_marks = total_marks
     
     

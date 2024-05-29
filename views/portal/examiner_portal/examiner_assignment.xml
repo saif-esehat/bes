@@ -660,32 +660,32 @@
                             </td>
 
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gsk_prac.climbing_mast"/>
+                                <t t-out="marksheet.gsk_prac.climbing_mast_bosun_chair"/>
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.buoy_flags_recognition"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.bosun_chair"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gsk_prac.rig_stage"/>
+                                <t t-out="marksheet.gsk_prac.rig_stage_rig_pilot_rig_scaffolding"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.rig_pilot"/>
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.rig_scaffolding"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gsk_prac.fast_ropes"/>
+                                <t t-out="marksheet.gsk_prac.fast_ropes_knots_bend_sounding_rod"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.knots_bend"/>
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.sounding_rod"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                                 <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
