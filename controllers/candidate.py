@@ -67,7 +67,7 @@ class GPCandidatePortal(CustomerPortal):
             partner_id = request.env.user.id
             candidate = request.env["ccmc.candidate"].sudo().search([('user_id','=',partner_id)])
             # print("candidate",candidate)
-            registered_exams = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',candidate.id)])
+            registered_exams = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',candidate.id),('state','in',('1-in_process','3-certified'))])
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             candidate = registered_exams
             # import wdb; wdb.set_trace(); 
