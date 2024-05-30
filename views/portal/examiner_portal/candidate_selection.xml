@@ -973,7 +973,7 @@
 
                            
                                
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area1">Using Hand and Plumbing Tools (Task 1)</label>
                                         <input type="number" min="0" max="10" class="form-control" id="subject_area1" name="subject_area1" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_1" required="True"/>
@@ -986,22 +986,22 @@
                                         <input type="number" min="0" max="10" class="form-control" id="subject_area2" name="subject_area2" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_2" required="True"/>
                                         /10
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area3">Using Hand and Plumbing Tools (Task 3)</label>
                                         <input type="number" min="0" max="10" class="form-control" id="subject_area3" name="subject_area3" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_3" required="True"/>
-                                        /10
+                                        /30
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject_area4">Use of Chipping Tools and paint Brushes</label>
-                                        <input type="number" min="0" max="10" class="form-control" id="subject_area4" name="subject_area4" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.use_of_chipping_tools_paint_brushes" required="True"/>
-                                        /10
+                                        <label for="subject_area4">Use of Chipping Tools and paint Brushes,Use of Carpentry Tools,Use of Measuring Instruments</label>
+                                        <input type="number" min="0" max="30" class="form-control" id="subject_area4" name="subject_area4" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.use_of_chipping_tools_paint" required="True"/>
+                                        /30
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area5">Use of Carpentry Tools</label>
                                         <input type="number" min="0" max="10" class="form-control" id="subject_area5" name="subject_area5" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.use_of_carpentry" required="True"/>
@@ -1015,23 +1015,23 @@
                                         <input type="number" min="0" max="10" class="form-control" id="subject_area6" name="subject_area6" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.use_of_measuring_instruments" required="True"/>
                                         /10
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject_area7">Welding (1 Task)</label>
-                                        <input type="number" min="0" max="20" class="form-control" id="subject_area7" name="subject_area7" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.welding" required="True"/>
-                                        /20
+                                        <label for="subject_area7">Welding (1 Task),Lathe Work (1 Task)</label>
+                                        <input type="number" min="0" max="30" class="form-control" id="subject_area7" name="subject_area7" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.welding_lathe" required="True"/>
+                                        /30
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="subject_area8">Lathe Work (1 Task)</label>
                                         <input type="number" min="0" max="10" class="form-control" id="subject_area8" name="subject_area8" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'"  t-att-value="mek_prac_marksheet.lathe" required="True"/>
                                         /10
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
