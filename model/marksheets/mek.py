@@ -11,14 +11,14 @@ class MekPractical(models.Model):
     
     marksheet_name = fields.Char("Marksheet Name",default="Practical MEK Marksheet")
     exam_bes_candidate_id = fields.Many2one("exam.schedule.bes.candidate",string="Exam BES Candidate",required=True)
-    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
-    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
+    # using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)")
+    # using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)")
     using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)")
-    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes")
-    use_of_carpentry = fields.Integer("Use of Carpentry Tools")
-    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
-    welding = fields.Integer("Welding (1 Task)")
-    lathe = fields.Integer("Lathe Work (1 Task)")
+    use_of_chipping_tools_paint = fields.Integer("Use of Chipping Tools & paint Brushes,Use of Carpentry Tools,")
+    # use_of_carpentry = fields.Integer("Use of Carpentry Tools")
+    # use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments")
+    welding_lathe = fields.Integer("Welding (1 Task)")
+    # lathe = fields.Integer("Lathe Work (1 Task)")
     electrical = fields.Integer("Electrical (1 Task)")
     
     total_marks = fields.Integer("Total Marks", compute="_compute_total_marks", store=True)
@@ -33,44 +33,44 @@ class MekPractical(models.Model):
         mek_practical.exam_bes_candidate_id.write({'mek_practical_id':mek_practical.id})
         return mek_practical
     
-    @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
-                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
-                 'welding', 'lathe', 'electrical')
+    @api.depends('using_hand_plumbing_tools_task_3',
+                 'use_of_chipping_tools_paint',
+                 'welding_lathe', 'electrical')
     def _compute_total_marks(self):
         for record in self:
             total = (
-                record.using_hand_plumbing_tools_task_1 +
-                record.using_hand_plumbing_tools_task_2 +
+                # record.using_hand_plumbing_tools_task_1 +
+                # record.using_hand_plumbing_tools_task_2 +
                 record.using_hand_plumbing_tools_task_3 +
-                record.use_of_chipping_tools_paint_brushes +
-                record.use_of_carpentry +
-                record.use_of_measuring_instruments +
-                record.welding +
-                record.lathe +
+                record.use_of_chipping_tools_paint  +
+                # record.use_of_carpentry +
+                # record.use_of_measuring_instruments +
+                record.welding_lathe +
+                # record.lathe +
                 record.electrical
             )
             record.total_marks = total
     
     
-    @api.constrains('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments', 'welding', 'lathe', 'electrical')
+    @api.constrains('using_hand_plumbing_tools_task_3', 'use_of_chipping_tools_paint', 'welding_lathe', 'electrical')
     def _check_values(self):
         for record in self:
             fields_to_check = {
-                'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
-                'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
+                # 'using_hand_plumbing_tools_task_1': "Using Hand & Plumbing Tools (Task 1)",
+                # 'using_hand_plumbing_tools_task_2': "Using Hand & Plumbing Tools (Task 2)",
                 'using_hand_plumbing_tools_task_3': "Using Hand & Plumbing Tools (Task 3)",
-                'use_of_chipping_tools_paint_brushes': "Use of Chipping Tools & Paint Brushes",
-                'use_of_carpentry': "Use of Carpentry Tools",
-                'use_of_measuring_instruments': "Use of Measuring Instruments",
-                'welding': "Welding (1 Task)",
-                'lathe': "Lathe Work (1 Task)",
+                'use_of_chipping_tools_paint': "Use of Chipping Tools & Paint Brushes,Use of Carpentry Tools,Use of Measuring Instruments",
+                # 'use_of_carpentry': "Use of Carpentry Tools",
+                # 'use_of_measuring_instruments': "Use of Measuring Instruments",
+                'welding_lathe': "Welding (1 Task),Lathe Work (1 Task)",
+                # 'lathe': "Lathe Work (1 Task)",
                 'electrical': "Electrical (1 Task)",
             }
 
             for field_name, field_label in fields_to_check.items():
                 field_value = record[field_name]
-                if field_name == 'welding' and field_value > 20:
-                    raise ValidationError(f"{field_label} value cannot exceed 20.")
+                if field_name == 'welding_lathe' and field_value > 30:
+                    raise ValidationError(f"{field_label} value cannot exceed 30.")
                 elif field_value > 10:
                     raise ValidationError(f"{field_label} value cannot exceed 10.")
                 

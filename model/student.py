@@ -1190,14 +1190,14 @@ class MekPrcticalLine(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     mek_prcatical_attempt_no = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
     mek_practical_exam_date = fields.Date(string="Exam Date",tracking=True)
-    using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)",tracking=True)
-    using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)",tracking=True)
+    # using_hand_plumbing_tools_task_1 = fields.Integer("Using Hand & Plumbing Tools (Task 1)",tracking=True)
+    # using_hand_plumbing_tools_task_2 = fields.Integer("Using Hand & Plumbing Tools (Task 2)",tracking=True)
     using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)",tracking=True)
-    use_of_chipping_tools_paint_brushes = fields.Integer("Use of Chipping Tools & paint Brushes",tracking=True)
-    use_of_carpentry = fields.Integer("Use of Carpentry Tools",tracking=True)
-    use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments",tracking=True)
-    welding = fields.Integer("Welding (1 Task)",tracking=True)
-    lathe = fields.Integer("Lathe Work (1 Task)",tracking=True)
+    use_of_chipping_tools_paint = fields.Integer("Use of Chipping Tools & paint Brushes",tracking=True)
+    # use_of_carpentry = fields.Integer("Use of Carpentry Tools",tracking=True)
+    # use_of_measuring_instruments = fields.Integer("Use of Measuring Instruments",tracking=True)
+    welding_lathe = fields.Integer("Welding (1 Task),Lathe Work (1 Task)",tracking=True)
+    # lathe = fields.Integer("Lathe Work (1 Task)",tracking=True)
     electrical = fields.Integer("Electrical (1 Task)",tracking=True)
     
     mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True,tracking=True)
@@ -1207,44 +1207,40 @@ class MekPrcticalLine(models.Model):
 
 
 
-    @api.onchange('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
-                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
-                 'welding', 'lathe', 'electrical')
+    @api.onchange('using_hand_plumbing_tools_task_3','use_of_chipping_tools_paint', 'welding_lathe', 'electrical')
     def _onchange_ccmc_oral_marks_limit(self):
-        if self.using_hand_plumbing_tools_task_1 > 10:
-            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 1) Marks cannot exceed 10.")
-        if self.using_hand_plumbing_tools_task_2 > 10:
-            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 2) Marks cannot exceed 10.")
-        if self.using_hand_plumbing_tools_task_3 > 10:
-            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 3) Marks cannot exceed 10.")
-        if self.use_of_chipping_tools_paint_brushes > 10:
-            raise UserError("In MEK Practical, Use of Chipping Tools & paint Brushes Marks cannot exceed 10.")
-        if self.use_of_carpentry > 10:
-            raise UserError("In MEK Practical, Use of Carpentry Tools Marks cannot exceed 10.")
-        if self.use_of_measuring_instruments > 10:
-            raise UserError("In MEK Practical, Use of Measuring Instruments Marks cannot exceed 10.")
-        if self.welding > 20:
-            raise UserError("In MEK Practical, Welding (1 Task) Marks cannot exceed 20.")
-        if self.lathe > 10:
-            raise UserError("In MEK Practical, Lathe Work (1 Task) Marks cannot exceed 10.")
+        # if self.using_hand_plumbing_tools_task_1 > 10:
+        #     raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 1) Marks cannot exceed 10.")
+        # if self.using_hand_plumbing_tools_task_2 > 10:
+        #     raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 2) Marks cannot exceed 10.")
+        if self.using_hand_plumbing_tools_task_3 > 30:
+            raise UserError("In MEK Practical, Using Hand & Plumbing Tools (Task 3) Marks cannot exceed 30.")
+        if self.use_of_chipping_tools_paint > 30:
+            raise UserError("In MEK Practical, Use of Chipping Tools & paint Brushes Marks cannot exceed 30.")
+        # if self.use_of_carpentry > 10:
+        #     raise UserError("In MEK Practical, Use of Carpentry Tools Marks cannot exceed 10.")
+        # if self.use_of_measuring_instruments > 10:
+        #     raise UserError("In MEK Practical, Use of Measuring Instruments Marks cannot exceed 10.")
+        if self.welding_lathe > 30:
+            raise UserError("In MEK Practical, Welding (1 Task) Marks cannot exceed 30.")
+        # if self.lathe > 10:
+        #     raise UserError("In MEK Practical, Lathe Work (1 Task) Marks cannot exceed 10.")
         if self.electrical > 10:
             raise UserError("In MEK Practical, Electrical (1 Task) Marks cannot exceed 10.")
   
     
-    @api.depends('using_hand_plumbing_tools_task_1', 'using_hand_plumbing_tools_task_2', 'using_hand_plumbing_tools_task_3',
-                 'use_of_chipping_tools_paint_brushes', 'use_of_carpentry', 'use_of_measuring_instruments',
-                 'welding', 'lathe', 'electrical')
+    @api.depends('using_hand_plumbing_tools_task_3','use_of_chipping_tools_paint', 'welding_lathe', 'electrical')
     def _compute_mek_practical_total_marks(self):
         for record in self:
             total = (
-                record.using_hand_plumbing_tools_task_1 +
-                record.using_hand_plumbing_tools_task_2 +
+                # record.using_hand_plumbing_tools_task_1 +
+                # record.using_hand_plumbing_tools_task_2 +
                 record.using_hand_plumbing_tools_task_3 +
-                record.use_of_chipping_tools_paint_brushes +
-                record.use_of_carpentry +
-                record.use_of_measuring_instruments +
-                record.welding +
-                record.lathe +
+                record.use_of_chipping_tools_paint +
+                # record.use_of_carpentry +
+                # record.use_of_measuring_instruments +
+                record.welding_lathe +
+                # record.lathe +
                 record.electrical
             )
             record.mek_practical_total_marks = total

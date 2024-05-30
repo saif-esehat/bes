@@ -726,30 +726,30 @@
                                 <span class='p-2'>Edit</span></a>
                             </td>
                             
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.using_hand_plumbing_tools_task_1"/>
                             </td>
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.using_hand_plumbing_tools_task_2"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.using_hand_plumbing_tools_task_3"/>
                             </td>
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.mek_prac.use_of_chipping_tools_paint_brushes"/>
+                                <t t-out="marksheet.mek_prac.use_of_chipping_tools_paint"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.use_of_carpentry"/>
                             </td>
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.use_of_measuring_instruments"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.mek_prac.welding"/>
+                                <t t-out="marksheet.mek_prac.welding_lathe"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                            <!-- <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.lathe"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.electrical"/>
                             </td>
