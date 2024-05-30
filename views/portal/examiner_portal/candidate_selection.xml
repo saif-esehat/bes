@@ -252,34 +252,33 @@
                                         <input type="file" class="form-control" id="photo" name="name" accept="image/*" onchange="displayImage(this)" />
                                     </div>
                                 </div> -->
-                             </div>
+                            </div>
                             <div class="row">
-                             <div class="col-md-12">
-                                <div class="text-right">
-                                <div class="form-group">
-                                    <label for="candidate_image"></label>
-                                   <t t-if="candidate_image">
-                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
-                                    </t>
-                                    <t t-else="">
-                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
-                                    </t>
-                                </div>
-                                </div>
+                                <div class="col-md-12">
+                                    <div class="text-right">
+                                        <div class="form-group">
+                                            <label for="candidate_image"></label>
+                                                <t t-if="candidate_image">
+                                                    <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                                </t>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="candidate_name">Candidate Name</label>
+                                        <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
+                                    </div>
                                 </div>
                                 
-
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="indos">Indos No</label>
+                                        <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
+                                    </div>
                                 </div>
 
 
@@ -289,24 +288,22 @@
                                     <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
                                 </div>
                                 </div>   
-                            -->
+                                -->
                                
                                 <div class="col-md-6">
                                     <!-- onchange="validateClimbingMast(this)" -->
                                     <div class="form-group">
-                                        <label for="climbing_mast_bosun_chair">Climb the mast with safe practices, Prepare and throw Heaving Line </label>
+                                        <label for="climbing_mast_bosun_chair">Climb the mast with safe practices, Prepare and throw Heaving Line,Rigging Bosun's Chair and self lower and hoist</label>
                                         <input type="number" min="0" max="30" class="form-control" id="climbing_mast_bosun_chair" name="climbing_mast_bosun_chair" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.climbing_mast_bosun_chair" required="True"/>
                                         / 30 Marks
                                         <small id="marks_error" style="color: red;"></small>
                                     </div>
-
-
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="buoy_flags_recognition">·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders</label>
-                                        <input type="number" min="0" max="12" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.buoy_flags_recognition" required="True"/>
-                                        /12
+                                        <input type="number" min="0" max="30" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.buoy_flags_recognition" required="True"/>
+                                        /30
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-6">
@@ -314,16 +311,16 @@
                                         <label for="bosun_chair">Rigging Bosun's Chair and self lower and hoist</label>
                                         <input type="number" min="0" max="8" class="form-control" id="bosun_chair" name="bosun_chair" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.bosun_chair" required="True"/>
                                         /08
-                                    </div>
-                                </div> -->
+                                    </div> -->
+                                <!-- </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="rig_stage">Rig a stage for painting shipside</label>
-                                        <input type="number" min="0" max="8" class="form-control" id="rig_stage" name="rig_stage" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.rig_stage" required="True"/>
-                                        /08
+                                        <label for="rig_stage_rig_pilot_rig_scaffolding">Rig a stage for painting shipside,Rig a Pilot Ladder,Rig scaffolding to work at a height</label>
+                                        <input type="number" min="0" max="30" class="form-control" id="rig_stage_rig_pilot_rig_scaffolding" name="rig_stage_rig_pilot_rig_scaffolding" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.rig_stage_rig_pilot_rig_scaffolding" required="True"/>
+                                        /30
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rig_pilot">Rig a Pilot Ladder</label>
                                         <input type="number" min="0" max="8" class="form-control" id="rig_pilot" name="rig_pilot" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.rig_pilot" required="True"/>
@@ -337,17 +334,17 @@
                                         <input type="number" min="0" max="8" class="form-control" id="rig_scoffolding" name="rig_scoffolding" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.rig_scaffolding" required="True"/>
                                         /08
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fast_ropes">·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopperl</label>
-                                        <input type="number" min="0" max="8" class="form-control" id="fast_ropes" name="fast_ropes" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.fast_ropes" required="True"/>
-                                        /08
+                                        <label for="fast_ropes_knots_bend_sounding_rod">·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopperl</label>
+                                        <input type="number" min="0" max="30" class="form-control" id="fast_ropes_knots_bend_sounding_rod" name="fast_ropes_knots_bend_sounding_rod" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.fast_ropes_knots_bend_sounding_rod" required="True"/>
+                                        /30
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="knots_bend">.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase</label>
                                         <input type="number" min="0" max="18" class="form-control" id="knots_bend" name="knots_bend" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.knots_bend" required="True"/>
@@ -361,7 +358,7 @@
                                         <input type="number" min="0" max="18" class="form-control" id="sounding_rod" name="sounding_rod" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.sounding_rod" required="True"/>
                                         /18
                                     </div>
-                                </div>
+                                </div> -->
 
                                 
 
@@ -372,24 +369,25 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="state">Status</label>
-                                    <select class="form-control" id="state" name="state">
-                                        <option value="draft" t-att-selected="gsk_prac_marksheet.gsk_practical_draft_confirm == 'draft'">Draft</option>
-                                        <option value="confirm" t-att-selected="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'">Confirm</option>
-                                       
-                                    </select>
-                                </div>
-                            </div>
-
-                            <t t-if="gsk_prac_marksheet.gsk_practical_draft_confirm == 'draft'">
-                                <div class="col-md-12">
-                                    <div class="form-group" style="display:grid">
-                                    
-                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    <div class="form-group">
+                                        <label for="state">Status</label>
+                                        <select class="form-control" id="state" name="state">
+                                            <option value="draft" t-att-selected="gsk_prac_marksheet.gsk_practical_draft_confirm == 'draft'">Draft</option>
+                                            <option value="confirm" t-att-selected="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'">Confirm</option>
+                                        
+                                        </select>
                                     </div>
                                 </div>
-                            </t>
+                                    <!-- </div> -->
+
+                                <t t-if="gsk_prac_marksheet.gsk_practical_draft_confirm == 'draft'">
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="display:grid">
+                                        
+                                            <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                        </div>
+                                    </div>
+                                </t>
 
 
                             </div>
@@ -497,25 +495,25 @@
                                 </div> -->
                             </div>
                             <div class="row">
-                           <div class="col-md-12">
-                                <div class="text-right">
-                                <div class="form-group">
-                                    <label for="candidate_image"></label>
-                                    <t t-if="candidate_image">
-                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
-                                    </t>
-                                    <t t-else="">
-                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
-                                    </t>
-                                </div>
-                                </div>
+                                <div class="col-md-12">
+                                    <div class="text-right">
+                                        <div class="form-group">
+                                            <label for="candidate_image"></label>
+                                            <t t-if="candidate_image">
+                                                <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                            </t>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="candidate_name">Candidate Name</label>
-                                    
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="candidate_name">Candidate Name</label>
+                                        
+                                        <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
+                                    </div>
                                 </div>
                                 
 
@@ -607,24 +605,24 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="state">Status</label>
-                                    <select class="form-control" id="state" name="state">
-                                        <option value="draft" t-att-selected="gsk_marksheet.gsk_oral_draft_confirm == 'draft'">Draft</option>
-                                        <option value="confirm" t-att-selected="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" >Confirm</option>
-                                       
-                                    </select>
-                                </div>
-                            </div>
-
-                            <t t-if="gsk_marksheet.gsk_oral_draft_confirm == 'draft'">
-                                <div class="col-md-12">
-                                    <div class="form-group" style="display:grid">
-                                    
-                                        <button type="submit"  class="btn btn-primary gskoralmarkssubmit" style="align-items:center">Submit</button>
+                                    <div class="form-group">
+                                        <label for="state">Status</label>
+                                        <select class="form-control" id="state" name="state">
+                                            <option value="draft" t-att-selected="gsk_marksheet.gsk_oral_draft_confirm == 'draft'">Draft</option>
+                                            <option value="confirm" t-att-selected="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" >Confirm</option>
+                                        
+                                        </select>
                                     </div>
                                 </div>
-                            </t>
+
+                                <t t-if="gsk_marksheet.gsk_oral_draft_confirm == 'draft'">
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="display:grid">
+                                        
+                                            <button type="submit"  class="btn btn-primary gskoralmarkssubmit" style="align-items:center">Submit</button>
+                                        </div>
+                                    </div>
+                                </t>
 
 
                             </div>

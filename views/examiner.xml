@@ -603,7 +603,7 @@
                     <field name="exam_type"/>
                     <field name="course"/>
                     <field name="exam_region"/>
-                    <field name="subject"/>
+                    <!-- <field name="subject"/> -->
                 </tree>
             </field>
         </record>

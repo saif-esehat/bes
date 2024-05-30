@@ -1858,7 +1858,7 @@ class GPExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -2709,7 +2709,7 @@ class CCMCExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
     
     ccmc_online_status = fields.Selection([
         ('pending', 'Pending'),
