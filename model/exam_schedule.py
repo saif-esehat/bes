@@ -2157,7 +2157,7 @@ class GPExam(models.Model):
                 record.certificate_qr_code = None
         
 
-
+    @api.depends('url')
     def _compute_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
