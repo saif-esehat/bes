@@ -13,7 +13,7 @@
                     <sheet>
                         <field name="exam_bes_candidate_id" invisible="1"/>
                         <!-- <group style="width:50%;"> -->
-                            <group>
+                            <!-- <group>
                                 <label for="using_hand_plumbing_tools_task_1" />
                                 <div >
                                     <field name="using_hand_plumbing_tools_task_1" min="0" max="10" nolabel="1"/>
@@ -29,27 +29,27 @@
                                     / 
                                     <span>10 Marks</span>
                                 </div>
-                            </group>
+                            </group> -->
 
                             <group>
                                 <label for="using_hand_plumbing_tools_task_3" />
                                 <div >
                                     <field name="using_hand_plumbing_tools_task_3" nolabel="1"/>
                                     / 
-                                    <span>10 Marks</span>
+                                    <span>30 Marks</span>
                                 </div>
                             </group>
 
                             <group>
-                                <label for="use_of_chipping_tools_paint_brushes" />
+                                <label for="use_of_chipping_tools_paint" />
                                 <div >
-                                    <field name="use_of_chipping_tools_paint_brushes" nolabel="1"/>
+                                    <field name="use_of_chipping_tools_paint" nolabel="1"/>
                                     / 
-                                    <span>10 Marks</span>
+                                    <span>30 Marks</span>
                                 </div>
                             </group>
 
-                            <group>
+                            <!-- <group>
                                 <label for="use_of_carpentry" />
                                 <div >
                                     <field name="use_of_carpentry" nolabel="1"/>
@@ -65,25 +65,25 @@
                                     / 
                                     <span>10 Marks</span>
                                 </div>
-                            </group>
+                            </group> -->
 
                             <group>
-                                <label for="welding" />
+                                <label for="welding_lathe" />
                                 <div >
-                                    <field name="welding" nolabel="1"/>
+                                    <field name="welding_lathe" nolabel="1"/>
                                     / 
-                                    <span>20 Marks</span>
+                                    <span>30 Marks</span>
                                 </div>
                             </group>
 
-                            <group>
+                            <!-- <group>
                                 <label for="lathe" />
                                 <div >
                                     <field name="lathe" nolabel="1"/>
                                     / 
                                     <span>10 Marks</span>
                                 </div>
-                            </group>
+                            </group> -->
 
                             <group>
                                 <label for="electrical" />
