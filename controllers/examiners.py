@@ -803,10 +803,11 @@ class ExaminerPortal(CustomerPortal):
         marks_values_5 = [1,2,3,4,5]
         marks_values_6 = [1,2,3,4,5,6]
         marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
         marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
         marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         
         gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_25 })
         gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_25 })
@@ -820,9 +821,9 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.set_column('A2:A2',35, unlocked)
         gsk_practical_sheet.set_column('B2:B2',10, unlocked)
         gsk_practical_sheet.set_column('C2:C2',20, unlocked)
-        gsk_practical_sheet.set_column('D2:K2',20, unlocked)
-        gsk_practical_sheet.set_column('L2:L2',15, unlocked)
-        gsk_practical_sheet.set_column('M2:M2',15, unlocked)
+        gsk_practical_sheet.set_column('D2:G2',35, unlocked)
+        gsk_practical_sheet.set_column('H2:H2',15, unlocked)
+        gsk_practical_sheet.set_column('I2:I2',15, unlocked)
         gsk_practical_sheet.set_column('N2:N2',15, unlocked)
             
         gsk_practical_sheet.protect()
@@ -832,16 +833,12 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-Climb the mast with safe practices \n -Prepare and throw Heaving Line  \n 12 Marks',
-          '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 12 Marks',
-          '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
-          '-Rig a stage for painting shipside \n 8 marks',
-          '-Rig a Pilot Ladder \n 8 marks',
-          '-Rig scaffolding to work at a height  \n 8 marks',
-          '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n 8 Marks', 
-          '-Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n -Reeve 3- fold / 2 fold purchase  \n 18 Marks', 
-          '·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight (18 Marks)',
-            'Remarks','Status']
+          '-Climb the mast with safe practices \n -Prepare and throw Heaving Line \n Rigging Bosun\'s Chair and self lower and hoist \n 30 Marks', #D
+          '-Rig a stage for painting shipside \n -Rig a Pilot Ladder \n -Rig scaffolding to work at a height  \n 30 marks',#E
+          '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n -Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n ·Taking Soundings with sounding rod / sounding taps \n ·Reading of Draft \n .Mannual lifting of weight (30 Marks)',#G
+          '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 10 Marks',#G
+        #   '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
+            'Remarks']
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
         
@@ -856,17 +853,18 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
         
-        gsk_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_12 })
-        gsk_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_8 })
-        gsk_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_18 })
-        gsk_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_18 })
+        gsk_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_30 })
+        gsk_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_30 })
+        gsk_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_30 })
+        gsk_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
+
+        gsk_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
+        # gsk_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_8 })
+        # gsk_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_8 })
+        # gsk_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_18 })
+        # gsk_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_18 })
         
-        gsk_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
+        # gsk_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
         
         workbook.close()
 
@@ -1148,50 +1146,50 @@ class ExaminerPortal(CustomerPortal):
             
             roll_no = row[1]
             candidate_code_no = row[2]  
-            climbing_mast = row[3]  
-            buoy_flags_recognition = row[4]  
-            bosun_chair = row[5]  
-            rig_stage = row[6]  
-            rig_pilot = row[7]  
-            rig_scaffolding = row[8] 
-            fast_ropes = row[9] 
-            knots_bend = row[10]
-            sounding_rod = row[11] 
+            climbing_mast_bosun_chair = row[3]  
+            rig_stage_rig_pilot_rig_scaffolding = row[4]  
+            fast_ropes_knots_bend_sounding_rod = row[5]  
+            buoy_flags_recognition = row[6]  
+            # rig_pilot = row[7]  
+            # rig_scaffolding = row[8] 
+            # fast_ropes = row[9] 
+            # knots_bend = row[10]
+            # sounding_rod = row[11] 
 
             gsk_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
-            if climbing_mast:
-                gsk_practical_total_marks += int(climbing_mast)
+            if climbing_mast_bosun_chair:
+                gsk_practical_total_marks += int(climbing_mast_bosun_chair)
             if buoy_flags_recognition:
                 gsk_practical_total_marks += int(buoy_flags_recognition)
-            if bosun_chair:
-                gsk_practical_total_marks += int(bosun_chair)
-            if rig_stage:
-                gsk_practical_total_marks += int(rig_stage)
-            if rig_pilot:
-                gsk_practical_total_marks += int(rig_pilot)
-            if rig_scaffolding:
-                gsk_practical_total_marks += int(rig_scaffolding)
-            if fast_ropes:
-                gsk_practical_total_marks += int(fast_ropes)
-            if knots_bend:
-                gsk_practical_total_marks += int(knots_bend)
-            if sounding_rod:
-                gsk_practical_total_marks += int(sounding_rod)
+            if rig_stage_rig_pilot_rig_scaffolding:
+                gsk_practical_total_marks += int(rig_stage_rig_pilot_rig_scaffolding)
+            if fast_ropes_knots_bend_sounding_rod:
+                gsk_practical_total_marks += int(fast_ropes_knots_bend_sounding_rod)
+            # if rig_pilot:
+            #     gsk_practical_total_marks += int(rig_pilot)
+            # if rig_scaffolding:
+            #     gsk_practical_total_marks += int(rig_scaffolding)
+            # if fast_ropes:
+            #     gsk_practical_total_marks += int(fast_ropes)
+            # if knots_bend:
+            #     gsk_practical_total_marks += int(knots_bend)
+            # if sounding_rod:
+            #     gsk_practical_total_marks += int(sounding_rod)
                 
-            gsk_practical_remarks = row[12]
+            gsk_practical_remarks = row[7]
 
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.gsk_prac:
                 candidate.gsk_prac.sudo().write({
-                    'climbing_mast_bosun_chair':climbing_mast,
+                    'climbing_mast_bosun_chair':climbing_mast_bosun_chair,
                     'buoy_flags_recognition':buoy_flags_recognition,
-                    'bosun_chair':bosun_chair,
-                    'rig_stage':rig_stage,
-                    'rig_pilot':rig_pilot,
-                    'rig_scaffolding':rig_scaffolding,
-                    'fast_ropes':fast_ropes,
-                    'knots_bend':knots_bend,
-                    'sounding_rod':sounding_rod,
+                    'rig_stage_rig_pilot_rig_scaffolding':rig_stage_rig_pilot_rig_scaffolding,
+                    'fast_ropes_knots_bend_sounding_rod':fast_ropes_knots_bend_sounding_rod,
+                    # 'rig_pilot':rig_pilot,
+                    # 'rig_scaffolding':rig_scaffolding,
+                    # 'fast_ropes':fast_ropes,
+                    # 'knots_bend':knots_bend,
+                    # 'sounding_rod':sounding_rod,
                     'gsk_practical_total_marks':gsk_practical_total_marks,
                     'gsk_practical_remarks':gsk_practical_remarks
 
@@ -1206,7 +1204,8 @@ class ExaminerPortal(CustomerPortal):
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             
-        return request.redirect("/my/assignments/batches/"+str(batch_id))
+        # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
+        return request.render("bes.examiner_assignment_candidate_list")
 
 
 
