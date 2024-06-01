@@ -2758,8 +2758,6 @@ class CCMCExam(models.Model):
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
 
-    # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
-    # def compute_certificate_criteria(self):
     
     url = fields.Char("URL",compute="_compute_url",tracking=True)
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True,tracking=True)
