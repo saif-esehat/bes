@@ -111,7 +111,7 @@
                                     <tbody>
 
                                         <tr scope="row" t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
-                                            <td style="border: 1px solid black;">GSK Oral/Practical</td>
+                                            <td style="border: 1px solid black;">GSK Practical &amp; Oral</td>
                                         </tr>
 
                                         <tr scope="row" t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
@@ -119,7 +119,7 @@
 
                                         </tr>
                                         <tr scope="row" t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
-                                            <td style="border: 1px solid black;">MEK Oral/Practical</td>
+                                            <td style="border: 1px solid black;">MEK Practical &amp; Oral</td>
 
                                         </tr>
                                         <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
