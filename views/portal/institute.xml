@@ -3458,6 +3458,9 @@
                         <th>Sign Status</th>
                         <th>Ship Visis</th>
                         <th>STCW</th>
+                        <th>View/Update</th>
+                        <th>Admit Card</th>
+                        <th>Certificate</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -3553,11 +3556,21 @@
                                     <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                                 </td>
                             </t>
+                            <t t-else=''>
+                                <td class="text-center">
+                                    <span class="text-danger">Pending</span>
+                                </td>
+                            </t>
                             <t t-set="exams_certificate" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('certificate_criteria','=','passed')])"/>
 
                             <t t-if='exams_certificate'>
                                 <td class="text-center">
                                     <a t-attf-href="/my/ccmccandidates/download_ccmc_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
+                                </td>
+                            </t>
+                            <t t-else=''>
+                                <td class="text-center">
+                                    <span class="text-danger">Pending</span>
                                 </td>
                             </t>
                             <t t-if="not candidate.user_id">
