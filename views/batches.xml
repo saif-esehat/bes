@@ -288,6 +288,7 @@
                         
                         <group style="width:50%;">
                             <field name="admit_card_status"/>
+                            <field name="admit_card_alloted"/>
                         </group>
 
                     </sheet>

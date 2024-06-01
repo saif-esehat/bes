@@ -40,7 +40,7 @@ class InstituteGPBatches(models.Model):
         ('issued', 'Issued')
     ],default="pending", string='Admit Card Status')
 
-    admit_card_alloted = fields.Integer("No. of Candidate Issued Admit Card",compute="_compute_admit_card_count",tracking=True)
+    admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
     
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",
                                                       compute="_compute_invoice_button_visible",
@@ -565,7 +565,19 @@ class InstituteCcmcBatches(models.Model):
     
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     
+    admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
+
+    @api.depends("admit_card_alloted")
+    def _compute_admit_card_count(self):
+        for rec in self:
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id','=', rec.id),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            # import wdb; wdb.set_trace()
+            # for i in candidate:
+                # candidate_count = self.env["gp.exam.schedule"].search_count([('gp_candidate','=',i.id),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
+            self.write({"admit_card_alloted":candidate_count})
+
+
     def issue_admit_card(self):
         self.write({"admit_card_status":"issued"})
     
