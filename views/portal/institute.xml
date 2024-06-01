@@ -3561,7 +3561,7 @@
                                     <span class="text-danger">Pending</span>
                                 </td>
                             </t>
-                            <t t-set="exams_certificate" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('certificate_criteria','=','passed')])"/>
+                            <t t-set="exams_certificate" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
 
                             <t t-if='exams_certificate'>
                                 <td class="text-center">
