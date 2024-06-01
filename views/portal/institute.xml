@@ -3548,7 +3548,7 @@
                             </td>
                             <t t-set="admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('attendance_criteria','=','passed')])"/>
                             
-                            <t t-if='admit_card'>
+                            <t t-if='batches.admit_card_status == "issued"'>
                                 <td class="text-center">
                                     <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                                 </td>
