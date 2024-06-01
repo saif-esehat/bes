@@ -36,7 +36,7 @@
                             <div class="col-6">
                                 <span style="font-size:20px;">Examination: </span>
                                 <span style="font-size:20px;">
-                                    <t t-set="formatted_date" t-value="o.dgs_batch.to_date.strftime('%b-%y')"/>
+                                    <t t-set="formatted_date" t-value="o.dgs_batch.to_date.strftime('%B %Y')"/>
                                     <t t-esc="formatted_date"/>
                                 </span>  
                             </div>
