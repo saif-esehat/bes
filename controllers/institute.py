@@ -363,6 +363,9 @@ class InstitutePortal(CustomerPortal):
         candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])
         qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])        
 
+        if qty == 0:
+            raise ValidationError("No Candidate Found for Registration. Please Select Fees Paid as Yes in Candidate Profile for the elligible Candidate")
+
         
         # qty = request.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes')])
         
