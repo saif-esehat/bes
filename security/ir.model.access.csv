@@ -88,10 +88,15 @@ bes.group_exam_coordinator_gp_candidate_ec_bes_institute,access_ec_bes_institute
 
 bes.group_exam_coordinator_gp_mek_oral_line,access_exam_coordinator_gp_mek_oral_line,bes.model_gp_mek_oral_line,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_gp_mek_practical_line,access_exam_coordinator_gp_mek_practical_line,bes.model_gp_mek_practical_line,bes.group_exam_coordinator,1,1,1,1
-bes.group_ec_examiner,access_ec_bes_examiner,bes.model_bes_examiner,bes.group_exam_coordinator,1,0,0,0
+bes.group_ec_examiner,access_ec_bes_examiner,bes.model_bes_examiner,bes.group_exam_coordinator,1,0,1,0
 
 bes.group_exam_coordinator_gp_gsk_oral_line,access_exam_coordinator_gp_gsk_oral_line,bes.model_gp_gsk_oral_line,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_gp_gsk_practical_line,access_exam_coordinator_gp_gsk_practical_line,bes.model_gp_gsk_practical_line,bes.group_exam_coordinator,1,1,1,1
+
+bes.group_exam_coordinator_ccmc_candidate,access_exam_coordinator_ccmc_candidate,bes.model_ccmc_candidate,bes.group_exam_coordinator,1,1,1,1
+
+
+
 
 bes.ec_access_gp_exam_schedule,access_ec_gp_exam_schedule,bes.model_gp_exam_schedule,bes.group_exam_coordinator,1,1,0,0
 bes.ec_access_ccmc_exam_schedule,access_ec_ccmc_exam_schedule,bes.model_ccmc_exam_schedule,bes.group_exam_coordinator,1,1,0,0
