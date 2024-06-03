@@ -2629,7 +2629,7 @@ class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
     _rec_name = "exam_id"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Schedule'
+    _description= 'CCMC Schedule'
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
