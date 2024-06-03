@@ -1658,8 +1658,8 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.set_column('A2:A2',35, unlocked)
         ccmc_oral_summary_sheet.set_column('B2:B2',10, unlocked)
         ccmc_oral_summary_sheet.set_column('C2:C2',20, unlocked)
-        ccmc_oral_summary_sheet.set_column('D2:J2',25, unlocked)
-        ccmc_oral_summary_sheet.set_column('K2:K2',15, unlocked)
+        ccmc_oral_summary_sheet.set_column('D2:H2',25, unlocked)
+        ccmc_oral_summary_sheet.set_column('I2:I2',15, unlocked)
 
         # Merge 3 cells over two rows.
         ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
@@ -1670,8 +1670,7 @@ class ExaminerPortal(CustomerPortal):
           '-Orals on Housekeeping and F& B Service \n 20 Marks',
           '-Attitude & Proffesionalism \n 10 Marks',
           '-Identification of Equipment \n 10 Marks',
-          '-GSK ORAL \n 20 Marks',
-        #   '-Safety \n 10 Marks',
+        #   '-GSK ORAL \n 20 Marks',
           'Remarks']
         for col, value in enumerate(header_prac):
             ccmc_oral_summary_sheet.write(1, col, value, header_format)
@@ -1700,10 +1699,10 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_20 })
         ccmc_oral_summary_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
         ccmc_oral_summary_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_20 })
+        # ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_20 })
         
        
-        ccmc_oral_summary_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': remarks })
+        ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': remarks })
                
         workbook.close()
 
@@ -1752,7 +1751,7 @@ class ExaminerPortal(CustomerPortal):
             orals_house_keeping = row[5]  
             attitude_proffessionalism = row[6]  
             equipment_identification = row[7]  
-            gsk_ccmc = row[8] 
+            # gsk_ccmc = row[8] 
 
             toal_ccmc_rating = 0  # Initialize gsk_practical_total_marks to 0
             if house_keeping:
@@ -1765,10 +1764,10 @@ class ExaminerPortal(CustomerPortal):
                 toal_ccmc_rating += int(attitude_proffessionalism)
             if equipment_identification:
                 toal_ccmc_rating += int(equipment_identification)
-            if gsk_ccmc:
-                toal_ccmc_rating += int(gsk_ccmc)  
+            # if gsk_ccmc:
+            #     toal_ccmc_rating += int(gsk_ccmc)  
 
-            remarks = row[9]
+            remarks = row[8]
             
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.ccmc_oral:
@@ -1778,7 +1777,7 @@ class ExaminerPortal(CustomerPortal):
                     'orals_house_keeping':orals_house_keeping,
                     'attitude_proffessionalism':attitude_proffessionalism,
                     'equipment_identification':equipment_identification,
-                    'gsk_ccmc':gsk_ccmc,
+                    # 'gsk_ccmc':gsk_ccmc,
                     'toal_ccmc_rating':toal_ccmc_rating,
                     # 'mek_oral_remarks':remarks,
 
