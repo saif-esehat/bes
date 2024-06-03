@@ -25,13 +25,13 @@ class CandidateAdmitCardGp(models.AbstractModel):
             
             for docs in docs1:
                 if docs.attendance_criteria == 'pending' :
-                    raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
+                    raise UserError("Admit Card Not Generated Attendance Criteria not Complied")
             
                 if docs.ship_visit_criteria == 'pending' :
-                    raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+                    raise UserError("Admit Card Not Generated Ship Visit  Criteria not Complied")
                 
                 if docs.stcw_criteria == 'pending':
-                    raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
+                    raise UserError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # candidate_image = base64.b64encode(docs1.candidate_image).decode()
             

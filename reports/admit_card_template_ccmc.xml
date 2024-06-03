@@ -35,7 +35,7 @@
                         <div class="col-6">
                             <span style="font-size:20px;">Examination: </span>
                             <span style="font-size:20px;">
-                                <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%b-%y')" />
+                                <t t-set="formatted_dob" t-value="o.dgs_batch.to_date.strftime('%B %Y')" />
                                 <t t-esc="formatted_dob" />
                             </span>  
                         </div>
@@ -102,19 +102,15 @@
                                 <tbody>
 
                                     <tr scope="row" t-if="o.cookery_bakery_prac_status == 'pending' or o.cookery_bakery_prac_status == 'failed'">
-                                        <td style="border: 1px solid black;">Cooker And Bakery</td>
+                                        <td style="border: 1px solid black;">Practical</td>
                                     </tr>
 
                                     <tr scope="row" t-if="o.ccmc_oral_prac_status == 'pending' or o.ccmc_oral_prac_status == 'failed'">
                                         <td style="border: 1px solid black;">Oral</td>
 
                                     </tr>
-                                    <!-- <tr scope="row" t-if="o.oral_prac_status == 'pending' or o.oral_prac_status == 'failed'">
-                                        <td style="border: 1px solid black;">Oral/Practical</td>
-
-                                    </tr> -->
                                     <tr scope="row" t-if="o.ccmc_online_status == 'pending' or o.ccmc_online_status == 'failed'">
-                                        <td style="border: 1px solid black;">CCMC Online</td>
+                                        <td style="border: 1px solid black;">Online</td>
 
                                     </tr>
                                 </tbody>

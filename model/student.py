@@ -668,17 +668,17 @@ class CCMCCandidate(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria' ,default="pending",compute="_check_stcw_certificate")
+    ], string='STCW Criteria' ,store=True,default="pending",compute="_check_stcw_certificate")
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',default="pending" ,compute='_check_ship_visit_criteria')
+    ], string='Ship Visit Criteria',store=True,default="pending" ,compute='_check_ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',default="pending",compute="_check_attendance_criteria")
+    ], string='Attendance Criteria',store=True,default="pending",compute="_check_attendance_criteria")
     
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),

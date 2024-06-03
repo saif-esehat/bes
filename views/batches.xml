@@ -71,6 +71,7 @@
 
                         <group style="width:50%;">
                             <field name="admit_card_status"/>
+                            <field name="admit_card_alloted"/>
                         </group>
 
                     </sheet>
@@ -287,6 +288,7 @@
                         
                         <group style="width:50%;">
                             <field name="admit_card_status"/>
+                            <field name="admit_card_alloted"/>
                         </group>
 
                     </sheet>
@@ -437,6 +439,9 @@
                             <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="mumbai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="kolkatta_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="chennai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
                         </group>

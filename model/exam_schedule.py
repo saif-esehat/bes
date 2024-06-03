@@ -1858,7 +1858,7 @@ class GPExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -2157,7 +2157,7 @@ class GPExam(models.Model):
                 record.certificate_qr_code = None
         
 
-
+    @api.depends('url')
     def _compute_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -2709,7 +2709,7 @@ class CCMCExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Exam Criteria' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
     
     ccmc_online_status = fields.Selection([
         ('pending', 'Pending'),
@@ -2758,8 +2758,6 @@ class CCMCExam(models.Model):
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
 
-    # @api.depends('cookery_bakery_prac_status','ccmc_oral_prac_status','')
-    # def compute_certificate_criteria(self):
     
     url = fields.Char("URL",compute="_compute_url",tracking=True)
     qr_code = fields.Binary(string="QR Code", compute="_compute_url", store=True,tracking=True)
