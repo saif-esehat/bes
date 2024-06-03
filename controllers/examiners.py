@@ -995,6 +995,7 @@ class ExaminerPortal(CustomerPortal):
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         
         mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
         mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
@@ -1011,8 +1012,8 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.set_column('A2:A2',35, unlocked)
         mek_practical_sheet.set_column('B2:B2',10, unlocked)
         mek_practical_sheet.set_column('C2:C2',20, unlocked)
-        mek_practical_sheet.set_column('D2:L2',25, unlocked)
-        mek_practical_sheet.set_column('M2:M2',15, unlocked)
+        mek_practical_sheet.set_column('D2:G2',25, unlocked)
+        mek_practical_sheet.set_column('H2:H2',15, unlocked)
             
         mek_practical_sheet.protect()
         
@@ -1021,14 +1022,14 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
-          '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks', #E
-          '-Using Hand & Plumbing Tools \n -Task 3 \n 10 Marks', #F
-          '-Use of Chipping Tools & paint Brushes \n 10 marks', #G
-          '-Use of Carpentry Tools \n 10 marks', #H
-          '-Use of Measuring Instruments \n 10 marks', #I
-          '-Welding (1 Task)  \n 20 marks', #J
-          '-Lathe Work (1 Task) \n 10 Marks', #K
+        #   '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
+        #   '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks', #E
+          '-Using Hand & Plumbing Tools \n -Task 3 \n 30 Marks', #F
+          '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
+        #   '-Use of Carpentry Tools \n 10 marks', #H
+        #   '-Use of Measuring Instruments \n 10 marks', #I
+          '-Welding (1 Task)  \n -Lathe Work (1 Task)\n  30 marks', #J
+        #   '-Lathe Work (1 Task) \n 10 Marks', #K
           '-Electrical (1 Task) \n 10 Marks', #L
            'Remarks']
         for col, value in enumerate(header_prac):
@@ -1045,17 +1046,17 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             mek_practical_sheet.write('C{}'.format(i+3), code, locked)
         
-        mek_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_30 })
+        mek_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_30 })
+        mek_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_30 })
         mek_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_20 })
-        mek_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_10 })
+        mek_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
+        # mek_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
+        # mek_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_30 })
+        # mek_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_10 })
+        # mek_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_10 })
         
-        mek_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
+        # mek_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
         
         
         workbook.close()
@@ -1270,34 +1271,34 @@ class ExaminerPortal(CustomerPortal):
             
             roll_no = row[1]
             candidate_code_no = row[2]  
-            using_hand_plumbing_tools_task_1 = row[3]  
-            using_hand_plumbing_tools_task_2 = row[4]  
-            using_hand_plumbing_tools_task_3 = row[5]  
-            use_of_chipping_tools_paint_brushes = row[6]  
-            use_of_carpentry = row[7]  
-            use_of_measuring_instruments = row[8] 
-            welding = row[9] 
-            lathe = row[10]
-            electrical = row[11] 
+            using_hand_plumbing_tools_task_3 = row[3]  
+            # using_hand_plumbing_tools_task_2 = row[4]  
+            # using_hand_plumbing_tools_task_3 = row[5]  
+            use_of_chipping_tools_paint = row[4]  
+            # use_of_carpentry = row[7]  
+            # use_of_measuring_instruments = row[8] 
+            welding_lathe = row[5] 
+            # lathe = row[10]
+            electrical = row[6] 
 
             # mek_practical_total_marks = row[12] 
             mek_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
-            if using_hand_plumbing_tools_task_1:
-                mek_practical_total_marks += int(using_hand_plumbing_tools_task_1)
-            if using_hand_plumbing_tools_task_2:
-                mek_practical_total_marks += int(using_hand_plumbing_tools_task_2)
+            # if using_hand_plumbing_tools_task_1:
+            #     mek_practical_total_marks += int(using_hand_plumbing_tools_task_1)
+            # if using_hand_plumbing_tools_task_2:
+            #     mek_practical_total_marks += int(using_hand_plumbing_tools_task_2)
             if using_hand_plumbing_tools_task_3:
                 mek_practical_total_marks += int(using_hand_plumbing_tools_task_3)
-            if use_of_chipping_tools_paint_brushes:
-                mek_practical_total_marks += int(use_of_chipping_tools_paint_brushes)
-            if use_of_carpentry:
-                mek_practical_total_marks += int(use_of_carpentry)
-            if use_of_measuring_instruments:
-                mek_practical_total_marks += int(use_of_measuring_instruments) 
-            if welding:
-                mek_practical_total_marks += int(welding) 
-            if lathe:
-                mek_practical_total_marks += int(lathe) 
+            if use_of_chipping_tools_paint:
+                mek_practical_total_marks += int(use_of_chipping_tools_paint_brushes,use_of_carpentry,use_of_measuring_instruments)
+            # if use_of_carpentry:
+            #     mek_practical_total_marks += int(use_of_carpentry)
+            # if use_of_measuring_instruments:
+            #     mek_practical_total_marks += int(use_of_measuring_instruments) 
+            if welding_lathe:
+                mek_practical_total_marks += int(welding,lathe) 
+            # if lathe:
+            #     mek_practical_total_marks += int(lathe) 
             if electrical:
                 mek_practical_total_marks += int(electrical) 
 
@@ -1306,14 +1307,14 @@ class ExaminerPortal(CustomerPortal):
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.mek_prac:
                 candidate.mek_prac.sudo().write({
-                    'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
-                    'using_hand_plumbing_tools_task_2':using_hand_plumbing_tools_task_2,
+                    # 'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
+                    # 'using_hand_plumbing_tools_task_2':using_hand_plumbing_tools_task_2,
                     'using_hand_plumbing_tools_task_3':using_hand_plumbing_tools_task_3,
-                    'use_of_chipping_tools_paint_brushes':use_of_chipping_tools_paint_brushes,
-                    'use_of_carpentry':use_of_carpentry,
-                    'use_of_measuring_instruments':use_of_measuring_instruments,
-                    'welding':welding,
-                    'lathe':lathe,
+                    'use_of_chipping_tools_paint':use_of_chipping_tools_paint_brushes,
+                    # 'use_of_carpentry':use_of_carpentry,
+                    # 'use_of_measuring_instruments':use_of_measuring_instruments,
+                    'welding_lathe':welding,
+                    # 'lathe':lathe,
                     'electrical':electrical,
                     'mek_practical_total_marks':mek_practical_total_marks,
                     'mek_practical_remarks':mek_practical_remarks
