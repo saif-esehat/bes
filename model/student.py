@@ -1562,7 +1562,7 @@ class CcmcOralLine(models.Model):
     
 
     @api.depends(
-        'gsk_ccmc','house_keeping','attitude_proffessionalism','equipment_identification'
+        'gsk_ccmc','house_keeping','f_b','orals_house_keeping','attitude_proffessionalism','equipment_identification'
     )
     def _compute_ccmc_rating_total(self):
         for record in self:
@@ -1570,6 +1570,8 @@ class CcmcOralLine(models.Model):
                 record.gsk_ccmc +
                 # record.safety_ccmc+
                 record.house_keeping+
+                record.f_b+
+                record.orals_house_keeping+
                 record.attitude_proffessionalism+
                 record.equipment_identification
             )
