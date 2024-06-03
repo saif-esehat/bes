@@ -785,6 +785,18 @@
                                 <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span><t t-out="marksheet.ccmc_oral.toal_ccmc_rating"/>Edit</span></a>
                             </td>
+
+                             <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">
+                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                                    Confirmed
+                                </span>
+                                <span t-else="" >
+                                    Draft
+                                </span>           
+                            </td>
+
+
+
                             <td t-if="examiner_subject == 'CCMC Oral and Practical' and exam_type == 'practical_oral'" class="text-left">
                                 <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span><t t-out="marksheet.cookery_bakery.total_mrks"/>Edit</span></a>
