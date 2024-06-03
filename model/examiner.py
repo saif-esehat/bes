@@ -11,7 +11,7 @@ class Examiner(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     examiner_image = fields.Binary(string='Examiner Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)
-    exam_center = fields.Many2one("exam.center", "Exam Region",tracking=True)
+    exam_center = fields.Many2one("exam.center", "Exam Region",default=lambda self: self.get_examiner_region(),tracking=True)
 
     name = fields.Char("Name",required=True,tracking=True)
     street = fields.Char("Street",tracking=True)
@@ -61,6 +61,11 @@ class Examiner(models.Model):
         ('inactive', 'Inactive')
     ], string='State',compute="_compute_examiner_state",default="active",tracking=True)
     
+    
+    def get_examiner_region(self):
+        user_id = self.env.user.id
+        region = self.env['exam.center'].sudo().search([('exam_co_ordinator','=',user_id)]).id
+        return region
     
     
     @api.depends('user_id')

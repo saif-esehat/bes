@@ -31,7 +31,7 @@
                         </group>
                         <group style="width:100%;">
                             <field name="subject_id" string="Subject" />
-                            <field name="exam_center"  />
+                            <field name="exam_center" readonly="1"  />
                         </group>
                         <group>
                             <group>

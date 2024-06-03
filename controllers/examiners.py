@@ -517,14 +517,14 @@ class ExaminerPortal(CustomerPortal):
            
 
             # Convert string values to integers
-            subject_area1 = int(rec['subject_area1'])
-            subject_area2 = int(rec['subject_area2'])
+            # subject_area1 = int(rec['subject_area1'])
+            # subject_area2 = int(rec['subject_area2'])
             subject_area3 = int(rec['subject_area3'])
             subject_area4 = int(rec['subject_area4'])
-            subject_area5 = int(rec['subject_area5'])
-            subject_area6 = int(rec['subject_area6'])
+            # subject_area5 = int(rec['subject_area5'])
+            # subject_area6 = int(rec['subject_area6'])
             subject_area7 = int(rec['subject_area7'])
-            subject_area8 = int(rec['subject_area8'])
+            # subject_area8 = int(rec['subject_area8'])
             subject_area9 = int(rec['subject_area9'])
            
             mek_practical_remarks = rec['remarks_practical_mek']
@@ -533,14 +533,14 @@ class ExaminerPortal(CustomerPortal):
 
             # Construct the dictionary with integer values
             vals = {
-                'using_hand_plumbing_tools_task_1': subject_area1,
-                'using_hand_plumbing_tools_task_2': subject_area2,
+                # 'using_hand_plumbing_tools_task_1': subject_area1,
+                # 'using_hand_plumbing_tools_task_2': subject_area2,
                 'using_hand_plumbing_tools_task_3': subject_area3,
-                'use_of_chipping_tools_paint_brushes': subject_area4,
-                'use_of_carpentry': subject_area5,
-                'use_of_measuring_instruments': subject_area6,
-                'welding': subject_area7,
-                'lathe': subject_area8,
+                'use_of_chipping_tools_paint': subject_area4,
+                # 'welding_lathe': subject_area5,
+                # 'electrical': subject_area6,
+                'welding_lathe': subject_area7,
+                # 'lathe': subject_area8,
                 'electrical': subject_area9,
                 'mek_practical_remarks': mek_practical_remarks,
                 'mek_practical_draft_confirm': state
@@ -1022,7 +1022,7 @@ class ExaminerPortal(CustomerPortal):
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
         #   '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
         #   '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks', #E
-          '-Using Hand & Plumbing Tools \n -Task 3 \n 30 Marks', #F
+          '-Using Hand & Plumbing Tools \n -3 Task  \n 30 Marks', #F
           '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
         #   '-Use of Carpentry Tools \n 10 marks', #H
         #   '-Use of Measuring Instruments \n 10 marks', #I
@@ -1276,9 +1276,9 @@ class ExaminerPortal(CustomerPortal):
             use_of_chipping_tools_paint = row[4]  
             # use_of_carpentry = row[7]  
             # use_of_measuring_instruments = row[8] 
-            welding_lathe = row[5] 
+            welding_lathe = row[5]                   
             # lathe = row[10]
-            electrical = row[6] 
+            electrical = row[6]             
 
             # mek_practical_total_marks = row[12] 
             mek_practical_total_marks = 0  # Initialize gsk_practical_total_marks to 0
@@ -1289,19 +1289,19 @@ class ExaminerPortal(CustomerPortal):
             if using_hand_plumbing_tools_task_3:
                 mek_practical_total_marks += int(using_hand_plumbing_tools_task_3)
             if use_of_chipping_tools_paint:
-                mek_practical_total_marks += int(use_of_chipping_tools_paint_brushes,use_of_carpentry,use_of_measuring_instruments)
+                mek_practical_total_marks += int(use_of_chipping_tools_paint)
             # if use_of_carpentry:
             #     mek_practical_total_marks += int(use_of_carpentry)
             # if use_of_measuring_instruments:
             #     mek_practical_total_marks += int(use_of_measuring_instruments) 
             if welding_lathe:
-                mek_practical_total_marks += int(welding,lathe) 
+                mek_practical_total_marks += int(welding_lathe) 
             # if lathe:
             #     mek_practical_total_marks += int(lathe) 
             if electrical:
                 mek_practical_total_marks += int(electrical) 
 
-            mek_practical_remarks = row[12]
+            mek_practical_remarks = row[7]
 
             candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.mek_prac:
@@ -1309,10 +1309,10 @@ class ExaminerPortal(CustomerPortal):
                     # 'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
                     # 'using_hand_plumbing_tools_task_2':using_hand_plumbing_tools_task_2,
                     'using_hand_plumbing_tools_task_3':using_hand_plumbing_tools_task_3,
-                    'use_of_chipping_tools_paint':use_of_chipping_tools_paint_brushes,
+                    'use_of_chipping_tools_paint':use_of_chipping_tools_paint,
                     # 'use_of_carpentry':use_of_carpentry,
                     # 'use_of_measuring_instruments':use_of_measuring_instruments,
-                    'welding_lathe':welding,
+                    'welding_lathe':welding_lathe,
                     # 'lathe':lathe,
                     'electrical':electrical,
                     'mek_practical_total_marks':mek_practical_total_marks,

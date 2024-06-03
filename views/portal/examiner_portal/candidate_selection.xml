@@ -989,8 +989,8 @@
                                 </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject_area3">Using Hand and Plumbing Tools (Task 3)</label>
-                                        <input type="number" min="0" max="10" class="form-control" id="subject_area3" name="subject_area3" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_3" required="True"/>
+                                        <label for="subject_area3">Using Hand and Plumbing Tools (3 Task)</label>
+                                        <input type="number" min="0" max="30" class="form-control" id="subject_area3" name="subject_area3" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_3" required="True"/>
                                         /30
                                     </div>
                                 </div>
