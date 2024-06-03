@@ -1771,7 +1771,7 @@ class ExaminerPortal(CustomerPortal):
             remarks = row[9]
             
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
-            if candidate and candidate.mek_oral:
+            if candidate and candidate.ccmc_oral:
                 candidate.ccmc_oral.sudo().write({
                     'house_keeping':house_keeping,
                     'f_b':f_b,
@@ -1834,7 +1834,7 @@ class ExaminerPortal(CustomerPortal):
             # mek_practical_remarks = row[12]
 
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
-            if candidate and candidate.mek_prac:
+            if candidate and candidate.cookery_bakery:
                 candidate.cookery_bakery.sudo().write({
                     'hygien_grooming':hygien_grooming,
                     'appearance':appearance,
