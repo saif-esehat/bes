@@ -98,6 +98,13 @@
                                         </a> 
                                     </td>
                                 </t>
+                                <t t-if="subject == 'CCMC GSK Oral'" >
+                                    <td class="text-left">
+                                        <a  t-attf-href="/open_ccmc_oral_form?rec_id={{ c.ccmc_candidate.id }}&amp;ccmc_oral={{ c.ccmc_oral.id }}&amp;assignment_id={{assignment_id}}">
+                                            CCMC GSK Oral
+                                        </a> 
+                                    </td>
+                                </t>
 
                             
 
@@ -1270,6 +1277,186 @@
             </div>
         </t>
     </template>
+    <template id="ccmc_oral_marks_submit" name="CCMC Oral Marks Submittion">
+        <style>
+            body {
+            background-color: #f8f9fa;
+            }
+
+            .container {
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            }
+
+            .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-img-container {
+            text-align: left;
+            margin-bottom: 10px;
+            }
+
+            .card-img {
+            width: 150px; /* Adjust the width as needed */
+            height: 150px; /* Adjust the height as needed */
+            object-fit: cover;
+            border-radius: 10px; /* Make it square by setting border-radius to half of the width/height */
+            }
+
+            .form-title {
+            text-align: center;
+            color: #007bff;
+            }
+
+            .form-group {
+            margin-bottom: 20px;
+            }
+
+            .form-label {
+            font-weight: bold;
+            }
+
+            .btn-submit {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            }
+        </style>
+        <script>
+            function displayImage(input) {
+                const cardImg = document.querySelector('.card-img');
+                const file = input.files[0];
+
+                if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    cardImg.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+                }
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">CCMC Oral Marks</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" class="form-control" id="indos" name="indos" t-att-value="indos"/>
+                               
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="text-right">
+                                        <div class="form-group">
+                                            <label for="candidate_image"></label>
+                                            <t t-if="candidate_image">
+                                                <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="candidate_name">Candidate Name</label>
+                                        <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="indos">Indos No</label>
+                                        <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="house_keeping">House keeping Practical</label>
+                                        <input type="number" class="form-control" id="house_keeping" name="house_keeping" t-att-value="ccmc_oral.house_keeping" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="f_b">F&amp;B services practical</label>
+                                        <input type="number" class="form-control" id="f_b" name="f_b" t-att-value="ccmc_oral.f_b" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="orals_house_keeping">Orals on Housekeeping and F&amp;B Service</label>
+                                        <input type="number" class="form-control" id="orals_house_keeping" name="orals_house_keeping" t-att-value="ccmc_oral.orals_house_keeping" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="attitude_proffessionalism">Attitude &amp; Proffesionalism</label>
+                                        <input type="number" class="form-control" id="attitude_proffessionalism" name="attitude_proffessionalism" t-att-value="ccmc_oral.attitude_proffessionalism" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="equipment_identification">Identification of Equipment</label>
+                                        <input type="number" class="form-control" id="equipment_identification" name="equipment_identification" t-att-value="ccmc_oral.equipment_identification" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="ccmc_gsk">GSK</label>
+                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_oral.gsk_ccmc" required="True"/>
+                                        <!-- <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_gsk_oral.gsk_ccmc" required="True"/> -->
+                                    </div>
+                                </div>
+                                
+                                
+                                <!-- <div class="col-md-6">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="safety_ccmc">Safety</label>
+                                                <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_oral.safety_ccmc" required="True"/>
+                                                <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="state">Status</label>
+                                        <select class="form-control" id="state" name="state">
+                                            <option value="draft">Draft</option>
+                                            <option value="confirm">Confirm</option>
+                                        
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group" style="display:grid">
+                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="ccmc_gsk_oral_marks_submit" name="CCMC GSK Oral Marks Submittion">
         <style>
             body {
@@ -1354,68 +1541,61 @@
                                
                             </div>
                             <div class="row">
-                            <div class="col-md-12">
-                                <div class="text-right">
-                                <div class="form-group">
-                                    <label for="candidate_image"></label>
-                                   <t t-if="candidate_image">
-                                        <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
-                                    </t>
-                                    <t t-else="">
-                                        <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
-                                    </t>
-                                </div>
-                                </div>
+                                <div class="col-md-12">
+                                    <div class="text-right">
+                                        <div class="form-group">
+                                            <label for="candidate_image"></label>
+                                            <t t-if="candidate_image">
+                                                <img t-att-src="'data:image/png;base64,'+candidate_image.decode('utf-8')" style="max-width: 100%; max-height: 100px;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <img src="/web/static/src/img/placeholder.png" style="max-width: 100%; max-height: 100px;"/>
+                                            </t>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="candidate_name">Candidate Name</label>
-                                    <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
+                                    <div class="form-group">
+                                        <label for="candidate_name">Candidate Name</label>
+                                        <input type="text" class="form-control" id="candidate_name" name="candidate_name" t-att-value="candidate_name" readonly="1"/>
+                                    </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="indos">Indos No</label>
+                                        <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
+                                    </div>
                                 </div>
                                 
-
-                                <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="indos">Indos No</label>
-                                    <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
-                                </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk">GSK</label>
                                         <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_gsk_oral.gsk_ccmc" required="True"/>
                                     </div>
                                 </div>
+                                
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="safety_ccmc">Safety</label>
-                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
+                                        <label for="ccmc_gsk">Safety</label>
+                                        <input type="number" class="form-control" id="safety" name="safety" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="state">Status</label>
-                                    <select class="form-control" id="state" name="state">
-                                        <option value="draft">Draft</option>
-                                        <option value="confirm">Confirm</option>
-                                       
-                                    </select>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="state">Status</label>
+                                        <select class="form-control" id="state" name="state">
+                                            <option value="draft">Draft</option>
+                                            <option value="confirm">Confirm</option>
+                                        
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
-                                <div class="form-group" style="display:grid">
-                                    
+                                    <div class="form-group" style="display:grid">
                                         <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
                                     </div>
                                 </div>
-
-
-
                             </div>
-
-
-
                         </form>
                     </div>
                 </div>

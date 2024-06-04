@@ -1653,9 +1653,11 @@ class ExamOralPracticalExaminers(models.Model):
                         (self.env.ref("bes.view_marksheet_ccmc_form_gsk_online").id, 'form')]
 
         
-        elif self.prac_oral_id.subject.name == 'CCMC GSK Oral':
-            views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
-                    (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
+        elif self.subject.name == 'CCMC GSK Oral':
+            if self.exam_type == 'practical_oral':
+
+                 views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
             
         
         
