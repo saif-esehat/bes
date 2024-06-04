@@ -11,7 +11,7 @@ class Examiner(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     examiner_image = fields.Binary(string='Examiner Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)
-    exam_center = fields.Many2one("exam.center", "Exam Region",default=lambda self: self.get_examiner_region(),tracking=True)
+    exam_center = fields.Many2one("exam.center", "Exam Region",tracking=True)
 
     name = fields.Char("Name",required=True,tracking=True)
     street = fields.Char("Street",tracking=True)
@@ -84,12 +84,12 @@ class Examiner(models.Model):
                 raise ValidationError("Zip code must be 6 digits.")
 
 
-    @api.constrains('phone')
-    def _check_valid_phone(self):
-        for record in self:
-            # Check if phone has 8 digits
-            if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
-                raise ValidationError("Phone number must be 8 digits.")
+    # @api.constrains('phone')
+    # def _check_valid_phone(self):
+    #     for record in self:
+    #         # Check if phone has 8 digits
+    #         if record.phone and not record.phone.isdigit() or len(record.phone) != 8:
+    #             raise ValidationError("Phone number must be 8 digits.")
 
     @api.constrains('mobile')
     def _check_valid_mobile(self):
