@@ -866,9 +866,19 @@
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.ccmc_oral.equipment_identification"/>
                             </td>
-                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.ccmc_oral.gsk_ccmc"/>
-                            </td>
+                            
+                            <t t-if="marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm'">
+                                <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                    <t t-out="marksheet.ccmc_oral.gsk_ccmc"/>
+                                </td>
+                                
+                            </t>
+                            <t t-else="">
+                                <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                    <span class="text-danger">Pending</span>
+                                </td>
+                            </t>
+                            
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.ccmc_oral.toal_ccmc_rating"/>
                             </td>
