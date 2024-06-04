@@ -154,8 +154,26 @@
                             </div>
                         </div>
                     </div>
-                    <p style="page-break-before:always;"> </p>
 
+                    <t t-if="o.attempt_number > 1">
+                        <div class="container"  style="font-size:18px;  margin-top:20px;  font-family: 'TimesNewRomanBold';">
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Instructions for candidates:</strong>
+                                    <ol>
+                                        <li>Report at 0900hrs on the exam day.</li>
+                                        <li>Report in Uniform for examination including PPE where required.</li>
+                                        <li>Mobiles not allowed.</li>
+                                        <li>Repeater candidates must bring CDC/Passport.</li>
+                                        <li>Repeater must confirm Date &amp; Venue of the examination on <a href="http://www.seafarers.edu.in">www.seafarers.edu.in</a></li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                    </t>
+                    <p style="page-break-before:always;"> </p>
                 </t>
             </div>
 

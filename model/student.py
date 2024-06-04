@@ -229,11 +229,18 @@ class GPCandidate(models.Model):
     @api.depends('stcw_certificate')
     def _check_stcw_certificate(self):
          for record in self:
+            # Retrieve all the STCW certificate records
+            stcw_certificates = record.stcw_certificate
+
             course_type_already  = [course.course_name for course in record.stcw_certificate]
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = record.check_combination_exists(course_type_already)
-            if all_types_exist:
+            
+            # Check if the candidate_cert_no is present for all the STCW certificates
+            all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
+
+            if all_types_exist and all_cert_nos_present:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
             else:
@@ -764,12 +771,18 @@ class CCMCCandidate(models.Model):
     @api.constrains('stcw_certificate')
     def _check_stcw_certificate(self):
          for record in self:
+            # Retrieve all the STCW certificate records
+            stcw_certificates = record.stcw_certificate
+
             course_type_already  = [course.course_name for course in record.stcw_certificate]
             # import wdb; wdb.set_trace();    
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = self.check_combination_exists(course_type_already)
-            if all_types_exist:
+            # Check if the candidate_cert_no is present for all the STCW certificates
+            all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
+
+            if all_types_exist and all_cert_nos_present:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
             else:
