@@ -102,12 +102,12 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
             },
             _onConfirmCCMCGSKOral: function(evt){
                 
-                debugger
+                // debugger
 
                 var gsk_oral_marksheet_id = evt.target.id
 
                 var postData = {
-                    id: mek_marksheet_id // Assuming you want to pass the ID in the request body
+                    id: gsk_oral_marksheet_id // Assuming you want to pass the ID in the request body
                 };
                 var result = [];
 
@@ -115,26 +115,72 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
               
                 
     
-                // $.ajax({
-                //     type: "POST",
-                //     url: '/confirm/mek/marksheet',
-                //     data: JSON.stringify(postData) ,
-                //     contentType: 'application/json',                    
-                //     success: function (response) {
-                //         // debugger
-                //         console.log("POST request successful:", response);
-                //         location.reload();
+                $.ajax({
+                    type: "POST",
+                    url: '/confirm/ccmcgsk/marksheet',
+                    data: JSON.stringify(postData) ,
+                    contentType: 'application/json',                    
+                    success: function (response) {
+                        // debugger
+                        console.log("POST request successful:", response);
+                        location.reload();
 
-                //         // if response["status"]
-                //         // Handle success response
-                //     },
-                //     error: function (xhr, status, error) {
-                //         // debugger
-                //         console.error("POST request failed:", error);
+                        // if response["status"]
+                        // Handle success response
+                    },
+                    error: function (xhr, status, error) {
+                        // debugger
+                        console.error("POST request failed:", error);
                         
-                //         // Handle error
-                //     }
-                // });
+                        // Handle error
+                    }
+                });
+
+            }
+        }
+    )
+
+    publicWidget.registry.ExaminerPortalCCMCOral = publicWidget.Widget.extend(
+        {
+            selector : ".confirm_ccmc_oral_marksheet_class",
+            events:{
+                'click':"_onConfirmCCMCOral"
+            },
+            _onConfirmCCMCOral: function(evt){
+                
+                // debugger
+
+                var gsk_oral_marksheet_id = evt.target.id
+
+                var postData = {
+                    id: gsk_oral_marksheet_id // Assuming you want to pass the ID in the request body
+                };
+                var result = [];
+
+
+              
+                
+    
+                $.ajax({
+                    type: "POST",
+                    url: '/confirm/ccmc_oral/marksheet',
+                    data: JSON.stringify(postData) ,
+                    contentType: 'application/json',                    
+                    success: function (response) {
+                        // debugger
+                        console.log("POST request successful:", response);
+                        location.reload();
+
+                        // if response["status"]
+                        // Handle success response
+                    },
+                    error: function (xhr, status, error) {
+                        // debugger
+                        console.error("POST request failed:", error);
+                        
+                        // Handle error
+                    }
+                });
 
             }
         }
