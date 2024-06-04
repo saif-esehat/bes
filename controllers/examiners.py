@@ -264,6 +264,7 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
             
+            import wdb;wdb.set_trace();
             return request.render("bes.examiner_candidate_list", 
                                   {'candidate': candidate,
                                    'ccmc_assignment':ccmc_assignment , 
@@ -747,9 +748,53 @@ class ExaminerPortal(CustomerPortal):
             ccmc_oral = request.env['ccmc.oral.line'].sudo().search([('id','=',rec['ccmc_oral'])]) 
             # exam_date = ccmc_oral.ccmc_oral_exam_date 'exam_date':exam_date, 
             
-            return request.render("bes.ccmc_gsk_oral_marks_submit", {'indos': candidate_indos,'ccmc_oral':ccmc_oral ,'candidate_name': candidate_name, 'candidate_image': candidate_image, "page_name": "ccmc_oral"})
+            return request.render("bes.ccmc_oral_marks_submit", {'indos': candidate_indos,'ccmc_oral':ccmc_oral ,'candidate_name': candidate_name, 'candidate_image': candidate_image, "page_name": "ccmc_oral"})
         
+    @http.route('/open_ccmc_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
+    def open_ccmc_gsk_oral_form(self, **rec):
+
         
+        candidate = request.env['ccmc.candidate'].sudo()
+        
+        if request.httprequest.method == "POST":
+            print('exittttttttttttttttttttttttttttttt')
+            # indos = rec['indos']
+            
+            marksheet = request.env['ccmc.gsk.oral.line'].sudo().search([('id','=',rec['ccmc_gsk_oral'])])
+
+            # Convert string values to integers                    
+            gsk_ccmc = int(rec['gsk_ccmc'])
+            safety_ccmc = int(rec['safety_ccmc'])
+
+            # Construct the dictionary with integer values
+            vals = {
+                'gsk_ccmc': gsk_ccmc,
+                'safety_ccmc': safety_ccmc,
+               
+                
+            }
+
+            # import wdb;wdb.set_trace();
+            # Write to the One2many field using the constructed dictionary
+            marksheet.write(vals)
+            
+            return request.redirect("/my/assignments/batches/candidates/"+rec["batch_id"]+"/"+rec['assignment_id'])
+
+        else:
+
+            rec_id = rec['rec_id']
+            
+            ccmc_candidate_rec = candidate.search([('id', '=', rec_id)])
+            candidate_indos = ccmc_candidate_rec.indos_no
+            candidate_name = ccmc_candidate_rec.name
+            candidate_image = ccmc_candidate_rec.candidate_image
+        
+            ccmc_gsk_oral = request.env['ccmc.gsk.oral.line'].sudo().search([('id','=',rec['ccmc_gsk_oral'])]) 
+            # exam_date = ccmc_oral.ccmc_oral_exam_date 'exam_date':exam_date, 
+            
+            return request.render("bes.ccmc_gsk_oral_marks_submit", {'indos': candidate_indos,'ccmc_gsk_oral':ccmc_gsk_oral ,'candidate_name': candidate_name, 'candidate_image': candidate_image, "page_name": "ccmc_oral"})
+
+
         
     @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_gsk_marksheet(self,batch_id,assignment_id, **rec):
@@ -1985,7 +2030,8 @@ class ExaminerPortal(CustomerPortal):
         # return request.render("bes.examiner_assignment_candidate_list")
     
     @http.route('/my/uploadccmcgskmarksheet', type='http', auth="user", website=True)
-    def upload_ccmc_marksheet(self,**kw):
+    def upload_ccmc_gsk_marksheet(self,**kw):
+        # import wdb;wdb.set_trace();
         user_id = request.env.user.id
         batch_id = int(kw['ccmc_gsk_ids'])
         assignment_id = int(kw['ccmc_ass_ids'])
@@ -2010,7 +2056,7 @@ class ExaminerPortal(CustomerPortal):
                 toal_ccmc_oral_rating += int(safety_ccmc) 
 
             # remarks = row[8]
-            import wdb;wdb.set_trace();
+            # import wdb;wdb.set_trace();
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.ccmc_gsk_oral:
                 candidate.ccmc_gsk_oral.sudo().write({
