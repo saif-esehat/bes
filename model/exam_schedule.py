@@ -2629,7 +2629,7 @@ class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
     _rec_name = "exam_id"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Schedule'
+    _description= 'CCMC Schedule'
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
@@ -2684,7 +2684,7 @@ class CCMCExam(models.Model):
     ], string='Cookery And Bakery',tracking=True)
     
     
-    cookery_oral = fields.Float("Cookery Oral",readonly=True,tracking=True)
+    cookery_oral = fields.Float("CCMC Oral/GSK",readonly=True,tracking=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
@@ -3035,14 +3035,14 @@ class CCMCExam(models.Model):
         ccmc_online_state = self.ccmc_online.state == 'done'
         
         
-        if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 ) or not (len(self.ccmc_online)==0):
+        if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
             
-             if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 ):
+             if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
                  
                  if cookery_draft_confirm and ccmc_oral_state:
                      cookery_bakery_marks = self.cookery_bakery.total_mrks
-                     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
-                     self.ccmc_oral_total = ccmc_oral_marks
+                     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating + self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                     self.cookery_oral = ccmc_oral_marks
                      self.cookery_practical = cookery_bakery_marks
                  else:
                     raise ValidationError("MEK Oral Or Practical Not Confirmed")

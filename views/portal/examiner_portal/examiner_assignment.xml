@@ -272,10 +272,26 @@
                                     }
 
                                     function openCcmcUploadModal(button) {
+                                    <!-- debugger -->
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('ccmc-batch-id');
+                                    var assignId = button.getAttribute('ccmc-assign-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('ccmc_batch_ids').value = dataId;
+                                    document.getElementById('ccmc_assignment_ids').value = assignId;
+                                    
+
+
+                                    }
+                                    
+                                    function openccmcgskUploadModal(button) {
+                                    <!-- debugger -->
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('ccmc-gsk-id');
+                                    var assignId = button.getAttribute('ccmc-assign-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('ccmc_gsk_ids').value = dataId;
+                                    document.getElementById('ccmc_ass_ids').value = assignId;
                                     
 
 
@@ -288,64 +304,6 @@
                                     document.getElementById('marksheet_id').value = dataId;
                                     }
 
-                                    function updateMarks(inputField, subjectArea) {
-                                        var inputId = inputField.id;
-                                        let candidate_id = inputId.match(/\d+$/)[0];
-                                        let marks = parseFloat(inputField.value) || 0;
-                                    
-                                        var data = {
-                                            candidate_id: candidate_id,
-                                            subject_area: subjectArea,
-                                            marks: marks
-                                        };
-                                    
-                                        $.ajax({
-                                            type: "POST",
-                                            url: '/my/gpcandidate/update_marks',
-                                            data: JSON.stringify(data),
-                                            contentType: 'application/json',
-                                            dataType: 'json',
-                                            success: function (response) {
-                                                console.log("POST request successful:", response);
-                                    
-                                                if (response.result === 'success') {
-                                                    // Recalculate total marks
-                                                    var subject1 = parseFloat($('#subject_area_1_2_3_' + candidate_id).val()) || 0;
-                                                    var subject2 = parseFloat($('#subject_area_4_5_6_' + candidate_id).val()) || 0;
-                                                    var subject3 = parseFloat($('#practical_record_journals_' + candidate_id).val()) || 0;
-                                                    var total = subject1 + subject2 + subject3;
-                                    
-                                                    $('#gsk_oral_total_marks_' + candidate_id).text(total);
-                                    
-                                                    // Update total marks in the backend
-                                                    var totalData = {
-                                                        candidate_id: candidate_id,
-                                                        gsk_oral_total_marks: total
-                                                    };
-                                    
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        url: '/my/gpcandidate/update_total_marks',
-                                                        data: JSON.stringify(totalData),
-                                                        contentType: 'application/json',
-                                                        dataType: 'json',
-                                                        success: function (response) {
-                                                            console.log("Total marks updated successfully:", response);
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error("Failed to update total marks:", error);
-                                                        }
-                                                    });
-                                                } else {
-                                                    console.error("Failed to update marks:", response.message);
-                                                }
-                                            },
-                                            error: function (xhr, status, error) {
-                                                console.error("POST request failed:", error);
-                                            }
-                                        });
-                                    }
-                                    
                                     
                                     
         </script>
@@ -404,6 +362,7 @@
                                     <form method="post" action="/my/uploadgskmarksheet" enctype="multipart/form-data">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="batch_id" name="batch_id" />
+                                        <input type="hidden" id="gsk_assignment_ids" name="gsk_assignment_ids" />
                                         <div class="form-group">
                                             <label for="fileUpload">XLSX Upload</label>
                                             <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
@@ -433,6 +392,7 @@
                                     <form method="post" action="/my/uploadmekmarksheet" enctype="multipart/form-data">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="mek_batch_ids" name="mek_batch_ids" />
+                                        <input type="hidden" id="mek_assignment_ids" name="mek_assignment_ids" />
                                         <div class="form-group">
                                             <label for="fileUpload">XLSX Upload</label>
                                             <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
@@ -463,6 +423,38 @@
                                     <form method="post" action="/my/uploadccmcmarksheet" enctype="multipart/form-data">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="ccmc_batch_ids" name="ccmc_batch_ids" />
+                                        <input type="hidden" id="ccmc_assignment_ids" name="ccmc_assignment_ids" />
+                                        <div class="form-group">
+                                            <label for="fileUpload">XLSX Upload</label>
+                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                        </div>
+                                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+           
+                <!-- Upload CCMC GSK Marksheet  -->
+                <div class="modal fade" id="uploadCcmcGskMarksheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Marksheet</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+
+                                    <form method="post" action="/my/uploadccmcgskmarksheet" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="ccmc_gsk_ids" name="ccmc_gsk_ids" />
+                                        <input type="hidden" id="ccmc_ass_ids" name="ccmc_ass_ids" />
                                         <div class="form-group">
                                             <label for="fileUpload">XLSX Upload</label>
                                             <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
@@ -534,14 +526,14 @@
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'"> -->
                 <t t-if="examiner_subject== 'CCMC GSK Oral'">
-                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC GSK Oral Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC GSK Oral Marksheet</a>
+                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC GSK Oral Marksheet</a>
+                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-gsk-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openccmcgskUploadModal(this)" data-target="#uploadCcmcGskMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC GSK Oral Marksheet</a>
                 </t>
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'"> -->
-                <t t-if="examiner_subject == 'CCMC Oral and Practical'">
-                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral and Practical Marksheet</a>
-                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral and Practical Marksheet</a>
+                <t t-if="examiner_subject == 'CCMC'">
+                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral &amp; Practical Marksheet</a>
+                    <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral &amp; Practical Marksheet</a>
                 </t>
                
                 <t t-if="not marksheet_image">
@@ -566,37 +558,66 @@
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Oral total</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Climb the mast with safe practices ,<br/> Prepare and throw Heaving Line, <br/> Rigging Bosun's Chair and self lower and hoist</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Climb the mast with safe practices ,<br/> Prepare and throw Heaving Line, <br/> Rigging Bosun's Chair and self lower and hoist</th>
                         <!-- <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rigging Bosun's Chair and self lower and hoist</th> -->
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rig a stage for painting shipside<br/>Rig a Pilot Ladder<br/> Rig scaffolding to work at a height </th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Rig a stage for painting shipside<br/>Rig a Pilot Ladder<br/> Rig scaffolding to work at a height </th>
                         <!-- <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rig a Pilot Ladder</th>
                             <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Rig scaffolding to work at a height</th> -->
-                            <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
-                            <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
+                            <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
+                            <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
                         <!-- <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> .Reeve 3- fold / 2 fold purchase</th> -->
                         <!-- <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight</th> -->
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Gsk Practical Total</th>
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Edit Marks</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Practical Total</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Uses of Hand/Plumbing/Carpentry Tools <br/> Chipping Tools <br/> Brushes &amp; Paints</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding <br/> Lathe/Drill/Grinder</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Electrical</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Journal</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Oral Total</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 1)</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 2)</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 3)</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Chipping Tools &amp; paint Brushes</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Carpentry Tools</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Measuring Instruments</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding (1 Task)</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Lathe Work (1 Task)</th>
+                        <!-- <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 1)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (Task 2)</th> -->
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Using Hand &amp; Plumbing Tools (3 Task)</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Chipping Tools &amp; paint Brushes <br/>Use of Carpentry Tools<br/>Use of Measuring Instruments </th>
+                        <!-- <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Carpentry Tools</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Use of Measuring Instruments</th> -->
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding (1 Task) <br/>Lathe Work (1 Task) </th>
+                        <!-- <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Lathe Work (1 Task)</th> -->
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Electrical (1 Task)</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Practical Total</th>
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
+                        
+                        <th t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">GSK</th>
+                        <th t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">Safety</th>
+                        <th t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">CCMC GSK Oral</th>
+                        <th t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
-                        <th t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">CCMC Oral</th>
-                        <th t-if="examiner_subject == 'CCMC Oral and Practical' and exam_type == 'practical_oral'" class="text-left">CCMC Practical</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">House Keeping</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">F &amp; B service Practical</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Orals on Housekeeping and F &amp; B Service</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Attitude &amp; Proffesionalism</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Identification of Equipment</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">GSK</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">CCMC Oral Total</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
+
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Appearance(Dish 1)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Taste(Dish 1)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Hygiene &amp; Grooming</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Texture(Dish 1)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Appearance(Dish 2)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Taste(Dish 2)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Texture(Dish 2)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Appearance(Dish 3)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Taste(Dish 3)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Texture(Dish 3)</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">identification of ingredients</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Knowledge of menu</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">CCMC Practical Total</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -608,7 +629,7 @@
                                 <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
                                 <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
                                 <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.name" />
-                                <t t-if="examiner_subject == 'CCMC Oral and Practical'" t-out="marksheet.ccmc_candidate.name" />
+                                <t t-if="examiner_subject == 'CCMC'" t-out="marksheet.ccmc_candidate.name" />
 
                             
                             </td>
@@ -625,6 +646,12 @@
                                 </t>
                                 <t t-elif="examiner_subject == 'MEK'">
                                     <t t-out="marksheet.gp_marksheet.exam_id" />
+                                </t>
+                                <t t-elif="examiner_subject == 'CCMC'">
+                                    <t t-out="marksheet.ccmc_marksheet.exam_id" />
+                                </t>
+                                <t t-elif="examiner_subject == 'CCMC GSK Oral'">
+                                    <t t-out="marksheet.ccmc_marksheet.exam_id" />
                                 </t>
                             </td>
 
@@ -725,9 +752,11 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_oral.journal"/>
                             </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_oral.mek_oral_total_marks"/>
+                            </td>
                             
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
-                                <t t-out="marksheet.mek_oral.mek_oral_total_marks"/>
                                 <a t-attf-href="/open_mek_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_oral={{marksheet.mek_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span class='p-2'>Edit</span></a>
                             </td>
@@ -759,9 +788,11 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.electrical"/>
                             </td>
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
+                            </td>
 
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
-                                <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                                 <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span class='p-2'>Edit</span></a>
                             </td>
@@ -783,13 +814,26 @@
                                 </span>   
                             </td>
 
-                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral' " class="text-left">
-                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                <span><t t-out="marksheet.ccmc_oral.toal_ccmc_rating"/>Edit</span></a>
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_gsk_oral.gsk_ccmc"/>
                             </td>
 
-                             <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">
-                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_gsk_oral.safety_ccmc"/>
+                            </td>
+                            
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating"/>
+                            </td>
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral' " class="text-left">
+                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span>Edit</span></a>
+                            </td>
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">
+                                <span t-if="marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm'" >
                                     Confirmed
                                 </span>
                                 <span t-else="" >
@@ -797,7 +841,8 @@
                                 </span>           
                             </td>
 
-                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral" class="text-left">
+                            
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral'" class="text-left">
                                 <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
                                 </span>
                                 <span t-else="" >
@@ -806,11 +851,108 @@
                             </td>
 
 
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.house_keeping"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.f_b"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.orals_house_keeping"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.attitude_proffessionalism"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.equipment_identification"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.gsk_ccmc"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.ccmc_oral.toal_ccmc_rating"/>
+                            </td>
 
-                            <td t-if="examiner_subject == 'CCMC Oral and Practical' and exam_type == 'practical_oral'" class="text-left">
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
+                                <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span>Edit</span></a>
+                            </td>
+
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.hygien_grooming"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.appearance"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.taste"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.texture"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.appearance_2"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.taste_2"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.texture_2"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.appearance_3"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.taste_3"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.texture_3"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.identification_ingredians"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.knowledge_of_menu"/>
+                            </td>
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.cookery_bakery.total_mrks"/>
+                            </td>
+
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
+                                <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                <span>Edit</span></a>
+                            </td>
+
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
+                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                                    Confirmed
+                                </span>
+                                <span t-else="" >
+                                    Draft
+                                </span>           
+                            </td>
+
+                            
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
+                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                                </span>
+                                <span t-else="" >
+                                    <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_ccmc_gsk_oral_marksheet_class">Confirm</button>                            
+                                </span>   
+                            </td>
+
+                            <!-- <td t-if="examiner_subject == 'CCMC GSK Oral' and exam_type == 'practical_oral" class="text-left">
+                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                                </span>
+                                <span t-else="" >
+                                    <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_ccmc_gsk_oral_marksheet_class">Confirm</button>                            
+                                </span>   
+                            </td> -->
+
+                            <!-- <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
                                 <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
                                 <span><t t-out="marksheet.cookery_bakery.total_mrks"/>Edit</span></a>
-                            </td>
+                            </td> -->
                             
                         </tr>
                     </t>

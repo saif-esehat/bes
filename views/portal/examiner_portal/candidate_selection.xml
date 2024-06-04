@@ -989,8 +989,8 @@
                                 </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="subject_area3">Using Hand and Plumbing Tools (Task 3)</label>
-                                        <input type="number" min="0" max="10" class="form-control" id="subject_area3" name="subject_area3" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_3" required="True"/>
+                                        <label for="subject_area3">Using Hand and Plumbing Tools (3 Task)</label>
+                                        <input type="number" min="0" max="30" class="form-control" id="subject_area3" name="subject_area3" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.using_hand_plumbing_tools_task_3" required="True"/>
                                         /30
                                     </div>
                                 </div>
@@ -1381,57 +1381,18 @@
                                     <input type="text" class="form-control" id="indos" name="indos" t-att-value="indos" readonly="1"/>
                                 </div>
                                 </div>
-
-                                <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="exam_date">Exam Date</label>
-                                    <input type="text" class="form-control" id="exam_date" name="exam_date" t-att-value="exam_date"/>
-                                </div>
-                           
-                                </div>    -->
-                               
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="house_keeping">House keeping Practical</label>
-                                        <input type="number" class="form-control" id="house_keeping" name="house_keeping" t-att-value="ccmc_oral.house_keeping" required="True"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="f_b">F&amp;B services practical</label>
-                                        <input type="number" class="form-control" id="f_b" name="f_b" t-att-value="ccmc_oral.f_b" required="True"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="orals_house_keeping">Orals on Housekeeping and F&amp;B Service</label>
-                                        <input type="number" class="form-control" id="orals_house_keeping" name="orals_house_keeping" t-att-value="ccmc_oral.orals_house_keeping" required="True"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="attitude_proffessionalism">Attitude &amp; Proffesionalism</label>
-                                        <input type="number" class="form-control" id="attitude_proffessionalism" name="attitude_proffessionalism" t-att-value="ccmc_oral.attitude_proffessionalism" required="True"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="equipment_identification">Identification of Equipment</label>
-                                        <input type="number" class="form-control" id="equipment_identification" name="equipment_identification" t-att-value="ccmc_oral.equipment_identification" required="True"/>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk">GSK</label>
-                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_oral.gsk_ccmc" required="True"/>
+                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_gsk_oral.gsk_ccmc" required="True"/>
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="safety_ccmc">Safety</label>
-                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_oral.safety_ccmc" required="True"/>
+                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="state">Status</label>

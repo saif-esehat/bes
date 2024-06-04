@@ -35,7 +35,7 @@ class GPCandidatePortal(CustomerPortal):
             registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate.id),('state','in',('1-in_process','3-certified'))])
             
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
-            registered_exams
+            # registered_exams
             # import wdb; wdb.set_trace(); 
             
             show_certificate = registered_exams.state == '3-certified' or False
@@ -70,10 +70,10 @@ class GPCandidatePortal(CustomerPortal):
             # print("candidate",candidate)
             registered_exams = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',candidate.id),('state','in',('1-in_process','3-certified'))])
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
-            candidate = registered_exams
+            # candidate = registered_exams
             # import wdb; wdb.set_trace(); 
             show_certificate = candidate.certificate_criteria == 'passed' or False
-            if registered_exams.state == '1-in_process' and registered_exams.ccmc_candidate.institute_batch_id.admit_card_status == 'issued':
+            if registered_exams.state == '1-in_process' and candidate.institute_batch_id.admit_card_status == 'issued' and candidate.stcw_criteria == 'passed' and candidate.ship_visit_criteria == 'passed' and candidate.attendance_criteria == 'passed':
                 show_admit_card = True
             else:
                 show_admit_card = False
