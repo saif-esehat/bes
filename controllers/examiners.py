@@ -194,6 +194,23 @@ class ExaminerPortal(CustomerPortal):
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
         return json.dumps({"status":"success"})
     
+    
+    @http.route(['/confirm/ccmcgsk/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmCCMCGSKMarksheet(self, **kw):
+        # print("KW Confirm GSK")
+        # import wdb; wdb.set_trace()
+        print("KW Confirm GSK")
+        # print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+        last_part = marksheet_id.split('_')[-1]
+        marksheet_id = int(last_part)
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.ccmc_gsk_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    
+    
     @http.route(['/confirm/mek/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmMEKMarksheet(self, **kw):
         print("KW Confirm MEK")
@@ -211,6 +228,26 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
         marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    
+    @http.route(['/confirm/ccmc_oral/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmCCMCORalMarksheet(self, **kw):
+        print("KW Confirm MEK")
+        
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.cookery_bakery.write({"cookery_draft_confirm": 'confirm' })
+        marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
         return json.dumps({"status":"success"})
     
     

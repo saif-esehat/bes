@@ -1592,6 +1592,8 @@ class ExamOralPracticalExaminers(models.Model):
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
     
+    extended = fields.Boolean("Extended")
+    
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
