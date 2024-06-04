@@ -753,7 +753,6 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_ccmc_gsk_oral_form', type='http', auth="user", website=True,method=["POST","GET"])
     def open_ccmc_gsk_oral_form(self, **rec):
 
-        # import wdb;wdb.set_trace();
         
         candidate = request.env['ccmc.candidate'].sudo()
         
@@ -775,6 +774,7 @@ class ExaminerPortal(CustomerPortal):
                 
             }
 
+            # import wdb;wdb.set_trace();
             # Write to the One2many field using the constructed dictionary
             marksheet.write(vals)
             
