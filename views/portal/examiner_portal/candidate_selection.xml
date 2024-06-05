@@ -1391,8 +1391,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="house_keeping">House keeping Practical</label>
-                                        <input type="number" min="0" max="10" class="form-control" id="house_keeping" name="house_keeping" t-att-value="ccmc_oral.house_keeping" required="True"/>
-                                        /10
+                                        <input type="number" min="0" max="20" class="form-control" id="house_keeping" name="house_keeping" t-att-value="ccmc_oral.house_keeping" required="True"/>
+                                        /20
                                     </div>
                                 </div>
                                 <div class="col-md-6">

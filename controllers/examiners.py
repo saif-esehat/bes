@@ -1337,7 +1337,7 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         examiner_assignments.write({
-            'marksheet_uploaded' : True 
+            'marksheet_uploaded' : True
         })
 
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
@@ -1461,7 +1461,7 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         examiner_assignments.write({
-            'marksheet_uploaded' : True 
+            'marksheet_uploaded' : True
         })
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
@@ -1847,7 +1847,7 @@ class ExaminerPortal(CustomerPortal):
             #     toal_ccmc_rating += int(gsk_ccmc)  
 
             remarks = row[8]
-            
+            candidate.ccmc_oral._compute_ccmc_rating_total()
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.ccmc_oral:
                 candidate.ccmc_oral.sudo().write({
@@ -1862,6 +1862,8 @@ class ExaminerPortal(CustomerPortal):
 
 
                 })
+
+
 
         worksheet_practical = workbook.sheet_by_index(0)
         for row_num in range(2, worksheet_practical.nrows):  # Assuming first row contains headers
@@ -1934,8 +1936,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         examiner_assignments.write({
-            'marksheet_uploaded' : True,
-            'extended' : True 
+            'marksheet_uploaded' : True
         })
             
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
@@ -1967,6 +1968,7 @@ class ExaminerPortal(CustomerPortal):
             if safety_ccmc:
                 toal_ccmc_oral_rating += int(safety_ccmc) 
 
+
             # remarks = row[8]
             # import wdb;wdb.set_trace();
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
@@ -1979,10 +1981,14 @@ class ExaminerPortal(CustomerPortal):
 
 
                 })
+            candidate.ccmc_oral._compute_ccmc_rating_total()
+
             if candidate and candidate.ccmc_oral:
                 candidate.ccmc_oral.sudo().write({
                     'gsk_ccmc':toal_ccmc_oral_rating,
                 })
+
+
 
     
             # mek_practical_remarks = row[12]
@@ -1990,8 +1996,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         examiner_assignments.write({
-            'marksheet_uploaded' : True,
-            'extended' : True 
+            'marksheet_uploaded' : True
         })
             
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
@@ -2011,7 +2016,8 @@ class ExaminerPortal(CustomerPortal):
         ])
         examiner_assignments.sudo().write({
             'marksheet_image':  base64.b64encode(file_content),
-            'marksheet_image_name': filename
+            'marksheet_image_name': filename,
+            'extended' : True 
         })
 
         return request.redirect("/my/assignments/batches/" + str(batch_id))
