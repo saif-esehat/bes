@@ -88,7 +88,7 @@
                             <field name="exam_coordinator" />
                         </group>
                         <notebook>
-                            <page string="Assignment of Examinations">
+                            <!-- <page string="Assignment of Examinations">
                                 <field name="assignments">
                                     <tree>
                                         <field name="examiner_id" />
@@ -101,7 +101,7 @@
                                         <field name="ccmc_candidates" attrs="{'invisible': [('assigned_to', '!=', 'ccmc_candidate')]}" />
                                     </tree>
                                 </field>
-                            </page>
+                            </page> -->
                             <page string="Payment Details">
                                 <group style="width:50%;">
                                     <field name="acc_no" string="Account No."/>
@@ -159,10 +159,19 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'" optional="show"/>
+                    <field name="exam_center"  optional="show"/>
+                    <field name="mobile"  optional="show"/>
+                    <field name="phone"  optional="show"/>
+                    <field name="pan_no"  optional="show"/>
+                    <field name="dob"  optional="show"/>
+                    <field name="present_designation"  optional="show"/>
+                    <field name="designation"  optional="show"/>
+                    <field name="competency_no"  optional="show"/>
+                    <field name="member_of_imei_cmmi"  optional="show"/>
+                    <field name="membership_no"  optional="show"/>
+                    <field name="date_of_issue"  optional="show"/>
                     <!-- <field name="exam_assignments"/> -->
-                    <field name="designation"/>
-                    <field name="exam_center"/>
-                    <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'"/>
     
                 </tree>
             </field>
