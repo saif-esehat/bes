@@ -194,6 +194,23 @@ class ExaminerPortal(CustomerPortal):
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
         return json.dumps({"status":"success"})
     
+    
+    @http.route(['/confirm/ccmcgsk/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmCCMCGSKMarksheet(self, **kw):
+        # print("KW Confirm GSK")
+        # import wdb; wdb.set_trace()
+        print("KW Confirm GSK")
+        # print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+        last_part = marksheet_id.split('_')[-1]
+        marksheet_id = int(last_part)
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.ccmc_gsk_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    
+    
     @http.route(['/confirm/mek/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmMEKMarksheet(self, **kw):
         print("KW Confirm MEK")
@@ -211,6 +228,26 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
         marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        return json.dumps({"status":"success"})
+    
+    
+    @http.route(['/confirm/ccmc_oral/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmCCMCORalMarksheet(self, **kw):
+        print("KW Confirm MEK")
+        
+        print(request.jsonrequest)
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+# Split the string by underscore and take the last element
+        last_part = marksheet_id.split('_')[-1]
+
+        # Extract the number from the last part
+        marksheet_id = int(last_part)
+
+        
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.cookery_bakery.write({"cookery_draft_confirm": 'confirm' })
+        marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
         return json.dumps({"status":"success"})
     
     
@@ -600,7 +637,7 @@ class ExaminerPortal(CustomerPortal):
             subject_area10 = int(rec['texture_dish3'])
             subject_area11 = int(rec['identification_of_ingredients'])
             subject_area12 = int(rec['knowledge_of_menu'])
-           
+            state = rec['state']
 
             candidate_rec = candidate.search([('indos_no', '=', indos)])
 
@@ -618,6 +655,7 @@ class ExaminerPortal(CustomerPortal):
                 'texture_3':subject_area10,
                 'identification_ingredians': subject_area11,
                 'knowledge_of_menu': subject_area12,
+                'cookery_draft_confirm': state,
                 
             }
 
@@ -710,23 +748,25 @@ class ExaminerPortal(CustomerPortal):
             marksheet = request.env['ccmc.oral.line'].sudo().search([('id','=',rec['ccmc_oral'])])
 
             # Convert string values to integers                    
-            subject_area1 = int(rec['ccmc_gsk'])
+            # subject_area1 = int(rec['ccmc_gsk'])
             # subject_area2 = int(rec['safety_ccmc'])
             subject_area3 = int(rec['house_keeping'])
             subject_area4 = int(rec['f_b'])
             subject_area5 = int(rec['orals_house_keeping'])
             subject_area6 = int(rec['attitude_proffessionalism'])
             subject_area7 = int(rec['equipment_identification'])
+            state = rec['state']
 
             # Construct the dictionary with integer values
             vals = {
-                'gsk_ccmc': subject_area1,
+                # 'gsk_ccmc': subject_area1,
                 # 'safety_ccmc': subject_area2,
                 'house_keeping': subject_area3,
                 'f_b': subject_area4,
                 'orals_house_keeping': subject_area5,
                 'attitude_proffessionalism': subject_area6,
                 'equipment_identification': subject_area7,
+                'ccmc_oral_draft_confirm': state,
                
                 
             }
@@ -765,11 +805,13 @@ class ExaminerPortal(CustomerPortal):
             # Convert string values to integers                    
             gsk_ccmc = int(rec['gsk_ccmc'])
             safety_ccmc = int(rec['safety_ccmc'])
+            state = rec['state']
 
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': gsk_ccmc,
                 'safety_ccmc': safety_ccmc,
+                'ccmc_oral_draft_confirm': state,
                
                 
             }
@@ -1427,139 +1469,6 @@ class ExaminerPortal(CustomerPortal):
         # return request.redirect("/my/assignments/batches/"+str(batch_id))
         return request.render("bes.examiner_assignment_candidate_list")
 
-
-
-            
-    
-    # @http.route('/open_ccmc_candidate_form/download_ccmc_oral_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
-    # def download_ccmc_oral_marksheet(self,batch_id,assignment_id, **rec):
-        
-    #     user_id = request.env.user.id
-    #     examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-    #     batch_id = batch_id
-    #     examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-    #     # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-    #     examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-    #     # import wdb;wdb.set_trace();
-    #     marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
-        
-    #     excel_buffer = io.BytesIO()
-
-    #     # Create a new Excel workbook and add a worksheet
-    #     workbook = xlsxwriter.Workbook(excel_buffer)
-    #     # workbook   = xlsxwriter.Workbook('filename.xlsx')
-
-    #     ccmc_oral_summary_sheet = workbook.add_worksheet('CCMC Oral')
-        
-    #     locked = workbook.add_format({'locked':True})
-    #     unlocked = workbook.add_format({'locked':False})
-    #     # Set the wrap text format
-    #     wrap_format = workbook.add_format({'text_wrap': True})
-        
-                
-    #     marks_values_5 = [1,2,3,4,5]
-    #     marks_values_6 = [1,2,3,4,5,6]
-    #     marks_values_8 = [1,2,3,4,5,6,7,8]
-    #     marks_values_9 = [1,2,3,4,5,6,7,8,9]
-    #     marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-    #     marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-                      
-    #     #For GSK Practical Marksheet
-    #     ccmc_oral_summary_sheet.set_column('A:XDF',None, unlocked)
-    #     ccmc_oral_summary_sheet.set_column('A2:A2',35, unlocked)
-    #     ccmc_oral_summary_sheet.set_column('B2:B2',10, unlocked)
-    #     ccmc_oral_summary_sheet.set_column('C2:C2',20, unlocked)
-    #     ccmc_oral_summary_sheet.set_column('D2:J2',25, unlocked)
-    #     ccmc_oral_summary_sheet.set_column('K2:K2',15, unlocked)
-            
-    #     ccmc_oral_summary_sheet.protect()
-        
-    #     header_format = workbook.add_format({
-    #                                             'bold': True,
-    #                                             'align': 'center',
-    #                                             'valign': 'vcenter',
-    #                                             'font_color': 'black',
-    #                                             'locked':True,
-    #                                             'text_wrap': True,
-    #                                         })
-        
-    #     merge_format = workbook.add_format({
-    #                                             'bold':     True,
-    #                                             'align':    'center',
-    #                                             'valign':   'vcenter',
-    #                                             'font_size': 20,
-    #                                             'font_color': 'black',
-    #                                         })
-        
-    #     # Merge 3 cells over two rows.
-    #     ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
-        
-    #     header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-    #       '-House keeping Practical \n 20 Marks',
-    #       '-F&B services practical \n 20 Marks',
-    #       '-Orals on Housekeeping and F& B Service \n 20 Marks',
-    #       '-Attitude & Proffesionalism \n 10 Marks',
-    #       '-Identification of Equipment \n 10 Marks',
-    #       '-GSK ORAL \n 10 Marks',
-    #       '-Safety \n 10 Marks',
-    #       'Remarks if any']
-    #     for col, value in enumerate(header_prac):
-    #         ccmc_oral_summary_sheet.write(1, col, value, header_format)
-        
-    #     # # import wdb;wdb.set_trace();
-    #     candidate_list = [] #List of Candidates
-    #     candidate_code = [] #Candidates Code No.
-    #     roll_no = []
-
-    #     for candidate in examiner_assignments.marksheets:
-    #         candidate_list.append(candidate.ccmc_candidate.name)
-    #         candidate_code.append(candidate.ccmc_candidate.candidate_code)
-    #         roll_no.append(candidate.ccmc_marksheet.exam_id)
-        
-    #     for i, candidate in enumerate(candidate_list):
-    #         ccmc_oral_summary_sheet.write('A{}'.format(i+3), candidate, locked)
-
-    #     for i, code in enumerate(roll_no):
-    #         ccmc_oral_summary_sheet.write('B{}'.format(i+3), code, locked)
-
-    #     for i, code in enumerate(candidate_code):
-    #         ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
-        
-    #     ccmc_oral_summary_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
-    #     ccmc_oral_summary_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
-    #     ccmc_oral_summary_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_20 })
-    #     ccmc_oral_summary_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-    #     ccmc_oral_summary_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
-    #     ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
-    #     ccmc_oral_summary_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_10 })
-        
-    #     remarks = ['Absent','Good','Average','Weak']
-    #     ccmc_oral_summary_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': remarks })
-        
-    #     workbook.close()
-
-    #     # Set the buffer position to the beginning
-    #     excel_buffer.seek(0)
-
-
-    #     date = marksheets[0].examiners_id.exam_date
-        
-    #     file_name = examiner.name+"-CCMC Oral-"+str(date)+".xlsx"
-
-
-    #     # Generate a response with the Excel file
-    #     response = request.make_response(
-    #         excel_buffer.getvalue(),
-    #         headers=[
-    #             ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-    #             ('Content-Disposition', 'attachment; filename='+file_name)
-    #         ]
-    #     )
-
-    #     # Clean up the buffer
-    #     excel_buffer.close()
-
-    #     return response
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_ccmc_practical_marksheet(self,batch_id,assignment_id, **rec):
@@ -2067,6 +1976,10 @@ class ExaminerPortal(CustomerPortal):
 
 
                 })
+            if candidate and candidate.ccmc_oral:
+                candidate.ccmc_oral.sudo().write({
+                    'gsk_ccmc':toal_ccmc_oral_rating,
+                })
 
     
             # mek_practical_remarks = row[12]
@@ -2078,45 +1991,6 @@ class ExaminerPortal(CustomerPortal):
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
         # return request.render("bes.examiner_assignment_candidate_list")
     
-
-    # @http.route('/my/gpcandidate/update_marks', type='json', auth='user', methods=["POST"])
-    # def update_marks(self, **post):
-    #     try:
-    #         candidate_id = post.get('candidate_id')
-    #         subject_area = post.get('subject_area')
-    #         marks = post.get('marks')
-
-    #         if not candidate_id or not subject_area or marks is None:
-    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
-
-    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
-    #         if candidate:
-    #             candidate.write({subject_area: int(marks)})
-    #             return json.dumps({'result': 'success'})
-    #         else:
-    #             return json.dumps({'result': 'error', 'message': 'Candidate not found'})
-    #     except Exception as e:
-    #         return json.dumps({'result': 'error', 'message': str(e)})
-    #     # return json.dumps({"status":"success", 'candidate_id':candidate_id ,'attendance_compliance_1':attendance_compliance_1  })
-        
-
-    # @http.route('/my/gpcandidate/update_total_marks', type='json', auth='user', methods=["POST"])
-    # def update_total_marks(self, **post):
-    #     try:
-    #         candidate_id = post.get('candidate_id')
-    #         total_marks = post.get('gsk_oral_total_marks')
-
-    #         if not candidate_id or total_marks is None:
-    #             return Response(json.dumps({'result': 'error', 'message': 'Missing required parameters'}), status=400)
-
-    #         candidate = request.env['gp.candidate'].sudo().browse(int(candidate_id))
-    #         if candidate:
-    #             candidate.write({'gsk_oral_total_marks': int(total_marks)})
-    #             return {'result': 'success'}
-    #         else:
-    #             return {'result': 'error', 'message': 'Candidate not found'}
-    #     except Exception as e:
-    #         return {'result': 'error', 'message': str(e)}
 
     @http.route('/my/uploadmarksheetimg', type='http', auth="user", website=True)
     def upload_marksheet_img(self, **kw):

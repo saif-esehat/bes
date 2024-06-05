@@ -442,6 +442,9 @@
                             <field name="mumbai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="kolkatta_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="chennai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="delhi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="kochi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="goa_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
                         </group>

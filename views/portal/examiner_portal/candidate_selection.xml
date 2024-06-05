@@ -1259,18 +1259,20 @@
                                 <div class="form-group">
                                     <label for="state">Status</label>
                                     <select class="form-control" id="state" name="state">
-                                        <option value="draft">Draft</option>
-                                        <option value="confirm">Confirm</option>
+                                        <option value="draft" t-att-selected="cookery_bakery.cookery_draft_confirm == 'draft'">Draft</option>
+                                        <option value="confirm" t-att-selected="cookery_bakery.cookery_draft_confirm == 'confirm'">Confirm</option>
                                        
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="col-md-12">
-                                <div class="form-group" style="display: grid">
-                                    <button type="submit" class="btn btn-primary" style="align-items: center">Submit</button>
+                            
+                            <t t-if="cookery_bakery.cookery_draft_confirm == 'draft'">
+                                <div class="col-md-12">
+                                    <div class="form-group" style="display: grid">
+                                        <button type="submit" class="btn btn-primary" style="align-items: center">Submit</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </t>
                         </form>
                     </div>
                 </div>
@@ -1389,65 +1391,55 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="house_keeping">House keeping Practical</label>
-                                        <input type="number" class="form-control" id="house_keeping" name="house_keeping" t-att-value="ccmc_oral.house_keeping" required="True"/>
+                                        <input type="number" min="0" max="10" class="form-control" id="house_keeping" name="house_keeping" t-att-value="ccmc_oral.house_keeping" required="True"/>
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="f_b">F&amp;B services practical</label>
-                                        <input type="number" class="form-control" id="f_b" name="f_b" t-att-value="ccmc_oral.f_b" required="True"/>
+                                        <input type="number" min="0" max="20" class="form-control" id="f_b" name="f_b" t-att-value="ccmc_oral.f_b" required="True"/>
+                                        /20
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="orals_house_keeping">Orals on Housekeeping and F&amp;B Service</label>
-                                        <input type="number" class="form-control" id="orals_house_keeping" name="orals_house_keeping" t-att-value="ccmc_oral.orals_house_keeping" required="True"/>
+                                        <input type="number" min="0" max="20" class="form-control" id="orals_house_keeping" name="orals_house_keeping" t-att-value="ccmc_oral.orals_house_keeping" required="True"/>
+                                        /20
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="attitude_proffessionalism">Attitude &amp; Proffesionalism</label>
-                                        <input type="number" class="form-control" id="attitude_proffessionalism" name="attitude_proffessionalism" t-att-value="ccmc_oral.attitude_proffessionalism" required="True"/>
+                                        <input type="number" min="0" max="10" class="form-control" id="attitude_proffessionalism" name="attitude_proffessionalism" t-att-value="ccmc_oral.attitude_proffessionalism" required="True"/>
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="equipment_identification">Identification of Equipment</label>
-                                        <input type="number" class="form-control" id="equipment_identification" name="equipment_identification" t-att-value="ccmc_oral.equipment_identification" required="True"/>
+                                        <input type="number" min="0" max="10" class="form-control" id="equipment_identification" name="equipment_identification" t-att-value="ccmc_oral.equipment_identification" required="True"/>
+                                        /10
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="ccmc_gsk">GSK</label>
-                                        <input type="number" class="form-control" id="ccmc_gsk" name="ccmc_gsk" t-att-value="ccmc_gsk_oral.gsk_ccmc" required="True"/>
-                                    </div>
-                                </div> -->
-                                
-                                
-                                <!-- <div class="col-md-6">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="safety_ccmc">Safety</label>
-                                                <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_oral.safety_ccmc" required="True"/>
-                                                <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="state">Status</label>
                                         <select class="form-control" id="state" name="state">
-                                            <option value="draft">Draft</option>
-                                            <option value="confirm">Confirm</option>
+                                            <option value="draft" t-att-selected="ccmc_oral.ccmc_oral_draft_confirm == 'draft'">Draft</option>
+                                            <option value="confirm" t-att-selected="ccmc_oral.ccmc_oral_draft_confirm == 'draft'">Confirm</option>
                                         
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group" style="display:grid">
-                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                <t t-if="ccmc_oral.ccmc_oral_draft_confirm == 'draft'">
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="display:grid">
+                                            <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                        </div>
                                     </div>
-                                </div>
+                                </t>
                             </div>
                         </form>
                     </div>
@@ -1569,14 +1561,16 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk">GSK</label>
-                                        <input type="number" class="form-control" id="gsk_ccmc" name="gsk_ccmc" t-att-value="ccmc_gsk_oral.gsk_ccmc" required="True"/>
+                                        <input type="number" min="0" max="10" class="form-control" id="gsk_ccmc" name="gsk_ccmc" t-att-value="ccmc_gsk_oral.gsk_ccmc" required="True"/>
+                                        /10
                                     </div>
                                 </div>
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk">Safety</label>
-                                        <input type="number" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
+                                        <input type="number" min="0" max="10" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
+                                        /10
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1588,11 +1582,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group" style="display:grid">
-                                        <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                <t t-if="ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft'">
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="display:grid">
+                                            <button type="submit" class="btn btn-primary" style="align-items:center">Submit</button>
+                                        </div>
                                     </div>
-                                </div>
+                                </t>
                             </div>
                         </form>
                     </div>

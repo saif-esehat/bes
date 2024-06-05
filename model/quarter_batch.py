@@ -26,6 +26,9 @@ class DGSBatch(models.Model):
     mumbai_region = fields.Many2one("bes.institute",string="Mumbai Institute",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
     kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Institute",tracking=True,domain="[('exam_center.name', '=','KOLKATTA')]")
     chennai_region = fields.Many2one("bes.institute",string="Chennai Institute",tracking=True,domain="[('exam_center.name', '=','CHENNAI')]")
+    delhi_region = fields.Many2one("bes.institute",string="Chennai Institute",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
+    kochi_region = fields.Many2one("bes.institute",string="Chennai Institute",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
+    goa_region = fields.Many2one("bes.institute",string="Chennai Institute",tracking=True,domain="[('exam_center.name', '=','GOA')]")
     state = fields.Selection([
         ('1-on_going', 'On-Going'),
         ('2-confirmed', 'Confirmed'),
