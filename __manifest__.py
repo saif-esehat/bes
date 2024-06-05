@@ -48,6 +48,7 @@
         'reports/admit_card_template_gp.xml',
         'reports/admit_card_template_ccmc.xml',
         'reports/dgs_report.xml',
+        'reports/attendance_sheet.xml',
         
         
 ],
