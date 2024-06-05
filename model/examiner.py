@@ -30,6 +30,7 @@ class Examiner(models.Model):
     present_designation = fields.Text("Present Designation",required=True)
     name_address_present_employer = fields.Text("Name and address of present employer",required=True,tracking=True)
     designation = fields.Selection([
+        ('non-mariner', 'Non Mariner'),
         ('master', 'Master Mariner'),
         ('chief', 'Chief Engineer'),
         ('catering','Catering Officer')
@@ -53,7 +54,7 @@ class Examiner(models.Model):
     exam_coordinator_id = fields.Boolean("Exam Coordinator ID",tracking=True)
     assignments = fields.One2many("examiner.assignment","examiner_id","Assignments",tracking=True)
     exam_assignments = fields.One2many("examiner.assignment","examiner_id",string="Exam Assignments",tracking=True)
-    
+    invigilator = fields.Boolean(string="Online Invigilator")
     
     
     state = fields.Selection([
