@@ -1618,6 +1618,13 @@ class ExamOralPracticalExaminers(models.Model):
                     raise ValidationError(error_msg)
 
     
+    def download_attendance_sheet(self):
+        if self.subject.name == "CCMC" and self.exam_type == "online":
+            return self.env.ref('bes.action_attendance_sheet_online_ccmc').report_action(self)
+        elif self.subject.name == "GSK" and self.exam_type == "online":
+            return self.env.ref('bes.action_attendance_sheet_online_gp').report_action(self)
+            
+
     
     @api.depends('online_from_date', 'online_to_date')
     def _compute_num_days(self):

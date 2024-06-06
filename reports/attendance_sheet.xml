@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="attendance_sheet_online_ccmc">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+
+                <div class="header">
+                    <table style="width:100%; border: 1px solid black;">
+                        <tr>
+                            <th style="border: 1px solid black;" rowspan="2">
+                                <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg" style="max-width: 100px; max-height: 100px;padding:8px;"/>
+                            </th>
+                            <th style="width:100%; border: 1px solid black;padding:10px; text-align:center" >
+                                <strong style="white-space: nowrap; ">Board of Examinations for Seafarers Trust</strong>
+                            </th>
+                        </tr>
+                        <tr style="width:100%; border: 1px solid black;padding:10px; text-align:center">
+                            <th style="white-space: nowrap;">
+                                <span style="text-align:center" >
+                                    Online Attendance Sheet CCMC Rating
+                                </span>
+                            </th>
+                        </tr>
+                        <tr  style="width:100%; border: 1px solid black;padding:10px; ">
+                            <th colspan="2" style="white-space: nowrap; padding:5px">
+                                <span style="text-align:left" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+
+
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                    <t t-set="index" t-value="0"/>
+                    <tr>
+                        <th style="border: 1px solid black; padding: 8px;">Sr No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Candidate Code No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Roll No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Name of Candidate</th>
+                        <th style="border: 1px solid black; padding: 8px;">INDoS No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Dob</th>
+                        <th style="border: 1px solid black; padding: 8px;">Sign</th>
+                    </tr>
+                    <t t-foreach="o.marksheets" t-as="candidate">
+                        <t t-set="index" t-value="index + 1"/>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-esc="index"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.candidate_code"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.ccmc_marksheet.exam_id"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.name"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.indos_no"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.dob"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;width: 150px;"></td>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="attendance_sheet_online_gp">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+
+
+                <div class="header">
+                    <table style="width:100%; border: 1px solid black;">
+                        <tr>
+                            <th style="border: 1px solid black;" rowspan="2">
+                                <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg" style="max-width: 100px; max-height: 100px;padding:8px;"/>
+                            </th>
+                            <th style="width:100%; border: 1px solid black;padding:10px; text-align:center" >
+                                <strong style="white-space: nowrap; ">Board of Examinations for Seafarers Trust</strong>
+                            </th>
+                        </tr>
+                        <tr style="width:100%; border: 1px solid black;padding:10px; text-align:center">
+                            <th style="white-space: nowrap;">
+                                <span style="text-align:center" >
+                                    Online Attendance Sheet GP Rating
+                                </span>
+                            </th>
+                        </tr>
+                        <tr  style="width:100%; border: 1px solid black;padding:10px; ">
+                            <th colspan="2" style="white-space: nowrap; padding:5px">
+                                <span style="text-align:left" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                    <t t-set="index" t-value="0"/>
+                    <tr>
+                        <th style="border: 1px solid black; padding: 8px;">Sr No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Candidate Code No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Roll No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Name of Candidate</th>
+                        <th style="border: 1px solid black; padding: 8px;">INDoS No.</th>
+                        <th style="border: 1px solid black; padding: 8px;">Dob</th>
+                        <th style="border: 1px solid black; padding: 8px;">Sign</th>
+                    </tr>
+                    <t t-foreach="o.marksheets" t-as="candidate">
+                        <t t-set="index" t-value="index + 1"/>
+                        <tr>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-esc="index"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.gp_marksheet.gp_candidate.candidate_code"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.gp_marksheet.exam_id"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.gp_marksheet.gp_candidate.name"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.gp_marksheet.gp_candidate.indos_no"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <span t-field="candidate.gp_marksheet.gp_candidate.dob"/>
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px;width: 150px;"></td>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>
