@@ -1748,8 +1748,8 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.write('B1', 'ROLL NO')
         candidate_worksheet.write('C1', 'NAME')
         candidate_worksheet.write('D1', 'DOB')
-        candidate_worksheet.write('E1', 'Xth')
-        candidate_worksheet.write('F1', 'XIIth')
+        candidate_worksheet.write('E1', 'Indos No.')
+        candidate_worksheet.write('F1', 'Candidate Code')
 
 
         row = 1
@@ -1759,8 +1759,8 @@ class InstitutePortal(CustomerPortal):
             candidate_worksheet.write(row,1,gp_candidate.roll_no)
             candidate_worksheet.write(row,2,gp_candidate.name)
             candidate_worksheet.write(row,3,gp_candidate.dob,date_format)
-            candidate_worksheet.write(row,4,gp_candidate.tenth_percent)
-            candidate_worksheet.write(row,5,gp_candidate.twelve_percent)
+            candidate_worksheet.write(row,4,gp_candidate.indos_no)
+            candidate_worksheet.write(row,5,gp_candidate.candidate_code)
             row += 1
         
         #Faculty
