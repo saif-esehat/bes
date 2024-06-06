@@ -33,6 +33,23 @@
         report_type="qweb-pdf"
         name="bes.report_general_certificate"
         file="bes.report_general_certificate"/>
+    
+    <report
+        id="action_attendance_sheet_online_ccmc"
+        string="CCMC Attendance Sheet"
+        model="exam.type.oral.practical.examiners"
+        report_type="qweb-pdf"
+        name="bes.attendance_sheet_online_ccmc"
+        file="bes.attendance_sheet_online_ccmc"/>
+    
+    <report
+        id="action_attendance_sheet_online_gp"
+        string="GP Attendance Sheet"
+        model="exam.type.oral.practical.examiners"
+        report_type="qweb-pdf"
+        name="bes.attendance_sheet_online_gp"
+        file="bes.attendance_sheet_online_gp"/>
+
 
     <!-- <report
         id="report_dgs_action"

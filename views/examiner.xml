@@ -360,6 +360,12 @@
                                 <field name="team_lead" invisible="1"/>
                                 <field name="exam_date"/>
                                 <field name="extended"/>
+                                <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
+                                    string="Attendance Sheet"
+                                    type="object"
+                                    class="btn-primary"
+                                    icon="fa-download"/>
+
                                 <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
                                 <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
                                 <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
