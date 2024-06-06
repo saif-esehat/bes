@@ -221,24 +221,30 @@
                     </group>
 
                     
-                    <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
-                    
-                    <group>
-                        <span>Click on The Update Button to Update the Candidate After Adding Exam Date,Subject and Exam Type in List Below and Confirm the Assignment By Clicking Confirm Button</span>  
-                    </group>
 
+                    
+                    
                     <field name="examiner_lines_ids" >
-                            <tree editable="bottom">
-                                <field name="exam_date" />
-                                <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
-                                <field name="exam_type"/>
-                                <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
-                                <field name="gp_marksheet_ids"  options="{'no_create':True}"/>
-                                <field name="no_candidates"/>
-                            </tree>
+                        <tree editable="bottom">
+                            <field name="exam_date" />
+                            <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
+                            <field name="exam_type"/>
+                            <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
+                            <field name="gp_marksheet_ids"  options="{'no_create':True}"/>
+                            <field name="no_candidates"/>
+                        </tree>
                     </field>
+                   
+                    <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
+                    <group>
+                        <span>Click on The Update Button to Update the Candidate After Adding Exam Date,Subject and Exam Type in List Above</span>  
+                    </group>
+                    
                     <footer>
                         <button string="Confirm" type="object" name="confirm" class="btn-primary"/>
+                        <group>
+                            <span>Click on The Confirm Button after you are satified with the assignment of the examiners</span>  
+                        </group>
                     </footer>
                 </form>
             </field>
@@ -275,30 +281,29 @@
                         <field name="examiner_required_ccmc_gsk_oral"/>
                     </group>
                     
-                    <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
                     
-                    <group>
-                        <span>Click on The Update Button to Update the Candidate After Adding Exam Date,Subject and Exam Type in List Below and Confirm the Assignment By Clicking Confirm Button</span>
-                    </group>
-
+                    
                     <field name="examiner_lines_ids" >
-                            <tree editable="bottom">
-                                <field name="exam_date" />
-                                <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
-                                <field name="exam_type"/>
-                                <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
-                                <field name="ccmc_marksheet_ids"  options="{'no_create':True}"/>
-                                <field name="no_candidates"/>
-                            </tree>
+                        <tree editable="bottom">
+                            <field name="exam_date" />
+                            <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
+                            <field name="exam_type"/>
+                            <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
+                            <field name="ccmc_marksheet_ids"  options="{'no_create':True}"/>
+                            <field name="no_candidates"/>
+                        </tree>
                     </field>
-
-
-
-           
-
+                   
+                    <button string="Update" type="object" class="oe_highlight" name="update_marksheet"/>
+                    <group>
+                        <span>Click on The Update Button to Update the Candidate After Adding Exam Date,Subject and Exam Type in List Above</span>  
+                    </group>
+                    
                     <footer>
                         <button string="Confirm" type="object" class="oe_highlight" name="confirm"/>
-                    
+                        <group>
+                            <span>Click on The Confirm Button after you are satified with the assignment of the examiners</span>  
+                        </group>
                     </footer>
                 </form>
             </field>
