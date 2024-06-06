@@ -557,6 +557,8 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                                                                                                     })    
 
             if record.subject.name == 'CCMC GSK Oral':
+                if record.no_candidates > 40:
+                        raise ValidationError("Number of candidates cannot exceed 40 for this assignment.")
                 
                 prac_oral_id = self.exam_duty.id
                 institute_id = self.institute_id.id
@@ -1588,7 +1590,7 @@ class ExamOralPracticalExaminers(models.Model):
     
     expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
     status = fields.Selection([
-        ('draft', 'Draft'),
+        ('draft', 'Draft'), 
         ('confirmed', 'Confirmed')
     ], string='Status',default="draft" )
     

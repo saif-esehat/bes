@@ -45,7 +45,7 @@ class GPCandidate(models.Model):
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
-    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible',tracking=True)
+    ],string="Elligiblity Criteria", default='not_elligible',tracking=True)
     
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
@@ -623,7 +623,7 @@ class CCMCCandidate(models.Model):
     elligiblity_criteria = fields.Selection([
         ('elligible', 'Elligible'),
         ('not_elligible', 'Not Elligible')
-    ],string="Elligiblity Criteria",compute="_compute_eligibility", default='not_elligible',tracking=True)
+    ],string="Elligiblity Criteria", default='not_elligible',tracking=True)
     
     
     attendance_compliance_1 = fields.Selection([
@@ -1833,20 +1833,23 @@ class CandidateRegisterExamWizard(models.TransientModel):
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
             
+
             ## MEK Marks Forwarding
             mek_survey_qb_input = self.gp_exam.mek_online
             mek_online_carry_forward = True
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
+            print("MEK Forwarding")
             
         elif not self.gsk_online_status == 'failed' and  self.mek_online_status == 'failed':
-            
+           
             ## GSK Marks Forwarding
+            print("GSK Forwarding")
+
             gsk_survey_qb_input = self.gp_exam.gsk_online
             gsk_online_marks = self.gp_exam.gsk_online_marks
             gsk_online_percentage = self.gp_exam.gsk_online_percentage
             gsk_online_carry_forward = True
-            
             ## MEK QB Assigning
             
             mek_survey_qb_input = self.mek_survey_qb._create_answer(user=self.candidate_id.user_id)
@@ -1855,6 +1858,19 @@ class CandidateRegisterExamWizard(models.TransientModel):
             mek_online_carry_forward = False
             mek_online_marks = self.gp_exam.mek_online_marks
             mek_online_percentage = self.gp_exam.mek_online_percentage
+        else:
+            # GSK Marks Forwarding
+            gsk_survey_qb_input = self.gp_exam.gsk_online
+            gsk_online_marks = self.gp_exam.gsk_online_marks
+            gsk_online_percentage = self.gp_exam.gsk_online_percentage
+            gsk_online_carry_forward = True
+            
+            ## MEK Marks Forwarding
+            mek_survey_qb_input = self.gp_exam.mek_online
+            mek_online_carry_forward = True
+            mek_online_marks = self.gp_exam.mek_online_marks
+            mek_online_percentage = self.gp_exam.mek_online_percentage
+            
 
             
         overall_marks = self.gp_exam.overall_marks
