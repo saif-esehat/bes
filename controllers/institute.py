@@ -1315,7 +1315,8 @@ class InstitutePortal(CustomerPortal):
         
         request.env['ccmc.candidate.ship.visits'].sudo().create(candidate_data)
         # import wdb; wdb.set_trace()
-
+        candidate = request.env["ccmc.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_ship_visit_criteria()
       
         
         
@@ -1381,7 +1382,8 @@ class InstitutePortal(CustomerPortal):
         request.env['ccmc.candidate.ship.visits'].sudo().search([('id','=',visit_id)]).unlink()
         print("Delete ccmc ship visit",str(kw.get("candidate_id")))
         
-        
+        candidate = request.env["ccmc.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_ship_visit_criteria()
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
     
     @http.route(['/my/gpcandidate/addstcw'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -1457,7 +1459,8 @@ class InstitutePortal(CustomerPortal):
             'certificate_upload': base64.b64encode(file_content)
         }
         request.env["ccmc.candidate.stcw.certificate"].sudo().create(stcw_data)
-
+        candidate = request.env["ccmc.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_stcw_certificate()
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
     
@@ -1648,6 +1651,7 @@ class InstitutePortal(CustomerPortal):
         
         candidate.write({'attendance_compliance_1':attendance1})
         candidate.write({'attendance_compliance_2':attendance2})
+        candidate._check_attendance_criteria()
 
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
