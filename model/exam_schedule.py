@@ -494,6 +494,8 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     
                     if record.no_candidates > 25:
                         raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
+                    elif record.no_candidates == 0:
+                        raise ValidationError("Please Assigned Candidate By Clicking On Update Button")
 
                     prac_oral_id = self.exam_duty.id
                     institute_id = self.institute_id.id
@@ -559,6 +561,8 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             if record.subject.name == 'CCMC GSK Oral':
                 if record.no_candidates > 40:
                         raise ValidationError("Number of candidates cannot exceed 40 for this assignment.")
+                elif record.no_candidates == 0:
+                        raise ValidationError("Please Assigned Candidate By Clicking On Update Button")
                 
                 prac_oral_id = self.exam_duty.id
                 institute_id = self.institute_id.id
@@ -846,6 +850,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     
                     if record.no_candidates > 25:
                         raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
+                    elif record.no_candidates == 0:
+                        raise ValidationError("Please Assigned Candidate By Clicking On Update")
                     
                     prac_oral_id = self.exam_duty.id
                     institute_id = self.institute_id.id
@@ -919,6 +925,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 if record.exam_type == 'practical_oral':
                     if record.no_candidates > 25:
                         raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
+                    elif record.no_candidates == 0:
+                        raise ValidationError("Please Assigned Candidate By Clicking On Update Button")
                     
                     prac_oral_id = self.exam_duty.id
                     institute_id = self.institute_id.id
@@ -1603,7 +1611,7 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if record.examiner and record.exam_date:
+            if record.examiner and record.exam_date and record.exam_type != 'online':
                 # Check if there are any other records with the same examiner and exam date
                 duplicate_records = self.search([
                     ('examiner', '=', record.examiner.id),
@@ -1614,7 +1622,7 @@ class ExamOralPracticalExaminers(models.Model):
                     # Get the name of the examiner
                     examiner_name = record.examiner.name
                     # Format the validation error message to include the examiner's name and exam date
-                    error_msg = _("Examiner '%s' is already assigned on %s!") % (examiner_name, record.exam_date)
+                    error_msg = _("Examiner '%s' is already assigned on %s! for ") % (examiner_name, record.exam_date)
                     raise ValidationError(error_msg)
 
     
@@ -1622,6 +1630,8 @@ class ExamOralPracticalExaminers(models.Model):
         if self.subject.name == "CCMC" and self.exam_type == "online":
             return self.env.ref('bes.action_attendance_sheet_online_ccmc').report_action(self)
         elif self.subject.name == "GSK" and self.exam_type == "online":
+            return self.env.ref('bes.action_attendance_sheet_online_gp').report_action(self)
+        elif self.subject.name == "MEK" and self.exam_type == "online":
             return self.env.ref('bes.action_attendance_sheet_online_gp').report_action(self)
             
 

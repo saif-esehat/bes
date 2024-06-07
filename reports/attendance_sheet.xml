@@ -23,7 +23,9 @@
                         </tr>
                         <tr  style="width:100%; border: 1px solid black;padding:10px; ">
                             <th colspan="2" style="white-space: nowrap; padding:5px">
-                                <span style="text-align:left" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
+                                <span style="float:left;" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
+                                <span style="margin-left:150px;" >Subject : <span style="text-align:center" ><t t-esc="o.subject.name"/></span></span>
+                                <span style="float:right;" >Date : <span style="text-align:right" ><t t-esc="o.exam_date"/></span></span>
                             </th>
                         </tr>
                     </table>
@@ -79,7 +81,7 @@
             <t t-foreach="docs" t-as="o">
 
 
-                <div class="header">
+                   <div class="header">
                     <table style="width:100%; border: 1px solid black;">
                         <tr>
                             <th style="border: 1px solid black;" rowspan="2">
@@ -98,7 +100,9 @@
                         </tr>
                         <tr  style="width:100%; border: 1px solid black;padding:10px; ">
                             <th colspan="2" style="white-space: nowrap; padding:5px">
-                                <span style="text-align:left" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
+                                <span style="float:left;" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
+                                <span style="margin-left:150px;" >Subject : <span style="text-align:center" ><t t-esc="o.subject.name"/></span></span>
+                                <span style="float:right;" >Date : <span style="text-align:right" ><t t-esc="o.exam_date"/></span></span>
                             </th>
                         </tr>
                     </table>

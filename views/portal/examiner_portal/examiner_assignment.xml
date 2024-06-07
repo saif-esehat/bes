@@ -221,7 +221,7 @@
                                     <t t-out="assignment.exam_date" />
                                 </t>
                                 <t t-else="assignment.exam_type == 'online'">
-                                    <t t-out="assignment.online_from_date" /> to <t t-out="assignment.online_to_date" />
+                                    <t t-out="assignment.exam_date" />
                                 </t>
                             </td>
                             <td class="text-left">

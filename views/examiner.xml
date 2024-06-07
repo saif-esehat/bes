@@ -66,7 +66,7 @@
                             <field name="competency_no"/>
                         </group>
                         <group style="width:50%;">
-                            <field name="date_of_issue" attrs="{ 'required':[('invigilator','=',False)] }"/>
+                            <field name="date_of_issue" />
                         </group>
                         <group style="width:50%;">
                             <field name="member_of_imei_cmmi"/>

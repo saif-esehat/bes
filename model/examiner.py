@@ -140,7 +140,7 @@ class Examiner(models.Model):
             'name': examiner.name,
             'login': examiner.email,  # You can set the login as the same as the user name
             'password': 12345678,  # Generate a random password
-            'sel_groups_1_9_10':1
+            'sel_groups_1_9_10':9
         }
 
         group_id = self.env.ref(group_xml_id).id
