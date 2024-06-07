@@ -36,7 +36,7 @@ class Examiner(models.Model):
         ('catering','Catering Officer')
     ], string='Rank',default='master',tracking=True)
     competency_no = fields.Char("Certificate of competency no.",tracking=True)
-    date_of_issue = fields.Date("Date of Issue",required=True,tracking=True)
+    date_of_issue = fields.Date("Date of Issue",tracking=True)
     member_of_imei_cmmi = fields.Selection([
         ('imei', 'IMEI'),
         ('cmmi', 'CMMI')
