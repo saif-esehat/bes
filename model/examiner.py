@@ -36,7 +36,7 @@ class Examiner(models.Model):
         ('catering','Catering Officer')
     ], string='Rank',default='master',tracking=True)
     competency_no = fields.Char("Certificate of competency no.",tracking=True)
-    date_of_issue = fields.Date("Date of Issue",required=True,tracking=True)
+    date_of_issue = fields.Date("Date of Issue",tracking=True)
     member_of_imei_cmmi = fields.Selection([
         ('imei', 'IMEI'),
         ('cmmi', 'CMMI')
@@ -140,7 +140,7 @@ class Examiner(models.Model):
             'name': examiner.name,
             'login': examiner.email,  # You can set the login as the same as the user name
             'password': 12345678,  # Generate a random password
-            'sel_groups_1_9_10':1
+            'sel_groups_1_9_10':9
         }
 
         group_id = self.env.ref(group_xml_id).id

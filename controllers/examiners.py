@@ -847,6 +847,7 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('id','=',assignment_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
@@ -1039,7 +1040,8 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         batch_id = batch_id
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
@@ -1053,8 +1055,8 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet = workbook.add_worksheet('MEK Oral')
         mek_practical_sheet = workbook.add_worksheet('MEK Practical')
         
-        locked = workbook.add_format({'locked':True})
-        unlocked = workbook.add_format({'locked':False})
+        locked = workbook.add_format({'locked':True,'border':1})
+        unlocked = workbook.add_format({'locked':False, 'border':1 })
         # Set the wrap text format
         wrap_format = workbook.add_format({'text_wrap': True})
         
@@ -1070,7 +1072,8 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
 
-        header_format = workbook.add_format({
+        header_format = workbook.add_format({   
+                                                'border':1,
                                                 'bold': True,
                                                 'align': 'center',
                                                 'valign': 'vcenter',
@@ -1079,7 +1082,8 @@ class ExaminerPortal(CustomerPortal):
                                                 'text_wrap': True,
                                             })
         
-        merge_format = workbook.add_format({
+        merge_format = workbook.add_format({    
+                                                'border':1,
                                                 'bold':     True,
                                                 'align':    'center',
                                                 'valign':   'vcenter',
@@ -1478,7 +1482,9 @@ class ExaminerPortal(CustomerPortal):
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
 
@@ -1691,8 +1697,11 @@ class ExaminerPortal(CustomerPortal):
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
+
         
 
         # import wdb;wdb.set_trace();

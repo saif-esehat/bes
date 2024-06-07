@@ -791,8 +791,13 @@ class InstituteCcmcBatches(models.Model):
                 'sel_groups_1_9_10': 9,
                 'groups_id': [(4, group_id, 0) for group_id in group_ids]
             }
+            
+            try:
+                portal_user = self.env['res.users'].sudo().create(user_values)
+            except:
+                print("Duplicate")
+                print(user_values)
 
-            portal_user = self.env['res.users'].sudo().create(user_values)
 
             candidate_count = self.env['ccmc.candidate'].sudo().search_count([('institute_batch_id','=',self.id)])
             sequence = self.generate_sequence()
