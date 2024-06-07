@@ -365,6 +365,11 @@
                                 <field name="team_lead" invisible="1"/>
                                 <field name="exam_date"/>
                                 <field name="extended"/>
+                                <button attrs="{'invisible': [('exam_type', '!=', 'online'),('subject','=','GSK')]}" name="download_gsk_marksheet"
+                                    string="Download Marksheet"
+                                    type="object"
+                                    class="btn-primary"
+                                    />
                                 <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
                                     string="Attendance Sheet"
                                     type="object"

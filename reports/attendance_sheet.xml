@@ -32,9 +32,6 @@
                 </div>
 
 
-
-
-
                 <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                     <t t-set="index" t-value="0"/>
                     <tr>
