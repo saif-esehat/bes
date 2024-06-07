@@ -1613,15 +1613,29 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
     
     
-    def download_gsk_marksheet(self):
+    def download_marksheet(self):
         
-        url = '/open_candidate_form/download_gsk_marksheet/7/'+str(self.id)
+        if self.exam_type == 'practical_oral' and self.subject.name == 'GSK':
         
-        return {
-                'type': 'ir.actions.act_url',
-                'url': url,
-                'target': 'new',
-            }
+            url = '/open_candidate_form/download_gsk_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+        
+        elif self.exam_type == 'practical_oral' and self.subject.name == 'MEK':
+        
+            url = '/open_candidate_form/download_mek_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+
+
 
         # examiner = self.examiner
         # # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])

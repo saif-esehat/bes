@@ -1032,11 +1032,13 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_candidate_form/download_mek_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_mek_marksheet(self,batch_id,assignment_id, **rec):
         
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        batch_id = batch_id
+        # user_id = request.env.user.id
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_id = batch_id
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).examiner
+
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
