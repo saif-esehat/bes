@@ -925,10 +925,6 @@ class ExaminerPortal(CustomerPortal):
         for col, value in enumerate(header_oral):
             gsk_oral_sheet.write(1, col, value, header_format)
         
-          
-        candidate_list = [] #List of Candidates
-        roll_no = []
-        candidate_code = [] #Candidates Code No.
         marks_values_5 = [1,2,3,4,5]
         marks_values_6 = [1,2,3,4,5,6]
         marks_values_8 = [1,2,3,4,5,6,7,8]
@@ -939,67 +935,71 @@ class ExaminerPortal(CustomerPortal):
         marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         remarks = ['Absent','Good','Average','Weak']
 
-        for candidate in marksheets:
-            candidate_list.append(candidate.gp_candidate.name)
-            roll_no.append(candidate.gp_marksheet.exam_id)
-            candidate_code.append(candidate.gp_candidate.candidate_code)
-        
-        # import wdb;wdb.set_trace();
-        
+        # Example lists for candidates and their codes (replace with actual data)
+        candidate_list = [candidate.gp_candidate.name for candidate in marksheets]
+        roll_no = [candidate.gp_marksheet.exam_id for candidate in marksheets]
+        candidate_code = [candidate.gp_candidate.candidate_code for candidate in marksheets]
+
+    # Write candidate data starting from the third row in the oral sheet
         for i, candidate in enumerate(candidate_list):
-            gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
+            gsk_oral_sheet.write(f'A{i + 3}', candidate, locked)
+            gsk_oral_sheet.set_row(i + 2, 45)  # Set row height for data rows
 
         for i, code in enumerate(roll_no):
-            gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
+            gsk_oral_sheet.write(f'B{i + 3}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
-            gsk_oral_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-            gsk_oral_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-            gsk_oral_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-            gsk_oral_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': remarks })
+            gsk_oral_sheet.write(f'C{i + 3}', code, locked)
 
-       
-        #For GSK Practical Marksheet
-        # gsk_practical_sheet.set_column('A:XDF',None, unlocked)
-        gsk_practical_sheet.set_column('A2:A2',50, unlocked)
-        gsk_practical_sheet.set_column('B2:B2',20, unlocked)
-        gsk_practical_sheet.set_column('C2:C2',30, unlocked)
-        gsk_practical_sheet.set_column('D2:G2',35, unlocked)
-        gsk_practical_sheet.set_column('F2:F2',50, unlocked)
-        gsk_practical_sheet.set_column('H2:H2',15, unlocked)
-            
-        gsk_practical_sheet.protect()
-        
-        
-        # Merge 3 cells over two rows.
+            # Add data validation for scores in the oral sheet
+            row_num = i + 3
+            gsk_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_25})
+            gsk_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_25})
+            gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_25})
+            gsk_oral_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': remarks})
+
+        # Set column widths for the practical sheet
+        gsk_practical_sheet.set_column('A2:A2', 50, unlocked)
+        gsk_practical_sheet.set_column('B2:B2', 20, unlocked)
+        gsk_practical_sheet.set_column('C2:C2', 30, unlocked)
+        gsk_practical_sheet.set_column('D2:G2', 35, unlocked)
+        gsk_practical_sheet.set_column('F2:F2', 50, unlocked)
+        gsk_practical_sheet.set_column('H2:H2', 15, unlocked)
+
+        # Merge cells in the first row for the practical sheet
         gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        
-        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-Climb the mast with safe practices \n -Prepare and throw Heaving Line \n Rigging Bosun\'s Chair and self lower and hoist \n 30 Marks', #D
-          '-Rig a stage for painting shipside \n -Rig a Pilot Ladder \n -Rig scaffolding to work at a height  \n 30 marks',#E
-          '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n -Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n ·Taking Soundings with sounding rod / sounding taps \n ·Reading of Draft \n .Mannual lifting of weight (30 Marks)',#G
-          '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 10 Marks',#G
-        #   '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
-            'Remarks']
+
+        # Write the header row for the practical sheet
+        header_prac = [
+            'Name of the Candidate', 'Roll No', 'Candidate Code No',
+            '-Climb the mast with safe practices \n -Prepare and throw Heaving Line \n -Rigging Bosun\'s Chair and self lower and hoist \n 30 Marks',
+            '-Rig a stage for painting shipside \n -Rig a Pilot Ladder \n -Rig scaffolding to work at a height  \n 30 marks',
+            '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n -Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n ·Taking Soundings with sounding rod / sounding taps \n ·Reading of Draft \n .Manual lifting of weight \n 30 Marks',
+            '-Recognise buoys and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 10 Marks',
+            'Remarks'
+        ]
+
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
-        
-        # # import wdb;wdb.set_trace();
-        
+
+        # Write candidate data starting from the third row in the practical sheet
         for i, candidate in enumerate(candidate_list):
-            gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
-            
+            gsk_practical_sheet.write(f'A{i + 3}', candidate, locked)
+            gsk_practical_sheet.set_row(i + 2, 45)  # Set row height for data rows
+
         for i, code in enumerate(roll_no):
-            gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
+            gsk_practical_sheet.write(f'B{i + 3}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
-            gsk_practical_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-            gsk_practical_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-            gsk_practical_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-            gsk_practical_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            gsk_practical_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': remarks })
+            gsk_practical_sheet.write(f'C{i + 3}', code, locked)
+
+            # Add data validation for scores in the practical sheet
+            row_num = i + 3
+            gsk_practical_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_30})
+            gsk_practical_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_30})
+            gsk_practical_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_30})
+            gsk_practical_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_10})
+            gsk_practical_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
         
         workbook.close()
 
@@ -1112,84 +1112,87 @@ class ExaminerPortal(CustomerPortal):
         for col, value in enumerate(header_oral):
             mek_oral_sheet.write(1, col, value, header_format)
         
-          
-        candidate_list = [] #List of Candidates
-        candidate_code = [] #Candidates Code No.
-        roll_no = []
+
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         remarks = ['Absent','Good','Average','Weak']
 
-        for candidate in marksheets:
-            candidate_list.append(candidate.gp_candidate.name)
-            candidate_code.append(candidate.gp_candidate.candidate_code)
+        # Example lists for candidates and their codes (replace with actual data)
+        candidate_list = [candidate.gp_candidate.name for candidate in marksheets]
+        candidate_code = [candidate.gp_candidate.candidate_code for candidate in marksheets]
+        roll_no = [candidate.gp_marksheet.exam_id for candidate in marksheets]
 
-            # import wdb;wdb.set_trace();
-            roll_no.append(candidate.gp_marksheet.exam_id)
-        
-        
+        # Write candidate data starting from the third row in the oral sheet
         for i, candidate in enumerate(candidate_list):
-            mek_oral_sheet.write('A{}'.format(i+3), candidate, locked)
-        
+            mek_oral_sheet.write(f'A{i + 3}', candidate, locked)
+            mek_oral_sheet.set_row(i + 2, 45)  # Set row height for candidate rows to 45
+
         for i, code in enumerate(roll_no):
-            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
+            mek_oral_sheet.write(f'B{i + 3}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            mek_oral_sheet.write('C{}'.format(i+3), code, locked)
-            mek_oral_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
-            mek_oral_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
-            mek_oral_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            mek_oral_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-            mek_oral_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': remarks })
-        
-        
-        
-        
-        #For GSK Practical Marksheet
-        mek_practical_sheet.set_column('A:XDF',None, unlocked)
-        mek_practical_sheet.set_column('A2:A2',50, unlocked)
-        mek_practical_sheet.set_column('B2:B2',20, unlocked)
-        mek_practical_sheet.set_column('C2:C2',30, unlocked)
-        mek_practical_sheet.set_column('D2:G2',25, unlocked)
-        mek_practical_sheet.set_column('H2:H2',15, unlocked)
+            mek_oral_sheet.write(f'C{i + 3}', code, locked)
             
-        mek_practical_sheet.protect()
-        
-        
-        # Merge 3 cells over two rows.
-        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
-        
-        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-        #   '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
-        #   '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks', #E
-          '-Using Hand & Plumbing Tools \n -3 Task  \n 30 Marks', #F
-          '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
-        #   '-Use of Carpentry Tools \n 10 marks', #H
-        #   '-Use of Measuring Instruments \n 10 marks', #I
-          '-Welding (1 Task)  \n -Lathe Work (1 Task)\n  30 marks', #J
-        #   '-Lathe Work (1 Task) \n 10 Marks', #K
-          '-Electrical (1 Task) \n 10 Marks', #L
-           'Remarks']
+            # Add data validation for scores in the oral sheet
+            row_num = i + 3
+            mek_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_20})
+            mek_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_20})
+            mek_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
+            mek_oral_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_25})
+            mek_oral_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
+
+        # Set column widths for the practical sheet
+        mek_practical_sheet.set_column('A2:A2', 50, unlocked)
+        mek_practical_sheet.set_column('B2:B2', 20, unlocked)
+        mek_practical_sheet.set_column('C2:C2', 30, unlocked)
+        mek_practical_sheet.set_column('D2:E2', 25, unlocked)
+        mek_practical_sheet.set_column('F2:G2', 35, unlocked)
+        mek_practical_sheet.set_column('H2:H2', 15, unlocked)
+
+        # Merge cells in the first row for the practical sheet
+        mek_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
+
+        # Write the header row for the practical sheet
+        header_prac = [
+            'Name of the Candidate', 'Roll No', 'Candidate Code No',
+            '-Using Hand & Plumbing Tools \n -3 Task  \n 30 Marks', #F
+            '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
+            '-Welding (1 Task)  \n -Lathe Work (1 Task)\n  30 marks', #J
+            '-Electrical (1 Task) \n 10 Marks', #L
+            'Remarks'
+        ]
+        # header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
+        #   '-Using Hand & Plumbing Tools \n -3 Task  \n 30 Marks', #F
+        #   '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
+        #   '-Welding (1 Task)  \n -Lathe Work (1 Task)\n  30 marks', #J
+        #   '-Electrical (1 Task) \n 10 Marks', #L
+        #    'Remarks']
+
         for col, value in enumerate(header_prac):
             mek_practical_sheet.write(1, col, value, header_format)
-        
-        # import wdb;wdb.set_trace();
-        
+
+        # Write candidate data starting from the third row in the practical sheet
         for i, candidate in enumerate(candidate_list):
-            mek_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+            mek_practical_sheet.write(f'A{i + 3}', candidate, locked)
+            mek_practical_sheet.set_row(i + 2, 45)  # Set row height for candidate rows to 45
 
         for i, code in enumerate(roll_no):
-            mek_practical_sheet.write('B{}'.format(i+3), code, locked)
+            mek_practical_sheet.write(f'B{i + 3}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            mek_practical_sheet.write('C{}'.format(i+3), code, locked)
-            mek_practical_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-            mek_practical_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-            mek_practical_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-            mek_practical_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            mek_practical_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': remarks })
+            mek_practical_sheet.write(f'C{i + 3}', code, locked)
+            
+            # Add data validation for scores in the practical sheet
+            row_num = i + 3
+            mek_practical_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_30})
+            mek_practical_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_30})
+            mek_practical_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_30})
+            mek_practical_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_10})
+            mek_practical_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
+
+
         
         
         workbook.close()
@@ -1502,6 +1505,10 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.set_column('C2:C2',30, unlocked)
         ccmc_cookery_bakery_sheet.set_column('D2:O2',20, unlocked)
         # ccmc_cookery_bakery_sheet.set_column('P2:P2',15, unlocked)
+
+        # Set row heights
+        # ccmc_cookery_bakery_sheet.set_row(0, 30)  # Header row (1st row in Excel)
+        # ccmc_cookery_bakery_sheet.set_row(1, 60)  # Second row
             
         ccmc_cookery_bakery_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -1550,10 +1557,6 @@ class ExaminerPortal(CustomerPortal):
         for col, value in enumerate(header_oral):
             ccmc_cookery_bakery_sheet.write(1, col, value, header_format)
         
-          
-        candidate_list = [] #List of Candidates
-        candidate_code = [] #Candidates Code No.
-        roll_no = []
         marks_values_5 = [1,2,3,4,5]
         marks_values_6 = [1,2,3,4,5,6]
         marks_values_8 = [1,2,3,4,5,6,7,8]
@@ -1562,34 +1565,35 @@ class ExaminerPortal(CustomerPortal):
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         remarks = ['Absent','Good','Average','Weak']
 
-        for candidate in examiner_assignments.marksheets:
-            candidate_list.append(candidate.ccmc_candidate.name)
-            candidate_code.append(candidate.ccmc_candidate.candidate_code)
-            roll_no.append(candidate.ccmc_marksheet.exam_id)
-        
-        # # import wdb;wdb.set_trace();
-        
+        candidate_list = [candidate.ccmc_candidate.name for candidate in examiner_assignments.marksheets]
+        candidate_code = [candidate.ccmc_candidate.candidate_code for candidate in examiner_assignments.marksheets]
+        roll_no = [candidate.ccmc_marksheet.exam_id for candidate in examiner_assignments.marksheets]
+
+        # Write candidate data starting from the third row
         for i, candidate in enumerate(candidate_list):
-            ccmc_cookery_bakery_sheet.write('A{}'.format(i+3), candidate, locked)
-        
+            ccmc_cookery_bakery_sheet.write(f'A{i + 3}', candidate, locked)
+            ccmc_cookery_bakery_sheet.set_row(i + 2, 45)  # Set row height for data rows
+
         for i, code in enumerate(roll_no):
-            ccmc_cookery_bakery_sheet.write('B{}'.format(i+3), code, locked)
+            ccmc_cookery_bakery_sheet.write(f'B{i + 3}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            ccmc_cookery_bakery_sheet.write('C{}'.format(i+3), code, locked)
-            ccmc_cookery_bakery_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_cookery_bakery_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_cookery_bakery_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_cookery_bakery_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_9 })
-            ccmc_cookery_bakery_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_cookery_bakery_sheet.data_validation('I{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_cookery_bakery_sheet.data_validation('J{}'.format(i+3), {'validate': 'list', 'source': marks_values_9 })
-            ccmc_cookery_bakery_sheet.data_validation('K{}'.format(i+3), {'validate': 'list', 'source': marks_values_5 })
-            ccmc_cookery_bakery_sheet.data_validation('L{}'.format(i+3), {'validate': 'list', 'source': marks_values_5 })
-            ccmc_cookery_bakery_sheet.data_validation('M{}'.format(i+3), {'validate': 'list', 'source': marks_values_5 })
-            ccmc_cookery_bakery_sheet.data_validation('N{}'.format(i+3), {'validate': 'list', 'source': marks_values_9 })
-            ccmc_cookery_bakery_sheet.data_validation('O{}'.format(i+3), {'validate': 'list', 'source': marks_values_8 })
-            # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
+            ccmc_cookery_bakery_sheet.write(f'C{i + 3}', code, locked)
+
+            # Add data validation for scores
+            row_num = i + 3
+            ccmc_cookery_bakery_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_cookery_bakery_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_cookery_bakery_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_cookery_bakery_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_9})
+            ccmc_cookery_bakery_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_cookery_bakery_sheet.data_validation(f'I{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_cookery_bakery_sheet.data_validation(f'J{row_num}', {'validate': 'list', 'source': marks_values_9})
+            ccmc_cookery_bakery_sheet.data_validation(f'K{row_num}', {'validate': 'list', 'source': marks_values_5})
+            ccmc_cookery_bakery_sheet.data_validation(f'L{row_num}', {'validate': 'list', 'source': marks_values_5})
+            ccmc_cookery_bakery_sheet.data_validation(f'M{row_num}', {'validate': 'list', 'source': marks_values_5})
+            ccmc_cookery_bakery_sheet.data_validation(f'N{row_num}', {'validate': 'list', 'source': marks_values_9})
+            ccmc_cookery_bakery_sheet.data_validation(f'O{row_num}', {'validate': 'list', 'source': marks_values_8})
         
         
         
