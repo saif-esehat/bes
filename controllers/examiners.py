@@ -972,7 +972,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge cells in the first row for the practical sheet
         gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         gsk_practical_sheet.write("E1:F1",examiner.name,merge_format)
-        gsk_oral_sheet.write("F1:G1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
+        gsk_practical_sheet.write("F1:G1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
 
 
         # Write the header row for the practical sheet
@@ -1110,6 +1110,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.merge_range("A1:C1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("D1:F1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         mek_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        mek_oral_sheet.write("F1:G1",examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
     
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n Use of chipping Tools & Brushes & Paints \n 20 Marks',
@@ -1161,6 +1162,8 @@ class ExaminerPortal(CustomerPortal):
         # Merge cells in the first row for the practical sheet
         mek_practical_sheet.merge_range("A1:E1", examiner_assignments.institute_id.name, merge_format)
         mek_practical_sheet.write("F1:G1",examiner.name,merge_format)
+        mek_practical_sheet.write("G1:H1",examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+
         # Write the header row for the practical sheet
         header_prac = [
             'Name of the Candidate', 'Roll No', 'Candidate Code No',
