@@ -1235,6 +1235,7 @@ class ExaminerPortal(CustomerPortal):
     def upload_gsk_marksheet(self,**kw):
         user_id = request.env.user.id
         batch_id = int(kw['batch_id'])
+        assignment_id = int(kw['gsk_assignment_ids'])
         # import wdb;wdb.set_trace();
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
@@ -1354,6 +1355,7 @@ class ExaminerPortal(CustomerPortal):
         
             
         # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
         return request.render("bes.examiner_assignment_candidate_list")
 
 
@@ -1363,6 +1365,7 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         # import wdb;wdb.set_trace();
         batch_id = int(kw['mek_batch_ids'])
+        assignment_id = int(kw['mek_assignment_ids'])
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
@@ -1477,6 +1480,7 @@ class ExaminerPortal(CustomerPortal):
         
             
         # return request.redirect("/my/assignments/batches/"+str(batch_id))
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
         return request.render("bes.examiner_assignment_candidate_list")
 
     

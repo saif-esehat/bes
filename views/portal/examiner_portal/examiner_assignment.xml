@@ -254,8 +254,10 @@
                                     function openGskUploadModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('batch-id');
+                                    var assignId = button.getAttribute('gsk-assign-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('batch_id').value = dataId;
+                                    document.getElementById('gsk_assignment_ids').value = assignId;
                                     
 
 
@@ -264,9 +266,10 @@
                                     function openMekUploadModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('mek-batch-id');
+                                    var assignId = button.getAttribute('mek-assign-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('mek_batch_ids').value = dataId;
-                                    
+                                    document.getElementById('mek_assignment_ids').value = assignId;
 
 
                                     }
@@ -535,7 +538,7 @@
                     <a t-attf-href="/open_candidate_form/download_gsk_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px; " class="btn btn-primary btn_cta">Download GSK Marksheet</a>
                     <t t-if="date_valid">
                         <t t-if="not marksheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-gsk-assign-id="{{assignment_id}}" onclick="openGskUploadModal(this)" data-target="#uploadGskMarksheetModal" class="btn btn-primary btn_cta">Upload GSK Marksheet</a>
                         </t>
                     </t>
                 </t>
@@ -544,7 +547,7 @@
                     <a t-attf-href="/open_candidate_form/download_mek_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download MEK Marksheet</a>
                     <t t-if="date_valid">    
                         <t t-if="not marksheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-mek-batch-id="{{batch_id}}" t-attf-mek-assign-id="{{assignment_id}}" onclick="openMekUploadModal(this)" data-target="#uploadMekMarksheetModal" class="btn btn-primary btn_cta">Upload MEK Marksheet</a>
                         </t>
                     </t>
                 </t>    
