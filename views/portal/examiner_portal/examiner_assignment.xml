@@ -522,8 +522,9 @@
                 <t t-set="extended_date" t-value="exam_date"/>
             </t>
 
-            <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
+            <!-- <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/> -->
             
+            <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
 
            
 

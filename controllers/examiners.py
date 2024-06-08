@@ -1477,7 +1477,7 @@ class ExaminerPortal(CustomerPortal):
         
             
         # return request.redirect("/my/assignments/batches/"+str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
 
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
