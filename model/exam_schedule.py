@@ -1634,6 +1634,26 @@ class ExamOralPracticalExaminers(models.Model):
                     'url': url,
                     'target': 'new',
                 }
+            
+        elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC':
+        
+            url = '/open_ccmc_candidate_form/download_ccmc_practical_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+        
+        elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC GSK Oral':
+        
+            url = '/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
 
 
 
