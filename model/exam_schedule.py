@@ -1852,7 +1852,7 @@ class ExamOralPracticalExaminers(models.Model):
                     # Get the name of the examiner
                     examiner_name = record.examiner.name
                     # Format the validation error message to include the examiner's name and exam date
-                    error_msg = _("Examiner '%s' is already assigned on %s! for ") % (examiner_name, record.exam_date)
+                    error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (examiner_name, record.exam_date,duplicate_records.institute_id.name)
                     raise ValidationError(error_msg)
 
     

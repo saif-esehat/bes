@@ -1539,7 +1539,8 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
-        ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
+        ccmc_cookery_bakery_sheet.merge_range("A1:E1", examiner_assignments.institute_id.name, merge_format)
+        ccmc_cookery_bakery_sheet.write("F1:G1",examiner.name,merge_format)
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Hygiene & Grooming \n 10 Marks', 
@@ -1616,7 +1617,8 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.set_column('I2:I2',15, unlocked)
 
         # Merge 3 cells over two rows.
-        ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
+        ccmc_oral_summary_sheet.merge_range("A1:E1",examiner_assignments.institute_id.name, merge_format)
+        ccmc_oral_summary_sheet.write("F1:H1",examiner.name,merge_format)
         
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-House keeping Practical \n 20 Marks',
@@ -1755,10 +1757,6 @@ class ExaminerPortal(CustomerPortal):
         for col, value in enumerate(header_oral):
             ccmc_gsk_oral_sheet.write(1, col, value, header_format)
         
-          
-        candidate_list = [] #List of Candidates
-        candidate_code = [] #Candidates Code No.
-        roll_no = []
         marks_values_5 = [1,2,3,4,5]
         marks_values_6 = [1,2,3,4,5,6]
         marks_values_8 = [1,2,3,4,5,6,7,8]
@@ -1768,23 +1766,26 @@ class ExaminerPortal(CustomerPortal):
         remarks = ['Absent','Good','Average','Weak']
 
 
-        for candidate in examiner_assignments.marksheets:
-            candidate_list.append(candidate.ccmc_candidate.name)
-            candidate_code.append(candidate.ccmc_candidate.candidate_code)
-            roll_no.append(candidate.ccmc_marksheet.exam_id)
-        
-        # # import wdb;wdb.set_trace();
-        
+        candidate_list = [candidate.ccmc_candidate.name for candidate in examiner_assignments.marksheets]
+        candidate_code = [candidate.ccmc_candidate.candidate_code for candidate in examiner_assignments.marksheets]
+        roll_no = [candidate.ccmc_marksheet.exam_id for candidate in examiner_assignments.marksheets]
+
+        # Write candidate data starting from the third row
         for i, candidate in enumerate(candidate_list):
-            ccmc_gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
-        
+            ccmc_gsk_oral_sheet.write(f'A{i + 3}', candidate, locked)
+            ccmc_gsk_oral_sheet.set_row(i + 2, 45)  # Set row height for data rows
+
         for i, code in enumerate(roll_no):
-            ccmc_gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
+            ccmc_gsk_oral_sheet.write(f'B{i + 3}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            ccmc_gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
-            ccmc_gsk_oral_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_gsk_oral_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_gsk_oral_sheet.write(f'C{i + 3}', code, locked)
+
+            # Add data validation for scores
+            row_num = i + 3
+            ccmc_gsk_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_gsk_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_10})
+            ccmc_gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
         
         workbook.close()
 
