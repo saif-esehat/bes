@@ -1889,25 +1889,39 @@ class GPExam(models.Model):
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria",tracking=True)
 
     
-    stcw_criteria = fields.Selection([
-        ('', ''),
-        ('pending', 'Pending'),
-        ('passed', 'Complied'),
-    ], string='STCW Criteria' , compute="compute_certificate_criteria",tracking=True)
+    # stcw_criteria = fields.Selection([
+    #     ('', ''),
+    #     ('pending', 'Pending'),
+    #     ('passed', 'Complied'),
+    # ], string='STCW Criteria' , compute="compute_certificate_criteria",tracking=True)
     
-    ship_visit_criteria = fields.Selection([
-        ('', ''),
-        ('pending', 'Pending'),
-        ('passed', 'Complied'),
-    ], string='Ship Visit Criteria' , compute="compute_certificate_criteria",tracking=True)
+    # ship_visit_criteria = fields.Selection([
+    #     ('', ''),
+    #     ('pending', 'Pending'),
+    #     ('passed', 'Complied'),
+    # ], string='Ship Visit Criteria' , compute="compute_certificate_criteria",tracking=True)
     
     
-    attendance_criteria = fields.Selection([
-        ('', ''),
-        ('pending', 'Pending'),
-        ('passed', 'Complied'),
-    ], string='Attendance Criteria' , compute="compute_certificate_criteria",tracking=True)
+    # attendance_criteria = fields.Selection([
+    #     ('', ''),
+    #     ('pending', 'Pending'),
+    #     ('passed', 'Complied'),
+    # ], string='Attendance Criteria' , compute="compute_certificate_criteria",tracking=True)
 
+    stcw_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='STCW Criteria',store=True,compute="_check_stcw_certificate")
+
+    ship_visit_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='Ship Visit Criteria',store=True ,compute='_check_ship_visit_criteria')
+
+    attendance_criteria = fields.Selection([
+        ('pending', 'Pending'),
+        ('passed', 'Complied'),
+    ], string='Attendance Criteria',store=True,compute="_check_attendance_criteria")
     
     state = fields.Selection([
         ('1-in_process', 'In Process'),
@@ -2008,7 +2022,44 @@ class GPExam(models.Model):
             else:
                 record.candidate_signature_status = 'pending'
 
+    @api.depends('gp_candidate.stcw_certificate')
+    def _check_stcw_certificate(self):
+         for record in self:
+            # Retrieve all the STCW certificate records
+            stcw_certificates = record.gp_candidate.stcw_certificate
 
+            course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
+
+            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+            all_types_exist = record.check_combination_exists(course_type_already)
+            
+            # Check if the candidate_cert_no is present for all the STCW certificates
+            all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
+
+            if all_types_exist and all_cert_nos_present:
+                # import wdb; wdb.set_trace();
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
+        
+    
+    @api.depends('gp_candidate.ship_visits')
+    def _check_ship_visit_criteria(self):
+        for record in self:
+            # import wdb; wdb.set_trace();
+            if len(record.gp_candidate.ship_visits) > 0:
+                record.ship_visit_criteria = 'passed'
+            else:
+                record.ship_visit_criteria = 'pending'
+    
+    
+    @api.depends('gp_candidate.attendance_compliance_1','gp_candidate.attendance_compliance_2')
+    def _check_attendance_criteria(self):
+       for record in self:
+            if record.gp_candidate.attendance_compliance_1 == 'yes' or record.gp_candidate.attendance_compliance_2 == 'yes':
+                record.attendance_criteria = 'passed'
+            else:
+                record.attendance_criteria = 'pending'
 
     @api.depends('mek_oral','mek_prac','gsk_oral','gsk_prac')
     def _compute_attendance(self):

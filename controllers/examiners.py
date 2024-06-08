@@ -1642,7 +1642,6 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_20 })
         ccmc_oral_summary_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
         ccmc_oral_summary_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        # ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_20 })
         
        
         ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': remarks })
@@ -1748,6 +1747,14 @@ class ExaminerPortal(CustomerPortal):
         candidate_list = [] #List of Candidates
         candidate_code = [] #Candidates Code No.
         roll_no = []
+        marks_values_5 = [1,2,3,4,5]
+        marks_values_6 = [1,2,3,4,5,6]
+        marks_values_8 = [1,2,3,4,5,6,7,8]
+        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        remarks = ['Absent','Good','Average','Weak']
+
 
         for candidate in examiner_assignments.marksheets:
             candidate_list.append(candidate.ccmc_candidate.name)
@@ -1764,20 +1771,9 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             ccmc_gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
+            ccmc_gsk_oral_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_gsk_oral_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
         
-        marks_values_5 = [1,2,3,4,5]
-        marks_values_6 = [1,2,3,4,5,6]
-        marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_9 = [1,2,3,4,5,6,7,8,9]
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        
-        ccmc_gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        
-        remarks = ['Absent','Good','Average','Weak']
-        # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
-
         workbook.close()
 
         # Set the buffer position to the beginning
