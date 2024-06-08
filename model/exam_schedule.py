@@ -8,6 +8,10 @@ import io
 import base64
 from datetime import datetime , date
 import math
+from odoo.http import content_disposition, request , Response
+from odoo.tools import date_utils
+import xlsxwriter
+
 
 
 
@@ -1607,6 +1611,232 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    
+    
+    def download_marksheet(self):
+        
+        if self.exam_type == 'practical_oral' and self.subject.name == 'GSK':
+        
+            url = '/open_candidate_form/download_gsk_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+        
+        elif self.exam_type == 'practical_oral' and self.subject.name == 'MEK':
+        
+            url = '/open_candidate_form/download_mek_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+            
+        elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC':
+        
+            url = '/open_ccmc_candidate_form/download_ccmc_practical_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+        
+        elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC GSK Oral':
+        
+            url = '/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/7/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+
+
+
+        # examiner = self.examiner
+        # # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        # # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('id','=',assignment_id)])
+        # examiner_assignments = self
+
+        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',self.id)])
+
+        # # import wdb;wdb.set_trace();
+        
+        # for exam in examiner_assignments:
+        #     if examiner.subject_id.name == 'GSK':
+        #         assignment = exam.id
+                
+        # # for candidate in assignment.gp_oral_prac
+
+        # excel_buffer = io.BytesIO()
+
+        # # Create a new Excel workbook and add a worksheet
+        # workbook = xlsxwriter.Workbook(excel_buffer)
+        # # workbook   = xlsxwriter.Workbook('filename.xlsx')
+
+        # gsk_oral_sheet = workbook.add_worksheet('GSK Oral')
+        # gsk_practical_sheet = workbook.add_worksheet('GSK Practical')
+        
+        # locked = workbook.add_format({'locked':True,'border':1,'font_size': 18})
+        # unlocked = workbook.add_format({'locked':False, 'border':1 })
+        # # Set the wrap text format
+        # wrap_format = workbook.add_format({'text_wrap': True})
+        
+        # #For GSK Oral Marksheet
+        # # gsk_oral_sheet.set_column('A:XDF',None, unlocked)
+        # gsk_oral_sheet.set_column('A2:A2',50, unlocked)
+        # gsk_oral_sheet.set_column('B2:B2',20, unlocked)
+        # gsk_oral_sheet.set_column('C2:C2',30, unlocked)
+        # gsk_oral_sheet.set_column('D2:E2',40, unlocked)
+        # gsk_oral_sheet.set_column('F2:F2',30, unlocked)
+        # gsk_oral_sheet.set_column('G:G',15, unlocked)
+            
+        # gsk_oral_sheet.protect()
+        # date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+
+        # header_format = workbook.add_format({   
+        #                                         'border':1,
+        #                                         'bold': True,
+        #                                         'align': 'center',
+        #                                         'valign': 'vcenter',
+        #                                         'font_color': 'black',
+        #                                         'locked':True,
+        #                                         'font_size': 15,
+        #                                         'text_wrap': True,
+        #                                     })
+        
+        # merge_format = workbook.add_format({    
+        #                                         'border':1,
+        #                                         'bold':     True,
+        #                                         'align':    'center',
+        #                                         'valign':   'vcenter',
+        #                                         'font_size': 20,
+        #                                         'font_color': 'black',
+        #                                         'text_wrap': True,
+        #                                     })
+        
+        # instruction = workbook.add_format({
+        #                                         'bold':     True,
+        #                                         'align':    'center',
+        #                                         'valign':   'vcenter',
+        #                                         'font_size': 12,
+        #                                         'font_color': 'red',
+        #                                         'text_wrap': True,
+        #                                     })
+
+        # gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        # gsk_oral_sheet.write("E1:F1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        # header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
+        #   'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
+        #   'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
+        #   'Practical Record Book and Journal \n 25 Marks', 'Remarks']
+        # for col, value in enumerate(header_oral):
+        #     gsk_oral_sheet.write(1, col, value, header_format)
+        
+          
+        # candidate_list = [] #List of Candidates
+        # roll_no = []
+        # candidate_code = [] #Candidates Code No.
+        # marks_values_5 = [1,2,3,4,5]
+        # marks_values_6 = [1,2,3,4,5,6]
+        # marks_values_8 = [1,2,3,4,5,6,7,8]
+        # marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        # marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
+        # marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+        # marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        # marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+        # remarks = ['Absent','Good','Average','Weak']
+
+        # for candidate in marksheets:
+        #     candidate_list.append(candidate.gp_candidate.name)
+        #     roll_no.append(candidate.gp_marksheet.exam_id)
+        #     candidate_code.append(candidate.gp_candidate.candidate_code)
+        
+        # # import wdb;wdb.set_trace();
+        
+        # for i, candidate in enumerate(candidate_list):
+        #     gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
+
+        # for i, code in enumerate(roll_no):
+        #     gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
+
+        # for i, code in enumerate(candidate_code):
+        #     gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
+        #     gsk_oral_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
+        #     gsk_oral_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
+        #     gsk_oral_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
+        #     gsk_oral_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': remarks })
+
+       
+        # #For GSK Practical Marksheet
+        # # gsk_practical_sheet.set_column('A:XDF',None, unlocked)
+        # gsk_practical_sheet.set_column('A2:A2',50, unlocked)
+        # gsk_practical_sheet.set_column('B2:B2',20, unlocked)
+        # gsk_practical_sheet.set_column('C2:C2',30, unlocked)
+        # gsk_practical_sheet.set_column('D2:G2',35, unlocked)
+        # gsk_practical_sheet.set_column('F2:F2',50, unlocked)
+        # gsk_practical_sheet.set_column('H2:H2',15, unlocked)
+            
+        # gsk_practical_sheet.protect()
+        
+        
+        # # Merge 3 cells over two rows.
+        # gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        
+        # header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
+        #   '-Climb the mast with safe practices \n -Prepare and throw Heaving Line \n Rigging Bosun\'s Chair and self lower and hoist \n 30 Marks', #D
+        #   '-Rig a stage for painting shipside \n -Rig a Pilot Ladder \n -Rig scaffolding to work at a height  \n 30 marks',#E
+        #   '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n -Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n ·Taking Soundings with sounding rod / sounding taps \n ·Reading of Draft \n .Mannual lifting of weight (30 Marks)',#G
+        #   '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 10 Marks',#G
+        # #   '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
+        #     'Remarks']
+        # for col, value in enumerate(header_prac):
+        #     gsk_practical_sheet.write(1, col, value, header_format)
+        
+        # # # import wdb;wdb.set_trace();
+        
+        # for i, candidate in enumerate(candidate_list):
+        #     gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+            
+        # for i, code in enumerate(roll_no):
+        #     gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
+
+        # for i, code in enumerate(candidate_code):
+        #     gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
+        #     gsk_practical_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
+        #     gsk_practical_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
+        #     gsk_practical_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
+        #     gsk_practical_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+        #     gsk_practical_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': remarks })
+        
+        # workbook.close()
+
+        # # Set the buffer position to the beginning
+        # excel_buffer.seek(0)
+
+        # date = examiner_assignments[0].exam_date
+        
+        # file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
+        
+        # # Generate a response with the Excel file
+        # # response = request.make_response(
+        # #     excel_buffer.getvalue(),
+        # #     headers=[
+        # #         ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+        # #         ('Content-Disposition', 'attachment; filename='+file_name)
+        # #     ]
+        # # )
+
+        # # Clean up the buffer
+        # excel_buffer.close()
+
+        # return excel_buffer
+        
+        
     
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):

@@ -841,12 +841,13 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_candidate_form/download_gsk_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_gsk_marksheet(self,batch_id,assignment_id, **rec):
         
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        batch_id = batch_id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # user_id = request.env.user.id
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_id = batch_id
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('id','=',assignment_id)])
+        # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('id','=',assignment_id)])
+        examiner = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).examiner
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
@@ -1031,11 +1032,13 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_candidate_form/download_mek_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_mek_marksheet(self,batch_id,assignment_id, **rec):
         
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        batch_id = batch_id
+        # user_id = request.env.user.id
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_id = batch_id
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).examiner
+
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
@@ -1467,10 +1470,10 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_ccmc_practical_marksheet(self,batch_id,assignment_id, **rec):
         
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        batch_id = batch_id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # user_id = request.env.user.id
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_id = batch_id
+        examiner = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).examiner
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
@@ -1574,24 +1577,24 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             ccmc_cookery_bakery_sheet.write('C{}'.format(i+3), code, locked)
+            ccmc_cookery_bakery_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_cookery_bakery_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_cookery_bakery_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_cookery_bakery_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_9 })
+            ccmc_cookery_bakery_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_cookery_bakery_sheet.data_validation('I{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_cookery_bakery_sheet.data_validation('J{}'.format(i+3), {'validate': 'list', 'source': marks_values_9 })
+            ccmc_cookery_bakery_sheet.data_validation('K{}'.format(i+3), {'validate': 'list', 'source': marks_values_5 })
+            ccmc_cookery_bakery_sheet.data_validation('L{}'.format(i+3), {'validate': 'list', 'source': marks_values_5 })
+            ccmc_cookery_bakery_sheet.data_validation('M{}'.format(i+3), {'validate': 'list', 'source': marks_values_5 })
+            ccmc_cookery_bakery_sheet.data_validation('N{}'.format(i+3), {'validate': 'list', 'source': marks_values_9 })
+            ccmc_cookery_bakery_sheet.data_validation('O{}'.format(i+3), {'validate': 'list', 'source': marks_values_8 })
+            # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
         
         
         
-        ccmc_cookery_bakery_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_cookery_bakery_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': marks_values_5 })
-        ccmc_cookery_bakery_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': marks_values_9 })
-        ccmc_cookery_bakery_sheet.data_validation('O3:O1048576', {'validate': 'list', 'source': marks_values_8 })
         
-        remarks = ['Absent','Good','Average','Weak']
-        # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
+
 
 
         ccmc_oral_summary_sheet = workbook.add_worksheet('CCMC Oral')
@@ -1636,15 +1639,15 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
+            ccmc_oral_summary_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
+            ccmc_oral_summary_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
+            ccmc_oral_summary_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
+            ccmc_oral_summary_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_oral_summary_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_oral_summary_sheet.data_validation('I{}'.format(i+3), {'validate': 'list', 'source': remarks })
         
-        ccmc_oral_summary_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_20 })
-        ccmc_oral_summary_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        ccmc_oral_summary_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': marks_values_10 })
         
        
-        ccmc_oral_summary_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': remarks })
                
         workbook.close()
 
@@ -1674,10 +1677,11 @@ class ExaminerPortal(CustomerPortal):
     @http.route('/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_ccmc_gsk_oral_marksheet(self,batch_id,assignment_id, **rec):
         
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        batch_id = batch_id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # user_id = request.env.user.id
+        examiner = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).examiner
+
+        # batch_id = batch_id
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
         # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
         examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
