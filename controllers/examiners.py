@@ -1858,8 +1858,9 @@ class ExaminerPortal(CustomerPortal):
             #     toal_ccmc_rating += int(gsk_ccmc)  
 
             remarks = row[8]
-            candidate.ccmc_oral._compute_ccmc_rating_total()
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate.ccmc_oral._compute_ccmc_rating_total()
+
             if candidate and candidate.ccmc_oral:
                 candidate.ccmc_oral.sudo().write({
                     'house_keeping':house_keeping,

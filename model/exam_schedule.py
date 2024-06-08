@@ -1841,7 +1841,7 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if record.examiner and record.exam_date and record.exam_type != 'online':
+            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral':
                 # Check if there are any other records with the same examiner and exam date
                 duplicate_records = self.search([
                     ('examiner', '=', record.examiner.id),
