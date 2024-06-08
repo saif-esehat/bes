@@ -919,6 +919,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         gsk_oral_sheet.write("E1:F1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         gsk_oral_sheet.write("F1:G1",examiner.name,merge_format)
+        gsk_oral_sheet.write("G1:H1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
        
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
