@@ -1471,8 +1471,8 @@ class ExaminerPortal(CustomerPortal):
 
 
                 })
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
         })
@@ -1950,7 +1950,7 @@ class ExaminerPortal(CustomerPortal):
 
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
@@ -2010,7 +2010,7 @@ class ExaminerPortal(CustomerPortal):
     
             # mek_practical_remarks = row[12]
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
@@ -2027,10 +2027,8 @@ class ExaminerPortal(CustomerPortal):
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
-            ('dgs_batch.id', '=', batch_id),
-            ('examiner.user_id', '=', user_id)
-        ])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+
         examiner_assignments.sudo().write({
             'marksheet_image':  base64.b64encode(file_content),
             'marksheet_image_name': filename,
