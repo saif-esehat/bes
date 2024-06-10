@@ -309,8 +309,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="buoy_flags_recognition">·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders</label>
-                                        <input type="number" min="0" max="30" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.buoy_flags_recognition" required="True"/>
-                                        /30
+                                        <input type="number" min="0" max="10" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.buoy_flags_recognition" required="True"/>
+                                        /10
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-6">

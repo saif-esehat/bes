@@ -1426,7 +1426,7 @@ class GskPracticallLine(models.Model):
     def _onchange_gsk_practicals_marks_limit(self):
         if self.climbing_mast_bosun_chair> 30:
             raise UserError("Climb the mast with safe practices , Prepare and throw Heaving Line marks should not be greater than 12.")
-        if self.buoy_flags_recognition > 12:
+        if self.buoy_flags_recognition > 10:
             raise UserError("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders marks should not be greater than 12.")
         # if self.bosun_chair > 8:
         #     raise UserError("Rigging Bosun's Chair and self lower and hoist marks should not be greater than 8.")
