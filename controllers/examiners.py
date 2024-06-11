@@ -1873,11 +1873,11 @@ class ExaminerPortal(CustomerPortal):
             row_num = i + 3
             ccmc_gsk_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_10})
             ccmc_gsk_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_10})
-            ccmc_gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
+            # ccmc_gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
 
             ccmc_gsk_oral_sheet.write(f'D{row_num}', '', dropdown_format)
             ccmc_gsk_oral_sheet.write(f'E{row_num}', '', dropdown_format)
-            ccmc_gsk_oral_sheet.write(f'F{row_num}', '', dropdown_format)
+            # ccmc_gsk_oral_sheet.write(f'F{row_num}', '', dropdown_format)
 
         
         workbook.close()

@@ -1581,12 +1581,12 @@ class ExamOralPractical(models.Model):
 class ExamOralPracticalExaminers(models.Model):
     _name = 'exam.type.oral.practical.examiners'
     _inherit = ['mail.thread','mail.activity.mixin']
-    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",required=False,tracking=True)
-    exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',tracking=True)
-    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",required=False,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",store=True,required=False,tracking=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
+    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)
-    subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
+    subject = fields.Many2one("course.master.subject",string="Subject",store=True,tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
