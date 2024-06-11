@@ -400,6 +400,53 @@
             </field>
         </record>
 
+        <record id="view_exam_assignments_action" model="ir.actions.act_window">
+            <field name="name">Examiner Assignments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">exam.type.oral.practical.examiners</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Examiner Assignments</p>
+            </field>
+        </record>
+
+        <record id="view_exam_assignments_search" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.search</field>
+            <field name="model">exam.type.oral.practical.examiners</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="dgs_batch"/>
+                    <field name="subject"/>
+                    <field name="examiner"/>
+                    <field name="prac_oral_id"/>
+                    <field name="exam_region"/>
+                    <field name="exam_date"/>
+                    
+                    <searchpanel>
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <field name="subject" enable_counters="1" icon="fa fa-user"/>
+                    </searchpanel>
+                </search>
+            </field>
+
+        </record>
+
+        <record id="view_exam_assignments_tree" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.tree</field>
+            <field name="model">exam.type.oral.practical.examiners</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="dgs_batch"/>
+                    <field name="subject"/>
+                    <field name="examiner"/>
+                    <field name="prac_oral_id"/>
+                    <field name="exam_region"/>
+                    <field name="exam_date"/>
+                    
+                </tree>
+            </field>
+        </record>
+
         <record id="view_marksheet_gp_tree_mek" model="ir.ui.view">
             <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>

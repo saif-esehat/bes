@@ -916,6 +916,14 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'red',
                                                 'text_wrap': True,
                                             })
+        # Define a format for the drop-down cells
+        dropdown_format = workbook.add_format({
+                                                'font_size': 18,  # Set the font size as needed
+                                                'align': 'center',  # Center align the text
+                                                'valign': 'vcenter',
+                                                'locked':False,
+                                                'border': 1  # Add border to clearly see the cells
+                                            })
 
         gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         gsk_oral_sheet.write("E1:F1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
@@ -962,6 +970,13 @@ class ExaminerPortal(CustomerPortal):
             gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_25})
             gsk_oral_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': remarks})
 
+              # # Apply the format to the cells with drop-down lists
+            gsk_oral_sheet.write(f'D{row_num}', '', dropdown_format)
+            gsk_oral_sheet.write(f'E{row_num}', '', dropdown_format)
+            gsk_oral_sheet.write(f'F{row_num}', '', dropdown_format)
+            gsk_oral_sheet.write(f'G{row_num}', '', dropdown_format)
+
+
         # Set column widths for the practical sheet
         gsk_practical_sheet.set_column('A2:A2', 50, unlocked)
         gsk_practical_sheet.set_column('B2:B2', 20, unlocked)
@@ -1007,6 +1022,12 @@ class ExaminerPortal(CustomerPortal):
             gsk_practical_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_30})
             gsk_practical_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_10})
             gsk_practical_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
+
+            gsk_practical_sheet.write(f'D{row_num}', '', dropdown_format)
+            gsk_practical_sheet.write(f'E{row_num}', '', dropdown_format)
+            gsk_practical_sheet.write(f'F{row_num}', '', dropdown_format)
+            gsk_practical_sheet.write(f'G{row_num}', '', dropdown_format)
+            gsk_practical_sheet.write(f'H{row_num}', '', dropdown_format)
         
         workbook.close()
 
@@ -1144,6 +1165,15 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             mek_oral_sheet.write(f'C{i + 3}', code, locked)
             
+           # Define a format for the drop-down cells
+            dropdown_format = workbook.add_format({
+                'font_size': 18,  # Set the font size as needed
+                'align': 'center',  # Center align the text
+                'valign': 'vcenter',
+                'locked':False,
+                'border': 1  # Add border to clearly see the cells
+            })
+
             # Add data validation for scores in the oral sheet
             row_num = i + 3
             mek_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_20})
@@ -1151,6 +1181,13 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
             mek_oral_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_25})
             mek_oral_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
+
+            # # Apply the format to the cells with drop-down lists
+            mek_oral_sheet.write(f'D{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'E{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'F{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'G{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'H{row_num}', '', dropdown_format)
 
         # Set column widths for the practical sheet
         mek_practical_sheet.set_column('A2:A2', 50, unlocked)
@@ -1174,12 +1211,6 @@ class ExaminerPortal(CustomerPortal):
             '-Electrical (1 Task) \n 10 Marks', #L
             'Remarks'
         ]
-        # header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-        #   '-Using Hand & Plumbing Tools \n -3 Task  \n 30 Marks', #F
-        #   '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
-        #   '-Welding (1 Task)  \n -Lathe Work (1 Task)\n  30 marks', #J
-        #   '-Electrical (1 Task) \n 10 Marks', #L
-        #    'Remarks']
 
         for col, value in enumerate(header_prac):
             mek_practical_sheet.write(1, col, value, header_format)
@@ -1202,6 +1233,13 @@ class ExaminerPortal(CustomerPortal):
             mek_practical_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_30})
             mek_practical_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_10})
             mek_practical_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
+
+             # # Apply the format to the cells with drop-down lists
+            mek_practical_sheet.write(f'D{row_num}', '', dropdown_format)
+            mek_practical_sheet.write(f'E{row_num}', '', dropdown_format)
+            mek_practical_sheet.write(f'F{row_num}', '', dropdown_format)
+            mek_practical_sheet.write(f'G{row_num}', '', dropdown_format)
+            mek_practical_sheet.write(f'H{row_num}', '', dropdown_format)
 
 
         
@@ -1548,6 +1586,14 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                                 'text_wrap': True,
                                             })
+        # Define a format for the drop-down cells
+        dropdown_format = workbook.add_format({
+                                                'font_size': 18,  # Set the font size as needed
+                                                'align': 'center',  # Center align the text
+                                                'valign': 'vcenter',
+                                                'locked':False,
+                                                'border': 1  # Add border to clearly see the cells
+                                            })
         
         # Merge 3 cells over two rows.
         ccmc_cookery_bakery_sheet.merge_range("A1:E1", examiner_assignments.institute_id.name, merge_format)
@@ -1610,7 +1656,19 @@ class ExaminerPortal(CustomerPortal):
             ccmc_cookery_bakery_sheet.data_validation(f'M{row_num}', {'validate': 'list', 'source': marks_values_5})
             ccmc_cookery_bakery_sheet.data_validation(f'N{row_num}', {'validate': 'list', 'source': marks_values_9})
             ccmc_cookery_bakery_sheet.data_validation(f'O{row_num}', {'validate': 'list', 'source': marks_values_8})
-        
+
+            ccmc_cookery_bakery_sheet.write(f'D{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'E{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'F{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'G{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'H{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'I{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'J{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'K{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'L{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'M{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'N{row_num}', '', dropdown_format)
+            ccmc_cookery_bakery_sheet.write(f'O{row_num}', '', dropdown_format)        
         
         
         
@@ -1660,12 +1718,22 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
-            ccmc_oral_summary_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
-            ccmc_oral_summary_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
-            ccmc_oral_summary_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
-            ccmc_oral_summary_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_oral_summary_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-            ccmc_oral_summary_sheet.data_validation('I{}'.format(i+3), {'validate': 'list', 'source': remarks })
+
+            row_num = i + 3
+            ccmc_oral_summary_sheet.data_validation(f'D{row_num}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
+            ccmc_oral_summary_sheet.data_validation(f'E{row_num}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
+            ccmc_oral_summary_sheet.data_validation(f'F{row_num}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
+            ccmc_oral_summary_sheet.data_validation(f'G{row_num}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_oral_summary_sheet.data_validation(f'H{row_num}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
+            ccmc_oral_summary_sheet.data_validation(f'I{row_num}'.format(i+3), {'validate': 'list', 'source': remarks })
+
+            ccmc_oral_summary_sheet.write(f'D{row_num}', '', dropdown_format)
+            ccmc_oral_summary_sheet.write(f'E{row_num}', '', dropdown_format)
+            ccmc_oral_summary_sheet.write(f'F{row_num}', '', dropdown_format)
+            ccmc_oral_summary_sheet.write(f'G{row_num}', '', dropdown_format)
+            ccmc_oral_summary_sheet.write(f'H{row_num}', '', dropdown_format)
+            ccmc_oral_summary_sheet.write(f'I{row_num}', '', dropdown_format)      
+        
         
         
        
@@ -1757,6 +1825,15 @@ class ExaminerPortal(CustomerPortal):
                                                 'text_wrap': True,
                                             })
         
+        # Define a format for the drop-down cells
+        dropdown_format = workbook.add_format({
+                                                'font_size': 18,  # Set the font size as needed
+                                                'align': 'center',  # Center align the text
+                                                'valign': 'vcenter',
+                                                'locked':False,
+                                                'border': 1  # Add border to clearly see the cells
+                                            })
+        
         # Merge 3 cells over two rows.
         ccmc_gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
@@ -1796,7 +1873,12 @@ class ExaminerPortal(CustomerPortal):
             row_num = i + 3
             ccmc_gsk_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_10})
             ccmc_gsk_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_10})
-            ccmc_gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
+            # ccmc_gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
+
+            ccmc_gsk_oral_sheet.write(f'D{row_num}', '', dropdown_format)
+            ccmc_gsk_oral_sheet.write(f'E{row_num}', '', dropdown_format)
+            # ccmc_gsk_oral_sheet.write(f'F{row_num}', '', dropdown_format)
+
         
         workbook.close()
 

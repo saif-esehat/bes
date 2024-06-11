@@ -196,6 +196,12 @@
                 name="Examiner Duty" 
                 action="bes_examiner_oral_practical_duty_action"
                 sequence="1" />
+        
+        <menuitem id="exam_assign_menu" 
+                parent="bes_batch_examiner_duty_menus_group_examiner" 
+                name="Examiner Assignments" 
+                action="view_exam_assignments_action"
+                sequence="10" />
 
         <menuitem id="examiner_ec_menu" 
                 parent="bes_batch_examiner_duty_menus_group_examiner" 
