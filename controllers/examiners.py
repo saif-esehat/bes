@@ -1346,7 +1346,7 @@ class ExaminerPortal(CustomerPortal):
 
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
         })
@@ -1356,7 +1356,7 @@ class ExaminerPortal(CustomerPortal):
             
         # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        # return request.render("bes.examiner_assignment_candidate_list")
 
 
 
@@ -1471,8 +1471,8 @@ class ExaminerPortal(CustomerPortal):
 
 
                 })
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        # examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
         })
@@ -1481,7 +1481,7 @@ class ExaminerPortal(CustomerPortal):
             
         # return request.redirect("/my/assignments/batches/"+str(batch_id))
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        # return request.render("bes.examiner_assignment_candidate_list")
 
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
@@ -1950,7 +1950,7 @@ class ExaminerPortal(CustomerPortal):
 
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
@@ -2010,7 +2010,7 @@ class ExaminerPortal(CustomerPortal):
     
             # mek_practical_remarks = row[12]
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         examiner_assignments.write({
             'marksheet_uploaded' : True
@@ -2024,13 +2024,12 @@ class ExaminerPortal(CustomerPortal):
     def upload_marksheet_img(self, **kw):
         user_id = request.env.user.id
         batch_id = int(kw['marksheet_id'])
+        assignment_id = int(kw['marksheet_assign_id'])
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
-            ('dgs_batch.id', '=', batch_id),
-            ('examiner.user_id', '=', user_id)
-        ])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+
         examiner_assignments.sudo().write({
             'marksheet_image':  base64.b64encode(file_content),
             'marksheet_image_name': filename,

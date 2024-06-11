@@ -303,10 +303,10 @@
                                     function openUploadMarksheetImage(button) {
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('marks-batch-id');
-                                    var assignId = button.getAttribute('ccmc-assign-id');
+                                    var assignId = button.getAttribute('img-assign-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('marksheet_id').value = dataId;
-                                    document.getElementById('ccmc_assignment_ids').value = assignId;
+                                    document.getElementById('marksheet_assign_id').value = assignId;
                                     }
 
                                     
@@ -490,6 +490,7 @@
                                     <form method="post" action="/my/uploadmarksheetimg" enctype="multipart/form-data">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="marksheet_id" name="marksheet_id" />
+                                        <input type="hidden" id="marksheet_assign_id" name="marksheet_assign_id" />
                                         <div class="form-group">
                                             <!-- <label for="fileUpload">Image Upload</label>
                                             <input type="file" class="form-control-file" accept=".png,.jpeg" name="fileUpload" id="fileUpload"/> -->
@@ -525,8 +526,9 @@
                 <t t-set="extended_date" t-value="exam_date"/>
             </t>
 
-            <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
+            <!-- <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/> -->
             
+            <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
 
            
 

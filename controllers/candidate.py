@@ -40,7 +40,8 @@ class GPCandidatePortal(CustomerPortal):
             
             show_certificate = registered_exams.state == '3-certified' or False
 
-            if registered_exams.state == '1-in_process' and candidate.institute_batch_id.admit_card_status == 'issued' and candidate.stcw_criteria == 'passed' and candidate.ship_visit_criteria == 'passed' and candidate.attendance_criteria == 'passed':
+            if registered_exams.state == '1-in_process' and candidate.institute_batch_id.admit_card_status == 'issued':
+            # and candidate.stcw_criteria == 'passed' and candidate.ship_visit_criteria == 'passed' and candidate.attendance_criteria == 'passed':
                 show_admit_card = True
             else:
                 show_admit_card = False
