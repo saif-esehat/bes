@@ -697,6 +697,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','=','passed'),('gsk_oral_prac_assignment','=',False)]).ids
         candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','=','passed'),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False)]).ids
         
+        print(candidate_with_mek)
+        
         candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('gsk_online_assignment','=',False)]).ids
         candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','=','passed'),('gsk_online_assignment','=',False)]).ids
         candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','=','passed'),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False)]).ids
@@ -778,6 +780,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
          # Distribute candidates with only GSK Online
         for idx, candidate in enumerate(candidate_with_gsk_online):
             try:
+                
                 online_gsk_examiner_index = idx % num_examiners_gsk_online
                 examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
                 online_gsk_assignments[examiner_gsk_online].append(candidate)
@@ -790,7 +793,12 @@ class GPExaminerAssignmentWizard(models.TransientModel):
             try:
                 mek_examiner_index = idx % num_examiners_mek
                 examiner_mek = examiners_mek[mek_examiner_index]
-                mek_assignments[examiners_mek].append(candidate)
+                print("Examiners_mek",examiners_mek)
+                print("Examiner_mek",examiner_mek)
+                print("mek_assignments",mek_assignments)
+                print("mek_assignment_examiners_mek",mek_assignments)
+                mek_assignments[examiner_mek].append(candidate)
+
             except ZeroDivisionError:
                 raise ValidationError("Please Add Atleast One MEK Examiner")
         
@@ -1841,7 +1849,7 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral':
+            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral' and record.dgs_batch.repeater_batch != True:
                 # Check if there are any other records with the same examiner and exam date
                 duplicate_records = self.search([
                     ('examiner', '=', record.examiner.id),
@@ -2271,7 +2279,9 @@ class GPExam(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            if all_types_exist and all_cert_nos_present:
+            # if all_types_exist and all_cert_nos_present:
+            
+            if all_types_exist:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
             else:
