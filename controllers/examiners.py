@@ -410,18 +410,19 @@ class ExaminerPortal(CustomerPortal):
         
         if request.httprequest.method == "POST":
             print('exittttttttttttttttttttttttttttttt')
+            print(rec)
             indos = rec['indos']
 
             # Convert string values to integers
-            climbing_mast_bosun_chair = int(rec['climbing_mast'])
+            climbing_mast_bosun_chair = int(rec['climbing_mast_bosun_chair'])
             buoy_flags_recognition = int(rec['buoy_flags_recognition'])
             # bosun_chair = int(rec['bosun_chair'])
-            rig_stage = int(rec['rig_stage'])
-            rig_pilot = int(rec['rig_pilot'])
-            rig_scoffolding = int(rec['rig_scoffolding'])
-            fast_ropes = int(rec['fast_ropes'])
-            knots_bend = int(rec['knots_bend'])
-            sounding_rod = int(rec['sounding_rod'])
+            rig_stage_rig_pilot_rig_scaffolding = int(rec['rig_stage_rig_pilot_rig_scaffolding'])
+            fast_ropes_knots_bend_sounding_rod = int(rec['fast_ropes_knots_bend_sounding_rod'])
+            # rig_scoffolding = int(rec['rig_scoffolding'])
+            # fast_ropes = int(rec['fast_ropes'])
+            # knots_bend = int(rec['knots_bend'])
+            # sounding_rod = int(rec['sounding_rod'])
             state = rec['state']
             remarks_oral_gsk = rec['gsk_practical_remarks']
             
@@ -436,12 +437,12 @@ class ExaminerPortal(CustomerPortal):
                 'climbing_mast_bosun_chair': climbing_mast_bosun_chair,
                 'buoy_flags_recognition': buoy_flags_recognition,
                 # 'bosun_chair': bosun_chair,
-                'rig_stage': rig_stage,
-                'rig_pilot': rig_pilot,
-                'rig_scaffolding': rig_scoffolding,
-                'fast_ropes': fast_ropes,
-                'knots_bend': knots_bend,
-                'sounding_rod': sounding_rod,
+                'rig_stage_rig_pilot_rig_scaffolding': rig_stage_rig_pilot_rig_scaffolding,
+                'fast_ropes_knots_bend_sounding_rod': fast_ropes_knots_bend_sounding_rod,
+                # 'rig_scaffolding': rig_scoffolding,
+                # 'fast_ropes': fast_ropes,
+                # 'knots_bend': knots_bend,
+                # 'sounding_rod': sounding_rod,
                 'gsk_practical_draft_confirm': state,
                 'gsk_practical_remarks': remarks_oral_gsk
             }
