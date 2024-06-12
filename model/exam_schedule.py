@@ -1619,6 +1619,20 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done')
+    
+    @api.depends('marksheets')
+    def compute_candidates_done(self):
+        for record in self:
+            if record.subject.name == 'GSK':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                       if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                           count += 1
+                    record.candidate_done = count
+            
+
     
     
     def download_marksheet(self):
@@ -1858,7 +1872,6 @@ class ExamOralPracticalExaminers(models.Model):
                 ])
                 if duplicate_records.exam_type == 'online':
                      # Get the name of the examiner
-<<<<<<< HEAD
                     pass
                 elif duplicate_records.exam_type == 'practical_oral':
                     examiner_name = record.examiner.name
@@ -1868,15 +1881,6 @@ class ExamOralPracticalExaminers(models.Model):
                 else:
                     pass
                     
-=======
-                    examiner_name = record.examiner.name
-                    # Format the validation error message to include the examiner's name and exam date
-                    error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (examiner_name, record.exam_date,duplicate_records.institute_id.name)
-                    raise ValidationError(error_msg) 
-                else:
-                    pass
-                   
->>>>>>> f99ce3a (data)
 
     
     def download_attendance_sheet(self):
