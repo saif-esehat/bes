@@ -1858,6 +1858,7 @@ class ExamOralPracticalExaminers(models.Model):
                 ])
                 if duplicate_records.exam_type == 'online':
                      # Get the name of the examiner
+<<<<<<< HEAD
                     pass
                 elif duplicate_records.exam_type == 'practical_oral':
                     examiner_name = record.examiner.name
@@ -1867,6 +1868,15 @@ class ExamOralPracticalExaminers(models.Model):
                 else:
                     pass
                     
+=======
+                    examiner_name = record.examiner.name
+                    # Format the validation error message to include the examiner's name and exam date
+                    error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (examiner_name, record.exam_date,duplicate_records.institute_id.name)
+                    raise ValidationError(error_msg) 
+                else:
+                    pass
+                   
+>>>>>>> f99ce3a (data)
 
     
     def download_attendance_sheet(self):
