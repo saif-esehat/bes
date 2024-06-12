@@ -445,6 +445,8 @@
                     <field name="exam_date"/>
                     <field name="marksheets"/>
                     <field name="candidate_done"/>
+                    <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+
                     
                 </tree>
             </field>

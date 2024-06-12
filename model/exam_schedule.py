@@ -1631,6 +1631,42 @@ class ExamOralPracticalExaminers(models.Model):
                        if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                            count += 1
                     record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+                    
+            elif record.subject.name == 'MEK':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.mek_oral.mek_oral_draft_confirm == 'confirm' and sheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+            
+            elif record.subject.name == 'CCMC':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.cookery_bakery.cookery_draft_confirm == 'confirm' and sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+            
+            elif record.subject.name == 'CCMC GSK Oral':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+                    
+            else:
+                record.candidate_done = 'NA'
+                
             
 
     
