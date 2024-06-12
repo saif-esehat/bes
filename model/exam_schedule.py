@@ -1619,6 +1619,20 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done')
+    
+    @api.depends('marksheets')
+    def compute_candidates_done(self):
+        for record in self:
+            if record.subject.name == 'GSK':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                       if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                           count += 1
+                    record.candidate_done = count
+            
+
     
     
     def download_marksheet(self):
