@@ -602,8 +602,8 @@
                         <!-- GSK Practical Subjects -->
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Climb the mast with safe practices ,<br/> Prepare and throw Heaving Line, <br/> Rigging Bosun's Chair and self lower and hoist</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Rig a stage for painting shipside<br/>Rig a Pilot Ladder<br/> Rig scaffolding to work at a height </th>
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Practical Total</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 

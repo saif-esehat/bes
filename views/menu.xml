@@ -201,6 +201,7 @@
                 parent="bes_batch_examiner_duty_menus_group_examiner" 
                 name="Examiner Assignments" 
                 action="view_exam_assignments_action"
+                groups="bes.group_bes_admin,bes.group_exam_coordinator"
                 sequence="10" />
 
         <menuitem id="examiner_ec_menu" 

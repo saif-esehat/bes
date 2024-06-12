@@ -697,6 +697,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','=','passed'),('gsk_oral_prac_assignment','=',False)]).ids
         candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','=','passed'),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False)]).ids
         
+        print(candidate_with_mek)
+        
         candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('gsk_online_assignment','=',False)]).ids
         candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','=','passed'),('gsk_online_assignment','=',False)]).ids
         candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','=','passed'),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False)]).ids
@@ -778,6 +780,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
          # Distribute candidates with only GSK Online
         for idx, candidate in enumerate(candidate_with_gsk_online):
             try:
+                
                 online_gsk_examiner_index = idx % num_examiners_gsk_online
                 examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
                 online_gsk_assignments[examiner_gsk_online].append(candidate)
@@ -790,7 +793,12 @@ class GPExaminerAssignmentWizard(models.TransientModel):
             try:
                 mek_examiner_index = idx % num_examiners_mek
                 examiner_mek = examiners_mek[mek_examiner_index]
-                mek_assignments[examiners_mek].append(candidate)
+                print("Examiners_mek",examiners_mek)
+                print("Examiner_mek",examiner_mek)
+                print("mek_assignments",mek_assignments)
+                print("mek_assignment_examiners_mek",mek_assignments)
+                mek_assignments[examiner_mek].append(candidate)
+
             except ZeroDivisionError:
                 raise ValidationError("Please Add Atleast One MEK Examiner")
         
@@ -1611,6 +1619,56 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done')
+    
+    @api.depends('marksheets')
+    def compute_candidates_done(self):
+        for record in self:
+            if record.subject.name == 'GSK':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                       if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                           count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+                    
+            elif record.subject.name == 'MEK':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.mek_oral.mek_oral_draft_confirm == 'confirm' and sheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+            
+            elif record.subject.name == 'CCMC':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.cookery_bakery.cookery_draft_confirm == 'confirm' and sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+            
+            elif record.subject.name == 'CCMC GSK Oral':
+                if record.exam_type == 'practical_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                else:
+                    record.candidate_done = 'NA'
+                    
+            else:
+                record.candidate_done = 'NA'
+                
+            
+
     
     
     def download_marksheet(self):
@@ -1841,7 +1899,7 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral':
+            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral' and record.dgs_batch.repeater_batch != True:
                 # Check if there are any other records with the same examiner and exam date
                 duplicate_records = self.search([
                     ('examiner', '=', record.examiner.id),
@@ -2271,7 +2329,9 @@ class GPExam(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            if all_types_exist and all_cert_nos_present:
+            # if all_types_exist and all_cert_nos_present:
+            
+            if all_types_exist:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
             else:
