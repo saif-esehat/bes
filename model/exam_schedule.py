@@ -381,23 +381,24 @@ class ExamOnline(models.Model):
 
 class CCMCExaminerAssignmentWizard(models.TransientModel):
     _name = 'ccmc.examiner.assignment.wizard'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Assignment Wizard'
     
-    exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
+    exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
-    exam_region = fields.Many2one('exam.center', 'Exam Region')
+    exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
     
-    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates")
-    ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates")
-    ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates")
+    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates",tracking=True)
+    ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates",tracking=True)
+    ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates",tracking=True)
     
     
-    no_of_days =  fields.Integer('No. of Days For Exam ')
-    examiner_required_ccmc_prac_oral = fields.Integer("Examiner Required For CCMC Prac/Oral Per Day",compute="_compute_examiners_ccmc_prac_oral")
-    examiner_required_ccmc_gsk_oral = fields.Integer("Examiner Required For CCMC GSK Oral Per Day",compute="_compute_examiners_ccmc_gsk_prac_oral")
+    no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
+    examiner_required_ccmc_prac_oral = fields.Integer("Examiner Required For CCMC Prac/Oral Per Day",compute="_compute_examiners_ccmc_prac_oral",tracking=True)
+    examiner_required_ccmc_gsk_oral = fields.Integer("Examiner Required For CCMC GSK Oral Per Day",compute="_compute_examiners_ccmc_gsk_prac_oral",tracking=True)
     
-    examiner_lines_ids = fields.One2many('ccmc.examiner.assignment.wizard.line', 'parent_id', string='Examiners')
+    examiner_lines_ids = fields.One2many('ccmc.examiner.assignment.wizard.line', 'parent_id', string='Examiners',tracking=True)
     
     
     def update_marksheet(self):
@@ -646,19 +647,20 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
 
 class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     _name = 'ccmc.examiner.assignment.wizard.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     
-    parent_id = fields.Many2one("ccmc.examiner.assignment.wizard",string="Parent")
-    exam_date = fields.Date('Exam Date')
-    subject = fields.Many2one("course.master.subject",string="Subject")
-    examiner = fields.Many2one('bes.examiner', string="Examiner")
-    ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates')
+    parent_id = fields.Many2one("ccmc.examiner.assignment.wizard",string="Parent",tracking=True)
+    exam_date = fields.Date('Exam Date',tracking=True)
+    subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
+    examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
+    ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
     # no_candidates = fields.Integer('No. Of Candidates')
-    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
     
     
     @api.depends('ccmc_marksheet_ids')
@@ -669,20 +671,21 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
 
 class GPExaminerAssignmentWizard(models.TransientModel):
     _name = 'examiner.assignment.wizard'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Assignment Wizard'
-    exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty")
-    institute_id = fields.Many2one("bes.institute",string="Institute")
+    exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
 
     
     #GP Course
-    gsk_prac_oral_candidates = fields.Integer('No. of Candidates In GSK Oral/Practical', compute="_compute_gsk_prac_oral_candidates")
-    mek_prac_oral_candidates = fields.Integer('No. of Candidates In MEK Oral/Practical', compute="_compute_mek_prac_oral_candidates")
-    gsk_online_candidates = fields.Integer('No. of Candidates In GSK Online',compute="_compute_gsk_online_candidates")
-    mek_online_candidates = fields.Integer('No. of Candidates In MEK Online',compute="_compute_mek_online_candidates")
-    no_of_days =  fields.Integer('No. of Days For Exam ')
-    examiner_required_mek = fields.Integer("Examiner Required For MEK Prac/Oral Per Day",compute="_compute_examiners_mek")
-    examiner_required_gsk = fields.Integer("Examiner Required For GSK Prac/Oral Per Day",compute="_compute_examiners_gsk")
+    gsk_prac_oral_candidates = fields.Integer('No. of Candidates In GSK Oral/Practical', compute="_compute_gsk_prac_oral_candidates",tracking=True)
+    mek_prac_oral_candidates = fields.Integer('No. of Candidates In MEK Oral/Practical', compute="_compute_mek_prac_oral_candidates",tracking=True)
+    gsk_online_candidates = fields.Integer('No. of Candidates In GSK Online',compute="_compute_gsk_online_candidates",tracking=True)
+    mek_online_candidates = fields.Integer('No. of Candidates In MEK Online',compute="_compute_mek_online_candidates",tracking=True)
+    no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
+    examiner_required_mek = fields.Integer("Examiner Required For MEK Prac/Oral Per Day",compute="_compute_examiners_mek",tracking=True)
+    examiner_required_gsk = fields.Integer("Examiner Required For GSK Prac/Oral Per Day",compute="_compute_examiners_gsk",tracking=True)
 
     
     
@@ -1072,19 +1075,20 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     
 class ExaminerAssignmentLineWizard(models.TransientModel):
     _name = 'examiner.assignment.wizard.line'
+    _inherit = ['mail.thread','mail.activity.mixin']
     
-    parent_id = fields.Many2one("examiner.assignment.wizard",string="Parent")
+    parent_id = fields.Many2one("examiner.assignment.wizard",string="Parent",tracking=True)
 
-    exam_date = fields.Date('Exam Date')
-    subject = fields.Many2one("course.master.subject",string="Subject")
-    examiner = fields.Many2one('bes.examiner', string="Examiner")
-    gp_marksheet_ids = fields.Many2many('gp.exam.schedule', string='Candidates')
+    exam_date = fields.Date('Exam Date',tracking=True)
+    subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
+    examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
+    gp_marksheet_ids = fields.Many2many('gp.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
-    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
     
     
     @api.depends('gp_marksheet_ids')
