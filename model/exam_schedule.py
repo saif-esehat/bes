@@ -432,7 +432,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner_ccmc_prac_oral = examiners_ccmc_prac_oral[ccmc_prac_oral_examiner_index]
                     ccmc_prac_oral_assignments[examiner_ccmc_prac_oral].append(candidate)
                 except ZeroDivisionError:
-                    raise ValidationError("Please Add Atleast One CCMC Prac/Oral Examiner")
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One CCMC Prac/Oral Examiner")
             
             
             #Distribute candidates with both CCMC GSK Oral
@@ -442,7 +445,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner_ccmc_gsk_oral = examiners_ccmc_gsk_oral[ccmc_gsk_oral_examiner_index]
                     ccmc_gsk_oral_assignments[examiner_ccmc_gsk_oral].append(candidate)
                 except ZeroDivisionError:
-                    raise ValidationError("Please Add Atleast One CCMC GSK Oral Examiner")
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One CCMC GSK Oral Examiner")
             
             
             #Distribute candidates with both CCMC Online
@@ -452,7 +458,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner_ccmc_online = examiners_ccmc_online[ccmc_online_examiner_index]
                     ccmc_online_assignments[examiner_ccmc_online].append(candidate)
                 except ZeroDivisionError:
-                    raise ValidationError("Please Add Atleast One CCMC Online Examiner")
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One CCMC Online Examiner")
                 
 
             
@@ -628,14 +637,14 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
             # import wdb;wdb.set_trace() 
-            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('cookery_bakery_prac_status','in',('pending','failed')),('ccmc_oral_prac_assignment','=',False)])
+            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_oral_prac_assignment','=',False)])
             
     
     @api.depends('institute_id')
     def _compute_ccmc_gsk_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('cookery_bakery_prac_status','in',('pending','failed')),('ccmc_gsk_oral_assignment','=',False)])
+            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_gsk_oral_assignment','=',False)])
     
     @api.depends('institute_id')
     def _compute_ccmc_online_candidates(self):
@@ -734,14 +743,20 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 examiner_gsk = examiners_gsk[gsk_examiner_index]
                 gsk_assignments[examiner_gsk].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One GSK Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One GSK Examiner")
             
             try:    
                 mek_examiner_index = idx % num_examiners_mek
                 examiner_mek = examiners_mek[mek_examiner_index]          
                 mek_assignments[examiner_mek].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One MEK Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One MEK Examiner")
         
         # import wdb;wdb.set_trace();
 
@@ -753,15 +768,21 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
                 online_gsk_assignments[examiner_gsk_online].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One GSK Online Examiner")
-            
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One GSK Online Examiner")
+                
             
             try:    
                 online_mek_examiner_index = idx % num_examiners_mek_online
                 examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
                 online_mek_assignments[examiner_mek_online].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One MEK Online Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One MEK Online Examiner")
             
         # import wdb;wdb.set_trace();
         
@@ -775,7 +796,10 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 examiner_gsk = examiners_gsk[gsk_examiner_index]
                 gsk_assignments[examiner_gsk].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One GSK Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One GSK Examiner")
             
          # Distribute candidates with only GSK Online
         for idx, candidate in enumerate(candidate_with_gsk_online):
@@ -785,7 +809,10 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
                 online_gsk_assignments[examiner_gsk_online].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One GSK Online Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One GSK Online Examiner")
         
         
         # Distribute candidates with only MEK
@@ -800,7 +827,10 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 mek_assignments[examiner_mek].append(candidate)
 
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One MEK Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One MEK Examiner")
         
         
         # Distribute candidates with only MEK Online
@@ -810,7 +840,10 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                 examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
                 online_mek_assignments[examiner_mek_online].append(candidate)
             except ZeroDivisionError:
-                raise ValidationError("Please Add Atleast One MEK Online Examiner")
+                if self.exam_duty.dgs_batch.repeater_batch:
+                    pass
+                else:
+                    raise ValidationError("Please Add Atleast One MEK Online Examiner")
 
             
         ### GSK ASSIGNMENTS    
@@ -1619,7 +1652,7 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
-    candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done')
+    candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done',store=True)
     
     @api.depends('marksheets')
     def compute_candidates_done(self):
@@ -3065,7 +3098,7 @@ class CCMCExam(models.Model):
         ('pending', 'Pending'),
         ('failed', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Oral/Prac Status',compute="compute_oral_prac_status",tracking=True)
+    ], string='Oral/Prac Status',store=True,compute="compute_oral_prac_status",tracking=True)
     
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
