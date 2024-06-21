@@ -687,17 +687,21 @@
                                 </t>
                             </td>
 
-                            <td  t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">
+                            <td  t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'online'" class="text-center">
                                 <t t-out="examiner_subject" />
                             </td>
 
-                            <td  t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">
+                            <td  t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'online'" class="text-center">
                                 <t t-if="examiner_subject == 'GSK'">
                                     <t t-out="marksheet.gsk_online.examiner_token" />
                                 </t>
                                 <t t-elif="examiner_subject == 'MEK'">
                                     <t t-out="marksheet.mek_online.examiner_token" />
                                 </t>
+                                <t t-elif="examiner_subject == 'CCMC'">
+                                    <t t-out="marksheet.ccmc_online.examiner_token" />
+                                </t>
+
                                 
                             </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'"  class="text-center">
