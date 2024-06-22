@@ -3418,7 +3418,7 @@ class CCMCExam(models.Model):
                      self.cookery_oral = ccmc_oral_marks
                      self.cookery_practical = cookery_bakery_marks
                  else:
-                    raise ValidationError("MEK Oral Or Practical Not Confirmed")
+                    raise ValidationError("CCMC Oral Or Practical Not Confirmed")
                 
              if not (len(self.ccmc_online)==0):
                  if ccmc_online_state:
