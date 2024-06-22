@@ -189,9 +189,12 @@ class ExaminerPortal(CustomerPortal):
         marksheet_id = data["id"]
         last_part = marksheet_id.split('_')[-1]
         marksheet_id = int(last_part)
+
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+        # import wdb; wdb.set_trace()
+        marksheet.examiners_id.compute_candidates_done()
         return json.dumps({"status":"success"})
     
     
@@ -207,6 +210,7 @@ class ExaminerPortal(CustomerPortal):
         marksheet_id = int(last_part)
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.ccmc_gsk_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        marksheet.examiners_id.compute_candidates_done()
         return json.dumps({"status":"success"})
     
     
@@ -228,6 +232,7 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
         marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        marksheet.examiners_id.compute_candidates_done()
         return json.dumps({"status":"success"})
     
     
@@ -248,6 +253,7 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.cookery_bakery.write({"cookery_draft_confirm": 'confirm' })
         marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        marksheet.examiners_id.compute_candidates_done()
         return json.dumps({"status":"success"})
     
     
