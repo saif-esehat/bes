@@ -316,10 +316,9 @@
             <field name="model">exam.type.oral.practical</field>
             <field name="arch" type="xml">
                 <form>
-                    <!-- <header>
-                            <field name="state" widget="statusbar"/>
-                            <button name="confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-draft')]}"  />
-                    </header> -->
+                    <header>
+                            <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"/>
+                    </header>
                     <sheet>
                          <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">

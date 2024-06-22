@@ -136,7 +136,7 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace(); 
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
-        survey_examiner_token = registered_exam.survey_id.examiner_token
+        survey_examiner_token = registered_exam.examiner_token
         
         
         if survey_examiner_token == examiner_token:

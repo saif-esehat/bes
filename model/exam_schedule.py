@@ -1182,6 +1182,33 @@ class ExamOralPractical(models.Model):
         return list(institute_ids)
     
     
+    def generate_expense_sheet(self):
+        print(self)
+        for assignment in self.examiners:
+            assignment_id = assignment.id
+            examiner_id = assignment.examiner.id
+            subject_name = assignment.subject.name
+            institute_id = assignment.institute_id.id
+            user_id = assignment.examiner.user_id.id
+            quantity = len(assignment.marksheets)
+            employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+            product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
+            child_records = self.env['hr.expense'].sudo().create([
+                                    {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                                ])
+            
+            expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                'dgs_exam':True,
+                                                                'dgs_batch': self.dgs_batch.id,
+                                                                'institute_id':institute_id,
+                                                                'employee_id':employee.id,
+                                                                'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                })
+            
+            assignment.write({'expense_sheet':expense_sheet})
+            
+    
+    
     
     def confirm(self):
         
@@ -2782,6 +2809,14 @@ class GPExam(models.Model):
                 else:
                     raise ValidationError("GSK Online Exam Not Done or Confirmed")
             
+            else:
+                # self.gsk_online_marks = self.gsk_online.scoring_total
+                self.gsk_online_percentage = (self.gsk_online_marks/75)*100
+                if self.gsk_online_percentage >= 60 :
+                    self.gsk_online_status = 'passed'
+                else:
+                    self.gsk_online_status = 'failed'
+            
             
             print("MEK ONline")
             print(not (len(self.mek_online) == 0))
@@ -2801,6 +2836,13 @@ class GPExam(models.Model):
                         self.mek_online_status = 'failed'
                 else:
                     raise ValidationError("MEK Online Exam Not Done or Confirmed")
+            else:
+                self.mek_online_percentage = (self.mek_online_marks/75)*100
+                if self.mek_online_percentage >= 60 :
+                    self.mek_online_status = 'passed'
+                else:
+                    self.mek_online_status = 'failed'
+
           
                 
                 
