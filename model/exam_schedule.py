@@ -1225,20 +1225,74 @@ class ExamOralPractical(models.Model):
             user_id = assignment.examiner.user_id.id
             quantity = len(assignment.marksheets)
             employee = self.env['hr.employee'].search([('user_id','=',user_id)])
-            product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
-            child_records = self.env['hr.expense'].sudo().create([
-                                    {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
-                                ])
             
-            expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                'dgs_exam':True,
-                                                                'dgs_batch': self.dgs_batch.id,
-                                                                'institute_id':institute_id,
-                                                                'employee_id':employee.id,
-                                                                'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                })
+            if subject_name == 'GSK' and assignment.exam_type == 'practical_oral': 
             
-            assignment.write({'expense_sheet':expense_sheet})
+                product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
+            
+            elif subject_name == 'MEK' and assignment.exam_type == 'practical_oral': 
+                
+                product =  self.env['product.product'].search([('default_code','=','mek_exam')])
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
+            
+            elif subject_name == 'GSK' and assignment.exam_type == 'online': 
+                
+                product =  self.env['product.product'].search([('default_code','=','gsk_online_exam')])
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': 1 }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
+            
+            elif subject_name == 'MEK' and assignment.exam_type == 'online': 
+                
+                product =  self.env['product.product'].search([('default_code','=','mek_online_exam')])
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': 1 }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
             
     
     
