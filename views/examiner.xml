@@ -340,7 +340,12 @@
                         </group>
                         <group style="width:50%;">
                             <field name="exam_region" readonly="1" required="1"/>
+                            <field name="expense_sheet_status" readonly="1" required="1"/>
+
+                            
                         </group>
+
+
                         <!-- <group style="width:50%;">
                             <field name="subject" domain="[('course_id','=',course)]" required="1" />
                         </group>
@@ -683,6 +688,7 @@
                     <field name="exam_type"/>
                     <field name="course"/>
                     <field name="exam_region"/>
+                    <field name="expense_sheet_status"/>
                     <!-- <field name="subject"/> -->
                 </tree>
             </field>

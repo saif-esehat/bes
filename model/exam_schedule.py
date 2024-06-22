@@ -1201,6 +1201,11 @@ class ExamOralPractical(models.Model):
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
+    
+    expense_sheet_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('generated', 'Generated')     
+    ], string='Expense Sheet Status', default='pending',tracking=True)
 
     state = fields.Selection([
         ('1-draft', 'Pending'),
@@ -1225,6 +1230,8 @@ class ExamOralPractical(models.Model):
             user_id = assignment.examiner.user_id.id
             quantity = len(assignment.marksheets)
             employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+            
+            designation = assignment.examiner
             
             if subject_name == 'GSK' and assignment.exam_type == 'practical_oral': 
             
@@ -1262,9 +1269,20 @@ class ExamOralPractical(models.Model):
             
             elif subject_name == 'GSK' and assignment.exam_type == 'online': 
                 
+                
+        
+                    
+                    
+                
                 product =  self.env['product.product'].search([('default_code','=','gsk_online_exam')])
+                
+                if designation == 'non-mariner':
+                    price = 2000
+                else:
+                    price = product.standard_price
+                
                 child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': 1 }
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
                                     ])
                 
                 expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
@@ -1280,8 +1298,15 @@ class ExamOralPractical(models.Model):
             elif subject_name == 'MEK' and assignment.exam_type == 'online': 
                 
                 product =  self.env['product.product'].search([('default_code','=','mek_online_exam')])
+                
+                if designation == 'non-mariner':
+                    price = 2000
+                else:
+                    price = product.standard_price
+                
+                
                 child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': 1 }
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
                                     ])
                 
                 expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
@@ -1293,6 +1318,68 @@ class ExamOralPractical(models.Model):
                                                                     })
             
                 assignment.write({'expense_sheet':expense_sheet})
+            
+            elif subject_name == 'CCMC' and assignment.exam_type == 'practical_oral': 
+                
+                product =  self.env['product.product'].search([('default_code','=','ccmc_exam')])
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
+                
+            elif subject_name == 'CCMC' and assignment.exam_type == 'online': 
+                
+                product =  self.env['product.product'].search([('default_code','=','ccmc_online_exam')])
+                
+                if designation == 'non-mariner':
+                    price = 2000
+                else:
+                    price = product.standard_price
+                
+                
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
+            
+            elif subject_name == 'CCMC GSK Oral' and assignment.exam_type == 'practical_oral': 
+                
+                product =  self.env['product.product'].search([('default_code','=','ccmc_gsk_exam')])
+                
+                
+                child_records = self.env['hr.expense'].sudo().create([
+                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
+                                    ])
+                
+                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+                                                                    'dgs_exam':True,
+                                                                    'dgs_batch': self.dgs_batch.id,
+                                                                    'institute_id':institute_id,
+                                                                    'employee_id':employee.id,
+                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
+                                                                    })
+            
+                assignment.write({'expense_sheet':expense_sheet})
+            
+        self.write({'expense_sheet_status':'generated'})
             
     
     
