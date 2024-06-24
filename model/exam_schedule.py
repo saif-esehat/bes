@@ -2406,10 +2406,10 @@ class GPExam(models.Model):
     #     ('passed', 'Complied'),
     # ], string='Attendance Criteria' , compute="compute_certificate_criteria",tracking=True)
 
-    stcw_criteria = fields.Selection([
+    stcw_criterias = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='STCW Criteria',store=True,compute="_check_stcw_certificate")
+    ], string='STCW Criteria',store=True,related='gp_candidate.stcw_criteria')
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
@@ -2520,27 +2520,27 @@ class GPExam(models.Model):
             else:
                 record.candidate_signature_status = 'pending'
 
-    @api.depends('gp_candidate.stcw_certificate')
-    def _check_stcw_certificate(self):
-         for record in self:
-            # Retrieve all the STCW certificate records
-            stcw_certificates = record.gp_candidate.stcw_certificate
+    # @api.depends('gp_candidate.stcw_certificate')
+    # def _check_stcw_certificate(self):
+    #      for record in self:
+    #         # Retrieve all the STCW certificate records
+    #         stcw_certificates = record.gp_candidate.stcw_certificate
 
-            course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
+    #         course_type_already  = [course.course_name for course in record.gp_candidate.stcw_certificate]
 
-            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
-            all_types_exist = record.check_combination_exists(course_type_already)
+    #         # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
+    #         all_types_exist = record.check_combination_exists(course_type_already)
             
-            # Check if the candidate_cert_no is present for all the STCW certificates
-            all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
+    #         # Check if the candidate_cert_no is present for all the STCW certificates
+    #         all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            # if all_types_exist and all_cert_nos_present:
+    #         # if all_types_exist and all_cert_nos_present:
             
-            if all_types_exist:
-                # import wdb; wdb.set_trace();
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
+    #         if all_types_exist:
+    #             # import wdb; wdb.set_trace();
+    #             record.stcw_criteria = 'passed'
+    #         else:
+    #             record.stcw_criteria = 'pending'
         
     
     @api.depends('gp_candidate.ship_visits')
@@ -2783,11 +2783,11 @@ class GPExam(models.Model):
             else:
                 record.exam_criteria = 'pending'
                 
-            if all_types_exist:
-                # import wdb; wdb.set_trace();
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
+            # if all_types_exist:
+            #     # import wdb; wdb.set_trace();
+            #     record.stcw_criterias = 'passed'
+            # else:
+            #     record.stcw_criterias = 'pending'
                 
             if record.gp_candidate.attendance_compliance_1 == 'yes' or record.gp_candidate.attendance_compliance_2 == 'yes':
                 record.attendance_criteria = 'passed'
@@ -2802,10 +2802,10 @@ class GPExam(models.Model):
 
                 record.ship_visit_criteria = 'pending'
     
-    @api.depends('exam_criteria','stcw_criteria','attendance_criteria','ship_visit_criteria')
+    @api.depends('exam_criteria','stcw_criterias','attendance_criteria','ship_visit_criteria')
     def compute_pending_certificate_criteria(self):
         for record in self:
-            if record.exam_criteria == record.stcw_criteria == record.attendance_criteria == record.ship_visit_criteria == 'passed':
+            if record.exam_criteria == record.stcw_criterias == record.attendance_criteria == record.ship_visit_criteria == 'passed':
                 record.certificate_criteria = 'passed'
             else:
                 record.certificate_criteria = 'pending'
@@ -3089,7 +3089,7 @@ class GPExam(models.Model):
                 
 
                 all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status,
-                                                                  self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+                                                                  self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
                     
                     
             
@@ -3279,7 +3279,7 @@ class GPExam(models.Model):
                 
                 
                 
-                all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
+                all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
 
                 
                 self.state = '2-done'

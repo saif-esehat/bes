@@ -236,6 +236,8 @@ class GPCandidate(models.Model):
             
             # print("Checkin STCW") 
             # print(course_type_already)            
+            gp_exam_count = self.env['gp.exam.schedule'].sudo().search_count([('gp_candidate','=',record.id)])          
+            # import wdb; wdb.set_trace();          
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = record.check_combination_exists(course_type_already)
@@ -243,14 +245,16 @@ class GPCandidate(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            
-            # if all_types_exist and all_cert_nos_present:
-            
-            if all_types_exist:
-                # import wdb; wdb.set_trace();
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
+            if gp_exam_count > 1:
+                if all_types_exist:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
+            elif gp_exam_count == 1:
+                if all_types_exist and all_cert_nos_present:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
         
     
     @api.depends('ship_visits')
