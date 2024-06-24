@@ -33,7 +33,7 @@
     </template>
 
     <template id="dgs_report">
-        <t t-call="web.basic_layout">
+        <t t-call="web.html_container">
             <t t-call="bes.dgs_report_custom_header_footer" >
                 <t t-foreach="docs" t-as="doc">
                     
