@@ -969,31 +969,6 @@ class ExaminerPortal(CustomerPortal):
         remarks = ['Absent','Good','Average','Weak']
         gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': remarks })
 
-<<<<<<< HEAD
-        #For GSK Practical Marksheet
-        gsk_practical_sheet.set_column('A:XDF',None, unlocked)
-        gsk_practical_sheet.set_column('A2:A2',35, unlocked)
-        gsk_practical_sheet.set_column('B2:B2',10, unlocked)
-        gsk_practical_sheet.set_column('C2:C2',20, unlocked)
-        gsk_practical_sheet.set_column('D2:G2',35, unlocked)
-        gsk_practical_sheet.set_column('H2:H2',15, unlocked)
-        gsk_practical_sheet.set_column('I2:I2',15, unlocked)
-        gsk_practical_sheet.set_column('N2:N2',15, unlocked)
-            
-        gsk_practical_sheet.protect()
-        
-        
-        # Merge 3 cells over two rows.
-        gsk_practical_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        
-        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-          '-Climb the mast with safe practices \n -Prepare and throw Heaving Line \n Rigging Bosun\'s Chair and self lower and hoist \n 30 Marks', #D
-          '-Rig a stage for painting shipside \n -Rig a Pilot Ladder \n -Rig scaffolding to work at a height  \n 30 marks',#E
-          '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n -Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n ·Taking Soundings with sounding rod / sounding taps \n ·Reading of Draft \n .Mannual lifting of weight (30 Marks)',#G
-          '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 10 Marks',#G
-        #   '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
-            'Remarks']
-=======
         # Example lists for candidates and their codes (replace with actual data)
         candidate_list = [candidate.gp_candidate.name for candidate in marksheets]
         roll_no = [candidate.gp_marksheet.exam_id for candidate in marksheets]
@@ -1048,7 +1023,6 @@ class ExaminerPortal(CustomerPortal):
             'Remarks'
         ]
 
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
         
@@ -1062,21 +1036,6 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
-        
-        gsk_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_30 })
-        gsk_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_30 })
-        gsk_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_30 })
-        gsk_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-
-<<<<<<< HEAD
-        gsk_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
-        # gsk_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_8 })
-        # gsk_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_8 })
-        # gsk_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_18 })
-        # gsk_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_18 })
-        
-        # gsk_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
-=======
             # Add data validation for scores in the practical sheet
             row_num = i + 3
             gsk_practical_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_30})
@@ -1090,7 +1049,6 @@ class ExaminerPortal(CustomerPortal):
             gsk_practical_sheet.write(f'F{row_num}', '', dropdown_format)
             gsk_practical_sheet.write(f'G{row_num}', '', dropdown_format)
             gsk_practical_sheet.write(f'H{row_num}', '', dropdown_format)
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         
         workbook.close()
 
@@ -1215,6 +1173,29 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             mek_oral_sheet.write('C{}'.format(i+3), code, locked)
+            # Define a format for the drop-down cells
+            dropdown_format = workbook.add_format({
+                'font_size': 18,  # Set the font size as needed
+                'align': 'center',  # Center align the text
+                'valign': 'vcenter',
+                'locked':False,
+                'border': 1  # Add border to clearly see the cells
+            })
+
+            # Add data validation for scores in the oral sheet
+            row_num = i + 3
+            mek_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_20})
+            mek_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_20})
+            mek_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
+            mek_oral_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_25})
+            mek_oral_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
+
+            # # Apply the format to the cells with drop-down lists
+            mek_oral_sheet.write(f'D{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'E{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'F{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'G{row_num}', '', dropdown_format)
+            mek_oral_sheet.write(f'H{row_num}', '', dropdown_format)
         
         marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
@@ -1239,48 +1220,7 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.set_column('D2:G2',25, unlocked)
         mek_practical_sheet.set_column('H2:H2',15, unlocked)
             
-<<<<<<< HEAD
-        mek_practical_sheet.protect()
-        
-        
-        # Merge 3 cells over two rows.
-        mek_practical_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
-        
-        header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-        #   '-Using Hand & Plumbing Tools \n -Task 1 \n 10 Marks', #D
-        #   '-Using Hand & Plumbing Tools \n -Task 2 \n 10 Marks', #E
-          '-Using Hand & Plumbing Tools \n -3 Task  \n 30 Marks', #F
-          '-Use of Chipping Tools & paint Brushes \n -Use of Carpentry Tools \n -Use of Measuring Instruments 30 marks', #G
-        #   '-Use of Carpentry Tools \n 10 marks', #H
-        #   '-Use of Measuring Instruments \n 10 marks', #I
-          '-Welding (1 Task)  \n -Lathe Work (1 Task)\n  30 marks', #J
-        #   '-Lathe Work (1 Task) \n 10 Marks', #K
-          '-Electrical (1 Task) \n 10 Marks', #L
-           'Remarks']
-=======
-           # Define a format for the drop-down cells
-            dropdown_format = workbook.add_format({
-                'font_size': 18,  # Set the font size as needed
-                'align': 'center',  # Center align the text
-                'valign': 'vcenter',
-                'locked':False,
-                'border': 1  # Add border to clearly see the cells
-            })
-
-            # Add data validation for scores in the oral sheet
-            row_num = i + 3
-            mek_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_20})
-            mek_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_20})
-            mek_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
-            mek_oral_sheet.data_validation(f'G{row_num}', {'validate': 'list', 'source': marks_values_25})
-            mek_oral_sheet.data_validation(f'H{row_num}', {'validate': 'list', 'source': remarks})
-
-            # # Apply the format to the cells with drop-down lists
-            mek_oral_sheet.write(f'D{row_num}', '', dropdown_format)
-            mek_oral_sheet.write(f'E{row_num}', '', dropdown_format)
-            mek_oral_sheet.write(f'F{row_num}', '', dropdown_format)
-            mek_oral_sheet.write(f'G{row_num}', '', dropdown_format)
-            mek_oral_sheet.write(f'H{row_num}', '', dropdown_format)
+           
 
         # Set column widths for the practical sheet
         mek_practical_sheet.set_column('A2:A2', 50, unlocked)
@@ -1305,7 +1245,6 @@ class ExaminerPortal(CustomerPortal):
             'Remarks'
         ]
 
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         for col, value in enumerate(header_prac):
             mek_practical_sheet.write(1, col, value, header_format)
         
@@ -1318,21 +1257,6 @@ class ExaminerPortal(CustomerPortal):
             mek_practical_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
-<<<<<<< HEAD
-            mek_practical_sheet.write('C{}'.format(i+3), code, locked)
-        
-        mek_practical_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_30 })
-        mek_practical_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_30 })
-        mek_practical_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_30 })
-        mek_practical_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
-        mek_practical_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
-        # mek_practical_sheet.data_validation('I3:I1048576', {'validate': 'list', 'source': marks_values_10 })
-        # mek_practical_sheet.data_validation('J3:J1048576', {'validate': 'list', 'source': marks_values_30 })
-        # mek_practical_sheet.data_validation('K3:K1048576', {'validate': 'list', 'source': marks_values_10 })
-        # mek_practical_sheet.data_validation('L3:L1048576', {'validate': 'list', 'source': marks_values_10 })
-        
-        # mek_practical_sheet.data_validation('M3:M1048576', {'validate': 'list', 'source': remarks })
-=======
             mek_practical_sheet.write(f'C{i + 3}', code, locked)
             
             # Add data validation for scores in the practical sheet
@@ -1351,7 +1275,6 @@ class ExaminerPortal(CustomerPortal):
             mek_practical_sheet.write(f'H{row_num}', '', dropdown_format)
 
 
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         
         
         workbook.close()
@@ -1733,9 +1656,6 @@ class ExaminerPortal(CustomerPortal):
             ccmc_cookery_bakery_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
-<<<<<<< HEAD
-            ccmc_cookery_bakery_sheet.write('C{}'.format(i+3), code, locked)
-=======
             ccmc_cookery_bakery_sheet.write(f'C{i + 3}', code, locked)
 
             # Add data validation for scores
@@ -1765,7 +1685,6 @@ class ExaminerPortal(CustomerPortal):
             ccmc_cookery_bakery_sheet.write(f'M{row_num}', '', dropdown_format)
             ccmc_cookery_bakery_sheet.write(f'N{row_num}', '', dropdown_format)
             ccmc_cookery_bakery_sheet.write(f'O{row_num}', '', dropdown_format)        
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         
         marks_values_5 = [1,2,3,4,5]
         marks_values_6 = [1,2,3,4,5,6]
@@ -1846,8 +1765,6 @@ class ExaminerPortal(CustomerPortal):
 
         for i, code in enumerate(candidate_code):
             ccmc_oral_summary_sheet.write('C{}'.format(i+3), code, locked)
-<<<<<<< HEAD
-=======
 
             row_num = i + 3
             ccmc_oral_summary_sheet.data_validation(f'D{row_num}'.format(i+3), {'validate': 'list', 'source': marks_values_20 })
@@ -1864,7 +1781,6 @@ class ExaminerPortal(CustomerPortal):
             ccmc_oral_summary_sheet.write(f'H{row_num}', '', dropdown_format)
             ccmc_oral_summary_sheet.write(f'I{row_num}', '', dropdown_format)      
         
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         
         ccmc_oral_summary_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
         ccmc_oral_summary_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
@@ -2009,8 +1925,6 @@ class ExaminerPortal(CustomerPortal):
         remarks = ['Absent','Good','Average','Weak']
         # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
 
-<<<<<<< HEAD
-=======
 
         candidate_list = [candidate.ccmc_candidate.name for candidate in examiner_assignments.marksheets]
         candidate_code = [candidate.ccmc_candidate.candidate_code for candidate in examiner_assignments.marksheets]
@@ -2038,7 +1952,6 @@ class ExaminerPortal(CustomerPortal):
             # ccmc_gsk_oral_sheet.write(f'F{row_num}', '', dropdown_format)
 
         
->>>>>>> 9aed74766292e7067c93a45811b017864b3f3019
         workbook.close()
 
         # Set the buffer position to the beginning
