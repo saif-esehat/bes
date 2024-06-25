@@ -2498,6 +2498,10 @@ class GPExam(models.Model):
         ('done', 'Done'),
     ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
 
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    show_hold_admit_card = fields.Boolean("Hide Hold Admit Card button",compute='_compute_hide_button')
+
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
@@ -2607,6 +2611,37 @@ class GPExam(models.Model):
 
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
+    
+    def HoldAdmitCard(self):
+        self.sudo().write({
+            'hold_admit_card':True,
+        })
+
+    def ReleaseAdmitCard(self):
+        self.sudo().write({
+            'hold_admit_card':False,
+        })
+
+
+    def _compute_hide_button(self):
+        if self.state != '1-in_process':
+            self.sudo().write({
+            'show_hold_admit_card':True
+        })
+        else:
+            self.sudo().write({
+            'show_hold_admit_card':False
+        })
+
+    def HoldCertificate(self):
+        self.sudo().write({
+            'hold_certificate':True
+        })
+
+    def ReleaseCertificate(self):
+        self.sudo().write({
+            'hold_certificate':False
+        })
     
     
     def reissue_approved(self):

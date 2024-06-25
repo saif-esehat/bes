@@ -30,7 +30,7 @@ class CandidateAdmitCardGp(models.AbstractModel):
                 if docs.ship_visit_criteria == 'pending' :
                     raise UserError("Admit Card Not Generated Ship Visit  Criteria not Complied")
                 
-                if docs.stcw_criteria == 'pending':
+                if docs.stcw_criterias == 'pending':
                     raise UserError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # candidate_image = base64.b64encode(docs1.candidate_image).decode()

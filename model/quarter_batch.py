@@ -79,25 +79,50 @@ class DGSBatch(models.Model):
                     
         self.state = '3-dgs_approved'
     
-    def print_gp_repeater(self):
+    # def print_gp_repeater(self):
         
-        datas = {
-        'doc_ids': self.id,
-        'report_type': 'Repeater',
-        'course': 'GP' 
-         }
+    #     datas = {
+    #     'doc_ids': self.id,
+    #     'report_type': 'Repeater',
+    #     'course': 'GP' 
+    #      }
         
-        return self.env.ref('bes.report_dgs_gp_fresh_action').report_action(self ,data=datas)
+    #     return self.env.ref('bes.report_dgs_gp_fresh_action').report_action(self ,data=datas)
     
     def print_gp_fresh(self):
         
-        datas = {
-        'doc_ids': self.id,
-        'report_type': 'Fresh',
-        'course': 'GP' 
-         }
+        if self.repeater_batch:
+            datas = {
+            'doc_ids': self.id,
+            'report_type': 'Repeater',
+            'course': 'GP' 
+            }
+        
+        else:
+            datas = {
+            'doc_ids': self.id,
+            'report_type': 'Fresh',
+            'course': 'GP' 
+            }
         
         return self.env.ref('bes.report_dgs_gp_fresh_action').report_action(self ,data=datas)
+    
+    def print_ccmc_fresh(self):
+        
+        if self.repeater_batch:
+            datas = {
+            'doc_ids': self.id,
+            'report_type': 'Repeater',
+            'course': 'CCMC' 
+            }
+        else:     
+            datas = {
+            'doc_ids': self.id,
+            'report_type': 'Fresh',
+            'course': 'CCMC' 
+            }
+        
+        return self.env.ref('bes.report_dgs_ccmc_fresh_action').report_action(self ,data=datas)
     
     
     def open_gp_exams(self):
@@ -145,7 +170,7 @@ class DGSBatch(models.Model):
 class DGSBatchReport(models.AbstractModel):
     _name = "report.bes.dgs_report"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description = "DGS Batch Report"
+    _description = "DGS Batch GP Report"
     
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -160,10 +185,9 @@ class DGSBatchReport(models.AbstractModel):
             exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')])
         elif report_type == 'Repeater' and course == 'GP':
             exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')])
-
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
-        insittute = self.env['bes.institute'].sudo().search([])
-        import wdb; wdb.set_trace(); 
+        institute = self.env['bes.institute'].sudo().search([])
+        # import wdb; wdb.set_trace(); 
 
         
         return {
@@ -171,9 +195,42 @@ class DGSBatchReport(models.AbstractModel):
             'doc_model': 'gp.exam.schedule',
             'docs':docs1,
             'exams':exams,
-            'insittutes':insittute,
+            'institutes':institute,
             'report_type':report_type,
             'course':course
         }
+    
 
+class CCMCDGSBatchReport(models.AbstractModel):
+    _name = "report.bes.ccmc_dgs_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "DGS Batch CCMC Report"
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        
+        
+        docids = data['doc_ids']
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)
+        report_type = data['report_type']
+        course = data['course']
+
+        if report_type == 'Fresh' and course == 'CCMC':
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')])
+        elif report_type == 'Repeater' and course == 'CCMC':
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')])
+            # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
+        institute = self.env['bes.institute'].sudo().search([])
+        # import wdb; wdb.set_trace(); 
+
+        
+        return {
+            'docids': docids,
+            'doc_model': 'ccmc.exam.schedule',
+            'docs':docs1,
+            'exams':exams,
+            'institutes':institute,
+            'report_type':report_type,
+            'course':course
+        }
     

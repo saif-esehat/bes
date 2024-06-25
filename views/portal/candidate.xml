@@ -347,18 +347,38 @@
 
 
                             </td> -->
-                            <td class="text-center">
-                                <t  t-if="show_admit_card">
-                                    <a t-attf-href="/my/gpexam/list/download_admit_card/{{rec.id}}" class="fa">Download Admit Card</a>
-                                </t>
-                                 <t  t-else="">
-                                    <span class="text-danger">Pending</span>
-                                </t>
-                            </td>
-                            <td t-if="show_certificate" class="text-center">
-                                    <a t-attf-href="/my/gpexam/list/download_certificate/{{rec.id}}" class="fa">Download Certificate</a>
-                               
+                            <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+                            <!-- <t t-if='hold_admit_card'>
+                                <td class="text-center">
+                                    <span class="text-danger">Kept On Hold</span>
+                                </td>
+                            </t> -->
 
+                            <t  t-if="show_admit_card">
+                                <td class="text-center">
+                                    <t  t-if="show_admit_card">
+                                        <t t-if='hold_admit_card'>
+                                            <span class="text-danger">On Hold</span>
+                                        </t>
+                                        <t  t-else="">
+                                            <a t-attf-href="/my/gpexam/list/download_admit_card/{{rec.id}}" class="fa">Download Admit Card</a>
+                                        </t>
+                                    </t>
+                                    <t  t-else="">
+                                        <span class="text-danger">Pending</span>
+                                    </t>
+                                </td>
+                            </t>
+
+                            <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
+
+                            <td t-if="show_certificate" class="text-center">
+                                <t t-if='hold_certificate'>
+                                    <span class="text-danger">On Hold</span>
+                                </t>
+                                <t t-else=''>
+                                    <a t-attf-href="/my/gpexam/list/download_certificate/{{rec.id}}" class="fa">Download Certificate</a>
+                                </t>
                             </td>
                              
                         </tr>
