@@ -105,7 +105,7 @@
                     <field name="mek_online_marks" optional="show"/>
                     <field name="overall_marks" optional="show"/>
                     <field name="exam_criteria" optional="show"/>
-                    <field name="stcw_criteria" optional="show"/>
+                    <field name="stcw_criterias" optional="show"/>
                     <field name="attendance_criteria" optional="show"/>
                     <field name="ship_visit_criteria" optional="show"/>
                     <field name="certificate_criteria" optional="show"/>

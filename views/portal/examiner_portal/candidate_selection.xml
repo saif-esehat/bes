@@ -309,17 +309,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="buoy_flags_recognition">·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders</label>
-                                        <input type="number" min="0" max="30" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.buoy_flags_recognition" required="True"/>
-                                        /30
+                                        <input type="number" min="0" max="10" class="form-control" id="buoy_flags_recognition" name="buoy_flags_recognition" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.buoy_flags_recognition" required="True"/>
+                                        /10
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="bosun_chair">Rigging Bosun's Chair and self lower and hoist</label>
-                                        <input type="number" min="0" max="8" class="form-control" id="bosun_chair" name="bosun_chair" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.bosun_chair" required="True"/>
-                                        /08
-                                    </div> -->
-                                <!-- </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="rig_stage_rig_pilot_rig_scaffolding">Rig a stage for painting shipside,Rig a Pilot Ladder,Rig scaffolding to work at a height</label>
@@ -327,22 +320,6 @@
                                         /30
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="rig_pilot">Rig a Pilot Ladder</label>
-                                        <input type="number" min="0" max="8" class="form-control" id="rig_pilot" name="rig_pilot" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.rig_pilot" required="True"/>
-                                        /08
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="rig_scoffolding">Rig scaffolding to work at a height</label>
-                                        <input type="number" min="0" max="8" class="form-control" id="rig_scoffolding" name="rig_scoffolding" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.rig_scaffolding" required="True"/>
-                                        /08
-                                    </div>
-                                </div> -->
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fast_ropes_knots_bend_sounding_rod">·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopperl</label>
@@ -350,24 +327,6 @@
                                         /30
                                     </div>
                                 </div>
-
-                                <!-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="knots_bend">.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase</label>
-                                        <input type="number" min="0" max="18" class="form-control" id="knots_bend" name="knots_bend" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.knots_bend" required="True"/>
-                                        /18
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="sounding_rod">·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight</label>
-                                        <input type="number" min="0" max="18" class="form-control" id="sounding_rod" name="sounding_rod" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.sounding_rod" required="True"/>
-                                        /18
-                                    </div>
-                                </div> -->
-
-                                
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -381,7 +340,6 @@
                                         <select class="form-control" id="state" name="state">
                                             <option value="draft" t-att-selected="gsk_prac_marksheet.gsk_practical_draft_confirm == 'draft'">Draft</option>
                                             <option value="confirm" t-att-selected="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'">Confirm</option>
-                                        
                                         </select>
                                     </div>
                                 </div>

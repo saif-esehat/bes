@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="attendance_sheet_online_ccmc">
-        <t t-call="web.html_container">
+        <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
 
                 <div class="header">
@@ -74,12 +74,12 @@
 
 
     <template id="attendance_sheet_online_gp">
-        <t t-call="web.html_container">
+        <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
 
 
                    <div class="header">
-                    <table style="width:100%; border: 1px solid black;">
+                    <table style="width:100%; border: 1px solid black;" >
                         <tr>
                             <th style="border: 1px solid black;" rowspan="2">
                                 <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg" style="max-width: 100px; max-height: 100px;padding:8px;"/>
@@ -108,7 +108,7 @@
 
 
 
-                <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                <table  class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                     <t t-set="index" t-value="0"/>
                     <tr>
                         <th style="border: 1px solid black; padding: 8px;">Sr No.</th>

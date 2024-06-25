@@ -233,6 +233,11 @@ class GPCandidate(models.Model):
             stcw_certificates = record.stcw_certificate
 
             course_type_already  = [course.course_name for course in record.stcw_certificate]
+            
+            # print("Checkin STCW") 
+            # print(course_type_already)            
+            gp_exam_count = self.env['gp.exam.schedule'].sudo().search_count([('gp_candidate','=',record.id)])          
+            # import wdb; wdb.set_trace();          
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = record.check_combination_exists(course_type_already)
@@ -240,11 +245,16 @@ class GPCandidate(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            if all_types_exist and all_cert_nos_present:
-                # import wdb; wdb.set_trace();
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
+            if gp_exam_count > 1:
+                if all_types_exist:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
+            elif gp_exam_count == 1:
+                if all_types_exist and all_cert_nos_present:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
         
     
     @api.depends('ship_visits')
@@ -782,7 +792,9 @@ class CCMCCandidate(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            if all_types_exist and all_cert_nos_present:
+            # if all_types_exist and all_cert_nos_present:
+
+            if all_types_exist:
                 # import wdb; wdb.set_trace();
                 record.stcw_criteria = 'passed'
             else:
@@ -1426,7 +1438,7 @@ class GskPracticallLine(models.Model):
     def _onchange_gsk_practicals_marks_limit(self):
         if self.climbing_mast_bosun_chair> 30:
             raise UserError("Climb the mast with safe practices , Prepare and throw Heaving Line marks should not be greater than 12.")
-        if self.buoy_flags_recognition > 12:
+        if self.buoy_flags_recognition > 10:
             raise UserError("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders marks should not be greater than 12.")
         # if self.bosun_chair > 8:
         #     raise UserError("Rigging Bosun's Chair and self lower and hoist marks should not be greater than 8.")

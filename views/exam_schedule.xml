@@ -259,7 +259,7 @@
                             <field name="mek_online_status" widget="badge" decoration-info="mek_online_carry_forward == True"  readonly="1"/>
                             <field name="gsk_online_status" widget="badge" decoration-info="gsk_online_carry_forward == True" readonly="1"/>
                             <field name="exam_criteria" readonly="1"/>
-                            <field name="stcw_criteria" readonly="1"/>
+                            <field name="stcw_criterias" readonly="1"/>
                             <field name="attendance_criteria" readonly="1"/>
                             <field name="ship_visit_criteria" readonly="1"/>
                             <field name="certificate_criteria" readonly="1"/>
@@ -318,7 +318,7 @@
                     <field name="mek_online_marks" optional="show"/>
                     <field name="overall_marks" optional="show"/>
                     <field name="exam_criteria" optional="show"/>
-                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="stcw_criterias"  optional="show" widget="badge" decoration-success= "stcw_criterias == 'passed'" decoration-danger="stcw_criterias == 'pending'"/>
                     <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
                     <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
                     <!-- <field name="stcw_criteria" optional="show"/>

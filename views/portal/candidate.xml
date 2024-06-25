@@ -275,14 +275,14 @@
                                 <t t-out="registered_exam.survey_id.subject.name" />
                             </td>
                              <td class="text-center">
-                                <t t-if="registered_exam.survey_id.exam_state == 'in_progress'">
-                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+                                    <t t-if="registered_exam.state != 'done'">
+                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+
+                                    </t>
 
                                     <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
-                                </t>
-                                <t t-else="">
 
-                                </t>
+
                             </td>
                         </tr>
                     </t>

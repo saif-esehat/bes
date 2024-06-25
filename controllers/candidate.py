@@ -72,7 +72,7 @@ class GPCandidatePortal(CustomerPortal):
             print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             # candidate = registered_exams
             # import wdb; wdb.set_trace(); 
-            show_certificate = candidate.certificate_criteria == 'passed' or False
+            show_certificate = registered_exams.certificate_criteria == 'passed' or False
             if registered_exams.state == '1-in_process' and candidate.institute_batch_id.admit_card_status == 'issued' and candidate.stcw_criteria == 'passed' and candidate.ship_visit_criteria == 'passed' and candidate.attendance_criteria == 'passed':
                 show_admit_card = True
             else:
@@ -136,7 +136,7 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace(); 
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
-        survey_examiner_token = registered_exam.survey_id.examiner_token
+        survey_examiner_token = registered_exam.examiner_token
         
         
         if survey_examiner_token == examiner_token:

@@ -316,10 +316,9 @@
             <field name="model">exam.type.oral.practical</field>
             <field name="arch" type="xml">
                 <form>
-                    <!-- <header>
-                            <field name="state" widget="statusbar"/>
-                            <button name="confirm" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-draft')]}"  />
-                    </header> -->
+                    <header>
+                            <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"/>
+                    </header>
                     <sheet>
                          <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
@@ -341,7 +340,12 @@
                         </group>
                         <group style="width:50%;">
                             <field name="exam_region" readonly="1" required="1"/>
+                            <field name="expense_sheet_status" readonly="1" required="1"/>
+
+                            
                         </group>
+
+
                         <!-- <group style="width:50%;">
                             <field name="subject" domain="[('course_id','=',course)]" required="1" />
                         </group>
@@ -397,6 +401,58 @@
                         <field name= "activity_ids" widget="mail_activity"/>
                     </div>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_exam_assignments_action" model="ir.actions.act_window">
+            <field name="name">Examiner Assignments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">exam.type.oral.practical.examiners</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Examiner Assignments</p>
+            </field>
+        </record>
+
+        <record id="view_exam_assignments_search" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.search</field>
+            <field name="model">exam.type.oral.practical.examiners</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="dgs_batch"/>
+                    <field name="subject"/>
+                    <field name="examiner"/>
+                    <field name="prac_oral_id"/>
+                    <field name="exam_region"/>
+                    <field name="exam_date"/>
+                    
+                    <searchpanel>
+                        <field name="dgs_batch" enable_counters="1" icon="fa fa-user"/>
+                        <field name="subject" enable_counters="1" icon="fa fa-user"/>
+                    </searchpanel>
+                </search>
+            </field>
+
+        </record>
+
+        <record id="view_exam_assignments_tree" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.tree</field>
+            <field name="model">exam.type.oral.practical.examiners</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="dgs_batch"/>
+                    <field name="subject"/>
+                    <field name="examiner"/>
+                    <field name="exam_type"/>
+                    <field name="institute_id"/>
+                    <field name="exam_region"/>
+                    <field name="exam_date"/>
+                    <field name="marksheets"/>
+                    <field name="candidate_done"/>
+                    <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+
+                    
+                </tree>
             </field>
         </record>
 
@@ -632,6 +688,7 @@
                     <field name="exam_type"/>
                     <field name="course"/>
                     <field name="exam_region"/>
+                    <field name="expense_sheet_status"/>
                     <!-- <field name="subject"/> -->
                 </tree>
             </field>
