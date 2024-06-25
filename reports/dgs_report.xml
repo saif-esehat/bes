@@ -135,7 +135,41 @@
                 
                 </t>
             </t>
+
             
+        </t>
+    </template>
+
+    <template id="dgs_report_result_analysis">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <table class="black-bordered-table" style="" border="1">
+
+                    <thead>
+                        <tr>
+                            <th style="vertical-align: bottom;">Sr. No.</th>
+                            <th style="vertical-align: bottom;">Code No.</th>
+                            <th style="vertical-align: bottom;">Name Of Institute.</th>
+                            <th style="vertical-align: bottom;">No of  candidates Appeared</th>
+                            <th style="vertical-align: bottom;">No of Passed Candidates</th>
+                            <th style="white-space: nowrap; vertical-align: bottom;" >% Passed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Add rows with student data here -->
+                        <t t-set="index" t-value="0" />
+                        <t t-foreach="institutes" t-as="institute">
+                            <tr>
+                                <t t-set="index" t-value="index + 1"/>
+                                <td><span t-esc="index"/></td>
+                                <td style="text-align:center"><span t-esc="institute.code"/></td>
+                                <td style="text-align:center"><span t-esc="institute.name"/></td>
+                                <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
         </t>
     </template>
 </odoo>

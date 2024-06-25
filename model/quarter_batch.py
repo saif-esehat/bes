@@ -153,7 +153,6 @@ class DGSBatchReport(models.AbstractModel):
         
         docids = data['doc_ids']
         docs1 = self.env['dgs.batches'].sudo().browse(docids)
-        # import wdb; wdb.set_trace(); 
         report_type = data['report_type']
         course = data['course']
 
@@ -163,6 +162,8 @@ class DGSBatchReport(models.AbstractModel):
             exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')])
 
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
+        insittute = self.env['bes.institute'].sudo().search([])
+        import wdb; wdb.set_trace(); 
 
         
         return {
@@ -170,6 +171,7 @@ class DGSBatchReport(models.AbstractModel):
             'doc_model': 'gp.exam.schedule',
             'docs':docs1,
             'exams':exams,
+            'insittutes':insittute,
             'report_type':report_type,
             'course':course
         }
