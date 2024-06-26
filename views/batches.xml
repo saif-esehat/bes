@@ -420,7 +420,7 @@
                     <header>                        
                         <button name="print_gp_fresh" string="GP Fresh" type="object" class="btn-primary" />
                         <button name="print_gp_repeater" string="GP Repeater" type="object" class="btn-primary" />
-                        
+                        <button name="get_pass_percentage" string="Generate Graph" type="object" class="btn-primary" />
                         <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
                         <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
                         <field name="state" widget="statusbar"/>
@@ -451,6 +451,9 @@
                         <group>
                             <field name="exam_pass_date"/>
                             <field name="certificate_issue_date"/>
+                        </group>
+                        <group>
+                            <field name="plot_image" widget="image" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">
