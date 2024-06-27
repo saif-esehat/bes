@@ -101,11 +101,17 @@
                                     <t t-if="exam.gsk_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
-                                     <t t-else="">
+                                    <t t-elif="exam.gsk_oral_prac_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                    </t>
+                                    <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
-                                     </t>
-                                     <t t-if="exam.mek_oral_prac_status == 'passed'">
+                                    </t>
+                                    <t t-if="exam.mek_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-elif="exam.mek_oral_prac_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
                                     </t>
                                      <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
@@ -113,11 +119,17 @@
                                      <t t-if="exam.mek_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
+                                    <t t-elif="exam.mek_online_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                    </t>
                                     <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
                                     </t>
                                     <t t-if="exam.gsk_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-elif="exam.gsk_online_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
                                     </t>
                                      <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
