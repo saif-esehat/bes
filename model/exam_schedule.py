@@ -2623,6 +2623,7 @@ class GPExam(models.Model):
         })
 
 
+    @api.depends('state', 'hold_admit_card')
     def _compute_hide_button(self):
         if self.state != '1-in_process':
             self.sudo().write({
