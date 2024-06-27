@@ -1833,7 +1833,7 @@ class ExamOralPracticalExaminers(models.Model):
                 if record.exam_type == 'practical_oral':
                     count = 0
                     for sheet in record.marksheets:
-                       if sheet.mek_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                       if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                            count += 1
                     record.candidate_done = count
                 else:
