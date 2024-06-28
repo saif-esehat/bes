@@ -156,12 +156,15 @@ class DGSBatch(models.Model):
 
     def move_confirm(self):
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
+        ccmc_exams = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.id)])
         
         for exam in exams:
             exam.move_done()
+        for exam in ccmc_exams:
+            exam.move_done()
             
         percentages = self.get_pass_percentage(exams)
-        import wdb; wdb.set_trace();
+        # import wdb; wdb.set_trace();
         self.state = '2-confirmed'
         
     def move_dgs_approved(self):
