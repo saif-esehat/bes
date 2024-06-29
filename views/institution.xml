@@ -21,7 +21,8 @@
                 <form >
                     <group>
                         <field name="dgs_batch" readonly="1"/>
-                        <field name="batch_name"/>
+                        <field name="batch_name" invisible='1'/>
+                        <field name="exam_batch_name"/>
                     </group>
                     <group style="width:50%;">
                         <field name="from_date"/>

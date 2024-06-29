@@ -1824,8 +1824,60 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
-    candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done',store=True)
+    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',tracking=True)
+    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True)
     
+    @api.depends('marksheets')
+    def check_absent(self):
+        for record in self:
+            if record.subject.name == 'GSK':
+                if record.exam_type == 'practical_oral':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.gsk_oral.gsk_oral_remarks and sheet.gsk_prac.gsk_practical_remarks:
+                            if sheet.gsk_oral.gsk_oral_remarks.lower() == 'absent' and sheet.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
+                                abs_count += 1
+                    record.absent_candidates = abs_count
+                else:
+                    record.absent_candidates = 'NA'
+                    
+            elif record.subject.name == 'MEK':
+                if record.exam_type == 'practical_oral':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.mek_oral.mek_oral_remarks and sheet.mek_prac.mek_practical_remarks: 
+                            if sheet.mek_oral.mek_oral_remarks.lower() == 'absent' and sheet.mek_prac.mek_practical_remarks.lower()  == 'absent':
+                                    abs_count += 1
+                    record.absent_candidates = abs_count
+                else:
+                    record.absent_candidates = 'NA'
+            
+            elif record.subject.name == 'CCMC':
+                if record.exam_type == 'practical_oral':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if  sheet.cookery_bakery.cookery_practical_remarks and sheet.ccmc_oral.ccmc_oral_remarks:
+                            if sheet.cookery_bakery.cookery_practical_remarks.lower() == 'absent' and sheet.ccmc_oral.ccmc_oral_remarks.lower() == 'absent':
+                                abs_count += 1
+                    record.absent_candidates = abs_count
+                else:
+                    record.absent_candidates = 'NA'
+            
+            elif record.subject.name == 'CCMC GSK Oral':
+                if record.exam_type == 'practical_oral':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_gsk_oral.ccmc_gsk_oral_remarks:
+                            if sheet.ccmc_gsk_oral.ccmc_gsk_oral_remarks.lower() == 'absent':
+                                abs_count += 1
+                        record.absent_candidates = abs_count
+                else:
+                    record.absent_candidates = 'NA'
+                    
+            else:
+                record.absent_candidates = 'NA'
+
+
     @api.depends('marksheets')
     def compute_candidates_done(self):
         for record in self:
