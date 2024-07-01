@@ -1803,6 +1803,7 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
+    candidates_count = fields.Integer("Candidates",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
@@ -1826,6 +1827,12 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
     candidate_done = fields.Char("Candidate Done" , compute='compute_candidates_done',store=True)
     
+    
+    @api.depends('marksheets')
+    def compute_candidates_count(self):
+        for record in self:
+            record.candidates_count = len(record.marksheets)
+    
     @api.depends('marksheets')
     def compute_candidates_done(self):
         for record in self:
@@ -1833,7 +1840,7 @@ class ExamOralPracticalExaminers(models.Model):
                 if record.exam_type == 'practical_oral':
                     count = 0
                     for sheet in record.marksheets:
-                       if sheet.mek_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                       if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                            count += 1
                     record.candidate_done = count
                 else:
@@ -2501,6 +2508,10 @@ class GPExam(models.Model):
         ('done', 'Done'),
     ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
 
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    show_hold_admit_card = fields.Boolean("Hide Hold Admit Card button",compute='_compute_hide_button')
+
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
@@ -2610,6 +2621,38 @@ class GPExam(models.Model):
 
     def reissue_approval(self):
         self.state = '5-pending_reissue_approval'
+    
+    def HoldAdmitCard(self):
+        self.sudo().write({
+            'hold_admit_card':True,
+        })
+
+    def ReleaseAdmitCard(self):
+        self.sudo().write({
+            'hold_admit_card':False,
+        })
+
+
+    @api.depends('state', 'hold_admit_card')
+    def _compute_hide_button(self):
+        if self.state != '1-in_process':
+            self.sudo().write({
+            'show_hold_admit_card':True
+        })
+        else:
+            self.sudo().write({
+            'show_hold_admit_card':False
+        })
+
+    def HoldCertificate(self):
+        self.sudo().write({
+            'hold_certificate':True
+        })
+
+    def ReleaseCertificate(self):
+        self.sudo().write({
+            'hold_certificate':False
+        })
     
     
     def reissue_approved(self):

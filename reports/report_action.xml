@@ -86,6 +86,16 @@
         <field name="binding_model_id" ref="bes.model_dgs_batches"/>
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
+
+    <record id="report_dgs_ccmc_fresh_action" model="ir.actions.report">
+        <field name="name">DGS Report</field>
+        <field name="model">dgs.batches</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.ccmc_dgs_report</field>
+        <field name="report_file">bes.ccmc_dgs_report</field>
+        <field name="binding_model_id" ref="bes.model_dgs_batches"/>
+        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+    </record>
    
     <report
         id="report_ccmc_certificate"

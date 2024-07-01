@@ -87,6 +87,18 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <!-- "Hold Admit Card" Button -->
+                        <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary" attrs="{'invisible': [('hold_admit_card', '=', True),('show_hold_admit_card', '=', True)]}"/>
+
+                        <!-- "Release Admit Card" Button -->
+                        <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary" attrs="{'invisible': [('hold_admit_card', '=', False),('show_hold_admit_card', '=', True)]}"/>
+                        
+                        <!-- "Hold Certificate" Button -->
+                        <button name="HoldCertificate" string="Hold Certificate" type="object" class="btn-primary" attrs="{'invisible': [('hold_certificate', '=', True)]}"/>
+                        <!-- "Release Certificate" Button -->
+                        <button name="ReleaseCertificate" string="Release Certificate" type="object" class="btn-primary" attrs="{'invisible': [('hold_certificate', '=', False)]}"/>
+
+                        <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
@@ -107,6 +119,9 @@
                             
                             <field name="reissued" readonly="1"/>
                             <field name="reissued_date" attrs="{'invisible': [('reissued', '=', False)]}" />
+                            <field name="hold_admit_card" readonly='1' />
+                            <field name="hold_certificate" readonly='1' />
+                            <field name="show_hold_admit_card" invisible='1' />
                             
                             <field name="dgs_batch" readonly="1"/>
                             <field name="gp_candidate" readonly="1"/>

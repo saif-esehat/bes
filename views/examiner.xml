@@ -447,7 +447,8 @@
                     <field name="institute_id"/>
                     <field name="exam_region"/>
                     <field name="exam_date"/>
-                    <field name="marksheets"/>
+                    <field name="marksheets" invisible="1" />
+                    <field name="candidates_count"/>
                     <field name="candidate_done"/>
                     <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>     
                 </tree>
