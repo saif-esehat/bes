@@ -1020,6 +1020,9 @@
                         </group>
                            
                         <group>
+                            <field name="cookery_practical_remarks"/>
+                        </group>
+                        <group>
                             <field name="cookery_draft_confirm"/>
                         </group>
                             
@@ -1113,6 +1116,9 @@
                             </div>
                         </group>
                         <group>
+                            <field name='ccmc_oral_remarks'/> 
+                        </group>
+                        <group>
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
@@ -1163,6 +1169,9 @@
                                         / 
                                 <span>20 Marks</span>
                             </div>
+                        </group>
+                        <group>
+                            <field name='ccmc_gsk_oral_remarks'/> 
                         </group>
                         <group>
                             <field name='ccmc_oral_draft_confirm'/> 
