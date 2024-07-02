@@ -4839,21 +4839,21 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="candidate_cert_no">Candidate Certificate Number</label>
-                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no"/>
+                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no" required='1'/>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="course_start_date">Course Start Date</label>
-                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date"/>
+                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date" required='1'/>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="course_end_date">Course End Date</label>
-                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date"/>
+                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date" required='1'/>
                                                                         </div>
                                                                     </div>
 

@@ -1825,8 +1825,8 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
-    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',tracking=True)
-    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True)
+    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
+    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
     
     
     @api.depends('marksheets')
@@ -1877,7 +1877,7 @@ class ExamOralPracticalExaminers(models.Model):
                         if sheet.ccmc_gsk_oral.ccmc_gsk_oral_remarks:
                             if sheet.ccmc_gsk_oral.ccmc_gsk_oral_remarks.lower() == 'absent':
                                 abs_count += 1
-                        record.absent_candidates = abs_count
+                    record.absent_candidates = abs_count
                 else:
                     record.absent_candidates = 'NA'
                     
