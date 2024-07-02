@@ -1807,6 +1807,7 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
+    candidates_count = fields.Integer("Candidates",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
@@ -1830,6 +1831,12 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
     absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
     candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
+    
+    
+    @api.depends('marksheets')
+    def compute_candidates_count(self):
+        for record in self:
+            record.candidates_count = len(record.marksheets)
     
     @api.depends('marksheets')
     def check_absent(self):
