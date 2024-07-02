@@ -462,9 +462,18 @@
                 <tree>
                     <field name="gp_candidate"/>
                     <field name="gp_marksheet"/>
-                    <field name="mek_oral"/>
-                    <field name="mek_prac"/>
-                    
+                    <field name="using_of_tools"/>
+                    <field name="welding_lathe_drill_grinder"/>
+                    <field name="electrical"/>
+                    <field name="journal"/>
+                    <field name="mek_oral_total_marks"/>
+                    <field name="mek_oral_remarks"/>
+                    <field name="using_hand_plumbing_tools_task_3"/>
+                    <field name="use_of_chipping_tools_paint"/>
+                    <field name="welding_lathe"/>
+                    <field name="prac_electrical"/>
+                    <field name="mek_practical_total_marks"/>
+                    <field name="mek_practical_remarks"/>
                 </tree>
             </field>
         </record>
@@ -476,8 +485,17 @@
                 <tree>
                     <field name="gp_candidate"/>
                      <field name="gp_marksheet"/>
-                    <field name="gsk_oral"/>
-                    <field name="gsk_prac"/>
+                    <field name="subject_area_1_2_3"/>
+                    <field name="subject_area_4_5_6"/>
+                    <field name="practical_record_journals"/>
+                    <field name="gsk_oral_total_marks"/>
+                    <field name="gsk_oral_remarks"/>
+                    <field name="climbing_mast_bosun_chair"/>
+                    <field name="buoy_flags_recognition"/>
+                    <field name="rig_stage_rig_pilot_rig_scaffolding"/>
+                    <field name="fast_ropes_knots_bend_sounding_rod"/>
+                    <field name="gsk_practical_total_marks"/>
+                    <field name="gsk_practical_remarks"/>
                 </tree>
             </field>
         </record>

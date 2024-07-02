@@ -2261,12 +2261,41 @@ class OralPracticalExaminersMarksheet(models.Model):
     gp_marksheet = fields.Many2one("gp.exam.schedule",string="GP Marksheet",tracking=True)
     ccmc_marksheet = fields.Many2one("ccmc.exam.schedule",string="CCMC Marksheet",tracking=True)
     ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate",tracking=True)
+   
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
-    
+    using_of_tools = fields.Integer("Uses of Hand/Plumbing/Carpentry Tools & Chipping Tools & Brushes & Paints",tracking=True,related='mek_oral.using_of_tools')
+    welding_lathe_drill_grinder = fields.Integer("Welding & Lathe/Drill/Grinder",tracking=True,related='mek_oral.welding_lathe_drill_grinder')
+    electrical = fields.Integer("Electrical",tracking=True,related='mek_oral.electrical')
+    journal = fields.Integer("Journal",tracking=True,related='mek_oral.journal')
+    mek_oral_total_marks = fields.Integer("Oral Total Marks", store=True,tracking=True,related='mek_oral.mek_oral_total_marks')
+    mek_oral_remarks = fields.Text("Remarks",tracking=True,related='mek_oral.mek_oral_remarks')
+
+
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
+    using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)",tracking=True,related='mek_prac.using_hand_plumbing_tools_task_3')
+    use_of_chipping_tools_paint = fields.Integer("Use of Chipping Tools & paint Brushes",tracking=True,related='mek_prac.use_of_chipping_tools_paint')
+    welding_lathe = fields.Integer("Welding (1 Task),Lathe Work (1 Task)",tracking=True,related='mek_prac.welding_lathe')
+    prac_electrical = fields.Integer("Electrical (1 Task)",tracking=True,related='mek_prac.electrical')
+    mek_practical_total_marks = fields.Integer("Practical Total Marks",store=True,tracking=True,related='mek_prac.mek_practical_total_marks')
+    mek_practical_remarks = fields.Text(" Remarks",tracking=True,related='mek_prac.mek_practical_remarks')
+
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
+    subject_area_1_2_3 = fields.Integer("Subject Area 1, 2, 3 ",tracking=True,related='gsk_oral.subject_area_1_2_3')
+    subject_area_4_5_6 = fields.Integer("Subject Area 4, 5, 6",tracking=True,related='gsk_oral.subject_area_4_5_6')
+    practical_record_journals = fields.Integer("Practical Record Book and Journal",tracking=True,related='gsk_oral.practical_record_journals')
+    gsk_oral_total_marks = fields.Integer("Oral Total Marks", store=True,tracking=True,related='gsk_oral.gsk_oral_total_marks')
+    gsk_oral_remarks = fields.Text(" Remarks",tracking=True,related='gsk_oral.gsk_oral_remarks')
+
+
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
-    
+    climbing_mast_bosun_chair= fields.Integer("Climb the mast with safe practices , Prepare and throw Heaving Line,Rigging Bosun's Chair and self lower and hoist",tracking=True,related='gsk_prac.climbing_mast_bosun_chair')
+    buoy_flags_recognition = fields.Integer("·Recognise buyos and flags .Hoisting a Flag correctly .Steering and Helm Orders",tracking=True,related='gsk_prac.buoy_flags_recognition')
+    rig_stage_rig_pilot_rig_scaffolding = fields.Integer("Rig a stage for painting shipside,Rig a Pilot Ladder,Rig scaffolding to work at a height",tracking=True,related='gsk_prac.rig_stage_rig_pilot_rig_scaffolding')
+    fast_ropes_knots_bend_sounding_rod = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight",tracking=True,related='gsk_prac.fast_ropes_knots_bend_sounding_rod')
+    gsk_practical_total_marks = fields.Integer("Practical Total Marks",store=True,tracking=True,related='gsk_prac.gsk_practical_total_marks')
+    gsk_practical_remarks = fields.Text("Remarks",tracking=True,related='gsk_prac.gsk_practical_remarks')
+
+
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
     hygien_grooming = fields.Integer("Hygiene & Grooming",tracking=True,related='cookery_bakery.hygien_grooming')
     appearance = fields.Integer("Appearance(Dish 1)",tracking=True,related='cookery_bakery.hygien_grooming')
@@ -2281,7 +2310,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     identification_ingredians = fields.Integer("identification of ingredients",tracking=True,related='cookery_bakery.identification_ingredians')
     knowledge_of_menu = fields.Integer("Knowledge of menu",tracking=True,related='cookery_bakery.knowledge_of_menu')
     total_mrks = fields.Integer("Total",store=True,tracking=True,related='cookery_bakery.total_mrks')
-    cookery_practical_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True,related='cookery_bakery.cookery_practical_remarks')
+    cookery_practical_remarks = fields.Char("Remarks",tracking=True,related='cookery_bakery.cookery_practical_remarks')
 
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
     house_keeping = fields.Integer("House Keeping",tracking=True,related='ccmc_oral.house_keeping')
@@ -2291,14 +2320,14 @@ class OralPracticalExaminersMarksheet(models.Model):
     equipment_identification = fields.Integer("Identification of Equipment",tracking=True,related='ccmc_oral.equipment_identification')
     gsk_ccmc = fields.Integer("GSK",related='ccmc_oral.gsk_ccmc',tracking=True)
     toal_ccmc_rating = fields.Integer("Total", store=True,tracking=True,related='ccmc_oral.toal_ccmc_rating')
-    ccmc_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True,related='ccmc_oral.ccmc_oral_remarks')
+    ccmc_oral_remarks = fields.Char(" Remarks",tracking=True,related='ccmc_oral.ccmc_oral_remarks')
     
 
     ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
     ccmc_gsk = fields.Integer("GSK",related='ccmc_gsk_oral.gsk_ccmc',tracking=True)
     safety_ccmc = fields.Integer("Safety",related='ccmc_gsk_oral.safety_ccmc',tracking=True)
     toal_ccmc_oral_rating = fields.Integer("Total", store=True,tracking=True,related='ccmc_gsk_oral.toal_ccmc_oral_rating')
-    ccmc_gsk_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True,related='ccmc_gsk_oral.ccmc_gsk_oral_remarks')
+    ccmc_gsk_oral_remarks = fields.Char(" Remarks",tracking=True,related='ccmc_gsk_oral.ccmc_gsk_oral_remarks')
     
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
 
