@@ -1140,6 +1140,8 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Practical&Oral'
+
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
     # examiners = fields.Many2one('bes.examiner', string="Examiner")
     # subject = fields.Many2one("course.master.subject","Subject")
@@ -1794,6 +1796,8 @@ class ExamOralPractical(models.Model):
 class ExamOralPracticalExaminers(models.Model):
     _name = 'exam.type.oral.practical.examiners'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Examiners'
+
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
@@ -2250,19 +2254,52 @@ class ExamOralPracticalExaminers(models.Model):
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Marksheets'
+
     examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate",tracking=True)
     gp_marksheet = fields.Many2one("gp.exam.schedule",string="GP Marksheet",tracking=True)
     ccmc_marksheet = fields.Many2one("ccmc.exam.schedule",string="CCMC Marksheet",tracking=True)
     ccmc_candidate = fields.Many2one("ccmc.candidate",string="CCMC Candidate",tracking=True)
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
+    
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
     
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
+    hygien_grooming = fields.Integer("Hygiene & Grooming",tracking=True,related='cookery_bakery.hygien_grooming')
+    appearance = fields.Integer("Appearance(Dish 1)",tracking=True,related='cookery_bakery.hygien_grooming')
+    taste = fields.Integer("Taste(Dish 1)",tracking=True,related='cookery_bakery.taste')
+    texture = fields.Integer("Texture(Dish 1)",tracking=True,related='cookery_bakery.texture')
+    appearance_2 = fields.Integer("Appearance(Dish 2)",tracking=True,related='cookery_bakery.appearance_2')
+    taste_2 = fields.Integer("Taste(Dish 2)",tracking=True,related='cookery_bakery.taste_2')
+    texture_2 = fields.Integer("Texture(Dish 2)",tracking=True,related='cookery_bakery.texture_2')
+    appearance_3 = fields.Integer("Appearance(Dish 3)",tracking=True,related='cookery_bakery.appearance_3')
+    taste_3 = fields.Integer("Taste(Dish 3)",tracking=True,related='cookery_bakery.taste_3')
+    texture_3 = fields.Integer("Texture(Dish 3)",tracking=True,related='cookery_bakery.texture_3')
+    identification_ingredians = fields.Integer("identification of ingredients",tracking=True,related='cookery_bakery.identification_ingredians')
+    knowledge_of_menu = fields.Integer("Knowledge of menu",tracking=True,related='cookery_bakery.knowledge_of_menu')
+    total_mrks = fields.Integer("Total",store=True,tracking=True,related='cookery_bakery.total_mrks')
+    cookery_practical_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True,related='cookery_bakery.cookery_practical_remarks')
+
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
+    house_keeping = fields.Integer("House Keeping",tracking=True,related='ccmc_oral.house_keeping')
+    f_b = fields.Integer("F & B service Practical",tracking=True,related='ccmc_oral.f_b')
+    orals_house_keeping = fields.Integer("Orals on Housekeeping and F& B Service",tracking=True,related='ccmc_oral.orals_house_keeping')
+    attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism",tracking=True,related='ccmc_oral.attitude_proffessionalism')
+    equipment_identification = fields.Integer("Identification of Equipment",tracking=True,related='ccmc_oral.equipment_identification')
+    gsk_ccmc = fields.Integer("GSK",related='ccmc_oral.gsk_ccmc',tracking=True)
+    toal_ccmc_rating = fields.Integer("Total", store=True,tracking=True,related='ccmc_oral.toal_ccmc_rating')
+    ccmc_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True,related='ccmc_oral.ccmc_oral_remarks')
+    
+
     ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
+    ccmc_gsk = fields.Integer("GSK",related='ccmc_gsk_oral.gsk_ccmc',tracking=True)
+    safety_ccmc = fields.Integer("Safety",related='ccmc_gsk_oral.safety_ccmc',tracking=True)
+    toal_ccmc_oral_rating = fields.Integer("Total", store=True,tracking=True,related='ccmc_gsk_oral.toal_ccmc_oral_rating')
+    ccmc_gsk_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True,related='ccmc_gsk_oral.ccmc_gsk_oral_remarks')
+    
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
 
 

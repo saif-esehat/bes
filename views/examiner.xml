@@ -584,8 +584,28 @@
                 <tree>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
-                    <field name="cookery_bakery"/>
-                    <field name="ccmc_oral"/>
+                    <field name="hygien_grooming"/>
+                    <field name="appearance"/>
+                    <field name="taste"/>
+                    <field name="texture"/>
+                    <field name="appearance_2"/>
+                    <field name="taste_2"/>
+                    <field name="texture_2"/>
+                    <field name="appearance_3"/>
+                    <field name="taste_3"/>
+                    <field name="texture_3"/>
+                    <field name="identification_ingredians"/>
+                    <field name="knowledge_of_menu"/>
+                    <field name="total_mrks"/>
+                    <field name="cookery_practical_remarks"/>
+                    <field name="house_keeping"/>
+                    <field name="f_b"/>
+                    <field name="orals_house_keeping"/>
+                    <field name="attitude_proffessionalism"/>
+                    <field name="equipment_identification"/>
+                    <field name="gsk_ccmc"/>
+                    <field name="toal_ccmc_rating"/>
+                    <field name="ccmc_oral_remarks"/>
                 </tree>
             </field>
         </record>
@@ -660,7 +680,11 @@
                 <tree>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
-                    <field name="ccmc_gsk_oral"/>
+                    <!-- <field name="ccmc_gsk_oral"/> -->
+                    <field name="ccmc_gsk"/>
+                    <field name="safety_ccmc"/>
+                    <field name="toal_ccmc_oral_rating"/>
+                    <field name="ccmc_gsk_oral_remarks"/>
                 </tree>
             </field>
         </record>
