@@ -327,8 +327,12 @@
                     <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
-                    <field name="gsk_total" optional="show"/>
-                    <field name="mek_total" optional="show"/>
+                    <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
+                    <field name="gsk_practical_marks" optional="show"  string="GSK Practical"/>
+                    <field name="gsk_total" optional="show" string="GSK O/P"/>
+                    <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
+                    <field name="mek_practical_marks" optional="show" string="MEK Practical" />
+                    <field name="mek_total" optional="show" string="GSK O/P"/>
                     <field name="gsk_online_marks" optional="show"/>
                     <field name="mek_online_marks" optional="show"/>
                     <field name="overall_marks" optional="show"/>
@@ -467,6 +471,11 @@
                             <field name="certificate_qr_code" widget="image"  style="width:100px; height:100px;" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         </group>
                         <field name="dgs_visible" invisible="0"/>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name= "message_ids" widget="mail_thread"/>
+                            <field name= "activity_ids" widget="mail_activity"/>
+                        </div>
 
                     </sheet>
                 </form>

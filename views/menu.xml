@@ -139,7 +139,7 @@
 
         <menuitem id="bes_exams_menu" 
                   parent="bes_menu" 
-                  name="Exam Result Details"
+                  name="Exam Master"
                   sequence="5" />
 
         <menuitem id="bes_exam" 
@@ -179,7 +179,7 @@
 
 
 
-        <menuitem id="dgs_batch_menu" parent="bes_menu" name="DGS Batch Master" action="dgs_batch_action" />
+        <menuitem id="dgs_batch_menu" parent="bes_menu" name="Result Master" action="dgs_batch_action" />
 
 
         <record id="survey.menu_surveys" model="ir.ui.menu">
