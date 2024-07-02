@@ -463,9 +463,18 @@
                 <tree>
                     <field name="gp_candidate"/>
                     <field name="gp_marksheet"/>
-                    <field name="mek_oral"/>
-                    <field name="mek_prac"/>
-                    
+                    <field name="using_of_tools"/>
+                    <field name="welding_lathe_drill_grinder"/>
+                    <field name="electrical"/>
+                    <field name="journal"/>
+                    <field name="mek_oral_total_marks"/>
+                    <field name="mek_oral_remarks"/>
+                    <field name="using_hand_plumbing_tools_task_3"/>
+                    <field name="use_of_chipping_tools_paint"/>
+                    <field name="welding_lathe"/>
+                    <field name="prac_electrical"/>
+                    <field name="mek_practical_total_marks"/>
+                    <field name="mek_practical_remarks"/>
                 </tree>
             </field>
         </record>
@@ -477,8 +486,17 @@
                 <tree>
                     <field name="gp_candidate"/>
                      <field name="gp_marksheet"/>
-                    <field name="gsk_oral"/>
-                    <field name="gsk_prac"/>
+                    <field name="subject_area_1_2_3"/>
+                    <field name="subject_area_4_5_6"/>
+                    <field name="practical_record_journals"/>
+                    <field name="gsk_oral_total_marks"/>
+                    <field name="gsk_oral_remarks"/>
+                    <field name="climbing_mast_bosun_chair"/>
+                    <field name="buoy_flags_recognition"/>
+                    <field name="rig_stage_rig_pilot_rig_scaffolding"/>
+                    <field name="fast_ropes_knots_bend_sounding_rod"/>
+                    <field name="gsk_practical_total_marks"/>
+                    <field name="gsk_practical_remarks"/>
                 </tree>
             </field>
         </record>
@@ -585,8 +603,28 @@
                 <tree>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
-                    <field name="cookery_bakery"/>
-                    <field name="ccmc_oral"/>
+                    <field name="hygien_grooming"/>
+                    <field name="appearance"/>
+                    <field name="taste"/>
+                    <field name="texture"/>
+                    <field name="appearance_2"/>
+                    <field name="taste_2"/>
+                    <field name="texture_2"/>
+                    <field name="appearance_3"/>
+                    <field name="taste_3"/>
+                    <field name="texture_3"/>
+                    <field name="identification_ingredians"/>
+                    <field name="knowledge_of_menu"/>
+                    <field name="total_mrks"/>
+                    <field name="cookery_practical_remarks"/>
+                    <field name="house_keeping"/>
+                    <field name="f_b"/>
+                    <field name="orals_house_keeping"/>
+                    <field name="attitude_proffessionalism"/>
+                    <field name="equipment_identification"/>
+                    <field name="gsk_ccmc"/>
+                    <field name="toal_ccmc_rating"/>
+                    <field name="ccmc_oral_remarks"/>
                 </tree>
             </field>
         </record>
@@ -661,7 +699,11 @@
                 <tree>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
-                    <field name="ccmc_gsk_oral"/>
+                    <!-- <field name="ccmc_gsk_oral"/> -->
+                    <field name="ccmc_gsk"/>
+                    <field name="safety_ccmc"/>
+                    <field name="toal_ccmc_oral_rating"/>
+                    <field name="ccmc_gsk_oral_remarks"/>
                 </tree>
             </field>
         </record>
