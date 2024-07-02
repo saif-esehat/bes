@@ -3999,9 +3999,9 @@
                                 <tr>
                                     <th>Course</th>
                                     <th>DGS Approval Document</th>
-                                    <th>Batches per Year</th>
+                                    <th>How many times cousre conducted in 1 year</th>
                                     <th>Candidates per Batch</th>
-                                    <th>Total Intake Capacity</th>
+                                    <th>Max Intake Capacity</th>
                                 </tr>
                             </thead>
 
@@ -4085,7 +4085,10 @@
 
                                             <div class="form-group">
                                                 <label for="capacity">Batch Per Year</label>
-                                                <input required="" type="number" class="form-control" id="batch_per_year" name="batch_per_year" min="0" />
+                                                <select class="form-control" id="batch_per_year" name="batch_per_year">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="capacity">Candidate Per Batch</label>

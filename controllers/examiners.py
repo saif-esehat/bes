@@ -193,8 +193,10 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+
         # import wdb; wdb.set_trace()
         marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -210,7 +212,10 @@ class ExaminerPortal(CustomerPortal):
         marksheet_id = int(last_part)
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.ccmc_gsk_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        marksheet.ccmc_gsk_oral._compute_ccmc_rating_total()
+        marksheet.ccmc_oral._compute_ccmc_rating_total()
         marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -233,6 +238,7 @@ class ExaminerPortal(CustomerPortal):
         marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
         marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
         marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -254,6 +260,7 @@ class ExaminerPortal(CustomerPortal):
         marksheet.cookery_bakery.write({"cookery_draft_confirm": 'confirm' })
         marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
         marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -644,6 +651,7 @@ class ExaminerPortal(CustomerPortal):
             subject_area10 = int(rec['texture_dish3'])
             subject_area11 = int(rec['identification_of_ingredients'])
             subject_area12 = int(rec['knowledge_of_menu'])
+            remarks = rec['cookery_practical_remarks']
             state = rec['state']
 
             candidate_rec = candidate.search([('indos_no', '=', indos)])
@@ -662,6 +670,7 @@ class ExaminerPortal(CustomerPortal):
                 'texture_3':subject_area10,
                 'identification_ingredians': subject_area11,
                 'knowledge_of_menu': subject_area12,
+                'cookery_practical_remarks': remarks,
                 'cookery_draft_confirm': state,
                 
             }
@@ -762,6 +771,7 @@ class ExaminerPortal(CustomerPortal):
             subject_area5 = int(rec['orals_house_keeping'])
             subject_area6 = int(rec['attitude_proffessionalism'])
             subject_area7 = int(rec['equipment_identification'])
+            remarks = rec['ccmc_oral_remarks']
             state = rec['state']
 
             # Construct the dictionary with integer values
@@ -773,6 +783,7 @@ class ExaminerPortal(CustomerPortal):
                 'orals_house_keeping': subject_area5,
                 'attitude_proffessionalism': subject_area6,
                 'equipment_identification': subject_area7,
+                'ccmc_oral_remarks': remarks,
                 'ccmc_oral_draft_confirm': state,
                
                 
@@ -812,12 +823,14 @@ class ExaminerPortal(CustomerPortal):
             # Convert string values to integers                    
             gsk_ccmc = int(rec['gsk_ccmc'])
             safety_ccmc = int(rec['safety_ccmc'])
+            remarks = int(rec['ccmc_gsk_oral_remarks'])
             state = rec['state']
 
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': gsk_ccmc,
                 'safety_ccmc': safety_ccmc,
+                'ccmc_gsk_oral_remarks': remarks,
                 'ccmc_oral_draft_confirm': state,
                
                 

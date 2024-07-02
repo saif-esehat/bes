@@ -1127,7 +1127,7 @@ class CookeryBakeryLine(models.Model):
     cookery_bekary_start_time = fields.Datetime(string="Start Time",tracking=True)
     cookery_bekary_end_time = fields.Datetime(string="End Time",tracking=True)
     cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
-
+    cookery_practical_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
 
     
     
@@ -1579,11 +1579,11 @@ class CcmcOralLine(models.Model):
     attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism",tracking=True)
     equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
     
-    gsk_ccmc = fields.Integer("GSK",tracking=True)
+    gsk_ccmc = fields.Integer("GSK",related = 'exam_id.ccmc_gsk_oral.toal_ccmc_oral_rating',tracking=True)
     # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
-
+    ccmc_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
     
 
     @api.depends(
@@ -1651,7 +1651,7 @@ class CcmcGSKOralLine(models.Model):
     safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
     ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
-
+    ccmc_gsk_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
     
 
     @api.depends(

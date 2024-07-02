@@ -450,6 +450,7 @@
                     <field name="marksheets" invisible="1" />
                     <field name="candidates_count"/>
                     <field name="candidate_done"/>
+                    <field name="absent_candidates"/>
                     <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>     
                 </tree>
             </field>

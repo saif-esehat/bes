@@ -446,7 +446,8 @@
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" readonly="1"/>
                             <field name="ccmc_oral_prac_status" readonly="1"/>
-                            <field name="oral_prac_status"/>
+                            <field name="ccmc_gsk_oral_prac_status" readonly="1"/>
+                            <!-- <field name="oral_prac_status"/> -->
 
                             
                             <field name="ccmc_online_status" readonly="1"/>

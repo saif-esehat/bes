@@ -3326,11 +3326,6 @@ class InstitutePortal(CustomerPortal):
     # method=["POST", "GET"]
 
 
-    # @http.route(['/my/update/inscap'], method=["POST", "GET"] ,type="http", auth="user", website=True)
-    # def UpdateInstituteCapacity(self,**kw ):
-    #     import wdb; wdb.set_trace();
-    #     request.redirect('my/editinstitute')
-
 
     @http.route(['/my/update/inscap'],method=["POST"], type="http", auth="user", website=True)
     def UpdateInstituteCapacits(self, **kw):
