@@ -1122,11 +1122,11 @@
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
-                    </div>
+                    </div> -->
                 </form>
             </field>
         </record>
@@ -1177,11 +1177,11 @@
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
-                    </div>
+                    </div> -->
                 </form>
             </field>
         </record>

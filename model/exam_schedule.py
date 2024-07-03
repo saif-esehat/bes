@@ -2438,7 +2438,7 @@ class GPExam(models.Model):
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
-    gp_candidate = fields.Many2one("gp.candidate","GP Candidate",tracking=True)
+    gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
     exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
@@ -2578,8 +2578,8 @@ class GPExam(models.Model):
     rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
     institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True,tracking=True)
-    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True,tracking=True)
-    indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no', required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True, required=True,tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no',store=True, required=True,tracking=True)
     user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
@@ -3574,7 +3574,7 @@ class CCMCExam(models.Model):
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
-    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code', required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code',store=True, required=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",required=True,tracking=True)
 
 
@@ -3708,7 +3708,7 @@ class CCMCExam(models.Model):
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
    
     institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',tracking=True)
-    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no', required=True,tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no',store=True,required=True,tracking=True)
     
     cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
     cookery_oral_carry_forward = fields.Boolean("Cookery Oral Carry Forward",tracking=True)
