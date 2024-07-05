@@ -1813,6 +1813,25 @@ class ExamOralPracticalExaminers(models.Model):
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
+    all_marksheet_confirmed = fields.Selection([
+                    ('na', 'NA'),
+                    ('pending', 'Pending'),
+                    ('done', 'Done')
+                ], string='Marksheet Remaining Status', default='pending',compute='compute_marksheet_done',store=True)
+    
+    @api.depends('candidates_count','candidate_done')
+    def compute_marksheet_done(self):
+        for record in self:
+            if record.candidate_done == 'NA':
+                record.all_marksheet_confirmed = 'na'
+            elif record.candidates_count == int(record.candidate_done):
+                record.all_marksheet_confirmed = 'done'
+            else:
+                record.all_marksheet_confirmed = 'pending'
+             
+    
+    
+
     online_from_date = fields.Date("From")
     online_to_date = fields.Date("To Date")
     team_lead = fields.Boolean("TL")
@@ -2247,7 +2266,7 @@ class ExamOralPracticalExaminers(models.Model):
         
         
         return {
-            'name': 'GP Marksheet',
+            'name': 'Marksheet',
             'domain': [('examiners_id', '=', self.id)],
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,form',  # Specify both tree and form views
@@ -2432,6 +2451,8 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
+
+    
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,tracking=True)
 
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
@@ -2502,6 +2523,15 @@ class GPExam(models.Model):
     ], string='GSK Online Status', default='pending',tracking=True)
     
     gsk_online_assignment = fields.Boolean('gsk_online_assignment')
+    
+    edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
+    
+
+    def _compute_is_in_group(self):
+        for record in self:
+            user = self.env.user
+            group_xml_ids = ['bes.edit_marksheet_status']
+            record.edit_marksheet_status = any(user.has_group(group) for group in group_xml_ids)
     
     exam_criteria = fields.Selection([
         ('', ''),
@@ -3695,6 +3725,15 @@ class CCMCExam(models.Model):
         ('failed','Failed'),
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
+    
+    edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
+    
+
+    def _compute_is_in_group(self):
+        for record in self:
+            user = self.env.user
+            group_xml_ids = ['bes.edit_marksheet_status']
+            record.edit_marksheet_status = any(user.has_group(group) for group in group_xml_ids)
 
     
     url = fields.Char("URL",compute="_compute_url",tracking=True)
