@@ -236,6 +236,8 @@ class GPCandidate(models.Model):
             
             # print("Checkin STCW") 
             # print(course_type_already)            
+            gp_exam_count = self.env['gp.exam.schedule'].sudo().search_count([('gp_candidate','=',record.id)])          
+            # import wdb; wdb.set_trace();          
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = record.check_combination_exists(course_type_already)
@@ -243,14 +245,16 @@ class GPCandidate(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            
-            # if all_types_exist and all_cert_nos_present:
-            
-            if all_types_exist:
-                # import wdb; wdb.set_trace();
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
+            if gp_exam_count > 1:
+                if all_types_exist:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
+            elif gp_exam_count == 1:
+                if all_types_exist and all_cert_nos_present:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
         
     
     @api.depends('ship_visits')
@@ -1105,25 +1109,25 @@ class CookeryBakeryLine(models.Model):
     exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam Id",tracking=True)
     # exam_attempt_number = fields.Integer(string="Exam Attempt No.")
     exam_attempt_number = fields.Integer(string="Exam Attempt No.", readonly=True,tracking=True)
-    cookery_exam_date = fields.Date(string="Exam Date",tracking=True)
-    hygien_grooming = fields.Integer("Hygiene & Grooming",tracking=True)
-    appearance = fields.Integer("Appearance(Dish 1)",tracking=True)
-    taste = fields.Integer("Taste(Dish 1)",tracking=True)
-    texture = fields.Integer("Texture(Dish 1)",tracking=True)
-    appearance_2 = fields.Integer("Appearance(Dish 2)",tracking=True)
-    taste_2 = fields.Integer("Taste(Dish 2)",tracking=True)
-    texture_2 = fields.Integer("Texture(Dish 2)",tracking=True)
-    appearance_3 = fields.Integer("Appearance(Dish 3)",tracking=True)
-    taste_3 = fields.Integer("Taste(Dish 3)",tracking=True)
-    texture_3 = fields.Integer("Texture(Dish 3)",tracking=True)
-    identification_ingredians = fields.Integer("identification of ingredients",tracking=True)
-    knowledge_of_menu = fields.Integer("Knowledge of menu",tracking=True)
-    total_mrks = fields.Integer("Total", compute="_compute_total_mrks", store=True,tracking=True)
-    cookery_examiner = fields.Many2one("bes.examiner",string="Examiner",tracking=True)
-    cookery_bekary_start_time = fields.Datetime(string="Start Time",tracking=True)
-    cookery_bekary_end_time = fields.Datetime(string="End Time",tracking=True)
-    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
-
+    cookery_exam_date = fields.Date(string="Exam Date")
+    hygien_grooming = fields.Integer("Hygiene & Grooming")
+    appearance = fields.Integer("Appearance(Dish 1)")
+    taste = fields.Integer("Taste(Dish 1)")
+    texture = fields.Integer("Texture(Dish 1)")
+    appearance_2 = fields.Integer("Appearance(Dish 2)")
+    taste_2 = fields.Integer("Taste(Dish 2)")
+    texture_2 = fields.Integer("Texture(Dish 2)")
+    appearance_3 = fields.Integer("Appearance(Dish 3)")
+    taste_3 = fields.Integer("Taste(Dish 3)")
+    texture_3 = fields.Integer("Texture(Dish 3)")
+    identification_ingredians = fields.Integer("identification of ingredients")
+    knowledge_of_menu = fields.Integer("Knowledge of menu")
+    total_mrks = fields.Integer("Total", compute="_compute_total_mrks", store=True)
+    cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
+    cookery_bekary_start_time = fields.Datetime(string="Start Time")
+    cookery_bekary_end_time = fields.Datetime(string="End Time")
+    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    cookery_practical_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
 
     
     
@@ -1569,17 +1573,17 @@ class CcmcOralLine(models.Model):
     ccmc_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
     ccmc_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
     
-    house_keeping = fields.Integer("House Keeping",tracking=True)
-    f_b = fields.Integer("F & B service Practical",tracking=True)
-    orals_house_keeping = fields.Integer("Orals on Housekeeping and F& B Service",tracking=True)
-    attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism",tracking=True)
-    equipment_identification = fields.Integer("Identification of Equipment",tracking=True)
+    house_keeping = fields.Integer("House Keeping")
+    f_b = fields.Integer("F & B service Practical")
+    orals_house_keeping = fields.Integer("Orals on Housekeeping and F& B Service")
+    attitude_proffessionalism = fields.Integer("Attitude & Proffesionalism")
+    equipment_identification = fields.Integer("Identification of Equipment")
     
-    gsk_ccmc = fields.Integer("GSK",tracking=True)
+    gsk_ccmc = fields.Integer("GSK",related = 'exam_id.ccmc_gsk_oral.toal_ccmc_oral_rating')
     # safety_ccmc = fields.Integer("Safety",tracking=True)
-    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
-    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
-
+    toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    ccmc_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
     
 
     @api.depends(
@@ -1643,11 +1647,11 @@ class CcmcGSKOralLine(models.Model):
     exam_id = fields.Many2one("ccmc.exam.schedule",string="Exam ID",tracking=True)
     ccmc_gsk_oral_attempt_no = fields.Integer(string="Exam Attempt No.", default=0, readonly=True,tracking=True)
     ccmc_gsk_oral_exam_date = fields.Date(string="Exam Date",tracking=True)
-    gsk_ccmc = fields.Integer("GSK",tracking=True)
-    safety_ccmc = fields.Integer("Safety",tracking=True)
-    toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True,tracking=True)
-    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
-
+    gsk_ccmc = fields.Integer("GSK")
+    safety_ccmc = fields.Integer("Safety")
+    toal_ccmc_oral_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    ccmc_gsk_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
     
 
     @api.depends(

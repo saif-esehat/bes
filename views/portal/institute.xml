@@ -2805,12 +2805,21 @@
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
                             
-                            <t t-set="admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('attendance_criteria','=','passed'),('ship_visit_criteria','=','passed'),('stcw_criteria','=','passed')])"/>
+                            <t t-set="admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('attendance_criteria','=','passed'),('ship_visit_criteria','=','passed'),('stcw_criterias','=','passed')])"/>
                             
+                            <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+
                             <t t-if='batches.admit_card_status == "issued"'>
-                                <td class="text-center">
-                                    <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
-                                </td>
+                                <t t-if='hold_admit_card'>
+                                    <td class="text-center">
+                                        <span class="text-danger">On Hold</span>
+                                    </td>
+                                </t>
+                                <t t-else=''>
+                                    <td class="text-center">
+                                        <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
+                                    </td>
+                                </t>
                             </t>
                             <t t-else=''>
                                 <td class="text-center">
@@ -2819,17 +2828,26 @@
                             </t>
                            
                             <t t-set="exams_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
+                            <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
 
                             <t t-if='exams_certificate'>
-                                <td class="text-center">
-                                    <a t-attf-href="/my/gpcandidates/download_gp_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
-                                </td>
+                                <t t-if='hold_certificate'>
+                                    <td class="text-center">
+                                        <span class="text-danger">On Hold</span>
+                                    </td>
+                                </t>
+                                <t t-else=''>
+                                    <td class="text-center">
+                                        <a t-attf-href="/my/gpcandidates/download_gp_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
+                                    </td>
+                                </t>
                             </t>
                             <t t-else=''>
                                 <td class="text-center">
                                     <span class="text-danger">Pending</span>
                                 </td>
                             </t>
+                            
                             <t t-if="not candidate.user_id">
                                 <td class="text-center">
                                     <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
@@ -3981,9 +3999,9 @@
                                 <tr>
                                     <th>Course</th>
                                     <th>DGS Approval Document</th>
-                                    <th>Batches per Year</th>
+                                    <th>How many times cousre conducted in 1 year</th>
                                     <th>Candidates per Batch</th>
-                                    <th>Total Intake Capacity</th>
+                                    <th>Max Intake Capacity</th>
                                 </tr>
                             </thead>
 
@@ -4067,7 +4085,10 @@
 
                                             <div class="form-group">
                                                 <label for="capacity">Batch Per Year</label>
-                                                <input required="" type="number" class="form-control" id="batch_per_year" name="batch_per_year" min="0" />
+                                                <select class="form-control" id="batch_per_year" name="batch_per_year">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="capacity">Candidate Per Batch</label>
@@ -4818,21 +4839,21 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="candidate_cert_no">Candidate Certificate Number</label>
-                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no"/>
+                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no" required='1'/>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="course_start_date">Course Start Date</label>
-                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date"/>
+                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date" required='1'/>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="course_end_date">Course End Date</label>
-                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date"/>
+                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date" required='1'/>
                                                                         </div>
                                                                     </div>
 

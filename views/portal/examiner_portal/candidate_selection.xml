@@ -1215,6 +1215,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="cookery_practical_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
+                                    <input type="text" class="form-control" id="cookery_practical_remarks" name="cookery_practical_remarks" t-att-value="cookery_bakery.cookery_practical_remarks" required="True"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="state">Status</label>
                                     <select class="form-control" id="state" name="state">
                                         <option value="draft" t-att-selected="cookery_bakery.cookery_draft_confirm == 'draft'">Draft</option>
@@ -1383,6 +1389,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="ccmc_oral_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="ccmc_oral_remarks" name="ccmc_oral_remarks" t-att-value="ccmc_oral.ccmc_oral_remarks" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="state">Status</label>
                                         <select class="form-control" id="state" name="state">
                                             <option value="draft" t-att-selected="ccmc_oral.ccmc_oral_draft_confirm == 'draft'">Draft</option>
@@ -1529,6 +1541,12 @@
                                         <label for="ccmc_gsk">Safety</label>
                                         <input type="number" min="0" max="10" class="form-control" id="safety_ccmc" name="safety_ccmc" t-att-value="ccmc_gsk_oral.safety_ccmc" required="True"/>
                                         /10
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="ccmc_gsk_oral_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
+                                        <input type="text" class="form-control" id="ccmc_gsk_oral_remarks" name="ccmc_gsk_oral_remarks" t-att-value="ccmc_gsk_oral.ccmc_gsk_oral_remarks" required="True"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

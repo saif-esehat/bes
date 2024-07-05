@@ -812,8 +812,10 @@
 
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-if="date_valid">
-                                    <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                    <span class='p-2'>Edit</span></a>
+                                    <!-- <t t-if="date_valid"> -->
+                                        <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                        <span class='p-2'>Edit</span></a>
+                                    <!-- </t> -->
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>

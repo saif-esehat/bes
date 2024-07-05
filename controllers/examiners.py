@@ -189,9 +189,14 @@ class ExaminerPortal(CustomerPortal):
         marksheet_id = data["id"]
         last_part = marksheet_id.split('_')[-1]
         marksheet_id = int(last_part)
+
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+
+        # import wdb; wdb.set_trace()
+        marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -207,6 +212,10 @@ class ExaminerPortal(CustomerPortal):
         marksheet_id = int(last_part)
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.ccmc_gsk_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        marksheet.ccmc_gsk_oral._compute_ccmc_rating_total()
+        marksheet.ccmc_oral._compute_ccmc_rating_total()
+        marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -228,6 +237,8 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
         marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -248,6 +259,8 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.cookery_bakery.write({"cookery_draft_confirm": 'confirm' })
         marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
     
     
@@ -638,6 +651,7 @@ class ExaminerPortal(CustomerPortal):
             subject_area10 = int(rec['texture_dish3'])
             subject_area11 = int(rec['identification_of_ingredients'])
             subject_area12 = int(rec['knowledge_of_menu'])
+            remarks = rec['cookery_practical_remarks']
             state = rec['state']
 
             candidate_rec = candidate.search([('indos_no', '=', indos)])
@@ -656,6 +670,7 @@ class ExaminerPortal(CustomerPortal):
                 'texture_3':subject_area10,
                 'identification_ingredians': subject_area11,
                 'knowledge_of_menu': subject_area12,
+                'cookery_practical_remarks': remarks,
                 'cookery_draft_confirm': state,
                 
             }
@@ -756,6 +771,7 @@ class ExaminerPortal(CustomerPortal):
             subject_area5 = int(rec['orals_house_keeping'])
             subject_area6 = int(rec['attitude_proffessionalism'])
             subject_area7 = int(rec['equipment_identification'])
+            remarks = rec['ccmc_oral_remarks']
             state = rec['state']
 
             # Construct the dictionary with integer values
@@ -767,6 +783,7 @@ class ExaminerPortal(CustomerPortal):
                 'orals_house_keeping': subject_area5,
                 'attitude_proffessionalism': subject_area6,
                 'equipment_identification': subject_area7,
+                'ccmc_oral_remarks': remarks,
                 'ccmc_oral_draft_confirm': state,
                
                 
@@ -806,12 +823,14 @@ class ExaminerPortal(CustomerPortal):
             # Convert string values to integers                    
             gsk_ccmc = int(rec['gsk_ccmc'])
             safety_ccmc = int(rec['safety_ccmc'])
+            remarks = int(rec['ccmc_gsk_oral_remarks'])
             state = rec['state']
 
             # Construct the dictionary with integer values
             vals = {
                 'gsk_ccmc': gsk_ccmc,
                 'safety_ccmc': safety_ccmc,
+                'ccmc_gsk_oral_remarks': remarks,
                 'ccmc_oral_draft_confirm': state,
                
                 
@@ -1312,7 +1331,7 @@ class ExaminerPortal(CustomerPortal):
                     
             remarks = row[6]
             
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             
             if candidate and candidate.gsk_oral:
                 candidate.gsk_oral.sudo().write({
@@ -1367,7 +1386,7 @@ class ExaminerPortal(CustomerPortal):
                 
             gsk_practical_remarks = row[7]
 
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.gsk_prac:
                 candidate.gsk_prac.sudo().write({
                     'climbing_mast_bosun_chair':climbing_mast_bosun_chair,
@@ -1439,7 +1458,7 @@ class ExaminerPortal(CustomerPortal):
 
             remarks = row[7]
             
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.mek_oral:
                 candidate.mek_oral.sudo().write({
                     'using_of_tools':using_of_tools,
@@ -1493,7 +1512,7 @@ class ExaminerPortal(CustomerPortal):
 
             mek_practical_remarks = row[7]
 
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.mek_prac:
                 candidate.mek_prac.sudo().write({
                     # 'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
@@ -1945,7 +1964,7 @@ class ExaminerPortal(CustomerPortal):
             #     toal_ccmc_rating += int(gsk_ccmc)  
 
             remarks = row[8]
-            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             candidate.ccmc_oral._compute_ccmc_rating_total()
 
             if candidate and candidate.ccmc_oral:
@@ -2012,7 +2031,7 @@ class ExaminerPortal(CustomerPortal):
 
             # mek_practical_remarks = row[12]
 
-            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.cookery_bakery:
                 candidate.cookery_bakery.sudo().write({
                     'hygien_grooming':hygien_grooming,
@@ -2071,7 +2090,7 @@ class ExaminerPortal(CustomerPortal):
 
             # remarks = row[8]
             # import wdb;wdb.set_trace();
-            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.ccmc_gsk_oral:
                 candidate.ccmc_gsk_oral.sudo().write({
                     'gsk_ccmc':gsk_ccmc,
