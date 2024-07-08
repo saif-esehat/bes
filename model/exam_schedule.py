@@ -3645,7 +3645,8 @@ class CCMCExam(models.Model):
     ], string='Cookery And Bakery',tracking=True)
     
     
-    cookery_oral = fields.Float("CCMC Oral/GSK",readonly=True,tracking=True)
+    cookery_oral = fields.Float("CCMC Oral",readonly=True,tracking=True)
+    ccmc_gsk_oral_marks = fields.Float("CCMC GSK Oral",readonly=True,tracking=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_gsk_oral_percentage = fields.Float("CCMC GSK Oral Percentage",readonly=True,tracking=True)
     ccmc_oral_prac_status = fields.Selection([
@@ -4147,8 +4148,12 @@ class CCMCExam(models.Model):
                  if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
                      cookery_bakery_marks = self.cookery_bakery.total_mrks
                      ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+                     ccmc_oral_gsk_marks = self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                     
                      self.cookery_oral = ccmc_oral_marks
                      self.cookery_practical = cookery_bakery_marks
+                     self.ccmc_gsk_oral_marks = ccmc_oral_gsk_marks
+                     
                  else:
                     error_msg = _("CCMC Oral Or Practical Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                     raise ValidationError(error_msg)
@@ -4160,14 +4165,16 @@ class CCMCExam(models.Model):
                  else:
                     error_msg = _("CCMC Online Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                     raise ValidationError(error_msg)
+                
             
-             self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online
+             self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online + self.ccmc_gsk_oral_marks
             
              #Percentage Calculation
              
              self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
              self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
              self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
+             
 
              self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
              self.overall_percentage = (self.overall_marks/300)*100
@@ -4178,7 +4185,7 @@ class CCMCExam(models.Model):
              else:
                     self.cookery_bakery_prac_status = 'failed'
                     
-             if self.ccmc_oral_percentage >= 60 and self.ccmc_gsk_oral_percentage >= 60:
+             if self.ccmc_oral_percentage >= 60:
                 self.ccmc_oral_prac_status = 'passed'
              else:
                 self.ccmc_oral_prac_status = 'failed'
