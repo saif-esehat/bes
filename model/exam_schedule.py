@@ -3884,7 +3884,7 @@ class CCMCExam(models.Model):
             record.qr_code = qr_image_base64
 
     
-    @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status')
+    @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status','ccmc_gsk_oral_prac_status')
     def compute_certificate_criteria(self):
         for record in self:
             
@@ -4166,7 +4166,7 @@ class CCMCExam(models.Model):
              #Percentage Calculation
              
              self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
-             self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+             self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
              self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
 
              self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
