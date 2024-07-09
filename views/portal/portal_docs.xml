@@ -18,9 +18,9 @@
                                 Raise a Query
                         </a>
                         
-                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/5" >
+                        <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/5" >
                                 Apply for Repeater Exam
-                        </a>
+                        </a> -->
 
                     </div>
                    
