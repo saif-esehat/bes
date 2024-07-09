@@ -19,6 +19,10 @@ class GPCandidate(models.Model):
     candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
     name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ],string="Gender",tracking=True)
     age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("GP Candidate Code No.",tracking=True)

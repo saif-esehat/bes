@@ -272,9 +272,7 @@
                             <field name="roll_no"/>
 
                             <field name="name" placeholder="Candidate" required="1"/>
-                            
-
-                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
+                            <field name="gender" placeholder="Candidate" required="0"/>
                             <field name="institute_id"/>
 
                             <field name="indos_no"/>
