@@ -5,6 +5,29 @@ from odoo.exceptions import UserError
 import datetime 
 
 
+class CandidateUserInactiveWizard(models.TransientModel):
+    _name = 'candidate.inactive.wizard'
+    _description = 'Candidate Inactive Wizard'
+
+    inactivation_reason = fields.Text(string='Inactivation Reason')
+    
+    
+    def inactivate_user(self):
+        # import wdb; wdb.set_trace();
+        record_id = self.env.context.get('active_id')
+        active_model = self.env.context.get('active_model')
+        
+        user_id = self.env.context.get('user_id')
+        user = self.env['res.users'].sudo().search([('id','=',user_id)])
+        user.write({
+            'active':False
+        })
+        parent_record = self.env[active_model].browse(record_id)
+        parent_record.message_post(body=self.inactivation_reason)
+
+        
+
+
 class GPCandidate(models.Model):
     _name = 'gp.candidate'
     _inherit = ['mail.thread','mail.activity.mixin']
@@ -301,9 +324,23 @@ class GPCandidate(models.Model):
                 raise ValidationError("Invalid email address. Must contain @ symbol.")
 
     def user_inactive(self):
-        self.user_id.sudo().write({
-            'active':False
-        })
+        
+        user_id = self.user_id.id
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Candidate Inactivation Form',
+            'res_model': 'candidate.inactive.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('bes.candidate_inactive_wizard_id').id,
+            'target': 'new',
+            'context': {
+                "user_id":user_id
+                },
+        }
+        # self.user_id.sudo().write({
+        #     'active':False
+        # })
 
     def user_active(self):
         self.user_id.sudo().write({
@@ -873,10 +910,25 @@ class CCMCCandidate(models.Model):
     #             }
 
     def user_inactive(self):
-        print("insavrtttttttttttt")
-        self.user_id.write({
-            'active':False
-        })
+        
+        user_id = self.user_id.id
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Candidate Inactivation Form',
+            'res_model': 'candidate.inactive.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('bes.candidate_inactive_wizard_id').id,
+            'target': 'new',
+            'context': {
+                "user_id":user_id
+                },
+        }
+        
+        # print("insavrtttttttttttt")
+        # self.user_id.write({
+        #     'active':False
+        # })
 
     def user_active(self):
         print("Activeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
