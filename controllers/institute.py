@@ -1055,6 +1055,7 @@ class InstitutePortal(CustomerPortal):
             candidate_details = {
                 'indos_no':kw.get('indos_no'),
                 'name':kw.get('full_name'),
+                'gender':kw.get('gender'),
                 'dob':kw.get('dob'),
                 'email':kw.get('e_mail'),
                 'phone':kw.get('phone'),
@@ -1110,6 +1111,7 @@ class InstitutePortal(CustomerPortal):
             candidate_details = {
                 'indos_no':kw.get('indos_no'),
                 'name':kw.get('full_name'),
+                'gender':kw.get('gender'),
                 'dob':kw.get('dob'),
                 'email':kw.get('e_mail'),
                 'phone':kw.get('phone'),
@@ -2057,17 +2059,18 @@ class InstitutePortal(CustomerPortal):
 
         candidate_worksheet.set_column('A:A',15,unlocked) #indos
         candidate_worksheet.set_column('B:B',30,unlocked) #name 
-        candidate_worksheet.set_column('C:C',15,unlocked) #dob
-        candidate_worksheet.set_column('D:D',35,unlocked) #line 1
-        candidate_worksheet.set_column('E:E',35,unlocked) #line2
-        candidate_worksheet.set_column('F:F',20,unlocked) #city
-        candidate_worksheet.set_column('G:G',10,unlocked) #state
-        candidate_worksheet.set_column('H:H',15,unlocked) #pin
-        candidate_worksheet.set_column('I:I',20,unlocked) #mobile 
-        candidate_worksheet.set_column('J:J',20,unlocked) #email
-        candidate_worksheet.set_column('K:K',10,unlocked)
+        candidate_worksheet.set_column('C:C',10,unlocked) #gender
+        candidate_worksheet.set_column('D:D',15,unlocked) #dob
+        candidate_worksheet.set_column('E:E',35,unlocked) #line 1
+        candidate_worksheet.set_column('F:F',35,unlocked) #line2
+        candidate_worksheet.set_column('G:G',20,unlocked) #city
+        candidate_worksheet.set_column('H:H',10,unlocked) #state
+        candidate_worksheet.set_column('I:I',15,unlocked) #pin
+        candidate_worksheet.set_column('J:J',20,unlocked) #mobile 
+        candidate_worksheet.set_column('K:K',20,unlocked) #email
         candidate_worksheet.set_column('L:L',10,unlocked)
         candidate_worksheet.set_column('M:M',10,unlocked)
+        candidate_worksheet.set_column('N:N',10,unlocked)
 
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -2086,28 +2089,30 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        header = ['INDOS NO', 'NAME','Gender', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
 
         # Set date format for DOB column
-        candidate_worksheet.set_column('C:C', 20, date_format)
+        candidate_worksheet.set_column('D:D', 20, date_format)
         # candidate_worksheet.set_column('J:J', None, number_format)
         # candidate_worksheet.set_column('G:G', None, zip_format)
 
 
 
         dropdown_values = ['Yes', 'No']
-
+        gender_values = ['Male', 'Female']
         state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
 
         # Add data validation for SC/ST column
-        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
-                                                'source': dropdown_values })
+        # candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
+        #                                         'source': dropdown_values })
         
-        candidate_worksheet.data_validation('G2:G1048576', {'validate': 'list',
-                                        'source': state_values })
+        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        
+        candidate_worksheet.data_validation('C2:C1048576', {'validate': 'list', 'source': gender_values})
+        
         
 
         state_cheatsheet = workbook.add_worksheet("States")
@@ -2336,17 +2341,18 @@ class InstitutePortal(CustomerPortal):
         
         candidate_worksheet.set_column('A:A',15,unlocked) #indos
         candidate_worksheet.set_column('B:B',30,unlocked) #name 
-        candidate_worksheet.set_column('C:C',15,unlocked) #dob
-        candidate_worksheet.set_column('D:D',35,unlocked) #line 1
-        candidate_worksheet.set_column('E:E',35,unlocked) #line2
-        candidate_worksheet.set_column('F:F',20,unlocked) #city
-        candidate_worksheet.set_column('G:G',10,unlocked) #state
-        candidate_worksheet.set_column('H:H',15,unlocked) #pin
-        candidate_worksheet.set_column('I:I',20,unlocked) #mobile 
-        candidate_worksheet.set_column('J:J',20,unlocked) #email
-        candidate_worksheet.set_column('K:K',10,unlocked)
+        candidate_worksheet.set_column('C:C',10,unlocked) #gender
+        candidate_worksheet.set_column('D:D',15,unlocked) #dob
+        candidate_worksheet.set_column('E:E',35,unlocked) #line 1
+        candidate_worksheet.set_column('F:F',35,unlocked) #line2
+        candidate_worksheet.set_column('G:G',20,unlocked) #city
+        candidate_worksheet.set_column('H:H',10,unlocked) #state
+        candidate_worksheet.set_column('I:I',15,unlocked) #pin
+        candidate_worksheet.set_column('J:J',20,unlocked) #mobile 
+        candidate_worksheet.set_column('K:K',20,unlocked) #email
         candidate_worksheet.set_column('L:L',10,unlocked)
         candidate_worksheet.set_column('M:M',10,unlocked)
+        candidate_worksheet.set_column('N:N',10,unlocked)
         
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -2365,7 +2371,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        header = ['INDOS NO', 'NAME', 'Gender', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
@@ -2373,9 +2379,10 @@ class InstitutePortal(CustomerPortal):
 
 
         # Set date format for DOB column
-        candidate_worksheet.set_column('C:C', 20, date_format)
+        candidate_worksheet.set_column('D:D', 20, date_format)
 
         dropdown_values = ['Yes', 'No']
+        gender_values = ['Male', 'Female']
         # import wdb; wdb.set_trace()
 
 
@@ -2384,11 +2391,13 @@ class InstitutePortal(CustomerPortal):
         state_values2 = ['Jammu and Kashmir','Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
         # Add data validation for SC/ST column
-        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
-                                                'source': dropdown_values })
+        # candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list',
+        #                                         'source': dropdown_values })
         
 
-        candidate_worksheet.data_validation('G2:G1048576', {'validate': 'list', 'source': state_values})
+        candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+        
+        candidate_worksheet.data_validation('C2:C1048576', {'validate': 'list', 'source': gender_values})
         
 
 
@@ -2629,18 +2638,19 @@ class InstitutePortal(CustomerPortal):
             try:
                 indos_no = row[0]  
                 full_name = row[1] 
+                gender = 'male' if row[2] == 'Male' else 'female'
                 
-                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
                 # formatted_date = self.convert_to_dd_mmm_yy(date_value)
                 # print("Formatted date:", formatted_date)
                 date_string = date_value.strftime('%d-%b-%y') 
                 dob = date_value
-                street1 = row[3]
-                street2 = row[4]  
-                dist_city = row[5]  # Assuming Dist./City is the fifth column
+                street1 = row[4]
+                street2 = row[5]  
+                dist_city = row[6]  # Assuming Dist./City is the fifth column
 
-                state_value = row[6]  # Assuming State (short) is the sixth column
-                pin_code = int(row[7])  # Assuming Pin code is the seventh column
+                state_value = row[7]  # Assuming State (short) is the sixth column
+                pin_code = int(row[8])  # Assuming Pin code is the seventh column
 
                     
 
@@ -2711,16 +2721,16 @@ class InstitutePortal(CustomerPortal):
                 # else:
                 #     phone = ""
                 
-                if row[8]:
+                if row[9]:
                     mobile = self.remove_after_dot_in_phone_number(str(row[9]))
                 else:
                     mobile = ""
 
                 # mobile = str(row[9]) 
-                email = row[9] 
+                email = row[10] 
 
                 
-                xth_std_eng = row[10]  # Assuming %  Xth Std in Eng. is the tenth column
+                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
                 
                 
                 if type(xth_std_eng) in [int, float]:
@@ -2749,7 +2759,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                twelfth_std_eng = row[11]  # Assuming %12th Std in Eng. is the eleventh column
+                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
                 if type(twelfth_std_eng) in [int, float]:
                     data_twelfth_std_eng = float(twelfth_std_eng)
                 elif type(twelfth_std_eng) == str:
@@ -2776,7 +2786,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                iti = row[12] # Assuming %ITI is the twelfth column
+                iti = row[13] # Assuming %ITI is the twelfth column
                 if type(iti) in [int, float]:
                     data_iti = float(iti)
                 elif type(iti) == str:
@@ -2807,6 +2817,7 @@ class InstitutePortal(CustomerPortal):
 
                 new_candidate = request.env['gp.candidate'].sudo().create({
                     'name': full_name,
+                    'gender': gender,
                     'institute_id': institute_id,
                     'indos_no': indos_no,
                     'dob': dob,
@@ -2887,19 +2898,19 @@ class InstitutePortal(CustomerPortal):
             try: 
                 indos_no = row[0]  
                 full_name = row[1] 
-
+                gender = 'male' if row[2] == 'Male' else 'female'
                 
-                date_value = xlrd.xldate_as_datetime(row[2], workbook.datemode)
+                date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
                 # formatted_date = self.convert_to_dd_mmm_yy(date_value)
                 # print("Formatted date:", formatted_date)
                 date_string = date_value.strftime('%d-%b-%y') 
                 dob = date_value
 
-                street1 = row[3]
-                street2 = row[4]  
-                dist_city = row[5]  # Assuming Dist./City is the fifth column
-                state_value = row[6]  # Assuming State (short) is the sixth column
-                pin_code = int(row[7])  # Assuming Pin code is the seventh column
+                street1 = row[4]
+                street2 = row[5]  
+                dist_city = row[6]  # Assuming Dist./City is the fifth column
+                state_value = row[7]  # Assuming State (short) is the sixth column
+                pin_code = int(row[8])  # Assuming Pin code is the seventh column
 
                 state_values = {
                         'MH': 'Maharashtra',
@@ -2946,14 +2957,14 @@ class InstitutePortal(CustomerPortal):
                 state = request.env['res.country.state'].sudo().search(
                     [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
 
-                if row[8]:
+                if row[9]:
                     mobile = self.remove_after_dot_in_phone_number(str(row[9]))
                 else:
                     mobile = ""
                     
-                email = row[9] 
+                email = row[10] 
 
-                xth_std_eng = row[10]  # Assuming %  Xth Std in Eng. is the tenth column
+                xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
                 
                 if type(xth_std_eng) in [int, float]:
                     data_xth_std_eng = float(xth_std_eng)
@@ -2981,7 +2992,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                twelfth_std_eng = row[11]  # Assuming %12th Std in Eng. is the eleventh column
+                twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
                 if type(twelfth_std_eng) in [int, float]:
                     data_twelfth_std_eng = float(twelfth_std_eng)
                 elif type(twelfth_std_eng) == str:
@@ -3008,7 +3019,7 @@ class InstitutePortal(CustomerPortal):
                 else:
                     raise ValidationError("Invalid marks/percentage")
 
-                iti = row[12] # Assuming %ITI is the twelfth column
+                iti = row[13] # Assuming %ITI is the twelfth column
                 if type(iti) in [int, float]:
                     data_iti = float(iti)
                 elif type(iti) == str:
@@ -3039,6 +3050,7 @@ class InstitutePortal(CustomerPortal):
 
                 new_candidate = request.env['ccmc.candidate'].sudo().create({
                     'name': full_name,
+                    'gender': gender,
                     'institute_id': institute_id,
                     'indos_no': indos_no,
                     'dob': dob,

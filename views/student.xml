@@ -272,7 +272,7 @@
                             <field name="roll_no"/>
 
                             <field name="name" placeholder="Candidate" required="1"/>
-                            <field name="gender" placeholder="Candidate" required="0"/>
+                            <field name="gender" placeholder="Gender" required="1"/>
                             <field name="institute_id"/>
 
                             <field name="indos_no"/>
@@ -626,6 +626,7 @@
                             <field name="institute_id"/>
                             <!-- <field name="name" placeholder="Candidate" required="1"/> -->
                             <field name="indos_no"/>
+                            <field name="gender" placeholder="Gender" required="1"/>
                             <field name="ccmc_user_state" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
@@ -1120,11 +1121,11 @@
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
-                    </div>
+                    </div> -->
                 </form>
             </field>
         </record>
@@ -1175,11 +1176,11 @@
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
-                    </div>
+                    </div> -->
                 </form>
             </field>
         </record>

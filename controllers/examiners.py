@@ -1331,7 +1331,7 @@ class ExaminerPortal(CustomerPortal):
                     
             remarks = row[6]
             
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             
             if candidate and candidate.gsk_oral:
                 candidate.gsk_oral.sudo().write({
@@ -1386,7 +1386,7 @@ class ExaminerPortal(CustomerPortal):
                 
             gsk_practical_remarks = row[7]
 
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.gsk_prac:
                 candidate.gsk_prac.sudo().write({
                     'climbing_mast_bosun_chair':climbing_mast_bosun_chair,
@@ -1458,7 +1458,7 @@ class ExaminerPortal(CustomerPortal):
 
             remarks = row[7]
             
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.mek_oral:
                 candidate.mek_oral.sudo().write({
                     'using_of_tools':using_of_tools,
@@ -1512,7 +1512,7 @@ class ExaminerPortal(CustomerPortal):
 
             mek_practical_remarks = row[7]
 
-            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['gp.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.mek_prac:
                 candidate.mek_prac.sudo().write({
                     # 'using_hand_plumbing_tools_task_1':using_hand_plumbing_tools_task_1,
@@ -1964,7 +1964,7 @@ class ExaminerPortal(CustomerPortal):
             #     toal_ccmc_rating += int(gsk_ccmc)  
 
             remarks = row[8]
-            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             candidate.ccmc_oral._compute_ccmc_rating_total()
 
             if candidate and candidate.ccmc_oral:
@@ -2031,7 +2031,7 @@ class ExaminerPortal(CustomerPortal):
 
             # mek_practical_remarks = row[12]
 
-            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.cookery_bakery:
                 candidate.cookery_bakery.sudo().write({
                     'hygien_grooming':hygien_grooming,
@@ -2090,7 +2090,7 @@ class ExaminerPortal(CustomerPortal):
 
             # remarks = row[8]
             # import wdb;wdb.set_trace();
-            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
+            candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
             if candidate and candidate.ccmc_gsk_oral:
                 candidate.ccmc_gsk_oral.sudo().write({
                     'gsk_ccmc':gsk_ccmc,

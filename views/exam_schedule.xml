@@ -269,10 +269,12 @@
 
                         </group>
                         <group style="width:50%">
-                            <field name="gsk_oral_prac_status" widget="badge" decoration-info="gsk_oral_prac_carry_forward == True"  readonly="1"/>
-                            <field name="mek_oral_prac_status" widget="badge" decoration-info="mek_oral_prac_carry_forward == True"  readonly="1"/>
-                            <field name="mek_online_status" widget="badge" decoration-info="mek_online_carry_forward == True"  readonly="1"/>
-                            <field name="gsk_online_status" widget="badge" decoration-info="gsk_online_carry_forward == True" readonly="1"/>
+                        
+                            <field name="edit_marksheet_status" invisible="1" />
+                            <field name="gsk_oral_prac_status"  decoration-info="gsk_oral_prac_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="mek_oral_prac_status"  decoration-info="mek_oral_prac_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="mek_online_status"  decoration-info="mek_online_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="gsk_online_status"  decoration-info="gsk_online_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <field name="exam_criteria" readonly="1"/>
                             <field name="stcw_criterias" readonly="1"/>
                             <field name="attendance_criteria" readonly="1"/>
@@ -327,8 +329,12 @@
                     <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
-                    <field name="gsk_total" optional="show"/>
-                    <field name="mek_total" optional="show"/>
+                    <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
+                    <field name="gsk_practical_marks" optional="show"  string="GSK Practical"/>
+                    <field name="gsk_total" optional="show" string="GSK O/P"/>
+                    <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
+                    <field name="mek_practical_marks" optional="show" string="MEK Practical" />
+                    <field name="mek_total" optional="show" string="GSK O/P"/>
                     <field name="gsk_online_marks" optional="show"/>
                     <field name="mek_online_marks" optional="show"/>
                     <field name="overall_marks" optional="show"/>
@@ -419,7 +425,7 @@
                             <div>
                                 <field name="cookery_oral" nolabel="1"/>
                             / 
-                                <span>100</span>
+                                <span>80</span>
                             </div>
 
                             <label for="cookery_gsk_online"/>
@@ -427,6 +433,12 @@
                                 <field name="cookery_gsk_online" nolabel="1"/>
                             / 
                                 <span>100</span>
+                            </div>
+                            <label for="ccmc_gsk_oral_marks"/>
+                            <div>
+                                <field name="ccmc_gsk_oral_marks" nolabel="1"/>
+                            / 
+                                <span>20</span>
                             </div>
                             <label for="overall_marks"/>
                             <div>
@@ -440,17 +452,18 @@
                             <field name="cookery_bakery_percentage" readonly="1"/>
                             <field name="ccmc_oral_percentage" readonly="1"/>
                             <field name="cookery_gsk_online_percentage" readonly="1"/>
+                            <field name="ccmc_gsk_oral_percentage" readonly="1"/>
+                            
                             <field name="overall_percentage" readonly="1"/>
                         </group>
 
                         <group style="width:33.33%">
-                            <field name="cookery_bakery_prac_status" readonly="1"/>
-                            <field name="ccmc_oral_prac_status" readonly="1"/>
-                            <field name="ccmc_gsk_oral_prac_status" readonly="1"/>
+                            <field name="cookery_bakery_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="ccmc_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="ccmc_gsk_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <!-- <field name="oral_prac_status"/> -->
-
-                            
-                            <field name="ccmc_online_status" readonly="1"/>
+                            <field name="edit_marksheet_status" invisible="1" />                            
+                            <field name="ccmc_online_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <field name="stcw_criteria" readonly="1"/>
                             <field name="ship_visit_criteria" readonly="1"/>
                             <field name="attendance_criteria" readonly="1"/>
@@ -467,6 +480,11 @@
                             <field name="certificate_qr_code" widget="image"  style="width:100px; height:100px;" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         </group>
                         <field name="dgs_visible" invisible="0"/>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name= "message_ids" widget="mail_thread"/>
+                            <field name= "activity_ids" widget="mail_activity"/>
+                        </div>
 
                     </sheet>
                     <div class="oe_chatter">
@@ -520,6 +538,7 @@
                         <filter name="group_by_registered_institute" string="Examination Center" context="{'group_by':'registered_institute'}" />
 
                     </group>
+                    <field name="exam_id"/>
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>

@@ -216,7 +216,7 @@
         </record>
 
         <record id="dgs_batch_action" model="ir.actions.act_window">
-            <field name="name">DGS Batch</field>
+            <field name="name">Result Master</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">dgs.batches</field>
             <field name="view_mode">tree,form</field>

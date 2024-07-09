@@ -698,19 +698,28 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">Date of Birth</label>
+                                                    <label for="gender">Gender</label>
+                                                    <select class="form-control" id="gender" name="gender" required="1">
+                                                        <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
+                                                        <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="dob">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">E-mail</label>
+                                                    <label for="e_mail">E-mail</label>
                                                     <input type="text" class="form-control" id="e_mail" name="e_mail" t-att-value ="candidate.email"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">Mobile</label>
+                                                    <label for="mobile">Mobile</label>
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
                                                 </div>
                                             </div>
@@ -785,6 +794,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Gender</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.gender"/>
                                         </p>
                                     </div>
                                 </div>
@@ -3162,11 +3182,6 @@
                                         <input type="file" class="form-control-file" accept=".xlsx" name="ccmcfileUpload" id="ccmcfileUpload"/>
                                     </div>
                                     <button id="ccmcuploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                                    <!-- <div id="loader-overlay" style="display: none;">
-                                        <div id="loader">
-                                            Uploading
-                                        </div>
-                                    </div> -->
 
                                 </form>
                             </div>
@@ -4260,7 +4275,16 @@
                                                     <input type="text" class="form-control" id="full_name" name="full_name" t-att-value ="candidate.name"/>
                                                 </div>
                                             </div>
-                                             <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="gender">Gender</label>
+                                                    <select class="form-control" id="gender" name="gender" required="1">
+                                                        <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
+                                                        <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
@@ -4353,6 +4377,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Gender</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.gender"/>
                                         </p>
                                     </div>
                                 </div>

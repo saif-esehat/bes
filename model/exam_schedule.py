@@ -1813,6 +1813,25 @@ class ExamOralPracticalExaminers(models.Model):
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
+    all_marksheet_confirmed = fields.Selection([
+                    ('na', 'NA'),
+                    ('pending', 'Pending'),
+                    ('done', 'Done')
+                ], string='Marksheet Remaining Status', default='pending',compute='compute_marksheet_done',store=True)
+    
+    @api.depends('candidates_count','candidate_done')
+    def compute_marksheet_done(self):
+        for record in self:
+            if record.candidate_done == 'NA':
+                record.all_marksheet_confirmed = 'na'
+            elif record.candidates_count == int(record.candidate_done):
+                record.all_marksheet_confirmed = 'done'
+            else:
+                record.all_marksheet_confirmed = 'pending'
+             
+    
+    
+
     online_from_date = fields.Date("From")
     online_to_date = fields.Date("To Date")
     team_lead = fields.Boolean("TL")
@@ -2247,7 +2266,7 @@ class ExamOralPracticalExaminers(models.Model):
         
         
         return {
-            'name': 'GP Marksheet',
+            'name': 'Marksheet',
             'domain': [('examiners_id', '=', self.id)],
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,form',  # Specify both tree and form views
@@ -2432,13 +2451,15 @@ class GPExam(models.Model):
     _rec_name = "exam_id"
     _description= 'Schedule'
     
+
+    
     exam_id = fields.Char("Roll No",required=True, copy=False, readonly=True,tracking=True)
 
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
-    gp_candidate = fields.Many2one("gp.candidate","GP Candidate",tracking=True)
+    gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
     exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
@@ -2503,16 +2524,25 @@ class GPExam(models.Model):
     
     gsk_online_assignment = fields.Boolean('gsk_online_assignment')
     
+    edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
+    
+
+    def _compute_is_in_group(self):
+        for record in self:
+            user = self.env.user
+            group_xml_ids = ['bes.edit_marksheet_status']
+            record.edit_marksheet_status = any(user.has_group(group) for group in group_xml_ids)
+    
     exam_criteria = fields.Selection([
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria")
     
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria",tracking=True)
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
 
     
     # stcw_criteria = fields.Selection([
@@ -2557,7 +2587,7 @@ class GPExam(models.Model):
         ('5-pending_reissue_approval','Reissue Approval'),
         ('6-pending_reissue_approved','Approved')
         
-    ], string='State', default='1-in_process',tracking=True)
+    ], string='State', default='1-in_process')
     
     reissued = fields.Boolean("Reissued",tracking=True)
     reissued_date = fields.Date("Reissued Date",tracking=True)
@@ -2578,8 +2608,8 @@ class GPExam(models.Model):
     rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
     institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True,tracking=True)
-    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code', required=True,tracking=True)
-    indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no', required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True, required=True,tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no',store=True, required=True,tracking=True)
     user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
@@ -3574,7 +3604,7 @@ class CCMCExam(models.Model):
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
-    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code', required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code',store=True, required=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",required=True,tracking=True)
 
 
@@ -3615,7 +3645,8 @@ class CCMCExam(models.Model):
     ], string='Cookery And Bakery',tracking=True)
     
     
-    cookery_oral = fields.Float("CCMC Oral/GSK",readonly=True,tracking=True)
+    cookery_oral = fields.Float("CCMC Oral",readonly=True,tracking=True)
+    ccmc_gsk_oral_marks = fields.Float("CCMC GSK Oral",readonly=True,tracking=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_gsk_oral_percentage = fields.Float("CCMC GSK Oral Percentage",readonly=True,tracking=True)
     ccmc_oral_prac_status = fields.Selection([
@@ -3695,6 +3726,15 @@ class CCMCExam(models.Model):
         ('failed','Failed'),
         ('passed','Passed'),
     ],string='Result',tracking=True,compute='_compute_result_status')
+    
+    edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
+    
+
+    def _compute_is_in_group(self):
+        for record in self:
+            user = self.env.user
+            group_xml_ids = ['bes.edit_marksheet_status']
+            record.edit_marksheet_status = any(user.has_group(group) for group in group_xml_ids)
 
     
     url = fields.Char("URL",compute="_compute_url",tracking=True)
@@ -3708,7 +3748,7 @@ class CCMCExam(models.Model):
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
    
     institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',tracking=True)
-    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no', required=True,tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no',store=True,required=True,tracking=True)
     
     cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
     cookery_oral_carry_forward = fields.Boolean("Cookery Oral Carry Forward",tracking=True)
@@ -3845,7 +3885,7 @@ class CCMCExam(models.Model):
             record.qr_code = qr_image_base64
 
     
-    @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status')
+    @api.depends('stcw_criteria','ship_visit_criteria','cookery_bakery_prac_status','ccmc_online_status','ccmc_gsk_oral_prac_status')
     def compute_certificate_criteria(self):
         for record in self:
             
@@ -3999,7 +4039,7 @@ class CCMCExam(models.Model):
              #Percentage Calculation
             #  import wdb; wdb.set_trace(); 
              self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
-             self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+             self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
              self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
              
              self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
@@ -4108,8 +4148,12 @@ class CCMCExam(models.Model):
                  if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
                      cookery_bakery_marks = self.cookery_bakery.total_mrks
                      ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+                     ccmc_oral_gsk_marks = self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                     
                      self.cookery_oral = ccmc_oral_marks
                      self.cookery_practical = cookery_bakery_marks
+                     self.ccmc_gsk_oral_marks = ccmc_oral_gsk_marks
+                     
                  else:
                     error_msg = _("CCMC Oral Or Practical Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                     raise ValidationError(error_msg)
@@ -4121,14 +4165,16 @@ class CCMCExam(models.Model):
                  else:
                     error_msg = _("CCMC Online Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                     raise ValidationError(error_msg)
+                
             
-             self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online
+             self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online + self.ccmc_gsk_oral_marks
             
              #Percentage Calculation
              
              self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
-             self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+             self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
              self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
+             
 
              self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
              self.overall_percentage = (self.overall_marks/300)*100
@@ -4139,7 +4185,7 @@ class CCMCExam(models.Model):
              else:
                     self.cookery_bakery_prac_status = 'failed'
                     
-             if self.ccmc_oral_percentage >= 60 and self.ccmc_gsk_oral_percentage >= 60:
+             if self.ccmc_oral_percentage >= 60:
                 self.ccmc_oral_prac_status = 'passed'
              else:
                 self.ccmc_oral_prac_status = 'failed'
