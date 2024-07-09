@@ -139,7 +139,7 @@
 
         <menuitem id="bes_exams_menu" 
                   parent="bes_menu" 
-                  name="Exam Master"
+                  name="Exam Marksheet Master"
                   sequence="5" />
 
         <menuitem id="bes_exam" 
