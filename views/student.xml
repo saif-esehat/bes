@@ -12,6 +12,13 @@
             </field>
         </record>
 
+        <record id="candidate_inactive_wizard_action" model="ir.actions.act_window">
+            <field name="name">Candidate Inactivation Form</field>
+            <field name="res_model">candidate.inactive.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         <record id="action_to_recompute_fields" model="ir.actions.server">
             <field name="name">Recompute the fields</field>
             <field name="type">ir.actions.server</field>
@@ -218,6 +225,23 @@
             </search>
             </field>
         </record>
+
+        <record id="candidate_inactive_wizard_id" model="ir.ui.view">
+                <field name="name">candidate.inactive.wizard.form</field>
+                <field name="model">candidate.inactive.wizard</field>
+                <field name="arch" type="xml">
+                    <form string="Inactivation Reason">
+                        <group>
+                            <field name="inactivation_reason" required="1"/>
+                        </group>
+                        <footer>
+                            <button string="Cancel" class="btn-default" special="cancel"/>
+                            <button string="Confirm" type="object" name="inactivate_user" class="btn-primary"/>
+                        </footer>
+                    </form>
+                </field>
+        </record>
+
 
 
         <record id="gp_candidate_forms" model="ir.ui.view">
