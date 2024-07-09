@@ -3713,7 +3713,7 @@ class CCMCExam(models.Model):
     certificate_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria",tracking=True)
+    ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
     user_state = fields.Selection([
         ('active', 'Active'),
