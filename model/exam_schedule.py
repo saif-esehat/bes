@@ -4040,7 +4040,7 @@ class CCMCExam(models.Model):
             #  import wdb; wdb.set_trace(); 
              self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
              self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
-             self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
+             self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/80) * 100
              
              self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
              self.overall_percentage = (self.overall_marks/300)*100
