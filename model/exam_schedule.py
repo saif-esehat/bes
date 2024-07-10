@@ -1814,9 +1814,9 @@ class ExamOralPracticalExaminers(models.Model):
     ], string='Exam Type', default='practical_oral',tracking=True)
     
     all_marksheet_confirmed = fields.Selection([
-                    ('na', 'NA'),
+                    ('na', 'Online'),
                     ('pending', 'Pending'),
-                    ('done', 'Done')
+                    ('done', 'Completed')
                 ], string='Marksheet Remaining Status', default='pending',compute='compute_marksheet_done',store=True)
     
     @api.depends('candidates_count','candidate_done')

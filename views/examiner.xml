@@ -526,14 +526,14 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <sheet>
+                    <sheet>
+                        <group>
                             <field name="gp_candidate"/> 
                             <field name="gp_marksheet"/>
                             <field name="gsk_oral"/>
                             <field name="gsk_prac"/>
-                        </sheet>
-                    </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -635,10 +635,14 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="ccmc_candidate"/>
-                    <field name="ccmc_marksheet"/>
-                    <field name="cookery_bakery"/>
-                    <field name="ccmc_oral"/>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_candidate"/>
+                            <field name="ccmc_marksheet"/>
+                            <field name="cookery_bakery"/>
+                            <field name="ccmc_oral"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -673,10 +677,14 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="ccmc_candidate"/>
-                    <field name="ccmc_marksheet"/>
-                    <field name="cookery_bakery"/>
-                    <field name="ccmc_oral"/>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_candidate"/>
+                            <field name="ccmc_marksheet"/>
+                            <field name="cookery_bakery"/>
+                            <field name="ccmc_oral"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -686,9 +694,13 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="ccmc_candidate"/>
-                    <field name="ccmc_marksheet"/>
-                    <field name="ccmc_gsk_oral"/>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_candidate"/>
+                            <field name="ccmc_marksheet"/>
+                            <field name="ccmc_gsk_oral"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
