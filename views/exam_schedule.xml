@@ -426,7 +426,7 @@
                             <div>
                                 <field name="cookery_oral" nolabel="1"/>
                             / 
-                                <span>80</span>
+                                <span>100</span>
                             </div>
 
                             <label for="cookery_gsk_online"/>
@@ -435,12 +435,12 @@
                             / 
                                 <span>100</span>
                             </div>
-                            <label for="ccmc_gsk_oral_marks"/>
+                            <!-- <label for="ccmc_gsk_oral_marks"/>
                             <div>
                                 <field name="ccmc_gsk_oral_marks" nolabel="1"/>
                             / 
                                 <span>20</span>
-                            </div>
+                            </div> -->
                             <label for="overall_marks"/>
                             <div>
                                 <field name="overall_marks" nolabel="1"/>
@@ -453,7 +453,7 @@
                             <field name="cookery_bakery_percentage" readonly="1"/>
                             <field name="ccmc_oral_percentage" readonly="1"/>
                             <field name="cookery_gsk_online_percentage" readonly="1"/>
-                            <field name="ccmc_gsk_oral_percentage" readonly="1"/>
+                            <!-- <field name="ccmc_gsk_oral_percentage" readonly="1"/> -->
                             
                             <field name="overall_percentage" readonly="1"/>
                         </group>
@@ -461,7 +461,7 @@
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
                             <field name="ccmc_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
-                            <field name="ccmc_gsk_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <!-- <field name="ccmc_gsk_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/> -->
                             <!-- <field name="oral_prac_status"/> -->
                             <field name="edit_marksheet_status" invisible="1" />                            
                             <field name="ccmc_online_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>

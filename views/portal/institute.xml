@@ -320,16 +320,16 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-left">
-                                <t t-if="batch.dgs_approval_state">
+                                <!-- <t t-if="batch.dgs_approval_state"> -->
                                     <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.batch_name"/>
                                     </a>
-                                </t>
-                                <t t-else="">
+                                <!-- </t> -->
+                                <!-- <t t-else="">
                                     <span class="fa disabled">
                                         <t t-out="batch.batch_name"/>
                                     </span>
-                                </t>
+                                </t> -->
                             </td>
 
                             <td class="text-left">
@@ -349,11 +349,11 @@
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
                             
-                            <t t-if="batch.state == '1-ongoing'">
+                            <!-- <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Update Batch Capacity</a>
                                 </td>
-                            </t>
+                            </t> -->
                             
                             <!-- <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
@@ -484,16 +484,16 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-left">
-                                <t t-if="batch.dgs_approval_state">
+                                <!-- <t t-if="batch.dgs_approval_state"> -->
                                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.ccmc_batch_name"/>
                                     </a>
-                                </t>
-                                <t t-else="">
+                                <!-- </t> -->
+                                <!-- <t t-else="">
                                     <span class="fa disabled">
                                         <t t-out="batch.ccmc_batch_name"/>
                                     </span>
-                                </t>
+                                </t> -->
                             </td>
                             <td class="text-left">
                                 <a t-attf-href="/my/ccmcbatch/faculties/{{batch.id}}" class="fa">
@@ -511,11 +511,11 @@
                             <td class="text-center">
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
-                            <t t-if="batch.ccmc_state == '1-ongoing'">
+                            <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Document</a>
                                 </td>
-                            </t>
+                            </t> -->
 
                             <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
@@ -698,19 +698,28 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">Date of Birth</label>
+                                                    <label for="gender">Gender</label>
+                                                    <select class="form-control" id="gender" name="gender" required="1">
+                                                        <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
+                                                        <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="dob">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">E-mail</label>
+                                                    <label for="e_mail">E-mail</label>
                                                     <input type="text" class="form-control" id="e_mail" name="e_mail" t-att-value ="candidate.email"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">Mobile</label>
+                                                    <label for="mobile">Mobile</label>
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
                                                 </div>
                                             </div>
@@ -785,6 +794,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Gender</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.gender"/>
                                         </p>
                                     </div>
                                 </div>
@@ -3162,11 +3182,6 @@
                                         <input type="file" class="form-control-file" accept=".xlsx" name="ccmcfileUpload" id="ccmcfileUpload"/>
                                     </div>
                                     <button id="ccmcuploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                                    <!-- <div id="loader-overlay" style="display: none;">
-                                        <div id="loader">
-                                            Uploading
-                                        </div>
-                                    </div> -->
 
                                 </form>
                             </div>
@@ -4260,7 +4275,16 @@
                                                     <input type="text" class="form-control" id="full_name" name="full_name" t-att-value ="candidate.name"/>
                                                 </div>
                                             </div>
-                                             <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="gender">Gender</label>
+                                                    <select class="form-control" id="gender" name="gender" required="1">
+                                                        <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
+                                                        <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
@@ -4353,6 +4377,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Gender</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.gender"/>
                                         </p>
                                     </div>
                                 </div>
