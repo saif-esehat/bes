@@ -2441,6 +2441,15 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="gender">Gender</label>
+                                                <select class="form-control" id="gender" name="gender" required="1">
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
                                                 <input type="text" class="form-control" id="indos_no" name="indos_no" />
                                             </div>
@@ -3213,6 +3222,15 @@
                                             <div class="form-group">
                                                 <label for="name">Full Name of Candidate as in INDOS</label>
                                                 <input type="text" class="form-control" id="name" name="name" required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="gender">Gender</label>
+                                                <select class="form-control" id="gender" name="gender" required="1">
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">

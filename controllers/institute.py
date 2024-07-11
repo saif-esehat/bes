@@ -437,6 +437,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
+            gender = 'male' if kw.get("gender") == 'Male' else 'female'
             dob = kw.get("dob")
             street = kw.get("street")
             street2 = kw.get("street2")
@@ -453,6 +454,7 @@ class InstitutePortal(CustomerPortal):
             
             candidate_data = {
                 "name": name,
+                "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
@@ -488,6 +490,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
+            gender = 'male' if kw.get("gender") == 'Male' else 'female'
             dob = kw.get("dob")
             street = kw.get("street")
             street2 = kw.get("street2")
@@ -504,6 +507,7 @@ class InstitutePortal(CustomerPortal):
             
             candidate_data = {
                 "name": name,
+                "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,

@@ -330,7 +330,7 @@
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
                     <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
-                    <field name="gsk_practical_marks" optional="show"  string="GSK Practical"/>
+                    <field name="gsk_practical_marks"  optional="show"  string="GSK Practical"/>
                     <field name="gsk_total" optional="show" string="GSK O/P"/>
                     <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
                     <field name="mek_practical_marks" optional="show" string="MEK Practical" />
@@ -342,9 +342,6 @@
                     <field name="stcw_criterias"  optional="show" widget="badge" decoration-success= "stcw_criterias == 'passed'" decoration-danger="stcw_criterias == 'pending'"/>
                     <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
                     <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
-                    <!-- <field name="stcw_criteria" optional="show"/>
-                    <field name="attendance_criteria" optional="show"/>
-                    <field name="ship_visit_criteria" optional="show"/> -->
                     <field name="certificate_criteria" optional="show"/>
                     <field name="state" optional="show"/>
                     <field name="rank" optional="show"/>
