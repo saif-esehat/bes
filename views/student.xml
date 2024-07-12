@@ -12,6 +12,13 @@
             </field>
         </record>
 
+        <record id="candidate_inactive_wizard_action" model="ir.actions.act_window">
+            <field name="name">Candidate Inactivation Form</field>
+            <field name="res_model">candidate.inactive.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         <record id="action_to_recompute_fields" model="ir.actions.server">
             <field name="name">Recompute the fields</field>
             <field name="type">ir.actions.server</field>
@@ -219,6 +226,23 @@
             </field>
         </record>
 
+        <record id="candidate_inactive_wizard_id" model="ir.ui.view">
+                <field name="name">candidate.inactive.wizard.form</field>
+                <field name="model">candidate.inactive.wizard</field>
+                <field name="arch" type="xml">
+                    <form string="Inactivation Reason">
+                        <group>
+                            <field name="inactivation_reason" required="1"/>
+                        </group>
+                        <footer>
+                            <button string="Cancel" class="btn-default" special="cancel"/>
+                            <button string="Confirm" type="object" name="inactivate_user" class="btn-primary"/>
+                        </footer>
+                    </form>
+                </field>
+        </record>
+
+
 
         <record id="gp_candidate_forms" model="ir.ui.view">
             <field name="name">gp.candidate.form</field>
@@ -272,9 +296,7 @@
                             <field name="roll_no"/>
 
                             <field name="name" placeholder="Candidate" required="1"/>
-                            
-
-                            <!-- <field name="name" placeholder="Candidate" required="1"/> -->
+                            <field name="gender" placeholder="Gender" required="1"/>
                             <field name="institute_id"/>
 
                             <field name="indos_no"/>
@@ -628,6 +650,7 @@
                             <field name="institute_id"/>
                             <!-- <field name="name" placeholder="Candidate" required="1"/> -->
                             <field name="indos_no"/>
+                            <field name="gender" placeholder="Gender" required="1"/>
                             <field name="ccmc_user_state" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
                             <field name="dob"/>
                             <field name="age"/>
@@ -1020,6 +1043,9 @@
                         </group>
                            
                         <group>
+                            <field name="cookery_practical_remarks"/>
+                        </group>
+                        <group>
                             <field name="cookery_draft_confirm"/>
                         </group>
                             
@@ -1113,14 +1139,17 @@
                             </div>
                         </group>
                         <group>
+                            <field name='ccmc_oral_remarks'/> 
+                        </group>
+                        <group>
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
-                    </div>
+                    </div> -->
                 </form>
             </field>
         </record>
@@ -1165,14 +1194,17 @@
                             </div>
                         </group>
                         <group>
+                            <field name='ccmc_gsk_oral_remarks'/> 
+                        </group>
+                        <group>
                             <field name='ccmc_oral_draft_confirm'/> 
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
+                    <!-- <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "message_ids" widget="mail_thread"/>
                         <field name= "activity_ids" widget="mail_activity"/>
-                    </div>
+                    </div> -->
                 </form>
             </field>
         </record>

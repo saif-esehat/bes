@@ -101,11 +101,17 @@
                                     <t t-if="exam.gsk_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
-                                     <t t-else="">
+                                    <t t-elif="exam.gsk_oral_prac_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                    </t>
+                                    <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
-                                     </t>
-                                     <t t-if="exam.mek_oral_prac_status == 'passed'">
+                                    </t>
+                                    <t t-if="exam.mek_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-elif="exam.mek_oral_prac_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
                                     </t>
                                      <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
@@ -113,11 +119,17 @@
                                      <t t-if="exam.mek_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
+                                    <t t-elif="exam.mek_online_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                    </t>
                                     <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
                                     </t>
                                     <t t-if="exam.gsk_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-elif="exam.gsk_online_attendance == 'absent'">
+                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
                                     </t>
                                      <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
@@ -135,6 +147,111 @@
                 
                 </t>
             </t>
+
+            
+        </t>
+    </template>
+
+    <template id="ccmc_dgs_report">
+        <t t-call="web.html_container">
+            <t t-call="bes.dgs_report_custom_header_footer" >
+                <t t-foreach="docs" t-as="doc">
+                    
+                    <style>
+                        .black-bordered-table {
+                            width: 100%;
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            margin-top: 30px;
+                        }
+                        th, td , tr {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding: 10px;
+                            border-collapse: collapse;
+                            padding-bottom: 0px;
+                            
+                        }
+                        thead {
+                            padding-bottom: 0px;
+
+                        }
+                        th {
+
+                          vertical-align: bottom;
+                        }
+                        </style>
+                
+
+                    <!-- <table class="black-bordered-table" style=""> -->
+                    <table class="black-bordered-table" style="" border="1">
+
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: bottom;">Sr. No.</th>
+                                <th style="vertical-align: bottom;">Code No.</th>
+                                <th style="vertical-align: bottom;">INDOS No.</th>
+                                <th style="vertical-align: bottom;">MTI No.</th>
+                                <th style="vertical-align: bottom;">Roll No</th>
+                                <th style="white-space: nowrap; vertical-align: bottom;" >Name of the Institute</th>
+                                <th style="vertical-align: bottom;" >Full Name of the Candidate as in INDOS</th>
+                                <th > DOB</th>
+                                <th>Practical Cookery Pass or Fail</th>
+                                <th>Oral Cookery &amp; others Pass or Fail</th>
+                                <th>Online Pass or Fail (Average 60% in above)</th>
+                                <th>Final Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Add rows with student data here -->
+                            <t t-set="index" t-value="0" />
+                            <t t-foreach="exams" t-as="exam">
+                                <tr>
+                                    <t t-set="index" t-value="index + 1"/>
+                                    <td><span t-esc="index"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.ccmc_candidate.candidate_code"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.ccmc_candidate.indos_no"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.ccmc_candidate.institute_id.mti"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
+                                    <td><span t-esc="exam.ccmc_candidate.institute_id.name"/></td>
+                                    <td><span t-esc="exam.ccmc_candidate.name"/></td>
+                                    <td style="text-align:center; white-space: nowrap;"><span t-esc="exam.ccmc_candidate.dob"/></td>
+
+                                    <t t-if="exam.cookery_bakery_prac_status == 'passed'">
+                                        <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                    </t>
+
+                                    <t t-if="exam.ccmc_oral_prac_status == 'passed'">
+                                        <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                    </t>
+
+                                    <t t-if="exam.ccmc_online_status == 'passed'">
+                                        <td style="text-align:center"><strong>P</strong></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                    </t>
+
+                                    <t t-if="exam.exam_criteria == 'passed'">
+                                        <td style="text-align:center"><strong>Passed</strong></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="text-align: center; color: red;"><strong>Fail</strong></td>
+                                    </t>  
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                
+                </t>
+            </t>
+
             
         </t>
     </template>

@@ -320,16 +320,16 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-left">
-                                <t t-if="batch.dgs_approval_state">
+                                <!-- <t t-if="batch.dgs_approval_state"> -->
                                     <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.batch_name"/>
                                     </a>
-                                </t>
-                                <t t-else="">
+                                <!-- </t> -->
+                                <!-- <t t-else="">
                                     <span class="fa disabled">
                                         <t t-out="batch.batch_name"/>
                                     </span>
-                                </t>
+                                </t> -->
                             </td>
 
                             <td class="text-left">
@@ -349,11 +349,11 @@
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
                             
-                            <t t-if="batch.state == '1-ongoing'">
+                            <!-- <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Update Batch Capacity</a>
                                 </td>
-                            </t>
+                            </t> -->
                             
                             <!-- <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
@@ -484,16 +484,16 @@
                     <t t-foreach="batches" t-as="batch">
                         <tr>
                             <td class="text-left">
-                                <t t-if="batch.dgs_approval_state">
+                                <!-- <t t-if="batch.dgs_approval_state"> -->
                                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.ccmc_batch_name"/>
                                     </a>
-                                </t>
-                                <t t-else="">
+                                <!-- </t> -->
+                                <!-- <t t-else="">
                                     <span class="fa disabled">
                                         <t t-out="batch.ccmc_batch_name"/>
                                     </span>
-                                </t>
+                                </t> -->
                             </td>
                             <td class="text-left">
                                 <a t-attf-href="/my/ccmcbatch/faculties/{{batch.id}}" class="fa">
@@ -511,11 +511,11 @@
                             <td class="text-center">
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
-                            <t t-if="batch.ccmc_state == '1-ongoing'">
+                            <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Document</a>
                                 </td>
-                            </t>
+                            </t> -->
 
                             <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-left">
@@ -698,19 +698,28 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">Date of Birth</label>
+                                                    <label for="gender">Gender</label>
+                                                    <select class="form-control" id="gender" name="gender" required="1">
+                                                        <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
+                                                        <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="dob">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">E-mail</label>
+                                                    <label for="e_mail">E-mail</label>
                                                     <input type="text" class="form-control" id="e_mail" name="e_mail" t-att-value ="candidate.email"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="indos_no">Mobile</label>
+                                                    <label for="mobile">Mobile</label>
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
                                                 </div>
                                             </div>
@@ -785,6 +794,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Gender</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.gender"/>
                                         </p>
                                     </div>
                                 </div>
@@ -2805,12 +2825,21 @@
                                 <a t-attf-href="/my/gpcandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
                             
-                            <t t-set="admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('attendance_criteria','=','passed'),('ship_visit_criteria','=','passed'),('stcw_criteria','=','passed')])"/>
+                            <t t-set="admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('attendance_criteria','=','passed'),('ship_visit_criteria','=','passed'),('stcw_criterias','=','passed')])"/>
                             
+                            <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+
                             <t t-if='batches.admit_card_status == "issued"'>
-                                <td class="text-center">
-                                    <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
-                                </td>
+                                <t t-if='hold_admit_card'>
+                                    <td class="text-center">
+                                        <span class="text-danger">On Hold</span>
+                                    </td>
+                                </t>
+                                <t t-else=''>
+                                    <td class="text-center">
+                                        <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
+                                    </td>
+                                </t>
                             </t>
                             <t t-else=''>
                                 <td class="text-center">
@@ -2819,17 +2848,26 @@
                             </t>
                            
                             <t t-set="exams_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
+                            <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
 
                             <t t-if='exams_certificate'>
-                                <td class="text-center">
-                                    <a t-attf-href="/my/gpcandidates/download_gp_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
-                                </td>
+                                <t t-if='hold_certificate'>
+                                    <td class="text-center">
+                                        <span class="text-danger">On Hold</span>
+                                    </td>
+                                </t>
+                                <t t-else=''>
+                                    <td class="text-center">
+                                        <a t-attf-href="/my/gpcandidates/download_gp_certificate/{{candidate.id}}" class="fa">Download Certificate</a>
+                                    </td>
+                                </t>
                             </t>
                             <t t-else=''>
                                 <td class="text-center">
                                     <span class="text-danger">Pending</span>
                                 </td>
                             </t>
+                            
                             <t t-if="not candidate.user_id">
                                 <td class="text-center">
                                     <a href="" data-toggle="modal" t-attf-candidate-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="onOpenDeleteCandidateModal(this)" data-target="#delete_candidate_modal" class="fa">Delete</a>
@@ -3144,11 +3182,6 @@
                                         <input type="file" class="form-control-file" accept=".xlsx" name="ccmcfileUpload" id="ccmcfileUpload"/>
                                     </div>
                                     <button id="ccmcuploadBtn" type="submit" class="btn btn-primary">Upload</button>
-                                    <!-- <div id="loader-overlay" style="display: none;">
-                                        <div id="loader">
-                                            Uploading
-                                        </div>
-                                    </div> -->
 
                                 </form>
                             </div>
@@ -3981,9 +4014,9 @@
                                 <tr>
                                     <th>Course</th>
                                     <th>DGS Approval Document</th>
-                                    <th>Batches per Year</th>
+                                    <th>How many times cousre conducted in 1 year</th>
                                     <th>Candidates per Batch</th>
-                                    <th>Total Intake Capacity</th>
+                                    <th>Max Intake Capacity</th>
                                 </tr>
                             </thead>
 
@@ -4067,7 +4100,10 @@
 
                                             <div class="form-group">
                                                 <label for="capacity">Batch Per Year</label>
-                                                <input required="" type="number" class="form-control" id="batch_per_year" name="batch_per_year" min="0" />
+                                                <select class="form-control" id="batch_per_year" name="batch_per_year">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="capacity">Candidate Per Batch</label>
@@ -4239,7 +4275,16 @@
                                                     <input type="text" class="form-control" id="full_name" name="full_name" t-att-value ="candidate.name"/>
                                                 </div>
                                             </div>
-                                             <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="gender">Gender</label>
+                                                    <select class="form-control" id="gender" name="gender" required="1">
+                                                        <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
+                                                        <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
@@ -4332,6 +4377,17 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Gender</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.gender"/>
                                         </p>
                                     </div>
                                 </div>
@@ -4818,21 +4874,21 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="candidate_cert_no">Candidate Certificate Number</label>
-                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no"/>
+                                                                            <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no" required='1'/>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="course_start_date">Course Start Date</label>
-                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date"/>
+                                                                            <input type="date" class="form-control" id="course_start_date" name="course_start_date" required='1'/>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="course_end_date">Course End Date</label>
-                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date"/>
+                                                                            <input type="date" class="form-control" id="course_end_date" name="course_end_date" required='1'/>
                                                                         </div>
                                                                     </div>
 

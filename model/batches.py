@@ -65,7 +65,7 @@ class InstituteGPBatches(models.Model):
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",tracking=True)
     
-    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",tracking=True)
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",compute='_compute_batch_capacity',tracking=True)
     dgs_approval_state = fields.Boolean(string="DGS Approval Status",tracking=True)
     dgs_document = fields.Binary(string="DGS Document",tracking=True)
     document_name = fields.Char("Name of Document",tracking=True)
@@ -74,7 +74,12 @@ class InstituteGPBatches(models.Model):
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
     
-    
+    @api.depends('institute_id')
+    def _compute_batch_capacity(self):
+        for rec in self:
+            if rec.institute_id.courses[0].course.course_code == 'GP':
+                # import wdb; wdb.set_trace()
+                rec.dgs_approved_capacity = rec.institute_id.courses[0].intake_capacity
     
     @api.model
     def create(self, values):
@@ -557,7 +562,7 @@ class InstituteCcmcBatches(models.Model):
         ('issued', 'Issued')
     ],default="pending", string='Admit Card Status')
     
-    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",compute='_compute_batch_capacity')
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
     document_name = fields.Char("Name of Document")
@@ -566,6 +571,13 @@ class InstituteCcmcBatches(models.Model):
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     
     admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
+
+    @api.depends('institute_id')
+    def _compute_batch_capacity(self):
+        for rec in self:
+            if rec.institute_id.courses[1].course.course_code and rec.institute_id.courses[1].course.course_code == 'CCMC':
+                # import wdb; wdb.set_trace()
+                rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
 
     @api.depends("admit_card_alloted")
     def _compute_admit_card_count(self):

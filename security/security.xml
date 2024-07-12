@@ -9,8 +9,23 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <record id="group_report_violation" model="res.groups">
+        <field name="name">Report Violation</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
+    <record id="group_approve_violation" model="res.groups">
+        <field name="name">Approve Violation</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <record id="group_examiners" model="res.groups">
         <field name="name">Examiner</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+    
+    <record id="edit_marksheet_status" model="res.groups">
+        <field name="name">Edit Marksheet</field>
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
@@ -55,6 +70,7 @@
             <field name="perm_unlink" eval="True"/>
             <field name="active" eval="True"/> -->
     </record>
+    
      <record id="examiner_duty_record_rule_bes_admin" model="ir.rule">
             <field name="name">Examiner Duty Record Rule</field>
             <field ref="model_exam_type_oral_practical" name="model_id"/>
@@ -90,12 +106,11 @@
             <field name="perm_unlink" eval="False"/> -->
     </record>
 
-     <record id="ec_registered_ccmc_candidate_record_rule" model="ir.rule">
+    <record id="ec_registered_ccmc_candidate_record_rule" model="ir.rule">
             <field name="name">EC CCMC Registered Candidate Record Rule</field>
             <field ref="model_ccmc_exam_schedule" name="model_id"/>
             <field name="groups" eval="[(4, ref('group_exam_coordinator'))]"/>
             <field name="domain_force">[('exam_region.exam_co_ordinator','=',user.id)]</field>
-
     </record>
 
     <record id="record_rule_allow_all_egistered_candidate" model="ir.rule">

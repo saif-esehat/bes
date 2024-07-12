@@ -78,6 +78,22 @@
             </field>
         </record>
 
+        <record id="candidate_integrity_violation_wizard_form" model="ir.ui.view">
+            <field name="name">candidate.integrity.violation.wizard.form</field>
+            <field name="model">candidate.integrity.violation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Report Integrity Violation">
+                    <group>
+                        <field name="incident_details"/>
+                        <field name="attachment_ids"  widget="many2many_binary"/>
+                    </group>
+                    <footer>
+                        <button string="Confirm" type="object" name="action_log_note" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
 
 
@@ -87,6 +103,17 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <!-- "Hold Admit Card" Button -->
+                        <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary" attrs="{'invisible': [('hold_admit_card', '=', True),('show_hold_admit_card', '=', True)]}"/>
+
+                        <!-- "Release Admit Card" Button -->
+                        <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary" attrs="{'invisible': [('hold_admit_card', '=', False),('show_hold_admit_card', '=', True)]}"/>
+                        
+                        <!-- "Hold Certificate" Button -->
+                        <button name="HoldCertificate" string="Hold Certificate" type="object" class="btn-primary" attrs="{'invisible': [('hold_certificate', '=', True)]}"/>
+                        <!-- "Release Certificate" Button -->
+                        <button name="ReleaseCertificate" string="Release Certificate" type="object" class="btn-primary" attrs="{'invisible': [('hold_certificate', '=', False)]}"/>
+
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
                         <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
@@ -95,6 +122,8 @@
                         <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approved" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
+                        <button string="Report Violation" groups="group_report_violation" type="object" name="report_integrity_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'na')]}" class="btn-primary"/>
+                        <button string="Approve Violation" groups="group_approve_violation" type="object" confirm="Are you sure you want to Approve the Violation ? The candidate will be Inactivated" name="approve_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'pending_approval')]}" class="btn-primary"/>
 
                     </header>
                     <sheet>
@@ -104,9 +133,13 @@
                             <field name="registered_institute" readonly="1"/>
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
+                             <field name="exam_violation_state" invisible="1"/>
                             
                             <field name="reissued" readonly="1"/>
                             <field name="reissued_date" attrs="{'invisible': [('reissued', '=', False)]}" />
+                            <field name="hold_admit_card" readonly='1' />
+                            <field name="hold_certificate" readonly='1' />
+                            <field name="show_hold_admit_card" invisible='1' />
                             
                             <field name="dgs_batch" readonly="1"/>
                             <field name="gp_candidate" readonly="1"/>
@@ -254,10 +287,12 @@
 
                         </group>
                         <group style="width:50%">
-                            <field name="gsk_oral_prac_status" widget="badge" decoration-info="gsk_oral_prac_carry_forward == True"  readonly="1"/>
-                            <field name="mek_oral_prac_status" widget="badge" decoration-info="mek_oral_prac_carry_forward == True"  readonly="1"/>
-                            <field name="mek_online_status" widget="badge" decoration-info="mek_online_carry_forward == True"  readonly="1"/>
-                            <field name="gsk_online_status" widget="badge" decoration-info="gsk_online_carry_forward == True" readonly="1"/>
+                        
+                            <field name="edit_marksheet_status" invisible="1" />
+                            <field name="gsk_oral_prac_status"  decoration-info="gsk_oral_prac_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="mek_oral_prac_status"  decoration-info="mek_oral_prac_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="mek_online_status"  decoration-info="mek_online_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="gsk_online_status"  decoration-info="gsk_online_carry_forward == True" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <field name="exam_criteria" readonly="1"/>
                             <field name="stcw_criterias" readonly="1"/>
                             <field name="attendance_criteria" readonly="1"/>
@@ -288,8 +323,9 @@
                         
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
+                
                         <field name= "message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                         <field name= "activity_ids" widget="mail_activity"/>
                     </div>
                 </form>
@@ -306,14 +342,19 @@
                         <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
                     </header>
                     <field name="exam_id" optional="show"/>
+                    <field name="exam_violation_state" optional="show"/>
                     <field name="gp_candidate" optional="show"/>
                     <field name="candidate_code" optional="show"/>
                     <field name="registered_institute" readonly="1" optional="show"/>
                     <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
-                    <field name="gsk_total" optional="show"/>
-                    <field name="mek_total" optional="show"/>
+                    <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
+                    <field name="gsk_practical_marks" optional="show"  string="GSK Practical"/>
+                    <field name="gsk_total" optional="show" string="GSK O/P"/>
+                    <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
+                    <field name="mek_practical_marks" optional="show" string="MEK Practical" />
+                    <field name="mek_total" optional="show" string="GSK O/P"/>
                     <field name="gsk_online_marks" optional="show"/>
                     <field name="mek_online_marks" optional="show"/>
                     <field name="overall_marks" optional="show"/>
@@ -325,13 +366,15 @@
                     <field name="attendance_criteria" optional="show"/>
                     <field name="ship_visit_criteria" optional="show"/> -->
                     <field name="certificate_criteria" optional="show"/>
-                    <field name="state" optional="show"/>
+                    
                     <field name="rank" optional="show"/>
                     <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
-                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
-
+                    <field name="result" string="Result Status" decoration-success= "result == 'passed'"  decoration-danger= "result == 'failed'" widget="badge" optional="show"/>
+                    <field name="result_status" string="Certificate Status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
+                    
+                    <field name="state" optional="show"/>
                 </tree>
             </field>
         </record>
@@ -361,6 +404,9 @@
                         <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approved" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
+                        <button string="Report Violation" type="object" name="report_integrity_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'na')]}" class="btn-primary"/>
+                        <button string="Approve Violation" type="object" confirm="Are you sure you want to Approve the Violation ? The candidate will be Inactivated" name="approve_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'pending_approval')]}" class="btn-primary"/>
+
  
                     </header>
                     <sheet>
@@ -370,12 +416,13 @@
                             <field name="registered_institute" readonly="1"/>
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id"/>
+                            <field name="exam_violation_state" invisible="1"/>
 
                             <field name="reissued"/>                            
                             <field name="reissued_date"/>
                             
-                            <field name="dgs_batch" readonly="0"/>
-                            <field name="ccmc_candidate"/>
+                            <field name="dgs_batch" readonly="1"/>
+                            <field name="ccmc_candidate" readonly="1"/>
                             <field name="candidate_code" readonly="1"/>
                             <field name="indos_no" readonly="1"/>
                             <field name="institute_name" invisible="1" />
@@ -413,6 +460,12 @@
                             / 
                                 <span>100</span>
                             </div>
+                            <!-- <label for="ccmc_gsk_oral_marks"/>
+                            <div>
+                                <field name="ccmc_gsk_oral_marks" nolabel="1"/>
+                            / 
+                                <span>20</span>
+                            </div> -->
                             <label for="overall_marks"/>
                             <div>
                                 <field name="overall_marks" nolabel="1"/>
@@ -425,16 +478,18 @@
                             <field name="cookery_bakery_percentage" readonly="1"/>
                             <field name="ccmc_oral_percentage" readonly="1"/>
                             <field name="cookery_gsk_online_percentage" readonly="1"/>
+                            <!-- <field name="ccmc_gsk_oral_percentage" readonly="1"/> -->
+                            
                             <field name="overall_percentage" readonly="1"/>
                         </group>
 
                         <group style="width:33.33%">
-                            <field name="cookery_bakery_prac_status" readonly="1"/>
-                            <field name="ccmc_oral_prac_status" readonly="1"/>
-                            <field name="oral_prac_status"/>
-
-                            
-                            <field name="ccmc_online_status" readonly="1"/>
+                            <field name="cookery_bakery_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
+                            <field name="ccmc_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <!-- <field name="ccmc_gsk_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/> -->
+                            <!-- <field name="oral_prac_status"/> -->
+                            <field name="edit_marksheet_status" invisible="1" />                            
+                            <field name="ccmc_online_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <field name="stcw_criteria" readonly="1"/>
                             <field name="ship_visit_criteria" readonly="1"/>
                             <field name="attendance_criteria" readonly="1"/>
@@ -451,8 +506,18 @@
                             <field name="certificate_qr_code" widget="image"  style="width:100px; height:100px;" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         </group>
                         <field name="dgs_visible" invisible="0"/>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name= "message_ids" widget="mail_thread"/>
+                            <field name= "activity_ids" widget="mail_activity"/>
+                        </div>
 
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name= "message_ids" widget="mail_thread"/>
+                        <field name= "activity_ids" widget="mail_activity"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -463,6 +528,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="exam_id"/> 
+                    <field name="exam_violation_state" optional="show"/>
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="registered_institute"/>
@@ -474,13 +540,13 @@
                     <field name="overall_marks"/>
                     <field name="exam_criteria"/>
                     <field name="certificate_criteria"/>
-                    <field name="state"/>
                     <field name="ccmc_rank"/> 
-                    <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="user_state"  widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
-                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
-
+                    <field name="result" string="Result Status" decoration-success= "result == 'passed'"  decoration-danger= "result == 'failed'" widget="badge" optional="show"/>
+                    <field name="result_status" string="Certificate Status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
+                    <field name="state" widget="badge" optional="show" />
                 </tree>
             </field>
         </record>
@@ -499,6 +565,7 @@
                         <filter name="group_by_registered_institute" string="Examination Center" context="{'group_by':'registered_institute'}" />
 
                     </group>
+                    <field name="exam_id"/>
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>
