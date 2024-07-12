@@ -2657,7 +2657,7 @@ class GPExam(models.Model):
         ('inactive', 'Inactive')
     ], string='User Status', related='gp_candidate.user_state', required=True,tracking=True)
 
-    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',string="Institute",required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',store=True,string="Institute",required=True,tracking=True)
     
     result_status = fields.Selection([
         ('absent','Absent'),

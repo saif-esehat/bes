@@ -31,6 +31,19 @@ class ExaminationReport(models.Model):
         ('repeater', 'Repeater')
     ],string='Type')
     
+    # def generate_report(self):
+        
+        
+    def institute_wise_pass_percentage(self):
+        
+        batch_id = self.examination_batch.id
+        
+        if self.course == 'gp':
+            self.env['gp.exam.schedule'].sudo([('dgs_batch','=',batch_id)])
+        
+        elif self.course == 'ccmc':
+            pass
+            
     
     def open_institute_wise_pass_percentage(self):
         
