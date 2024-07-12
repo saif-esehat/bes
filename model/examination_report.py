@@ -20,6 +20,12 @@ class ExaminationReport(models.Model):
     
     
     examination_batch = fields.Many2one("dgs.batches",string="Examination Batch",tracking=True)
+
+    
+    
+
+
+
     
 
     
