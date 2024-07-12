@@ -122,8 +122,8 @@
                         <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approved" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
-                        <button string="Report Violation" type="object" name="report_integrity_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'na')]}" class="btn-primary"/>
-                        <button string="Approve Violation" type="object" confirm="Are you sure you want to Approve the Violation ? The candidate will be Inactivated" name="approve_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'pending_approval')]}" class="btn-primary"/>
+                        <button string="Report Violation" groups="group_report_violation" type="object" name="report_integrity_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'na')]}" class="btn-primary"/>
+                        <button string="Approve Violation" groups="group_approve_violation" type="object" confirm="Are you sure you want to Approve the Violation ? The candidate will be Inactivated" name="approve_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'pending_approval')]}" class="btn-primary"/>
 
                     </header>
                     <sheet>
@@ -540,14 +540,13 @@
                     <field name="overall_marks"/>
                     <field name="exam_criteria"/>
                     <field name="certificate_criteria"/>
-                    <field name="state"/>
                     <field name="ccmc_rank"/> 
-                    <field name="user_state" optional="show" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="user_state"  widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
                     <field name="result" string="Result Status" decoration-success= "result == 'passed'"  decoration-danger= "result == 'failed'" widget="badge" optional="show"/>
                     <field name="result_status" string="Certificate Status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
-
+                    <field name="state" widget="badge" optional="show" />
                 </tree>
             </field>
         </record>
