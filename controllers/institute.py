@@ -1062,6 +1062,8 @@ class InstitutePortal(CustomerPortal):
                 candidate.write({'candidate_signature': base64.b64encode(signature_photo),
                              'candidate_signature_name':  signature_photo_name,
                              })
+            state = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN'), ('id', '=', kw.get('state_id'))]).id if kw.get('state_id') else False
             candidate_details = {
                 'indos_no':kw.get('indos_no'),
                 'name':kw.get('full_name'),
@@ -1073,8 +1075,8 @@ class InstitutePortal(CustomerPortal):
                 'street':kw.get('street'),
                 'street2':kw.get('street2'),
                 'city':kw.get('city'),
-                'zip':kw.get('zip')
-                # 'state_id':kw.get('state_id')
+                'zip':kw.get('zip'),
+                'state_id':state
             }
             
             for key, value in candidate_details.items():
@@ -1099,6 +1101,9 @@ class InstitutePortal(CustomerPortal):
         candidate = request.env["ccmc.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         
+        states = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN')])
+        
         if request.httprequest.method == 'POST':
             # import wdb; wdb.set_trace()
             candidate_image = kw.get("candidate_photo").read()
@@ -1120,7 +1125,10 @@ class InstitutePortal(CustomerPortal):
                 candidate.write({'candidate_signature': base64.b64encode(signature_photo),
                              'candidate_signature_name':  signature_photo_name,
                              })
-                
+            
+            state = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN'), ('id', '=', kw.get('state_id'))]).id if kw.get('state_id') else False
+            
             candidate_details = {
                 'indos_no':kw.get('indos_no'),
                 'name':kw.get('full_name'),
@@ -1131,6 +1139,9 @@ class InstitutePortal(CustomerPortal):
                 'mobile':kw.get('mobile'),
                 'street':kw.get('street'),
                 'street2':kw.get('street2'),
+                'city':kw.get('city'),
+                'zip':kw.get('zip'),
+                'state_id':state
             }
             
             for key, value in candidate_details.items():

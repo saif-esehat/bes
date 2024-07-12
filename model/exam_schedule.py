@@ -3885,6 +3885,11 @@ class CCMCExam(models.Model):
         ('pending', 'Pending'),
         ('done', 'Done'),
     ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
+    
+    absent_status = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Absent Status")
 
     @api.depends('ccmc_candidate.candidate_image')
     def _check_image(self):
