@@ -1156,7 +1156,7 @@ class InstitutePortal(CustomerPortal):
         else:
             return "File not found or empty."
 
-
+    
 
     @http.route(['/my/institute_document'], type="http", method=["POST", "GET"], auth="user", website=True)
     def InstituteDocumentView(self, **kw):

@@ -20,6 +20,12 @@
             <field name="context">{}</field>
         </record>
 
+        <record id="action_time_sheet_form" model="ir.actions.act_window">
+            <field name="name">Time Sheet Report Form</field>
+            <field name="res_model">time.sheet.report</field>
+            <field name="view_mode">form</field>
+        </record>
+
         <!-- <record id="open_ec_gp_exam_schedule_form" model="ir.actions.act_window">
             <field name="name">GP Registered Candidate</field>
             <field name="res_model">gp.exam.schedule</field>
@@ -48,6 +54,8 @@
 
         <menuitem id="course_menu" parent="course_master_menu" name="Courses" action="course_master_action" sequence="1" />
         <menuitem id="subject_menu" parent="course_master_menu" name="Subject" action="subject_master_action" sequence="2" />
+        <menuitem id="timesheet_menu" parent="bes_menu" name="TimeSheet"  action="action_time_sheet_form" sequence="10" />
+
 
 
 
