@@ -1798,7 +1798,7 @@ class ExamOralPracticalExaminers(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Examiners'
 
-    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",store=True,required=False,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="Exam Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
@@ -2495,7 +2495,7 @@ class GPExam(models.Model):
 
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -2848,7 +2848,7 @@ class GPExam(models.Model):
     @api.depends('certificate_criteria')
     def _compute_result_status(self):
         for record in self:
-            print(record.state)
+            # print(record.state)
             if record.state == '3-certified':
                 record.result_status = 'passed'
             elif record.state in ['1-in_process','2-done']:
@@ -3213,16 +3213,20 @@ class GPExam(models.Model):
     def process_marks(self):
         
         if self.exam_violation_state == 'na':
+        
+
             mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
             mek_practical_draft_confirm = self.mek_prac.mek_practical_draft_confirm == 'confirm'
             gsk_oral_draft_confirm = self.gsk_oral.gsk_oral_draft_confirm == 'confirm'
             gsk_practical_draft_confirm = self.gsk_prac.gsk_practical_draft_confirm == 'confirm'
-
+            
             gsk_online_done = self.gsk_online.state == 'done' 
             mek_online_done = self.mek_online.state == 'done'
-
+            
+            print((len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0))
+            
             if not (len(self.mek_oral) == 0 and len(self.mek_prac) == 0) or not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0) or not (len(self.gsk_online) == 0) or not (len(self.mek_online) == 0)  :
-                
+                print("We reached")
                 if not (len(self.mek_oral) == 0 and len(self.mek_prac) == 0):
                     if mek_oral_draft_confirm and mek_practical_draft_confirm: 
                         mek_oral_marks = self.mek_oral.mek_oral_total_marks
@@ -3239,8 +3243,7 @@ class GPExam(models.Model):
                             self.mek_oral_prac_status = 'failed'
                     else:
                         print("Exam_ID" + self.exam_id)
-                        error_msg = _("MEK Oral Or Practical Not Confirmed for'%s'") % (self.gp_candidate.name)
-                        raise ValidationError(error_msg)
+                        raise ValidationError("MEK Oral Or Practical Not Confirmed")
 
                 if not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0):
                     
@@ -3258,10 +3261,10 @@ class GPExam(models.Model):
                         else:
                             self.gsk_oral_prac_status = 'failed'
                     else:
-                        error_msg = _("GSK Oral Or Practical Not Confirmed for'%s'") % (self.gp_candidate.name)
-                        raise ValidationError(error_msg)
+                        raise ValidationError("GSK Oral Or Practical Not Confirmed :"+str(self.exam_id))
                 
                 if not (len(self.gsk_online) == 0):
+                # if False:
                     
                     if gsk_online_done:
                     
@@ -3273,8 +3276,7 @@ class GPExam(models.Model):
                         else:
                             self.gsk_online_status = 'failed'
                     else:
-                        error_msg = _("GSK Online Exam Not Done or Confirmed for'%s'") % (self.gp_candidate.name)
-                        raise ValidationError(error_msg)
+                        raise ValidationError("GSK Online Exam Not Done or Confirmed")
                 
                 else:
                     # self.gsk_online_marks = self.gsk_online.scoring_total
@@ -3283,11 +3285,7 @@ class GPExam(models.Model):
                         self.gsk_online_status = 'passed'
                     else:
                         self.gsk_online_status = 'failed'
-                
-                
-                print("MEK ONline")
-                print(not (len(self.mek_online) == 0))
-                
+
                 # if False:
                 if not (len(self.mek_online) == 0):
                     if mek_online_done:
@@ -3303,43 +3301,36 @@ class GPExam(models.Model):
                         else:
                             self.mek_online_status = 'failed'
                     else:
-                        error_msg = _("MEK Online Exam Not Done or Confirmed for'%s'") % (self.gp_candidate.name)
-                        raise ValidationError(error_msg)
+                        raise ValidationError("MEK Online Exam Not Done or Confirmed")
                 else:
                     self.mek_online_percentage = (self.mek_online_marks/75)*100
                     if self.mek_online_percentage >= 60 :
                         self.mek_online_status = 'passed'
                     else:
                         self.mek_online_status = 'failed'
-
-            
-                    
-                    
-                    
-                
                 # print("Doing Nothing")
                 overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
                 self.overall_marks = overall_marks
                 self.overall_percentage = (overall_marks/500) * 100
-                
+
             else:
                 
             
             
                 # if not (len(self.mek_oral) == 0 and len(self.mek_prac) == 0) or not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0) or not (len(self.gsk_online) == 0) or not (len(self.mek_online) == 0)  :
-                if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
+                # if mek_oral_draft_confirm and mek_practical_draft_confirm and gsk_oral_draft_confirm and gsk_practical_draft_confirm and gsk_online_done and mek_online_done:
 
-                # if True:
+                if True:
 
                 
-                    mek_oral_marks = self.mek_oral.mek_oral_total_marks
+                    mek_oral_marks = self.mek_oral_marks
                     self.mek_oral_marks = mek_oral_marks
-                    mek_practical_marks = self.mek_prac.mek_practical_total_marks
+                    mek_practical_marks = self.mek_practical_marks
                     self.mek_practical_marks = mek_practical_marks
                     mek_total_marks = mek_oral_marks + mek_practical_marks
                     self.mek_total = mek_total_marks
                     self.mek_percentage = (mek_total_marks/175) * 100
-                    self.mek_online_marks = self.mek_online.scoring_total
+                    self.mek_online_marks = self.mek_online_marks
                     self.mek_online_percentage = (self.mek_online_marks/75)*100
                     
                     
@@ -3350,14 +3341,14 @@ class GPExam(models.Model):
                         self.mek_oral_prac_status = 'failed'
 
 
-                    gsk_oral_marks = self.gsk_oral.gsk_oral_total_marks
+                    gsk_oral_marks = self.gsk_oral_marks
                     self.gsk_oral_marks = gsk_oral_marks
-                    gsk_practical_marks = self.gsk_prac.gsk_practical_total_marks
+                    gsk_practical_marks = self.gsk_practical_marks
                     self.gsk_practical_marks = gsk_practical_marks
                     gsk_total_marks = gsk_oral_marks + gsk_practical_marks
                     self.gsk_total = gsk_total_marks
                     self.gsk_percentage = (gsk_total_marks/175) * 100
-                    self.gsk_online_marks = self.gsk_online.scoring_total
+                    self.gsk_online_marks = self.gsk_online_marks
                     self.gsk_online_percentage = (self.gsk_online_marks/75)*100
                     
                     overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
@@ -3369,6 +3360,12 @@ class GPExam(models.Model):
                     else:
                         self.gsk_oral_prac_status = 'failed'
 
+                    
+                    # self.state = '2-done'
+                    
+                    
+                    
+                    
                     if self.gsk_online_percentage >= 60 :
                         self.gsk_online_status = 'passed'
                     else:
@@ -3380,12 +3377,11 @@ class GPExam(models.Model):
                     else:
                         self.mek_online_status = 'failed'
                     
+                    
+                    
+                    
+                    all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
 
-                    all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status,
-                                                                    self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
-                        
-                        
-                
                 else:
                     print("Exam_ID" + self.exam_id)
                     raise ValidationError("Exam ID "+str(self.exam_id)+" Not All exam are Confirmed")
@@ -3702,7 +3698,7 @@ class CCMCExam(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'CCMC Schedule'
     
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     

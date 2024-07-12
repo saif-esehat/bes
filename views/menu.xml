@@ -205,7 +205,21 @@
         <record id="survey.menu_survey_form" model="ir.ui.menu">
             <field name="name">Examinations</field>
         </record>
+        
+        
+        <menuitem id="ship_visit_menu" 
+        parent="bes_menu" 
+        name="Ship Visits"/>
 
+        <menuitem id="gp_ship_visit_menu" 
+        parent="ship_visit_menu" 
+        name="GP Ship Visits" 
+        action="gp_candidate_ship_visits_action"/>
+        
+        <menuitem id="ccmc_ship_visit_menu" 
+        parent="ship_visit_menu" 
+        name="CCMC Ship Visits" 
+        action="ccmc_candidate_ship_visits_action"/>
 
         <menuitem id="exam_duty_menu" 
                 parent="bes_batch_examiner_duty_menus_group_examiner" 
