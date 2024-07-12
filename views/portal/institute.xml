@@ -734,6 +734,32 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="state_id">State</label>
+                                                    <select class="form-control" id="state_id" name="state_id">
+                                                        <t t-foreach="states" t-as="state">
+                                                            <option t-att-value="state.id" t-att-selected="state.id == candidate.state_id.id or ''">
+                                                                <t t-esc="state.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="state_id">State</label>
+                                                    <select class="form-control" id="state_id" name="state_id">
+                                                        <t t-foreach="states" t-as="state">
+                                                            <option t-attf-value="{{state.id}}">
+                                                                <t t-out="state.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+                                            
+                                            
                                         </div>
 
                                     </div>

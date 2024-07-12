@@ -219,7 +219,7 @@
                 <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" /> -->
 
                 <searchpanel>
-                    <field name="dgs_batch" enable_counters="1"/>
+                    <!-- <field name="dgs_batch" enable_counters="1"/> -->
                     <field name="exam_region" enable_counters="1"/>
                 </searchpanel>
             </search>
@@ -356,7 +356,18 @@
 
                         <notebook>
                             <page string="Ship Visits">
-                                <field name="ship_visits"/>
+                                <field name="ship_visits"  nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="name_of_ships"/>
+                                        <field name="imo_no"/>
+                                        <field name="name_of_ports_visited"/>
+                                        <field name="date_of_visits"/>
+                                        <field name="time_spent_on_ship"/>
+                                        <field name="bridge"/>
+                                        <field name="eng_room"/>
+                                        <field name="cargo_area"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Attendance">
                                 <label for="attendance_compliance_1" />
@@ -517,6 +528,7 @@
                     <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="user_id" optional="hide"/>
                     <field name="name"  optional="show"/>
+                    <field name="gender"  optional="show"/>
                     <field name="candidate_code"  optional="show"/>
                     <field name="institute_id"  optional="show"/>
                     <field name="institute_batch_id"  optional="show"/>
@@ -555,7 +567,14 @@
             </field>
         </record> -->
 
+        
 
+        <record id="gp_candidate_ship_visits_action" model="ir.actions.act_window">
+            <field name="name">Ship Visits</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">gp.candidate.ship.visits</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
 
     <record id="gp_candidate_ship_visits_form" model="ir.ui.view">
             <field name="name">gp.candidate.ship.visits.form</field>
@@ -586,21 +605,40 @@
             </field>
     </record>
 
+        
 
         <record id="gp_candidate_ship_visits_tree" model="ir.ui.view">
-            <field name="name">gp.candidate.ship.visits.form</field>
+            <field name="name">gp.candidate.ship.visits.tree</field>
             <field name="model">gp.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="dgs_batch" invisible='1'/>
+                    <field name="institute_code"/>
+                    <field name="institute"/>
+                    <field name="candidate_count"/>
                     <field name="name_of_ships"/>
                     <field name="imo_no"/>
                     <field name="name_of_ports_visited"/>
-                    <field name="date_of_visits"/>
+                    <field name="date_of_visits" widget="date" options="{'format': 'dd-MM-yy'}"/>
                     <field name="time_spent_on_ship"/>
-                    <field name="bridge"/>
-                    <field name="eng_room"/>
-                    <field name="cargo_area"/>
+                    <field name="exam_region"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="gp_candidate_ship_visits_search" model="ir.ui.view">
+            <field name="name">gp.candidate.ship.visits.search</field>
+            <field name="model">gp.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <search string="GP Candidate Search">
+
+                    <field name="dgs_batch"  />
+                    <field name="institute"/>
+                    <field name="candidate_id"  />
+                    <searchpanel>
+                        <field name="dgs_batch" enable_counters="1"/>
+                    </searchpanel>
+                </search>      
             </field>
         </record>
 
@@ -700,7 +738,18 @@
 
                         <notebook>
                             <page string="Ship Visits">
-                                <field name="ship_visits"/>
+                                <field name="ship_visits"  nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="name_of_ships"/>
+                                        <field name="imo_no"/>
+                                        <field name="name_of_ports_visited"/>
+                                        <field name="date_of_visits"/>
+                                        <field name="time_spent_on_ship"/>
+                                        <field name="bridge"/>
+                                        <field name="eng_room"/>
+                                        <field name="cargo_area"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Attendance">
                                 <label for="attendance_compliance_1" />
@@ -824,7 +873,7 @@
                     <field name="roll_no" />
                     <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
                     <searchpanel>
-                        <field name="dgs_batch" enable_counters="1"/>
+                        <!-- <field name="dgs_batch" enable_counters="1"/> -->
                         <field name="exam_region" enable_counters="1"/>
                     <!-- <field name="institute_batch_id" enable_counters="1"/> -->
                 </searchpanel> 
@@ -841,6 +890,7 @@
                     <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
                     <field name="user_id" optional="hide"/>
                     <field name="name"  optional="show"/>
+                    <field name="gender"  optional="show"/>
                     <field name="candidate_code"  optional="show"/>
                     <field name="institute_id"  optional="show"/>
                     <field name="institute_batch_id"  optional="show"/>
@@ -870,6 +920,14 @@
             </field>
         </record>
 
+
+               
+        <record id="ccmc_candidate_ship_visits_action" model="ir.actions.act_window">
+            <field name="name">Ship Visits</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ccmc.candidate.ship.visits</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
 
         <record id="ccmc_candidate_ship_visits_form" model="ir.ui.view">
             <field name="name">ccmc.candidate.ship.visits.form</field>
@@ -902,19 +960,37 @@
 
 
         <record id="ccmc_candidate_ship_visits_tree" model="ir.ui.view">
-            <field name="name">ccmc.candidate.ship.visits.form</field>
+            <field name="name">ccmc.candidate.ship.visits.tree</field>
             <field name="model">ccmc.candidate.ship.visits</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="dgs_batch" invisible='1'/>
+                    <field name="institute_code"/>
+                    <field name="institute"/>
+                    <field name="candidate_count"/>
                     <field name="name_of_ships"/>
                     <field name="imo_no"/>
                     <field name="name_of_ports_visited"/>
-                    <field name="date_of_visits"/>
+                    <field name="date_of_visits" widget="date" options="{'format': 'dd-MM-yy'}"/>
                     <field name="time_spent_on_ship"/>
-                    <field name="bridge"/>
-                    <field name="eng_room"/>
-                    <field name="cargo_area"/>
+                    <field name="exam_region"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="ccmc_candidate_ship_visits_search" model="ir.ui.view">
+            <field name="name">ccmc.candidate.ship.visits.search</field>
+            <field name="model">ccmc.candidate.ship.visits</field>
+            <field name="arch" type="xml">
+                <search string="ccmc Candidate Search">
+
+                    <field name="dgs_batch"  />
+                    <field name="institute"/>
+                    <field name="candidate_id"  />
+                    <searchpanel>
+                        <field name="dgs_batch" enable_counters="1"/>
+                    </searchpanel>
+                </search>      
             </field>
         </record>
 

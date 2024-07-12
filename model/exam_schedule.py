@@ -1798,7 +1798,7 @@ class ExamOralPracticalExaminers(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Examiners'
 
-    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="DGS Batch",store=True,required=False,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="Exam Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
@@ -2457,7 +2457,7 @@ class GPExam(models.Model):
 
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
@@ -3600,7 +3600,7 @@ class CCMCExam(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'CCMC Schedule'
     
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     

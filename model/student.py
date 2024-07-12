@@ -34,7 +34,7 @@ class GPCandidate(models.Model):
     _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
@@ -608,7 +608,14 @@ class GPSTCWCandidate(models.Model):
 class GPCandidateShipVisits(models.Model):
     _name = 'gp.candidate.ship.visits'
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description = 'Ship Visits'
+    _description = 'GP Ship Visits'
+    
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",related="candidate_id.institute_batch_id",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="candidate_id.institute_batch_id.dgs_batch",store=True)
+    institute = fields.Many2one("bes.institute",string="Name of Institute",related="candidate_id.institute_id",store=True,tracking=True)
+    institute_code = fields.Char(string="Code No.",related="institute.code",store=True)
+    candidate_count = fields.Integer("Number of Candidates",related="institute_batch_id.admit_card_alloted",tracking=True)
+    exam_region = fields.Many2one("exam.center",string="Exam Region",store=True,related="institute.exam_center",tracking=True)
     candidate_id = fields.Many2one("gp.candidate","Candidate",tracking=True)
     name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus",tracking=True)
     imo_no = fields.Char("Ship IMO Number",tracking=True)
@@ -627,7 +634,7 @@ class CCMCCandidate(models.Model):
     _description = 'CCMC Candidate'
     
     institute_batch_id = fields.Many2one("institute.ccmc.batches","Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",related="institute_batch_id.dgs_batch",store=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True,tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
@@ -1147,7 +1154,14 @@ class CCMCSTCWCandidate(models.Model):
 class CCMCCandidateShipVisits(models.Model):
     _name = 'ccmc.candidate.ship.visits'
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description = 'Ship Visits'
+    _description = 'CCMC Ship Visits'
+
+    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",related="candidate_id.institute_batch_id",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="candidate_id.institute_batch_id.dgs_batch",store=True)
+    institute = fields.Many2one("bes.institute",string="Name of Institute",related="candidate_id.institute_id",store=True,tracking=True)
+    institute_code = fields.Char(string="Code No.",related="institute.code",store=True)
+    candidate_count = fields.Integer("Number of Candidates",related="candidate_id.institute_batch_id.admit_card_alloted",tracking=True)
+    exam_region = fields.Many2one("exam.center",string="Exam Region",store=True,related="institute.exam_center",tracking=True)
     candidate_id = fields.Many2one("ccmc.candidate","Candidate",tracking=True)
     name_of_ships = fields.Char("Name of  the Ship Visited / Ship in Campus",tracking=True)
     imo_no = fields.Char("Ship IMO Number",tracking=True)
@@ -1772,7 +1786,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
     
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False,tracking=True)
     gp_exam = fields.Many2one("gp.exam.schedule",string="GP Exam",required=True,tracking=True)
     
     
@@ -2070,7 +2084,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
     _description = 'Register Exam'
     
     exam_region = fields.Many2one("exam.center",string="Exam Region",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False,tracking=True)
 
     institute_ids = fields.Many2many("bes.institute",string="Institute",compute="_compute_institute_ids",tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)

@@ -22,7 +22,7 @@ class InstituteGPBatches(models.Model):
     
     code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
     exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False,tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False,tracking=True)
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
     faculty_name = fields.Char("Faculty name",tracking=True)
     candidate_count = fields.Integer("Candidate Count",compute="_compute_candidate_count",tracking=True)
@@ -524,7 +524,7 @@ class InstituteCcmcBatches(models.Model):
     code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
     exam_region = fields.Char("Exam Region",related ='institute_id.exam_center.name',store=True,tracking=True)
     ccmc_batch_name = fields.Char("Batch Name",required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
     ccmc_faculty_name = fields.Char("Faculty name")
     candidate_user_invoice_criteria = fields.Boolean("Invoice Criteria",compute="compute_candidate_user_invoice_criteria")
     all_invoice_generated = fields.Boolean("All Invoice Generated",compute="compute_all_invoice_generated")
@@ -907,7 +907,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
 
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.gp.batches",string="Batches",required=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True)
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank")
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank")
     
@@ -960,7 +960,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     batch_id = fields.Many2one("institute.ccmc.batches",string="Batches",required=True)
     cookery_bakery_qb = fields.Many2one("survey.survey",string="Cookery Bakery Question Bank Template")
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
     
     
     def register(self,batch_id,candidates_ids):
