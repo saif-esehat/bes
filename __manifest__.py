@@ -40,6 +40,7 @@
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/template.xml',
+        'views/examination_report.xml',
         'reports/admit_card_template.xml',
         'reports/report_action.xml',
         'reports/sep_certificate.xml',

@@ -2711,6 +2711,21 @@ class GPExam(models.Model):
         ('pending', 'Pending'),
         ('done', 'Done'),
     ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
+    
+    absent_status = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Absent Status",compute="_compute_absent_status",store=True)
+    
+    @api.depends('gsk_oral_prac_attendance','gsk_online_attendance','mek_oral_prac_attendance','mek_online_attendance')
+    def _compute_absent_status(self):
+        for record in self:
+            if record.gsk_oral_prac_attendance == 'absent' and record.gsk_online_attendance == 'absent' and record.mek_oral_prac_attendance == 'absent' and record.mek_online_attendance == 'absent':
+                record.absent_status = "absent"
+            elif record.gsk_oral_prac_attendance == 'absent' or record.gsk_online_attendance == 'absent' or record.mek_oral_prac_attendance == 'absent' or record.mek_online_attendance == 'absent':
+                record.absent_status = "present"
+            else:
+                 record.absent_status = "present"
 
     hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
     hold_certificate = fields.Boolean("Hold Certificate", default=False)
