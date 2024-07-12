@@ -2477,7 +2477,8 @@ class IntegrityViolationWizard(models.TransientModel):
             #         'res_id': record.id,
             #     })
 
-    
+
+
 
     
     

@@ -289,9 +289,10 @@ class DGSBatchReport(models.AbstractModel):
 
         if report_type == 'Fresh' and course == 'GP':
             exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')])
-            self.get_pass_percentage(exams)
+            # self.get_pass_percentage(exams)
         elif report_type == 'Repeater' and course == 'GP':
             exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')])
+            print(exams)
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
         institute = self.env['bes.institute'].sudo().search([])
         # import wdb; wdb.set_trace(); 
