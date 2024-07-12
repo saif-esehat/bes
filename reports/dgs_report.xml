@@ -97,8 +97,11 @@
                                     <td><span t-esc="exam.gp_candidate.institute_id.name"/></td>
                                     <td><span t-esc="exam.gp_candidate.name"/></td>
                                     <td style="text-align:center; white-space: nowrap;"><span t-esc="exam.gp_candidate.dob"/></td>
-
-                                    <t t-if="exam.gsk_oral_prac_status == 'passed'">
+                                    
+                                    <t t-if="exam.gsk_oral_prac_carry_forward">
+                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.gsk_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_oral_prac_attendance == 'absent'">
@@ -107,16 +110,24 @@
                                     <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
                                     </t>
-                                    <t t-if="exam.mek_oral_prac_status == 'passed'">
+
+                                    <t t-if="exam.mek_oral_prac_carry_forward">
+                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.mek_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_oral_prac_attendance == 'absent'">
                                         <td style="text-align:center; color:blue;"><strong>A</strong></td>
                                     </t>
-                                     <t t-else="">
+                                    <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
-                                     </t>
-                                     <t t-if="exam.mek_online_status == 'passed'">
+                                    </t>
+
+                                    <t t-if="exam.mek_online_carry_forward">
+                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.mek_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_online_attendance == 'absent'">
@@ -125,7 +136,11 @@
                                     <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
                                     </t>
-                                    <t t-if="exam.gsk_online_status == 'passed'">
+
+                                    <t t-if="exam.gsk_online_carry_forward">
+                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.gsk_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_online_attendance == 'absent'">
@@ -217,21 +232,30 @@
                                     <td><span t-esc="exam.ccmc_candidate.name"/></td>
                                     <td style="text-align:center; white-space: nowrap;"><span t-esc="exam.ccmc_candidate.dob"/></td>
 
-                                    <t t-if="exam.cookery_bakery_prac_status == 'passed'">
+                                    <t t-if="exam.cookery_prac_carry_forward">
+                                        <td style="text-align:center;color: green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.cookery_bakery_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
                                     </t>
 
-                                    <t t-if="exam.ccmc_oral_prac_status == 'passed'">
+                                    <t t-if="exam.cookery_oral_carry_forward">
+                                        <td style="text-align:center;color: green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.ccmc_oral_prac_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-else="">
                                         <td style="text-align: center; color: red;"><strong>F</strong></td>
                                     </t>
 
-                                    <t t-if="exam.ccmc_online_status == 'passed'">
+                                    <t t-if="exam.cookery_gsk_online_carry_forward">
+                                        <td style="text-align:center;color: green;"><strong>AP</strong></td>
+                                    </t>
+                                    <t t-elif="exam.ccmc_online_status == 'passed'">
                                         <td style="text-align:center"><strong>P</strong></td>
                                     </t>
                                     <t t-else="">
