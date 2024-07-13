@@ -2030,10 +2030,7 @@ class ExaminerPortal(CustomerPortal):
             #     toal_ccmc_rating += int(gsk_ccmc)  
 
             remarks = row[8]
-<<<<<<< HEAD
-=======
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no),('candidate_code','=',candidate_code_no)])
->>>>>>> 06a06ffa0a227671ec04fc94f3292560de6154d3
             candidate.ccmc_oral._compute_ccmc_rating_total()
             candidate = request.env['ccmc.exam.schedule'].sudo().search([('exam_id','=',roll_no)])
             if candidate and candidate.ccmc_oral:

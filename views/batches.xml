@@ -421,6 +421,7 @@
                         <button name="print_gp_fresh" string="GP Report" type="object" class="btn-primary" />
                         <button name="print_ccmc_fresh" string="CCMC Report" type="object" class="btn-primary" />
                         <button name="get_pass_percentage" string="Generate Graph" type="object" class="btn-primary" />
+                        <button name="ccmc_get_pass_percentage" string="Generate Graph CCMC" type="object" class="btn-primary" />
                         <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
                         <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
                         <field name="state" widget="statusbar"/>
@@ -453,7 +454,8 @@
                             <field name="certificate_issue_date"/>
                         </group>
                         <group>
-                            <field name="plot_image" widget="image" />
+                            <field name="gp_plot_image" widget="image" />
+                            <field name="ccmc_plot_image" widget="image" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">
