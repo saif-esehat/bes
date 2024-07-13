@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="dgs_report_custom_header_footer">
+        <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
+            <div class="row" style="text-align:center; font-size:18px;">
+                <div class="col-12">
+                    All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px" t-esc="report_type" />
+                    <t t-if="course == 'GP'">
+                        <strong>GP RATING <span t-esc="type"/> - 
+                        </strong>
+                    </t>
+                    <t t-if="course == 'CCMC'">
+                        <strong>CCMC RATING <span t-esc="type"/> - 
+                        </strong>
+                    </t>
+                   
+                </div>
+            </div >
+        </div>
+        <div t-attf-class="article" t-att-style="report_header_style">
+            <t t-out="0" />
+        </div>
+         <!-- o_standard_footer -->
+        <div t-attf-class="footer">
+            <div class="row">
+                <div class="col-12 pull-left">
+                    <small>
+                        <span>Page</span>
+                        <span class="page" />
+                        of
+                        <span class="topage" />
+                    </small>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <template id="summarised_gp_report">
+        <t t-call="web.html_container">
+            <t t-call="bes.dgs_report_custom_header_footer">
+                <t t-foreach="docs" t-as="doc">
+                    <style>
+                        .black-bordered-table {
+                            width: 100%;
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            margin-top: 30px;
+                        }
+                        th, td, tr {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding: 10px;
+                            border-collapse: collapse;
+                        }
+                        thead {
+                            padding-bottom: 0px;
+                        }
+                        th {
+                            vertical-align: bottom;
+                        }
+                    </style>
+                    <table class="black-bordered-table" style="" border="1">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Code No.</th>
+                                <th>Name of the Institute</th>
+                                <th>Applied</th>
+                                <th>Candidate Appear</th>
+                                <th>GSK (P.O.J) Pass - Applied</th>
+                                <th>GSK (P.O.J) Pass - % Pass</th>
+                                <th>MEK (P.O.J) Pass - Applied</th>
+                                <th>MEK (P.O.J) Pass - % Pass</th>
+                                <th>GSK Online Pass - Applied</th>
+                                <th>GSK Online Pass - % Pass</th>
+                                <th>MEK Online Pass - Applied</th>
+                                <th>MEK Online Pass - % Pass</th>
+                                <th>Overall Pass</th>
+                                <th>Overall Pass %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="index" t-value="0"/>
+                            
+                            <t t-foreach="exam_centers" t-as="center">
+                                <!-- <tr>
+                                    <td colspan="13"><strong>Exam Region: <span t-esc="center.name"/></strong></td>
+                                </tr> -->
+                                <t t-foreach="institutes.filtered(lambda i: i.exam_center.id == center.id)" t-as="institute">
+                                    <!-- <t t-foreach="exams.filtered(lambda e: e.gp_candidate.institute_id.id == institute.id)" t-as="exam"> -->
+                                        <tr>
+                                            <t t-set="index" t-value="index + 1"/>
+                                            <td><span t-esc="index"/></td>
+                                            <td><span  />B02</td>
+                                            <td><span  />B.P. Marine</td>
+                                            <td><span  />398</td>
+                                            <td><span  />398</td>
+                                            <td><span  />359</td>
+                                            <td><span  />90.2%</td>
+                                            <td><span  />387</td>
+                                            <td><span  />97.2%</td>
+                                            <td><span  />365</td>
+                                            <td><span  />91.7%</td>
+                                            <td><span  />378</td>
+                                            <td><span  />95.0%</td>
+                                            <td><span  />318</td>
+                                            <td><span  />79.9%</td>
+                                        </tr>
+                                    <!-- </t> -->
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </t>
+    </template>
+    
+    <template id="summarised_ccmc_report">
+        <t t-call="web.html_container">
+            <t t-call="bes.dgs_report_custom_header_footer">
+                <t t-foreach="docs" t-as="doc">
+                    <style>
+                        .black-bordered-table {
+                            width: 100%;
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            margin-top: 30px;
+                        }
+                        th, td, tr {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding: 10px;
+                            border-collapse: collapse;
+                        }
+                        thead {
+                            padding-bottom: 0px;
+                        }
+                        th {
+                            vertical-align: bottom;
+                        }
+                    </style>
+                    <table class="black-bordered-table" style="" border="1">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Code No.</th>
+                                <th>Name of the Institute</th>
+                                <th>Applied</th>
+                                <th>Candidate Appear</th>
+                                <th>Practical Pass - Appeared</th>
+                                <th>Practical Pass</th>
+                                <th>Practical Pass - % Pass</th>
+                                <th>Oral Pass - Appeared</th>
+                                <th>Oral Pass</th>
+                                <th>Oral Pass - % Pass</th>
+                                <th>Online Pass - Appeared</th>
+                                <th>Online Pass</th>
+                                <th>Online Pass - % Pass</th>
+                                <th>Overall Pass</th>
+                                <th>Overall Pass %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="index" t-value="0"/>
+                            
+                            <t t-foreach="exam_centers" t-as="center">
+                                <!-- <tr>
+                                    <td colspan="13"><strong>Exam Region: <span t-esc="center.name"/></strong></td>
+                                </tr> -->
+                                <t t-foreach="institutes.filtered(lambda i: i.exam_center.id == center.id)" t-as="institute">
+                                    <!-- <t t-foreach="exams" t-as="exam"> -->
+                                        <tr>
+                                            <t t-set="index" t-value="index + 1"/>
+                                            <td><span t-esc="index"/></td>
+                                            <td><span  />B02</td>
+                                            <td><span  />B.P. Marine</td>
+                                            <td><span  />50</td>
+                                            <td><span  />50</td>
+                                            <td><span  />50</td>
+                                            <td><span  />50</td>
+                                            <td><span  />100%</td>
+                                            <td><span  />50</td>
+                                            <td><span  />48</td>
+                                            <td><span  />96.0%</td>
+                                            <td><span  />50</td>
+                                            <td><span  />43</td>
+                                            <td><span  />86.0%</td>
+                                            <td><span  />42</td>
+                                            <td><span  />84.0%</td>
+                                        </tr>
+                                    <!-- </t> -->
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>  

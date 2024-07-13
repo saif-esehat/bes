@@ -115,6 +115,25 @@
         file="bes.report_batches"
     />
 
+    <record id="summarised_gp_report_action" model="ir.actions.report">
+        <field name="name">Summarised GP Report</field>
+        <field name="model">examination.report</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.summarised_gp_report</field>
+        <field name="report_file">bes.summarised_report</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+    </record>
+
+    <record id="summarised_ccmc_report_action" model="ir.actions.report">
+        <field name="name">Summarised CCMC Report</field>
+        <field name="model">examination.report</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.summarised_ccmc_report</field>
+        <field name="report_file">bes.summarised_report</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+    </record>
 
 
 </odoo>

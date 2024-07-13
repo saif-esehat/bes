@@ -50,6 +50,7 @@
         'reports/admit_card_template_ccmc.xml',
         'reports/dgs_report.xml',
         'reports/attendance_sheet.xml',
+        'reports/summarised_report.xml',
         
         
 ],

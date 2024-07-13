@@ -82,7 +82,37 @@ class ExaminationReport(models.Model):
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
         'context': {}
-        }       
+        }      
+
+    def print_summarised_gp_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'GP',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas) 
+   
+    def print_summarised_ccmc_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'CCMC',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
     
 
 
@@ -114,5 +144,66 @@ class InsititutePassPercentage(models.Model):
             else:
                 record.percentage = 0.0
 
+class SummarisedGPReport(models.AbstractModel):
+    _name = "report.bes.summarised_gp_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "Summarised GP Report"
     
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['examination.report'].sudo().browse(docids)
+        report_type = data['report_type']
+        course = data['course']
+
+        if report_type == 'Fresh' and course == 'GP':
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
+        elif report_type == 'Repeater' and course == 'GP':
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
+        
+        institutes = self.env['bes.institute'].sudo().search([], order='code asc')
+        exam_centers = self.env['exam.center'].sudo().search([])
+
+        return {
+            'docids': docids,
+            'doc_model': 'gp.exam.schedule',
+            'docs': docs1,
+            'exams': exams,
+            'institutes': institutes,
+            'exam_centers': exam_centers,
+            'report_type': report_type,
+            'course': course
+        }
+
+class SummarisedCCMCReport(models.AbstractModel):
+    _name = "report.bes.summarised_ccmc_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "Summarised CCMC Report"
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['examination.report'].sudo().browse(docids)
+        report_type = data['report_type']
+        course = data['course']
+
+        if report_type == 'Fresh' and course == 'CCMC':
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
+        elif report_type == 'Repeater' and course == 'CCMC':
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
+        
+        institutes = self.env['bes.institute'].sudo().search([], order='code asc')
+        exam_centers = self.env['exam.center'].sudo().search([])
+
+        return {
+            'docids': docids,
+            'doc_model': 'ccmc.exam.schedule',
+            'docs': docs1,
+            'exams': exams,
+            'institutes': institutes,
+            'exam_centers': exam_centers,
+            'report_type': report_type,
+            'course': course
+        }
+
     
