@@ -107,18 +107,18 @@
 
                             <group style="width:50%;">
                                 <label for="principal_name" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="principal_name" nolabel="1" style="margin-top: 14px;" />
+                                <field name="principal_name" nolabel="1" style="margin-top: 14px;" required="1"/>
                                 <label for="principal_phone" style="margin-bottom:10px; margin-top: 15px;" />
-                                <field name="principal_phone" style="margin-top: 14px;" nolabel="1"/>
+                                <field name="principal_phone" style="margin-top: 14px;" nolabel="1" required="1"/>
                                 <label for="principal_mobile" style="margin-bottom:10px; margin-top: 15px;" />
-                                <field name="principal_mobile" style="margin-bottom:10px; margin-top: 15px;" nolabel="1"/>
+                                <field name="principal_mobile" style="margin-bottom:10px; margin-top: 15px;" nolabel="1" required="1"/>
                                 <label for="principal_email" style="margin-bottom:10px; margin-top: 15px;"/>
-                                <field name="principal_email" style="margin-bottom:10px; margin-top: 15px;" nolabel="1"/>
+                                <field name="principal_email" style="margin-bottom:10px; margin-top: 15px;" nolabel="1" required="1"/>
                             </group>
                             <group style="width:50%;">
                                 <label for="admin_phone" style="margin-bottom:10px; margin-top: 15px;"/>
                                 <field name="admin_phone" nolabel="1"/>
-                                <label for="admin_mobile" style="margin-bottom:10px; margin-top: 15px;"/>
+                                <label for="admin_mobile" style="margin-bottom:10px; margin-top: 15px;" required="1"/>
                                 <field name="admin_mobile" nolabel="1"/>
                                 <label for="admin_email" style="margin-bottom:10px; margin-top: 15px;"/>
                                 <field name="admin_email" nolabel="1"/>

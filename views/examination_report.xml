@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_examination_report_tree" model="ir.ui.view">
+            <field name="name">examination.report.tree</field>
+            <field name="model">examination.report</field>
+            <field name="arch" type="xml">
+                <tree string="Examination Reports">
+                    <field name="examination_batch"/>
+                    <field name="course" optional="show"/>                  
+                    <field name="exam_type" optional="show"/>   
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="institute_pass_percentage_filter" model="ir.ui.view">
+            <field name="name">institute.pass.percentage.filter</field>
+            <field name="model">institute.pass.percentage</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="percentage"/>
+                    <filter string="Percentage &lt; 80" name="percentage_less_than_80" domain="[('percentage', '&lt;', 80)]"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="view_examination_report_form" model="ir.ui.view">
+            <field name="name">examination.report.form</field>
+            <field name="model">examination.report</field>
+            <field name="arch" type="xml">
+                <form string="Examination Report">
+                    <header>
+                        <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
+                    </header>
+                    <sheet>
+
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_institute_wise_pass_percentage" string="Institute Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="open_subject_wise_pass_percentage" string="Subject Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
+                        <group>
+                            <field name="examination_batch"/>      
+                            <field name="course"/>                  
+                            <field name="exam_type"/>                         
+                        </group>
+                       
+                    </sheet>
+                     <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="activity_ids" widget="mail_activity"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_institute_pass_percentage_tree" model="ir.ui.view">
+            <field name="name">institute.pass.percentage.tree</field>
+            <field name="model">institute.pass.percentage</field>
+            <field name="arch" type="xml">
+                <tree string="Institute Pass Percentage">
+                    <field name="examination_report_batch"/>
+                    <field name="institute_id" optional="show"/>
+                    <field name="examination_batch" optional="show" />
+                    <field name="course" optional="show"/>
+                    <field name="applied" optional="show"/>
+                    <field name="appeared" optional="show"/>
+                    <field name="passed" optional="show"/>
+                    <field name="percentage" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_institute_pass_percentage_form" model="ir.ui.view">
+        <field name="name">institute.pass.percentage.form</field>
+        <field name="model">institute.pass.percentage</field>
+        <field name="arch" type="xml">
+            <form string="Institute Pass Percentage">
+                <sheet>
+
+                    <group>
+                        <field name="examination_report_batch"/>
+                        <field name="examination_batch"/>
+                        <field name="course"/>
+                        <field name="institute_id" />
+                        <field name="course" />
+                        <field name="applied" />
+                        <field name="appeared" />
+                        <field name="passed" />
+                        <field name="percentage" />
+                    </group>
+                </sheet>
+                 <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_subject_pass_percentage_tree" model="ir.ui.view">
+        <field name="name">subject.pass.percentage.tree</field>
+        <field name="model">subject.pass.percentage</field>
+        <field name="arch" type="xml">
+            <tree string="Subject Pass Percentage">
+                <field name="examination_report_batch"/>
+                <field name="examination_batch"/>
+                <field name="subject"/>
+                <field name="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_subject_pass_percentage_form" model="ir.ui.view">
+    <field name="name">subject.pass.percentage.form</field>
+    <field name="model">subject.pass.percentage</field>
+    <field name="arch" type="xml">
+        <form string="Subject Pass Percentage">
+                <sheet>
+                    <group>
+                        <field name="examination_report_batch"/>
+                        <field name="examination_batch"/>
+                        <field name="subject"/>
+                        <field name="percentage"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+    </data>
+</odoo>

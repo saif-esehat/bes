@@ -696,7 +696,7 @@
                                                     <input type="text" class="form-control" id="full_name" name="full_name"  t-att-value ="candidate.name"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="gender">Gender</label>
                                                     <select class="form-control" id="gender" name="gender" required="1">
@@ -705,19 +705,19 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="dob">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="e_mail">E-mail</label>
                                                     <input type="text" class="form-control" id="e_mail" name="e_mail" t-att-value ="candidate.email"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="mobile">Mobile</label>
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
@@ -727,13 +727,27 @@
                                                 <div class="form-group">
                                                     <label for="indos_no">Address</label>
                                                     <div class="form-group">
-                                                        <label for="">line 1</label><input type="text" class="form-control mb-3" id="street" name="street" t-att-value ="candidate.street"/>
-                                                        <label for="">line 2</label><input type="text" class="form-control" id="street2" name="street2" t-att-value ="candidate.street2"/>
+                                                        <label for="">Line 1</label><input type="text" class="form-control mb-3" id="street" name="street" t-att-value ="candidate.street"/>
+                                                        <label for="">Line 2</label><input type="text" class="form-control" id="street2" name="street2" t-att-value ="candidate.street2"/>
                                                         <label for="">City</label><input type="text" class="form-control" id="city" name="city" t-att-value ="candidate.city"/>
                                                         <label for="">Pincode</label><input type="text" class="form-control" id="zip" name="zip" t-att-value ="candidate.zip"/>
                                                     </div>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="state_id">State</label>
+                                                    <select class="form-control" id="state_id" name="state_id">
+                                                        <t t-foreach="states" t-as="state">
+                                                            <option t-attf-value="{{state.id}}" t-att-selected="candidate.state_id.id">
+                                                                <t t-out="state.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
                                             </div>
+                                            <!-- <div class="col-md-12">
+                                            </div> -->
+                                            
+                                            
                                         </div>
 
                                     </div>
@@ -2441,6 +2455,15 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="gender">Gender</label>
+                                                <select class="form-control" id="gender" name="gender" required="1">
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
                                                 <input type="text" class="form-control" id="indos_no" name="indos_no" />
                                             </div>
@@ -3213,6 +3236,15 @@
                                             <div class="form-group">
                                                 <label for="name">Full Name of Candidate as in INDOS</label>
                                                 <input type="text" class="form-control" id="name" name="name" required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="gender">Gender</label>
+                                                <select class="form-control" id="gender" name="gender" required="1">
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -4275,7 +4307,7 @@
                                                     <input type="text" class="form-control" id="full_name" name="full_name" t-att-value ="candidate.name"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="gender">Gender</label>
                                                     <select class="form-control" id="gender" name="gender" required="1">
@@ -4284,25 +4316,19 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="indos_no">Date of Birth</label>
                                                     <input type="date" class="form-control" id="dob" name="dob" t-att-value ="candidate.dob"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="indos_no">E-mail</label>
                                                     <input type="text" class="form-control" id="e_mail" name="e_mail" t-att-value ="candidate.email"/>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="indos_no">Phone</label>
-                                                    <input type="text" class="form-control" id="phone" name="phone" />
-                                                </div>
-                                            </div> -->
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="indos_no">Mobile</label>
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
@@ -4311,10 +4337,20 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Address</label>
-                                                    <label for="">line 1</label><input type="text" class="form-control mb-3" id="street" name="street" t-att-value ="candidate.street"/>
-                                                    <label for="">line 2</label><input type="text" class="form-control" id="street2" name="street2" t-att-value ="candidate.street2"/>
+                                                    <label for="">Line 1</label><input type="text" class="form-control mb-3" id="street" name="street" t-att-value ="candidate.street"/>
+                                                    <label for="">Line 2</label><input type="text" class="form-control" id="street2" name="street2" t-att-value ="candidate.street2"/>
                                                     <label for="">City</label><input type="text" class="form-control" id="city" name="city" t-att-value ="candidate.city"/>
                                                     <label for="">Pincode</label><input type="text" class="form-control" id="zip" name="zip" t-att-value ="candidate.zip"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="state_id">State</label>
+                                                    <select class="form-control" id="state_id" name="state_id">
+                                                        <t t-foreach="states" t-as="state">
+                                                            <option t-attf-value="{{state.id}}" t-att-selected="candidate.state_id.id">
+                                                                <t t-out="state.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>

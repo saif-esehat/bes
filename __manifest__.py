@@ -40,7 +40,11 @@
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/template.xml',
+<<<<<<< HEAD
         'views/timesheet.xml',
+=======
+        'views/examination_report.xml',
+>>>>>>> c86d16150d7863209c049d80da41a05aa019b10d
         'reports/admit_card_template.xml',
         'reports/report_action.xml',
         'reports/sep_certificate.xml',

@@ -105,7 +105,7 @@ class SurveyUserInputInherited(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute")
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="DGS Batch",required=False)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
     
     
     def generate_unique_string(self):

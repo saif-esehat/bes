@@ -122,8 +122,8 @@
                         <button name="open_reissue_wizard" string="Reissue Certificate" attrs="{'invisible': [('state', '!=', '6-pending_reissue_approved')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approved" string="Approve" attrs="{'invisible': [('state', '!=', '5-pending_reissue_approval')]}" type="object" class="btn-primary"/>
                         <button name="reissue_approval" string="Reissue Approval" attrs="{'invisible': [('state', '!=', '3-certified')]}" type="object" class="btn-primary"/>
-                        <button string="Report Violation" groups="group_report_violation" type="object" name="report_integrity_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'na')]}" class="btn-primary"/>
-                        <button string="Approve Violation" groups="group_approve_violation" type="object" confirm="Are you sure you want to Approve the Violation ? The candidate will be Inactivated" name="approve_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'pending_approval')]}" class="btn-primary"/>
+                        <button string="Report Violation" groups="bes.group_report_violation" type="object" name="report_integrity_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'na')]}" class="btn-primary"/>
+                        <button string="Approve Violation" groups="bes.group_approve_violation" type="object" confirm="Are you sure you want to Approve the Violation ? The candidate will be Inactivated" name="approve_violation"  attrs="{'invisible': [('exam_violation_state', '!=', 'pending_approval')]}" class="btn-primary"/>
 
                     </header>
                     <sheet>
@@ -134,6 +134,8 @@
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
                              <field name="exam_violation_state" invisible="1"/>
+                             <field name="absent_status" invisible="1"/>
+                             
                             
                             <field name="reissued" readonly="1"/>
                             <field name="reissued_date" attrs="{'invisible': [('reissued', '=', False)]}" />
@@ -342,6 +344,7 @@
                         <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
                     </header>
                     <field name="exam_id" optional="show"/>
+                    
                     <field name="exam_violation_state" optional="show"/>
                     <field name="gp_candidate" optional="show"/>
                     <field name="candidate_code" optional="show"/>
@@ -349,19 +352,28 @@
                     <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
+                    <!-- <field name="gsk_oral_marks" optional="show" string="GSK Oral" widget="badge" decoration-success="gsk_oral_marks >= 45" decoration-danger="gsk_oral_marks &lt; 45 or gsk_oral_marks == 0"/>
+                    <field name="gsk_practical_marks" optional="show" string="GSK Practical" widget="badge" decoration-success="gsk_practical_marks >= 60" decoration-danger="gsk_practical_marks &lt; 60 or gsk_practical_marks == 0"/> -->
                     <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
-                    <field name="gsk_practical_marks" optional="show"  string="GSK Practical"/>
+                    <field name="gsk_practical_marks"  optional="show"  string="GSK Practical"/>
                     <field name="gsk_total" optional="show" string="GSK O/P"/>
+                    <!-- <field name="mek_oral_marks" optional="show"  string="MEK Oral"  widget="badge" decoration-success="mek_oral_marks > 45" decoration-danger="mek_oral_marks &lt; 45"/>
+                    <field name="mek_practical_marks" optional="show" string="MEK Practical"  widget="badge" decoration-success="mek_practical_marks > 60" decoration-danger="mek_practical_marks &lt; 60" /> -->
                     <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
-                    <field name="mek_practical_marks" optional="show" string="MEK Practical" />
+                    <field name="mek_practical_marks" optional="show" string="MEK Practical"/>
                     <field name="mek_total" optional="show" string="GSK O/P"/>
+                    <!-- <field name="gsk_online_marks" optional="show"  widget="badge" decoration-success="gsk_online_marks > 45" decoration-danger="gsk_online_marks &lt; 45"/> -->
+                    <!-- <field name="mek_online_marks" optional="show"  widget="badge" decoration-success="mek_online_marks > 45" decoration-danger="mek_online_marks &lt; 45"/> -->
                     <field name="gsk_online_marks" optional="show"/>
                     <field name="mek_online_marks" optional="show"/>
+
+
                     <field name="overall_marks" optional="show"/>
                     <field name="exam_criteria" optional="show"/>
                     <field name="stcw_criterias"  optional="show" widget="badge" decoration-success= "stcw_criterias == 'passed'" decoration-danger="stcw_criterias == 'pending'"/>
                     <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
                     <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
+                    <field name="absent_status"/>
                     <!-- <field name="stcw_criteria" optional="show"/>
                     <field name="attendance_criteria" optional="show"/>
                     <field name="ship_visit_criteria" optional="show"/> -->
@@ -544,6 +556,7 @@
                     <field name="user_state"  widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
+                    <field name="absent_status"/> 
                     <field name="result" string="Result Status" decoration-success= "result == 'passed'"  decoration-danger= "result == 'failed'" widget="badge" optional="show"/>
                     <field name="result_status" string="Certificate Status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
                     <field name="state" widget="badge" optional="show" />
