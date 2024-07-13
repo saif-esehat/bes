@@ -232,9 +232,11 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=', candidate_id)])
+        states = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN')])
         batches = candidate.institute_batch_id
         
-        vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches}
+        vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches, 'states':states}
         return request.render("bes.gp_candidate_profile_view", vals)
     
     @http.route(['/my/ccmccandidateprofile/<int:candidate_id>'], type="http", auth="user", website=True)
@@ -242,8 +244,10 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         candidate = request.env["ccmc.candidate"].sudo().search(
             [('id', '=', candidate_id)])
+        states = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN')])
         batches = candidate.institute_batch_id
-        vals = {'candidate': candidate, "page_name": "ccmc_candidate_form",'batches':batches}
+        vals = {'candidate': candidate, "page_name": "ccmc_candidate_form",'batches':batches, 'states':states}
         return request.render("bes.ccmc_candidate_profile_view", vals)
     
     @http.route(['/getcountrystate'],method=["GET"], type="http", auth="user", website=True)
@@ -437,6 +441,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
+            gender = 'male' if kw.get("gender") == 'Male' else 'female'
             dob = kw.get("dob")
             street = kw.get("street")
             street2 = kw.get("street2")
@@ -453,6 +458,7 @@ class InstitutePortal(CustomerPortal):
             
             candidate_data = {
                 "name": name,
+                "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
@@ -488,6 +494,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
+            gender = 'male' if kw.get("gender") == 'Male' else 'female'
             dob = kw.get("dob")
             street = kw.get("street")
             street2 = kw.get("street2")
@@ -504,6 +511,7 @@ class InstitutePortal(CustomerPortal):
             
             candidate_data = {
                 "name": name,
+                "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
@@ -1029,6 +1037,8 @@ class InstitutePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search(
             [('id', '=',int(kw.get("canidate_id")) )])
         
+        states = request.env['res.country.state'].sudo().search(
+                [('country_id.code', '=', 'IN')])
         
         
         if request.httprequest.method == 'POST':
@@ -1062,6 +1072,9 @@ class InstitutePortal(CustomerPortal):
                 'mobile':kw.get('mobile'),
                 'street':kw.get('street'),
                 'street2':kw.get('street2'),
+                'city':kw.get('city'),
+                'zip':kw.get('zip')
+                # 'state_id':kw.get('state_id')
             }
             
             for key, value in candidate_details.items():
@@ -1274,7 +1287,7 @@ class InstitutePortal(CustomerPortal):
         
         request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
         
-        request.env.cr.commit()
+        # request.env.cr.commit()
         candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate_id)])
         candidate._check_sign()
         candidate._check_image()
@@ -2073,7 +2086,7 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('N:N',10,unlocked)
 
         candidate_worksheet.protect()
-        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
@@ -2176,7 +2189,7 @@ class InstitutePortal(CustomerPortal):
 
         
         # instruction_worksheet.protect()
-        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
@@ -2355,7 +2368,7 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('N:N',10,unlocked)
         
         candidate_worksheet.protect()
-        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 
@@ -2460,7 +2473,7 @@ class InstitutePortal(CustomerPortal):
 
         
         # instruction_worksheet.protect()
-        date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
         # number_format = workbook.add_format({'num_format': '0000000000', 'locked': False})
         # zip_format = workbook.add_format({'num_format': '000000', 'locked': False})
 

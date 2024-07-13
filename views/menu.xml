@@ -36,11 +36,13 @@
             <!-- Replace 'module_name' with the actual name of your module -->
             <field name="context">{}</field>
         </record>
+
+        <record id="action_examination_report" model="ir.actions.act_window">
+            <field name="name">Examination Reports</field>
+            <field name="res_model">examination.report</field>
+            <field name="view_mode">tree,form</field>
+        </record>
         
-
-
-
-
 
         <menuitem id="bes_menu" name="BES" groups="bes.group_bes_admin" sequence="1" web_icon="bes,static/description/icon.png" />
 
@@ -187,6 +189,14 @@
         name="Result Master" 
         action="dgs_batch_action" />
 
+        <menuitem id="report_master_menu" 
+            parent="bes_menu" 
+            name="Report Master" />
+
+ 
+        <menuitem id="menu_examination_report" name="Examination Reports"
+                parent="report_master_menu" action="action_examination_report" sequence="10"/>
+
 
         <record id="survey.menu_surveys" model="ir.ui.menu">
             <field name="name">Examinations</field>
@@ -195,7 +205,21 @@
         <record id="survey.menu_survey_form" model="ir.ui.menu">
             <field name="name">Examinations</field>
         </record>
+        
+        
+        <menuitem id="ship_visit_menu" 
+        parent="bes_menu" 
+        name="Ship Visits"/>
 
+        <menuitem id="gp_ship_visit_menu" 
+        parent="ship_visit_menu" 
+        name="GP Ship Visits" 
+        action="gp_candidate_ship_visits_action"/>
+        
+        <menuitem id="ccmc_ship_visit_menu" 
+        parent="ship_visit_menu" 
+        name="CCMC Ship Visits" 
+        action="ccmc_candidate_ship_visits_action"/>
 
         <menuitem id="exam_duty_menu" 
                 parent="bes_batch_examiner_duty_menus_group_examiner" 
