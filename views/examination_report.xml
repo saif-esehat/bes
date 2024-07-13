@@ -42,6 +42,8 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="open_institute_wise_pass_percentage" string="Institute Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
+                            <button name="open_subject_wise_pass_percentage" string="Subject Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                         </div>
                         <group>
                             <field name="examination_batch"/>      
@@ -104,6 +106,38 @@
             </form>
         </field>
     </record>
+
+    <record id="view_subject_pass_percentage_tree" model="ir.ui.view">
+        <field name="name">subject.pass.percentage.tree</field>
+        <field name="model">subject.pass.percentage</field>
+        <field name="arch" type="xml">
+            <tree string="Subject Pass Percentage">
+                <field name="examination_report_batch"/>
+                <field name="examination_batch"/>
+                <field name="subject"/>
+                <field name="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_subject_pass_percentage_form" model="ir.ui.view">
+    <field name="name">subject.pass.percentage.form</field>
+    <field name="model">subject.pass.percentage</field>
+    <field name="arch" type="xml">
+        <form string="Subject Pass Percentage">
+                <sheet>
+                    <group>
+                        <field name="examination_report_batch"/>
+                        <field name="examination_batch"/>
+                        <field name="subject"/>
+                        <field name="percentage"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
 
 
     </data>
