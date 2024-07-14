@@ -4,14 +4,18 @@
         <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
             <div class="row" style="text-align:center; font-size:18px;">
                 <div class="col-12">
-                    All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px" t-esc="report_type" />
+                    All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px"/> <br></br>
                     <t t-if="course == 'GP'">
-                        <strong>GP RATING <span t-esc="type"/> - 
-                        </strong>
+                        <strong>GP RATING <span t-esc="report_type"/> - </strong>
+                        <div class="col-12">
+                            Summary of Result of <span t-esc="report_type"/> Candidates
+                        </div>
                     </t>
                     <t t-if="course == 'CCMC'">
-                        <strong>CCMC RATING <span t-esc="type"/> - 
-                        </strong>
+                        <strong>CCMC RATING <span t-esc="report_type"/> - </strong>
+                        <div class="col-12">
+                            Summary of Result of <span t-esc="report_type"/> Candidates
+                        </div>
                     </t>
                    
                 </div>
@@ -61,7 +65,7 @@
                     </style>
                     <table class="black-bordered-table" style="" border="1">
                         <thead>
-                            <tr>
+                            <!-- <tr>
                                 <th>Sr. No.</th>
                                 <th>Code No.</th>
                                 <th>Name of the Institute</th>
@@ -77,6 +81,29 @@
                                 <th>MEK Online Pass - % Pass</th>
                                 <th>Overall Pass</th>
                                 <th>Overall Pass %</th>
+                            </tr> -->
+                            <tr>
+                                <th rowspan="2">Sr. No.</th>
+                                <th rowspan="2">Code No.</th>
+                                <th rowspan="2">Name of the Institute</th>
+                                <th rowspan="2">Applied</th>
+                                <th rowspan="2">Candidate Appear</th>
+                                <th colspan="2">GSK POJ Pass</th>
+                                <th colspan="2">MEK POJ Pass</th>
+                                <th colspan="2">GSK Online Pass</th>
+                                <th colspan="2">MEK Online Pass</th>
+                                <th rowspan="2">Overall Pass</th>
+                                <th rowspan="2">Overall Pass %</th>
+                            </tr>
+                            <tr>
+                                <th>Applied</th>
+                                <th>% Pass</th>
+                                <th>Applied</th>
+                                <th>% Pass</th>
+                                <th>Applied</th>
+                                <th>% Pass</th>
+                                <th>Applied</th>
+                                <th>% Pass</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,16 +120,16 @@
                                             <td><span t-esc="index"/></td>
                                             <td><span  />B02</td>
                                             <td><span  />B.P. Marine</td>
-                                            <td><span  />398</td>
-                                            <td><span  />398</td>
-                                            <td><span  />359</td>
-                                            <td><span  />90.2%</td>
-                                            <td><span  />387</td>
-                                            <td><span  />97.2%</td>
-                                            <td><span  />365</td>
-                                            <td><span  />91.7%</td>
-                                            <td><span  />378</td>
-                                            <td><span  />95.0%</td>
+                                            <td><span  />app 398</td>
+                                            <td><span  />can 398</td>
+                                            <td><span  />gsk a 359</td>
+                                            <td><span  />gsk p 90.2%</td>
+                                            <td><span  />mek a 387</td>
+                                            <td><span  />mek p 97.2%</td>
+                                            <td><span  />gsk o a 365</td>
+                                            <td><span  />gsk o p 91.7%</td>
+                                            <td><span  />mek o a 378</td>
+                                            <td><span  />mek o p 95.0%</td>
                                             <td><span  />318</td>
                                             <td><span  />79.9%</td>
                                         </tr>
@@ -143,22 +170,27 @@
                     <table class="black-bordered-table" style="" border="1">
                         <thead>
                             <tr>
-                                <th>Sr. No.</th>
-                                <th>Code No.</th>
-                                <th>Name of the Institute</th>
-                                <th>Applied</th>
-                                <th>Candidate Appear</th>
-                                <th>Practical Pass - Appeared</th>
-                                <th>Practical Pass</th>
-                                <th>Practical Pass - % Pass</th>
-                                <th>Oral Pass - Appeared</th>
-                                <th>Oral Pass</th>
-                                <th>Oral Pass - % Pass</th>
-                                <th>Online Pass - Appeared</th>
-                                <th>Online Pass</th>
-                                <th>Online Pass - % Pass</th>
-                                <th>Overall Pass</th>
-                                <th>Overall Pass %</th>
+                                <th rowspan="2">Sr. No.</th>
+                                <th rowspan="2">Code No.</th>
+                                <th rowspan="2">Name of the Institute</th>
+                                <th rowspan="2">Applied</th>
+                                <th rowspan="2">Candidate Appear</th>
+                                <th colspan="3">Practical</th>
+                                <th colspan="3">Oral</th>
+                                <th colspan="3">Online</th>
+                                <th rowspan="2">Overall Pass</th>
+                                <th rowspan="2">Overall Pass %</th>
+                            </tr>
+                            <tr>
+                                <th>Appeared</th>
+                                <th>Pass</th>
+                                <th>% Pass</th>
+                                <th>Appeared</th>
+                                <th>Pass</th>
+                                <th>% Pass</th>
+                                <th>Appeared</th>
+                                <th>Pass</th>
+                                <th>% Pass</th>
                             </tr>
                         </thead>
                         <tbody>
