@@ -284,7 +284,6 @@ class InsititutePassPercentage(models.Model):
             else:
                 record.percentage = 0.0
 
-<<<<<<< HEAD
 class SummarisedGPReport(models.AbstractModel):
     _name = "report.bes.summarised_gp_report"
     _inherit = ['mail.thread','mail.activity.mixin']
@@ -347,7 +346,6 @@ class SummarisedCCMCReport(models.AbstractModel):
             'course': course
         }
 
-=======
 
 class SubjectPassPercentage(models.Model):
     _name = "subject.pass.percentage"
@@ -378,5 +376,4 @@ class SubjectPassPercentage(models.Model):
     #             record.percentage = (record.passed / record.appeared) * 100
     #         else:
     #             record.percentage = 0.0
->>>>>>> 5e7f195c06c30d24f688fc2cd45e21b9919851f6
     
