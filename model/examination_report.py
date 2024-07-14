@@ -34,7 +34,104 @@ class ExaminationReport(models.Model):
     def generate_report(self):
         self.institute_wise_pass_percentage()
         self.subject_wise_pass_percentage()
+        self.summarised_report()
             
+
+    def summarised_report(self):
+        batch_id = self.examination_batch.id
+        
+        if self.course == 'gp':
+            institute_ids = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
+            for institute_id in institute_ids:
+                applied = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
+                appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
+                
+                #GSK Prac/Oral
+                gsk_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_oral_prac_status','=','passed')])
+                gsk_passed_percentage = (gsk_passed_count/appeared) * 100
+                
+                #MEK Prac/Oral
+                mek_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_oral_prac_status','=','passed')])
+                mek_passed_percentage = (mek_passed_count/appeared) * 100
+                
+                #GSK Online
+                gsk_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_status','=','passed')])
+                gsk_online_passed_percentage = (gsk_online_passed_count/appeared) * 100
+                
+                #MEK Online
+                mek_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_status','=','passed')])
+                mek_online_passed_percentage = (mek_online_passed_count/appeared) * 100
+                
+                
+                overall_passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('result','=','passed')])
+                
+                vals = {
+                    'examination_report_batch': self.id,  # Assuming 1 is the ID of the examination report batch
+                    'institute': institute_id,  # Assuming 2 is the ID of the institute
+                    'applied': applied,
+                    'candidate_appeared': appeared,
+                    'gsk_prac_oral_pass': gsk_passed_count,
+                    'gsk_prac_oral_pass_per': gsk_passed_percentage,
+                    'mek_prac_oral_pass': mek_passed_count,
+                    'mek_prac_oral_pass_per': mek_passed_percentage,
+                    'gsk_online_pass': gsk_online_passed_count,
+                    'gsk_online_pass_per': gsk_online_passed_percentage,
+                    'mek_online_pass': mek_online_passed_count,
+                    'mek_online_pass_per': mek_online_passed_percentage,
+                    'overall_pass': overall_passed,  # Sum of all passes
+                    # The overall_pass_per will be computed automatically
+                }
+                
+                self.env['summarised.gp.report'].create(vals)
+        
+        elif self.course == 'ccmc':
+            
+            batch_id = self.examination_batch.id
+
+            institute_ids = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
+            for institute_id in institute_ids:
+                print(institute_id)
+                applied = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
+                appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
+                print("appeared")
+                print(appeared)
+                practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed')])
+                print("practical")           
+                print(practical)
+                practical_percentage = (practical/appeared) * 100
+                
+                oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed')])
+                oral_percentage = (oral/appeared) * 100
+                
+                online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed')])
+                online_percentage = (online/appeared) * 100
+                
+                overall_passed = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('result','=','passed')])
+                
+                vals = {
+                        'examination_report_batch': self.id,  # Assuming 1 is the ID of the examination report batch
+                        'institute': institute_id,  # Assuming 2 is the ID of the institute
+                        'applied': applied,
+                        'candidate_appeared': appeared,
+                        'practical_pass_appeared': appeared,
+                        'practical_pass': practical,
+                        'practical_pass_per': practical_percentage,
+                        'oral_pass_appeared': appeared,
+                        'oral_pass': oral,
+                        'oral_pass_per': oral_percentage,
+                        'online_pass_appeared': appeared,
+                        'online_pass': online,
+                        'online_pass_per': online_percentage,
+                        'overall_pass': overall_passed,  # Sum of all passes
+                        # The overall_pass_per will be computed automatically
+                    }
+                self.env['summarised.ccmc.report'].create(vals)
+                
+
+                            
+
+        
+
     
     def subject_wise_pass_percentage(self):
         
@@ -309,8 +406,6 @@ class InsititutePassPercentage(models.Model):
             else:
                 record.percentage = 0.0
 
-<<<<<<< HEAD
-=======
 
 class SubjectPassPercentage(models.Model):
     _name = "subject.pass.percentage"
@@ -343,7 +438,6 @@ class SubjectPassPercentage(models.Model):
     #             record.percentage = 0.0
     
 
->>>>>>> 59a09091bc0449dfdf7e7be3dfb271e35a5a994c
 class SummarisedGPReport(models.AbstractModel):
     _name = "report.bes.summarised_gp_report"
     _inherit = ['mail.thread','mail.activity.mixin']
@@ -435,7 +529,17 @@ class GPSummarisedReport(models.Model):
     mek_online_pass_per = fields.Float("MEK Online Pass - % Pass",tracking=True)
     
     overall_pass = fields.Integer("Overall Pass",tracking=True)
-    overall_pass_per = fields.Float("Overall Pass %",tracking=True)
+    overall_pass_per = fields.Float("Overall Pass %",compute="_compute_percentage",store=True,tracking=True)
+    
+    @api.depends('candidate_appeared', 'overall_pass')
+    def _compute_percentage(self):
+        for record in self:
+            if record.candidate_appeared > 0:
+                record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
+            else:
+                record.percentage = 0.0
+    
+    
 
 class CCMCSummarisedReport(models.Model):
     _name = "summarised.ccmc.report"
@@ -464,13 +568,13 @@ class CCMCSummarisedReport(models.Model):
     online_pass_per = fields.Float("Online Pass - % Pass",tracking=True)
     
     overall_pass = fields.Integer("Overall Pass",tracking=True)
-    overall_pass_per = fields.Float("Overall Pass %",tracking=True)
+    overall_pass_per = fields.Float("Overall Pass %",compute="_compute_percentage",tracking=True)
     
-    # @api.depends('appeared', 'passed')
-    # def _compute_percentage(self):
-    #     for record in self:
-    #         if record.appeared > 0:
-    #             record.percentage = (record.passed / record.appeared) * 100
-    #         else:
-    #             record.percentage = 0.0
+    @api.depends('candidate_appeared', 'overall_pass')
+    def _compute_percentage(self):
+        for record in self:
+            if record.candidate_appeared > 0:
+                record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
+            else:
+                record.overall_pass_per = 0.0
     
