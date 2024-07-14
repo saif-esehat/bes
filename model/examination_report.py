@@ -223,6 +223,31 @@ class ExaminationReport(models.Model):
         'type': 'ir.actions.act_window',
         'context': {}
         }      
+    
+    def open_summarised_gp_report(self):
+        
+        return {
+        'name': 'Summarised GP Report',
+        'domain': [('examination_report_batch', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'summarised.gp.report',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {}
+        }      
+    def open_summarised_ccmc_report(self):
+        
+        return {
+        'name': 'Summarised CCMC Report',
+        'domain': [('examination_report_batch', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'summarised.ccmc.report',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {}
+        }      
 
     def print_summarised_gp_report(self):
         
@@ -284,6 +309,41 @@ class InsititutePassPercentage(models.Model):
             else:
                 record.percentage = 0.0
 
+<<<<<<< HEAD
+=======
+
+class SubjectPassPercentage(models.Model):
+    _name = "subject.pass.percentage"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Subject Pass Percentage'
+    
+    
+    examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
+    examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
+    subject = fields.Selection([
+        ('gsk_prac_oral', 'GSK Practical/Oral'),
+        ('mek_prac_oral', 'MEK Practical/Oral'),
+        ('gsk_online', 'GSK Online'),
+        ('mek_online', 'MEK Online'),
+        ('cookery_bakery', 'Cookery Bakery'),
+        ('ccmc_oral', 'CCMC Oral'),
+        ('ccmc_online', 'CCMC Online')
+    ], string='Subject')
+    
+    percentage = fields.Float("Percentage (%)")
+    
+    # percentage = fields.Float("Percentage (%)", compute='_compute_percentage', store=True)
+    
+    # @api.depends('appeared', 'passed')
+    # def _compute_percentage(self):
+    #     for record in self:
+    #         if record.appeared > 0:
+    #             record.percentage = (record.passed / record.appeared) * 100
+    #         else:
+    #             record.percentage = 0.0
+    
+
+>>>>>>> 59a09091bc0449dfdf7e7be3dfb271e35a5a994c
 class SummarisedGPReport(models.AbstractModel):
     _name = "report.bes.summarised_gp_report"
     _inherit = ['mail.thread','mail.activity.mixin']
@@ -347,27 +407,64 @@ class SummarisedCCMCReport(models.AbstractModel):
         }
 
 
-class SubjectPassPercentage(models.Model):
-    _name = "subject.pass.percentage"
+
+class GPSummarisedReport(models.Model):
+    _name = "summarised.gp.report"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Subject Pass Percentage'
+    _description= 'Summarised GP Report'
     
     
     examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
     examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
-    subject = fields.Selection([
-        ('gsk_prac_oral', 'GSK Practical/Oral'),
-        ('mek_prac_oral', 'MEK Practical/Oral'),
-        ('gsk_online', 'GSK Online'),
-        ('mek_online', 'MEK Online'),
-        ('cookery_bakery', 'Cookery Bakery'),
-        ('ccmc_oral', 'CCMC Oral'),
-        ('ccmc_online', 'CCMC Online')
-    ], string='Subject')
     
-    percentage = fields.Float("Percentage (%)")
+    institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
+    exam_region = fields.Many2one("exam.center", "Exam Region",related="institute.exam_center",tracking=True)
+    applied = fields.Integer("Applied",tracking=True)
+    candidate_appeared = fields.Integer("Candidate Appeared",tracking=True)
     
-    # percentage = fields.Float("Percentage (%)", compute='_compute_percentage', store=True)
+    gsk_prac_oral_pass = fields.Integer("GSK (P.O.J) Pass - Applied",tracking=True)
+    gsk_prac_oral_pass_per = fields.Float("GSK (P.O.J) Pass - % Pass",tracking=True)
+    
+    mek_prac_oral_pass = fields.Integer("MEK (P.O.J) Pass - Applied",tracking=True)
+    mek_prac_oral_pass_per = fields.Float("MEK (P.O.J) Pass - % Pass",tracking=True)
+    
+    gsk_online_pass = fields.Integer("GSK Online Pass - Applied",tracking=True)
+    gsk_online_pass_per = fields.Float("GSK Online Pass - % Pass",tracking=True)
+    
+    mek_online_pass = fields.Integer("MEK Online Pass - Applied",tracking=True)
+    mek_online_pass_per = fields.Float("MEK Online Pass - % Pass",tracking=True)
+    
+    overall_pass = fields.Integer("Overall Pass",tracking=True)
+    overall_pass_per = fields.Float("Overall Pass %",tracking=True)
+
+class CCMCSummarisedReport(models.Model):
+    _name = "summarised.ccmc.report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Summarised CCMC Report'
+    
+    
+    examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
+    examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
+    
+    institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
+    exam_region = fields.Many2one("exam.center", "Exam Region",related="institute.exam_center",tracking=True)
+    applied = fields.Integer("Applied",tracking=True)
+    candidate_appeared = fields.Integer("Candidate Appeared",tracking=True)
+    
+    practical_pass_appeared = fields.Integer("Practical Pass - Appeared",tracking=True)
+    practical_pass = fields.Integer("Practical Pass",tracking=True)
+    practical_pass_per = fields.Float("Practical Pass - % Pass",tracking=True)
+    
+    oral_pass_appeared = fields.Integer("Oral Pass - Appeared",tracking=True)
+    oral_pass = fields.Integer("Oral Pass",tracking=True)
+    oral_pass_per = fields.Float("Oral Pass - % Pass",tracking=True)
+    
+    online_pass_appeared = fields.Integer("Online Pass - Appeared",tracking=True)
+    online_pass = fields.Integer("Online Pass",tracking=True)
+    online_pass_per = fields.Float("Online Pass - % Pass",tracking=True)
+    
+    overall_pass = fields.Integer("Overall Pass",tracking=True)
+    overall_pass_per = fields.Float("Overall Pass %",tracking=True)
     
     # @api.depends('appeared', 'passed')
     # def _compute_percentage(self):
