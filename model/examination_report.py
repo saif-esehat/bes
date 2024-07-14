@@ -463,4 +463,11 @@ class CCMCSummarisedReport(models.Model):
     overall_pass = fields.Integer("Overall Pass",tracking=True)
     overall_pass_per = fields.Float("Overall Pass %",tracking=True)
     
+    # @api.depends('appeared', 'passed')
+    # def _compute_percentage(self):
+    #     for record in self:
+    #         if record.appeared > 0:
+    #             record.percentage = (record.passed / record.appeared) * 100
+    #         else:
+    #             record.percentage = 0.0
     
