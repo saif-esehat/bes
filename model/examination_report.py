@@ -448,7 +448,10 @@ class SummarisedGPReport(models.AbstractModel):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
         
-        data = self.env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docs1.id)])
+        data = self.env['summarised.gp.report'].sudo().search(
+                    [('examination_report_batch', '=', docs1.id)],
+                    order='institute_code asc'
+                )
         exam_region = data.exam_region.ids
         
         data = self.env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docs1.id)])
@@ -470,7 +473,8 @@ class SummarisedGPReport(models.AbstractModel):
             'docids': docids,
             'doc_model': 'summarised.gp.report',
             'docs': data,
-            'exam_regions': exam_region
+            'exam_regions': exam_region,
+            'examination_report':docs1
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
@@ -487,26 +491,31 @@ class SummarisedCCMCReport(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
-        report_type = data['report_type']
-        course = data['course']
+        data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)], order='institute_code asc')
+        exam_region = data.exam_region.ids
+        print(exam_region)
+        # report_type = data['report_type']
+        # course = data['course']
 
-        if report_type == 'Fresh' and course == 'CCMC':
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
-        elif report_type == 'Repeater' and course == 'CCMC':
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
+        # if report_type == 'Fresh' and course == 'CCMC':
+        #     exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
+        # elif report_type == 'Repeater' and course == 'CCMC':
+        #     exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
         
-        institutes = self.env['bes.institute'].sudo().search([], order='code asc')
-        exam_centers = self.env['exam.center'].sudo().search([])
+        # institutes = self.env['bes.institute'].sudo().search([], order='code asc')
+        # exam_centers = self.env['exam.center'].sudo().search([])
 
         return {
             'docids': docids,
             'doc_model': 'ccmc.exam.schedule',
-            'docs': docs1,
-            'exams': exams,
-            'institutes': institutes,
-            'exam_centers': exam_centers,
-            'report_type': report_type,
-            'course': course
+            'docs': docids,
+            'exam_regions': exam_region,
+            'examination_report':docs1
+            # 'exams': exams,
+            # 'institutes': institutes,
+            # 'exam_centers': exam_centers,
+            # 'report_type': report_type,
+            # 'course': course
         }
 
 
@@ -521,6 +530,7 @@ class GPSummarisedReport(models.Model):
     examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
     
     institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
+    institute_code = fields.Char("Institute Code",store=True,related="institute.code",tracking=True)    
     exam_region = fields.Many2one("exam.center", "Exam Region",store=True,related="institute.exam_center",tracking=True)
     applied = fields.Integer("Applied",tracking=True)
     candidate_appeared = fields.Integer("Candidate Appeared",tracking=True)
@@ -558,7 +568,7 @@ class CCMCSummarisedReport(models.Model):
     
     examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
     examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
-    
+    institute_code = fields.Char("Institute Code",store=True,related="institute.code",tracking=True)    
     institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
     exam_region = fields.Many2one("exam.center", "Exam Region",store=True,related="institute.exam_center",tracking=True)
     applied = fields.Integer("Applied",tracking=True)
