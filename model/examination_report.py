@@ -21,6 +21,8 @@ class ExaminationReport(models.Model):
     
     
     examination_batch = fields.Many2one("dgs.batches",string="Examination Batch",tracking=True)
+    
+    
     course = fields.Selection([
         ('gp', 'GP'),
         ('ccmc', 'CCMC')
@@ -31,6 +33,24 @@ class ExaminationReport(models.Model):
         ('repeater', 'Repeater')
     ],string='Type')
     
+    visible_gp_report_button = fields.Boolean(string='Visible GP Report Button',compute="show_repeater_report_button",tracking=True)
+    visible_ccmc_report_button = fields.Boolean(string='Visible CCMC Report Button',compute="show_repeater_report_button",tracking=True)
+
+    
+    @api.depends('exam_type','course')
+    def show_repeater_report_button(self):
+        for record in self:
+            if record.exam_type == 'fresh' and record.course == 'gp':
+                record.visible_gp_report_button = True
+                record.visible_ccmc_report_button = False
+            elif record.exam_type == 'fresh' and record.course == 'ccmc':
+                record.visible_gp_report_button = False
+                record.visible_ccmc_report_button = True
+            else:
+                record.visible_gp_report_button = False
+                record.visible_ccmc_report_button = False
+            
+    
     def generate_report(self):
         self.institute_wise_pass_percentage()
         self.subject_wise_pass_percentage()
@@ -40,7 +60,7 @@ class ExaminationReport(models.Model):
     def summarised_report(self):
         batch_id = self.examination_batch.id
         
-        if self.course == 'gp':
+        if self.course == 'gp' and self.exam_type == 'fresh':
             institute_ids = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
             for institute_id in institute_ids:
                 applied = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
@@ -84,7 +104,7 @@ class ExaminationReport(models.Model):
                 
                 self.env['summarised.gp.report'].create(vals)
         
-        elif self.course == 'ccmc':
+        elif self.course == 'ccmc' and self.exam_type == 'fresh':
             
             batch_id = self.examination_batch.id
 
