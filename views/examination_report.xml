@@ -149,6 +149,7 @@
                 <field name="examination_report_batch"/>
                 <field name="examination_batch" optional="show" />
                 <field name="exam_region" optional="show"/>
+                <field name="institute_code" optional="show"/>
                 <field name="institute" optional="show"/>
                 <field name="applied" optional="show"/>
                 <field name="candidate_appeared" optional="show"/>
@@ -216,6 +217,7 @@
                 <field name="examination_report_batch"/>
                 <field name="examination_batch" optional="show" />
                 <field name="exam_region" optional="show"/>
+                <field name="institute_code" optional="show"/>
                 <field name="institute" optional="show"/>
                 <field name="applied" optional="show"/>
                 <field name="candidate_appeared" optional="show"/>
