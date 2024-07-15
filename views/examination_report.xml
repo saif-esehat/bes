@@ -34,11 +34,19 @@
                 <form string="Examination Report">
                     <header>
                         <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
+                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'gp')]}"/>
+                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
                     </header>
                     <sheet>
 
                         <div class="oe_button_box" name="button_box">
                             <button name="open_institute_wise_pass_percentage" string="Institute Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="open_subject_wise_pass_percentage" string="Subject Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="open_summarised_gp_report" string="GP Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('course', '!=', 'gp')]}">
+                            </button>
+                            <button name="open_summarised_ccmc_report" string="CCMC Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('course', '!=', 'ccmc')]}">
                             </button>
                         </div>
                         <group>
@@ -76,25 +84,192 @@
         </record>
 
         <record id="view_institute_pass_percentage_form" model="ir.ui.view">
-        <field name="name">institute.pass.percentage.form</field>
-        <field name="model">institute.pass.percentage</field>
-        <field name="arch" type="xml">
-            <form string="Institute Pass Percentage">
-                <sheet>
+            <field name="name">institute.pass.percentage.form</field>
+            <field name="model">institute.pass.percentage</field>
+            <field name="arch" type="xml">
+                <form string="Institute Pass Percentage">
+                    <sheet>
 
+                        <group>
+                            <field name="examination_report_batch"/>
+                            <field name="examination_batch"/>
+                            <field name="course"/>
+                            <field name="institute_id" />
+                            <field name="course" />
+                            <field name="applied" />
+                            <field name="appeared" />
+                            <field name="passed" />
+                            <field name="percentage" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="activity_ids" widget="mail_activity"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    <record id="view_subject_pass_percentage_tree" model="ir.ui.view">
+        <field name="name">subject.pass.percentage.tree</field>
+        <field name="model">subject.pass.percentage</field>
+        <field name="arch" type="xml">
+            <tree string="Subject Pass Percentage">
+                <field name="examination_report_batch"/>
+                <field name="examination_batch"/>
+                <field name="subject"/>
+                <field name="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_subject_pass_percentage_form" model="ir.ui.view">
+    <field name="name">subject.pass.percentage.form</field>
+    <field name="model">subject.pass.percentage</field>
+    <field name="arch" type="xml">
+        <form string="Subject Pass Percentage">
+                <sheet>
                     <group>
                         <field name="examination_report_batch"/>
                         <field name="examination_batch"/>
-                        <field name="course"/>
-                        <field name="institute_id" />
-                        <field name="course" />
-                        <field name="applied" />
-                        <field name="appeared" />
-                        <field name="passed" />
-                        <field name="percentage" />
+                        <field name="subject"/>
+                        <field name="percentage"/>
                     </group>
                 </sheet>
-                 <div class="oe_chatter">
+            </form>
+        </field>
+    </record>
+
+    <record id="view_summarised_gp_report_tree" model="ir.ui.view">
+        <field name="name">summarised.gp.report.tree</field>
+        <field name="model">summarised.gp.report</field>
+        <field name="arch" type="xml">
+            <tree string="Summarised GP Report">
+                <field name="examination_report_batch"/>
+                <field name="examination_batch" optional="show" />
+                <field name="exam_region" optional="show"/>
+                <field name="institute" optional="show"/>
+                <field name="applied" optional="show"/>
+                <field name="candidate_appeared" optional="show"/>
+                <field name="gsk_prac_oral_pass" optional="show"/>
+                <field name="gsk_prac_oral_pass_per" optional="show"/>
+                <field name="mek_prac_oral_pass" optional="show"/>
+                <field name="mek_prac_oral_pass_per" optional="show"/>
+                <field name="gsk_online_pass" optional="show"/>
+                <field name="gsk_online_pass_per" optional="show"/>
+                <field name="mek_online_pass" optional="show"/>
+                <field name="mek_online_pass_per" optional="show"/>
+                <field name="overall_pass" optional="show"/>
+                <field name="overall_pass_per" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_summarised_gp_report_form" model="ir.ui.view">
+        <field name="name">summarised.gp.report.form</field>
+        <field name="model">summarised.gp.report</field>
+        <field name="arch" type="xml">
+            <form string="Summarised GP Report">
+                <sheet>
+                    <group>
+                        <group  style="width:60%;">
+                            <field name="examination_report_batch"/>
+                            <field name="examination_batch" />
+                            <field name="institute" />
+                            <field name="exam_region" />
+                        </group>
+                        <group style="width:50%;">
+                            <field name="applied" />
+                            <field name="gsk_prac_oral_pass" />
+                            <field name="mek_prac_oral_pass" />
+                            <field name="gsk_online_pass" />
+                            <field name="mek_online_pass" />
+                            <field name="overall_pass" />
+                    
+                        </group>
+                        <group style="width:50%;">
+                            <field name="candidate_appeared" />
+                            <field name="gsk_prac_oral_pass_per" />
+                            <field name="mek_prac_oral_pass_per" />
+                            <field name="gsk_online_pass_per" />
+                            <field name="mek_online_pass_per" />
+                            <field name="overall_pass_per" />
+                            
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_summarised_ccmc_report_tree" model="ir.ui.view">
+        <field name="name">summarised.ccmc.report.tree</field>
+        <field name="model">summarised.ccmc.report</field>
+        <field name="arch" type="xml">
+            <tree string="Summarised CCMC Report">
+                <field name="examination_report_batch"/>
+                <field name="examination_batch" optional="show" />
+                <field name="exam_region" optional="show"/>
+                <field name="institute" optional="show"/>
+                <field name="applied" optional="show"/>
+                <field name="candidate_appeared" optional="show"/>
+                <field name="practical_pass_appeared" optional="show"/>
+                <field name="practical_pass" optional="show"/>
+                <field name="practical_pass_per" optional="show"/>
+                <field name="oral_pass_appeared" optional="show"/>
+                <field name="oral_pass" optional="show"/>
+                <field name="oral_pass_per" optional="show"/>
+                <field name="online_pass_appeared" optional="show"/>
+                <field name="online_pass" optional="show"/>
+                <field name="online_pass_per" optional="show"/>
+                <field name="overall_pass" optional="show"/>
+                <field name="overall_pass_per" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_summarised_ccmc_report_form" model="ir.ui.view">
+        <field name="name">summarised.ccmc.report.form</field>
+        <field name="model">summarised.ccmc.report</field>
+        <field name="arch" type="xml">
+            <form string="Summarised CCMC Report">
+                <sheet>
+                    <group>
+                        <group  style="width:80%;">
+                            <field name="examination_report_batch"/>
+                            <field name="examination_batch" />
+                            <field name="institute" />
+                            <field name="exam_region" />
+                        </group>
+                        <group style="width:33.33%;">
+                            <field name="applied" />
+                            <field name="practical_pass_appeared"/>
+                            <field name="oral_pass_appeared"/>
+                            <field name="online_pass_appeared"/>
+                            <field name="overall_pass" />
+                        </group>
+                        <group style="width:33.33%;">
+                            <field name="candidate_appeared" />
+                            <field name="practical_pass"/>
+                            <field name="oral_pass"/>
+                            <field name="online_pass"/>
+                        </group>
+                        <group style="width:33.33%;">
+                            <br></br>
+                            <field name="practical_pass_per"/>
+                            <field name="oral_pass_per"/>
+                            <field name="online_pass_per"/>
+                            <field name="overall_pass_per" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>

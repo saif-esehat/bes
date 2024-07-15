@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+<!-- 
+        <menuitem id="time_sheet_parent" name="Time Sheet"/>
+
+        <menuitem id="time_sheet_id" 
+            name="Sub Menu" 
+            sequence="1"
+            parent="bes_menu"
+            action="action_time_sheet_form"/> -->
+
+        <!-- Define the Action -->
+    
+          
+        <!-- Define the Form View -->
+        <record id="view_time_sheet_report_form" model="ir.ui.view">
+            <field name="name">time.sheet.report.form</field>
+            <field name="model">time.sheet.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Time Sheet Report">
+
+                            <field name="examiner"/>
+                            <field name="institutes_id"/>
+                            <field name="place"/>
+                            <field name="exam_dates"/>
+                        </group>
+                        <notebook>
+                            <page string="Timesheet Examinations">
+                                <field name="timesheet_examinations" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="arrival_date_time"/>
+                                        <field name="online_examination"/>
+                                        <field name="completion_time"/>
+                                        <field name="candidate_examined"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Travel Details">
+                                <field name="travel_details">
+                                    <tree editable="bottom">
+                                        <field name="left_residence"/>
+                                        <field name="arrival_institute_hotel"/>
+                                        <field name="left_institute_hotel"/>
+                                        <field name="arrival_residence"/>
+                                        <field name="mode_of_travel"/>
+                                        <field name="expenses"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Custom Form">
+                                <field name="custom_form" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="remarks"/>
+                                        <field name="transport_logistics"/>
+                                        <field name="examiner_name"/>
+                                        <field name="co_ordinator_name"/>
+                                        <field name="bills_attached"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+

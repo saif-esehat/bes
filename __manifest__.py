@@ -40,6 +40,7 @@
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/template.xml',
+        'views/timesheet.xml',
         'views/examination_report.xml',
         'reports/admit_card_template.xml',
         'reports/report_action.xml',
@@ -50,6 +51,7 @@
         'reports/admit_card_template_ccmc.xml',
         'reports/dgs_report.xml',
         'reports/attendance_sheet.xml',
+        'reports/summarised_report.xml',
         
         
 ],
