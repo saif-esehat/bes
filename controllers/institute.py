@@ -2126,7 +2126,7 @@ class InstitutePortal(CustomerPortal):
 
         dropdown_values = ['Yes', 'No']
         gender_values = ['Male', 'Female']
-        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CG', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OR', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
 
         # Add data validation for SC/ST column
@@ -2150,7 +2150,7 @@ class InstitutePortal(CustomerPortal):
                 'AR': 'Arunachal Pradesh',
                 'AS': 'Assam',
                 'BR': 'Bihar',
-                'CT': 'Chhattisgarh',
+                'CG': 'Chhattisgarh',
                 'GA': 'Goa',
                 'GJ': 'Gujarat',
                 'HR': 'Haryana',
@@ -2163,7 +2163,7 @@ class InstitutePortal(CustomerPortal):
                 'ML': 'Meghalaya',
                 'MZ': 'Mizoram',
                 'NL': 'Nagaland',
-                'OD': 'Odisha',
+                'OR': 'Orissa',
                 'PB': 'Punjab',
                 'RJ': 'Rajasthan',
                 'SK': 'Sikkim',
@@ -2410,7 +2410,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
 
-        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CT', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OD', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
+        state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CG', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OR', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
         state_values2 = ['Jammu and Kashmir','Maharashtra','Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh','Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka','Kerala', 'Madhya Pradesh', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland','Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Chandigarh','Lakshadweep', 'Delhi', 'Puducherry','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu']
 
@@ -2436,7 +2436,7 @@ class InstitutePortal(CustomerPortal):
                 'AR': 'Arunachal Pradesh',
                 'AS': 'Assam',
                 'BR': 'Bihar',
-                'CT': 'Chhattisgarh',
+                'CG': 'Chhattisgarh',
                 'GA': 'Goa',
                 'GJ': 'Gujarat',
                 'HR': 'Haryana',
@@ -2449,7 +2449,7 @@ class InstitutePortal(CustomerPortal):
                 'ML': 'Meghalaya',
                 'MZ': 'Mizoram',
                 'NL': 'Nagaland',
-                'OD': 'Odisha',
+                'OR': 'Orissa',
                 'PB': 'Punjab',
                 'RJ': 'Rajasthan',
                 'SK': 'Sikkim',
@@ -2661,7 +2661,7 @@ class InstitutePortal(CustomerPortal):
                     'AR': 'Arunachal Pradesh',
                     'AS': 'Assam',
                     'BR': 'Bihar',
-                    'CT': 'Chhattisgarh',
+                    'CG': 'Chhattisgarh',
                     'GA': 'Goa',
                     'GJ': 'Gujarat',
                     'HR': 'Haryana',
@@ -2674,7 +2674,7 @@ class InstitutePortal(CustomerPortal):
                     'ML': 'Meghalaya',
                     'MZ': 'Mizoram',
                     'NL': 'Nagaland',
-                    'OD': 'Odisha',
+                    'OR': 'Orissa',
                     'PB': 'Punjab',
                     'RJ': 'Rajasthan',
                     'SK': 'Sikkim',
@@ -3113,7 +3113,7 @@ class InstitutePortal(CustomerPortal):
                         'ML': 'Meghalaya',
                         'MZ': 'Mizoram',
                         'NL': 'Nagaland',
-                        'OD': 'Odisha',
+                        'OR': 'Orissa',
                         'PB': 'Punjab',
                         'RJ': 'Rajasthan',
                         'SK': 'Sikkim',
@@ -3183,7 +3183,8 @@ class InstitutePortal(CustomerPortal):
                     state_value = row[7]
                     state = request.env['res.country.state'].sudo().search(
                         [('country_id.code', '=', 'IN'), ('code', '=', state_value)]
-                    ).id if state_value else False
+                    ).id
+                    # if state_value else False
                 except:
                     raise ValidationError(f"Missing State in row {row_num + 1}")
 
@@ -3282,7 +3283,7 @@ class InstitutePortal(CustomerPortal):
                 })
                 
             except:
-                raise ValidationError(f"Incorrect Excel format please check {row_num + 1}")
+                raise ValidationError(f"Incorrect Excel format please check row {row_num + 1}")
             
         # workbook.close()
 
