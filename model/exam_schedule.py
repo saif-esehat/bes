@@ -3709,7 +3709,7 @@ class CCMCExam(models.Model):
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
     candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code',store=True, required=True,tracking=True)
-    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",store=True,required=True,tracking=True)
 
 
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
