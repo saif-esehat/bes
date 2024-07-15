@@ -93,7 +93,7 @@ class DGSBatch(models.Model):
         bars = plt.bar(institutes, percentages, color='skyblue',width=0.5)
         plt.xlabel('Institutes')
         plt.ylabel('Pass Percentage')
-        plt.title('Pass Percentage of Students Institute-wise')
+        plt.title('GP Rating Pass Percentage of Students Institute-wise')
         plt.xticks(rotation=45,fontsize=7)
         plt.ylim(0, 110)
         
@@ -182,7 +182,7 @@ class DGSBatch(models.Model):
         bars = plt.bar(institutes, percentages, color='skyblue',width=0.5)
         plt.xlabel('Institutes')
         plt.ylabel('Pass Percentage')
-        plt.title('Pass Percentage of Students Institute-wise')
+        plt.title('CCMC Rating Pass Percentage of Students Institute-wise')
         plt.xticks(rotation=45,fontsize=7)
         plt.ylim(0, 110)
         

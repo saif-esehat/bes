@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="dgs_report_custom_header_footer_summarise">
+        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
         <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
-            <div class="row" style="text-align:center; font-size:18px;">
+            <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold','TimesNewRoman';">
                 <div class="col-12">
                     All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px"/> <br></br>
                     <t t-if="course == 'GP'">
-                        <strong>GP RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%B %Y')"/> </strong>
-                        <div class="col-12">
-                            Summary of Result of <span t-esc="report_type"/> Candidates
-                        </div>
+                        <strong>GP RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/> </strong>
                     </t>
                     <t t-if="course == 'CCMC'">
-                        <strong>CCMC RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%B %Y')"/> </strong>
-                        <div class="col-12">
-                            Summary of Result of <span t-esc="report_type"/> Candidates
-                        </div>
+                        <strong>CCMC RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/> </strong>
                     </t>
                    
                 </div>
@@ -41,6 +36,7 @@
     
     <template id="summarised_gp_report">
         <t t-call="web.html_container">
+            <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <t t-call="bes.dgs_report_custom_header_footer_summarise">
                 <!-- <t t-foreach="docs" t-as="doc"> -->
                     <style>
@@ -52,9 +48,10 @@
                         }
                         th, td, tr {
                             border: 1px solid black;
-                            text-align: left;
+                            text-align: center;
                             padding: 10px;
                             border-collapse: collapse;
+                            font-family: 'TimesNewRomanBold';
                         }
                         thead {
                             padding-bottom: 0px;
@@ -66,27 +63,30 @@
                     <table class="black-bordered-table" style="" border="1">
                         <thead>
                             <tr>
+                                <th colspan="15" style="text-align:center; font-size:25px; margin:0; padding:0; ">Summary of Result of <span t-esc="report_type"/> Candidates </th>
+                            </tr>
+                            <tr>
                                 <th rowspan="2">Sr. No.</th>
                                 <th rowspan="2">Code No.</th>
                                 <th rowspan="2">Name of the Institute</th>
                                 <th rowspan="2">Applied</th>
-                                <th rowspan="2">Candidate Appear</th>
-                                <th colspan="2">GSK POJ Pass</th>
-                                <th colspan="2">MEK POJ Pass</th>
-                                <th colspan="2">GSK Online Pass</th>
-                                <th colspan="2">MEK Online Pass</th>
-                                <th rowspan="2">Overall Pass</th>
-                                <th rowspan="2">Overall Pass %</th>
+                                <th rowspan="2">Candidate Appeard</th>
+                                <th colspan="2">GSK (P.O.J)</th>
+                                <th colspan="2">MEK (P.O.J)</th>
+                                <th colspan="2">GSK Online</th>
+                                <th colspan="2">MEK Online</th>
+                                <th rowspan="2">Overall Passed</th>
+                                <th rowspan="2">Overall Passed %</th>
                             </tr>
                             <tr>
-                                <th>Applied</th>
-                                <th>% Pass</th>
-                                <th>Applied</th>
-                                <th>% Pass</th>
-                                <th>Applied</th>
-                                <th>% Pass</th>
-                                <th>Applied</th>
-                                <th>% Pass</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -152,7 +152,6 @@
    
                                         <t t-if="institutes_index == institutes_length">
                                             <tr style="background-color: #f2f2f2;">
-                                                <!-- <td colspan="15" style="text-align: center;"><strong>End of Institutes List for this Exam Region</strong></td> -->
                                                 <td></td>
                                                 <td></td>
                                                 <td><span t-esc="institute.exam_region.name"/></td>
@@ -184,8 +183,6 @@
 
                                     <t t-if="region_index == region_length">
                                             <tr style="background-color: #f2f2f2;">
-                                                <!-- <td colspan="15" style="text-align: center;"><strong>All India Exit</strong></td> -->
-
                                                 <td></td>
                                                 <td></td>
                                                 <td>All India Results</td>
@@ -205,8 +202,8 @@
                                     </t>
                             </t>
 
-                            
-                        </tbody>
+                           
+                        </tbody> 
                     </table>
                 <!-- </t> -->
             </t>
@@ -215,6 +212,7 @@
     
     <template id="summarised_ccmc_report">
         <t t-call="web.html_container">
+            <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <t t-call="bes.dgs_report_custom_header_footer_summarise">
                 <!-- <t t-foreach="docs" t-as="doc"> -->
                     <style>
@@ -226,9 +224,10 @@
                         }
                         th, td, tr {
                             border: 1px solid black;
-                            text-align: left;
+                            text-align: center;
                             padding: 10px;
                             border-collapse: collapse;
+                            font-family: 'TimesNewRomanBold','TimesNewRoman';
                         }
                         thead {
                             padding-bottom: 0px;
@@ -240,27 +239,30 @@
                     <table class="black-bordered-table" style="" border="1">
                         <thead>
                             <tr>
+                                <th colspan="16" style="text-align:center; font-size:25px; margin:0; padding:0; ">Summary of Result of <span t-esc="report_type"/> Candidates </th>
+                            </tr>
+                            <tr>
                                 <th rowspan="2">Sr. No.</th>
                                 <th rowspan="2">Code No.</th>
                                 <th rowspan="2">Name of the Institute</th>
                                 <th rowspan="2">Applied</th>
-                                <th rowspan="2">Candidate Appear</th>
+                                <th rowspan="2">Candidate Appeard</th>
                                 <th colspan="3">Practical</th>
                                 <th colspan="3">Oral</th>
                                 <th colspan="3">Online</th>
-                                <th rowspan="2">Overall Pass</th>
-                                <th rowspan="2">Overall Pass %</th>
+                                <th rowspan="2">Overall Passed</th>
+                                <th rowspan="2">Overall Passed %</th>
                             </tr>
                             <tr>
                                 <th>Appeared</th>
-                                <th>Pass</th>
-                                <th>% Pass</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
                                 <th>Appeared</th>
-                                <th>Pass</th>
-                                <th>% Pass</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
                                 <th>Appeared</th>
-                                <th>Pass</th>
-                                <th>% Pass</th>
+                                <th>Passed</th>
+                                <th>% pass Institute wise</th>
                             </tr>
                         </thead>
                         <tbody>
