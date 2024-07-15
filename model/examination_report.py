@@ -470,4 +470,3 @@ class CCMCSummarisedReport(models.Model):
     #             record.percentage = (record.passed / record.appeared) * 100
     #         else:
     #             record.percentage = 0.0
-    
