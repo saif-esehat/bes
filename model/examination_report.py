@@ -449,7 +449,12 @@ class SummarisedGPReport(models.AbstractModel):
         docs1 = self.env['examination.report'].sudo().browse(docids)
         
         data = self.env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docs1.id)])
+        exam_region = data.exam_region.ids
+        
+        data = self.env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docs1.id)])
 
+        
+        print(exam_region)
         # report_type = data['report_type']
         # course = data['course']
 
@@ -465,6 +470,7 @@ class SummarisedGPReport(models.AbstractModel):
             'docids': docids,
             'doc_model': 'summarised.gp.report',
             'docs': data,
+            'exam_regions': exam_region
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
@@ -515,7 +521,7 @@ class GPSummarisedReport(models.Model):
     examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
     
     institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
-    exam_region = fields.Many2one("exam.center", "Exam Region",related="institute.exam_center",tracking=True)
+    exam_region = fields.Many2one("exam.center", "Exam Region",store=True,related="institute.exam_center",tracking=True)
     applied = fields.Integer("Applied",tracking=True)
     candidate_appeared = fields.Integer("Candidate Appeared",tracking=True)
     
@@ -554,7 +560,7 @@ class CCMCSummarisedReport(models.Model):
     examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
     
     institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
-    exam_region = fields.Many2one("exam.center", "Exam Region",related="institute.exam_center",tracking=True)
+    exam_region = fields.Many2one("exam.center", "Exam Region",store=True,related="institute.exam_center",tracking=True)
     applied = fields.Integer("Applied",tracking=True)
     candidate_appeared = fields.Integer("Candidate Appeared",tracking=True)
     
