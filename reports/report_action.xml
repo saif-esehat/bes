@@ -135,12 +135,12 @@
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
    
-    <record id="gp_graph_report_action" model="ir.actions.report">
-        <field name="name">GP Graph Report</field>
+    <record id="bar_graph_report_action" model="ir.actions.report">
+        <field name="name">Bar Graph Report</field>
         <field name="model">examination.report</field>
         <field name="report_type">qweb-html</field>
-        <field name="report_name">bes.graph_report</field>
-        <field name="report_file">bes.summarised_report</field>
+        <field name="report_name">bes.bar_graph_report</field>
+        <field name="report_file">bes.bar_graph_report</field>
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
 

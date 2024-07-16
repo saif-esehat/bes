@@ -394,7 +394,7 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)  
+        return self.env.ref('bes.bar_graph_report_action').report_action(self ,data=datas)  
    
     def print_summarised_ccmc_report(self):
         

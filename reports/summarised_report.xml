@@ -446,7 +446,7 @@
         <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
             <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
                 <div class="col-12">
-                    All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px"/> <br></br>
+                    BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  <span style="margin-left:5px; margin-right:5px"/> <br></br>
                     <t t-if="course == 'GP'">
                         <strong>GP RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/> </strong>
                     </t>
@@ -480,11 +480,10 @@
             <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <t t-call="bes.bar_graph_report_header">
 
-                Test
 
-                <!-- <t t-foreach="docs" t-as="doc"> -->
+                <t t-foreach="docs" t-as="doc">
 
-                <!-- </t> -->
+                </t>
             </t>
         </t>
     </template>
