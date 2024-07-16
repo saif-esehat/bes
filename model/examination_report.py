@@ -379,7 +379,22 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas) 
+        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
+    
+    def print_bar_graph_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'GP',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)  
    
     def print_summarised_ccmc_report(self):
         
@@ -395,6 +410,23 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
+           
+    def print_ship_visit_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'CCMC',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+
+        
     
     def print_gp_graph_report(self):
         
@@ -402,7 +434,7 @@ class ExaminationReport(models.Model):
             'doc_ids': self.id,
             'doc_model': 'examination.report',
             'docs': self,
-            'course': 'GP',
+
             'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
         }
         
@@ -411,7 +443,7 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.gp_graph_report_action').report_action(self ,data=datas) 
+        return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
     
 
 
@@ -623,6 +655,31 @@ class CCMCSummarisedReport(models.Model):
     
     overall_pass = fields.Integer("Overall Passed",tracking=True)
     overall_pass_per = fields.Float("Overall Passed %",compute="_compute_percentage",tracking=True)
+
+
+class ShipVisitReport(models.Model):
+    _name = "ship.visit.report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Ship Visit Report'
+    
+    examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
+    examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
+    
+    institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
+    exam_region = fields.Many2one("exam.center", "Exam Region",store=True,related="institute.exam_center",tracking=True)
+    code_no = fields.Char(related="institute.code", string="code_no")
+    name_institute = fields.Char(related="institute.name", string="Name_of_the_institute")
+    no_of_candidates = fields.Char(string="No_Of_Candidates")
+    no_of_ship_visit = fields.Char(string="No_Of_Ship_visit")
+    Name_of_ship_visit = fields.Char(string="Name_of_the_Ship_Visited_Ship_in_Campus")
+    imo_no = fields.Char(string="IMO_No")
+    name_of_the_port = fields.Char(string="Name_of_the_Port_Visited_Place_of_SIC")
+    date_visit = fields.Char(string="Date_of_Visit")
+    time_spend_on_ship = fields.Char(string="Time_Spend_on_Ship_Hrs")
+    provided= fields.Char(string="Provided_Evidence")
+    remark = fields.Char(string="Remark")
+    center = fields.Char(string="Center")
+
     
     @api.depends('candidate_appeared', 'overall_pass')
     def _compute_percentage(self):
@@ -631,5 +688,31 @@ class CCMCSummarisedReport(models.Model):
                 record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
             else:
                 record.overall_pass_per = 0.0
+                
+
+class BarGraphReport(models.AbstractModel):
+    _name = "report.bes.bar_graph_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "Bar Graph Report"
     
- 
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['examination.report'].sudo().browse(docids)
+        # data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
+        # exam_region = data.exam_region.ids
+       
+
+        return {
+            # 'docids': docids,
+            'doc_model': 'examination.report',
+            # 'docs': docids,
+            # 'exam_regions': exam_region,
+            'examination_report':docs1
+            # 'exams': exams,
+            # 'institutes': institutes,
+            # 'exam_centers': exam_centers,
+            # 'report_type': report_type,
+            # 'course': course
+        }

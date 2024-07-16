@@ -439,20 +439,120 @@
             </t>
         </t>
     </template>
+        
+    <template id="ship_visit_report">
+        <t t-call="web.html_container">
+                <style>
+                    .black-bordered-table {
+                        width: 100%;
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        margin-top: 30px;
+                    }
+                    th, td, tr {
+                        border: 1px solid black;
+                        text-align: left;
+                        padding: 10px;
+                        border-collapse: collapse;
+                    }
+                    thead {
+                        padding-bottom: 0px;
+                    }
+                    th {
+                        vertical-align: bottom;
+                    }
+                </style>
+                <table class="black-bordered-table" style="" border="1">
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>Code No.</th>
+                            <th>Name of the Institute</th>
+                            <th>No of Candidate</th>
+                            <th>No of Ship Visit</th>
+                            <th>Name of tne Ship Visited/Ship in Campus</th>
+                            <th>IMO No.</th>
+                            <th>Name of the Port Visited Place of SIC</th>
+                            <th>Date of Visit</th>
+                            <th>Time Spend on Ship(Hrs)</th>
+                            <th>Provided Evidence</th>
+                            <th>Remrk</th>
+                            <th>Center</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="index" t-value="0"/>
+                            <tr>
+                                <t t-set="index" t-value="index + 1"/>
+                                <td><span t-esc="index"/></td>
+                                <td><span  />B02</td>
+                                <td><span  />B.P. Marine</td>
+                                <td><span  />398</td>
+                                <td><span  />11</td>
+                                <td><span  />MSC Vandya</td>
+                                <td><span  />9484467</td>
+                                <td><span  />JNPT</td>
+                                <td><span  />29-09-23</td>
+                                <td><span  />6Hrs</td>
+                                <td><span  />No</td>
+                                <td><span  />--</td>
+                                <td><span  />Mumbai</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </t>
+    </template>
 
-    <template id="graph_report">
+
+    <template id="bar_graph_report_header">
+        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+        <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
+            <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
+                <div class="col-12">
+                    All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px"/> <br></br>
+                    <t t-if="course == 'GP'">
+                        <strong>GP RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/> </strong>
+                    </t>
+                    <t t-if="course == 'CCMC'">
+                        <strong>CCMC RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/> </strong>
+                    </t>
+                   
+                </div>
+            </div >
+        </div>
+        <div t-attf-class="article" t-att-style="report_header_style">
+            <t t-out="0" />
+        </div>
+         <!-- o_standard_footer -->
+        <!-- <div t-attf-class="footer">
+            <div class="row">
+                <div class="col-12 pull-left">
+                    <small>
+                        <span>Page</span>
+                        <span class="page" />
+                        of
+                        <span class="topage" />
+                    </small>
+                </div>
+            </div>
+        </div> -->
+    </template>
+
+    <template id="bar_graph_report">
         <t t-call="web.html_container">
             <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+            <t t-call="bes.bar_graph_report_header">
 
-            <span>All India Results</span>
-            <t t-foreach="docs" t-as="doc">
-                <div class="container" style="text-align:center; border:2px solid black;">
-                    <h2>BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS</h2>
-                    <t t-if="doc.course == 'GP'">
-                        <h2><span t-esc="doc.course"/><span t-esc="doc.examination_batch"/></h2>
-                    </t>
-                </div>
+                Test
+
+                <!-- <t t-foreach="docs" t-as="doc"> -->
+
+                <!-- </t> -->
             </t>
         </t>
     </template>
+
+    
+
+
 </odoo>  
