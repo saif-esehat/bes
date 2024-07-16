@@ -2917,7 +2917,7 @@ class InstitutePortal(CustomerPortal):
                     raise ValidationError(f"Missing Full Name in row {row_num + 1}")
 
                 try:
-                    gender = 'male' if row[2] == 'Male' else 'female'
+                    gender = 'male' if row[2].lower() == 'male' else 'female'
                 except:
                     raise ValidationError(f"Missing Gender in row {row_num + 1}")
 
@@ -3150,7 +3150,7 @@ class InstitutePortal(CustomerPortal):
                     raise ValidationError(f"Missing Full Name in row {row_num + 1}")
 
                 try:
-                    gender = 'male' if row[2] == 'Male' else 'female'
+                    gender = 'male' if row[2].lower() == 'male' else 'female'
                 except:
                     raise ValidationError(f"Missing Gender in row {row_num + 1}")
 
