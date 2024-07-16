@@ -662,7 +662,6 @@ class ShipVisitReport(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Ship Visit Report'
     
-    
     examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
     examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
     
@@ -717,4 +716,3 @@ class BarGraphReport(models.AbstractModel):
             # 'report_type': report_type,
             # 'course': course
         }
-    
