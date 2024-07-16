@@ -3,7 +3,7 @@
     <template id="dgs_report_custom_header_footer_summarise">
         <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
         <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
-            <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold','TimesNewRoman';">
+            <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
                 <div class="col-12">
                     All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px"/> <br></br>
                     <t t-if="course == 'GP'">
@@ -51,10 +51,13 @@
                             text-align: center;
                             padding: 10px;
                             border-collapse: collapse;
-                            font-family: 'TimesNewRomanBold';
                         }
                         thead {
                             padding-bottom: 0px;
+                            font-family: 'TimesNewRomanBold';
+                        }
+                        td{
+                            font-family: 'TimesNewRoman';
                         }
                         th {
                             vertical-align: bottom;
