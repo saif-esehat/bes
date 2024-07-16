@@ -737,12 +737,12 @@
                                                     <label for="state_id">State</label>
                                                     <select class="form-control" id="state_id" name="state_id">
                                                         <t t-foreach="states" t-as="state">
-                                                            <option t-attf-value="{{state.id}}" t-att-selected="candidate.state_id.id">
-                                                                <t t-out="state.name"/>
+                                                            <option t-attf-value="{{state.id}}" t-att-selected="state.id == candidate.state_id.id">
+                                                                <t t-esc="state.name"/>
                                                             </option>
                                                         </t>
                                                     </select>
-                                                </div>
+                                                </div>                                                
                                             </div>
                                             <!-- <div class="col-md-12">
                                             </div> -->
@@ -4346,12 +4346,12 @@
                                                     <label for="state_id">State</label>
                                                     <select class="form-control" id="state_id" name="state_id">
                                                         <t t-foreach="states" t-as="state">
-                                                            <option t-attf-value="{{state.id}}" t-att-selected="candidate.state_id.id">
-                                                                <t t-out="state.name"/>
+                                                            <option t-attf-value="{{state.id}}" t-att-selected="state.id == candidate.state_id.id">
+                                                                <t t-esc="state.name"/>
                                                             </option>
                                                         </t>
                                                     </select>
-                                                </div>
+                                                </div> 
                                             </div>
                                         </div>
 

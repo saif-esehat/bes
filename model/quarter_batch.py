@@ -25,6 +25,8 @@ class DGSBatch(models.Model):
                       widget="date", 
                       date_format="%b-%y",tracking=True)
     
+
+    
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     mumbai_region = fields.Many2one("bes.institute",string="Mumbai Institute",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
@@ -46,17 +48,67 @@ class DGSBatch(models.Model):
     
     gp_plot_image = fields.Binary(string='Pass Percentage Plot')
     ccmc_plot_image = fields.Binary(string='Pass Percentage Plot')
+    
+    report_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('generated', 'Generated'),
+    
+    ], string='Report Status', default='pending',tracking=True)
+    
+    
+    visible_generate_report = fields.Boolean(string='Visible Generate Button',compute="show_generate_report_button",tracking=True)
 
     
+    
+    @api.depends('state','report_status')    
+    def show_generate_report_button(self):
+        for record in self:
+            if record.state == '2-confirmed' and record.report_status == 'pending':
+                record.visible_generate_report = True
+            else:
+                record.visible_generate_report = False
+                
+
+    def open_reports(self):
+        
+        return {
+        'name': 'Reports',
+        'domain': [('examination_batch', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'examination.report',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {}
+        }       
+    
+    def generate_report(self):
+        self.get_pass_percentage()
+        self.ccmc_get_pass_percentage()
+        if not self.repeater_batch:
+            gp = self.env['examination.report'].sudo().create({'examination_batch':self.id,'course':'gp','exam_type':'fresh'})
+            gp.generate_report()
+            ccmc = self.env['examination.report'].sudo().create({'examination_batch':self.id,'course':'ccmc','exam_type':'fresh'})
+            ccmc.generate_report()
+            
+            self.report_status = 'generated'
+        else:
+            gp = self.env['examination.report'].sudo().create({'examination_batch':self.id,'course':'gp','exam_type':'repeater'})
+            gp.generate_report()
+            ccmc = self.env['examination.report'].sudo().create({'examination_batch':self.id,'course':'ccmc','exam_type':'repeater'})
+            ccmc.generate_report()
+            self.report_status = 'generated'
     
     
     def get_pass_percentage(self,exams=None):
         if self.repeater_batch:
-            if exams == None:
-                exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','<','1')])
+            # if exams == None:
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
         else:
-            if exams == None:
-                exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','=','1')])
+            # if exams == None:
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
+            
+        print(exams)
         total_counts = defaultdict(int)
         pass_counts = defaultdict(int)
         # exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','=','1')])
@@ -93,7 +145,7 @@ class DGSBatch(models.Model):
         bars = plt.bar(institutes, percentages, color='skyblue',width=0.5)
         plt.xlabel('Institutes')
         plt.ylabel('Pass Percentage')
-        plt.title('Pass Percentage of Students Institute-wise')
+        plt.title('GP Rating Pass Percentage of Students Institute-wise')
         plt.xticks(rotation=45,fontsize=7)
         plt.ylim(0, 110)
         
@@ -141,11 +193,11 @@ class DGSBatch(models.Model):
 
     def ccmc_get_pass_percentage(self,exams=None):
         if self.repeater_batch:
-            if exams == None:
-                exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','<','1')])
+            # if exams == None:
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
         else:
-            if exams == None:
-                exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','=','1')])
+            # if exams == None:
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
         total_counts = defaultdict(int)
         pass_counts = defaultdict(int)
         # exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','=','1')])
@@ -182,7 +234,7 @@ class DGSBatch(models.Model):
         bars = plt.bar(institutes, percentages, color='skyblue',width=0.5)
         plt.xlabel('Institutes')
         plt.ylabel('Pass Percentage')
-        plt.title('Pass Percentage of Students Institute-wise')
+        plt.title('CCMC Rating Pass Percentage of Students Institute-wise')
         plt.xticks(rotation=45,fontsize=7)
         plt.ylim(0, 110)
         
@@ -258,7 +310,7 @@ class DGSBatch(models.Model):
         for exam in ccmc_exams:
             exam.move_done()
             
-        percentages = self.get_pass_percentage(exams)
+        # percentages = self.get_pass_percentage(exams)
         # import wdb; wdb.set_trace();
         self.state = '2-confirmed'
         

@@ -33,9 +33,9 @@
             <field name="arch" type="xml">
                 <form string="Examination Report">
                     <header>
-                        <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
-                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'gp')]}"/>
-                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
+                        <!-- <button name="generate_report" string="Generate Report" type="object" class="btn-primary" /> -->
+                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}"/>
+                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/>
                     </header>
                     <sheet>
 
@@ -44,12 +44,14 @@
                             </button>
                             <button name="open_subject_wise_pass_percentage" string="Subject Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
-                            <button name="open_summarised_gp_report" string="GP Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('course', '!=', 'gp')]}">
+                            <button name="open_summarised_gp_report" string="GP Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}">
                             </button>
-                            <button name="open_summarised_ccmc_report" string="CCMC Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('course', '!=', 'ccmc')]}">
+                            <button name="open_summarised_ccmc_report" string="CCMC Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}">
                             </button>
                         </div>
                         <group>
+                            <field name="visible_ccmc_report_button" invisible="1"/>  
+                            <field name="visible_gp_report_button" invisible="1"/>      
                             <field name="examination_batch"/>      
                             <field name="course"/>                  
                             <field name="exam_type"/>                         
@@ -71,7 +73,7 @@
             <field name="model">institute.pass.percentage</field>
             <field name="arch" type="xml">
                 <tree string="Institute Pass Percentage">
-                    <field name="examination_report_batch"/>
+                    <field name="examination_report_batch" optional="hide"/>
                     <field name="institute_id" optional="show"/>
                     <field name="examination_batch" optional="show" />
                     <field name="course" optional="show"/>
@@ -116,7 +118,7 @@
         <field name="model">subject.pass.percentage</field>
         <field name="arch" type="xml">
             <tree string="Subject Pass Percentage">
-                <field name="examination_report_batch"/>
+                <field name="examination_report_batch" optional="hide"/>
                 <field name="examination_batch"/>
                 <field name="subject"/>
                 <field name="percentage"/>
@@ -146,9 +148,10 @@
         <field name="model">summarised.gp.report</field>
         <field name="arch" type="xml">
             <tree string="Summarised GP Report">
-                <field name="examination_report_batch"/>
-                <field name="examination_batch" optional="show" />
+                <field name="examination_report_batch" optional="hide" />
+                <field name="examination_batch" optional="hide" />
                 <field name="exam_region" optional="show"/>
+                <field name="institute_code" optional="show"/>
                 <field name="institute" optional="show"/>
                 <field name="applied" optional="show"/>
                 <field name="candidate_appeared" optional="show"/>
@@ -213,9 +216,10 @@
         <field name="model">summarised.ccmc.report</field>
         <field name="arch" type="xml">
             <tree string="Summarised CCMC Report">
-                <field name="examination_report_batch"/>
-                <field name="examination_batch" optional="show" />
+                <field name="examination_report_batch" optional="hide"/>
+                <field name="examination_batch" optional="hide" />
                 <field name="exam_region" optional="show"/>
+                <field name="institute_code" optional="show"/>
                 <field name="institute" optional="show"/>
                 <field name="applied" optional="show"/>
                 <field name="candidate_appeared" optional="show"/>
