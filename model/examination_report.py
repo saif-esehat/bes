@@ -486,9 +486,7 @@ class SummarisedGPReport(models.AbstractModel):
         docs1 = self.env['examination.report'].sudo().browse(docids)
         
         data = self.env['summarised.gp.report'].sudo().search(
-                    [('examination_report_batch', '=', docs1.id)],
-                    order='institute_code asc'
-                )
+                    [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
         exam_region = data.exam_region.ids
         
         data = self.env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docs1.id)])
@@ -528,7 +526,7 @@ class SummarisedCCMCReport(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
-        data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)], order='institute_code asc')
+        data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
         exam_region = data.exam_region.ids
         print(exam_region)
         # report_type = data['report_type']

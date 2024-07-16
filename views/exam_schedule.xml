@@ -344,7 +344,7 @@
                         <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
                     </header>
                     <field name="exam_id" optional="show"/>
-                    
+                     <field name="institute_code" force_save="1" optional="show"/>
                     <field name="exam_violation_state" optional="show"/>
                     <field name="gp_candidate" optional="show"/>
                     <field name="candidate_code" optional="show"/>
@@ -424,7 +424,7 @@
                     <sheet>
                         <group>
                             <field name="exam_id" readonly="1"/>
-                            <field name="institute_code"/>
+                            <field name="institute_code"  force_save="1"/>
                             <field name="registered_institute" readonly="1"/>
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id"/>
@@ -540,6 +540,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="exam_id"/> 
+                    <field name="institute_code"/> 
                     <field name="exam_violation_state" optional="show"/>
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>

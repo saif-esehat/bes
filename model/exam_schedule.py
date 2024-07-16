@@ -2649,7 +2649,7 @@ class GPExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
-    institute_code = fields.Char(string="Institute Code", related='gp_candidate.institute_id.code', required=True,tracking=True)
+    institute_code = fields.Char(string="Institute Code", related='institute_id.code',store=True,tracking=True)
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True, required=True,tracking=True)
     indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no',store=True, required=True,tracking=True)
     user_state = fields.Selection([
@@ -3869,7 +3869,7 @@ class CCMCExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
    
-    institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',tracking=True)
+    institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',store=True,tracking=True)
     indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no',store=True,required=True,tracking=True)
     
     cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
