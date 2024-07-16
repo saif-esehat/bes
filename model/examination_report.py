@@ -709,7 +709,7 @@ class BarGraphReport(models.AbstractModel):
             'doc_model': 'examination.report',
             # 'docs': docids,
             # 'exam_regions': exam_region,
-            'examination_report':docs1
+            'docs':docs1
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
