@@ -613,40 +613,11 @@
                         </div>
                         </div>
                     </div>
-<<<<<<< HEAD
 
                 
 
-=======
->>>>>>> 4aa7ce3ed2f4e7d7b55c8e6a1cce75621e5fb6a3
                 </t>
-                <!-- Page break for the next page -->
-                <div style="page-break-before: always;"></div>
-
-                <div class="container">
-                    <t t-set="institutes" t-value="env['bes.institute'].sudo().search([]).sorted(key=lambda r: r.code)" />
-                    <t t-set="half_length" t-value="len(institutes) // 2" />
-                    
-                    <div class="row">
-                        <div class="col-6" style="font-family: 'TimesNewRoman';">
-                            <t t-foreach="institutes[:half_length]" t-as="institute">
-                                <div class="institute-item"  style="font-family: 'TimesNewRoman';">
-                                    <span t-esc="institute.code"  style="font-family: 'TimesNewRoman';"/>
-                                    <span t-esc="institute.name"  style="font-family: 'TimesNewRoman';"/>
-                                </div>
-                            </t>
-                        </div>
-                        <div class="col-6" style="font-family: 'TimesNewRoman';">
-                            <t t-foreach="institutes[half_length:]" t-as="institute">
-                                <div class="institute-item"  style="font-family: 'TimesNewRoman';">
-                                    <span t-esc="institute.code"  style="font-family: 'TimesNewRoman';"/>
-                                    <span t-esc="institute.name"  style="font-family: 'TimesNewRoman';"/>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-                
+   
                     
             </t>
         </t>
