@@ -546,24 +546,69 @@
                     .institute-div{
                         
                     }
+        
+            
+                 .image-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    margin-top: 5px;
+                }
+                img.centered-image {
+                    margin: auto;
+                }
+
+                .my-table {
+                    border-collapse: collapse;
+                    width: 80%; /* Reduced width */
+                    margin: 20px auto; /* Center align and add margin */
+                    font-size: 12px;
+                }
+
+
+
+
                 </style>
                 <t t-foreach="docs" t-as="doc">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 image-container">
                                 <t t-if="doc.course == 'gp'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:100%; margin-top:5px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:100%;height:570px; margin-top:5px;"/>
                                 </t>
                                 <t t-elif="doc.course == 'ccmc'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:100%; margin-top:5px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:100%;height:570px; margin-top:5px;"/>
                                 </t>
                             </div>
                         </div>
+                        <div class="row">
+                           <div class="col-12">
+                            <table class="my-table" >
+                                 <tbody>
+
+                                     <!-- <tr t-foreach="range(0, int(47/3 + 0.5 - 1e-10))" t-as="i">
+                                        <td t-if="i * 3 &lt;  47"><span t-esc="i * 3"/></td>
+                                        <td t-if="i * 3 + 1 &lt;  47"><span t-esc="i * 3 + 1"/></td>
+                                        <td t-if="i * 3 + 2 &lt;  47"><span t-esc="i * 3 + 2"/></td>
+                                    </tr> -->
+
+                                
+
+                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i">
+                                        <td t-if="i * 3 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
+                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
+                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
                     </div>
 
-                    <div class="container-fluid">
+                
 
-                    </div>
                 </t>
             </t>
         </t>

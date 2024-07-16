@@ -148,9 +148,6 @@ class ExaminationReport(models.Model):
                 self.env['summarised.ccmc.report'].create(vals)
                 
 
-                            
-
-        
 
     
     def subject_wise_pass_percentage(self):
@@ -272,14 +269,7 @@ class ExaminationReport(models.Model):
 
             
                 
-                
 
-                    
-         
-            
-                    
-                    
-                    
         
     def institute_wise_pass_percentage(self):
         
@@ -700,7 +690,19 @@ class BarGraphReport(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
-        # data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
+        batch_id = docs1.examination_batch.id
+        institutes_data = []
+        if docs1.course == 'gp':
+            institutes = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+        elif docs1.course == 'ccmc':
+            institutes = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+    
+        for institute in institutes:
+            ins = {'code':institute.code , 'name':institute.name}
+            institutes_data.append(ins)
+        
+        
+        
         # exam_region = data.exam_region.ids
        
 
@@ -709,7 +711,8 @@ class BarGraphReport(models.AbstractModel):
             'doc_model': 'examination.report',
             # 'docs': docids,
             # 'exam_regions': exam_region,
-            'docs':docs1
+            'docs':docs1,
+            'institutes_data':institutes_data
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
