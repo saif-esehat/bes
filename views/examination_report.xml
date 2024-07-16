@@ -36,6 +36,7 @@
                         <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
                         <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'gp')]}"/>
                         <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
+                        <button name="print_ship_visit_report" string="Ship Visit Report" type="object"/>
                     </header>
                     <sheet>
 
