@@ -379,7 +379,22 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas) 
+        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
+    
+    def print_bar_graph_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'GP',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)  
    
     def print_summarised_ccmc_report(self):
         
@@ -402,7 +417,7 @@ class ExaminationReport(models.Model):
             'doc_ids': self.id,
             'doc_model': 'examination.report',
             'docs': self,
-            'course': 'GP',
+
             'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
         }
         
@@ -411,7 +426,7 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.gp_graph_report_action').report_action(self ,data=datas) 
+        return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
     
 
 
@@ -631,4 +646,32 @@ class CCMCSummarisedReport(models.Model):
                 record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
             else:
                 record.overall_pass_per = 0.0
+                
+
+class BarGraphReport(models.AbstractModel):
+    _name = "report.bes.bar_graph_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "Bar Graph Report"
+    
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['examination.report'].sudo().browse(docids)
+        # data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
+        # exam_region = data.exam_region.ids
+       
+
+        return {
+            # 'docids': docids,
+            'doc_model': 'examination.report',
+            # 'docs': docids,
+            # 'exam_regions': exam_region,
+            'examination_report':docs1
+            # 'exams': exams,
+            # 'institutes': institutes,
+            # 'exam_centers': exam_centers,
+            # 'report_type': report_type,
+            # 'course': course
+        }
     
