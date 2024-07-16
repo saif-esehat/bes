@@ -542,12 +542,10 @@
         <t t-call="web.html_container">
             <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <t t-call="bes.bar_graph_report_header">
-
-
                 <t t-foreach="docs" t-as="doc">
-
-
+                    <img t-attf-src="data:image/png;base64,{{o.ccmc_candidate.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 125px; height: 150px; position: absolute; top: 0px; right: 15px;"/>
                 </t>
+            </t>
 
         </t>
     </template>
