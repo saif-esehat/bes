@@ -505,11 +505,11 @@
 
 
     <template id="bar_graph_report_header">
-        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
         <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
+            <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
-                <div class="col-12">
-                    BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  <span style="margin-left:5px; margin-right:5px"/> <br></br>
+                <div class="col-12" style="font-family: 'TimesNewRomanBold';">
+                    BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  <span style="margin-left:5px; margin-right:5px;font-family: 'TimesNewRomanBold';"/> <br></br>
                     <t t-if="docs.course == 'gp'">
                         <strong>GP RATING <span t-field="docs.exam_type"/> - <span t-esc="docs.examination_batch.to_date.strftime('%b-%y')"/> </strong>
                     </t>
@@ -543,8 +543,15 @@
             <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <t t-call="bes.bar_graph_report_header">
                 <style>
-                    .institute-div{
-                        
+                    .institute-list {
+                        display: flex;
+                        flex-wrap: wrap;
+                        font-family: 'TimesNewRomanBold';
+                    }
+                    .institute-item {
+                        flex: 0 0 50%; /* Each item takes 50% of the width of the container */
+                        box-sizing: border-box; /* Ensure padding and borders are included in the width */
+                        padding: 5px;
                     }
         
             
@@ -571,7 +578,7 @@
 
                 </style>
                 <t t-foreach="docs" t-as="doc">
-                    <div class="container-fluid">
+                    <div class="container">
                         <div class="row">
                             <div class="col-12 image-container">
                                 <t t-if="doc.course == 'gp'">
@@ -606,10 +613,41 @@
                         </div>
                         </div>
                     </div>
+<<<<<<< HEAD
 
                 
 
+=======
+>>>>>>> 4aa7ce3ed2f4e7d7b55c8e6a1cce75621e5fb6a3
                 </t>
+                <!-- Page break for the next page -->
+                <div style="page-break-before: always;"></div>
+
+                <div class="container">
+                    <t t-set="institutes" t-value="env['bes.institute'].sudo().search([]).sorted(key=lambda r: r.code)" />
+                    <t t-set="half_length" t-value="len(institutes) // 2" />
+                    
+                    <div class="row">
+                        <div class="col-6" style="font-family: 'TimesNewRoman';">
+                            <t t-foreach="institutes[:half_length]" t-as="institute">
+                                <div class="institute-item"  style="font-family: 'TimesNewRoman';">
+                                    <span t-esc="institute.code"  style="font-family: 'TimesNewRoman';"/>
+                                    <span t-esc="institute.name"  style="font-family: 'TimesNewRoman';"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-6" style="font-family: 'TimesNewRoman';">
+                            <t t-foreach="institutes[half_length:]" t-as="institute">
+                                <div class="institute-item"  style="font-family: 'TimesNewRoman';">
+                                    <span t-esc="institute.code"  style="font-family: 'TimesNewRoman';"/>
+                                    <span t-esc="institute.name"  style="font-family: 'TimesNewRoman';"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                
+                    
             </t>
         </t>
     </template>
