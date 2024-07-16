@@ -103,10 +103,10 @@ class DGSBatch(models.Model):
     def get_pass_percentage(self,exams=None):
         if self.repeater_batch:
             # if exams == None:
-            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id)]).sorted(key=lambda r: r.institute_code)
         else:
             # if exams == None:
-            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id)]).sorted(key=lambda r: r.institute_code)
             
         print(exams)
         total_counts = defaultdict(int)
@@ -194,10 +194,10 @@ class DGSBatch(models.Model):
     def ccmc_get_pass_percentage(self,exams=None):
         if self.repeater_batch:
             # if exams == None:
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)]).sorted(key=lambda r: r.institute_code)
         else:
             # if exams == None:
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)])
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)]).sorted(key=lambda r: r.institute_code)
         total_counts = defaultdict(int)
         pass_counts = defaultdict(int)
         # exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','=','1')])
@@ -435,10 +435,10 @@ class DGSBatchReport(models.AbstractModel):
         course = data['course']
 
         if report_type == 'Fresh' and course == 'GP':
-            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')])
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')]).sorted(key=lambda r: r.institute_code)
             # self.get_pass_percentage(exams)
         elif report_type == 'Repeater' and course == 'GP':
-            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')])
+            exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')]).sorted(key=lambda r: r.institute_code)
             print(exams)
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
         institute = self.env['bes.institute'].sudo().search([])
@@ -471,9 +471,9 @@ class CCMCDGSBatchReport(models.AbstractModel):
         course = data['course']
 
         if report_type == 'Fresh' and course == 'CCMC':
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')])
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','=','1')]).sorted(key=lambda r: r.institute_code)
         elif report_type == 'Repeater' and course == 'CCMC':
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')])
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id),('attempt_number','>','1')]).sorted(key=lambda r: r.institute_code)
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
         institute = self.env['bes.institute'].sudo().search([])
         # import wdb; wdb.set_trace(); 
