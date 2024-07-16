@@ -632,3 +632,4 @@ class CCMCSummarisedReport(models.Model):
             else:
                 record.overall_pass_per = 0.0
     
+ 
