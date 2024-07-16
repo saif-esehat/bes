@@ -396,6 +396,23 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
     
+    def print_gp_graph_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'doc_model': 'examination.report',
+            'docs': self.id,
+            'course': 'GP',
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.gp_graph_report_action').report_action(self ,data=datas) 
+    
 
 
 class InsititutePassPercentage(models.Model):

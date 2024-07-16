@@ -82,11 +82,11 @@
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Sr. No.</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Code No.</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Inst. Code</th>
-                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">MTI No.</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Roll No</th>
                                 <th style="white-space: nowrap; vertical-align: bottom; font-family: 'TimesNewRomanBold';" >Name of the Institute</th>
-                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';" >Full Name of the Candidate as in INDOS</th>
-                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">INDOS No.</th>
+                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">MTI No.</th>
+                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';" >Full Name of the Candidate as in INDoS</th>
+                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">INDoS No.</th>
                                 <th style="text-align:center; font-family: 'TimesNewRomanBold';"> DOB</th>
                                 <th style="text-align:center; font-family: 'TimesNewRomanBold';">GSK P &amp; O Pass or Fail</th>
                                 <th style="text-align:center; font-family: 'TimesNewRomanBold';">MEK P &amp; O Pass or Fail</th>
@@ -106,9 +106,9 @@
                                     <td><span t-esc="index"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.candidate_code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.code"/></td>
-                                    <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.mti"/></td>
                                     <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
                                     <td><span t-esc="exam.gp_candidate.institute_id.name"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.mti"/></td>
                                     <td><span t-esc="exam.gp_candidate.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.indos_no"/></td>
                                     <td style="text-align:center; white-space: nowrap;">
@@ -232,11 +232,11 @@
                                 <th style="vertical-align: bottom;">Sr. No.</th>
                                 <th style="vertical-align: bottom;">Code No.</th>
                                 <th style="vertical-align: bottom;">Inst. Code</th>
-                                <th style="vertical-align: bottom;">MTI No.</th>
                                 <th style="vertical-align: bottom;">Roll No</th>
                                 <th style="white-space: nowrap; vertical-align: bottom;" >Name of the Institute</th>
-                                <th style="vertical-align: bottom;" >Full Name of the Candidate as in INDOS</th>
-                                <th style="vertical-align: bottom;">INDOS No.</th>
+                                <th style="vertical-align: bottom;">MTI No.</th>
+                                <th style="vertical-align: bottom;" >Full Name of the Candidate as in INDoS</th>
+                                <th style="vertical-align: bottom;">INDoS No.</th>
                                 <th > DOB</th>
                                 <th>Practical Cookery Pass or Fail</th>
                                 <th>Oral Cookery &amp; others Pass or Fail</th>
@@ -254,9 +254,9 @@
                                     <td><span t-esc="index"/></td>
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.candidate_code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.institute_id.code"/></td>
-                                    <td style="text-align:center"><span t-esc="exam.ccmc_candidate.institute_id.mti"/></td>
                                     <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
                                     <td><span t-esc="exam.ccmc_candidate.institute_id.name"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.ccmc_candidate.institute_id.mti"/></td>
                                     <td><span t-esc="exam.ccmc_candidate.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.indos_no"/></td>
                                     <td style="text-align:center; white-space: nowrap;">
