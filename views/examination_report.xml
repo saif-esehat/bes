@@ -33,11 +33,18 @@
             <field name="arch" type="xml">
                 <form string="Examination Report">
                     <header>
+<<<<<<< HEAD
+                        <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
+                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'gp')]}"/>
+                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
+                        <button name="print_ship_visit_report" string="Ship Visit Report" type="object"/>
+=======
                         <!-- <button name="generate_report" string="Generate Report" type="object" class="btn-primary" /> -->
                         <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}"/>
                         <button name="print_bar_graph_report" string="Graph Report" type="object" class="btn-primary"/>
                         <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/>
                         <!-- <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/> -->
+>>>>>>> 0a40a9c85ab4de99888e049cebc6547bc41b0c11
                     </header>
                     <sheet>
 
