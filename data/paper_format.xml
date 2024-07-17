@@ -35,7 +35,7 @@
             <field name="dpi">96</field>
         </record>
 
-        <record id="dgs_report_potrait" model="report.paperformat">
+        <!-- <record id="dgs_report_potrait" model="report.paperformat">
             <field name="name">Custom Paperformat for the DGS Report Potrait</field>
             <field name="default" eval="True"/>
             <field name="disable_shrinking" eval="True"/>
@@ -50,7 +50,7 @@
             <field name="margin_left">0</field>
             <field name="margin_right">0</field>
             <field name="dpi">90</field>
-        </record>
+        </record> -->
 
     </data>
 </odoo>
