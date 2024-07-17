@@ -78,6 +78,7 @@
             <field name="arch" type="xml">
                 <tree string="Institute Pass Percentage">
                     <field name="examination_report_batch" optional="hide"/>
+                    <field name="institute_code" optional="hide"/>
                     <field name="institute_id" optional="show"/>
                     <field name="examination_batch" optional="show" />
                     <field name="course" optional="show"/>

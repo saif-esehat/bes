@@ -44,12 +44,12 @@
                             width: 100%;
                             border: 1px solid black;
                             border-collapse: collapse;
-                            margin-top: 30px;
+                            margin-top: 80px;
                         }
                         th, td, tr {
                             border: 1px solid black;
                             text-align: center;
-                            padding: 10px;
+                            padding: 0px;
                             border-collapse: collapse;
                         }
                         thead {
@@ -603,9 +603,9 @@
                                 
 
                                     <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i">
-                                        <td t-if="i * 3 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
-                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
-                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
+                                        <td t-if="i * 3 &lt; len(institutes_data)"><span style="font-family: 'TimesNewRomanBold';" t-esc="institutes_data[i * 3]['code']"/> - <span style="font-family: 'TimesNewRomanBold';" t-esc="institutes_data[i * 3]['name']"/></td>
+                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)"><span style="font-family: 'TimesNewRomanBold';" t-esc="institutes_data[i * 3 + 1]['code']"/> - <span style="font-family: 'TimesNewRomanBold';" t-esc="institutes_data[i * 3 + 1]['name']"/></td>
+                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)"><span style="font-family: 'TimesNewRomanBold';" t-esc="institutes_data[i * 3 + 2]['code']"/> - <span style="font-family: 'TimesNewRomanBold';" t-esc="institutes_data[i * 3 + 2]['name']"/></td>
 
                                     </tr>
                                 </tbody>

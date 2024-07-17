@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <!-- Paper Format for Landscape (8.5 x 11 inches) -->
         <!-- <record id="dgs_report_landscape" model="report.paperformat">
             <field name="name">Landscape</field>
@@ -27,13 +27,29 @@
             <field name="format">A4</field>
             <field name="page_height">0</field>
             <field name="page_width">0</field>
-            <!-- this one is to make the pdf to become horizontal, if landscape=False, pdf will become vertical -->
             <field name="orientation">Landscape</field>
             <field name="margin_top">20</field>
             <field name="margin_bottom">8</field>
             <field name="margin_left">0</field>
             <field name="margin_right">0</field>
             <field name="dpi">96</field>
+        </record>
+
+        <record id="dgs_report_potrait" model="report.paperformat">
+            <field name="name">Custom Paperformat for the DGS Report Potrait</field>
+            <field name="default" eval="True"/>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">5</field>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Potrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="dpi">90</field>
         </record>
 
     </data>
