@@ -55,7 +55,82 @@ class ExaminationReport(models.Model):
         self.institute_wise_pass_percentage()
         self.subject_wise_pass_percentage()
         self.summarised_report()
+        self.attempt_wise_report()
+        
+    
+    def ordinal(self,n):
+        if 10 <= n % 100 <= 20:
+            suffix = 'th'
+        else:
+            suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+        return str(n) + suffix + " attempt"
+    
+    
+    def attempt_wise_report(self):
+        
+        if self.course == 'gp' and self.exam_type == 'repeater':
+            batch_id = self.examination_batch.id
+            exam_schedules = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', batch_id)])
+
+            # Extract the attempt numbers and get the unique values
+            attempt_numbers = list(set(exam_schedules.mapped('attempt_number')))
+            attempt_numbers.sort(reverse=True)
+            print(attempt_numbers)
             
+            for attempt_number in  attempt_numbers:
+                attempt_number = attempt_number
+                appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number)])
+                passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number),('result','=','passed')])
+                print('appeared')
+                print(appeared)
+                print('passed')
+                print(passed)
+                
+                data = {
+                    'examination_report_batch':self.id,
+                    'attempt_number': self.ordinal(attempt_number),
+                    'appeared':appeared,
+                    'passed':passed
+                }
+                
+                self.env['attempt.wise.report'].sudo().create(data)
+        
+        elif self.course == 'ccmc' and self.exam_type == 'repeater':
+            batch_id = self.examination_batch.id
+            exam_schedules = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', batch_id)])
+
+            # Extract the attempt numbers and get the unique values
+            attempt_numbers = list(set(exam_schedules.mapped('attempt_number')))
+            attempt_numbers.sort(reverse=True)
+            print(attempt_numbers)
+            
+            for attempt_number in  attempt_numbers:
+                attempt_number = attempt_number
+                appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number)])
+                passed = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number),('result','=','passed')])
+                print('appeared')
+                print(appeared)
+                print('passed')
+                print(passed)
+                
+                data = {
+                    'examination_report_batch':self.id,
+                    'attempt_number': self.ordinal(attempt_number),
+                    'appeared':appeared,
+                    'passed':passed
+                }
+                
+                self.env['attempt.wise.report'].sudo().create(data)
+        
+        else:
+            pass
+
+                
+            
+            # self.env['attempt.wise.report'].sudo().create({})
+            
+        
+               
 
     def summarised_report(self):
         batch_id = self.examination_batch.id
@@ -147,8 +222,6 @@ class ExaminationReport(models.Model):
                     }
                 self.env['summarised.ccmc.report'].create(vals)
                 
-
-
     
     def subject_wise_pass_percentage(self):
         
@@ -267,10 +340,6 @@ class ExaminationReport(models.Model):
 
                     
 
-            
-                
-
-        
     def institute_wise_pass_percentage(self):
         
         batch_id = self.examination_batch.id
@@ -318,6 +387,19 @@ class ExaminationReport(models.Model):
             'context': {}
             }  
     
+    def open_attempt_wise_report(self):
+        
+        return {
+            'name': 'Attempt Wise Report',
+            'domain': [('examination_report_batch', '=', self.id)],
+            'view_type': 'form',
+            'res_model': 'attempt.wise.report',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
+            'context': {}
+            }  
+    
     def open_institute_wise_pass_percentage(self):
         
         return {
@@ -343,6 +425,7 @@ class ExaminationReport(models.Model):
         'type': 'ir.actions.act_window',
         'context': {}
         }      
+        
     def open_summarised_ccmc_report(self):
         
         return {
@@ -645,6 +728,39 @@ class CCMCSummarisedReport(models.Model):
     
     overall_pass = fields.Integer("Overall Passed",tracking=True)
     overall_pass_per = fields.Float("Overall Passed %",compute="_compute_percentage",tracking=True)
+    
+    @api.depends('candidate_appeared', 'overall_pass')
+    def _compute_percentage(self):
+        for record in self:
+            if record.candidate_appeared > 0:
+                record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
+            else:
+                record.overall_pass_per = 0.0
+
+
+
+class AttemptWiseReport(models.Model):
+    _name = "attempt.wise.report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Attempt Wise Report'
+    examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
+    examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
+    attempt_number = fields.Char("Attempt Number")
+    appeared = fields.Integer("Appeared")
+    passed = fields.Integer("Passed")
+    pass_percentage = fields.Float("Pass Percentage", compute='_compute_pass_percentage', store=True)
+
+    
+    
+    @api.depends('appeared', 'passed')
+    def _compute_pass_percentage(self):
+        for record in self:
+            if record.appeared > 0:
+                record.pass_percentage = (record.passed / record.appeared) * 100
+            else:
+                record.pass_percentage = 0
+    
+    
 
 
 class ShipVisitReport(models.Model):
