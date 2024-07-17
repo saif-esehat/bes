@@ -33,13 +33,16 @@
             <field name="arch" type="xml">
                 <form string="Examination Report">
                     <header>
-                        <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
+                        <!-- <button name="generate_report" string="Generate Report" type="object" class="btn-primary" /> -->
                         <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'gp')]}"/>
                         <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
                         <!-- <button name="generate_report" string="Generate Report" type="object" class="btn-primary" /> -->
                         <button name="print_bar_graph_report" string="Graph Report" type="object" class="btn-primary"/>
                         <!-- <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/> -->
                         <button name="print_ship_visit_report" string="Ship Visit Report" type="object" class="btn-primary"/>
+                        <button name="attempt_wise_report" string="Attempt Report" type="object" class="btn-primary"/>
+
+                        
                     </header>
                     <sheet>
 
@@ -51,6 +54,8 @@
                             <button name="open_summarised_gp_report" string="GP Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}">
                             </button>
                             <button name="open_summarised_ccmc_report" string="CCMC Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}">
+                            </button>
+                            <button name="open_attempt_wise_report" string="Attempt Wise Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',False)]}">
                             </button>
                         </div>
                         <group>
@@ -286,6 +291,41 @@
             </form>
         </field>
     </record>
+
+    <record id="view_attempt_wise_report_tree" model="ir.ui.view">
+        <field name="name">attempt.wise.report.tree</field>
+        <field name="model">attempt.wise.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examination_report_batch" optional="hide"/>
+                <field name="examination_batch" optional="hide"/>
+                <field name="attempt_number"/>
+                <field name="appeared"/>
+                <field name="passed"/>
+                <field name="pass_percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_attempt_wise_report_form" model="ir.ui.view">
+        <field name="name">attempt.wise.report.form</field>
+        <field name="model">attempt.wise.report</field>
+        <field name="arch" type="xml">
+            <form string="Attempt Wise Report">
+                <sheet>
+                    <group>
+                        <field name="examination_report_batch" />
+                        <field name="examination_batch" />
+                        <field name="attempt_number"/>
+                        <field name="appeared"/>
+                        <field name="passed"/>
+                        <field name="pass_percentage"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
 
 
     </data>
