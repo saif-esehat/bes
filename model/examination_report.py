@@ -35,6 +35,8 @@ class ExaminationReport(models.Model):
     
     visible_gp_report_button = fields.Boolean(string='Visible GP Report Button',compute="show_repeater_report_button",tracking=True)
     visible_ccmc_report_button = fields.Boolean(string='Visible CCMC Report Button',compute="show_repeater_report_button",tracking=True)
+    visible_gp_repeater_report_button = fields.Boolean(string='Visible GP Repeater Report Button',compute="show_repeater_report_button",tracking=True)
+    visible_ccmc_repeater_report_button = fields.Boolean(string='Visible CCMC Repeater Report Button',compute="show_repeater_report_button",tracking=True)
 
     
     @api.depends('exam_type','course')
@@ -43,12 +45,28 @@ class ExaminationReport(models.Model):
             if record.exam_type == 'fresh' and record.course == 'gp':
                 record.visible_gp_report_button = True
                 record.visible_ccmc_report_button = False
+                record.visible_gp_repeater_report_button = False
+                record.visible_ccmc_repeater_report_button = False
             elif record.exam_type == 'fresh' and record.course == 'ccmc':
                 record.visible_gp_report_button = False
                 record.visible_ccmc_report_button = True
+                record.visible_gp_repeater_report_button = False
+                record.visible_ccmc_repeater_report_button = False
+            elif record.exam_type == 'repeater' and record.course == 'gp':
+                record.visible_gp_report_button = False
+                record.visible_ccmc_report_button = False
+                record.visible_gp_repeater_report_button = True
+                record.visible_ccmc_repeater_report_button = False
+            elif record.exam_type == 'repeater' and record.course == 'ccmc':
+                record.visible_gp_report_button = False
+                record.visible_ccmc_report_button = True
+                record.visible_gp_repeater_report_button = False
+                record.visible_ccmc_repeater_report_button = True
             else:
                 record.visible_gp_report_button = False
                 record.visible_ccmc_report_button = False
+                record.visible_gp_repeater_report_button = False
+                record.visible_ccmc_repeater_report_button = False
             
     
     def generate_report(self):
@@ -185,14 +203,12 @@ class ExaminationReport(models.Model):
 
             institute_ids = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
             for institute_id in institute_ids:
-                print(institute_id)
+
+
                 applied = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
-                print("appeared")
-                print(appeared)
+
                 practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed')])
-                print("practical")           
-                print(practical)
                 practical_percentage = (practical/appeared) * 100
                 
                 oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed')])
@@ -221,6 +237,125 @@ class ExaminationReport(models.Model):
                         # The overall_pass_per will be computed automatically
                     }
                 self.env['summarised.ccmc.report'].create(vals)
+        
+        elif self.course == 'gp' and self.exam_type == 'repeater':
+            institute_ids = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
+            for institute_id in institute_ids:
+                applied = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
+                appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
+                
+                #GSK Prac/Oral
+                
+                gsk_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_oral_prac_carry_forward','=',False)])                
+                gsk_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_oral_prac_carry_forward','=',False),('gsk_oral_prac_status','=','passed')])
+                try:
+                    gsk_passed_percentage = (gsk_passed_count/gsk_appeared) * 100
+                except ZeroDivisionError:
+                    gsk_passed_percentage = 0
+                
+                #MEK Prac/Oral
+                mek_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_oral_prac_carry_forward','=',False)])                
+                mek_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_oral_prac_status','=','passed'),('mek_oral_prac_carry_forward','=',False)])
+                try:
+                    mek_passed_percentage = (mek_passed_count/mek_appeared) * 100
+                except ZeroDivisionError:
+                    mek_passed_percentage = 0
+                
+                #GSK Online
+                gsk_online_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_carry_forward','=',False)])
+                gsk_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_status','=','passed'),('gsk_online_carry_forward','=',False)])
+                try:
+                    gsk_online_passed_percentage = (gsk_online_passed_count/gsk_online_appeared) * 100
+                except ZeroDivisionError:
+                    gsk_online_passed_percentage = 0
+                    
+                #MEK Online
+                mek_online_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_online_carry_forward','=',False)])                
+                mek_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_status','=','passed'),('mek_online_carry_forward','=',False)])
+                try:
+                    mek_online_passed_percentage = (mek_online_passed_count/mek_online_appeared) * 100
+                except ZeroDivisionError:
+                    mek_online_passed_percentage = 0
+                    
+                
+                overall_passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('result','=','passed')])
+                
+                vals = {
+                    'examination_report_batch': self.id,  # Assuming 1 is the ID of the examination report batch
+                    'institute': institute_id,  # Assuming 2 is the ID of the institute
+                    'applied': applied,
+                    'candidate_appeared': appeared,
+                    'gsk_prac_oral_appeared':gsk_appeared,
+                    'gsk_prac_oral_pass': gsk_passed_count,
+                    'gsk_prac_oral_pass_per': gsk_passed_percentage,
+                    'mek_prac_oral_appeared':mek_appeared,
+                    'mek_prac_oral_pass': mek_passed_count,
+                    'mek_prac_oral_pass_per': mek_passed_percentage,
+                    'gsk_online_appeared':gsk_online_appeared,
+                    'gsk_online_pass': gsk_online_passed_count,
+                    'gsk_online_pass_per': gsk_online_passed_percentage,
+                    'mek_online_appeared':mek_online_appeared,
+                    'mek_online_pass': mek_online_passed_count,
+                    'mek_online_pass_per': mek_online_passed_percentage,
+                    'overall_pass': overall_passed,  # Sum of all passes
+                    # The overall_pass_per will be computed automatically
+                }
+                
+                self.env['summarised.gp.repeater.report'].create(vals)
+        
+        elif self.course == 'ccmc' and self.exam_type == 'repeater':
+            batch_id = self.examination_batch.id
+            institute_ids = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
+            for institute_id in institute_ids:
+
+
+                applied = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
+                appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
+
+                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('cookery_prac_carry_forward','=',False)])
+                practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed'),('cookery_prac_carry_forward','=',False)])
+                try :
+                    practical_percentage = (practical/practical_appeared) * 100
+                except ZeroDivisionError:
+                    practical_percentage = 0
+                    
+                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False)])                
+                oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False)])
+                
+                try:
+                    oral_percentage = (oral/oral_appeared) * 100
+                except ZeroDivisionError:
+                    oral_percentage = 0
+
+                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False)])                
+                online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False)])
+                
+                try:
+                    online_percentage = (online/online_appeared) * 100
+                except ZeroDivisionError:
+                    online_percentage = 0
+                
+                overall_passed = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('result','=','passed')])
+                
+                vals = {
+                        'examination_report_batch': self.id,  # Assuming 1 is the ID of the examination report batch
+                        'institute': institute_id,  # Assuming 2 is the ID of the institute
+                        'applied': applied,
+                        'candidate_appeared': appeared,
+                        'practical_pass_appeared': practical_appeared,
+                        'practical_pass': practical,
+                        'practical_pass_per': practical_percentage,
+                        'oral_pass_appeared': oral_appeared,
+                        'oral_pass': oral,
+                        'oral_pass_per': oral_percentage,
+                        'online_pass_appeared': online_appeared,
+                        'online_pass': online,
+                        'online_pass_per': online_percentage,
+                        'overall_pass': overall_passed,  # Sum of all passes
+                        # The overall_pass_per will be computed automatically
+                    }
+                self.env['summarised.ccmc.report'].create(vals)
+            
                 
     
     def subject_wise_pass_percentage(self):
@@ -420,6 +555,19 @@ class ExaminationReport(models.Model):
         'domain': [('examination_report_batch', '=', self.id)],
         'view_type': 'form',
         'res_model': 'summarised.gp.report',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {}
+        }    
+        
+    def open_summarised_gp_repeater_report(self):
+        
+        return {
+        'name': 'Summarised GP Repeater Report',
+        'domain': [('examination_report_batch', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'summarised.gp.repeater.report',
         'view_id': False,
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
@@ -721,7 +869,7 @@ class GPSummarisedReport(models.Model):
 class GPSummarisedRepeaterReport(models.Model):
     _name = "summarised.gp.repeater.report"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Summarised GP Report'
+    _description= 'Summarised GP Repeater Report'
     
     
     examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
@@ -762,7 +910,6 @@ class GPSummarisedRepeaterReport(models.Model):
     
     
     
-
 
 class CCMCSummarisedReport(models.Model):
     _name = "summarised.ccmc.report"
