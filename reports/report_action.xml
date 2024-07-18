@@ -61,6 +61,22 @@
         paperformat="bes.dgs_report_landscape"   
     /> -->
 
+    <record id="bes.dgs_final_report_landscape" model="report.paperformat">
+        <field name="name">Landscape Format with Custom Margins</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">15</field> <!-- Adjust as needed -->
+        <field name="margin_bottom">5</field> <!-- Adjust as needed -->
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">15</field>
+        <field name="dpi">120</field> <!-- Example DPI, adjust as needed -->
+    </record>
+    
     <record id="bes.dgs_report_landscape" model="report.paperformat">
         <field name="name">Landscape Format with Custom Margins</field>
         <field name="default" eval="False"/>
@@ -84,7 +100,7 @@
         <field name="report_name">bes.dgs_report</field>
         <field name="report_file">bes.dgs_report</field>
         <field name="binding_model_id" ref="bes.model_dgs_batches"/>
-        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
 
     <record id="report_dgs_ccmc_fresh_action" model="ir.actions.report">
@@ -94,7 +110,7 @@
         <field name="report_name">bes.ccmc_dgs_report</field>
         <field name="report_file">bes.ccmc_dgs_report</field>
         <field name="binding_model_id" ref="bes.model_dgs_batches"/>
-        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
    
     <report
@@ -121,8 +137,14 @@
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.summarised_gp_report</field>
         <field name="report_file">bes.summarised_report</field>
-        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
-        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+    </record>
+
+    <record id="summarised_gp_repeater_report_action" model="ir.actions.report">
+        <field name="name">Summarised GP Repeater Report</field>
+        <field name="model">examination.report</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.summarised_gp_repeater_report</field>
+        <field name="report_file">bes.summarised_gp_repeater_report</field>
     </record>
 
     <record id="summarised_ccmc_report_action" model="ir.actions.report">
@@ -131,25 +153,23 @@
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.summarised_ccmc_report</field>
         <field name="report_file">bes.summarised_report</field>
-        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
-        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
    
-    <record id="gp_graph_report_action" model="ir.actions.report">
-        <field name="name">GP Graph Report</field>
+    <record id="bar_graph_report_action" model="ir.actions.report">
+        <field name="name">Bar Graph Report</field>
         <field name="model">examination.report</field>
         <field name="report_type">qweb-html</field>
-        <field name="report_name">bes.graph_report</field>
-        <field name="report_file">bes.summarised_report</field>
+        <field name="report_name">bes.bar_graph_report</field>
+        <field name="report_file">bes.bar_graph_report</field>
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
 
      <record id="ship_visit_report_action" model="ir.actions.report">
-        <field name="name">ship_visit Report</field>
+        <field name="name">Ship Visit Report</field>
         <field name="model">examination.report</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.ship_visit_report</field>
-        <field name="report_file">bes.summarised_report</field>
+        <field name="report_file">bes.ship_visit_report</field>
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>

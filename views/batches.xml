@@ -425,7 +425,7 @@
                         <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
                         <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
                         <button name="generate_report" string="Generate Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_generate_report', '=', False)]}"  />
-
+                        <button name="print_ship_visit_report" string="Ship Visit Report" type="object" class="btn-primary"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

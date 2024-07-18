@@ -33,18 +33,17 @@
             <field name="arch" type="xml">
                 <form string="Examination Report">
                     <header>
-<<<<<<< HEAD
-                        <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
-                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'gp')]}"/>
-                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
-                        <button name="print_ship_visit_report" string="Ship Visit Report" type="object"/>
-=======
                         <!-- <button name="generate_report" string="Generate Report" type="object" class="btn-primary" /> -->
-                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}"/>
-                        <!-- <button name="print_gp_graph_report" string="Graph Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}"/> -->
-                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/>
+                        <button name="print_summarised_gp_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_gp_report_button', '!=', True)]}"/>
+                        <button name="print_summarised_gp_repeater_report" string="GP Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_gp_repeater_report_button', '!=', True)]}"/>
+                        <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('course', '!=', 'ccmc')]}"/>
+                        <!-- <button name="generate_report" string="Generate Report" type="object" class="btn-primary" /> -->
+                        <button name="print_bar_graph_report" string="Graph Report" type="object" class="btn-primary"/>
                         <!-- <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/> -->
->>>>>>> 0a40a9c85ab4de99888e049cebc6547bc41b0c11
+                        <button name="print_ship_visit_report" string="Ship Visit Report" type="object" class="btn-primary"/>
+                        <!-- <button name="summarised_report" string="Summartise Rep" type="object" class="btn-primary"/> -->
+
+                        
                     </header>
                     <sheet>
 
@@ -55,12 +54,18 @@
                             </button>
                             <button name="open_summarised_gp_report" string="GP Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}">
                             </button>
+                            <button name="open_summarised_gp_repeater_report" string="GP Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_gp_repeater_report_button','!=',True)]}">
+                            </button>
                             <button name="open_summarised_ccmc_report" string="CCMC Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}">
+                            </button>
+                            <button name="open_attempt_wise_report" string="Attempt Wise Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',False)]}">
                             </button>
                         </div>
                         <group>
                             <field name="visible_ccmc_report_button" invisible="1"/>  
-                            <field name="visible_gp_report_button" invisible="1"/>      
+                            <field name="visible_gp_report_button" invisible="1"/>  
+                            <field name="visible_gp_repeater_report_button" invisible="1"/>  
+                            <field name="visible_ccmc_repeater_report_button" invisible="1"/>      
                             <field name="examination_batch"/>      
                             <field name="course"/>                  
                             <field name="exam_type"/>                         
@@ -83,6 +88,7 @@
             <field name="arch" type="xml">
                 <tree string="Institute Pass Percentage">
                     <field name="examination_report_batch" optional="hide"/>
+                    <field name="institute_code" optional="hide"/>
                     <field name="institute_id" optional="show"/>
                     <field name="examination_batch" optional="show" />
                     <field name="course" optional="show"/>
@@ -128,7 +134,7 @@
         <field name="arch" type="xml">
             <tree string="Subject Pass Percentage">
                 <field name="examination_report_batch" optional="hide"/>
-                <field name="examination_batch"/>
+                <field name="examination_batch" optional="hide"/>
                 <field name="subject"/>
                 <field name="percentage"/>
             </tree>
@@ -136,20 +142,20 @@
     </record>
 
     <record id="view_subject_pass_percentage_form" model="ir.ui.view">
-    <field name="name">subject.pass.percentage.form</field>
-    <field name="model">subject.pass.percentage</field>
-    <field name="arch" type="xml">
-        <form string="Subject Pass Percentage">
-                <sheet>
-                    <group>
-                        <field name="examination_report_batch"/>
-                        <field name="examination_batch"/>
-                        <field name="subject"/>
-                        <field name="percentage"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
+        <field name="name">subject.pass.percentage.form</field>
+        <field name="model">subject.pass.percentage</field>
+        <field name="arch" type="xml">
+            <form string="Subject Pass Percentage">
+                    <sheet>
+                        <group>
+                            <field name="examination_report_batch"/>
+                            <field name="examination_batch"/>
+                            <field name="subject"/>
+                            <field name="percentage"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
     </record>
 
     <record id="view_summarised_gp_report_tree" model="ir.ui.view">
@@ -290,6 +296,109 @@
             </form>
         </field>
     </record>
+
+    <record id="view_attempt_wise_report_tree" model="ir.ui.view">
+        <field name="name">attempt.wise.report.tree</field>
+        <field name="model">attempt.wise.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examination_report_batch" optional="hide"/>
+                <field name="examination_batch" optional="hide"/>
+                <field name="attempt_number"/>
+                <field name="appeared"/>
+                <field name="passed"/>
+                <field name="pass_percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_attempt_wise_report_form" model="ir.ui.view">
+        <field name="name">attempt.wise.report.form</field>
+        <field name="model">attempt.wise.report</field>
+        <field name="arch" type="xml">
+            <form string="Attempt Wise Report">
+                <sheet>
+                    <group>
+                        <field name="examination_report_batch" />
+                        <field name="examination_batch" />
+                        <field name="attempt_number"/>
+                        <field name="appeared"/>
+                        <field name="passed"/>
+                        <field name="pass_percentage"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+    <record id="view_gp_summarised_repeater_report_tree" model="ir.ui.view">
+        <field name="name">summarised.gp.repeater.report.tree</field>
+        <field name="model">summarised.gp.repeater.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examination_report_batch"/>
+                <field name="examination_batch"/>
+                <field name="institute"/>
+                <field name="institute_code"/>
+                <field name="exam_region"/>
+                <field name="applied"/>
+                <field name="candidate_appeared"/>
+                <field name="gsk_prac_oral_appeared"/>
+                <field name="gsk_prac_oral_pass"/>
+                <field name="gsk_prac_oral_pass_per"/>
+                <field name="mek_prac_oral_appeared"/>
+                <field name="mek_prac_oral_pass"/>
+                <field name="mek_prac_oral_pass_per"/>
+                <field name="gsk_online_appeared"/>
+                <field name="gsk_online_pass"/>
+                <field name="gsk_online_pass_per"/>
+                <field name="mek_online_appeared"/>
+                <field name="mek_online_pass"/>
+                <field name="mek_online_pass_per"/>
+                <field name="overall_pass"/>
+                <field name="overall_pass_per"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_gp_summarised_repeater_report_form" model="ir.ui.view">
+        <field name="name">summarised.gp.repeater.report.form</field>
+        <field name="model">summarised.gp.repeater.report</field>
+        <field name="arch" type="xml">
+            <form string="Summarised GP Repeater Report">
+                <sheet>
+                    <group>
+                        <field name="examination_report_batch"/>
+                        <field name="examination_batch"/>
+                        <field name="institute"/>
+                        <field name="institute_code"/>
+                        <field name="exam_region"/>
+                        <field name="applied"/>
+                        <field name="candidate_appeared"/>
+                        <field name="gsk_prac_oral_appeared"/>
+                        <field name="gsk_prac_oral_pass"/>
+                        <field name="gsk_prac_oral_pass_per"/>
+                        <field name="mek_prac_oral_appeared"/>
+                        <field name="mek_prac_oral_pass"/>
+                        <field name="mek_prac_oral_pass_per"/>
+                        <field name="gsk_online_appeared"/>
+                        <field name="gsk_online_pass"/>
+                        <field name="gsk_online_pass_per"/>
+                        <field name="mek_online_appeared"/>
+                        <field name="mek_online_pass"/>
+                        <field name="mek_online_pass_per"/>
+                        <field name="overall_pass"/>
+                        <field name="overall_pass_per"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
 
 
     </data>

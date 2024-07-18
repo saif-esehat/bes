@@ -540,6 +540,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="exam_id"/> 
+                    <field name="attempt_number"/> 
                     <field name="institute_code"/> 
                     <field name="exam_violation_state" optional="show"/>
                     <field name="ccmc_candidate"/>
