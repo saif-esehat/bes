@@ -2775,6 +2775,11 @@ class GPExam(models.Model):
     #         else:
     #             record.stcw_criteria = 'pending'
     
+    def format_name(self,name):
+        words = name.split()
+        capitalized_words = [word.capitalize() for word in words]
+        formatted_name = ' '.join(capitalized_words)
+        return formatted_name
     
     def approve_violation(self):
         
