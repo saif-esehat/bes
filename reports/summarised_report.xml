@@ -47,7 +47,7 @@
                 <div class="col-12">
                     <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
                     <span style="display:block; text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
-                        70th All India Exit Examination Result for
+                        72nd All India Exit Examination Result for
                         <br></br>
                         <t t-if="course == 'GP'">
                             <strong style="font-family: 'TimesNewRomanBold'; font-weight:900; text-align:center;">
@@ -720,10 +720,10 @@
 
                                 
 
-                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i">
-                                        <td t-if="i * 3 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
-                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
-                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
+                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold';">
+                                        <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
+                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
+                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
 
                                     </tr>
                                 </tbody>
