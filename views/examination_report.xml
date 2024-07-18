@@ -40,7 +40,7 @@
                         <button name="print_bar_graph_report" string="Graph Report" type="object" class="btn-primary"/>
                         <!-- <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/> -->
                         <button name="print_ship_visit_report" string="Ship Visit Report" type="object" class="btn-primary"/>
-                        <button name="summarised_report" string="Summartise Rep" type="object" class="btn-primary"/>
+                        <!-- <button name="summarised_report" string="Summartise Rep" type="object" class="btn-primary"/> -->
 
                         
                     </header>
