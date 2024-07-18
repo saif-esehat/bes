@@ -45,9 +45,9 @@
         <div class="container-fluid header article" style="font-family: 'TimesNewRomanBold';">
             <div class="row" style="font-family: 'TimesNewRomanBold';">
                 <div class="col-12 " style="font-family: 'TimesNewRomanBold';">
-                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
+                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';"><t t-if="course == 'GP'">ENCL.2a</t><t t-if="course == 'CCMC'">ENCL.2b</t></span>
                     <span style="display:block; text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
-                        72nd All India Exit Examination Result for
+                        65th All India Exit Examination Result for
                         <br></br>
                         <t t-if="course == 'GP'">
                             <strong style="font-family: 'Times New Roman', Times, serif; font-weight:900; text-align:center;">
@@ -827,7 +827,7 @@
                                                 <!-- <td colspan="15" style="text-align: center;"><strong>All India Exit</strong></td> -->
                                                 <td></td>
                                                 <td></td>
-                                                <td><span t-esc="institute.exam_region.name"/>REGION</td>
+                                                <td><span t-esc="institute.exam_region.name"/> REGION</td>
                                                 <td><span t-esc="region_applied"/></td>
                                                 <td><span t-esc="region_candidate_appeared"/></td>
                                              
