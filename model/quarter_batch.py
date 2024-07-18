@@ -542,17 +542,19 @@ class ShipVisitReportModel(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
+        
         docs1 = self.env['dgs.batches'].sudo().browse(docids)
-        batch_id = docs1.id
-        institutes_data = []
-        # if docs1.course == 'gp':
-        gp_institutes = self.env['gp.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
-        # elif docs1.course == 'ccmc':
-        ccmc_institutes = self.env['ccmc.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
+        
+        # batch_id = docs1.id
+        # institutes_data = []
+        # # if docs1.course == 'gp':
+        # gp_institutes = self.env['gp.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
+        # # elif docs1.course == 'ccmc':
+        # ccmc_institutes = self.env['ccmc.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
     
-        for institute in gp_institutes:
-            ins = {'code':institute.code , 'name':institute.name}
-            institutes_data.append(ins)
+        # for institute in gp_institutes:
+        #     ins = {'code':institute.code , 'name':institute.name}
+        #     institutes_data.append(ins)
         
         
         
