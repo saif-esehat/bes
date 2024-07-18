@@ -37,7 +37,7 @@
             
                         <!-- Centered content -->
                         All India Exit Examination Result for 
-                        <span style="margin-left:5px; margin-right:5px" t-esc="report_type" /> Candidates
+                        <span style="margin-left:5px; margin-right:5px" t-esc="report_type" />Candidates
                         <strong>
                             <span style="margin-left:5px"/>
                             <t t-set="formatted_date" t-value="doc.to_date.strftime('%B %Y')" />
@@ -77,12 +77,12 @@
                             width: 100%;
                             border: 1px solid black;
                             border-collapse: collapse;
-                            margin-top: 30px;
+                            margin-top: 10px;
                         }
                         th, td , tr {
                             border: 1px solid black;
                             text-align: left;
-                            padding: 10px;
+                            padding: 5px;
                             border-collapse: collapse;
                             padding-bottom: 0px;
                         }
@@ -107,19 +107,19 @@
 
                         <thead>
                             <tr>
-                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Sr. No.</th>
+                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold'; width:8px; height:8px;">Sr. No.</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Code No.</th>
-                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Inst. Code</th>
+                                <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold'; width:18px; height:8px;">Inst. Code</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">Roll No</th>
                                 <th style="white-space: nowrap; vertical-align: bottom; font-family: 'TimesNewRomanBold';" >Name of the Institute</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">MTI No.</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';" >Full Name of the Candidate as in INDoS</th>
                                 <th style="vertical-align: bottom; font-family: 'TimesNewRomanBold';">INDoS No.</th>
                                 <th style="text-align:center; font-family: 'TimesNewRomanBold';"> DOB</th>
-                                <th style="text-align:center; font-family: 'TimesNewRomanBold';">GSK P &amp; O Pass or Fail</th>
-                                <th style="text-align:center; font-family: 'TimesNewRomanBold';">MEK P &amp; O Pass or Fail</th>
-                                <th style="text-align:center; font-family: 'TimesNewRomanBold';">Online GSK Pass or Fail</th>
-                                <th style="text-align:center; font-family: 'TimesNewRomanBold';">Online MEK Pass or Fail</th>
+                                <th style="text-align:center; font-family: 'TimesNewRomanBold'; width:8px; height:8px;">GSK P &amp; O Pass or Fail</th>
+                                <th style="text-align:center; font-family: 'TimesNewRomanBold'; width:8px; height:8px;">MEK P &amp; O Pass or Fail</th>
+                                <th style="text-align:center; font-family: 'TimesNewRomanBold'; width:8px; height:8px;">Online GSK Pass or Fail</th>
+                                <th style="text-align:center; font-family: 'TimesNewRomanBold'; width:8px; height:8px;">Online MEK Pass or Fail</th>
                                 <th style="text-align:center; font-family: 'TimesNewRomanBold';"> 
                                     <t t-set="formatted_date" t-value="doc.to_date.strftime('%b %y')" />
                                     <t t-esc="formatted_date" /> Final Result</th>
@@ -135,9 +135,9 @@
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.candidate_code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
-                                    <td><span t-esc="exam.format_name(exam.gp_candidate.institute_id.name)"/></td>
+                                    <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.gp_candidate.institute_id.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.mti"/></td>
-                                    <td><span t-esc="exam.gp_candidate.name"/></td>
+                                    <td><span t-esc="exam.format_name(exam.gp_candidate.name)"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.indos_no"/></td>
                                     <td style="text-align:center; white-space: nowrap;">
                                         <t t-set="formatted_date" t-value="exam.gp_candidate.dob.strftime('%d-%b-%y')" />
@@ -146,63 +146,63 @@
                                     </td>
                                     
                                     <t t-if="exam.gsk_oral_prac_carry_forward">
-                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_oral_prac_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center;  width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_oral_prac_attendance == 'absent'">
-                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                        <td style="text-align:center; color:blue;  width:8px; height:8px;"><strong>A</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red;  width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
                                     <t t-if="exam.mek_oral_prac_carry_forward">
-                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_oral_prac_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center;  width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_oral_prac_attendance == 'absent'">
-                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                        <td style="text-align:center; color:blue;  width:8px; height:8px;"><strong>A</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red;  width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
                                     
                                     <t t-if="exam.gsk_online_carry_forward">
-                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_online_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center;  width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_online_attendance == 'absent'">
-                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                        <td style="text-align:center; color:blue;  width:8px; height:8px;"><strong>A</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red;  width:8px; height:8px;"><strong>F</strong></td>
                                     </t>                                    
                                     
                                     <t t-if="exam.mek_online_carry_forward">
-                                        <td style="text-align:center;color:green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_online_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center;  width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_online_attendance == 'absent'">
-                                        <td style="text-align:center; color:blue;"><strong>A</strong></td>
+                                        <td style="text-align:center; color:blue;  width:8px; height:8px;"><strong>A</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red;  width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
                                     
                                     <t t-if="exam.exam_criteria == 'passed'">
-                                        <td style="text-align:center"><strong>PASS</strong></td>
+                                        <td style="text-align:center; width:10px;"><strong>PASS</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>FAIL</strong></td>
+                                        <td style="text-align: center; color: red; width:10px;"><strong>FAIL</strong></td>
                                     </t>  
                                 </tr>
                             </t>
@@ -228,7 +228,7 @@
                             width: 100%;
                             border: 1px solid black;
                             border-collapse: collapse;
-                            margin-top: 30px;
+                            margin-top: 15px;
                         }
                         th, td , tr {
                             border: 1px solid black;
@@ -257,18 +257,18 @@
 
                         <thead>
                             <tr>
-                                <th style="vertical-align: bottom;">Sr. No.</th>
+                                <th style="vertical-align: bottom; width:8px; height:8px;">Sr. No.</th>
                                 <th style="vertical-align: bottom;">Code No.</th>
-                                <th style="vertical-align: bottom;">Inst. Code</th>
+                                <th style="vertical-align: bottom; width:18px; height:8px;">Inst. Code</th>
                                 <th style="vertical-align: bottom;">Roll No</th>
                                 <th style="white-space: nowrap; vertical-align: bottom;" >Name of the Institute</th>
                                 <th style="vertical-align: bottom;">MTI No.</th>
                                 <th style="vertical-align: bottom;" >Full Name of the Candidate as in INDoS</th>
                                 <th style="vertical-align: bottom;">INDoS No.</th>
                                 <th > DOB</th>
-                                <th>Practical Cookery Pass or Fail</th>
-                                <th>Oral Cookery &amp; others Pass or Fail</th>
-                                <th>Online Pass or Fail (Average 60% in above)</th>
+                                <th style=" width:8px; height:8px;">Practical Cookery Pass or Fail</th>
+                                <th style="width:8px; height:8px;">Oral Cookery &amp; others Pass or Fail</th>
+                                <th style="width:8px; height:8px;">Online Pass or Fail (Average 60% in above)</th>
                                 <th><t t-set="formatted_date" t-value="doc.to_date.strftime('%b %y')" />
                                     <t t-esc="formatted_date" /> Final Result</th>
                             </tr>
@@ -283,7 +283,7 @@
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.candidate_code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.institute_id.code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
-                                    <td><span t-esc="exam.ccmc_candidate.institute_id.name"/></td>
+                                    <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.ccmc_candidate.institute_id.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.institute_id.mti"/></td>
                                     <td><span t-esc="exam.ccmc_candidate.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.ccmc_candidate.indos_no"/></td>
@@ -293,40 +293,40 @@
                                     </td>
 
                                     <t t-if="exam.cookery_prac_carry_forward">
-                                        <td style="text-align:center;color: green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color: green; width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.cookery_bakery_prac_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center; width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red; width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
                                     <t t-if="exam.cookery_oral_carry_forward">
-                                        <td style="text-align:center;color: green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color: green; width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.ccmc_oral_prac_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center; width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red; width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
                                     <t t-if="exam.cookery_gsk_online_carry_forward">
-                                        <td style="text-align:center;color: green;"><strong>AP</strong></td>
+                                        <td style="text-align:center;color: green; width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.ccmc_online_status == 'passed'">
-                                        <td style="text-align:center"><strong>P</strong></td>
+                                        <td style="text-align:center; width:8px; height:8px;"><strong>P</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>F</strong></td>
+                                        <td style="text-align: center; color: red; width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
                                     <t t-if="exam.exam_criteria == 'passed'">
-                                        <td style="text-align:center"><strong>PASS</strong></td>
+                                        <td style="text-align:center; width:10px;"><strong>PASS</strong></td>
                                     </t>
                                     <t t-else="">
-                                        <td style="text-align: center; color: red;"><strong>FAIL</strong></td>
+                                        <td style="text-align: center; color: red; width:10px;"><strong>FAIL</strong></td>
                                     </t>  
                                 </tr>
                             </t>

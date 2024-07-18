@@ -415,6 +415,17 @@ class DGSBatch(models.Model):
         other_batches.write({'is_current_batch': False})
         
 
+    def print_ship_visit_report(self):
+        
+        datas = {
+            'doc_ids': self.id  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+            
+        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+
+        
+
 class DGSBatchReport(models.AbstractModel):
     _name = "report.bes.dgs_report"
     _inherit = ['mail.thread','mail.activity.mixin']
@@ -489,3 +500,75 @@ class CCMCDGSBatchReport(models.AbstractModel):
             'course':course
         }
     
+class ShipVisitReport(models.Model):
+    _name = "ship.visit.report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description= 'Ship Visit Report'
+    
+    examination_report_batch = fields.Many2one("examination.report",string="Examination Report Batch")
+    examination_batch = fields.Many2one("dgs.batches",related="examination_report_batch.examination_batch",string="Examination Batch",tracking=True)
+    
+    institute = fields.Many2one('bes.institute',"Name of Institute",tracking=True)
+    exam_region = fields.Many2one("exam.center", "Exam Region",store=True,related="institute.exam_center",tracking=True)
+    code_no = fields.Char(related="institute.code", string="code_no")
+    name_institute = fields.Char(related="institute.name", string="Name_of_the_institute")
+    no_of_candidates = fields.Char(string="No_Of_Candidates")
+    no_of_ship_visit = fields.Char(string="No_Of_Ship_visit")
+    Name_of_ship_visit = fields.Char(string="Name_of_the_Ship_Visited_Ship_in_Campus")
+    imo_no = fields.Char(string="IMO_No")
+    name_of_the_port = fields.Char(string="Name_of_the_Port_Visited_Place_of_SIC")
+    date_visit = fields.Char(string="Date_of_Visit")
+    time_spend_on_ship = fields.Char(string="Time_Spend_on_Ship_Hrs")
+    provided= fields.Char(string="Provided_Evidence")
+    remark = fields.Char(string="Remark")
+    center = fields.Char(string="Center")
+
+    
+    @api.depends('candidate_appeared', 'overall_pass')
+    def _compute_percentage(self):
+        for record in self:
+            if record.candidate_appeared > 0:
+                record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
+            else:
+                record.overall_pass_per = 0.0
+
+
+class ShipVisitReportModel(models.AbstractModel):
+    _name = "report.bes.ship_visit_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "Ship Visit Report"
+    
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)
+        batch_id = docs1.id
+        institutes_data = []
+        # if docs1.course == 'gp':
+        gp_institutes = self.env['gp.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
+        # elif docs1.course == 'ccmc':
+        ccmc_institutes = self.env['ccmc.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
+    
+        for institute in gp_institutes:
+            ins = {'code':institute.code , 'name':institute.name}
+            institutes_data.append(ins)
+        
+        
+        
+        # exam_region = data.exam_region.ids
+       
+
+        return {
+            # 'docids': docids,
+            'doc_model': 'dgs.batches',
+            # 'docs': docids,
+            # 'exam_regions': exam_region,
+            'docs':docs1,
+            'institutes_data':institutes_data
+            # 'exams': exams,
+            # 'institutes': institutes,
+            # 'exam_centers': exam_centers,
+            # 'report_type': report_type,
+            # 'course': course
+        }

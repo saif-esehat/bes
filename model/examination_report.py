@@ -312,14 +312,14 @@ class ExaminationReport(models.Model):
                 applied = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
-                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('cookery_prac_carry_forward','=',False)])
+                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_prac_carry_forward','=',False)])
                 practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed'),('cookery_prac_carry_forward','=',False)])
                 try :
                     practical_percentage = (practical/practical_appeared) * 100
                 except ZeroDivisionError:
                     practical_percentage = 0
                     
-                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False)])                
+                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_oral_carry_forward','=',False)])                
                 oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False)])
                 
                 try:
@@ -327,7 +327,7 @@ class ExaminationReport(models.Model):
                 except ZeroDivisionError:
                     oral_percentage = 0
 
-                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False)])                
+                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_gsk_online_carry_forward','=',False)])                
                 online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False)])
                 
                 try:
@@ -632,6 +632,25 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
            
+           
+    def print_ship_visit_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'CCMC',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+
+        
+    
+               
     def print_ship_visit_report(self):
         
         datas = {
@@ -954,6 +973,13 @@ class AttemptWiseReport(models.Model):
     
     
 
+    @api.depends('candidate_appeared', 'overall_pass')
+    def _compute_percentage(self):
+        for record in self:
+            if record.candidate_appeared > 0:
+                record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
+            else:
+                record.overall_pass_per = 0.0
 
 class ShipVisitReport(models.Model):
     _name = "ship.visit.report"
@@ -977,15 +1003,6 @@ class ShipVisitReport(models.Model):
     provided= fields.Char(string="Provided_Evidence")
     remark = fields.Char(string="Remark")
     center = fields.Char(string="Center")
-
-    
-    @api.depends('candidate_appeared', 'overall_pass')
-    def _compute_percentage(self):
-        for record in self:
-            if record.candidate_appeared > 0:
-                record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
-            else:
-                record.overall_pass_per = 0.0
                 
 
 class BarGraphReport(models.AbstractModel):
