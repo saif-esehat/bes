@@ -137,7 +137,7 @@
                                     <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
                                     <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.gp_candidate.institute_id.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.mti"/></td>
-                                    <td><span t-esc="exam.gp_candidate.name"/></td>
+                                    <td><span t-esc="exam.format_name(exam.gp_candidate.name)"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.indos_no"/></td>
                                     <td style="text-align:center; white-space: nowrap;">
                                         <t t-set="formatted_date" t-value="exam.gp_candidate.dob.strftime('%d-%b-%y')" />
