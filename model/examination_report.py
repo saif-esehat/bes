@@ -602,6 +602,21 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
     
+    def print_summarised_gp_repeater_report(self):
+        
+        datas = {
+            'doc_ids': self.id,
+            'course': 'GP',
+            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+        }
+        
+        if self.exam_type == 'repeater':
+            datas['report_type'] = 'Repeater'
+        elif self.exam_type == 'fresh':
+            datas['report_type'] = 'Fresh'
+            
+        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
+    
     def print_bar_graph_report(self):
         
         datas = {
@@ -746,7 +761,48 @@ class SubjectPassPercentage(models.Model):
     #             record.percentage = (record.passed / record.appeared) * 100
     #         else:
     #             record.percentage = 0.0
+
+class SummarisedGPRepeaterReport(models.AbstractModel):
+    _name = "report.bes.summarised_gp_repeater_report"
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = "Summarised GP Repeater Report"
     
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['examination.report'].sudo().browse(docids)
+        
+        data = self.env['summarised.gp.report'].sudo().search(
+                    [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
+        exam_region = data.exam_region.ids
+        
+        data = self.env['summarised.gp.repeater.report'].sudo().search([('examination_report_batch','=',docs1.id)])
+
+        
+        print(exam_region)
+        # report_type = data['report_type']
+        # course = data['course']
+
+        # if report_type == 'Fresh' and course == 'GP':
+        #     exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
+        # elif report_type == 'Repeater' and course == 'GP':
+        #     exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
+        
+        # institutes = self.env['bes.institute'].sudo().search([], order='code asc')
+        # exam_centers = self.env['exam.center'].sudo().search([])
+
+        return {
+            'docids': docids,
+            'doc_model': 'summarised.gp.report',
+            'docs': data,
+            'exam_regions': exam_region,
+            'examination_report':docs1
+            # 'exams': exams,
+            # 'institutes': institutes,
+            # 'exam_centers': exam_centers,
+            # 'report_type': report_type,
+            # 'course': course
+        }    
 
 class SummarisedGPReport(models.AbstractModel):
     _name = "report.bes.summarised_gp_report"
