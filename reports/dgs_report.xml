@@ -135,7 +135,7 @@
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.candidate_code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.code"/></td>
                                     <td style="text-align:center"><span t-esc="exam.exam_id"/></td>
-                                    <td><span t-esc="exam.gp_candidate.institute_id.name"/></td>
+                                    <td><span t-esc="exam.format_name(exam.gp_candidate.institute_id.name)"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.institute_id.mti"/></td>
                                     <td><span t-esc="exam.gp_candidate.name"/></td>
                                     <td style="text-align:center"><span t-esc="exam.gp_candidate.indos_no"/></td>
