@@ -3932,6 +3932,18 @@ class CCMCExam(models.Model):
         self.ccmc_oral_prac_status = 'failed'
         self.ccmc_online_status = 'failed'
         self.state = '4-pending'
+    
+    def format_name(self,name):
+        # Split the name into words
+        words = name.split()
+        
+        # Capitalize each word
+        capitalized_words = [word.capitalize() for word in words]
+        
+        # Join the capitalized words back into a single string
+        formatted_name = ' '.join(capitalized_words)
+        
+        return formatted_name
         
     @api.depends('certificate_criteria')
     def _compute_result_status(self):
