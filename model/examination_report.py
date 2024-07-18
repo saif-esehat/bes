@@ -615,7 +615,7 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
+        return self.env.ref('bes.summarised_gp_repeater_report_action').report_action(self ,data=datas)
     
     def print_bar_graph_report(self):
         
@@ -772,7 +772,7 @@ class SummarisedGPRepeaterReport(models.AbstractModel):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
         
-        data = self.env['summarised.gp.report'].sudo().search(
+        data = self.env['summarised.gp.repeater.report'].sudo().search(
                     [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
         exam_region = data.exam_region.ids
         
@@ -793,7 +793,7 @@ class SummarisedGPRepeaterReport(models.AbstractModel):
 
         return {
             'docids': docids,
-            'doc_model': 'summarised.gp.report',
+            'doc_model': 'summarised.gp.repeater.report',
             'docs': data,
             'exam_regions': exam_region,
             'examination_report':docs1
