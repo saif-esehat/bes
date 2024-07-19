@@ -172,7 +172,7 @@ class ExaminationReport(models.Model):
                 gsk_online_passed_percentage = (gsk_online_passed_count/appeared) * 100
                 
                 #MEK Online
-                mek_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_status','=','passed')])
+                mek_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_online_status','=','passed')])
                 mek_online_passed_percentage = (mek_online_passed_count/appeared) * 100
                 
                 
@@ -240,9 +240,82 @@ class ExaminationReport(models.Model):
         
         elif self.course == 'gp' and self.exam_type == 'repeater':
             institute_ids = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).institute_id.ids
+            overall_absent = 0
             for institute_id in institute_ids:
+                absent = 0
+                applied_records = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
+
+                for record in applied_records:
+                    index = 0
+                    row = [ ]
+                    if record.gsk_oral_prac_carry_forward:
+                        gsk_status = "AP"
+                        row.append(gsk_status)
+                    elif record.gsk_oral_prac_status == 'passed':
+                        gsk_status = "P"
+                        row.append(gsk_status)
+                    elif record.gsk_oral_prac_attendance == 'absent':
+                         gsk_status = "A"
+                         row.append(gsk_status)
+                    else:
+                        gsk_status = "F"
+                        row.append(gsk_status)
+                         
+                    if record.mek_oral_prac_carry_forward:
+                        mek_status = "AP"
+                        row.append(mek_status)
+                    elif record.mek_oral_prac_status == 'passed':
+                        mek_status = "P"
+                        row.append(mek_status)
+                    elif record.mek_oral_prac_attendance == 'absent':
+                         mek_status = "A"
+                         row.append(mek_status)
+                    else:
+                        mek_status = "F"
+                        row.append(mek_status)
+                    
+                    if record.mek_online_carry_forward:
+                        mek_online_status = "AP"
+                        row.append(mek_online_status)
+                    elif record.mek_online_status == 'passed':
+                        mek_online_status = "P"
+                        row.append(mek_online_status)
+                    elif record.mek_online_attendance == 'absent':
+                         mek_online_status = "A"
+                         row.append(mek_online_status)
+                    else:
+                        mek_online_status = "F"
+                        row.append(mek_online_status)
+                    
+                    if record.gsk_online_carry_forward:
+                        gsk_online_status = "AP"
+                        row.append(gsk_online_status)
+                    elif record.gsk_online_status == 'passed':
+                        gsk_online_status = "P"
+                        row.append(gsk_online_status)
+                    elif record.gsk_online_attendance == 'absent':
+                         gsk_online_status = "A"
+                         row.append(gsk_online_status)
+                    else:
+                        gsk_online_status = "F"
+                        row.append(gsk_online_status)
+                    
+                    allowed_values = {'AP', 'A'}
+    
+                    # Convert the record to a set to find unique values
+                    unique_values = set(row)
+                    # absent_status = False
+                    # Check if the unique values are a subset of allowed values
+                    if unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values):
+                        absent = absent + 1
+
+                ins_name = self.env['bes.institute'].sudo().search([('id','=',institute_id)])
+                print("Institute  "+str(ins_name.name)+" Absent "+ str(absent))
+                    
+                
                 applied = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
-                appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
+                # appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
+                appeared = applied - absent
                 
                 #GSK Prac/Oral
                 
@@ -302,6 +375,9 @@ class ExaminationReport(models.Model):
                 }
                 
                 self.env['summarised.gp.repeater.report'].create(vals)
+            
+            print("overall_absent")    
+            print(overall_absent)
         
         elif self.course == 'ccmc' and self.exam_type == 'repeater':
             batch_id = self.examination_batch.id
@@ -962,7 +1038,7 @@ class GPSummarisedRepeaterReport(models.Model):
             if record.candidate_appeared > 0:
                 record.overall_pass_per = (record.overall_pass / record.candidate_appeared) * 100
             else:
-                record.percentage = 0.0
+                record.overall_pass_per = 0.0
     
     
     

@@ -173,8 +173,11 @@
                     <t t-set="nation_candidate_appeared" t-value="0" />
                     <t t-set="nation_gsk_prac_oral_pass" t-value="0" />
                     <t t-set="nation_mek_prac_oral_pass" t-value="0" />
+
                     <t t-set="nation_gsk_online_pass" t-value="0" />
+
                     <t t-set="nation_mek_online_pass" t-value="0" />
+                    
                     <t t-set="nation_overall_pass" t-value="0" />
                     
                     <t t-foreach="regions" t-as="center">
@@ -555,9 +558,19 @@
                                             <td><span t-esc="round((region_mek_online_pass/region_mek_online_appeared)*100,2)"/>%</td>
                                         </t>
 
+
+                                        <t t-if="region_candidate_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="region_overall_pass"/></td>
+                                            <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        </t>
+
                                         
-                                        <td><span t-esc="region_overall_pass"/></td>
-                                        <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                       
 
 
                                         

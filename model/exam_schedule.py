@@ -2684,23 +2684,23 @@ class GPExam(models.Model):
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK P&O",compute="_compute_attendance")
+    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance")
 
     gsk_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK Online")
+    ],string="GSK Online Attendance")
     
     mek_oral_prac_attendance = fields.Selection([
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK P&O",compute="_compute_attendance")
+    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance")
     
     mek_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK Online")
+    ],string="MEK Online Attendance")
 
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
