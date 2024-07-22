@@ -2521,7 +2521,7 @@ class GPExam(models.Model):
     mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True,tracking=True)
     gsk_practical_marks = fields.Float("GSK Practical",readonly=True,tracking=True)
     mek_practical_marks = fields.Float("MEK Practical",readonly=True,tracking=True)
-    gsk_total = fields.Float("GSK Oral/Practical",readonly=True,tracking=True)
+    gsk_total = fields.Float("GSK Oral/Practical Marks",readonly=True,tracking=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True,tracking=True)
     
     # mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
@@ -2530,7 +2530,7 @@ class GPExam(models.Model):
     gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2),tracking=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2),tracking=True)
     gsk_online_percentage = fields.Float("GSK Online (%)",readonly=True,digits=(16,2),tracking=True)    
-    mek_total = fields.Float("MEK Oral/Practical",readonly=True,tracking=True)
+    mek_total = fields.Float("MEK Oral/Practical Marks",readonly=True,tracking=True)
     mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True,tracking=True)
     overall_marks = fields.Float("Overall Marks",readonly=True,tracking=True)
     overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)

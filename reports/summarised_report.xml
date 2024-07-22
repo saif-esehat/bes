@@ -1182,10 +1182,10 @@
                         <div class="row">
                             <div class="col-12 image-container">
                                 <t t-if="doc.course == 'gp'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:100%;height:570px; margin-top:5px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:95%;height:550px; margin-top:2px;"/>
                                 </t>
                                 <t t-elif="doc.course == 'ccmc'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:100%;height:570px; margin-top:5px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:95%;height:550px; margin-top:2px;"/>
                                 </t>
                             </div>
                         </div>
@@ -1202,10 +1202,10 @@
 
                                 
 
-                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold';">
-                                        <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
-                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
-                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
+                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold';font-size: 8px;">
+                                        <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';font-size: 8px"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
+                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';font-size: 8px"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
+                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';font-size: 8px"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
 
                                     </tr>
                                 </tbody>
