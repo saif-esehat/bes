@@ -1238,6 +1238,8 @@ class ExamOralPractical(models.Model):
             employee = self.env['hr.employee'].search([('user_id','=',user_id)])
             
             designation = assignment.examiner
+            exam_date = assignment.exam_date
+            # import wdb; wdb.set_trace(); 
             
             if subject_name == 'GSK' and assignment.exam_type == 'practical_oral': 
             
@@ -1253,8 +1255,16 @@ class ExamOralPractical(models.Model):
                                                                     'employee_id':employee.id,
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
+                
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                        'institutes_id':institute_id,
+                                                                        'examiner':examiner_id,
+                                                                        'expense_sheet':expense_sheet.id,
+                                                                        'exam_date':exam_date
+                })
+                expense_sheet.write({'time_sheet': time_sheet.id})
             
-                assignment.write({'expense_sheet':expense_sheet})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
             elif subject_name == 'MEK' and assignment.exam_type == 'practical_oral': 
                 
@@ -1270,8 +1280,15 @@ class ExamOralPractical(models.Model):
                                                                     'employee_id':employee.id,
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
-            
-                assignment.write({'expense_sheet':expense_sheet})
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                        'institutes_id':institute_id,
+                                                                        'examiner':examiner_id,
+                                                                        'expense_sheet':expense_sheet.id,
+                                                                        'exam_date':exam_date
+                })
+
+                expense_sheet.write({'time_sheet': time_sheet.id})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
             elif subject_name == 'GSK' and assignment.exam_type == 'online': 
                 
@@ -1298,8 +1315,15 @@ class ExamOralPractical(models.Model):
                                                                     'employee_id':employee.id,
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
-            
-                assignment.write({'expense_sheet':expense_sheet})
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                        'institutes_id':institute_id,
+                                                                        'examiner':examiner_id,
+                                                                        'expense_sheet':expense_sheet.id,
+                                                                        'exam_date':exam_date
+                })
+
+                expense_sheet.write({'time_sheet': time_sheet.id})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
             elif subject_name == 'MEK' and assignment.exam_type == 'online': 
                 
@@ -1322,8 +1346,15 @@ class ExamOralPractical(models.Model):
                                                                     'employee_id':employee.id,
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
-            
-                assignment.write({'expense_sheet':expense_sheet})
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                            'institutes_id':institute_id,
+                                                                            'examiner':examiner_id,
+                                                                            'expense_sheet':expense_sheet.id,
+                                                                            'exam_date':exam_date
+                    })
+
+                expense_sheet.write({'time_sheet': time_sheet.id})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
             elif subject_name == 'CCMC' and assignment.exam_type == 'practical_oral': 
                 
@@ -1340,7 +1371,15 @@ class ExamOralPractical(models.Model):
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
             
-                assignment.write({'expense_sheet':expense_sheet})
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                        'institutes_id':institute_id,
+                                                                        'examiner':examiner_id,
+                                                                        'expense_sheet':expense_sheet.id,
+                                                                        'exam_date':exam_date
+                })
+
+                expense_sheet.write({'time_sheet': time_sheet.id})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
                 
             elif subject_name == 'CCMC' and assignment.exam_type == 'online': 
                 
@@ -1364,7 +1403,15 @@ class ExamOralPractical(models.Model):
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
             
-                assignment.write({'expense_sheet':expense_sheet})
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                        'institutes_id':institute_id,
+                                                                        'examiner':examiner_id,
+                                                                        'expense_sheet':expense_sheet.id,
+                                                                        'exam_date':exam_date
+                })
+
+                expense_sheet.write({'time_sheet': time_sheet.id})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
             elif subject_name == 'CCMC GSK Oral' and assignment.exam_type == 'practical_oral': 
                 
@@ -1383,7 +1430,15 @@ class ExamOralPractical(models.Model):
                                                                     'expense_line_ids': [(6, 0, child_records.ids)]
                                                                     })
             
-                assignment.write({'expense_sheet':expense_sheet})
+                time_sheet = self.env['time.sheet.report'].sudo().create({
+                                                                        'institutes_id':institute_id,
+                                                                        'examiner':examiner_id,
+                                                                        'expense_sheet':expense_sheet.id,
+                                                                        'exam_date':exam_date
+                })
+
+                expense_sheet.write({'time_sheet': time_sheet.id})
+                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
         self.write({'expense_sheet_status':'generated'})
             
@@ -1837,7 +1892,9 @@ class ExamOralPracticalExaminers(models.Model):
     team_lead = fields.Boolean("TL")
     no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
     
-    expense_sheet = fields.Many2one('hr.expense.sheet', string="Expense Sheet")
+    expense_sheet = fields.Many2one('hr.expense.sheet', string="Renumeration")
+    time_sheet = fields.Many2one("time.sheet.report",string="Time sheet")
+    
     status = fields.Selection([
         ('draft', 'Draft'), 
         ('confirmed', 'Confirmed')
