@@ -415,14 +415,14 @@ class DGSBatch(models.Model):
         other_batches.write({'is_current_batch': False})
         
 
-    def print_ship_visit_report(self):
+    # def print_ship_visit_report(self):
         
-        datas = {
-            'doc_ids': self.id  # Assuming examination_batch is a recordset and you want its ID
-        }
+    #     datas = {
+    #         'doc_ids': self.id  # Assuming examination_batch is a recordset and you want its ID
+    #     }
         
             
-        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+    #     return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
 
         
 

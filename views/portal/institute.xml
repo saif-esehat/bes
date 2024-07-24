@@ -698,7 +698,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="gender">Gender</label>
+                                                    <label for="gender">Gender (for age relaxation)</label>
                                                     <select class="form-control" id="gender" name="gender" required="1">
                                                         <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
                                                         <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
@@ -723,6 +723,19 @@
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
                                                 </div>
                                             </div>
+                                                                           
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="sc_st">To be mentioned if SC /ST /OBC(for age relaxation)</label>
+                                                    <select class="form-control" id="sc_st" name="sc_st" required="1">
+                                                        <option value="general" t-att-selected ="candidate.sc_st == 'general'">General</option>
+                                                        <option value="sc" t-att-selected ="candidate.sc_st == 'sc'">SC</option>
+                                                        <option value="st" t-att-selected ="candidate.sc_st == 'st'">ST</option>
+                                                        <option value="obc" t-att-selected ="candidate.sc_st == 'obc'">OBC</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Address</label>
@@ -864,6 +877,17 @@
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.mobile"/>
                                         </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">To be mentioned if SC /ST /OBC</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.sc_st"/>
+                                        </p>(for age relaxation)
                                     </div>
                                 </div>
                                 <hr/>
@@ -4309,7 +4333,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="gender">Gender</label>
+                                                    <label for="gender">Gender (for age relaxation)</label>
                                                     <select class="form-control" id="gender" name="gender" required="1">
                                                         <option value="male" t-att-selected ="candidate.gender == 'male'">Male</option>
                                                         <option value="female" t-att-selected ="candidate.gender == 'female'">Female</option>
@@ -4332,6 +4356,17 @@
                                                 <div class="form-group">
                                                     <label for="indos_no">Mobile</label>
                                                     <input type="text" class="form-control" id="mobile" name="mobile" t-att-value ="candidate.mobile"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="sc_st">To be mentioned if SC /ST /OBC (for age relaxation)</label>
+                                                    <select class="form-control" id="sc_st" name="sc_st" required="1">
+                                                        <option value="general" t-att-selected ="candidate.sc_st == 'general'">General</option>
+                                                        <option value="sc" t-att-selected ="candidate.sc_st == 'sc'">SC</option>
+                                                        <option value="st" t-att-selected ="candidate.sc_st == 'st'">ST</option>
+                                                        <option value="obc" t-att-selected ="candidate.sc_st == 'obc'">OBC</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -4469,6 +4504,17 @@
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.mobile"/>
                                         </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">To be mentioned if SC /ST /OBC</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.sc_st"/>
+                                        </p>(for age relaxation)
                                     </div>
                                 </div>
                                 <hr/>

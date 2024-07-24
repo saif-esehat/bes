@@ -20,11 +20,6 @@
             <field name="context">{}</field>
         </record>
 
-        <record id="action_time_sheet_form" model="ir.actions.act_window">
-            <field name="name">Time Sheet Report Form</field>
-            <field name="res_model">time.sheet.report</field>
-            <field name="view_mode">form</field>
-        </record>
 
         <!-- <record id="open_ec_gp_exam_schedule_form" model="ir.actions.act_window">
             <field name="name">GP Registered Candidate</field>

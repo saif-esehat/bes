@@ -28,6 +28,7 @@
                     <field name="dgs_exam" invisible="1" />
                     <field name="dgs_batch" attrs="{'invisible':[('dgs_exam','=',False)]}" />
                     <field name="institute_id" attrs="{'invisible':[('dgs_exam','=',False)]}" />
+                    <field name="time_sheet" attrs="{'invisible':[('dgs_exam','=',False)]}" />
 
 
                 </xpath>              
