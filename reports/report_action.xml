@@ -107,7 +107,7 @@
     </record>
 
     <record id="report_dgs_ccmc_fresh_action" model="ir.actions.report">
-        <field name="name">DGS Report</field>
+        <field name="name">DGS Reports</field>
         <field name="model">dgs.batches</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.ccmc_dgs_report</field>

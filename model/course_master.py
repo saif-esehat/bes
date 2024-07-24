@@ -19,7 +19,7 @@ class CourseMaster(models.Model):
     _name = "course.master.subject"
     _description= 'Course Subject'
     _rec_name = 'name'
-    _inherit = ['mail.thread','mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     
     course_id = fields.Many2one("course.master","Course ID",tracking=True)
     name = fields.Char("Course Subject",tracking=True)
