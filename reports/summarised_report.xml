@@ -45,14 +45,9 @@
         <div class="container-fluid header article" style="font-family: 'TimesNewRomanBold';">
             <div class="row" style="font-family: 'TimesNewRomanBold';">
                 <div class="col-12 " style="font-family: 'TimesNewRomanBold';">
-                <t t-if="course == 'GP'">
-                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
-                </t>
-                <t t-if="course == 'CCMC'">
-                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
-                </t>
+                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';"><t t-if="course == 'GP'">ENCL.2a</t><t t-if="course == 'CCMC'">ENCL.2b</t></span>
                     <span style="display:block; text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
-                        72nd All India Exit Examination Result for
+                        65th All India Exit Examination Result for
                         <br></br>
                         <t t-if="course == 'GP'">
                             <strong style="font-family: 'Times New Roman', Times, serif; font-weight:900; text-align:center;">
@@ -178,8 +173,11 @@
                     <t t-set="nation_candidate_appeared" t-value="0" />
                     <t t-set="nation_gsk_prac_oral_pass" t-value="0" />
                     <t t-set="nation_mek_prac_oral_pass" t-value="0" />
+
                     <t t-set="nation_gsk_online_pass" t-value="0" />
+
                     <t t-set="nation_mek_online_pass" t-value="0" />
+                    
                     <t t-set="nation_overall_pass" t-value="0" />
                     
                     <t t-foreach="regions" t-as="center">
@@ -560,9 +558,19 @@
                                             <td><span t-esc="round((region_mek_online_pass/region_mek_online_appeared)*100,2)"/>%</td>
                                         </t>
 
+
+                                        <t t-if="region_candidate_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="region_overall_pass"/></td>
+                                            <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        </t>
+
                                         
-                                        <td><span t-esc="region_overall_pass"/></td>
-                                        <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                       
 
 
                                         
@@ -840,7 +848,7 @@
                                                 <!-- <td colspan="15" style="text-align: center;"><strong>All India Exit</strong></td> -->
                                                 <td></td>
                                                 <td></td>
-                                                <td><span t-esc="institute.exam_region.name"/>REGION</td>
+                                                <td><span t-esc="institute.exam_region.name"/> REGION</td>
                                                 <td><span t-esc="region_applied"/></td>
                                                 <td><span t-esc="region_candidate_appeared"/></td>
                                              
@@ -1171,10 +1179,10 @@
                         <div class="row">
                             <div class="col-12 image-container">
                                 <t t-if="doc.course == 'gp'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:100%;height:570px; margin-top:5px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:95%;height:550px; margin-top:2px;"/>
                                 </t>
                                 <t t-elif="doc.course == 'ccmc'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:100%;height:570px; margin-top:5px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:95%;height:550px; margin-top:2px;"/>
                                 </t>
                             </div>
                         </div>
@@ -1191,10 +1199,10 @@
 
                                 
 
-                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold';">
-                                        <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
-                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
-                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
+                                    <tr t-foreach="range(0,int(len(institutes_data)/3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold';font-size: 8px;">
+                                        <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';font-size: 8px"><span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/></td>
+                                        <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';font-size: 8px"><span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/></td>
+                                        <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold';font-size: 8px"><span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/></td>
 
                                     </tr>
                                 </tbody>
