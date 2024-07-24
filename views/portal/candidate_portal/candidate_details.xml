@@ -143,10 +143,105 @@
     <template id="exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
             <div class="container mt16">
-                <h1>Repeater Application for GP Rating</h1>
+                <h1>Application Form GP Rating(Repeater)</h1>
                 <form action="/my/application/view" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" t-att-value="batch.id" />
+                    <div class="form-group row">
+                        <div class="form-group row">
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Full Name:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="candidate.name"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Indos No:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="candidate.indos_no"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Code No:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="candidate.candidate_code"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Address:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.street"/>
+                                                </span>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.street2"/>
+                                                </span>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.city"/>
+                                                </span>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.state_id.name"/>
+                                                </span>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.zip"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="row justify-content-center mb-2">
+                                    <div class="col-12">
+                                        <t t-if="candidate.candidate_image">
+                                            <img t-attf-src="data:image/png;base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        <t t-if="candidate.candidate_signature">
+                                            <img t-attf-src="data:image/png;base64, {{candidate.candidate_signature}}" alt="signature" class="rounded img-fluid" style="width: 150px;"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <p class=""><strong>Exam Batch:</strong></p>
+                        </div>
+                        <div class="col-9">
+                            <p class="text-muted">
+                                <t t-out="candidate.dgs_batch.batch_name"/>
+                            </p>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
@@ -157,19 +252,14 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="training_institute">Training Institute Name</label>
+                            <label for="training_institute">Parent Training Institute</label>
                             <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="name">Name as in the INDoS</label>
-                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="candidate_code">Candidate Code No.</label>
-                            <input type="hidden" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
-                            <input type="text" t-att-disabled="1" class="form-control" t-att-value="candidate.candidate_code"/>
+                            <label for="name">No. of Attempts</label>
+                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="exam.attempt_number"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -228,7 +318,7 @@
 
                         </div>
                         <div class="col-md-4">
-                            <label for="exams">Previous Exam Status</label><br/>
+                            <label for="exams">Previous Exam Status:</label>
                             <span>Red means Failed</span><br/>
                             <div class="form-check">
                                 <t t-if="exam.gsk_online_status == 'failed'">
@@ -265,22 +355,41 @@
 
                         </div>
                         <div class="col-md-4">
+                            <label for="fees">Fees To be Exam</label><br/>
+                            <!-- <img t-attf-src="/bes/static/src/img/GP_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" /> -->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <p>The amount to be paid for booking </p>
+                    </div>
+                    <hr/>
+                    <div class="form-group row">
+                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong><br/>
+                        <div class="col-md-4">
                             <label for="gp_qr">Payment QR code</label><br/>
                             <img t-attf-src="/bes/static/src/img/GP_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" />
                         </div>
                     </div>
+                    <hr/>
                     <div class="form-group row">
-                        <div class="col-md-4">
+                        <p>Make Payment and enter payment details</p>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
                             <label for="upi_utr_no">Transaction ID/ UTR No.</label>
                             <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="amount">Amount</label>
                             <input type="number" name="amount" id="amount" class="form-control" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="payment_date">Date</label>
                             <input type="date" name="payment_date" id="payment_date" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label for="attachments">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
+                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
