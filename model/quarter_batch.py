@@ -441,6 +441,8 @@ class DGSBatchReport(models.AbstractModel):
         
         
         docids = data['doc_ids']
+        # docids = docids
+
         docs1 = self.env['dgs.batches'].sudo().browse(docids)
         report_type = data['report_type']
         course = data['course']
@@ -454,7 +456,6 @@ class DGSBatchReport(models.AbstractModel):
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
         institute = self.env['bes.institute'].sudo().search([])
         # import wdb; wdb.set_trace(); 
-
         
         return {
             'docids': docids,
@@ -497,7 +498,8 @@ class CCMCDGSBatchReport(models.AbstractModel):
             'exams':exams,
             'institutes':institute,
             'report_type':report_type,
-            'course':course
+            'course':course,
+            'name':'Report'
         }
     
 class ShipVisitReport(models.Model):
