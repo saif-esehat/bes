@@ -882,12 +882,12 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">To be mentioned if SC /ST /OBC(for age relaxation)</p>
+                                        <p class="mb-0">To be mentioned if SC /ST /OBC</p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.sc_st"/>
-                                        </p>
+                                        </p>(for age relaxation)
                                     </div>
                                 </div>
                                 <hr/>
@@ -4509,12 +4509,12 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">To be mentioned if SC /ST /OBC(for age relaxation)</p>
+                                        <p class="mb-0">To be mentioned if SC /ST /OBC</p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.sc_st"/>
-                                        </p>
+                                        </p>(for age relaxation)
                                     </div>
                                 </div>
                                 <hr/>
