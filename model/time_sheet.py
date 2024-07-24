@@ -34,11 +34,11 @@ class TravelDetails(models.Model):
     left_institute_hotel = fields.Datetime(string='Left the Institute/Hotel')
     arrival_residence = fields.Datetime(string='Arrival at Residence')
     mode_of_travel = fields.Selection([
-        'bus',"Bus",
-        'cab',"Cab",
-        'railway',"Railways",
-        'airline',"Airline"
-    ],string='Mode of Travel')
+        ('bus',"Bus"),
+        ('cab',"Cab"),
+        ('railway',"Railways"),
+        ('airline',"Airline")
+    ],string='Mode of Travel',default="bus")
     expenses = fields.Float(string='Expenses (if incurred)')
 
 class CustomForm(models.Model):
