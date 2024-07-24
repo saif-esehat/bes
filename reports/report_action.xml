@@ -112,7 +112,7 @@
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.ccmc_dgs_report</field>
         <field name="report_file">bes.ccmc_dgs_report</field>
-        <field name="print_report_name">Report - Test</field>
+        <field name="print_report_name">"DGS Report CCMC -"&amp if dgs_batch.repeater ' Repeater' else ' Fresh' "-" dgs_batch.batch_name   </field>
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
