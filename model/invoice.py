@@ -5,6 +5,7 @@ from odoo.exceptions import UserError,ValidationError
 class BatchInvoice(models.Model):
     _inherit = "account.move"
     gp_batch_ok = fields.Boolean("GP Batch Required")
+    repeater_candidate_ok = fields.Boolean("Repeater Candidate Ok")
     batch = fields.Many2one("institute.gp.batches","Batch")
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
@@ -32,7 +33,6 @@ class BatchInvoice(models.Model):
                     'type': 'ir.actions.act_window',
                     'view_id': False,
                     'context': {'search_default_fees_paid':1}
-                    
                 }
         
     def open_ccmc_candidate(self):
