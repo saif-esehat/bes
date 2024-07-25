@@ -896,7 +896,7 @@ class ExaminationReport(models.Model):
         
         datas = {
             'doc_ids': self.id,
-            'course': 'CCMC',
+            'course': self.course,
             'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
         }
         
