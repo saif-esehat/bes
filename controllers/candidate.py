@@ -242,7 +242,6 @@ class GPCandidatePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
         current_year = datetime.datetime.now().year
-        dgs_batches = request.env["dgs.batches"].sudo().search([])
         vals = {
             'candidate': candidate,
             'exam': exam,
