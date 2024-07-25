@@ -142,6 +142,45 @@
         
     <template id="exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
+            <script>
+                function updateExamOptions() {
+                    const month = document.getElementById('exam_month').value;
+                    const examCentre = document.getElementById('exam_centre');
+                    const examBatch = document.getElementById('exam_batch');
+                    
+                    // Clear existing options
+                    examCentre.innerHTML = '';
+                
+                    // Define options based on selected month
+                    let options = [];
+                    if (month === 'mar' || month === 'sep') {
+                        options = [
+                            { value: 'MUMBAI', text: 'Mumbai' },
+                            { value: 'DELHI', text: 'Delhi' },
+                            { value: 'KOLKATA', text: 'Kolkata' }
+                        ];
+                        examBatch.innerHTML = 'Batch for ' + (month === 'mar' ? 'March' : 'September');
+                    } else {
+                        options = [
+                            { value: 'MUMBAI', text: 'Mumbai' },
+                            { value: 'KOLKATA', text: 'Kolkata' },
+                            { value: 'CHENNAI', text: 'Chennai' },
+                            { value: 'DELHI', text: 'Delhi' },
+                            { value: 'KOCHI', text: 'Kochi' },
+                            { value: 'GOA', text: 'Goa' }
+                        ];
+                        examBatch.innerHTML = 'Batch for ' + (month === 'dec' ? 'December' : 'June');
+                    }
+                
+                    // Populate the exam centre dropdown
+                    options.forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option.value;
+                        opt.textContent = option.text;
+                        examCentre.appendChild(opt);
+                    });
+                }
+            </script>
             <div class="container mt16">
                 <h1>Application Form GP Rating(Repeater)</h1>
                 <form action="/my/application/view" method="post">
@@ -190,18 +229,23 @@
                                                 <p class="mb-0"><strong>Address:</strong></p>
                                             </div>
                                             <div class="col-sm-9">
+                                                <label>Address Line 1: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>Address Line 2: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street2"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>Dist/City: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.city"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>State: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.state_id.name"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>Pincode: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.zip"/>
                                                 </span>
@@ -234,7 +278,27 @@
 
                     <div class="row">
                         <div class="col-3">
-                            <p class=""><strong>Exam Batch:</strong></p>
+                            <p class="mb-0"><strong>Application For:</strong></p>
+                        </div>
+                        <div class="col-3">
+                            <p class="text-muted mb-0">
+                                <t t-out="year"/>
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="exam_centre" >Select Month</label>
+                            <select name="exam_centre" id="exam_month" onchange="updateExamOptions()" class="form-control">
+                                <option value="dec">December</option>
+                                <option value="mar">March</option>
+                                <option value="june">June</option>
+                                <option value="sep">September</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <span class="" id="exam_batch"><strong>Exam Batch:</strong></span>
                         </div>
                         <div class="col-9">
                             <p class="text-muted">
@@ -246,9 +310,12 @@
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
                             <select name="exam_centre" id="exam_centre" class="form-control">
-                                <option value="MUMBAI">MUMBAI</option>
-                                <option value="KOLKATA">KOLKATTA</option>
-                                <option value="CHENNAI">CHENNAI</option>
+                                <option value="MUMBAI">Mumbai</option>
+                                <option value="KOLKATA">Kolkata</option>
+                                <option value="CHENNAI">Chennai</option>
+                                <option value="DELHI">Delhi</option>
+                                <option value="KOCHI">Kochi</option>
+                                <option value="GOA">Goa</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -264,11 +331,11 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                            <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
-                                    <label for="gsk_online" class="form-check-label">GSK Online (Fees Rs.300/-)</label>
+                                    <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
@@ -280,7 +347,7 @@
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
-                                    <label for="mek_online" class="form-check-label">MEK Online (Fees Rs. 300/-)</label>
+                                    <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
@@ -293,7 +360,7 @@
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
-                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
@@ -306,7 +373,7 @@
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
-                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral (Fee Rs.550/-)</label>
+                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
@@ -318,8 +385,53 @@
 
                         </div>
                         <div class="col-md-4">
-                            <label for="exams">Previous Exam Status:</label>
-                            <span>Red means Failed</span><br/>
+                            <label for="fees">Fees to be Paid for Exam</label>
+                            <t t-if="exam.gsk_online_status == 'failed'">
+                                <div class="form-row">
+                                   <span>300/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>                           
+                            </t>
+
+                            <t t-if="exam.mek_online_status == 'failed'">
+                                <div class="form-row">
+                                    <span>300/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>                             
+                            </t>
+
+                            <t t-if="exam.gsk_oral_prac_status == 'failed'">
+                                <div class="form-row">
+                                    <span>550/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div> 
+                            </t>
+
+                            <t t-if="exam.mek_oral_prac_status == 'failed'">
+                                <div class="form-row">
+                                    <span>550/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-4">
+                            <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
                                 <t t-if="exam.gsk_online_status == 'failed'">
                                     <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
@@ -354,13 +466,10 @@
                             </div>
 
                         </div>
-                        <div class="col-md-4">
-                            <label for="fees">Fees To be Exam</label><br/>
-                            <!-- <img t-attf-src="/bes/static/src/img/GP_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" /> -->
-                        </div>
+
                     </div>
                     <div class="form-group row">
-                        <p>The amount to be paid for booking </p>
+                        <p>Total amount to be paid for booking of exams</p>
                     </div>
                     <hr/>
                     <div class="form-group row">
@@ -387,11 +496,14 @@
                             <label for="payment_date">Date</label>
                             <input type="date" name="payment_date" id="payment_date" class="form-control" />
                         </div>
-                        <div class="col-md-3">
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
                             <label for="attachments">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
                             <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
                         </div>
                     </div>
+
                     <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
