@@ -15,6 +15,8 @@ class ExamCenter(models.Model):
     mobile = fields.Char("Mobile",related='exam_co_ordinator.partner_id.mobile')
     email = fields.Char("Email",related='exam_co_ordinator.partner_id.email')
     gp_candidate = fields.Many2one('gp.exam.schedule')
+    repeater_region = fields.Boolean("Repeater Region")
+    
 
 
     def examiners(self):
