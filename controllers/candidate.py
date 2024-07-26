@@ -241,10 +241,12 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        current_year = datetime.datetime.now().year
         vals = {
             'candidate': candidate,
             'exam': exam,
-            'batch':batch
+            'batch':batch,
+            'year':current_year
         }
         if exam.state == '1-in_process':
             return request.render("bes.exam_in_process", vals)

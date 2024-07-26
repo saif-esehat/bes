@@ -726,7 +726,7 @@
                                                                            
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="sc_st">To be mentioned if SC /ST /OBC(for age relaxation)</label>
+                                                    <label for="sc_st">To be mentioned if SC /ST /OBC (for age relaxation)</label>
                                                     <select class="form-control" id="sc_st" name="sc_st" required="1">
                                                         <option value="general" t-att-selected ="candidate.sc_st == 'general'">General</option>
                                                         <option value="sc" t-att-selected ="candidate.sc_st == 'sc'">SC</option>
@@ -887,7 +887,7 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.sc_st"/>
-                                        </p>(for age relaxation)
+                                        </p> (for age relaxation)
                                     </div>
                                 </div>
                                 <hr/>
@@ -4514,7 +4514,7 @@
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
                                             <t t-out="candidate.sc_st"/>
-                                        </p>(for age relaxation)
+                                        </p> (for age relaxation)
                                     </div>
                                 </div>
                                 <hr/>

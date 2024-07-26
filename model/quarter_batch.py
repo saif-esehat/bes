@@ -567,7 +567,7 @@ class ShipVisitReportModel(models.AbstractModel):
             # 'docids': docids,
             'doc_model': 'dgs.batches',
             'docs':docs1,
-            'institutes_data':institutes_data
+            # 'institutes_data':institutes_data
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
