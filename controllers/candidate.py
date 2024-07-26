@@ -428,12 +428,21 @@ class GPCandidatePortal(CustomerPortal):
                 exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
                 # exams_register = request.env['candidate.gp.register.exam.wizard'].sudo().search([('candidate_id','=',candidate.id)])
                 
-            
+                # import wdb; wdb.set_trace()
                 
                 # exams_register.register_exam_web(dgs_batch_id,candidate)
                 if candidate:
+                    transaction_id = kwargs.get('upi_utr_no')
+                    transaction_date = kwargs.get('payment_date')
+                    total_amount = int(kwargs.get('amount'))
+                    file_content = kwargs.get("transaction_slip").read()
+                    filename = kwargs.get('transaction_slip').filename
+
                     
                     invoice_vals = {
+                        'transaction_id': transaction_id,
+                        'transaction_date': transaction_date,
+                        'total_amount':total_amount,
                         'partner_id': candidate.user_id.partner_id.id,  
                         'gp_candidate': candidate.id,
                         'move_type': 'out_invoice',
@@ -441,7 +450,9 @@ class GPCandidatePortal(CustomerPortal):
                         'gp_repeater_candidate_ok':True,
                         'l10n_in_gst_treatment':'unregistered',
                         'preferred_exam_region':exam_region.id,
-                        'repeater_exam_batch': int(dgs_batch_id)
+                        'repeater_exam_batch': int(dgs_batch_id),
+                        'transaction_slip': base64.b64encode(file_content),
+                        'file_name':filename
                     }
                     
                     new_invoice = request.env['account.move'].sudo().create(invoice_vals)

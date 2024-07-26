@@ -245,7 +245,6 @@
                    
                 </div> -->
 
-            <t t-if="env.user.has_group('bes.group_institute')">
             <div t-if="invoice.transaction_id" style="margin-top: 10px;border: 3px solid #ccc; padding: 5px;" class="col-md-10">
                 <strong>Submitted Transaction Details :</strong>
                 <div class="form-group" style="margin-top: 14px; padding: 10px">
@@ -258,14 +257,19 @@
                                 <t t-out="invoice.transaction_id"/>
                             </span>
                         </div>
-                        <div class="col-md-5">
-                            <strong>
-                                <label for="bank_name">Bank Name and Address : </label>
-                            </strong>
-                            <span>
-                                <t t-out="invoice.bank_name"/>
-                            </span>
-                        </div>
+                        
+                        <t t-if="env.user.has_group('bes.group_institute')">
+
+                            <div class="col-md-5">
+                                <strong>
+                                    <label for="bank_name">Bank Name and Address : </label>
+                                </strong>
+                                <span>
+                                    <t t-out="invoice.bank_name"/>
+                                </span>
+                            </div>
+                        </t>
+
                         <div class="col-md-5">
                             <strong>
                                 <label for="transaction_date"></label>Transaction Date : </strong>
@@ -296,7 +300,6 @@
                     </div>
                 </div>
             </div>
-            </t>
 
 
 
