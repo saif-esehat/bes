@@ -72,6 +72,20 @@
                             </div>
                         </div>
                         
+                        <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
+                            <t t-if="o.attempt_number == 1">
+                                <strong>Admit Card - GP Fresh Candidate</strong>
+                            </t>
+                            <t t-else="">
+                                 <div class="row" style="margin-bottom:4px;">
+                                    <div class="col-6">
+                                    <span style="font-size:20px;">Institute: </span>
+                                    <span style="font-size:20px;"><t t-esc="o.institute_id.name"/></span>  
+                                </div>
+                        </div>   
+                            </t>
+                        </div> 
+
                         <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
                                 <span style="font-size:20px;">Code No: </span>

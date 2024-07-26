@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<<<<<<< HEAD
-    <template id="dgs_report_custom_header_footer">
-        <div class="container" t-attf-class="header article" t-att-style="report_header_style" style=" margin-botton:5px;">
-            <div class="row" style="text-align:center; font-size:18px;">
-                <div class="col-12">
-                    All India Exit Examination Result for  <span style="margin-left:5px; margin-right:5px"/> <br></br>
-                    <t t-if="course == 'GP'">
-                        <strong>GP RATING <span t-esc="report_type"/> - </strong>
-                        <div class="col-12">
-                            Summary of Result of <span t-esc="report_type"/> Candidates
-                        </div>
-                    </t>
-                    <t t-if="course == 'CCMC'">
-                        <strong>CCMC RATING <span t-esc="report_type"/> - </strong>
-                        <div class="col-12">
-                            Summary of Result of <span t-esc="report_type"/> Candidates
-                        </div>
-                    </t>
-                   
-=======
     <template id="dgs_report_custom_header_footer_summarise">
         <style>
             @font-face {
@@ -80,7 +60,6 @@
                             </strong>
                         </t>
                     </span>
->>>>>>> 08a5e89cfdc397c75801dcd8d06759ef2e20e8db
                 </div>
             </div>
         </div>
@@ -1195,7 +1174,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        </div>
+  v 0                         </div> 
                     </div>
 
 
