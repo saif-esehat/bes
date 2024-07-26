@@ -33,7 +33,7 @@ class GPCandidate(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate'
     
-    institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
+    institute_batch_id = fields.Many2one("institute.gp.batches","Institute Wise Batch",tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
@@ -65,7 +65,12 @@ class GPCandidate(models.Model):
     tenth_percent = fields.Integer("% Xth Std in Eng.",tracking=True)
     twelve_percent = fields.Integer("% 12th Std in Eng.",tracking=True)
     iti_percent = fields.Integer("% ITI",tracking=True)
-    sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
+    sc_st = fields.Selection([
+        ('general','General'),
+        ('sc','SC'),
+        ('st','ST'),
+        ('obc','OBC')
+    ],default='general',string="To be mentioned if SC /ST /OBC",tracking=True)
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
     exam_region = fields.Many2one("exam.center",string="Exam Region",store=True,related="institute_id.exam_center",tracking=True)
 
@@ -633,7 +638,7 @@ class CCMCCandidate(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'CCMC Candidate'
     
-    institute_batch_id = fields.Many2one("institute.ccmc.batches","Batch",tracking=True)
+    institute_batch_id = fields.Many2one("institute.ccmc.batches","Institute Wise Batch",tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True,tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
@@ -667,7 +672,13 @@ class CCMCCandidate(models.Model):
     tenth_percent = fields.Char("% Xth Std in Eng.",tracking=True)
     twelve_percent = fields.Char("% 12th Std in Eng.",tracking=True)
     iti_percent = fields.Char("% ITI",tracking=True)
-    sc_st = fields.Boolean("To be mentioned if Candidate SC/ST",tracking=True)
+    sc_st = fields.Selection([
+        ('general','General'),
+        ('sc','SC'),
+        ('st','ST'),
+        ('obc','OBC')
+    ],default='general',string="To be mentioned if SC /ST /OBC",tracking=True)
+    
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
     ccmc_exam = fields.Many2many("ccmc.exam.schedule",string="Exam",tracking=True)
     qualification = fields.Selection([

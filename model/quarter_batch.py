@@ -415,14 +415,14 @@ class DGSBatch(models.Model):
         other_batches.write({'is_current_batch': False})
         
 
-    def print_ship_visit_report(self):
+    # def print_ship_visit_report(self):
         
-        datas = {
-            'doc_ids': self.id  # Assuming examination_batch is a recordset and you want its ID
-        }
+    #     datas = {
+    #         'doc_ids': self.id  # Assuming examination_batch is a recordset and you want its ID
+    #     }
         
             
-        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+    #     return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
 
         
 
@@ -441,6 +441,8 @@ class DGSBatchReport(models.AbstractModel):
         
         
         docids = data['doc_ids']
+        # docids = docids
+
         docs1 = self.env['dgs.batches'].sudo().browse(docids)
         report_type = data['report_type']
         course = data['course']
@@ -454,7 +456,6 @@ class DGSBatchReport(models.AbstractModel):
             # report_action = self.env.ref('bes.dgs_report').with_context(landscape=True).report_action(self, data={})
         institute = self.env['bes.institute'].sudo().search([])
         # import wdb; wdb.set_trace(); 
-
         
         return {
             'docids': docids,
@@ -497,7 +498,8 @@ class CCMCDGSBatchReport(models.AbstractModel):
             'exams':exams,
             'institutes':institute,
             'report_type':report_type,
-            'course':course
+            'course':course,
+            'name':'Report'
         }
     
 class ShipVisitReport(models.Model):
@@ -565,7 +567,7 @@ class ShipVisitReportModel(models.AbstractModel):
             # 'docids': docids,
             'doc_model': 'dgs.batches',
             'docs':docs1,
-            'institutes_data':institutes_data
+            # 'institutes_data':institutes_data
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,

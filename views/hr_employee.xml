@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record model="ir.ui.view" id="view_employee_form_inherited">
+        <!-- <record model="ir.ui.view" id="view_employee_form_inherited">
             <field name="name">hr.employee.form.inherited</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
@@ -12,7 +12,7 @@
                 </xpath>
               
             </field>
-        </record>
+        </record> -->
 
         <record model="ir.ui.view" id="view_hr_expense_sheet_form_inherited">
             <field name="name">hr.expense.sheet.inherited</field>
@@ -28,13 +28,14 @@
                     <field name="dgs_exam" invisible="1" />
                     <field name="dgs_batch" attrs="{'invisible':[('dgs_exam','=',False)]}" />
                     <field name="institute_id" attrs="{'invisible':[('dgs_exam','=',False)]}" />
+                    <field name="time_sheet" attrs="{'invisible':[('dgs_exam','=',False)]}" />
 
 
                 </xpath>              
             </field>
         </record>
 
-        <record id="view_employee_form_inherit" model="ir.ui.view">
+        <!-- <record id="view_employee_form_inherit" model="ir.ui.view">
             <field name="name">hr.employee.form.inherit</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
@@ -46,6 +47,6 @@
                 </xpath>
             </field>
         </record>
-    
+     -->
     </data>
 </odoo>

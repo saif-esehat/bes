@@ -195,8 +195,9 @@
                         <th class="text-left">Exam Type</th>
                         <th class="text-left">Exam Date</th>
                         <th class="text-left">No of Candidates</th>
-                        <th class="text-left">Action</th>
-                        <th class="text-left">Expense Sheet</th>
+                        <th class="text-left">View candidates</th>
+                        <th class="text-left">Renumeration</th>
+                        <th class="text-left">Time Sheet</th>
 
                     </tr>
                 </thead>
@@ -218,10 +219,10 @@
                             </td>
                             <td class="text-center">
                                 <t t-if="assignment.exam_type == 'practical_oral'">
-                                    <t t-out="assignment.exam_date" />
+                                    <t t-out="assignment.exam_date.strftime('%d-%m-%y')" />
                                 </t>
                                 <t t-else="assignment.exam_type == 'online'">
-                                    <t t-out="assignment.exam_date" />
+                                    <t t-out="assignment.exam_date.strftime('%d-%m-%y')" />
                                 </t>
                             </td>
                             <td class="text-left">
@@ -231,7 +232,10 @@
                                 <a t-attf-href="/my/assignments/batches/candidates/{{batch}}/{{assignment.id}}">View</a>
                             </td>
                             <td class="text-left">
-                                <a t-attf-href="/my/assignments/batches/expenses/{{assignment.id}}">Expense Sheet</a>
+                                <a t-attf-href="/my/assignments/batches/expenses/{{assignment.id}}">Payments Details</a>
+                            </td>
+                            <td class="text-left">
+                                <a t-attf-href="/my/assignments/batches/timesheet/{{assignment.id}}">Update Time Sheet</a>
                             </td>
                         </tr>
                     </t>
@@ -605,8 +609,12 @@
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Practical Total</th>
+<<<<<<< HEAD
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">GSK Total</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Pass/Fail</th>
+=======
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Total</th>
+>>>>>>> f1fad06199309d0819e69828fd5ed4bff0ab890a
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
                         <!-- MEK Oral Subjects -->
@@ -818,11 +826,16 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                             </td>
+<<<<<<< HEAD
                              <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.mek_total"/>
                             </td>
                              <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.(mek_total)/(175)"/>
+=======
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="marksheet.gp_marksheet.mek_total"/>
+>>>>>>> f1fad06199309d0819e69828fd5ed4bff0ab890a
                             </td>
 
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
