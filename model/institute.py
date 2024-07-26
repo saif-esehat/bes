@@ -163,7 +163,7 @@ class Institute(models.Model):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(length))
     
-
+      
     @api.model
     def create(self, values):
         institute = super(Institute, self).create(values)
@@ -221,7 +221,6 @@ class Institute(models.Model):
     
         # Link the contact partner with the user's partner
         portal_user.partner_id.write({'child_ids': [(4, contact_partner.id)]})
-        
         
         
 

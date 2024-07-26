@@ -14,34 +14,42 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/gpexam/list?gpexamcand=parameter_value">
                                 Download Admit Card / Certificate
                         </a>
-                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket">
                                 Raise a Query
                         </a>
-                        
-                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/5" >
+
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/5">
                                 Apply for Repeater Exam
+                        </a>
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/invoices" title="Invoices &amp; Bills">
+                                    Invoices &amp; Bills
+                            <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
                         </a>
 
                     </div>
-                   
+
                 </t>
                 <t t-elif="env.user.has_group('bes.group_ccmc_candidates')">
 
                     <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
                     <h3>CCMC Candidate</h3>
                     <div >
-                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcexam/list">
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcexam/list">
                                 Exams
                         </a>
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/ccmcexam/list?ccmcexamcand=parameter_value">
                                 Download Admit Card / Certificate
                         </a>
-                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket">
                                 Raise a Query
                         </a>
-                        <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/ccmccandidate/repeater/5" >
+                        <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/ccmccandidate/repeater/5">
                                 Apply for Repeater Exam
                         </a> -->
+                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/invoices" title="Invoices &amp; Bills">
+                                    Invoices &amp; Bills
+                            <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
+                        </a>
                     </div>
                 </t>
                 <t t-elif="env.user.has_group('bes.group_institute')">
@@ -92,13 +100,13 @@
                                 CCMC Candidate
                             </a> -->
                             <!-- </t> -->
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket" >
+                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket">
                                 Raise a Query
                             </a>
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/institute_document/list">
                                 Upload Documents
                             </a>
-                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" >
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
                                 Books Order Form
                             </a> -->
                         </div>
@@ -109,7 +117,7 @@
                         <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                         <h3>Examiner</h3>
                         <div>
-                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/examiner/online_exam" >
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/examiner/online_exam">
                                 Online Exam
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
@@ -124,13 +132,13 @@
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
 
                             </a> -->
-                            
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"  href="/my/invoices" title="Invoices &amp; Bills">
+
+                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/invoices" title="Invoices &amp; Bills">
                                     Travel Bills &amp; Time Sheet 
                                 <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
                             </a>
-                            
-                           
+
+
                         </div>
                     </div>
                 </t>
@@ -150,68 +158,73 @@
 
 
     <template id="portal_invoice_page_inherited" inherit_id="account.portal_invoice_page">
-            <xpath expr="//div[@class='o_portal_html_view shadow p-3']" position="after">
+        <xpath expr="//div[@class='o_portal_html_view shadow p-3']" position="after">
 
-                <div class="modal fade" id="update_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/updatetransaction" enctype="multipart/form-data">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Update Transaction Detail</h5>
-                                </div>
-                                <input type="hidden" id="invoice_id" t-att-value="invoice.id" name="invoice_id"/>
-                                <div class="modal-body">
+            <div class="modal fade" id="update_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="post" action="/my/updatetransaction" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Update Transaction Detail</h5>
+                            </div>
+                            <input type="hidden" id="invoice_id" t-att-value="invoice.id" name="invoice_id"/>
+                            <div class="modal-body">
 
-                                    <div class="container mt-5">
+                                <div class="container mt-5">
 
 
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="transaction_id">Transaction ID</label>
-                                                <input required="True" type="text" class="form-control" id="transaction_id" name="transaction_id"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="bank_name">Bank Name and Address</label>
-                                                <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="transaction_date">Transaction Date</label>
-                                                <input required="True" type="date" class="form-control" id="transaction_date" name="transaction_date" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="total_amount">Total Amount ₹</label>
-                                                <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="transaction_slip">Upload Transaction Pay Slip/ Screenshot</label>
-                                                <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
-                                            </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="transaction_id">Transaction ID</label>
+                                            <input required="True" type="text" class="form-control" id="transaction_id" name="transaction_id"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bank_name">Bank Name and Address</label>
+                                            <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="transaction_date">Transaction Date</label>
+                                            <input required="True" type="date" class="form-control" id="transaction_date" name="transaction_date" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="total_amount">Total Amount ₹</label>
+                                            <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="transaction_slip">Upload Transaction Pay Slip/ Screenshot</label>
+                                            <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Yes</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                </div>
                             </div>
-                        </form>
-                    </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
+            </div>
 
+
+            <t t-if="env.user.has_group('bes.group_institute')">
                 <div style="margin-top: 10px;">
-                <td class="text-left" style="margin-top: 14px;" >
-                    <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#update_transaction_modal">Generate Invoice</a> -->
-                    <strong>Kindly submit your transaction details by clicking the button below</strong>
-                    <div style="margin-top: 10px;">
-                        <a href="" class="btn btn-primary" data-toggle="modal" data-target="#update_transaction_modal">Update Transaction Detail</a>
-                    </div>
-                </td>
+                    <td class="text-left" style="margin-top: 14px;">
+                        <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#update_transaction_modal">Generate Invoice</a> -->
+                        <strong>Kindly submit your transaction details by clicking the button below</strong>
+                        <div style="margin-top: 10px;">
+                            <a href="" class="btn btn-primary" data-toggle="modal" data-target="#update_transaction_modal">Update Transaction Detail</a>
+                        </div>
+                    </td>
                 </div>
+            </t>
 
-                
 
-                <!-- <div t-if="invoice.transaction_id" style="margin-top: 10px;" class="col-md-6">
+
+
+
+            <!-- <div t-if="invoice.transaction_id" style="margin-top: 10px;" class="col-md-6">
                     <div class="form-group">
                           <strong><label for="transaction_id">Transaction ID : </label></strong>
                         <span><t t-out="invoice.transaction_id"/></span>
@@ -232,78 +245,104 @@
                    
                 </div> -->
 
-                <div t-if="invoice.transaction_id" style="margin-top: 10px;border: 3px solid #ccc; padding: 5px;"  class="col-md-10">
-                    <strong>Submitted Transaction Details :</strong>
-                    <div class="form-group" style="margin-top: 14px; padding: 10px">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <strong><label for="transaction_id">Transaction ID : </label></strong>
-                                <span><t t-out="invoice.transaction_id"/></span>
-                            </div>
-                            <div class="col-md-5">
-                                <strong><label for="bank_name">Bank Name and Address : </label></strong>
-                                <span><t t-out="invoice.bank_name"/></span>
-                            </div>
-                            <div class="col-md-5">
-                                <strong><label for="transaction_date"></label>Transaction Date : </strong>
-                                <span><t t-out="invoice.transaction_date.strftime('%d-%b-%Y')"/></span>
-                            </div>
+            <div t-if="invoice.transaction_id" style="margin-top: 10px;border: 3px solid #ccc; padding: 5px;" class="col-md-10">
+                <strong>Submitted Transaction Details :</strong>
+                <div class="form-group" style="margin-top: 14px; padding: 10px">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <strong>
+                                <label for="transaction_id">Transaction ID : </label>
+                            </strong>
+                            <span>
+                                <t t-out="invoice.transaction_id"/>
+                            </span>
                         </div>
-                    </div>
-                    <div class="form-group" style="margin-top: 14px; padding: 10px">
-                        <div class="row">
+                        
+                        <t t-if="env.user.has_group('bes.group_institute')">
+
                             <div class="col-md-5">
-                                <strong><label for="total_amount">Total Amount ₹ : </label></strong>
-                                <span><t t-out="invoice.total_amount"/></span>
+                                <strong>
+                                    <label for="bank_name">Bank Name and Address : </label>
+                                </strong>
+                                <span>
+                                    <t t-out="invoice.bank_name"/>
+                                </span>
                             </div>
-                            <div class="col-md-5">
-                                <strong><label for="total_amount">Transaction Slip : </label></strong>
-                                <span><a t-attf-href="/my/downloadtransactionslip/{{invoice.id}}">Download</a></span>
-                            </div>
+                        </t>
+
+                        <div class="col-md-5">
+                            <strong>
+                                <label for="transaction_date"></label>Transaction Date : </strong>
+                            <span>
+                                <t t-out="invoice.transaction_date.strftime('%d-%b-%Y')"/>
+                            </span>
                         </div>
                     </div>
                 </div>
+                <div class="form-group" style="margin-top: 14px; padding: 10px">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <strong>
+                                <label for="total_amount">Total Amount ₹ : </label>
+                            </strong>
+                            <span>
+                                <t t-out="invoice.total_amount"/>
+                            </span>
+                        </div>
+                        <div class="col-md-5">
+                            <strong>
+                                <label for="total_amount">Transaction Slip : </label>
+                            </strong>
+                            <span>
+                                <a t-attf-href="/my/downloadtransactionslip/{{invoice.id}}">Download</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-                
 
-    
 
-            </xpath>
-            <xpath expr="//div[@class='small mb-1']" position="replace">
-            
-            </xpath>
 
-            <xpath expr="//a[@href='#discussion']" position="replace">
-            
-            </xpath>
 
-            <!-- <xpath expr="//t[@t-set='entries']" position="replace">
-            
-            </xpath> -->
-      </template>
+        </xpath>
+        <xpath expr="//div[@class='small mb-1']" position="replace">
 
-      <template id="portal_report_invoice_document_inherited" inherit_id="account.report_invoice_document">
-
-        <xpath expr="//th[@name='th_quantity']" position="replace">
-            <th name="th_quantity" class="text-right"><span>Number</span></th>
         </xpath>
 
-      </template>
+        <xpath expr="//a[@href='#discussion']" position="replace">
 
-      <template id="portal_record_sidebar_inherited" inherit_id="portal.portal_record_sidebar">
+        </xpath>
+
+        <!-- <xpath expr="//t[@t-set='entries']" position="replace">
+            
+            </xpath> -->
+    </template>
+
+    <template id="portal_report_invoice_document_inherited" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//th[@name='th_quantity']" position="replace">
+            <th name="th_quantity" class="text-right">
+                <span>Number</span>
+            </th>
+        </xpath>
+
+    </template>
+
+    <template id="portal_record_sidebar_inherited" inherit_id="portal.portal_record_sidebar">
 
         <xpath expr="//div[@class='card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block']" position="replace">
             <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
-                    Powered by <a target="_blank" href="https://esehat.in" >eSehat</a>
-                </div>
+                    Powered by <a target="_blank" href="https://esehat.in">eSehat</a>
+            </div>
         </xpath>
 
-      </template>
+    </template>
 
 
 
-    
+
 
 
     <!-- <template id="candidate_exam" inherit_id="portal.portal_my_home">

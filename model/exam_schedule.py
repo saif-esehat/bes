@@ -3303,9 +3303,9 @@ class GPExam(models.Model):
                             self.mek_oral_prac_status = 'passed'
                         else:
                             self.mek_oral_prac_status = 'failed'
-                    else:
-                        print("Exam_ID" + self.exam_id)
-                        raise ValidationError("MEK Oral Or Practical Not Confirmed")
+                    # else:
+                    #     print("Exam_ID" + self.exam_id)
+                    #     raise ValidationError("MEK Oral Or Practical Not Confirmed")
 
                 if not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0):
                     
@@ -3322,8 +3322,8 @@ class GPExam(models.Model):
                             self.gsk_oral_prac_status = 'passed'
                         else:
                             self.gsk_oral_prac_status = 'failed'
-                    else:
-                        raise ValidationError("GSK Oral Or Practical Not Confirmed :"+str(self.exam_id))
+                    # else:
+                    #     raise ValidationError("GSK Oral Or Practical Not Confirmed :"+str(self.exam_id))
                 
                 if not (len(self.gsk_online) == 0):
                 # if False:

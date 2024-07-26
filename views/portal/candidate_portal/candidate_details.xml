@@ -142,9 +142,48 @@
         
     <template id="exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
+            <script>
+                function updateExamOptions() {
+                    const month = document.getElementById('exam_month').value;
+                    const examCentre = document.getElementById('exam_centre');
+                    const examBatch = document.getElementById('exam_batch');
+                    
+                    // Clear existing options
+                    examCentre.innerHTML = '';
+                
+                    // Define options based on selected month
+                    let options = [];
+                    if (month === 'mar' || month === 'sep') {
+                        options = [
+                            { value: 'MUMBAI', text: 'Mumbai' },
+                            { value: 'DELHI', text: 'Delhi' },
+                            { value: 'KOLKATA', text: 'Kolkata' }
+                        ];
+                        examBatch.innerHTML = 'Batch for ' + (month === 'mar' ? 'March' : 'September');
+                    } else {
+                        options = [
+                            { value: 'MUMBAI', text: 'Mumbai' },
+                            { value: 'KOLKATA', text: 'Kolkata' },
+                            { value: 'CHENNAI', text: 'Chennai' },
+                            { value: 'DELHI', text: 'Delhi' },
+                            { value: 'KOCHI', text: 'Kochi' },
+                            { value: 'GOA', text: 'Goa' }
+                        ];
+                        examBatch.innerHTML = 'Batch for ' + (month === 'dec' ? 'December' : 'June');
+                    }
+                
+                    // Populate the exam centre dropdown
+                    options.forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option.value;
+                        opt.textContent = option.text;
+                        examCentre.appendChild(opt);
+                    });
+                }
+            </script>
             <div class="container mt16">
                 <h1>Application Form GP Rating(Repeater)</h1>
-                <form action="/my/application/view" method="post">
+                <form action="/my/application/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" t-att-value="batch.id" />
                     <div class="form-group row">
@@ -190,18 +229,23 @@
                                                 <p class="mb-0"><strong>Address:</strong></p>
                                             </div>
                                             <div class="col-sm-9">
+                                                <label>Address Line 1: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>Address Line 2: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street2"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>Dist/City: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.city"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>State: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.state_id.name"/>
-                                                </span>
+                                                </span><br/>
+                                                <label>Pincode: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.zip"/>
                                                 </span>
@@ -232,9 +276,29 @@
                         </div>
                     </div>
 
+                    <!-- <div class="row">
+                        <div class="col-3">
+                            <p class="mb-0"><strong>Application For:</strong></p>
+                        </div>
+                        <div class="col-3">
+                            <p class="text-muted mb-0">
+                                <t t-out="batch.batch_name"/>
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="exam_centre" >Select Month</label>
+                            <select name="exam_centre" id="exam_month" onchange="updateExamOptions()" class="form-control">
+                                <option value="dec">December</option>
+                                <option value="mar">March</option>
+                                <option value="june">June</option>
+                                <option value="sep">September</option>
+                            </select>
+                        </div>
+                    </div> -->
                     <div class="row">
                         <div class="col-3">
-                            <p class=""><strong>Application For:</strong></p>
+                            <p class="mb-0"><strong>Application For:</strong></p>
                         </div>
                         <div class="col-9">
                             <p class="text-muted">
@@ -245,6 +309,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
+                            <label for="exam_centre">Exam Centre Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month in ['March','September']">
                             <t t-set="fresher_repeater" t-value="env['exam.center'].sudo().search([])"/>
@@ -266,9 +331,7 @@
                                         <option value="region.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
-                                <!-- <t t-set="region" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/> -->
                             </t>
-                            <label for="exam_centre">Exam Centre Selected</label>
                             
                         </div>
                         <div class="col-md-6">
@@ -284,7 +347,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                            <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
@@ -338,7 +401,54 @@
 
                         </div>
                         <div class="col-md-4">
-                                <label for="fees">Fees to be Paid for Exam</label>
+                            <label for="fees">Fees to be Paid for Exam</label>
+                            <t t-if="exam.gsk_online_status == 'failed'">
+                                <div class="form-row">
+                                   <span>300/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>                           
+                            </t>
+
+                            <t t-if="exam.mek_online_status == 'failed'">
+                                <div class="form-row">
+                                    <span>300/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>                             
+                            </t>
+
+                            <t t-if="exam.gsk_oral_prac_status == 'failed'">
+                                <div class="form-row">
+                                    <span>550/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div> 
+                            </t>
+
+                            <t t-if="exam.mek_oral_prac_status == 'failed'">
+                                <div class="form-row">
+                                    <span>550/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-4">
+                            <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
+                            <div class="form-check">
                                 <t t-if="exam.gsk_online_status == 'failed'">
                                     <div class="form-row">
                                        <span>300/-</span>
@@ -421,11 +531,8 @@
                             </div>
     
                         </div>
-                        <div class="form-group row">
-                            <p>Total amount to be paid for booking of exams</p>
-                        </div>
-                        
-                       
+
+                    </div>
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
                     </div>
@@ -454,11 +561,14 @@
                             <label for="payment_date">Date</label>
                             <input type="date" name="payment_date" id="payment_date" class="form-control" />
                         </div>
-                        <div class="col-md-3">
-                            <label for="attachments">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
-                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
+                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" /><br/><br/>
                         </div>
                     </div>
+
                     <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
@@ -468,54 +578,167 @@
     <template id="ccmc_exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
             <div class="container mt16">
-                <h1>Repeater Application for CCMC Rating</h1>
+                <h1>Application Form CCMC Rating(Repeater)</h1>
                 <form action="/my/ccmcapplication/view" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" t-att-value="batch.id" />
                     <div class="form-group row">
+                        <div class="form-group row">
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Full Name:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="candidate.name"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Indos No:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="candidate.indos_no"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Code No:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="candidate.candidate_code"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0"><strong>Address:</strong></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <label>Address Line 1: </label>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.street"/>
+                                                </span><br/>
+                                                <label>Address Line 2: </label>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.street2"/>
+                                                </span><br/>
+                                                <label>Dist/City: </label>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.city"/>
+                                                </span><br/>
+                                                <label>State: </label>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.state_id.name"/>
+                                                </span><br/>
+                                                <label>Pincode: </label>
+                                                <span class="text-muted mb-0">
+                                                    <t t-out="candidate.zip"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="row justify-content-center mb-2">
+                                    <div class="col-12">
+                                        <t t-if="candidate.candidate_image">
+                                            <img t-attf-src="data:image/png;base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        <t t-if="candidate.candidate_signature">
+                                            <img t-attf-src="data:image/png;base64, {{candidate.candidate_signature}}" alt="signature" class="rounded img-fluid" style="width: 150px;"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <p class="mb-0"><strong>Application For:</strong></p>
+                        </div>
+                        <div class="col-3">
+                            <p class="text-muted mb-0">
+                                <t t-out="batch.batch_name"/>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
-                            <select name="exam_centre" id="exam_centre" class="form-control">
-                                <option value="MUMBAI">MUMBAI</option>
-                                <option value="KOLKATA">KOLKATTA</option>
-                                <option value="CHENNAI">CHENNAI</option>
-                            </select>
+                            <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
+                            <t t-if="exam_month in ['March','September']">
+                                <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
+
+                                <select name="exam_centre" id="exam_centre" class="form-control">
+
+                                    <t t-foreach="fresher_region" t-as="region">
+                                        <option value="region.id"><t t-esc="region.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
+                            <t t-else="">
+
+                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
+
+                               <select name="exam_centre" id="exam_centre" class="form-control">
+
+                                    <t t-foreach="region_repeater" t-as="region">
+                                        <option value="region.id"><t t-esc="region.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
                         </div>
                         <div class="col-md-6">
-                            <label for="training_institute">Training Institute Name</label>
-                            <input type="text" t-att-disabled="1" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            <label for="training_institute">Parent Training Institute</label>
+                            <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="name">Name as in the INDoS</label>
-                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="candidate.name"/>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="candidate_code">Candidate Code No.</label>
-                            <input type="hidden" name="candidate_code" id="candidate_code" class="form-control" t-att-value="candidate.candidate_code"/>
-                            <input type="text" t-att-disabled="1" class="form-control" t-att-value="candidate.candidate_code"/>
+                            <label for="name">No. of Attempts</label>
+                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="exam.attempt_number"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination / Examinations</label><br/>
+                            <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_practical" value="Cookery And Bakery" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery (Fees Rs.566/-)</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="566" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>                            
                             </t>
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_oral" value="566" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_oral" value="cookery_oral" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral (Fees Rs. 566/-)</label>
                                 </div>
                             </t>
@@ -528,20 +751,56 @@
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_gsk_online" value="568" id="cookery_gsk_online" class="form-check-input"/>
-                                    <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online (Fee Rs.568/-)</label>
+                                    <input type="checkbox" name="cookery_gsk_online" value="cookery_gsk_online" id="cookery_gsk_online" class="form-check-input"/>
+                                    <label for="cookery_gsk_online" class="form-check-label">CCMC Online (Fee Rs.568/-)</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="568" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="cookery_gsk_online" id="cookery_gsk_online" class="form-check-input"/>
                                     <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>
                         </div>
+
                         <div class="col-md-4">
-                            <label for="exams">Previous Exam Status</label><br/>
-                            <span>Red means Failed</span><br/>
+                            <label for="fees">Fees to be Paid for Exam</label>
+                            <t t-if="exam.cookery_bakery_prac_status == 'failed'">
+                                <div class="form-row">
+                                   <span>566/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>                           
+                            </t>
+
+                            <t t-if="exam.ccmc_oral_prac_status == 'failed'">
+                                <div class="form-row">
+                                    <span>566/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div>                             
+                            </t>
+
+                            <t t-if="exam.ccmc_online_status == 'failed'">
+                                <div class="form-row">
+                                    <span>568/-</span>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="form-row">
+                                    <span>---</span>
+                                </div> 
+                            </t>
+                        </div>
+
+                        <div class="col-md-4">
+                            <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
                                 <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-danger">Cookery And Bakery</span>
@@ -567,26 +826,44 @@
                                 </t>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group row">
+                        <p>Total amount to be paid for booking of exams</p>
+                    </div>
+                    <hr/>
+                    <div class="form-group row">
+                        <p>Make Payment and enter payment details</p>
+                    </div>
+                    <div class="form-group row">
+                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong><br/>
                         <div class="col-md-4">
-                            <label for="ccmc_qr">Payment QR code</label><br/>
+                            <label for="gp_qr">Payment QR code</label><br/>
                             <img t-attf-src="/bes/static/src/img/CCMC_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" />
                         </div>
                     </div>
+                    <hr/>
                     <div class="form-group row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="upi_utr_no">Transaction ID/ UTR No.</label>
                             <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="amount">Amount</label>
-                            <input type="number" name="amount" id="amount" class="form-control"/>
+                            <input type="number" name="amount" id="amount" class="form-control" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="payment_date">Date</label>
-                            <input type="date" name="payment_date" id="payment_date" class="form-control"/>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control" />
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in the details before submission</strong>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="attachments">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
+                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
         </t>

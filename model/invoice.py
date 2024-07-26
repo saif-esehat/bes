@@ -5,6 +5,20 @@ from odoo.exceptions import UserError,ValidationError
 class BatchInvoice(models.Model):
     _inherit = "account.move"
     gp_batch_ok = fields.Boolean("GP Batch Required")
+    
+    gp_repeater_candidate_ok = fields.Boolean("GP Repeater Candidate Ok")
+    ccmc_repeater_candidate_ok = fields.Boolean("CCMC Repeater Candidate Ok")
+    
+    repeater_exam_batch = fields.Many2one('dgs.batches', string='Exam Batch')
+
+    preferred_exam_region = fields.Many2one('exam.center', string='Preferred Exam Region')
+    
+    
+    
+    gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate')
+    ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate')
+    
+    
     batch = fields.Many2one("institute.gp.batches","Batch")
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
@@ -16,8 +30,6 @@ class BatchInvoice(models.Model):
     transaction_slip =  fields.Binary("Transaction Slip")
     file_name = fields.Char("Transaction Slip Filename")
     transaction_date = fields.Date("Transaction Date")
-    
-    
     
     
     def open_gp_candidate(self):
@@ -32,7 +44,6 @@ class BatchInvoice(models.Model):
                     'type': 'ir.actions.act_window',
                     'view_id': False,
                     'context': {'search_default_fees_paid':1}
-                    
                 }
         
     def open_ccmc_candidate(self):
