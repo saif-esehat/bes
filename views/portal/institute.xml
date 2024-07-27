@@ -3026,9 +3026,9 @@
                                         contentType: 'application/json',
                                         success: function (response) {
                                             <!-- debugger -->
-                                            console.log("POST request successful:", response);
+                                            console.log("POST request successful:", response.result);
         
-                                            // if response["status"]
+                                            // if response["status"] 
                                             // Handle success response
                                         },
                                             error: function (xhr, status, error) {
