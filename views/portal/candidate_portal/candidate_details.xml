@@ -362,51 +362,51 @@
                             <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>                            </t>
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
