@@ -188,7 +188,7 @@
                         }
                     });
 
-                    debugger
+                    <!-- debugger -->
 
 
                 }
@@ -547,6 +547,79 @@
 
     <template id="ccmc_exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
+            <script>
+                document.addEventListener('DOMContentLoaded', function(event) {
+
+                const checkboxes = document.querySelectorAll('.form-check-input');
+                var totalAmountElement = document.querySelector('.total_span');
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateTotalAmount);
+                });
+                
+
+
+                function updateTotalAmount() {
+
+                    let total = 0;
+                    var anyChecked = false; 
+
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            anyChecked = true; 
+                            var postData = {
+                                product_code: checkbox.value 
+                            };
+
+                            <!-- total += parseFloat(checkbox.value); -->
+                            $.ajax({
+                                        type: "POST",
+                                        url: '/my/getproductprice',
+                                        data: JSON.stringify(postData),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+
+                                            console.log("POST request successful:", JSON.parse(response.result));
+                                            var amount = JSON.parse(response.result).amount
+
+                                            
+                                            total += parseFloat(amount);
+                                            totalAmountElement.textContent = 'Total Amount: ₹' + total;
+
+
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                console.error("POST request failed:", error);
+
+                                                // Handle error
+                                            }
+                                        });
+                        }
+
+                        if (!anyChecked) {
+                                total = 0;
+                                totalAmountElement.textContent = 'Total Amount: ₹' + total;
+                            }
+
+                        
+                    }
+                    
+
+                    
+                    
+                    
+                    
+                    
+                    );
+
+                    <!-- debugger -->
+
+
+                }
+            });
+            </script>
             <div class="container mt16">
                 <h1>Application Form CCMC Rating(Repeater)</h1>
                 <form action="/my/ccmcapplication/view" method="post">
@@ -695,39 +768,39 @@
                             <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery (Fees Rs.566/-)</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>                            
                             </t>
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_oral" value="cookery_oral" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral (Fees Rs. 566/-)</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="Cookery Oral" value="566" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="Cookery Oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
                                 </div>                            
                             </t>
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_gsk_online" value="cookery_gsk_online" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input"/>
                                     <label for="cookery_gsk_online" class="form-check-label">CCMC Online (Fee Rs.568/-)</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="cookery_gsk_online" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input"/>
                                     <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>
@@ -800,8 +873,13 @@
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
                     </div>
+<<<<<<< HEAD
                     <div>
                         <b><span id="ccmc_total_fees"></span></b>
+=======
+                     <div class="form-group row">
+                        <span class="total_span"></span>
+>>>>>>> 1502d65a3ec5d7771939ac128831dbe32f84a0ba
                     </div>
                     <hr/>
                     <div class="form-group row">
