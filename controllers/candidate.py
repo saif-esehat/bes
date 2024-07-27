@@ -511,7 +511,7 @@ class GPCandidatePortal(CustomerPortal):
         default_code = request.jsonrequest['product_code']
 
 
-        # import wdb; wdb.set_trace()
+        import wdb; wdb.set_trace()
         amount = request.env["product.template"].sudo().search([('default_code', '=', default_code )]).list_price
 
         
