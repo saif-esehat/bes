@@ -603,7 +603,7 @@
                                             console.log("POST request successful:", JSON.parse(response.result));
                                             var amount = JSON.parse(response.result).amount
 
-                                            
+                                            debugger
                                             total += parseFloat(amount);
                                             totalAmountElement.textContent = 'Total Amount: ₹' + total;
 
