@@ -143,43 +143,55 @@
     <template id="exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
             <script>
-                function updateExamOptions() {
-                    const month = document.getElementById('exam_month').value;
-                    const examCentre = document.getElementById('exam_centre');
-                    const examBatch = document.getElementById('exam_batch');
-                    
-                    // Clear existing options
-                    examCentre.innerHTML = '';
-                
-                    // Define options based on selected month
-                    let options = [];
-                    if (month === 'mar' || month === 'sep') {
-                        options = [
-                            { value: 'MUMBAI', text: 'Mumbai' },
-                            { value: 'DELHI', text: 'Delhi' },
-                            { value: 'KOLKATA', text: 'Kolkata' }
-                        ];
-                        examBatch.innerHTML = 'Batch for ' + (month === 'mar' ? 'March' : 'September');
-                    } else {
-                        options = [
-                            { value: 'MUMBAI', text: 'Mumbai' },
-                            { value: 'KOLKATA', text: 'Kolkata' },
-                            { value: 'CHENNAI', text: 'Chennai' },
-                            { value: 'DELHI', text: 'Delhi' },
-                            { value: 'KOCHI', text: 'Kochi' },
-                            { value: 'GOA', text: 'Goa' }
-                        ];
-                        examBatch.innerHTML = 'Batch for ' + (month === 'dec' ? 'December' : 'June');
-                    }
-                
-                    // Populate the exam centre dropdown
-                    options.forEach(option => {
-                        const opt = document.createElement('option');
-                        opt.value = option.value;
-                        opt.textContent = option.text;
-                        examCentre.appendChild(opt);
+                document.addEventListener('DOMContentLoaded', function(event) {
+
+                const checkboxes = document.querySelectorAll('.form-check-input');
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateTotalAmount);
+                });
+
+
+                function updateTotalAmount() {
+
+                    let total = 0;
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+
+                            var postData = {
+                                product_code: checkbox.value 
+                            };
+
+                            <!-- total += parseFloat(checkbox.value); -->
+                            $.ajax({
+                                        type: "POST",
+                                        url: '/my/getproductprice',
+                                        data: JSON.stringify(postData),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+
+                                            console.log("POST request successful:", JSON.parse(response.result));
+                                            var amount = response.result.amount
+                                            total += parseFloat(amount);
+
+
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                console.error("POST request failed:", error);
+
+                                                // Handle error
+                                            }
+                                        });
+                        }
                     });
+
+                    debugger
+
+
                 }
+            });
             </script>
             <div class="container mt16">
                 <h1>Application Form GP Rating(Repeater)</h1>
