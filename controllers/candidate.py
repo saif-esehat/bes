@@ -7,7 +7,7 @@ import base64
 import datetime
 from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
-
+import json
 
 
 
@@ -285,16 +285,18 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/ccmcapplication/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewCCMCApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
-            candidate_code = kwargs.get('candidate_code')
+            candidate_user_id = request.env.user.id
+            candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             dgs_batch_id =int(kwargs.get('batch_id'))
-            candidate = request.env['ccmc.candidate'].sudo().search([('candidate_code', '=', 'C2406B15007')], limit=1)
+            
+
 
             
             exam_region = request.env["exam.center"].sudo().search([('name','=',kwargs.get('exam_centre'))])            
             exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
             
             invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',dgs_batch_id)])   
-            import wdb; wdb.set_trace()
+            
          
             if not invoice_exist:
                 line_items = []
@@ -335,8 +337,18 @@ class GPCandidatePortal(CustomerPortal):
                     
                 
                 if candidate:
+                    transaction_id = kwargs.get('upi_utr_no')
+                    transaction_date = kwargs.get('payment_date')
+                    total_amount = int(kwargs.get('amount'))
+                    file_content = kwargs.get("transaction_slip").read()
+                    filename = kwargs.get('transaction_slip').filename
+                    import wdb;wdb.set_trace()
+                    # import wdb; wdb.set_trace()
                     
                     invoice_vals = {
+                        'transaction_id': transaction_id,
+                        'transaction_date': transaction_date,
+                        'total_amount':total_amount,
                         'partner_id': candidate.user_id.partner_id.id,  
                         'ccmc_candidate': candidate.id,
                         'move_type': 'out_invoice',
@@ -344,7 +356,9 @@ class GPCandidatePortal(CustomerPortal):
                         'ccmc_repeater_candidate_ok':True,
                         'l10n_in_gst_treatment':'unregistered',
                         'preferred_exam_region':exam_region.id,
-                        'repeater_exam_batch': int(dgs_batch_id)
+                        'repeater_exam_batch': int(dgs_batch_id),
+                        'transaction_slip': base64.b64encode(file_content),
+                        'file_name':filename
                     }
                     
                     new_invoice = request.env['account.move'].sudo().create(invoice_vals)
@@ -367,10 +381,10 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
-            
-            candidate_code = kwargs.get('candidate_code')
-            candidate = request.env['gp.candidate'].sudo().search([('candidate_code', '=', 'G2406K01017')], limit=1)
+            candidate_user_id = request.env.user.id
+            candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             dgs_batch_id = int(kwargs.get('batch_id'))
+            exam_center = int(kwargs.get('exam_centre'))
             
             
             invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',dgs_batch_id)])
@@ -387,8 +401,8 @@ class GPCandidatePortal(CustomerPortal):
                 mek_online = kwargs.get('mek_online')
                 gsk_online = kwargs.get('gsk_online')
                 
-                # Exam Region Need To come from db and not static
-                exam_region = request.env["exam.center"].sudo().search([('name','=','MUMBAI')])
+                exam_region = request.env["exam.center"].sudo().search([('id','=',exam_center)])
+                import wdb; wdb.set_trace()
                 # import wdb; wdb.set_trace()
                 
                 if mek_practical_oral:
@@ -492,3 +506,15 @@ class GPCandidatePortal(CustomerPortal):
             return "sep_nov"
         else:
             return "Invalid month."
+
+
+    @http.route(['/my/getproductprice'], type='json', auth="user", methods=['GET', 'POST'])
+    def GetProductPrice(self, **kwargs):
+        default_code = request.jsonrequest['product_code']
+
+
+        # import wdb; wdb.set_trace()
+        amount = request.env["product.template"].sudo().search([('default_code', '=', default_code )]).list_price
+
+        
+        return json.dumps({"amount":amount})

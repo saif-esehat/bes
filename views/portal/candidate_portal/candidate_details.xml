@@ -143,43 +143,55 @@
     <template id="exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
             <script>
-                function updateExamOptions() {
-                    const month = document.getElementById('exam_month').value;
-                    const examCentre = document.getElementById('exam_centre');
-                    const examBatch = document.getElementById('exam_batch');
-                    
-                    // Clear existing options
-                    examCentre.innerHTML = '';
-                
-                    // Define options based on selected month
-                    let options = [];
-                    if (month === 'mar' || month === 'sep') {
-                        options = [
-                            { value: 'MUMBAI', text: 'Mumbai' },
-                            { value: 'DELHI', text: 'Delhi' },
-                            { value: 'KOLKATA', text: 'Kolkata' }
-                        ];
-                        examBatch.innerHTML = 'Batch for ' + (month === 'mar' ? 'March' : 'September');
-                    } else {
-                        options = [
-                            { value: 'MUMBAI', text: 'Mumbai' },
-                            { value: 'KOLKATA', text: 'Kolkata' },
-                            { value: 'CHENNAI', text: 'Chennai' },
-                            { value: 'DELHI', text: 'Delhi' },
-                            { value: 'KOCHI', text: 'Kochi' },
-                            { value: 'GOA', text: 'Goa' }
-                        ];
-                        examBatch.innerHTML = 'Batch for ' + (month === 'dec' ? 'December' : 'June');
-                    }
-                
-                    // Populate the exam centre dropdown
-                    options.forEach(option => {
-                        const opt = document.createElement('option');
-                        opt.value = option.value;
-                        opt.textContent = option.text;
-                        examCentre.appendChild(opt);
+                document.addEventListener('DOMContentLoaded', function(event) {
+
+                const checkboxes = document.querySelectorAll('.form-check-input');
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateTotalAmount);
+                });
+
+
+                function updateTotalAmount() {
+
+                    let total = 0;
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+
+                            var postData = {
+                                product_code: checkbox.value 
+                            };
+
+                            <!-- total += parseFloat(checkbox.value); -->
+                            $.ajax({
+                                        type: "POST",
+                                        url: '/my/getproductprice',
+                                        data: JSON.stringify(postData),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+
+                                            console.log("POST request successful:", JSON.parse(response.result));
+                                            var amount = response.result.amount
+                                            total += parseFloat(amount);
+
+
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                console.error("POST request failed:", error);
+
+                                                // Handle error
+                                            }
+                                        });
+                        }
                     });
+
+                    <!-- debugger -->
+
+
                 }
+            });
             </script>
             <div class="container mt16">
                 <h1>Application Form GP Rating(Repeater)</h1>
@@ -308,15 +320,31 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
+                            <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
                             <label for="exam_centre">Exam Centre Selected</label>
-                            <select name="exam_centre" id="exam_centre" class="form-control">
-                                <option value="MUMBAI">Mumbai</option>
-                                <option value="KOLKATA">Kolkata</option>
-                                <option value="CHENNAI">Chennai</option>
-                                <option value="DELHI">Delhi</option>
-                                <option value="KOCHI">Kochi</option>
-                                <option value="GOA">Goa</option>
-                            </select>
+                            <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
+                            <t t-if="exam_month in ['March','September']">
+                            <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
+
+                                <select name="exam_centre" id="exam_centre" class="form-control">
+
+                                    <t t-foreach="fresher_region" t-as="region">
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
+                            <t t-else="">
+
+                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
+
+                               <select name="exam_centre" id="exam_centre" class="form-control">
+
+                                    <t t-foreach="region_repeater" t-as="region">
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
+                            
                         </div>
                         <div class="col-md-6">
                             <label for="training_institute">Parent Training Institute</label>
@@ -334,51 +362,51 @@
                             <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>                            </t>
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -388,7 +416,7 @@
                             <label for="fees">Fees to be Paid for Exam</label>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-row">
-                                   <span>300/-</span>
+                                   ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'gsk_online_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -399,7 +427,7 @@
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-row">
-                                    <span>300/-</span>
+                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'mek_online_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -410,7 +438,7 @@
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-row">
-                                    <span>550/-</span>
+                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'gsk_po_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -421,7 +449,7 @@
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-row">
-                                    <span>550/-</span>
+                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'mek_po_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -430,6 +458,8 @@
                                 </div>
                             </t>
                         </div>
+
+                            
                         <div class="col-4">
                             <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
@@ -466,6 +496,7 @@
                             </div>
 
                         </div>
+    
 
                     </div>
                     <div class="form-group row">
@@ -512,9 +543,82 @@
 
     <template id="ccmc_exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
+            <script>
+                document.addEventListener('DOMContentLoaded', function(event) {
+
+                const checkboxes = document.querySelectorAll('.form-check-input');
+                var totalAmountElement = document.querySelector('.total_span');
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateTotalAmount);
+                });
+                
+
+
+                function updateTotalAmount() {
+
+                    let total = 0;
+                    var anyChecked = false; 
+
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            anyChecked = true; 
+                            var postData = {
+                                product_code: checkbox.value 
+                            };
+
+                            <!-- total += parseFloat(checkbox.value); -->
+                            $.ajax({
+                                        type: "POST",
+                                        url: '/my/getproductprice',
+                                        data: JSON.stringify(postData),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+
+                                            console.log("POST request successful:", JSON.parse(response.result));
+                                            var amount = JSON.parse(response.result).amount
+
+                                            
+                                            total += parseFloat(amount);
+                                            totalAmountElement.textContent = 'Total Amount: ₹' + total;
+
+
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                console.error("POST request failed:", error);
+
+                                                // Handle error
+                                            }
+                                        });
+                        }
+
+                        if (!anyChecked) {
+                                total = 0;
+                                totalAmountElement.textContent = 'Total Amount: ₹' + total;
+                            }
+
+                        
+                    }
+                    
+
+                    
+                    
+                    
+                    
+                    
+                    );
+
+                    <!-- debugger -->
+
+
+                }
+            });
+            </script>
             <div class="container mt16">
                 <h1>Application Form CCMC Rating(Repeater)</h1>
-                <form action="/my/ccmcapplication/view" method="post">
+                <form action="/my/ccmcapplication/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" t-att-value="batch.id" />
                     <div class="form-group row">
@@ -621,14 +725,28 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
-                            <select name="exam_centre" id="exam_centre" class="form-control">
-                                <option value="MUMBAI">Mumbai</option>
-                                <option value="KOLKATA">Kolkata</option>
-                                <option value="CHENNAI">Chennai</option>
-                                <option value="DELHI">Delhi</option>
-                                <option value="KOCHI">Kochi</option>
-                                <option value="GOA">Goa</option>
-                            </select>
+                            <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
+                            <t t-if="exam_month in ['March','September']">
+                                <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
+
+                                <select name="exam_centre" id="exam_centre" class="form-control">
+
+                                    <t t-foreach="fresher_region" t-as="region">
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
+                            <t t-else="">
+
+                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
+
+                               <select name="exam_centre" id="exam_centre" class="form-control">
+
+                                    <t t-foreach="region_repeater" t-as="region">
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
                         </div>
                         <div class="col-md-6">
                             <label for="training_institute">Parent Training Institute</label>
@@ -652,7 +770,7 @@
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>                            
                             </t>
@@ -665,7 +783,7 @@
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="Cookery Oral" value="566" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="Cookery Oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
                                 </div>                            
                             </t>
@@ -678,7 +796,7 @@
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="cookery_gsk_online" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input"/>
                                     <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>
@@ -751,6 +869,9 @@
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
                     </div>
+                     <div class="form-group row">
+                        <span class="total_span"></span>
+                    </div>
                     <hr/>
                     <div class="form-group row">
                         <p>Make Payment and enter payment details</p>
@@ -779,8 +900,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="attachments">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
-                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
+                            <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
+                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" /><br/><br/>
                         </div>
                     </div>
 
