@@ -187,7 +187,7 @@
                         }
                     });
 
-                    debugger
+                    <!-- debugger -->
 
 
                 }
@@ -547,6 +547,7 @@
                 document.addEventListener('DOMContentLoaded', function(event) {
 
                 const checkboxes = document.querySelectorAll('.form-check-input');
+                var totalAmountElement = document.querySelector('.total_span');
 
                 checkboxes.forEach(function(checkbox) {
                     checkbox.addEventListener('change', updateTotalAmount);
@@ -557,9 +558,11 @@
                 function updateTotalAmount() {
 
                     let total = 0;
+                    var anyChecked = false; 
+
                     checkboxes.forEach(function(checkbox) {
                         if (checkbox.checked) {
-
+                            anyChecked = true; 
                             var postData = {
                                 product_code: checkbox.value 
                             };
@@ -573,8 +576,11 @@
                                         success: function (response) {
 
                                             console.log("POST request successful:", JSON.parse(response.result));
-                                            var amount = response.result.amount
+                                            var amount = JSON.parse(response.result).amount
+
+                                            
                                             total += parseFloat(amount);
+                                            totalAmountElement.textContent = 'Total Amount: ₹' + total;
 
 
                                             // if response["status"]
@@ -587,9 +593,24 @@
                                             }
                                         });
                         }
-                    });
 
-                    debugger
+                        if (!anyChecked) {
+                                total = 0;
+                                totalAmountElement.textContent = 'Total Amount: ₹' + total;
+                            }
+
+                        
+                    }
+                    
+
+                    
+                    
+                    
+                    
+                    
+                    );
+
+                    <!-- debugger -->
 
 
                 }
@@ -847,6 +868,9 @@
                     </div>
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
+                    </div>
+                     <div class="form-group row">
+                        <span class="total_span"></span>
                     </div>
                     <hr/>
                     <div class="form-group row">
