@@ -345,7 +345,7 @@
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
                             <label for="exam_centre">Exam Centre Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
-                            <t t-if="exam_month in ['March','September']">
+                            <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
                                 <select name="exam_centre" id="exam_centre" class="form-control">
@@ -751,7 +751,7 @@
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
-                            <t t-if="exam_month in ['March','September']">
+                            <t t-if="exam_month not in ['March','September']">
                                 <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
                                 <select name="exam_centre" id="exam_centre" class="form-control">
