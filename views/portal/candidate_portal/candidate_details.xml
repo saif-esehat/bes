@@ -47,9 +47,9 @@
                 <div class="form-group  col-xl-6">
                     <label class="col-form-label label-optional" for="country_id">Country:</label>
                     <select name="country_id" t-attf-class="form-control" t-att-disabled="1">
-                    <option t-attf-value="{{country.id}}" t-att-selected="1" class="form-control">
-                        <t t-out="country.name" />
-                    </option>
+                        <option t-attf-value="{{country.id}}" t-att-selected="1" class="form-control">
+                            <t t-out="country.name" />
+                        </option>
                     </select>
                 </div>
             </t>
@@ -76,10 +76,10 @@
                 <t t-set="state" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).state_id"/>
                 <div class="form-group  col-xl-6">
                     <label class="col-form-label label-optional" for="states_id">State / Province:</label>
-                    <select name="states_id" class="form-control"  t-att-disabled="1" >
-                    <option t-attf-value="{{state.id}}" t-att-selected="1" class="form-control">
-                        <t t-out="state.name" />
-                    </option>
+                    <select name="states_id" class="form-control" t-att-disabled="1">
+                        <option t-attf-value="{{state.id}}" t-att-selected="1" class="form-control">
+                            <t t-out="state.name" />
+                        </option>
                     </select>
                 </div>
             </t>
@@ -99,51 +99,53 @@
             </t>
 
         </xpath>
-         <xpath expr="//label[@for='states_id']/parent::div" position="after">
-                <t t-set="indos_no" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).indos_no"/>
-                <t t-if="env.user.has_group('bes.group_gp_candidates')">
-                    <div class="form-group  col-xl-6">
-                        <label class="col-form-label" for="email">Indos No.</label>
-                        <input type="email" name="email" t-attf-value="{{indos_no}}" t-att-readonly="1" class="form-control "/>
-                    </div>
-                </t>
-          </xpath>
-          <xpath expr="//div[@class='col-lg-8']" position="after">
+        <xpath expr="//label[@for='states_id']/parent::div" position="after">
+            <t t-set="indos_no" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).indos_no"/>
+            <t t-if="env.user.has_group('bes.group_gp_candidates')">
+                <div class="form-group  col-xl-6">
+                    <label class="col-form-label" for="email">Indos No.</label>
+                    <input type="email" name="email" t-attf-value="{{indos_no}}" t-att-readonly="1" class="form-control "/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@class='col-lg-8']" position="after">
             <div class="col-lg-4">
                 <t t-set="candidate_image" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).candidate_image"/>
                 <t t-set="candidate_signature" t-value="env['gp.candidate'].sudo().search([('user_id','=',env.user.id)]).candidate_signature"/>
 
-                 <div class="row">
+                <div class="row">
                     <t t-if="candidate_image">
                         <img t-attf-src="data:image/png; base64, {{candidate_image}}" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 40px; margin-left:25px;" />
                     </t>
                     <t t-else="">
                         <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 40px; margin-left:25px;"/>
-                    </t>  
-                   
+                    </t>
+
                 </div>
                 <div class="col">
-                    
-                     <t t-if="candidate_signature">
-                        <span style="margin-top: 25px; margin-left:25px;"><h4>Signature</h4></span>
+
+                    <t t-if="candidate_signature">
+                        <span style="margin-top: 25px; margin-left:25px;">
+                            <h4>Signature</h4>
+                        </span>
                         <img t-attf-src="data:image/png; base64, {{candidate_signature}}" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 20px; margin-left:15px;" />
                     </t>
                     <!-- <t t-else="">
                         <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-fluid" style="width: 150px;margin-top: 20px; margin-left:15px;"/>
                     </t>                  -->
-                 </div>
+                </div>
             </div>
-               
-          </xpath>
+
+        </xpath>
 
 
 
     </template>
-        
+
     <template id="exam_application_form_template" name="Exam Application Form">
         <t t-call="website.layout">
             <script>
-                function updateExamOptions() {
+                <!-- function updateExamOptions() {
                     const month = document.getElementById('exam_month').value;
                     const examCentre = document.getElementById('exam_centre');
                     const examBatch = document.getElementById('exam_batch');
@@ -179,7 +181,59 @@
                         opt.textContent = option.text;
                         examCentre.appendChild(opt);
                     });
+                } -->
+
+                document.addEventListener('DOMContentLoaded', function(event) {
+                
+                const checkboxes = document.querySelectorAll('.form-check-input');
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateTotalAmount);
+                });
+
+
+                function updateTotalAmount() {
+                    
+                    let total = 0;
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            
+                            var postData = {
+                                product_code: checkbox.value 
+                            };
+
+                            <!-- total += parseFloat(checkbox.value); -->
+                            $.ajax({
+                                        type: "POST",
+                                        url: '/my/getproductprice',
+                                        data: JSON.stringify(postData),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+
+                                            console.log("POST request successful:", JSON.parse(response.result));
+                                            var amount = response.result.amount
+                                            total += parseFloat(amount);
+                                            
+
+                                            // if response["status"]
+                                            // Handle success response
+                                        },
+                                            error: function (xhr, status, error) {
+                                                console.error("POST request failed:", error);
+                                                
+                                                // Handle error
+                                            }
+                                        });
+                        }
+                    });
+
+                    debugger
+
+
                 }
+            });
+
+
             </script>
             <div class="container mt16">
                 <h1>Application Form GP Rating(Repeater)</h1>
@@ -193,7 +247,9 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Full Name:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Full Name:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -204,7 +260,9 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Indos No:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Indos No:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -215,7 +273,9 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Code No:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Code No:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -226,25 +286,31 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Address:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Address:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <label>Address Line 1: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>Address Line 2: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street2"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>Dist/City: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.city"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>State: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.state_id.name"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>Pincode: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.zip"/>
@@ -287,7 +353,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="exam_centre" >Select Month</label>
+                            <label for="exam_centre">Select Month</label>
                             <select name="exam_centre" id="exam_month" onchange="updateExamOptions()" class="form-control">
                                 <option value="dec">December</option>
                                 <option value="mar">March</option>
@@ -298,7 +364,9 @@
                     </div> -->
                     <div class="row">
                         <div class="col-3">
-                            <p class="mb-0"><strong>Application For:</strong></p>
+                            <p class="mb-0">
+                                <strong>Application For:</strong>
+                            </p>
                         </div>
                         <div class="col-9">
                             <p class="text-muted">
@@ -308,35 +376,19 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
                             <label for="exam_centre">Exam Centre Selected</label>
-                            <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
-                            <t t-if="exam_month in ['March','September']">
-                            <t t-set="fresher_repeater" t-value="env['exam.center'].sudo().search([])"/>
-
-                                <select name="exam_centre" id="exam_centre" class="form-control">
-
-                                    <t t-foreach="fresher_repeater" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
-                                    </t>
-                                </select>
-                            </t>
-                            <t t-else="">
-
-                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
-
-                               <select name="exam_centre" id="exam_centre" class="form-control">
-
-                                    <t t-foreach="region_repeater" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
-                                    </t>
-                                </select>
-                            </t>
-                            
+                            <select name="exam_centre" id="exam_centre" class="form-control">
+                                <option value="MUMBAI">Mumbai</option>
+                                <option value="KOLKATA">Kolkata</option>
+                                <option value="CHENNAI">Chennai</option>
+                                <option value="DELHI">Delhi</option>
+                                <option value="KOCHI">Kochi</option>
+                                <option value="GOA">Goa</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label for="training_institute">Parent Training Institute</label>
-                            <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            <input type="text" t-att-disabled="1" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -347,54 +399,56 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination(s)</label><br/>
+                            <label for="exam_parts">Applied for Examination(s)</label>
+                            <br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="GSK Online" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
-                                </div>                            </t>
+                                </div>
+                            </t>
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="MEK Online" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
-                                </div>                            
+                                </div>
                             </t>
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="GSK Practical &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="gsk_po_repeater &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="MEK Practical &amp; Oral" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -404,13 +458,13 @@
                             <label for="fees">Fees to be Paid for Exam</label>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-row">
-                                   <span>300/-</span>
+                                    <span>300/-</span>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-row">
                                     <span>---</span>
-                                </div>                           
+                                </div>
                             </t>
 
                             <t t-if="exam.mek_online_status == 'failed'">
@@ -421,7 +475,7 @@
                             <t t-else="">
                                 <div class="form-row">
                                     <span>---</span>
-                                </div>                             
+                                </div>
                             </t>
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
@@ -432,7 +486,7 @@
                             <t t-else="">
                                 <div class="form-row">
                                     <span>---</span>
-                                </div> 
+                                </div>
                             </t>
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
@@ -447,89 +501,41 @@
                             </t>
                         </div>
                         <div class="col-4">
-                            <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
+                            <span>
+                                <strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
                                 <t t-if="exam.gsk_online_status == 'failed'">
-                                    <div class="form-row">
-                                       <span>300/-</span>
-                                    </div>
+                                    <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div>                           
+                                    <span id="gsk_online_status" class="badge badge-success">GSK Online</span>
                                 </t>
-    
+                            </div>
+                            <div class="form-check">
                                 <t t-if="exam.mek_online_status == 'failed'">
-                                    <div class="form-row">
-                                        <span>300/-</span>
-                                    </div>
+                                    <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div>                             
+                                    <span id="mek_online_status" class="badge badge-success">MEK Online</span>
                                 </t>
-    
+                            </div>
+                            <div class="form-check">
                                 <t t-if="exam.gsk_oral_prac_status == 'failed'">
-                                    <div class="form-row">
-                                        <span>550/-</span>
-                                    </div>
+                                    <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div> 
+                                    <span id="gsk_oral_prac_status" class="badge badge-success">GSK Practical &amp; Oral</span>
                                 </t>
-    
+                            </div>
+                            <div class="form-check">
                                 <t t-if="exam.mek_oral_prac_status == 'failed'">
-                                    <div class="form-row">
-                                        <span>550/-</span>
-                                    </div>
+                                    <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div>
+                                    <span id="mek_oral_prac_status" class="badge badge-success">MEK Practical &amp; Oral</span>
                                 </t>
                             </div>
-                            <div class="col-4">
-                                <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
-                                <div class="form-check">
-                                    <t t-if="exam.gsk_online_status == 'failed'">
-                                        <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="gsk_online_status" class="badge badge-success">GSK Online</span>
-                                    </t>
-                                </div>
-                                <div class="form-check">
-                                    <t t-if="exam.mek_online_status == 'failed'">
-                                        <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="mek_online_status" class="badge badge-success">MEK Online</span>
-                                    </t>
-                                </div>
-                                <div class="form-check">
-                                    <t t-if="exam.gsk_oral_prac_status == 'failed'">
-                                        <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="gsk_oral_prac_status" class="badge badge-success">GSK Practical &amp; Oral</span>
-                                    </t>
-                                </div>
-                                <div class="form-check">
-                                    <t t-if="exam.mek_oral_prac_status == 'failed'">
-                                        <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="mek_oral_prac_status" class="badge badge-success">MEK Practical &amp; Oral</span>
-                                    </t>
-                                </div>
-    
-                            </div>
-    
+
                         </div>
 
                     </div>
@@ -538,9 +544,11 @@
                     </div>
                     <hr/>
                     <div class="form-group row">
-                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong><br/>
+                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong>
+                        <br/>
                         <div class="col-md-4">
-                            <label for="gp_qr">Payment QR code</label><br/>
+                            <label for="gp_qr">Payment QR code</label>
+                            <br/>
                             <img t-attf-src="/bes/static/src/img/GP_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" />
                         </div>
                     </div>
@@ -564,12 +572,16 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
-                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" /><br/><br/>
+                            <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB):</label>
+                            <br/>
+                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" />
+                            <br/>
+                            <br/>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
         </t>
@@ -579,7 +591,7 @@
         <t t-call="website.layout">
             <div class="container mt16">
                 <h1>Application Form CCMC Rating(Repeater)</h1>
-                <form action="/my/ccmcapplication/view" method="post">
+                <form action="/my/ccmcapplication/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" t-att-value="batch.id" />
                     <div class="form-group row">
@@ -589,7 +601,9 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Full Name:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Full Name:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -600,7 +614,9 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Indos No:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Indos No:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -611,7 +627,9 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Code No:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Code No:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -622,25 +640,31 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Address:</strong></p>
+                                                <p class="mb-0">
+                                                    <strong>Address:</strong>
+                                                </p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <label>Address Line 1: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>Address Line 2: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.street2"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>Dist/City: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.city"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>State: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.state_id.name"/>
-                                                </span><br/>
+                                                </span>
+                                                <br/>
                                                 <label>Pincode: </label>
                                                 <span class="text-muted mb-0">
                                                     <t t-out="candidate.zip"/>
@@ -674,7 +698,9 @@
 
                     <div class="row">
                         <div class="col-3">
-                            <p class="mb-0"><strong>Application For:</strong></p>
+                            <p class="mb-0">
+                                <strong>Application For:</strong>
+                            </p>
                         </div>
                         <div class="col-3">
                             <p class="text-muted mb-0">
@@ -686,32 +712,18 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
-                            <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
-                            <t t-if="exam_month in ['March','September']">
-                                <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
-
-                                <select name="exam_centre" id="exam_centre" class="form-control">
-
-                                    <t t-foreach="fresher_region" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
-                                    </t>
-                                </select>
-                            </t>
-                            <t t-else="">
-
-                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
-
-                               <select name="exam_centre" id="exam_centre" class="form-control">
-
-                                    <t t-foreach="region_repeater" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
-                                    </t>
-                                </select>
-                            </t>
+                            <select name="exam_centre" id="exam_centre" class="form-control">
+                                <option value="MUMBAI">Mumbai</option>
+                                <option value="KOLKATA">Kolkata</option>
+                                <option value="CHENNAI">Chennai</option>
+                                <option value="DELHI">Delhi</option>
+                                <option value="KOCHI">Kochi</option>
+                                <option value="GOA">Goa</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label for="training_institute">Parent Training Institute</label>
-                            <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            <input type="text" t-att-disabled="1" name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -722,37 +734,38 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination(s)</label><br/>
+                            <label for="exam_parts">Applied for Examination(s)</label>
+                            <br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
-                                    <label for="cookery_practical" class="form-check-label">Cookery And Bakery (Fees Rs.566/-)</label>
+                                    <input type="checkbox" name="cookery_practical" value="Cookery And Bakery" id="cookery_practical" class="form-check-input"/>
+                                    <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1"  name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="cookery_practical" value="cookery_practical" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
-                                </div>                            
+                                </div>
                             </t>
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_oral" value="cookery_oral" id="cookery_oral" class="form-check-input"/>
-                                    <label for="cookery_oral" class="form-check-label">Cookery Oral (Fees Rs. 566/-)</label>
+                                    <input type="checkbox" name="cookery_oral" value="566" id="cookery_oral" class="form-check-input"/>
+                                    <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="Cookery Oral" value="566" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
-                                </div>                            
+                                </div>
                             </t>
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_gsk_online" value="cookery_gsk_online" id="cookery_gsk_online" class="form-check-input"/>
-                                    <label for="cookery_gsk_online" class="form-check-label">CCMC Online (Fee Rs.568/-)</label>
+                                    <input type="checkbox" name="cookery_gsk_online" value="568" id="cookery_gsk_online" class="form-check-input"/>
+                                    <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
@@ -767,13 +780,13 @@
                             <label for="fees">Fees to be Paid for Exam</label>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-row">
-                                   <span>566/-</span>
+                                    <span>566/-</span>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-row">
                                     <span>---</span>
-                                </div>                           
+                                </div>
                             </t>
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
@@ -784,7 +797,7 @@
                             <t t-else="">
                                 <div class="form-row">
                                     <span>---</span>
-                                </div>                             
+                                </div>
                             </t>
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
@@ -795,12 +808,13 @@
                             <t t-else="">
                                 <div class="form-row">
                                     <span>---</span>
-                                </div> 
+                                </div>
                             </t>
                         </div>
 
                         <div class="col-md-4">
-                            <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
+                            <span>
+                                <strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
                                 <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-danger">Cookery And Bakery</span>
@@ -835,9 +849,11 @@
                         <p>Make Payment and enter payment details</p>
                     </div>
                     <div class="form-group row">
-                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong><br/>
+                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong>
+                        <br/>
                         <div class="col-md-4">
-                            <label for="gp_qr">Payment QR code</label><br/>
+                            <label for="gp_qr">Payment QR code</label>
+                            <br/>
                             <img t-attf-src="/bes/static/src/img/CCMC_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" />
                         </div>
                     </div>
@@ -858,12 +874,16 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="attachments">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
-                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="attachments[]" t-att-multiple="1" /><br/><br/>
+                            <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB):</label>
+                            <br/>
+                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" />
+                            <br/>
+                            <br/>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
         </t>

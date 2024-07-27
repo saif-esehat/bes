@@ -7,7 +7,7 @@ import base64
 import datetime
 from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
-
+import json
 
 
 
@@ -294,7 +294,7 @@ class GPCandidatePortal(CustomerPortal):
             exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
             
             invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',dgs_batch_id)])   
-            import wdb; wdb.set_trace()
+            
          
             if not invoice_exist:
                 line_items = []
@@ -335,8 +335,18 @@ class GPCandidatePortal(CustomerPortal):
                     
                 
                 if candidate:
+                    transaction_id = kwargs.get('upi_utr_no')
+                    transaction_date = kwargs.get('payment_date')
+                    total_amount = int(kwargs.get('amount'))
+                    file_content = kwargs.get("transaction_slip").read()
+                    filename = kwargs.get('transaction_slip').filename
+                    
+                    # import wdb; wdb.set_trace()
                     
                     invoice_vals = {
+                        'transaction_id': transaction_id,
+                        'transaction_date': transaction_date,
+                        'total_amount':total_amount,
                         'partner_id': candidate.user_id.partner_id.id,  
                         'ccmc_candidate': candidate.id,
                         'move_type': 'out_invoice',
@@ -344,7 +354,9 @@ class GPCandidatePortal(CustomerPortal):
                         'ccmc_repeater_candidate_ok':True,
                         'l10n_in_gst_treatment':'unregistered',
                         'preferred_exam_region':exam_region.id,
-                        'repeater_exam_batch': int(dgs_batch_id)
+                        'repeater_exam_batch': int(dgs_batch_id),
+                        'transaction_slip': base64.b64encode(file_content),
+                        'file_name':filename
                     }
                     
                     new_invoice = request.env['account.move'].sudo().create(invoice_vals)
@@ -492,3 +504,14 @@ class GPCandidatePortal(CustomerPortal):
             return "sep_nov"
         else:
             return "Invalid month."
+
+
+    @http.route(['/my/getproductprice'], type='json', auth="user", methods=['GET', 'POST'])
+    def GetProductPrice(self, **kwargs):
+        default_code = request.jsonrequest['product_code']
+
+
+        amount = request.env["product.template"].sudo().search([('default_code', '=', default_code )]).list_price
+
+        
+        return json.dumps({"amount":amount})
