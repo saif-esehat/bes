@@ -312,11 +312,11 @@
                             <label for="exam_centre">Exam Centre Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month in ['March','September']">
-                            <t t-set="fresher_repeater" t-value="env['exam.center'].sudo().search([])"/>
+                            <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
                                 <select name="exam_centre" id="exam_centre" class="form-control">
 
-                                    <t t-foreach="fresher_repeater" t-as="region">
+                                    <t t-foreach="fresher_region" t-as="region">
                                         <option value="region.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
