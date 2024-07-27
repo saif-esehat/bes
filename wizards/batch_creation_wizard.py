@@ -22,7 +22,7 @@ class BatchWizard(models.TransientModel):
         for institute in institutes:
             for course in institute.courses:
                 if course.course.course_code == 'GP':
-                    if course.batcher_per_year == 1 or course.batcher_per_year > 1:
+                    if course.batcher_per_year == 1:
                         if self.exam_batch_name == 'jan':
                             self.batch_name = 'Jan - June'
                             self.env['institute.gp.batches'].create({
@@ -47,7 +47,7 @@ class BatchWizard(models.TransientModel):
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
                 elif course.course.course_code == 'CCMC':
-                    if course.batcher_per_year == 1 or course.batcher_per_year > 1:
+                    if course.batcher_per_year == 1:
                         if self.exam_batch_name == 'jan':
                             self.batch_name = 'Jan - June'
                             self.env['institute.ccmc.batches'].create({

@@ -1167,6 +1167,7 @@ class ExamOralPractical(models.Model):
                 'context': {
                     'default_exam_duty': self.id,
                     'default_exam_region': self.exam_region.id,
+                    'deafault_institute': self.institute_id.id,
                 }
             }
             
@@ -1184,6 +1185,7 @@ class ExamOralPractical(models.Model):
                 'context': {
                     'default_exam_duty': self.id,
                     'default_exam_region': self.exam_region.id,
+                    'deafault_institute': self.institute_id.id,
                 }
             }
     
