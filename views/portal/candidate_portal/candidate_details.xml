@@ -343,21 +343,21 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
-                            <label for="exam_centre">Exam Centre Selected</label>
+                            <label for="exam_centre">Exam Region Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
-                                <select name="exam_centre" id="exam_centre" class="form-control">
+                                <select name="exam_centre" id="exam_centre" class="form-control"  t-att-disabled="1" >
 
                                     <t t-foreach="fresher_region" t-as="region">
-                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
                             <t t-else="">
 
-                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
+                               <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
 
                                <select name="exam_centre" id="exam_centre" class="form-control">
 
@@ -749,15 +749,15 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="exam_centre">Exam Centre Selected</label>
+                            <label for="exam_centre">Exam Region Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month not in ['March','September']">
                                 <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
-                                <select name="exam_centre" id="exam_centre" class="form-control">
+                                <select name="exam_centre" id="exam_centre" class="form-control" t-att-disabled="1">
 
                                     <t t-foreach="fresher_region" t-as="region">
-                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
