@@ -416,7 +416,7 @@
                             <label for="fees">Fees to be Paid for Exam</label>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-row">
-                                   <span>300/-</span>
+                                   ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'gsk_online_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -427,7 +427,7 @@
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-row">
-                                    <span>300/-</span>
+                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'mek_online_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -438,7 +438,7 @@
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-row">
-                                    <span>550/-</span>
+                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'gsk_po_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -449,7 +449,7 @@
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-row">
-                                    <span>550/-</span>
+                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'mek_po_repeater' )]).list_price"/>
                                 </div>
                             </t>
                             <t t-else="">
@@ -458,91 +458,45 @@
                                 </div>
                             </t>
                         </div>
+
+                            
                         <div class="col-4">
                             <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
                                 <t t-if="exam.gsk_online_status == 'failed'">
-                                    <div class="form-row">
-                                       <span>300/-</span>
-                                    </div>
+                                    <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div>                           
+                                    <span id="gsk_online_status" class="badge badge-success">GSK Online</span>
                                 </t>
-    
+                            </div>
+                            <div class="form-check">
                                 <t t-if="exam.mek_online_status == 'failed'">
-                                    <div class="form-row">
-                                        <span>300/-</span>
-                                    </div>
+                                    <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div>                             
+                                    <span id="mek_online_status" class="badge badge-success">MEK Online</span>
                                 </t>
-    
+                            </div>
+                            <div class="form-check">
                                 <t t-if="exam.gsk_oral_prac_status == 'failed'">
-                                    <div class="form-row">
-                                        <span>550/-</span>
-                                    </div>
+                                    <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div> 
+                                    <span id="gsk_oral_prac_status" class="badge badge-success">GSK Practical &amp; Oral</span>
                                 </t>
-    
+                            </div>
+                            <div class="form-check">
                                 <t t-if="exam.mek_oral_prac_status == 'failed'">
-                                    <div class="form-row">
-                                        <span>550/-</span>
-                                    </div>
+                                    <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
                                 </t>
                                 <t t-else="">
-                                    <div class="form-row">
-                                        <span>---</span>
-                                    </div>
+                                    <span id="mek_oral_prac_status" class="badge badge-success">MEK Practical &amp; Oral</span>
                                 </t>
                             </div>
-                            <div class="col-4">
-                                <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
-                                <div class="form-check">
-                                    <t t-if="exam.gsk_online_status == 'failed'">
-                                        <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="gsk_online_status" class="badge badge-success">GSK Online</span>
-                                    </t>
-                                </div>
-                                <div class="form-check">
-                                    <t t-if="exam.mek_online_status == 'failed'">
-                                        <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="mek_online_status" class="badge badge-success">MEK Online</span>
-                                    </t>
-                                </div>
-                                <div class="form-check">
-                                    <t t-if="exam.gsk_oral_prac_status == 'failed'">
-                                        <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="gsk_oral_prac_status" class="badge badge-success">GSK Practical &amp; Oral</span>
-                                    </t>
-                                </div>
-                                <div class="form-check">
-                                    <t t-if="exam.mek_oral_prac_status == 'failed'">
-                                        <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span id="mek_oral_prac_status" class="badge badge-success">MEK Practical &amp; Oral</span>
-                                    </t>
-                                </div>
-    
-                            </div>
-    
+
                         </div>
+    
 
                     </div>
                     <div class="form-group row">
