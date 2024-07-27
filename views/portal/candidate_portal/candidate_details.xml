@@ -341,7 +341,7 @@
                                <select name="exam_centre" id="exam_centre" class="form-control">
 
                                     <t t-foreach="region_repeater" t-as="region">
-                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option> 
                                     </t>
                                 </select>
                             </t>
@@ -873,13 +873,8 @@
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
                     </div>
-<<<<<<< HEAD
-                    <div>
-                        <b><span id="ccmc_total_fees"></span></b>
-=======
                      <div class="form-group row">
                         <span class="total_span"></span>
->>>>>>> 1502d65a3ec5d7771939ac128831dbe32f84a0ba
                     </div>
                     <hr/>
                     <div class="form-group row">
