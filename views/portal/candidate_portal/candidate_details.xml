@@ -330,7 +330,7 @@
                                 <select name="exam_centre" id="exam_centre" class="form-control">
 
                                     <t t-foreach="fresher_region" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
@@ -341,7 +341,7 @@
                                <select name="exam_centre" id="exam_centre" class="form-control">
 
                                     <t t-foreach="region_repeater" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
@@ -736,7 +736,7 @@
                                 <select name="exam_centre" id="exam_centre" class="form-control">
 
                                     <t t-foreach="fresher_region" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
@@ -747,7 +747,7 @@
                                <select name="exam_centre" id="exam_centre" class="form-control">
 
                                     <t t-foreach="region_repeater" t-as="region">
-                                        <option value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
