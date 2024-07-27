@@ -345,7 +345,7 @@
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
                             <label for="exam_centre">Exam Centre Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
-                            <t t-if="exam_month in ['March','September']">
+                            <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
                                 <select name="exam_centre" id="exam_centre" class="form-control">
@@ -751,7 +751,7 @@
                         <div class="col-md-6">
                             <label for="exam_centre">Exam Centre Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
-                            <t t-if="exam_month in ['March','September']">
+                            <t t-if="exam_month not in ['March','September']">
                                 <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
                                 <select name="exam_centre" id="exam_centre" class="form-control">
@@ -789,7 +789,7 @@
                             <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_practical" value="Cookery And Bakery" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>
                             </t>
@@ -802,7 +802,7 @@
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_oral" value="566" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
                                 </div>
                             </t>
@@ -815,7 +815,7 @@
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_gsk_online" value="568" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input"/>
                                     <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>

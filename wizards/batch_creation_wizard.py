@@ -35,6 +35,19 @@ class BatchWizard(models.TransientModel):
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
                     elif course.batcher_per_year > 1:
+                        # New Code
+                        if self.exam_batch_name == 'jan':
+                            self.batch_name = 'Jan - June'
+                            self.env['institute.gp.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
+                                "institute_id": institute.id,
+                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "from_date": self.from_date,
+                                "to_date": self.to_date,
+                                "course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+
                         if self.exam_batch_name == 'july':
                             self.batch_name = 'July - Dec'
                             self.env['institute.gp.batches'].create({
@@ -59,6 +72,18 @@ class BatchWizard(models.TransientModel):
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
                     elif course.batcher_per_year > 1:
+                        # New code
+                        if self.exam_batch_name == 'jan':
+                            self.batch_name = 'Jan - June'
+                            self.env['institute.ccmc.batches'].create({
+                                "institute_id": institute.id,
+                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "ccmc_from_date": self.from_date,
+                                "ccmc_to_date": self.to_date,
+                                "ccmc_course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+
                         if self.exam_batch_name == 'july':
                             self.batch_name = 'July - Dec'
                             self.env['institute.ccmc.batches'].create({
