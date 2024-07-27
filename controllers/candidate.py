@@ -285,9 +285,11 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/ccmcapplication/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewCCMCApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
-            candidate_code = kwargs.get('candidate_code')
+            candidate_user_id = request.env.user.id
+            candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             dgs_batch_id =int(kwargs.get('batch_id'))
-            candidate = request.env['ccmc.candidate'].sudo().search([('candidate_code', '=', 'C2406B15007')], limit=1)
+            
+
 
             
             exam_region = request.env["exam.center"].sudo().search([('name','=',kwargs.get('exam_centre'))])            
@@ -340,7 +342,7 @@ class GPCandidatePortal(CustomerPortal):
                     total_amount = int(kwargs.get('amount'))
                     file_content = kwargs.get("transaction_slip").read()
                     filename = kwargs.get('transaction_slip').filename
-                    
+                    import wdb;wdb.set_trace()
                     # import wdb; wdb.set_trace()
                     
                     invoice_vals = {
