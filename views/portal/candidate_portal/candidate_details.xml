@@ -146,6 +146,8 @@
                 document.addEventListener('DOMContentLoaded', function(event) {
 
                 const checkboxes = document.querySelectorAll('.form-check-input');
+                var totalAmountElement = document.querySelector('.total_span');
+
 
                 checkboxes.forEach(function(checkbox) {
                     checkbox.addEventListener('change', updateTotalAmount);
@@ -155,9 +157,11 @@
                 function updateTotalAmount() {
 
                     let total = 0;
+                    var anyChecked = false; 
+
                     checkboxes.forEach(function(checkbox) {
                         if (checkbox.checked) {
-
+                            anyChecked = true; 
                             var postData = {
                                 product_code: checkbox.value 
                             };
@@ -171,9 +175,11 @@
                                         success: function (response) {
 
                                             console.log("POST request successful:", JSON.parse(response.result));
-                                            var amount = response.result.amount
+                                            var amount = JSON.parse(response.result).amount
+
+                                            
                                             total += parseFloat(amount);
-                                            document.getElementById('gp_total_fees').innerText = total
+                                            totalAmountElement.textContent = 'Total Amount: ₹' + total;
 
 
                                             // if response["status"]
@@ -186,7 +192,22 @@
                                             }
                                         });
                         }
-                    });
+
+                        if (!anyChecked) {
+                                total = 0;
+                                totalAmountElement.textContent = 'Total Amount: ₹' + total;
+                            }
+
+                        
+                    }
+                    
+
+                    
+                    
+                    
+                    
+                    
+                    );
 
                     <!-- debugger -->
 
@@ -503,8 +524,8 @@
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
                     </div>
-                    <div>
-                        <b><span id="gp_total_fees"></span></b>
+                    <div class="form-group row">
+                        <span class="total_span"></span>
                     </div>
                     <hr/>
                     <div class="form-group row">
@@ -521,15 +542,15 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">Transaction ID/ UTR No.</label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount</label>
-                            <input type="number" name="amount" id="amount" class="form-control" />
+                            <input type="number" name="amount" id="amount" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="payment_date">Date</label>
-                            <input type="date" name="payment_date" id="payment_date" class="form-control" />
+                            <input type="date" name="payment_date" id="payment_date" required="True" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -891,15 +912,15 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">Transaction ID/ UTR No.</label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" class="form-control"/>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount</label>
-                            <input type="number" name="amount" id="amount" class="form-control" />
+                            <input type="number" name="amount" id="amount" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="payment_date">Date</label>
-                            <input type="date" name="payment_date" id="payment_date" class="form-control" />
+                            <input type="date" name="payment_date" id="payment_date" required="True" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">
