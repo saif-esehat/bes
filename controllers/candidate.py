@@ -379,10 +379,10 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
-            import wdb; wdb.set_trace()
             candidate_user_id = request.env.user.id
             candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             dgs_batch_id = int(kwargs.get('batch_id'))
+            exam_center = int(kwargs.get('exam_centre'))
             
             
             invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',dgs_batch_id)])
@@ -399,8 +399,8 @@ class GPCandidatePortal(CustomerPortal):
                 mek_online = kwargs.get('mek_online')
                 gsk_online = kwargs.get('gsk_online')
                 
-                # Exam Region Need To come from db and not static
-                exam_region = request.env["exam.center"].sudo().search([('name','=','MUMBAI')])
+                exam_region = request.env["exam.center"].sudo().search([('id','=',exam_center)])
+                import wdb; wdb.set_trace()
                 # import wdb; wdb.set_trace()
                 
                 if mek_practical_oral:
