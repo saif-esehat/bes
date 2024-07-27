@@ -49,6 +49,23 @@
             <field name="view_id" ref="create_batch_wizard_form"/>
             <field name="target">new</field>
         </record>
+
+        <record id="view_batch_pop_up_form" model="ir.ui.view">
+            <field name="name">batch.pop.up.wizard.form</field>
+            <field name="model">batch.pop.up.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Batch Pop Up">
+                    <group>
+                        <field name="message" readonly="1"/>
+                    </group>
+                    
+                    <footer>
+                        <button name="action_close" string="Close" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
         
         
 

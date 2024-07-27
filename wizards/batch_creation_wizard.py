@@ -13,82 +13,82 @@ class BatchWizard(models.TransientModel):
         ],string="Batch Name")
     from_date = fields.Date("From Date")
     to_date = fields.Date("To Date")
-
+    
     
     
     def create_batches(self):
-        
-        institutes = self.env['bes.institute'].search([('id','=',self.env.context.get('active_ids'))])        
-        print('institutes')
-        print(institutes)
+        institutes = self.env['bes.institute'].search([('id', '=', self.env.context.get('active_ids'))])
+        created_batches = []
         for institute in institutes:
-            institute_id = institute
-            
-            # import wdb; wdb.set_trace()
             for course in institute.courses:
-                # try:
-                    if course.course.course_code == 'GP':
-                        if course.batcher_per_year == 1: 
-                            print('batcher_per_year')
-                            if self.exam_batch_name == 'jan':
-                                print('jan')
-                                self.batch_name = 'Jan - June'
-                                self.env['institute.gp.batches'].create({
-                                    "dgs_batch": self.dgs_batch.id,
-                                    "institute_id":institute_id.id,
-                                    "batch_name":str(course.course.course_code)+"/"+self.batch_name+' '+self.from_date.strftime('%Y'),
-                                    "from_date" : self.from_date,
-                                    "to_date":self.to_date,
-                                    "course":course.course.id
-                                })
-                                raise ValidationError("BAtches created succefully")
+                if course.course.course_code == 'GP':
+                    if course.batcher_per_year == 1 or course.batcher_per_year > 1:
+                        if self.exam_batch_name == 'jan':
+                            self.batch_name = 'Jan - June'
+                            self.env['institute.gp.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
+                                "institute_id": institute.id,
+                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "from_date": self.from_date,
+                                "to_date": self.to_date,
+                                "course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                    elif course.batcher_per_year > 1:
+                        if self.exam_batch_name == 'july':
+                            self.batch_name = 'July - Dec'
+                            self.env['institute.gp.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
+                                "institute_id": institute.id,
+                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "from_date": self.from_date,
+                                "to_date": self.to_date,
+                                "course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                elif course.course.course_code == 'CCMC':
+                    if course.batcher_per_year == 1 or course.batcher_per_year > 1:
+                        if self.exam_batch_name == 'jan':
+                            self.batch_name = 'Jan - June'
+                            self.env['institute.ccmc.batches'].create({
+                                "institute_id": institute.id,
+                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "ccmc_from_date": self.from_date,
+                                "ccmc_to_date": self.to_date,
+                                "ccmc_course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                    elif course.batcher_per_year > 1:
+                        if self.exam_batch_name == 'july':
+                            self.batch_name = 'July - Dec'
+                            self.env['institute.ccmc.batches'].create({
+                                "institute_id": institute.id,
+                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "ccmc_from_date": self.from_date,
+                                "ccmc_to_date": self.to_date,
+                                "ccmc_course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+        
+        message = "Batches Created Successfully for: \n" + "\n".join(created_batches)
+        
+        # Open the popup with the message
+        return {
+            'name': 'Batch Created',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
+        }
+class hr_wizard(models.TransientModel):
 
-                        elif course.batcher_per_year > 1:
-                                if self.exam_batch_name == 'july':
-                                    print('July')
-                                    # import wdb; wdb.set_trace()
-                                    self.batch_name = 'July - Dec'
-                                    self.env['institute.gp.batches'].create({
-                                        "dgs_batch": self.dgs_batch.id,
-                                        "institute_id":institute_id.id,
-                                        "batch_name":str(course.course.course_code)+"/"+self.batch_name+' '+self.from_date.strftime('%Y'),
-                                        "from_date" : self.from_date,
-                                        "to_date":self.to_date,
-                                        "course":course.course.id
-                                })
-                                raise ValidationError("BAtches created succefully")
-                    elif course.course.course_code == 'CCMC':
-                        if course.batcher_per_year == 1: 
-                            if self.exam_batch_name == 'jan':
-                                self.batch_name = 'Jan - June'
-                                self.env['institute.ccmc.batches'].create({
-                                    "institute_id":institute_id.id,
-                                    "ccmc_batch_name":str(course.course.course_code)+"/"+self.batch_name+' '+self.from_date.strftime('%Y'),
-                                    "ccmc_from_date" : self.from_date,
-                                    "ccmc_to_date":self.to_date,
-                                    "ccmc_course":course.course.id
-                                })
-                        elif course.batcher_per_year > 1:
-                                if self.exam_batch_name == 'july':
-                                    self.batch_name = 'July - Dec'
-                                    self.env['institute.ccmc.batches'].create({
-                                        "institute_id":institute_id.id,
-                                        "ccmc_batch_name":str(course.course.course_code)+"/"+self.batch_name+' '+self.from_date.strftime('%Y'),
-                                        "ccmc_from_date" : self.from_date,
-                                        "ccmc_to_date":self.to_date,
-                                        "ccmc_course":course.course.id
-                                    })
+    _name = 'batch.pop.up.wizard'
 
-        #         # Notify success
-        #             self.env.user.notify_success(message=_('Batch successfully created!'))
-        #         except Exception as e:
-        #             # Notify failure
-        #             self.env.user.notify_danger(message=_('Batch creation failed!'))
-        #             raise e
+    _description = 'Batch Pop Up Wizard'
 
-        #                # Send notifications
-        # for notif_type, message in notifications:
-        #     self.env['bus.bus'].sendone(
-        #         (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-        #         {'type': notif_type, 'title': _('Batch Creation'), 'message': message}
-        #     )    
+    message = fields.Text(string="Message", readonly=True, store=True)
+    
+    def action_close(self):
+        return {'type': 'ir.actions.act_window_close'}
