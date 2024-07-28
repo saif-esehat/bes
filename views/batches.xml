@@ -89,6 +89,9 @@
             <field name="model">institute.gp.batches</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="action_delete_batches" type="object" string="Delete Batches" class="oe_highlight" />
+                    </header>
                     <field name="batch_name"/>
                     <field name="institute_id"/>
                     <field name="code"/>

@@ -143,7 +143,31 @@ class InstituteGPBatches(models.Model):
                 record.candidate_user_invoice_criteria = False
  
 
-
+    @api.model
+    def action_delete_batches(self):
+        # Retrieve records to be deleted
+        batches_to_delete = self.search([])
+        
+        if not batches_to_delete:
+            raise UserError("No batches found to delete.")
+        
+        # Optionally, store the names or IDs of the batches being deleted for logging or message purposes
+        batch_names = ', '.join(batch.name for batch in batches_to_delete)
+        
+        # Delete the batches
+        batches_to_delete.unlink()
+        
+        # Return a message to the user
+        message = f"Batches successfully deleted: {batch_names}"
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Deletion Successful',
+                'message': message,
+                'type': 'success',
+            }
+        }
             
     
     
