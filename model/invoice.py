@@ -300,8 +300,16 @@ class CustomPaymentRegister(models.TransientModel):
                 if subject == 'ccmc_online_repeater':
                     cookery_bakery_qb_input = last_exam.ccmc_online
                     cookery_gsk_online_carry_forward = True
+                    
+            if invoice.repeater_exam_batch.to_date.strftime('%B') in ['March','September']:
+                registered_institute = None
+            else:
+                registered_institute = invoice.ccmc_candidate.institute_id.id                
+
             
-            ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,
+            ccmc_exam_schedule.write({
+                                      "registered_institute":registered_institute,
+                                      "cookery_bakery":cookery_bakery.id,
                                       "ccmc_gsk_oral":ccmc_gsk_oral.id,
                                       "ccmc_oral":ccmc_oral.id,
                                       "ccmc_online":cookery_bakery_qb_input.id,
