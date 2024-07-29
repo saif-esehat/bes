@@ -343,21 +343,21 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
-                            <label for="exam_centre">Exam Centre Selected</label>
+                            <label for="exam_centre">Exam Region Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
-                                <select name="exam_centre" id="exam_centre" class="form-control">
+                                <select name="exam_centre" id="exam_centre" class="form-control"  t-att-disabled="1" >
 
                                     <t t-foreach="fresher_region" t-as="region">
-                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
                             <t t-else="">
 
-                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
+                               <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
 
                                <select name="exam_centre" id="exam_centre" class="form-control">
 
@@ -409,7 +409,7 @@
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -603,7 +603,7 @@
                                             console.log("POST request successful:", JSON.parse(response.result));
                                             var amount = JSON.parse(response.result).amount
 
-                                            
+                                            <!-- debugger -->
                                             total += parseFloat(amount);
                                             totalAmountElement.textContent = 'Total Amount: ₹' + total;
 
@@ -749,15 +749,15 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="exam_centre">Exam Centre Selected</label>
+                            <label for="exam_centre">Exam Region Selected</label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month not in ['March','September']">
                                 <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
-                                <select name="exam_centre" id="exam_centre" class="form-control">
+                                <select name="exam_centre" id="exam_centre" class="form-control" t-att-disabled="1">
 
                                     <t t-foreach="fresher_region" t-as="region">
-                                        <option t-att-value="region.id"><t t-esc="region.name"/></option>
+                                        <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
@@ -789,7 +789,7 @@
                             <label for="exam_parts">Applied for Examination(s)</label><br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_practical" value="Cookery And Bakery" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>
                             </t>
@@ -802,7 +802,7 @@
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_oral" value="566" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
                                 </div>
                             </t>
@@ -815,7 +815,7 @@
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_gsk_online" value="568" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input"/>
                                     <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>

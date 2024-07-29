@@ -19,10 +19,19 @@ class BatchWizard(models.TransientModel):
     def create_batches(self):
         institutes = self.env['bes.institute'].search([('id', '=', self.env.context.get('active_ids'))])
         created_batches = []
+        # New code
+        # Counters for GP and CCMC
+        gp_institute_count = 0
+        ccmc_institute_count = 0
+
+        # Track unique institutes
+        unique_gp_institutes = set()
+        unique_ccmc_institutes = set()
+
         for institute in institutes:
             for course in institute.courses:
                 if course.course.course_code == 'GP':
-                    if course.batcher_per_year == 1 or course.batcher_per_year > 1:
+                    if course.batcher_per_year == 1:
                         if self.exam_batch_name == 'jan':
                             self.batch_name = 'Jan - June'
                             self.env['institute.gp.batches'].create({
@@ -34,7 +43,24 @@ class BatchWizard(models.TransientModel):
                                 "course": course.course.id
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                            gp_institute_count += 1  # Increment GP counter
+                            unique_gp_institutes.add(institute.id)  # Track unique GP institutes
                     elif course.batcher_per_year > 1:
+                        # New Code
+                        if self.exam_batch_name == 'jan':
+                            self.batch_name = 'Jan - June'
+                            self.env['institute.gp.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
+                                "institute_id": institute.id,
+                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "from_date": self.from_date,
+                                "to_date": self.to_date,
+                                "course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                            gp_institute_count += 1  # Increment GP counter
+                            unique_gp_institutes.add(institute.id)  # Track unique GP institutes
+
                         if self.exam_batch_name == 'july':
                             self.batch_name = 'July - Dec'
                             self.env['institute.gp.batches'].create({
@@ -46,8 +72,10 @@ class BatchWizard(models.TransientModel):
                                 "course": course.course.id
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                            gp_institute_count += 1  # Increment GP counter
+                            unique_gp_institutes.add(institute.id)  # Track unique GP institutes
                 elif course.course.course_code == 'CCMC':
-                    if course.batcher_per_year == 1 or course.batcher_per_year > 1:
+                    if course.batcher_per_year == 1:
                         if self.exam_batch_name == 'jan':
                             self.batch_name = 'Jan - June'
                             self.env['institute.ccmc.batches'].create({
@@ -58,7 +86,23 @@ class BatchWizard(models.TransientModel):
                                 "ccmc_course": course.course.id
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                            ccmc_institute_count += 1  # Increment CCMC counter
+                            unique_ccmc_institutes.add(institute.id)  # Track unique CCMC institutes
                     elif course.batcher_per_year > 1:
+                        # New code
+                        if self.exam_batch_name == 'jan':
+                            self.batch_name = 'Jan - June'
+                            self.env['institute.ccmc.batches'].create({
+                                "institute_id": institute.id,
+                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
+                                "ccmc_from_date": self.from_date,
+                                "ccmc_to_date": self.to_date,
+                                "ccmc_course": course.course.id
+                            })
+                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                            ccmc_institute_count += 1  # Increment CCMC counter
+                            unique_ccmc_institutes.add(institute.id)  # Track unique CCMC institutes
+
                         if self.exam_batch_name == 'july':
                             self.batch_name = 'July - Dec'
                             self.env['institute.ccmc.batches'].create({
@@ -69,8 +113,19 @@ class BatchWizard(models.TransientModel):
                                 "ccmc_course": course.course.id
                             })
                             created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+                            ccmc_institute_count += 1  # Increment CCMC counter
+                            unique_ccmc_institutes.add(institute.id)  # Track unique CCMC institutes
         
-        message = "Batches Created Successfully for: \n" + "\n".join(created_batches)
+        # Count the number of unique institutes
+        total_unique_gp_institutes = len(unique_gp_institutes)
+        total_unique_ccmc_institutes = len(unique_ccmc_institutes)
+
+        # Create message
+        message = (
+            f"Batches created for {total_unique_gp_institutes} GP institutes and "
+            f"{total_unique_ccmc_institutes} CCMC institutes.\n\n"
+            "List of created batches:\n" + "\n".join(created_batches)
+        )
         
         # Open the popup with the message
         return {

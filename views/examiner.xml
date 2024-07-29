@@ -325,16 +325,16 @@
                                 <field name="candidate_count" string="Candidate"  widget="statinfo"/>
                             </button>
                         </div> -->
-                        <group style="width:100%;">
+                        <group style="width:50%;">
                             <field name="dgs_batch"/>
                         </group> 
                        
                         <!-- <group style="width:50%;">
                             <field name="institute_code"/>
                         </group> -->
-                        <!-- <group style="width:50%;">
-                            <field name="institute_id"/>
-                        </group> -->
+                        <group style="width:50%;">
+                            <field name="institute_id" domain="[('exam_center','=', exam_region)]"/>
+                        </group>
                         <group style="width:50%;">
                             <field name="course" required="1" />
                         </group>
