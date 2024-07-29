@@ -1076,7 +1076,8 @@ class InstitutePortal(CustomerPortal):
                 'street2':kw.get('street2'),
                 'city':kw.get('city'),
                 'zip':kw.get('zip'),
-                'state_id':state
+                'state_id':state,
+                'sc_st':kw.get('sc_st')
             }
             
             for key, value in candidate_details.items():
@@ -1141,7 +1142,8 @@ class InstitutePortal(CustomerPortal):
                 'street2':kw.get('street2'),
                 'city':kw.get('city'),
                 'zip':kw.get('zip'),
-                'state_id':state
+                'state_id':state,
+                'sc_st':kw.get('sc_st')
             }
             
             for key, value in candidate_details.items():
@@ -2092,9 +2094,10 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('I:I',15,unlocked) #pin
         candidate_worksheet.set_column('J:J',20,unlocked) #mobile 
         candidate_worksheet.set_column('K:K',20,unlocked) #email
-        candidate_worksheet.set_column('L:L',10,unlocked)
-        candidate_worksheet.set_column('M:M',10,unlocked)
-        candidate_worksheet.set_column('N:N',10,unlocked)
+        candidate_worksheet.set_column('L:L',10,unlocked) #Xth
+        candidate_worksheet.set_column('M:M',10,unlocked) #XIIth
+        candidate_worksheet.set_column('N:N',10,unlocked) #ITI
+        candidate_worksheet.set_column('O:O',25,unlocked) #category
 
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
@@ -2113,7 +2116,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME','Gender', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        header = ['INDOS NO', 'NAME','Gender', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI',"To be mentioned if SC /ST /OBC"]
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
 
@@ -2124,7 +2127,7 @@ class InstitutePortal(CustomerPortal):
 
 
 
-        dropdown_values = ['Yes', 'No']
+        category_values = ['General', 'SC','ST','OBC']
         gender_values = ['Male', 'Female']
         state_values = ['JK','MH', 'AP', 'AR', 'AS', 'BR', 'CG', 'GA', 'GJ', 'HR', 'HP', 'JH', 'KA', 'KL', 'MP', 'MN', 'ML', 'MZ', 'NL', 'OR', 'PB', 'RJ', 'SK', 'TN', 'TG', 'TR', 'UP', 'UK', 'WB', 'CH', 'LD', 'DL', 'PY', 'AN', 'DH']
 
@@ -2135,6 +2138,8 @@ class InstitutePortal(CustomerPortal):
         
         candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
         
+        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list', 'source': category_values})
+
         candidate_worksheet.data_validation('C2:C1048576', {'validate': 'list', 'source': gender_values})
         
         
@@ -2374,9 +2379,10 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.set_column('I:I',15,unlocked) #pin
         candidate_worksheet.set_column('J:J',20,unlocked) #mobile 
         candidate_worksheet.set_column('K:K',20,unlocked) #email
-        candidate_worksheet.set_column('L:L',10,unlocked)
-        candidate_worksheet.set_column('M:M',10,unlocked)
-        candidate_worksheet.set_column('N:N',10,unlocked)
+        candidate_worksheet.set_column('L:L',10,unlocked) #Xth
+        candidate_worksheet.set_column('M:M',10,unlocked) #XIIth
+        candidate_worksheet.set_column('N:N',10,unlocked) #ITI
+        candidate_worksheet.set_column('O:O',25,unlocked) #category
         
         candidate_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
@@ -2395,7 +2401,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'NAME', 'Gender', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI']
+        header = ['INDOS NO', 'NAME', 'Gender', 'DOB DD-MMM-YYYY', 'Address Line 1', 'Address Line 2', 'DIST/CITY', 'STATE', 'PINCODE', 'MOBILE', 'EMAIL', 'Xth', 'XIIth', 'ITI',"To be mentioned if SC /ST /OBC"]
         for col, value in enumerate(header):
             candidate_worksheet.write(0, col, value, header_format)
             # candidate_worksheet.set_column('J:J', None, number_format)
@@ -2405,7 +2411,7 @@ class InstitutePortal(CustomerPortal):
         # Set date format for DOB column
         candidate_worksheet.set_column('D:D', 20, date_format)
 
-        dropdown_values = ['Yes', 'No']
+        category_values = ['General', 'SC','ST','OBC']
         gender_values = ['Male', 'Female']
         # import wdb; wdb.set_trace()
 
@@ -2420,6 +2426,8 @@ class InstitutePortal(CustomerPortal):
         
 
         candidate_worksheet.data_validation('H2:H1048576', {'validate': 'list', 'source': state_values})
+
+        candidate_worksheet.data_validation('O2:O1048576', {'validate': 'list', 'source': category_values})
         
         candidate_worksheet.data_validation('C2:C1048576', {'validate': 'list', 'source': gender_values})
         
@@ -2694,361 +2702,168 @@ class InstitutePortal(CustomerPortal):
 
         # worksheet = workbook.get_worksheet_by_name('Candidates')
         worksheet = workbook.sheet_by_index(0)
-        # for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
-        #     row = worksheet.row_values(row_num)
-        #     try:
-        #         indos_no = row[0]  
-        #         full_name = row[1] 
-        #         gender = 'male' if row[2] == 'Male' else 'female'
-                
-        #         date_value = xlrd.xldate_as_datetime(row[3], workbook.datemode)
-        #         # formatted_date = self.convert_to_dd_mmm_yy(date_value)
-        #         # print("Formatted date:", formatted_date)
-        #         date_string = date_value.strftime('%d-%b-%y') 
-        #         dob = date_value
-        #         street1 = row[4]
-        #         street2 = row[5]  
-        #         dist_city = row[6]  # Assuming Dist./City is the fifth column
-
-        #         state_value = row[7]  # Assuming State (short) is the sixth column
-        #         pin_code = int(row[8])  # Assuming Pin code is the seventh column
-
-                    
-
-        #         state_values = {
-        #             'JK': 'Jammu and Kashmir',
-        #             'MH': 'Maharashtra',
-        #             'AP': 'Andhra Pradesh',
-        #             'AR': 'Arunachal Pradesh',
-        #             'AS': 'Assam',
-        #             'BR': 'Bihar',
-        #             'CT': 'Chhattisgarh',
-        #             'GA': 'Goa',
-        #             'GJ': 'Gujarat',
-        #             'HR': 'Haryana',
-        #             'HP': 'Himachal Pradesh',
-        #             'JH': 'Jharkhand',
-        #             'KA': 'Karnataka',
-        #             'KL': 'Kerala',
-        #             'MP': 'Madhya Pradesh',
-        #             'MN': 'Manipur',
-        #             'ML': 'Meghalaya',
-        #             'MZ': 'Mizoram',
-        #             'NL': 'Nagaland',
-        #             'OD': 'Odisha',
-        #             'PB': 'Punjab',
-        #             'RJ': 'Rajasthan',
-        #             'SK': 'Sikkim',
-        #             'TN': 'Tamil Nadu',
-        #             'TG': 'Telangana',
-        #             'TR': 'Tripura',
-        #             'UP': 'Uttar Pradesh',
-        #             'UK': 'Uttarakhand',
-        #             'WB': 'West Bengal',
-        #             'AN': 'Andaman and Nicobar Islands',
-        #             'CH': 'Chandigarh',
-        #             'DH': 'Dadra and Nagar Haveli and Daman and Diu',
-        #             'LD': 'Lakshadweep',
-        #             'DL': 'Delhi',
-        #             'PY': 'Puducherry'
-        #         }
-
-        #         # state = False
-        #         # for code, name in state_values.items():
-        #         #     if name.lower() == state_value.lower():
-        #         #         state = code
-        #         #     else:
-        #         #         state = False
-
-        #             # state = False
-        #             # for code, name in state_values.items():
-        #             #     if name.lower() == state_value.lower():
-        #             #         state = code
-        #             #     else:
-        #             #         state = False
-
-        #             # print("Stateeeeee",state)
-                            
-        #         data_xth_std_eng = 0
-        #         data_twelfth_std_eng = 0
-        #         data_iti = 0
-        #         state = request.env['res.country.state'].sudo().search(
-        #             [('country_id.code', '=', 'IN'), ('code', '=', state_value)]).id if state_value else False
-
-        #         # phone = str((row[8]))
-        #         # print("Phone ",str(row[8] ))
-        #         # if row[8]:
-        #         #     phone = self.remove_after_dot_in_phone_number(str(row[8]))
-        #         # else:
-        #         #     phone = ""
-                
-        #         if row[9]:
-        #             mobile = self.remove_after_dot_in_phone_number(str(row[9]))
-        #         else:
-        #             mobile = ""
-
-        #         # mobile = str(row[9]) 
-        #         email = row[10] 
-
-                
-        #         xth_std_eng = row[11]  # Assuming %  Xth Std in Eng. is the tenth column
-                
-                
-        #         if type(xth_std_eng) in [int, float]:
-        #             data_xth_std_eng = float(xth_std_eng)
-        #         elif type(xth_std_eng) == str:
-        #             if xth_std_eng.lower() == 'a+':
-        #                 data_xth_std_eng = 90
-        #             if xth_std_eng.lower() == 'a':
-        #                 data_xth_std_eng = 80
-        #             if xth_std_eng.lower() == 'b+':
-        #                 data_xth_std_eng = 70
-        #             if xth_std_eng.lower() == 'b':
-        #                 data_xth_std_eng = 60
-        #             if xth_std_eng.lower() == 'c+':
-        #                 data_xth_std_eng = 50
-        #             if xth_std_eng.lower() == 'c':
-        #                 data_xth_std_eng = 40
-        #             if xth_std_eng.lower() == 'd+':
-        #                 data_xth_std_eng = 30
-        #             if xth_std_eng.lower() == 'd':
-        #                 data_xth_std_eng = 20
-        #             if xth_std_eng.lower() == 'e':
-        #                 data_xth_std_eng = 19
-        #             else:
-        #                 data_xth_std_eng = 0
-        #         else:
-        #             raise ValidationError("Invalid marks/percentage")
-
-        #         twelfth_std_eng = row[12]  # Assuming %12th Std in Eng. is the eleventh column
-        #         if type(twelfth_std_eng) in [int, float]:
-        #             data_twelfth_std_eng = float(twelfth_std_eng)
-        #         elif type(twelfth_std_eng) == str:
-        #             if twelfth_std_eng.lower() == 'a+':
-        #                 data_twelfth_std_eng = 90
-        #             if twelfth_std_eng.lower() == 'a':
-        #                 data_twelfth_std_eng = 80
-        #             if twelfth_std_eng.lower() == 'b+':
-        #                 data_twelfth_std_eng = 70
-        #             if twelfth_std_eng.lower() == 'b':
-        #                 data_twelfth_std_eng = 60
-        #             if twelfth_std_eng.lower() == 'c+':
-        #                 data_twelfth_std_eng = 50
-        #             if twelfth_std_eng.lower() == 'c':
-        #                 data_twelfth_std_eng = 40
-        #             if twelfth_std_eng.lower() == 'd+':
-        #                 data_twelfth_std_eng = 30
-        #             if twelfth_std_eng.lower() == 'd':
-        #                 data_twelfth_std_eng = 20
-        #             if twelfth_std_eng.lower() == 'e':
-        #                 data_twelfth_std_eng = 19
-        #             else:
-        #                 data_twelfth_std_eng = 0
-        #         else:
-        #             raise ValidationError("Invalid marks/percentage")
-
-        #         iti = row[13] # Assuming %ITI is the twelfth column
-        #         if type(iti) in [int, float]:
-        #             data_iti = float(iti)
-        #         elif type(iti) == str:
-        #             if iti.lower() == 'a+':
-        #                 data_iti = 90
-        #             if iti.lower() == 'a':
-        #                 data_iti = 80
-        #             if iti.lower() == 'b+':
-        #                 data_iti = 70
-        #             if iti.lower() == 'b':
-        #                 data_iti = 60
-        #             if iti.lower() == 'c+':
-        #                 data_iti = 50
-        #             if iti.lower() == 'c':
-        #                 data_iti = 40
-        #             if iti.lower() == 'd+':
-        #                 data_iti = 30
-        #             if iti.lower() == 'd':
-        #                 data_iti = 20
-        #             if iti.lower() == 'e':
-        #                 data_iti = 19
-        #             else:
-        #                 data_iti = 0
-        #         else:
-        #             raise ValidationError("Invalid marks/percentage")  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
-                
-        #         # candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
-
-        #         new_candidate = request.env['gp.candidate'].sudo().create({
-        #             'name': full_name,
-        #             'gender': gender,
-        #             'institute_id': institute_id,
-        #             'indos_no': indos_no,
-        #             'dob': dob,
-        #             # 'roll_no': roll_no,
-        #             # 'candidate_code': code_no,
-        #             'institute_batch_id': batch_id,
-        #             'street': street1,
-        #             'street2': street2,
-        #             # 'phone': phone,
-        #             'mobile': mobile,
-        #             'email': email,
-
-        #             'city': dist_city,
-        #             'state_id': state,
-        #             'zip': pin_code,
-        #             'tenth_percent': data_xth_std_eng,
-        #             'twelve_percent': data_twelfth_std_eng,
-        #             'iti_percent': data_iti,
-        #             # 'sc_st': candidate_st
-        #         })
-        #     except:
-        #         error_val = "Excel Sheet format incorrect\n"+"There is problem in row no " + str(row_num)
-        #         raise ValidationError(error_val)
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             # import wdb; wdb.set_trace()
+            # try:
             try:
-                try:
-                    indos_no = row[0]
-                except:
-                    raise ValidationError(f"Missing Indos No in row {row_num + 1}")
-                
-                try:
-                    full_name = row[1]
-                except:
-                    raise ValidationError(f"Missing Full Name in row {row_num + 1}")
+                indos_no = row[0]
+            except:
+                raise ValidationError(f"Missing Indos No in row {row_num + 1}, Please use the given format and check for unwanted spaces")
+            
+            try:
+                full_name = row[1]
+            except:
+                raise ValidationError(f"Missing Full Name in row {row_num + 1}")
 
-                try:
-                    gender = 'male' if row[2].lower() == 'male' else 'female'
-                except:
-                    raise ValidationError(f"Missing Gender in row {row_num + 1}")
+            try:
+                gender = 'male' if row[2].lower() == 'male' else 'female'
+            except:
+                raise ValidationError(f"Missing Gender in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    date_value = row[3]
-                    if isinstance(date_value, float):
-                        date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
-                    else:
-                        date_value = datetime.strptime(date_value, '%d-%b-%Y')
-                    dob = date_value
-                except:
-                    raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}")
+            try:
+                date_value = row[3]
+                if isinstance(date_value, float):
+                    date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
+                else:
+                    date_value = datetime.strptime(date_value, '%d-%b-%Y')
+                dob = date_value
+            except:
+                raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    street1 = row[4]
-                except  :
-                    raise ValidationError(f"Missing Street 1 in row {row_num + 1}")
+            try:
+                street1 = row[4]
+            except  :
+                raise ValidationError(f"Missing Street 1 in row {row_num + 1}")
 
-                try:
-                    street2 = row[5]  
-                except  :
-                    raise ValidationError(f"Missing Street 2 in row {row_num + 1}")
+            try:
+                street2 = row[5]  
+            except  :
+                raise ValidationError(f"Missing Street 2 in row {row_num + 1}")
 
-                try:
-                    dist_city = row[6]
-                except :
-                    raise ValidationError(f"Missing District/City in row {row_num + 1}")
+            try:
+                dist_city = row[6]
+            except :
+                raise ValidationError(f"Missing District/City in row {row_num + 1}")
 
-                try:
-                    state_value = row[7]
-                    state = request.env['res.country.state'].sudo().search(
-                        [('country_id.code', '=', 'IN'), ('code', '=', state_value)]
-                    ).id if state_value else False
-                except  :
-                    raise ValidationError(f"Missing State in row {row_num + 1}")
+            try:
+                state_value = row[7]
+                state = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]
+                ).id if state_value else False
+            except  :
+                raise ValidationError(f"Missing State in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    pin_code = int(row[8])
-                except:
-                    raise ValidationError(f"Invalid or Missing Pin Code in row {row_num + 1}")
+            try:
+                pin_code = int(row[8])
+            except:
+                raise ValidationError(f"Invalid or Missing Pin Code in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    if row[9]:
-                        mobile = self.remove_after_dot_in_phone_number(str(row[9]))
-                    else:
-                        mobile = ""
-                except  :
-                    raise ValidationError(f"Missing Mobile in row {row_num + 1}")
+            try:
+                if row[9]:
+                    mobile = self.remove_after_dot_in_phone_number(str(row[9]))
+                else:
+                    mobile = ""
+            except  :
+                raise ValidationError(f"Missing Mobile in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    email = row[10]
-                except  :
-                    raise ValidationError(f"Missing Email in row {row_num + 1}")
+            try:
+                email = row[10]
+            except  :
+                raise ValidationError(f"Missing Email in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                def convert_grade_to_percentage(grade):
-                    if grade.lower() == 'a+':
-                        return 90
-                    if grade.lower() == 'a':
-                        return 80
-                    if grade.lower() == 'b+':
-                        return 70
-                    if grade.lower() == 'b':
-                        return 60
-                    if grade.lower() == 'c+':
-                        return 50
-                    if grade.lower() == 'c':
-                        return 40
-                    if grade.lower() == 'd+':
-                        return 30
-                    if grade.lower() == 'd':
-                        return 20
-                    if grade.lower() == 'e':
-                        return 19
-                    return 0
+            def convert_grade_to_percentage(grade):
+                if grade.lower() == 'a+':
+                    return 90
+                if grade.lower() == 'a':
+                    return 80
+                if grade.lower() == 'b+':
+                    return 70
+                if grade.lower() == 'b':
+                    return 60
+                if grade.lower() == 'c+':
+                    return 50
+                if grade.lower() == 'c':
+                    return 40
+                if grade.lower() == 'd+':
+                    return 30
+                if grade.lower() == 'd':
+                    return 20
+                if grade.lower() == 'e':
+                    return 19
+                return 0
 
-                try:
-                    xth_std_eng = row[11]
-                    if type(xth_std_eng) in [int, float]:
-                        data_xth_std_eng = float(xth_std_eng)
-                    elif type(xth_std_eng) == str:
-                        data_xth_std_eng = convert_grade_to_percentage(xth_std_eng)
-                    else:
-                        raise ValidationError(f"Invalid marks/percentage for Xth Std in row {row_num + 1}")
-                except  :
-                    raise ValidationError(f"Missing Xth Std in row {row_num + 1}")
+            try:
+                xth_std_eng = row[11]
+                if type(xth_std_eng) in [int, float]:
+                    data_xth_std_eng = float(xth_std_eng)
+                elif type(xth_std_eng) == str:
+                    data_xth_std_eng = convert_grade_to_percentage(xth_std_eng)
+                else:
+                    raise ValidationError(f"Invalid marks/percentage for Xth Std in row {row_num + 1}")
+            except  :
+                raise ValidationError(f"Missing Xth Std in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    twelfth_std_eng = row[12]
-                    if type(twelfth_std_eng) in [int, float]:
-                        data_twelfth_std_eng = float(twelfth_std_eng)
-                    elif type(twelfth_std_eng) == str:
-                        data_twelfth_std_eng = convert_grade_to_percentage(twelfth_std_eng)
-                    else:
-                        raise ValidationError(f"Invalid marks/percentage for XIIth Std in row {row_num + 1}")
-                except  :
-                    raise ValidationError(f"Missing XIIth Std in row {row_num + 1}")
+            try:
+                twelfth_std_eng = row[12]
+                if type(twelfth_std_eng) in [int, float]:
+                    data_twelfth_std_eng = float(twelfth_std_eng)
+                elif type(twelfth_std_eng) == str:
+                    data_twelfth_std_eng = convert_grade_to_percentage(twelfth_std_eng)
+                else:
+                    raise ValidationError(f"Invalid marks/percentage for XIIth Std in row {row_num + 1}")
+            except  :
+                raise ValidationError(f"Missing XIIth Std in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    iti = row[13]
-                    if type(iti) in [int, float]:
-                        data_iti = float(iti)
-                    elif type(iti) == str:
-                        data_iti = convert_grade_to_percentage(iti)
-                    else:
-                        raise ValidationError(f"Invalid marks/percentage for ITI in row {row_num + 1}")
-                except  :
-                    raise ValidationError(f"Missing ITI in row {row_num + 1}")
-                    # candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
-                try:
-                    new_candidate = request.env['gp.candidate'].sudo().create({
-                        'name': full_name,
-                        'gender': gender,
-                        'institute_id': institute_id,
-                        'indos_no': indos_no,
-                        'dob': dob,
-                        'institute_batch_id': batch_id,
-                        'street': street1,
-                        'street2': street2,
-                        'mobile': mobile,
-                        'email': email,
-                        'city': dist_city,
-                        'state_id': state,
-                        'zip': pin_code,
-                        'tenth_percent': data_xth_std_eng,
-                        'twelve_percent': data_twelfth_std_eng,
-                        'iti_percent': data_iti,
-                    })
-                except Exception as e:
-                    raise ValidationError(f"Error creating candidate for row {row_num + 1}")
-            except ValidationError as e:
-                raise ValidationError(f"Incorrect Excel format please check {row_num + 1}")
+            try:
+                iti = row[13]
+                if type(iti) in [int, float]:
+                    data_iti = float(iti)
+                elif type(iti) == str:
+                    data_iti = convert_grade_to_percentage(iti)
+                else:
+                    raise ValidationError(f"Invalid marks/percentage for ITI in row {row_num + 1}")
+            except  :
+                raise ValidationError(f"Missing ITI in row {row_num + 1}, Please use the given format and check for unwanted spaces")
+            
+            try:
+                if row[14]=='General':
+                    candidate_st = 'general'
+                elif row[14] == 'SC':
+                    candidate_st = 'sc'
+                elif row[14] == 'ST':
+                    candidate_st = 'st'
+                elif row[14] == 'OBC':
+                    candidate_st = 'obc'
+                else:
+                    raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
+            except :
+                raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
+
+            try:
+                new_candidate = request.env['gp.candidate'].sudo().create({
+                    'name': full_name,
+                    'gender': gender,
+                    'institute_id': institute_id,
+                    'indos_no': indos_no,
+                    'dob': dob,
+                    'institute_batch_id': batch_id,
+                    'street': street1,
+                    'street2': street2,
+                    'mobile': mobile,
+                    'email': email,
+                    'city': dist_city,
+                    'state_id': state,
+                    'zip': pin_code,
+                    'tenth_percent': data_xth_std_eng,
+                    'twelve_percent': data_twelfth_std_eng,
+                    'iti_percent': data_iti,
+                    'sc_st':candidate_st
+                })
+            except Exception as e:
+                raise ValidationError(f"Error creating candidate , \n Incorrect format for row {row_num + 1}")
+            # except ValidationError as e:
+            #     raise ValidationError(f"Incorrect Excel format please check {row_num + 1}")
 
             # workbook.close()
 
@@ -3136,132 +2951,145 @@ class InstitutePortal(CustomerPortal):
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
             
-            # import wdb; wdb.set_trace()
             
-            try: 
-                try:
-                    indos_no = row[0]
-                except:
-                    raise ValidationError(f"Missing Indos No in row {row_num + 1}")
-                
-                try:
-                    full_name = row[1]
-                except:
-                    raise ValidationError(f"Missing Full Name in row {row_num + 1}")
+            # import wdb; wdb.set_trace()
+            # try: 
+            try:
+                indos_no = row[0]
+            except:
+                raise ValidationError(f"Missing Indos No in row {row_num + 1}, Please use the given format and check for unwanted spaces")
+            
+            try:
+                full_name = row[1]
+            except:
+                raise ValidationError(f"Missing Full Name in row {row_num + 1}")
 
-                try:
-                    gender = 'male' if row[2].lower() == 'male' else 'female'
-                except:
-                    raise ValidationError(f"Missing Gender in row {row_num + 1}")
+            try:
+                gender = 'male' if row[2].lower() == 'male' else 'female'
+            except:
+                raise ValidationError(f"Missing Gender in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    date_value = row[3]
-                    if isinstance(date_value, float):
-                        date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
-                    else:
-                        date_value = datetime.strptime(date_value, '%d-%b-%Y')
-                    dob = date_value
-                except :
-                    raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}")
+            try:
+                date_value = row[3]
+                if isinstance(date_value, float):
+                    date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
+                else:
+                    date_value = datetime.strptime(date_value, '%d-%b-%Y')
+                dob = date_value
+            except :
+                raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    street1 = row[4]
-                except  :
-                    raise ValidationError(f"Missing Street 1 in row {row_num + 1}")
+            try:
+                street1 = row[4]
+            except  :
+                raise ValidationError(f"Missing Street 1 in row {row_num + 1}")
 
-                try:
-                    street2 = row[5]  
-                except  :
-                    raise ValidationError(f"Missing Street 2 in row {row_num + 1}")
+            try:
+                street2 = row[5]  
+            except  :
+                raise ValidationError(f"Missing Street 2 in row {row_num + 1}")
 
-                try:
-                    dist_city = row[6]
-                except:
-                    raise ValidationError(f"Missing District/City in row {row_num + 1}")
+            try:
+                dist_city = row[6]
+            except:
+                raise ValidationError(f"Missing District/City in row {row_num + 1}")
 
-                try:
-                    state_value = row[7]
-                    state = request.env['res.country.state'].sudo().search(
-                        [('country_id.code', '=', 'IN'), ('code', '=', state_value)]
-                    ).id
-                    # if state_value else False
-                except:
-                    raise ValidationError(f"Missing State in row {row_num + 1}")
+            try:
+                state_value = row[7]
+                state = request.env['res.country.state'].sudo().search(
+                    [('country_id.code', '=', 'IN'), ('code', '=', state_value)]
+                ).id
+                # if state_value else False
+            except:
+                raise ValidationError(f"Missing State in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    pin_code = int(row[8])
-                except:
-                    raise ValidationError(f"Invalid or Missing Pin Code in row {row_num + 1}")
+            try:
+                pin_code = int(row[8])
+            except:
+                raise ValidationError(f"Invalid or Missing Pin Code in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    if row[9]:
-                        mobile = self.remove_after_dot_in_phone_number(str(row[9]))
-                    else:
-                        mobile = ""
-                except  :
-                    raise ValidationError(f"Missing Mobile in row {row_num + 1}")
+            try:
+                if row[9]:
+                    mobile = self.remove_after_dot_in_phone_number(str(row[9]))
+                else:
+                    mobile = ""
+            except  :
+                raise ValidationError(f"Missing Mobile in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    email = row[10]
-                except  :
-                    raise ValidationError(f"Missing Email in row {row_num + 1}")
+            try:
+                email = row[10]
+            except  :
+                raise ValidationError(f"Missing Email in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                def convert_grade_to_percentage(grade):
-                    if grade.lower() == 'a+':
-                        return 90
-                    if grade.lower() == 'a':
-                        return 80
-                    if grade.lower() == 'b+':
-                        return 70
-                    if grade.lower() == 'b':
-                        return 60
-                    if grade.lower() == 'c+':
-                        return 50
-                    if grade.lower() == 'c':
-                        return 40
-                    if grade.lower() == 'd+':
-                        return 30
-                    if grade.lower() == 'd':
-                        return 20
-                    if grade.lower() == 'e':
-                        return 19
-                    return 0
+            def convert_grade_to_percentage(grade):
+                if grade.lower() == 'a+':
+                    return 90
+                if grade.lower() == 'a':
+                    return 80
+                if grade.lower() == 'b+':
+                    return 70
+                if grade.lower() == 'b':
+                    return 60
+                if grade.lower() == 'c+':
+                    return 50
+                if grade.lower() == 'c':
+                    return 40
+                if grade.lower() == 'd+':
+                    return 30
+                if grade.lower() == 'd':
+                    return 20
+                if grade.lower() == 'e':
+                    return 19
+                return 0
 
-                try:
-                    xth_std_eng = row[11]
-                    if type(xth_std_eng) in [int, float]:
-                        data_xth_std_eng = float(xth_std_eng)
-                    elif type(xth_std_eng) == str:
-                        data_xth_std_eng = convert_grade_to_percentage(xth_std_eng)
-                    else:
-                        raise ValidationError(f"Invalid marks/percentage for Xth Std in row {row_num + 1}")
-                except  :
-                    raise ValidationError(f"Missing Xth Std in row {row_num + 1}")
+            try:
+                xth_std_eng = row[11]
+                if type(xth_std_eng) in [int, float]:
+                    data_xth_std_eng = float(xth_std_eng)
+                elif type(xth_std_eng) == str:
+                    data_xth_std_eng = convert_grade_to_percentage(xth_std_eng)
+                else:
+                    raise ValidationError(f"Invalid marks/percentage for Xth Std in row {row_num + 1}")
+            except  :
+                raise ValidationError(f"Missing Xth Std in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    twelfth_std_eng = row[12]
-                    if type(twelfth_std_eng) in [int, float]:
-                        data_twelfth_std_eng = float(twelfth_std_eng)
-                    elif type(twelfth_std_eng) == str:
-                        data_twelfth_std_eng = convert_grade_to_percentage(twelfth_std_eng)
-                    else:
-                        raise ValidationError(f"Invalid marks/percentage for XIIth Std in row {row_num + 1}")
-                except  :
-                    raise ValidationError(f"Missing XIIth Std in row {row_num + 1}")
+            try:
+                twelfth_std_eng = row[12]
+                if type(twelfth_std_eng) in [int, float]:
+                    data_twelfth_std_eng = float(twelfth_std_eng)
+                elif type(twelfth_std_eng) == str:
+                    data_twelfth_std_eng = convert_grade_to_percentage(twelfth_std_eng)
+                else:
+                    raise ValidationError(f"Invalid marks/percentage for XIIth Std in row {row_num + 1}")
+            except  :
+                raise ValidationError(f"Missing XIIth Std in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                try:
-                    iti = row[13]
-                    if type(iti) in [int, float]:
-                        data_iti = float(iti)
-                    elif type(iti) == str:
-                        data_iti = convert_grade_to_percentage(iti)
-                    else:
-                        raise ValidationError(f"Invalid marks/percentage for ITI in row {row_num + 1}")
-                except  :
-                    raise ValidationError(f"Missing ITI in row {row_num + 1}")
+            try:
+                iti = row[13]
+                if type(iti) in [int, float]:
+                    data_iti = float(iti)
+                elif type(iti) == str:
+                    data_iti = convert_grade_to_percentage(iti)
+                else:
+                    raise ValidationError(f"Invalid marks/percentage for ITI in row {row_num + 1}")
+            except  :
+                raise ValidationError(f"Missing ITI in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
-                # candidate_st = True if row[14] == 'Yes' else False  # Assuming To be mentioned if Candidate SC/ST is the thirteenth column
+            try:
+                if row[14]=='General':
+                    candidate_st = 'general'
+                elif row[14] == 'SC':
+                    candidate_st = 'sc'
+                elif row[14] == 'ST':
+                    candidate_st = 'st'
+                elif row[14] == 'OBC':
+                    candidate_st = 'obc'
+                else:
+                    raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
+            except :
+                raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
 
+            try:
                 new_candidate = request.env['ccmc.candidate'].sudo().create({
                     'name': full_name,
                     'gender': gender,
@@ -3279,11 +3107,11 @@ class InstitutePortal(CustomerPortal):
                     'tenth_percent': data_xth_std_eng,
                     'twelve_percent': data_twelfth_std_eng,
                     'iti_percent': data_iti,
-                    # 'sc_st': candidate_st
+                    'sc_st': candidate_st
                 })
-                
             except:
-                raise ValidationError(f"Incorrect Excel format please check row {row_num + 1}")
+                raise ValidationError(f"Error creating candidate , \n Incorrect format for row {row_num + 1}")
+                
             
         # workbook.close()
 

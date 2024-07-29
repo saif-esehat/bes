@@ -32,7 +32,8 @@
         model="gp.exam.schedule"
         report_type="qweb-pdf"
         name="bes.report_general_certificate"
-        file="bes.report_general_certificate"/>
+        file="bes.report_general_certificate"
+       />
     
     <report
         id="action_attendance_sheet_online_ccmc"
@@ -40,13 +41,15 @@
         model="exam.type.oral.practical.examiners"
         report_type="qweb-pdf"
         name="bes.attendance_sheet_online_ccmc"
-        file="bes.attendance_sheet_online_ccmc"/>
+        file="bes.attendance_sheet_online_ccmc"
+       />
     
     <report
         id="action_attendance_sheet_online_gp"
         string="GP Attendance Sheet"
         model="exam.type.oral.practical.examiners"
         report_type="qweb-pdf"
+        
         name="bes.attendance_sheet_online_gp"
         file="bes.attendance_sheet_online_gp"/>
 
@@ -99,17 +102,18 @@
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.dgs_report</field>
         <field name="report_file">bes.dgs_report</field>
-        <field name="binding_model_id" ref="bes.model_dgs_batches"/>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
 
     <record id="report_dgs_ccmc_fresh_action" model="ir.actions.report">
-        <field name="name">DGS Report</field>
+        <field name="name">DGS Reports</field>
         <field name="model">dgs.batches</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.ccmc_dgs_report</field>
         <field name="report_file">bes.ccmc_dgs_report</field>
-        <field name="binding_model_id" ref="bes.model_dgs_batches"/>
+        <field name="print_report_name">"DGS Report CCMC -"&amp; if dgs_batch.repeater ' Repeater' else ' Fresh' "-" dgs_batch.batch_name   </field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
    
@@ -170,4 +174,13 @@
 
     
 
+     <record id="ship_visit_report_action" model="ir.actions.report">
+        <field name="name">Ship Visit Report</field>
+        <field name="model">examination.report</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.ship_visit_report</field>
+        <field name="report_file">bes.summarised_report</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
+    </record>
 </odoo>

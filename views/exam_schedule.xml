@@ -356,12 +356,12 @@
                     <field name="gsk_practical_marks" optional="show" string="GSK Practical" widget="badge" decoration-success="gsk_practical_marks >= 60" decoration-danger="gsk_practical_marks &lt; 60 or gsk_practical_marks == 0"/> -->
                     <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
                     <field name="gsk_practical_marks"  optional="show"  string="GSK Practical"/>
-                    <field name="gsk_total" optional="show" string="GSK O/P"/>
+                    <field name="gsk_total"/>
                     <!-- <field name="mek_oral_marks" optional="show"  string="MEK Oral"  widget="badge" decoration-success="mek_oral_marks > 45" decoration-danger="mek_oral_marks &lt; 45"/>
                     <field name="mek_practical_marks" optional="show" string="MEK Practical"  widget="badge" decoration-success="mek_practical_marks > 60" decoration-danger="mek_practical_marks &lt; 60" /> -->
                     <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
                     <field name="mek_practical_marks" optional="show" string="MEK Practical"/>
-                    <field name="mek_total" optional="show" string="GSK O/P"/>
+                    <field name="mek_total" />
                     <!-- <field name="gsk_online_marks" optional="show"  widget="badge" decoration-success="gsk_online_marks > 45" decoration-danger="gsk_online_marks &lt; 45"/> -->
                     <!-- <field name="mek_online_marks" optional="show"  widget="badge" decoration-success="mek_online_marks > 45" decoration-danger="mek_online_marks &lt; 45"/> -->
                     <field name="gsk_online_marks" optional="show"/>

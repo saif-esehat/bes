@@ -9,6 +9,7 @@ class Examiner(models.Model):
     _description= 'Examiner'
     _rec_name = 'name'
     _inherit = ['mail.thread','mail.activity.mixin']
+    
     examiner_image = fields.Binary(string='Examiner Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)
     exam_center = fields.Many2one("exam.center", "Exam Region",tracking=True)

@@ -40,7 +40,7 @@ class InstituteGPBatches(models.Model):
         ('issued', 'Issued')
     ],default="pending", string='Admit Card Status')
 
-    admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
+    admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count")
     
     create_invoice_button_invisible = fields.Boolean("Invoice Button Visiblity",
                                                       compute="_compute_invoice_button_visible",
@@ -160,8 +160,8 @@ class InstituteGPBatches(models.Model):
             # import wdb; wdb.set_trace()
             # for i in candidate:
                 # candidate_count = self.env["gp.exam.schedule"].search_count([('gp_candidate','=',i.id),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-    
-            self.write({"admit_card_alloted":candidate_count})
+            rec.admit_card_alloted = candidate_count
+            # self.write({"admit_card_alloted":candidate_count})
             
     def move_to_invoiced(self):
         if self.payment_state == 'not_paid':

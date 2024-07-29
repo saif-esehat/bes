@@ -11,7 +11,25 @@
             action="action_time_sheet_form"/> -->
 
         <!-- Define the Action -->
-    
+        <record id="action_time_sheet_form" model="ir.actions.act_window">
+            <field name="name">Time Sheet Report Form</field>
+            <field name="res_model">time.sheet.report</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_time_sheet_report_tree" model="ir.ui.view">
+            <field name="name">time.sheet.report.tree</field>
+            <field name="model">time.sheet.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="examiner"/>
+                    <field name="expense_sheet"/>
+                    <field name="institutes_id"/>
+                    <field name="place"/>
+                    <field name="exam_date"/>
+                </tree>
+            </field>
+        </record>
           
         <!-- Define the Form View -->
         <record id="view_time_sheet_report_form" model="ir.ui.view">
@@ -23,18 +41,21 @@
                         <group string="Time Sheet Report">
 
                             <field name="examiner"/>
+                            <field name="expense_sheet"/>
                             <field name="institutes_id"/>
                             <field name="place"/>
-                            <field name="exam_dates"/>
+                            <field name="exam_date"/>
                         </group>
                         <notebook>
                             <page string="Timesheet Examinations">
                                 <field name="timesheet_examinations" nolabel="1">
                                     <tree editable="bottom">
                                         <field name="arrival_date_time"/>
-                                        <field name="online_examination"/>
+                                        <field name="commence_exam"/>
+                                        <field name="lunch_break"/>
                                         <field name="completion_time"/>
                                         <field name="candidate_examined"/>
+                                        <field name="debriefing_inst"/>
                                     </tree>
                                 </field>
                             </page>
@@ -68,4 +89,3 @@
         </record>
     </data>
 </odoo>
-

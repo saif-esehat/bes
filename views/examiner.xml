@@ -317,7 +317,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                            <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"/>
+                            <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
                     </header>
                     <sheet>
                          <!-- <div class="oe_button_box" name="button_box">
@@ -325,16 +325,16 @@
                                 <field name="candidate_count" string="Candidate"  widget="statinfo"/>
                             </button>
                         </div> -->
-                        <group style="width:100%;">
+                        <group style="width:50%;">
                             <field name="dgs_batch"/>
                         </group> 
                        
                         <!-- <group style="width:50%;">
                             <field name="institute_code"/>
                         </group> -->
-                        <!-- <group style="width:50%;">
-                            <field name="institute_id"/>
-                        </group> -->
+                        <group style="width:50%;">
+                            <field name="institute_id" domain="[('exam_center','=', exam_region)]"/>
+                        </group>
                         <group style="width:50%;">
                             <field name="course" required="1" />
                         </group>
@@ -384,6 +384,7 @@
                                 <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
                                 <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
                                 <field name="expense_sheet" />
+                                <field name="time_sheet" />
                                 <field name="status" invisible="1" />
                                 <field name="marksheets"  />
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
