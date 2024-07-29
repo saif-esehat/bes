@@ -648,20 +648,20 @@ class ExaminationReport(models.Model):
         return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
            
            
-    def print_ship_visit_report(self):
+    # def print_ship_visit_report(self):
         
-        datas = {
-            'doc_ids': self.id,
-            'course': 'CCMC',
-            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
-        }
+    #     datas = {
+    #         'doc_ids': self.id,
+    #         'course': 'CCMC',
+    #         'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+    #     }
         
-        if self.exam_type == 'repeater':
-            datas['report_type'] = 'Repeater'
-        elif self.exam_type == 'fresh':
-            datas['report_type'] = 'Fresh'
+    #     if self.exam_type == 'repeater':
+    #         datas['report_type'] = 'Repeater'
+    #     elif self.exam_type == 'fresh':
+    #         datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+    #     return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
 
         
     
@@ -679,7 +679,7 @@ class ExaminationReport(models.Model):
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
             
-        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+        return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
 
         
     

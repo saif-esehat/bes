@@ -422,7 +422,7 @@ class DGSBatch(models.Model):
         }
         
             
-        return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
+        return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
 
         
 
@@ -534,25 +534,33 @@ class ShipVisitReport(models.Model):
 
 
 class ShipVisitReportModel(models.AbstractModel):
-    _name = "report.bes.ship_visit_report"
+    _name = "report.bes.candidate_ship_visit_reports"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description = "Ship Visit Report"
+    _description = "Ship Visit Reports"
     
     
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
-        docs1 = self.env['dgs.batches'].sudo().browse(docids)
-        batch_id = docs1.id
-        institutes_data = []
-        # if docs1.course == 'gp':
-        gp_institutes = self.env['gp.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
-        # elif docs1.course == 'ccmc':
-        ccmc_institutes = self.env['ccmc.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
+        
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)        
+        gp_ship_visits = self.env['gp.candidate.ship.visits'].sudo().search([('dgs_batch','=',docs1.id)])
+        print('gp_ship_visits.institute.id')
+        institutes_data = gp_ship_visits.sorted(key=lambda r: r.institute_code).institute.ids
+        print(institutes_data)
+        
+        
+        
+        # batch_id = docs1.id
+        # institutes_data = []
+        # # if docs1.course == 'gp':
+        # gp_institutes = self.env['gp.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
+        # # elif docs1.course == 'ccmc':
+        # ccmc_institutes = self.env['ccmc.candidate'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_id.code).institute_id
     
-        for institute in gp_institutes:
-            ins = {'code':institute.code , 'name':institute.name}
-            institutes_data.append(ins)
+        # for institute in gp_institutes:
+        #     ins = {'code':institute.code , 'name':institute.name}
+        #     institutes_data.append(ins)
         
         
         
@@ -562,8 +570,6 @@ class ShipVisitReportModel(models.AbstractModel):
         return {
             # 'docids': docids,
             'doc_model': 'dgs.batches',
-            # 'docs': docids,
-            # 'exam_regions': exam_region,
             'docs':docs1,
             'institutes_data':institutes_data
             # 'exams': exams,

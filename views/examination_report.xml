@@ -50,7 +50,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="open_institute_wise_pass_percentage" string="Institute Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
-                            <button name="open_subject_wise_pass_percentage" string="Subject Wise %" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            <button name="open_subject_wise_pass_percentage" string="Subject Wise %" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('exam_type','=','repeater')]}">
                             </button>
                             <button name="open_summarised_gp_report" string="GP Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_gp_report_button','!=',True)]}">
                             </button>
@@ -58,7 +58,7 @@
                             </button>
                             <button name="open_summarised_ccmc_report" string="CCMC Summarised Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}">
                             </button>
-                            <button name="open_attempt_wise_report" string="Attempt Wise Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('visible_ccmc_report_button','!=',False)]}">
+                            <button name="open_attempt_wise_report" string="Attempt Wise Report" type="object" class="oe_stat_button" icon="fa-align-justify" attrs="{'invisible': [('exam_type','=','fresh')]}">
                             </button>
                         </div>
                         <group>
