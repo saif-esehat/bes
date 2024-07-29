@@ -66,6 +66,10 @@ class BatchInvoice(models.Model):
         
 class CustomPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
+    
+    
+    def array_difference(self,array1, array2):
+        return [item for item in array1 if item not in array2]
 
     def action_create_payments(self):
         # import wdb;wdb.set_trace()
@@ -103,6 +107,135 @@ class CustomPaymentRegister(models.TransientModel):
         # Your custom code here after calling the super method
             # For CCMC
             return action
+        elif invoice.gp_repeater_candidate_ok:
+            dgs_exam = invoice.repeater_exam_batch.id
+            exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
+            last_exam = self.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', invoice.gp_candidate.id)], order='attempt_number desc', limit=1)
+            
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':invoice.gp_candidate.id , "dgs_batch": dgs_exam  , "exam_id":exam_id })
+            
+            applied = []
+            
+            for line in invoice.invoice_line_ids:
+                if line.product_id.default_code == 'mek_po_repeater':
+                    mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':invoice.gp_candidate.id})
+                    mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':invoice.gp_candidate.id})
+                    mek_practical_marks = last_exam.mek_practical_marks
+                    mek_oral_marks = last_exam.mek_oral_marks
+                    mek_total = last_exam.mek_total
+                    mek_percentage = last_exam.mek_percentage
+                    mek_oral_prac_carry_forward = False
+                    applied.append(line.product_id.default_code)
+                
+                if line.product_id.default_code == 'gsk_po_repeater':
+                    gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':invoice.gp_candidate.id})
+                    gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':invoice.gp_candidate.id})
+                
+                    gsk_practical_marks = last_exam.gsk_practical_marks
+                    gsk_oral_marks = last_exam.gsk_oral_marks
+                    gsk_total = last_exam.gsk_total
+                    gsk_percentage = last_exam.gsk_percentage
+                    gsk_oral_prac_carry_forward = False
+                    applied.append(line.product_id.default_code)
+
+                if line.product_id.default_code == 'gsk_online_repeater':
+                    gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_NEW_2')])
+                    gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
+                    token = gsk_survey_qb_input.generate_unique_string()
+                    gsk_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id , 'dgs_batch':dgs_exam})
+                    gsk_online_carry_forward = False
+                    gsk_online_marks = last_exam.gsk_online_marks
+                    gsk_online_percentage = last_exam.gsk_online_percentage
+                    applied.append(line.product_id.default_code)
+                
+                if line.product_id.default_code == 'mek_online_repeater':
+                    mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_NEW_2')])
+                    mek_survey_qb_input = mek_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
+                    token = mek_survey_qb_input.generate_unique_string()
+                    mek_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id ,'dgs_batch':dgs_exam  })
+                    mek_online_carry_forward = False
+                    mek_online_marks = last_exam.mek_online_marks
+                    mek_online_percentage = last_exam.mek_online_percentage
+                    applied.append(line.product_id.default_code)
+                    
+            total_applied = ['mek_po_repeater','gsk_po_repeater','gsk_online_repeater','mek_online_repeater']
+            carry_forward_subjects = self.array_difference(total_applied, applied)
+
+            for subject in carry_forward_subjects:
+                if subject == 'mek_po_repeater':
+                    mek_practical = last_exam.mek_prac
+                    mek_oral =last_exam.mek_oral
+                    mek_oral_prac_carry_forward = True
+                    mek_practical_marks = last_exam.mek_practical_marks
+                    mek_oral_marks = last_exam.mek_oral_marks
+                    mek_total = last_exam.mek_total
+                    mek_percentage = last_exam.mek_percentage
+                
+                if subject == 'gsk_po_repeater':
+                    gsk_practical = last_exam.gsk_prac
+                    gsk_oral = last_exam.gsk_oral
+                    gsk_practical_marks = last_exam.gsk_practical_marks
+                    gsk_oral_marks = last_exam.gsk_oral_marks
+                    gsk_total = last_exam.gsk_total
+                    gsk_percentage = last_exam.gsk_percentage
+                    gsk_oral_prac_carry_forward = True
+                
+                if subject == 'gsk_online_repeater':
+                    gsk_survey_qb_input = last_exam.gsk_online
+                    gsk_online_marks = last_exam.gsk_online_marks
+                    gsk_online_percentage = last_exam.gsk_online_percentage
+                    gsk_online_carry_forward = True
+                
+                if subject == 'mek_online_repeater':
+                    mek_survey_qb_input = last_exam.mek_online
+                    mek_online_carry_forward = True
+                    mek_online_marks = last_exam.mek_online_marks
+                    mek_online_percentage = last_exam.mek_online_percentage
+            
+            overall_marks = last_exam.overall_marks
+            overall_percentage = last_exam.overall_percentage
+            
+            if invoice.repeater_exam_batch.to_date.strftime('%B') in ['March','September']:
+                registered_institute = None
+            else:
+                registered_institute = invoice.gp_candidate.institute_id.id                
+            
+            gp_exam_schedule.write({
+                                "registered_institute":registered_institute,
+                                "mek_oral":mek_oral.id,
+                                "mek_prac":mek_practical.id,
+                                "gsk_oral":gsk_oral.id,
+                                "gsk_prac":gsk_practical.id , 
+                                "gsk_online":gsk_survey_qb_input.id, 
+                                "mek_online":mek_survey_qb_input.id,
+                                "gsk_practical_marks":gsk_practical_marks,
+                                "gsk_oral_marks":gsk_oral_marks,
+                                "gsk_total":gsk_total,
+                                "gsk_percentage":gsk_percentage,
+                                "mek_practical_marks":mek_practical_marks,
+                                "mek_oral_marks":mek_oral_marks,
+                                "mek_total":mek_total,
+                                "mek_percentage":mek_percentage,
+                                "mek_online_marks":mek_online_marks,
+                                "mek_online_percentage":mek_online_percentage,
+                                "gsk_online_marks":gsk_online_marks,
+                                "gsk_online_percentage":gsk_online_percentage,
+                                "overall_marks":overall_marks,
+                                "overall_percentage":overall_percentage,
+                                "gsk_oral_prac_carry_forward":gsk_oral_prac_carry_forward,
+                                "mek_oral_prac_carry_forward":mek_oral_prac_carry_forward,
+                                "mek_online_carry_forward":mek_online_carry_forward,
+                                "gsk_online_carry_forward":gsk_online_carry_forward
+
+                                })      
+                    
+                    
+
+                    
+
+ 
+                
+            
         # For Gp 
         return action
         

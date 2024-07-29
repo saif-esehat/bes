@@ -2709,14 +2709,14 @@ class GPExam(models.Model):
     rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
     institute_code = fields.Char(string="Institute Code", related='institute_id.code',store=True,tracking=True)
-    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True, required=True,tracking=True)
-    indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no',store=True, required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True,tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='gp_candidate.indos_no',store=True,tracking=True)
     user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
     ], string='User Status', related='gp_candidate.user_state', required=True,tracking=True)
 
-    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',store=True,string="Institute",required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",related='gp_candidate.institute_id',store=True,string="Institute",tracking=True)
     
     result_status = fields.Selection([
         ('absent','Absent'),
