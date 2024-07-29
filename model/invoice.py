@@ -227,9 +227,88 @@ class CustomPaymentRegister(models.TransientModel):
                                 "mek_online_carry_forward":mek_online_carry_forward,
                                 "gsk_online_carry_forward":gsk_online_carry_forward
 
-                                })      
+                                })
+        
+        elif invoice.ccmc_repeater_candidate_ok:
+            dgs_batch = invoice.repeater_exam_batch.id      
+            exam_id  = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
+            last_exam = self.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', invoice.ccmc_candidate.id)], order='attempt_number desc', limit=1)
+            
+            cookery_practical = last_exam.cookery_practical
+            cookery_oral = last_exam.cookery_oral
+            cookery_gsk_online = last_exam.cookery_gsk_online
+            overall_marks = last_exam.overall_marks
+                 
+
+            #Mark Percentage
+            cookery_bakery_percentage = last_exam.cookery_bakery_percentage
+            ccmc_oral_percentage = last_exam.ccmc_oral_percentage
+            cookery_gsk_online_percentage = last_exam.cookery_gsk_online_percentage
+            overall_percentage = last_exam.overall_percentage
+            
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
+            'ccmc_candidate':invoice.ccmc_candidate.id,
+            'exam_id':exam_id,
+            'dgs_batch':dgs_batch,
+            'cookery_practical':cookery_practical,
+            'cookery_oral':cookery_oral,
+            'cookery_gsk_online':cookery_gsk_online,
+            'overall_marks':overall_marks ,
+            'cookery_bakery_percentage':cookery_bakery_percentage,
+            'ccmc_oral_percentage':ccmc_oral_percentage,
+            'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
+            'overall_percentage':overall_percentage,
+            'cookery_bakery_prac_status':last_exam.cookery_bakery_prac_status,
+            'ccmc_oral_prac_status':last_exam.ccmc_oral_prac_status
+            })
+            
+            applied = []
+            for line in invoice.invoice_line_ids:
+                if line.product_id.default_code == 'ccmc_online_repeater':
+                    cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
+                    cookery_bakery_qb_input = cookery_bakery_qb_input._create_answer(user=invoice.ccmc_candidate.user_id)
+                    cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id})
+                    cookery_gsk_online_carry_forward = False
+                    applied.append(line.product_id.default_code)
                     
                     
+                if line.product_id.default_code == 'ccmc_practical_repeater':
+                    cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':invoice.ccmc_candidate.id})
+                    cookery_prac_carry_forward = False
+                    applied.append(line.product_id.default_code)
+                    
+                if line.product_id.default_code == 'ccmc_oral_repeater':
+                    ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':invoice.ccmc_candidate.id})
+                    ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':invoice.ccmc_candidate.id})
+                    cookery_oral_carry_forward = False
+                    applied.append(line.product_id.default_code)
+
+            total_applied = ['ccmc_online_repeater','ccmc_practical_repeater','ccmc_oral_repeater']
+            carry_forward_subjects = self.array_difference(total_applied, applied)
+            # import wdb; wdb.set_trace();     
+            
+            for subject in carry_forward_subjects:
+                if subject == 'ccmc_practical_repeater':
+                    cookery_bakery = last_exam.cookery_bakery
+                    cookery_prac_carry_forward = True
+                    
+                if subject == 'ccmc_oral_repeater':
+                    ccmc_oral = last_exam.ccmc_oral
+                    ccmc_gsk_oral = last_exam.ccmc_gsk_oral
+                    cookery_oral_carry_forward = True
+                
+                if subject == 'ccmc_online_repeater':
+                    cookery_bakery_qb_input = last_exam.ccmc_online
+                    cookery_gsk_online_carry_forward = True
+            
+            ccmc_exam_schedule.write({"cookery_bakery":cookery_bakery.id,
+                                      "ccmc_gsk_oral":ccmc_gsk_oral.id,
+                                      "ccmc_oral":ccmc_oral.id,
+                                      "ccmc_online":cookery_bakery_qb_input.id,
+                                      "cookery_gsk_online_carry_forward":cookery_gsk_online_carry_forward,
+                                      "cookery_oral_carry_forward":cookery_oral_carry_forward,
+                                      "cookery_prac_carry_forward":cookery_prac_carry_forward
+                                      })  
 
                     
 

@@ -3768,12 +3768,12 @@ class CCMCExam(models.Model):
     
     exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Center',store=True)
 
-    exam_id = fields.Char(string="Roll No",required=True, copy=False, readonly=True,tracking=True)
+    exam_id = fields.Char(string="Roll No", copy=False, readonly=True,tracking=True)
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
-    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code',store=True, required=True,tracking=True)
-    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",store=True,required=True,tracking=True)
+    candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code',store=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",store=True,tracking=True)
 
 
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
@@ -3934,7 +3934,7 @@ class CCMCExam(models.Model):
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
    
     institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',store=True,tracking=True)
-    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no',store=True,required=True,tracking=True)
+    indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no',store=True,tracking=True)
     
     cookery_prac_carry_forward = fields.Boolean("Cookery Practical Carry Forward",tracking=True)
     cookery_oral_carry_forward = fields.Boolean("Cookery Oral Carry Forward",tracking=True)
