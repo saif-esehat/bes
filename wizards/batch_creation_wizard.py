@@ -147,3 +147,33 @@ class hr_wizard(models.TransientModel):
     
     def action_close(self):
         return {'type': 'ir.actions.act_window_close'}
+    
+
+
+class BatchDeleteWizard(models.TransientModel):
+    _name = 'batch.delete.wizard'
+    _description = 'Batch Delete Confirmation Wizard'
+
+    message = fields.Text(string='Message', readonly=True)
+    
+    @api.model
+    def default_get(self, fields):
+        res = super(BatchDeleteWizard, self).default_get(fields)
+        # Get the context value for the message
+        if self.env.context.get('default_message'):
+            res.update({
+                'message': self.env.context['default_message']
+            })
+        return res
+
+    def action_confirm_delete(self):
+        # Perform the actual deletion here
+        # Get the selected batch IDs from the context
+        batch_ids = self.env.context.get('batch_ids')
+        if batch_ids:
+            batches_to_delete = self.env['institute.gp.batches'].browse(batch_ids)
+            batches_to_delete.unlink()
+        return {'type': 'ir.actions.act_window_close'}
+
+    def action_cancel(self):
+        return {'type': 'ir.actions.act_window_close'}

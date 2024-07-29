@@ -144,30 +144,38 @@ class InstituteGPBatches(models.Model):
  
 
     @api.model
-    def action_delete_batches(self):
-        # Retrieve records to be deleted
-        batches_to_delete = self.search([])
+    def action_delete_batches(self, batch_ids=None):
+        if batch_ids is None or not batch_ids:
+            raise ValidationError("No batches selected for deletion.")
+
+        # Retrieve records to be deleted based on provided IDs
+        batches_to_delete = self.browse(batch_ids)
         
         if not batches_to_delete:
-            raise UserError("No batches found to delete.")
+            raise ValidationError("No valid batches found to delete.")
         
-        # Optionally, store the names or IDs of the batches being deleted for logging or message purposes
-        batch_names = ', '.join(batch.name for batch in batches_to_delete)
+        # Construct message with batch names and corresponding institute names
+        batch_info = []
+        for batch in batches_to_delete:
+            institute_name = batch.institute_id.name or 'Unknown Institute'
+            batch_info.append(f"(Institute: {institute_name}) - {batch.batch_name} \n")
         
-        # Delete the batches
-        batches_to_delete.unlink()
+        batch_info_str = ', '.join(batch_info)
         
-        # Return a message to the user
-        message = f"Batches successfully deleted: {batch_names}"
+        # Pass the message and batch IDs to the wizard
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Deletion Successful',
-                'message': message,
-                'type': 'success',
+            'name': 'Batch Delete Confirmation',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.delete.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {
+                'default_message': f"Batches to be deleted:\n{batch_info_str}",
+                'batch_ids': batch_ids,
             }
         }
+    
             
     
     
@@ -689,7 +697,38 @@ class InstituteCcmcBatches(models.Model):
         self.write({"ccmc_state":'4-invoiced'})
         
         
+    @api.model
+    def action_delete_batches(self, batch_ids=None):
+        if batch_ids is None or not batch_ids:
+            raise ValidationError("No batches selected for deletion.")
 
+        # Retrieve records to be deleted based on provided IDs
+        batches_to_delete = self.browse(batch_ids)
+        
+        if not batches_to_delete:
+            raise ValidationError("No valid batches found to delete.")
+        
+        # Construct message with batch names and corresponding institute names
+        batch_info = []
+        for batch in batches_to_delete:
+            institute_name = batch.institute_id.name or 'Unknown Institute'
+            batch_info.append(f"(Institute: {institute_name}) - {batch.batch_name} \n")
+        
+        batch_info_str = ', '.join(batch_info)
+        
+        # Pass the message and batch IDs to the wizard
+        return {
+            'name': 'Batch Delete Confirmation',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.delete.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {
+                'default_message': f"Batches to be deleted:\n{batch_info_str}",
+                'batch_ids': batch_ids,
+            }
+        }
           
     
     def create_invoice_ccmc(self):

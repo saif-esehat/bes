@@ -84,6 +84,24 @@
             </field>
         </record>
 
+        <record id="view_batch_delete_wizard_form" model="ir.ui.view">
+            <field name="name">batch.delete.wizard.form</field>
+            <field name="model">batch.delete.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Batch Delete Confirmation">
+                    <sheet>
+                        <group>
+                            <field name="message" readonly="1"/>
+                        </group>
+                        <footer>
+                            <button name="action_confirm_delete" type="object" string="Delete" class="btn-primary"/>
+                            <button name="action_cancel" type="object" string="Cancel" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="institute_gpbatch_tree" model="ir.ui.view">
             <field name="name">institute.gp.batches.tree</field>
             <field name="model">institute.gp.batches</field>
@@ -371,6 +389,9 @@
             <field name="model">institute.ccmc.batches</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="action_delete_batches" type="object" string="Delete Batches" class="oe_highlight" />
+                    </header>
                     <field name="ccmc_batch_name"/>
                     <field name="institute_id"/>
                     <field name="code"/>
