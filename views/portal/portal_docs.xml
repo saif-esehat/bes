@@ -43,9 +43,9 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket">
                                 Raise a Query
                         </a>
-                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/ccmccandidate/repeater/5" >
+                        <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/ccmccandidate/repeater/5" >
                                 Apply for Repeater Exam
-                        </a>
+                        </a> -->
                     </div>
                 </t>
                 <t t-elif="env.user.has_group('bes.group_institute')">

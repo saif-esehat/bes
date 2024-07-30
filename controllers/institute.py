@@ -441,6 +441,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
+            indos_no = kw.get("indos_no")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
             dob = kw.get("dob")
             street = kw.get("street")
@@ -451,13 +452,15 @@ class InstitutePortal(CustomerPortal):
             phone = kw.get("phone")
             mobile = kw.get("mobile")
             email = kw.get("email")
+            eighth_percent = kw.get("eighth_percent")
             tenth_percent = kw.get("tenth_percent")
             twelve_percent = kw.get("twelve_percent")
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
-            
+
             candidate_data = {
                 "name": name,
+                "indos_no": indos_no,
                 "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
@@ -470,6 +473,7 @@ class InstitutePortal(CustomerPortal):
                 "phone": phone,
                 "mobile": mobile,
                 "email": email,
+                "eighth_percent": eighth_percent,
                 "tenth_percent": tenth_percent,
                 "twelve_percent": twelve_percent,
                 "iti_percent": iti_percent,
@@ -495,6 +499,7 @@ class InstitutePortal(CustomerPortal):
         if request.httprequest.method == 'POST':
             name = kw.get("name")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
+            indos_no = kw.get("indos_no")
             dob = kw.get("dob")
             street = kw.get("street")
             street2 = kw.get("street2")
@@ -504,13 +509,16 @@ class InstitutePortal(CustomerPortal):
             phone = kw.get("phone")
             mobile = kw.get("mobile")
             email = kw.get("email")
+            eighth_percent = kw.get("eighth_percent")
             tenth_percent = kw.get("tenth_percent")
             twelve_percent = kw.get("twelve_percent")
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
+
             
             candidate_data = {
                 "name": name,
+                "indos_no": indos_no,
                 "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
@@ -523,6 +531,7 @@ class InstitutePortal(CustomerPortal):
                 "phone": phone,
                 "mobile": mobile,
                 "email": email,
+                "eighth_percent": eighth_percent,
                 "tenth_percent": tenth_percent,
                 "twelve_percent": twelve_percent,
                 "iti_percent": iti_percent,
@@ -3461,8 +3470,8 @@ class InstitutePortal(CustomerPortal):
         batch = request.env['institute.gp.batches'].sudo().search([('id', '=', batch_id)])
         # import wdb; wdb.set_trace()
         candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id)])
-        # Extract indos numbers from candidates
-        indos = [candidate.indos_no for candidate in candidates]
+        # Extract indos numbers from candidates, ensuring they are valid
+        indos = [candidate.indos_no for candidate in candidates if candidate.indos_no]  # Only include non-empty indos_no
 
         # Write the indos numbers to the worksheet
         for i, candidate in enumerate(indos):
@@ -3667,8 +3676,8 @@ class InstitutePortal(CustomerPortal):
         batch = request.env['institute.ccmc.batches'].sudo().search([('id', '=', batch_id)])
         # import wdb; wdb.set_trace()
         candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id)])
-        # Extract indos numbers from candidates
-        indos = [candidate.indos_no for candidate in candidates]
+        # Extract indos numbers from candidates, ensuring they are valid
+        indos = [candidate.indos_no for candidate in candidates if candidate.indos_no]  # Only include non-empty indos_no
 
         # Write the indos numbers to the worksheet
         for i, candidate in enumerate(indos):

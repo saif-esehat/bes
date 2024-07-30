@@ -338,6 +338,7 @@
 
                         <group style="width:50%;">
                             <field name="qualification"/>
+                            <field name="eighth_percent" />
                             <field name="tenth_percent" />
                             <field name="twelve_percent" />
                             <field name="iti_percent" />
@@ -726,6 +727,7 @@
 
                         <group style="width:50%;">
                             <field name="qualification"/>
+                            <field name="eighth_percent" />
                             <field name="tenth_percent" />
                             <field name="twelve_percent" />
                             <field name="iti_percent" />

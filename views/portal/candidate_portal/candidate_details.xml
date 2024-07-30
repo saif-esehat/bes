@@ -217,119 +217,108 @@
             </script>
             <div class="container mt16">
                 <h1>Application Form GP Rating(Repeater)</h1>
+                <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of Application for Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
                 <form action="/my/application/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" t-att-value="batch.id" />
                     <div class="form-group row">
-                        <div class="form-group row">
-                            <div class="col-lg-8">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Full Name:</strong></p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    <t t-out="candidate.name"/>
-                                                </p>
-                                            </div>
+                        <div class="col-lg-8">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0"><strong>Full Name:</strong></p>
                                         </div>
-                                        <hr/>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Indos No:</strong></p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    <t t-out="candidate.indos_no"/>
-                                                </p>
-                                            </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                <t t-out="candidate.name"/>
+                                            </p>
                                         </div>
-                                        <hr/>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Code No:</strong></p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    <t t-out="candidate.candidate_code"/>
-                                                </p>
-                                            </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0"><strong>Indos No:</strong></p>
                                         </div>
-                                        <hr/>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0"><strong>Address:</strong></p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <label>Address Line 1: </label>
-                                                <span class="text-muted mb-0">
-                                                    <t t-out="candidate.street"/>
-                                                </span><br/>
-                                                <label>Address Line 2: </label>
-                                                <span class="text-muted mb-0">
-                                                    <t t-out="candidate.street2"/>
-                                                </span><br/>
-                                                <label>Dist/City: </label>
-                                                <span class="text-muted mb-0">
-                                                    <t t-out="candidate.city"/>
-                                                </span><br/>
-                                                <label>State: </label>
-                                                <span class="text-muted mb-0">
-                                                    <t t-out="candidate.state_id.name"/>
-                                                </span><br/>
-                                                <label>Pincode: </label>
-                                                <span class="text-muted mb-0">
-                                                    <t t-out="candidate.zip"/>
-                                                </span>
-                                            </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                <t t-out="candidate.indos_no"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0"><strong>Code No:</strong></p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                <t t-out="candidate.candidate_code"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0"><strong>Parent Training Institute:</strong></p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                <t t-out="candidate.institute_id.name"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0"><strong>Address:</strong></p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <label>Address Line 1: </label>
+                                            <span class="text-muted mb-0">
+                                                <t t-out="candidate.street"/>
+                                            </span><br/>
+                                            <label>Address Line 2: </label>
+                                            <span class="text-muted mb-0">
+                                                <t t-out="candidate.street2"/>
+                                            </span><br/>
+                                            <label>Dist/City: </label>
+                                            <span class="text-muted mb-0">
+                                                <t t-out="candidate.city"/>
+                                            </span><br/>
+                                            <label>State: </label>
+                                            <span class="text-muted mb-0">
+                                                <t t-out="candidate.state_id.name"/>
+                                            </span><br/>
+                                            <label>Pincode: </label>
+                                            <span class="text-muted mb-0">
+                                                <t t-out="candidate.zip"/>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3 text-center">
-                                <div class="row justify-content-center mb-2">
-                                    <div class="col-12">
-                                        <t t-if="candidate.candidate_image">
-                                            <img t-attf-src="data:image/png;base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
-                                        </t>
-                                        <t t-else="">
-                                            <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
-                                        </t>
-                                    </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <div class="row justify-content-center mb-2">
+                                <div class="col-12">
+                                    <t t-if="candidate.candidate_image">
+                                        <img t-attf-src="data:image/png;base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;"/>
+                                    </t>
                                 </div>
-                                <div class="row justify-content-center">
-                                    <div class="col-12">
-                                        <t t-if="candidate.candidate_signature">
-                                            <img t-attf-src="data:image/png;base64, {{candidate.candidate_signature}}" alt="signature" class="rounded img-fluid" style="width: 150px;"/>
-                                        </t>
-                                    </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <t t-if="candidate.candidate_signature">
+                                        <img t-attf-src="data:image/png;base64, {{candidate.candidate_signature}}" alt="signature" class="rounded img-fluid" style="width: 150px;"/>
+                                    </t>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- <div class="row">
-                        <div class="col-3">
-                            <p class="mb-0"><strong>Application For:</strong></p>
-                        </div>
-                        <div class="col-3">
-                            <p class="text-muted mb-0">
-                                <t t-out="batch.batch_name"/>
-                            </p>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="exam_centre" >Select Month</label>
-                            <select name="exam_centre" id="exam_month" onchange="updateExamOptions()" class="form-control">
-                                <option value="dec">December</option>
-                                <option value="mar">March</option>
-                                <option value="june">June</option>
-                                <option value="sep">September</option>
-                            </select>
-                        </div>
-                    </div> -->
                     <div class="row">
                         <div class="col-3">
                             <p class="mb-0"><strong>Application For:</strong></p>
@@ -369,8 +358,13 @@
                             
                         </div>
                         <div class="col-md-6">
-                            <label for="training_institute">Parent Training Institute</label>
-                            <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            <label for="training_institute">Exam Center</label>
+                            <t t-if="exam_month not in ['March','September']">
+                                <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            </t>
+                            <t t-else="">
+                                <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" placeholder="To be Announced"/>
+                            </t>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -409,7 +403,7 @@
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater &amp; Oral" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -529,7 +523,11 @@
                     </div>
                     <hr/>
                     <div class="form-group row">
-                        <strong class="text-danger">The candidate shall pay the fee/fees throught QR Code. Other Mode of Payment will not be accepted </strong><br/>
+                        <div class="col-md-12">
+                            <strong class="text-danger">The candidate shall pay the fees through QR Code. Other Modes of Payment will not be accepted.</strong>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <div class="col-md-4">
                             <label for="gp_qr">Payment QR code</label><br/>
                             <img t-attf-src="/bes/static/src/img/GP_Repeater.jpg" alt="avatar" class="img-fluid" style="width: 125px;" />
@@ -555,12 +553,12 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB):</label><br/>
+                            <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB):</label><br/>
                             <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" /><br/><br/>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
+                    <button type="submit" class="btn btn-primary">Submit</button><strong class="text-danger pl-5">Kindly fill in all the details before submission</strong>
                 </form>
             </div>
         </t>
