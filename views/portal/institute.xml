@@ -2176,6 +2176,14 @@
                                     document.getElementById('batch_id').value = dataId;
 
                                     }
+                                    
+                                    function openSTCWModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('batch_id').value = dataId;
+
+                                    }
 
                                     function onOpenAddCandidateModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
@@ -2392,6 +2400,11 @@
                         <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>                    
+                        
+                        <t t-if="ins_batch.candidate_count > 0">
+                            <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
+                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
+                        </t>
                     </div>
                     <div class="">
                         <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
@@ -2403,6 +2416,41 @@
 
             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a> -->
 
+
+            <div class="modal fade" id="uploadSTCWModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Candidate STCW</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Modal content goes here -->
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadgpcandidatestcwdata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="batch_id" name="batch_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -2972,6 +3020,14 @@
                                         document.getElementById('confirm_ccmc_candidate_batch_id').value = batchId;
                                     }
 
+                                    function openCCMCSTCWModal(button) {
+                                        // Retrieve the data-id attribute value from the clicked button
+                                        var dataId = button.getAttribute('batch-id');
+                                        // Update the content of the modal with the retrieved data
+                                        document.getElementById('ccmc_batch_id').value = dataId;
+
+                                    }
+
 
                                     function onOpenAddCandidateModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
@@ -3203,12 +3259,53 @@
                         <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-modal-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openccmcUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                    
+                        <t t-if="ins_batch.candidate_count > 0">
+                            <a t-attf-href="/my/ccmcbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
+                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadCCMCSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
+                        </t>
                     </div>
                     <div class="">
                         <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
                     </div>
                 </div>
             </t>
+
+            <div class="modal fade" id="uploadCCMCSTCWModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Candidate STCW</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Modal content goes here -->
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadccmccandidatestcwdata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="ccmc_batch_id" name="ccmc_batch_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">

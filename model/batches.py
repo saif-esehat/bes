@@ -712,7 +712,7 @@ class InstituteCcmcBatches(models.Model):
         batch_info = []
         for batch in batches_to_delete:
             institute_name = batch.institute_id.name or 'Unknown Institute'
-            batch_info.append(f"(Institute: {institute_name}) - {batch.batch_name} \n")
+            batch_info.append(f"(Institute: {institute_name}) - {batch.ccmc_batch_name} \n")
         
         batch_info_str = ', '.join(batch_info)
         

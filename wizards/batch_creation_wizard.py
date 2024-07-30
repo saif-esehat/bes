@@ -171,8 +171,12 @@ class BatchDeleteWizard(models.TransientModel):
         # Get the selected batch IDs from the context
         batch_ids = self.env.context.get('batch_ids')
         if batch_ids:
-            batches_to_delete = self.env['institute.gp.batches'].browse(batch_ids)
-            batches_to_delete.unlink()
+            if self.env.context.get('active_model') == 'institute.gp.batches':
+                batches_to_delete = self.env['institute.gp.batches'].browse(batch_ids)
+                batches_to_delete.unlink()
+            elif self.env.context.get('active_model') == 'institute.ccmc.batches':
+                batches_to_delete = self.env['institute.ccmc.batches'].browse(batch_ids)
+                batches_to_delete.unlink()
         return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel(self):
