@@ -349,7 +349,7 @@ class GPCandidatePortal(CustomerPortal):
                     total_amount = int(kwargs.get('amount'))
                     file_content = kwargs.get("transaction_slip").read()
                     filename = kwargs.get('transaction_slip').filename
-                    import wdb;wdb.set_trace()
+                    # import wdb;wdb.set_trace()
                     # import wdb; wdb.set_trace()
                     
                     invoice_vals = {

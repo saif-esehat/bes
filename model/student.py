@@ -2208,7 +2208,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-
+            
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
