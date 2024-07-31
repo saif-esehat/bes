@@ -238,6 +238,7 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/gpcandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyExam(self,batch_id, **kw):
         # import wdb; wdb.set_trace()
+        raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         
         partner_id = request.env.user.id
@@ -257,6 +258,7 @@ class GPCandidatePortal(CustomerPortal):
     
     @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyCCMCExam(self,batch_id, **kw):
+        raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         
         partner_id = request.env.user.id
