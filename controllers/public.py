@@ -14,6 +14,46 @@ from odoo.exceptions import UserError,ValidationError
 
 
 class PublicPortal(http.Controller):
+    
+    @http.route(['/register/repeater/candidate'],type="http", auth='none',website=True)
+    def RegisterGPCandidateView(self,**kw ):
+        # import wdb; wdb.set_trace();
+        if request.httprequest.method == 'GET':
+            return request.render("bes.gprepeaterregister", {})
+        elif request.httprequest.method == 'POST':
+            # import wdb; wdb.set_trace();
+            
+            candidate_image = kw.get("candidate_image").read()
+            candidate_image_name = kw.get('candidate_image').filename
+            
+            signature_photo = kw.get("signature_image").read()
+            signature_photo_name = kw.get('signature_image').filename
+            
+            vals = {
+                'candidate_image_name': candidate_image_name,
+                'candidate_image':  base64.b64encode(candidate_image),
+                'candidate_signature_name': signature_photo_name,
+                'candidate_signature': base64.b64encode(signature_photo),
+                'name': kw.get('name'),
+                'course': kw.get('course'),
+                'indos_no': kw.get('indos'),
+                'candidate_code': kw.get('candidate_code'),
+                'institute_id': int(kw.get('institute_id')),
+                'gender': kw.get('gender'),
+                'email': kw.get('email'),
+                'phone': kw.get('phone'),
+                'state': 'pending'
+            }
+            
+            
+            
+            request.env["repeater.candidate.approval"].sudo().create(vals)
+
+            
+            return request.render("bes.gprepeaterregister", {})
+            
+    
+
 
 
     @http.route(['/verification/gpadmitcard/<int:exam_id>'], type="http", auth='none')

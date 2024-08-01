@@ -1027,85 +1027,81 @@
 
 
 
-<template id="candidate_ship_visit_reports">
-            <t t-call="web.html_container">
-                
-                        <div class="container">
-                            <table class="black-bordered-table" style="" border="1">
-                                <thead>
-                                    <tr>GP INSTITUTES</tr>
-                                    <tr>
-                                        <th>Sr.No.</th>
-                                        <th>Code No.</th>
-                                        <th>Name of the Institute</th>
-                                        <th>No of Candidate</th>
-                                        <th>No of Ship Visit</th>
-                                        <th>Name of tne Ship Visited/Ship in Campus</th>
-                                        <th>IMO No.</th>
-                                        <th>Name of the Port Visited Place of SIC</th>
-                                        <th>Date of Visit</th>
-                                        <th>Time Spend on Ship(Hrs)</th>
-                                        <th>Provided Evidence</th>
-                                        <th>Remrk</th>
-                                        <th>Center</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                            <t t-set="index" t-value="0"/>
-                                          
-                                            <t t-foreach="institutes_data" t-as="institute_id">
-                                                <t t-set="institute_object" t-value="env['bes.institute'].sudo().search([('id','=',institute_id)])"/>
-                                                <t t-set="candidate_count" t-value="env['gp.candidate'].sudo().search_count([('dgs_batch','=',docs.id),('institute_id','=',institute_id)])"/>
-                                                <t t-set="ships" t-value="env['gp.candidate.ship.visits'].sudo().search([('dgs_batch','=',docs.id),('institute','=',institute_id)])"/>
-                                                <t t-set="unique_ships" t-value="set((ship.name_of_ships, ship.imo_no,ship.name_of_ports_visited,ship.date_of_visits,ship.time_spent_on_ship) for ship in ships)"/>
-                                                
-                                                <t t-set="unique_ships_sorted" t-value="sorted(unique_ships, key=lambda x: x[2])"/>
-                                                <t t-set="unique_ships_count" t-value="len(unique_ships)"/>
-                                                <!-- <t t-foreach="unique_ships" t-as="unique_ship"> -->
-                                                <t t-set="unique_ships_index" t-value="1"/>
-                                                <t t-set="index" t-value="index + 1"/>
-                                                
-                                                <t t-set="previous_port" t-value="''"/>
-                                                <t t-set="rowspan_dict" t-value="{}"/>
-                                                <t t-set="current_port_count" t-value="0"/>
-                                                
-                                                <tr  t-foreach="unique_ships_sorted" t-as="unique_ship">
-                                                        <t t-if="unique_ships_index == 1">
-                                                            <t t-esc="rowspan_dict.update({unique_ship[2]:sum(1 for item in unique_ships_sorted if item[2] == unique_ship[2])})"/>
-                                                            <!-- <span t-esc="rowspan_dict"/> -->
-                                                            <!-- <t t-set="rowspan_dict[unique_ship[2]]" t-value="sum(1 for item in unique_ships if item[2] == unique_ship[2])"/> -->
-                                                            <td  t-att-rowspan="unique_ships_count"><span t-esc="index"/></td>
-                                                            <td t-att-rowspan="unique_ships_count" ><span t-esc="institute_object.code"/></td>
-                                                            <td t-att-rowspan="unique_ships_count"><span t-esc="institute_object.name"/></td>
-                                                            <td t-att-rowspan="unique_ships_count"><span t-esc="candidate_count"/></td>
-                                                            <td t-att-rowspan="unique_ships_count"><span t-esc="unique_ships_count"/></td>
-                                                        </t>
-                                                        <t t-set="current_port_count" t-value="rowspan_dict.get(unique_ship[2], 0)"/>
-                                                        <t t-set="unique_ships_index" t-value="unique_ships_index+1"/>
-                                                        <td><span t-esc="unique_ship[0]"/></td> <!-- name_of_ships -->
-                                                        <td><span t-esc="unique_ship[1]"/></td> <!-- imo_no -->
-                                                        <td><span t-esc="unique_ship[2]"/></td>
-                                                        <!-- <t t-if="unique_ship[2] != previous_port">
-                                                            <td t-att-rowspan="current_port_count"><span t-esc="unique_ship[2]"/></td>
-                                                            <t t-set="previous_port" t-value="unique_ship[2]"/>
-                                                        </t> -->
-                                                        <!-- <td><span t-esc="unique_ship[3]"/></td> -->
-
-                                                        <!-- <t t-else="" >
-                                                            <td><span t-esc="unique_ship[2]"/></td>
-                                                         </t> -->
-                                                        <!-- <td><span t-esc="unique_ship[2]"/></td> -->
-                                                        <!-- <td><span t-esc="unique_ship[3]"/></td>
-                                                        <td><span t-esc="unique_ship[4]"/></td> -->
-                                                
-                                                </tr>
-                                            </t>
-                                            
-                                            
+    <template id="candidate_ship_visit_reports">
+        <t t-call="web.html_container">
     
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="container">
+                <table class="black-bordered-table" style="" border="1">
+                    <thead>
+                        <tr>GP INSTITUTES</tr>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>Code No.</th>
+                            <th>Name of the Institute</th>
+                            <th>No of Candidate</th>
+                            <th>No of Ship Visit</th>
+                            <th>Name of tne Ship Visited/Ship in Campus</th>
+                            <th>IMO No.</th>
+                            <th>Name of the Port Visited Place of SIC</th>
+                            <th>Date of Visit</th>
+                            <th>Time Spend on Ship(Hrs)</th>
+                            <th>Provided Evidence</th>
+                            <th>Remrk</th>
+                            <th>Center</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="index" t-value="0"/>
+                        
+                        <t t-foreach="institutes_data" t-as="institute_id">
+                            <t t-set="institute_object" t-value="env['bes.institute'].sudo().search([('id','=',institute_id)])"/>
+                            <t t-set="candidate_count" t-value="env['gp.candidate'].sudo().search_count([('dgs_batch','=',docs.id),('institute_id','=',institute_id)])"/>
+                            <t t-set="ships" t-value="env['gp.candidate.ship.visits'].sudo().search([('dgs_batch','=',docs.id),('institute','=',institute_id)])"/>
+                            <t t-set="unique_ships" t-value="set((ship.name_of_ships, ship.imo_no,ship.name_of_ports_visited,ship.date_of_visits,ship.time_spent_on_ship) for ship in ships)"/>
+                            
+                            <t t-set="unique_ships_sorted" t-value="sorted(unique_ships, key=lambda x: x[2])"/>
+                            <t t-set="unique_ships_count" t-value="len(unique_ships)"/>
+                            <!-- <t t-foreach="unique_ships" t-as="unique_ship"> -->
+                            <t t-set="unique_ships_index" t-value="1"/>
+                            <t t-set="index" t-value="index + 1"/>
+                            
+                            <t t-set="previous_port" t-value="''"/>
+                            <t t-set="rowspan_dict" t-value="{}"/>
+                            <t t-set="current_port_count" t-value="0"/>
+                            
+                            <tr  t-foreach="unique_ships_sorted" t-as="unique_ship">
+                                    <t t-if="unique_ships_index == 1">
+                                        <t t-esc="rowspan_dict.update({unique_ship[2]:sum(1 for item in unique_ships_sorted if item[2] == unique_ship[2])})"/>
+                                        <!-- <span t-esc="rowspan_dict"/> -->
+                                        <!-- <t t-set="rowspan_dict[unique_ship[2]]" t-value="sum(1 for item in unique_ships if item[2] == unique_ship[2])"/> -->
+                                        <td  t-att-rowspan="unique_ships_count"><span t-esc="index"/></td>
+                                        <td t-att-rowspan="unique_ships_count" ><span t-esc="institute_object.code"/></td>
+                                        <td t-att-rowspan="unique_ships_count"><span t-esc="institute_object.name"/></td>
+                                        <td t-att-rowspan="unique_ships_count"><span t-esc="candidate_count"/></td>
+                                        <td t-att-rowspan="unique_ships_count"><span t-esc="unique_ships_count"/></td>
+                                    </t>
+                                    <t t-set="current_port_count" t-value="rowspan_dict.get(unique_ship[2], 0)"/>
+                                    <t t-set="unique_ships_index" t-value="unique_ships_index+1"/>
+                                    <td><span t-esc="unique_ship[0]"/></td> <!-- name_of_ships -->
+                                    <td><span t-esc="unique_ship[1]"/></td> <!-- imo_no -->
+                                    <td><span t-esc="unique_ship[2]"/></td>
+                                    <!-- <t t-if="unique_ship[2] != previous_port">
+                                        <td t-att-rowspan="current_port_count"><span t-esc="unique_ship[2]"/></td>
+                                        <t t-set="previous_port" t-value="unique_ship[2]"/>
+                                    </t> -->
+                                    <!-- <td><span t-esc="unique_ship[3]"/></td> -->
+
+                                    <!-- <t t-else="" >
+                                        <td><span t-esc="unique_ship[2]"/></td>
+                                        </t> -->
+                                    <!-- <td><span t-esc="unique_ship[2]"/></td> -->
+                                    <!-- <td><span t-esc="unique_ship[3]"/></td>
+                                    <td><span t-esc="unique_ship[4]"/></td> -->
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
         </t>
     </template>
 
@@ -1230,13 +1226,9 @@
                                 </tbody>
                             </table>
                         </div>
-  v 0                         </div> 
+                       </div> 
                     </div>
-
-
                 </t>
-   
-                    
             </t>
         </t>
     </template>

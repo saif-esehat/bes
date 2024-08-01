@@ -43,6 +43,16 @@
             <field name="res_model">examination.report</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <record id="action_repeater_candidate_approval" model="ir.actions.act_window">
+            <field name="name">Repeater Candidate Approval</field>
+            <field name="res_model">repeater.candidate.approval</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_repeater_candidate_approval" name="Repeater Candidate Approval"
+           parent="bes_menu" action="action_repeater_candidate_approval" sequence="10"/>
+
         
 
         <menuitem id="bes_menu" name="BES" groups="bes.group_bes_admin" sequence="1" web_icon="bes,static/description/icon.png" />

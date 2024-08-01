@@ -84,11 +84,32 @@
             </field>
         </record>
 
+        <record id="view_batch_delete_wizard_form" model="ir.ui.view">
+            <field name="name">batch.delete.wizard.form</field>
+            <field name="model">batch.delete.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Batch Delete Confirmation">
+                    <sheet>
+                        <group>
+                            <field name="message" readonly="1"/>
+                        </group>
+                        <footer>
+                            <button name="action_confirm_delete" type="object" string="Delete" class="btn-primary"/>
+                            <button name="action_cancel" type="object" string="Cancel" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="institute_gpbatch_tree" model="ir.ui.view">
             <field name="name">institute.gp.batches.tree</field>
             <field name="model">institute.gp.batches</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="action_delete_batches" type="object" string="Delete Batches" class="oe_highlight" />
+                    </header>
                     <field name="batch_name"/>
                     <field name="institute_id"/>
                     <field name="code"/>
@@ -368,6 +389,9 @@
             <field name="model">institute.ccmc.batches</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="action_delete_batches" type="object" string="Delete Batches" class="oe_highlight" />
+                    </header>
                     <field name="ccmc_batch_name"/>
                     <field name="institute_id"/>
                     <field name="code"/>
@@ -450,8 +474,14 @@
                             <field name="delhi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="kochi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="goa_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="from_date"/>
-                            <field name="to_date"/>
+                        </group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
+                            <field name="from_date" string="Exam Start Date"/>
+                            <field name="to_date" string="Exam End Date"/>
+                        </group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', True)]}">
+                            <field name="from_date" string="Fresh Batch Start Date"/>
+                            <field name="to_date" string="Fresh Batch End Date"/>
                         </group>
                         <group>
                             <field name="report_status"/>
@@ -527,6 +557,9 @@
                 </form>
             </field>
         </record>
+
+
+        
 
         
 

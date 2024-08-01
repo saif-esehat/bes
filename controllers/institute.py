@@ -441,6 +441,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
+            indos_no = kw.get("indos_no")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
             dob = kw.get("dob")
             street = kw.get("street")
@@ -451,13 +452,15 @@ class InstitutePortal(CustomerPortal):
             phone = kw.get("phone")
             mobile = kw.get("mobile")
             email = kw.get("email")
+            eighth_percent = kw.get("eighth_percent")
             tenth_percent = kw.get("tenth_percent")
             twelve_percent = kw.get("twelve_percent")
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
-            
+
             candidate_data = {
                 "name": name,
+                "indos_no": indos_no,
                 "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
@@ -470,6 +473,7 @@ class InstitutePortal(CustomerPortal):
                 "phone": phone,
                 "mobile": mobile,
                 "email": email,
+                "eighth_percent": eighth_percent,
                 "tenth_percent": tenth_percent,
                 "twelve_percent": twelve_percent,
                 "iti_percent": iti_percent,
@@ -495,6 +499,7 @@ class InstitutePortal(CustomerPortal):
         if request.httprequest.method == 'POST':
             name = kw.get("name")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
+            indos_no = kw.get("indos_no")
             dob = kw.get("dob")
             street = kw.get("street")
             street2 = kw.get("street2")
@@ -504,13 +509,16 @@ class InstitutePortal(CustomerPortal):
             phone = kw.get("phone")
             mobile = kw.get("mobile")
             email = kw.get("email")
+            eighth_percent = kw.get("eighth_percent")
             tenth_percent = kw.get("tenth_percent")
             twelve_percent = kw.get("twelve_percent")
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
+
             
             candidate_data = {
                 "name": name,
+                "indos_no": indos_no,
                 "gender": gender,
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
@@ -523,6 +531,7 @@ class InstitutePortal(CustomerPortal):
                 "phone": phone,
                 "mobile": mobile,
                 "email": email,
+                "eighth_percent": eighth_percent,
                 "tenth_percent": tenth_percent,
                 "twelve_percent": twelve_percent,
                 "iti_percent": iti_percent,
@@ -3413,4 +3422,417 @@ class InstitutePortal(CustomerPortal):
                 ]
                 return request.make_response(content, headers=headers)
         return request.not_found()
+    
+# New Code STCW Bulk Uploading
+    @http.route('/my/gpbatch/candidates/stcw_format_download/<int:batch_id>', type='http', auth='user',website=True)
+    def generate_gp_candidate_stcw_format(self, batch_id, **kw):
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        candidate_stcw_worksheet = workbook.add_worksheet("STCW Details")
         
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        candidate_stcw_worksheet.set_column('A:XDF', None, unlocked)
+        
+        candidate_stcw_worksheet.set_column('A:A',15,unlocked) #indos
+        candidate_stcw_worksheet.set_column('B:B',10,unlocked) #cousre
+        candidate_stcw_worksheet.set_column('C:C',35,unlocked) #insitute_name
+        candidate_stcw_worksheet.set_column('D:D',15,unlocked) #mti_no
+       # Set the column format for certificate_no to number
+        number_format = workbook.add_format({'num_format': '0', 'locked': False})
+
+        # Set the column width and format for certificate_no
+        candidate_stcw_worksheet.set_column('E:E', 35, number_format)  # certificate_no
+        
+        candidate_stcw_worksheet.set_column('F:F',20,unlocked) #cousre_start_date
+        candidate_stcw_worksheet.set_column('G:G',20,unlocked) #cousre_end_date
+        
+        candidate_stcw_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        for col, value in enumerate(header):
+            candidate_stcw_worksheet.write(0, col, value, header_format)
+
+        # Auto fill indos no
+        batch = request.env['institute.gp.batches'].sudo().search([('id', '=', batch_id)])
+        # import wdb; wdb.set_trace()
+        candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id)])
+        # Extract indos numbers from candidates, ensuring they are valid
+        indos = [candidate.indos_no for candidate in candidates if candidate.indos_no]  # Only include non-empty indos_no
+
+        # Write the indos numbers to the worksheet
+        for i, candidate in enumerate(indos):
+            # Calculate the starting row for the current candidate
+            start_row = i * 2 + 2  # Each indos occupies two rows
+
+            # Write the indos number twice in consecutive rows
+            candidate_stcw_worksheet.write(f'A{start_row}', candidate, locked)
+            candidate_stcw_worksheet.write(f'A{start_row + 1}', candidate, locked)
+        
+        
+        # Set date format for DOB column
+        candidate_stcw_worksheet.set_column('F:F', 20, date_format)
+        candidate_stcw_worksheet.set_column('G:G', 20, date_format)
+
+        cousre_values = ["BST","STSDSD"]
+
+        candidate_stcw_worksheet.data_validation('B2:B1048576', {'validate': 'list', 'source': cousre_values})
+        
+        instruction_worksheet = workbook.add_worksheet("Instructions")
+
+        instruction_worksheet.set_column('A:P',20,unlocked)
+
+        
+        # instruction_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
+
+        # instruction_worksheet.write_comment('M2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        for col, value in enumerate(header):
+            instruction_worksheet.write(0, col, value, header_format)
+
+        # Set date format for DOB column
+        instruction_worksheet.set_column('F:F', 20, date_format)
+        instruction_worksheet.set_column('G:G', 20, date_format)
+
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
+        mandatory_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'red',
+            'text_wrap': True
+        })
+
+
+        # Instruction Description
+        merge_format = workbook.add_format({
+                                        'bold': True,
+                                        'align': 'center',
+                                        'valign': 'vcenter',
+                                        'font_size': 15,
+                                        'font_color': 'black',
+                                    })
+        instruction_worksheet.protect()
+        
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=candidate_STCW_format_file.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+    
+
+
+    @http.route(['/my/uploadgpcandidatestcwdata'], type="http", auth="user", website=True)
+    def UploadGPCandidateSTCWData(self, **kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        batch_id = int(kw.get("batch_id"))
+        
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        # Open the uploaded workbook
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet = workbook.sheet_by_index(0)
+
+        # Iterate through the rows of the worksheet, starting from the second row
+        for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+            row = worksheet.row_values(row_num)
+
+            # Extracting data from the row
+            indos_no = row[0]  # Assuming INDOS NO is in the first column
+            course_name = row[1].lower()  # Assuming COURSE is in the second column
+            institute_name = row[2]  # Assuming INSTITUTE NAME is in the third column
+
+            # Initialize variables
+            mti_no = None
+            certificate_no = None
+            course_start_date = None
+            course_end_date = None
+
+            # Check if MTI NO is present and convert to int
+            if row[3]:  # If there's a value in the fourth column
+                try:
+                    mti_no = int(row[3])  # Assuming MTI NO is in the fourth column
+                except ValueError:
+                    continue  # Skip this row if conversion fails
+
+            # Check if CERTIFICATE NO is present and convert to int
+            if row[4]:  # If there's a value in the fifth column
+                try:
+                    certificate_no = int(row[4])  # Assuming CERTIFICATE NO is in the fifth column
+                except ValueError:
+                    continue  # Skip this row if conversion fails
+
+            # Check if COURSE START DATE is present
+            if row[5]:  # If there's a value in the sixth column
+                course_start_date = xlrd.xldate.xldate_as_datetime(row[5], workbook.datemode).date()
+
+            # Check if COURSE END DATE is present
+            if row[6]:  # If there's a value in the seventh column
+                course_end_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+
+            # Find the candidate based on INDOS NO
+            candidate = request.env["gp.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
+            # Create a new candidate STCW record
+            request.env['gp.candidate.stcw.certificate'].sudo().create({
+                'candidate_id': candidate.id,
+                'course_name': course_name,
+                'institute_name': institute_id,
+                'marine_training_inst_number': mti_no,
+                'mti_indos_no': indos_no,
+                'candidate_cert_no': certificate_no,
+                'course_start_date': course_start_date,
+                'course_end_date': course_end_date
+            })
+            candidate._check_stcw_certificate()
+
+        return request.redirect("/my/gpbatch/candidates/" + str(batch_id))
+
+    @http.route('/my/ccmcbatch/candidates/stcw_format_download/<int:batch_id>', type='http', auth='user',website=True)
+    def generate_ccmc_candidate_stcw_format(self, batch_id, **kw):
+        excel_buffer = io.BytesIO()
+
+        # Create a new Excel workbook and add a worksheet
+        workbook = xlsxwriter.Workbook(excel_buffer)
+        candidate_stcw_worksheet = workbook.add_worksheet("STCW Details")
+        
+        
+        locked = workbook.add_format({'locked':True})
+        unlocked = workbook.add_format({'locked':False})
+        candidate_stcw_worksheet.set_column('A:XDF', None, unlocked)
+        
+        candidate_stcw_worksheet.set_column('A:A',15,unlocked) #indos
+        candidate_stcw_worksheet.set_column('B:B',10,unlocked) #cousre
+        candidate_stcw_worksheet.set_column('C:C',35,unlocked) #insitute_name
+        candidate_stcw_worksheet.set_column('D:D',15,unlocked) #mti_no
+       # Set the column format for certificate_no to number
+        number_format = workbook.add_format({'num_format': '0', 'locked': False})
+
+        # Set the column width and format for certificate_no
+        candidate_stcw_worksheet.set_column('E:E', 35, number_format)  # certificate_no
+        
+        candidate_stcw_worksheet.set_column('F:F',20,unlocked) #cousre_start_date
+        candidate_stcw_worksheet.set_column('G:G',20,unlocked) #cousre_end_date
+        
+        candidate_stcw_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        for col, value in enumerate(header):
+            candidate_stcw_worksheet.write(0, col, value, header_format)
+
+        # Auto fill indos no
+        batch = request.env['institute.ccmc.batches'].sudo().search([('id', '=', batch_id)])
+        # import wdb; wdb.set_trace()
+        candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id)])
+        # Extract indos numbers from candidates, ensuring they are valid
+        indos = [candidate.indos_no for candidate in candidates if candidate.indos_no]  # Only include non-empty indos_no
+
+        # Write the indos numbers to the worksheet
+        for i, candidate in enumerate(indos):
+            # Calculate the starting row for the current candidate
+            start_row = i * 2 + 2  # Each indos occupies two rows
+
+            # Write the indos number twice in consecutive rows
+            candidate_stcw_worksheet.write(f'A{start_row}', candidate, locked)
+            candidate_stcw_worksheet.write(f'A{start_row + 1}', candidate, locked)
+        
+        
+        # Set date format for DOB column
+        candidate_stcw_worksheet.set_column('F:F', 20, date_format)
+        candidate_stcw_worksheet.set_column('G:G', 20, date_format)
+
+        cousre_values = ["BST","STSDSD"]
+
+        candidate_stcw_worksheet.data_validation('B2:B1048576', {'validate': 'list', 'source': cousre_values})
+        
+        instruction_worksheet = workbook.add_worksheet("Instructions")
+
+        instruction_worksheet.set_column('A:P',20,unlocked)
+
+        
+        # instruction_worksheet.protect()
+        date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
+
+        # instruction_worksheet.write_comment('M2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
+
+        header_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'white',
+            'bg_color': '#336699',  # Blue color for the background
+            'locked':True
+        })
+        
+        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        for col, value in enumerate(header):
+            instruction_worksheet.write(0, col, value, header_format)
+
+        # Set date format for DOB column
+        instruction_worksheet.set_column('F:F', 20, date_format)
+        instruction_worksheet.set_column('G:G', 20, date_format)
+
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
+        mandatory_format = workbook.add_format({
+            'bold': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'font_color': 'red',
+            'text_wrap': True
+        })
+
+
+        # Instruction Description
+        merge_format = workbook.add_format({
+                                        'bold': True,
+                                        'align': 'center',
+                                        'valign': 'vcenter',
+                                        'font_size': 15,
+                                        'font_color': 'black',
+                                    })
+        instruction_worksheet.protect()
+        
+        workbook.close()
+
+        # Set the buffer position to the beginning
+        excel_buffer.seek(0)
+
+        # Generate a response with the Excel file
+        response = request.make_response(
+            excel_buffer.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', 'attachment; filename=candidate_STCW_format_file.xlsx')
+            ]
+        )
+
+        # Clean up the buffer
+        excel_buffer.close()
+
+        return response
+    
+
+
+    @http.route(['/my/uploadccmccandidatestcwdata'], type="http", auth="user", website=True)
+    def UploadCCMCCandidateSTCWData(self, **kw):
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        
+        batch_id = int(kw.get("batch_id"))
+        
+        file_content = kw.get("fileUpload").read()
+        filename = kw.get('fileUpload').filename
+
+        # Open the uploaded workbook
+        workbook = xlrd.open_workbook(file_contents=file_content)
+        worksheet = workbook.sheet_by_index(0)
+
+        # Iterate through the rows of the worksheet, starting from the second row
+        for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
+            row = worksheet.row_values(row_num)
+
+            # Extracting data from the row
+            indos_no = row[0]  # Assuming INDOS NO is in the first column
+            course_name = row[1].lower()  # Assuming COURSE is in the second column
+            institute_name = row[2]  # Assuming INSTITUTE NAME is in the third column
+
+            # Initialize variables
+            mti_no = None
+            certificate_no = None
+            course_start_date = None
+            course_end_date = None
+
+            # Check if MTI NO is present and convert to int
+            if row[3]:  # If there's a value in the fourth column
+                try:
+                    mti_no = int(row[3])  # Assuming MTI NO is in the fourth column
+                except ValueError:
+                    continue  # Skip this row if conversion fails
+
+            # Check if CERTIFICATE NO is present and convert to int
+            if row[4]:  # If there's a value in the fifth column
+                try:
+                    certificate_no = int(row[4])  # Assuming CERTIFICATE NO is in the fifth column
+                except ValueError:
+                    continue  # Skip this row if conversion fails
+
+            # Check if COURSE START DATE is present
+            if row[5]:  # If there's a value in the sixth column
+                course_start_date = xlrd.xldate.xldate_as_datetime(row[5], workbook.datemode).date()
+
+            # Check if COURSE END DATE is present
+            if row[6]:  # If there's a value in the seventh column
+                course_end_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+
+            # Find the candidate based on INDOS NO
+            candidate = request.env["ccmc.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
+            # Create a new candidate STCW record
+            request.env['ccmc.candidate.stcw.certificate'].sudo().create({
+                'candidate_id': candidate.id,
+                'course_name': course_name,
+                'institute_name': institute_id,
+                'marine_training_inst_number': mti_no,
+                'mti_indos_no': indos_no,
+                'candidate_cert_no': certificate_no,
+                'course_start_date': course_start_date,
+                'course_end_date': course_end_date
+            })
+            candidate._check_stcw_certificate()
+
+        return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
+

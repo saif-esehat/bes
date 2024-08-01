@@ -238,8 +238,8 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/gpcandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyExam(self,batch_id, **kw):
         # import wdb; wdb.set_trace()
+        raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
-        
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
@@ -257,6 +257,7 @@ class GPCandidatePortal(CustomerPortal):
     
     @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyCCMCExam(self,batch_id, **kw):
+        raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         
         partner_id = request.env.user.id
@@ -347,7 +348,7 @@ class GPCandidatePortal(CustomerPortal):
                     total_amount = int(kwargs.get('amount'))
                     file_content = kwargs.get("transaction_slip").read()
                     filename = kwargs.get('transaction_slip').filename
-                    import wdb;wdb.set_trace()
+                    # import wdb;wdb.set_trace()
                     # import wdb; wdb.set_trace()
                     
                     invoice_vals = {
@@ -371,7 +372,7 @@ class GPCandidatePortal(CustomerPortal):
                     
                     return request.redirect("/my/invoices")
             else:
-                raise ValidationError("Application For Repeater Exam is Already Registered. Kindly Check the Invoice for Further Status of Application")
+                raise ValidationError("Application For Repeater Exam is already Submitted ONCE. \nKindly Check the Invoice for Further Status of Application")
         else:
             partner_id = request.env.user.id
             candidate = request.env["ccmc.candidate"].sudo().search([('user_id', '=', partner_id)], limit=1)
@@ -386,6 +387,7 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
+            # import wdb; wdb.set_trace()
             candidate_user_id = request.env.user.id
             candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             dgs_batch_id = int(kwargs.get('batch_id'))
@@ -403,6 +405,7 @@ class GPCandidatePortal(CustomerPortal):
             
                 # import wdb; wdb.set_trace()
                 
+
                 
                 
                 line_items = []
@@ -483,7 +486,7 @@ class GPCandidatePortal(CustomerPortal):
                     
                     return request.redirect("/my/invoices")
             else:
-                raise ValidationError("Application For Repeater Exam is Already Registered. Kindly Check the Invoice for Further Status of Application")
+                raise ValidationError("Application For Repeater Exam is already Submitted ONCE. \nKindly Check the Invoice for Further Status of Application")
         else:
             partner_id = request.env.user.id
             candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)], limit=1)

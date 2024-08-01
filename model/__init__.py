@@ -17,3 +17,4 @@ from . import quarter_batch
 from . import attendance_sheet
 from . import time_sheet
 from . import examination_report
+from . import candidate_approval

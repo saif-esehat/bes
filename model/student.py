@@ -62,6 +62,7 @@ class GPCandidate(models.Model):
     phone = fields.Char("Phone",tracking=True)
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
     email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
+    eighth_percent = fields.Integer("% 8th Std in Eng.",tracking=True)
     tenth_percent = fields.Integer("% Xth Std in Eng.",tracking=True)
     twelve_percent = fields.Integer("% 12th Std in Eng.",tracking=True)
     iti_percent = fields.Integer("% ITI",tracking=True)
@@ -88,6 +89,7 @@ class GPCandidate(models.Model):
     batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
     invoice_generated = fields.Boolean("Invoice Generated")
     qualification = fields.Selection([
+        ('eight', '8th std'),
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
@@ -282,7 +284,7 @@ class GPCandidate(models.Model):
                     record.stcw_criteria = 'passed'
                 else:
                     record.stcw_criteria = 'pending'
-            elif gp_exam_count == 1:
+            elif gp_exam_count in [0,1]:
                 if all_types_exist and all_cert_nos_present:
                     record.stcw_criteria = 'passed'
                 else:
@@ -669,6 +671,7 @@ class CCMCCandidate(models.Model):
     phone = fields.Char("Phone", validators=[api.constrains('phone')],tracking=True)
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
     email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
+    eighth_percent = fields.Integer("% 8th Std in Eng.",tracking=True)
     tenth_percent = fields.Char("% Xth Std in Eng.",tracking=True)
     twelve_percent = fields.Char("% 12th Std in Eng.",tracking=True)
     iti_percent = fields.Char("% ITI",tracking=True)
@@ -682,6 +685,7 @@ class CCMCCandidate(models.Model):
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
     ccmc_exam = fields.Many2many("ccmc.exam.schedule",string="Exam",tracking=True)
     qualification = fields.Selection([
+        ('eight', '8th std'),
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
@@ -848,6 +852,7 @@ class CCMCCandidate(models.Model):
 
             course_type_already  = [course.course_name for course in record.stcw_certificate]
             # import wdb; wdb.set_trace();    
+            exam_count = self.env['ccmc.exam.schedule'].sudo().search_count([('ccmc_candidate','=',record.id)])          
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = self.check_combination_exists(course_type_already)
@@ -856,11 +861,16 @@ class CCMCCandidate(models.Model):
 
             # if all_types_exist and all_cert_nos_present:
 
-            if all_types_exist:
-                # import wdb; wdb.set_trace();
-                record.stcw_criteria = 'passed'
-            else:
-                record.stcw_criteria = 'pending'
+            if exam_count > 1:
+                if all_types_exist:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
+            elif exam_count in [0,1]:
+                if all_types_exist and all_cert_nos_present:
+                    record.stcw_criteria = 'passed'
+                else:
+                    record.stcw_criteria = 'pending'
         
     
     @api.constrains('ship_visits')
@@ -2208,7 +2218,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-
+            
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
