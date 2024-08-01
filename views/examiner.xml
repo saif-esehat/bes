@@ -463,6 +463,9 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="gp_candidate"/>
                     <field name="gp_marksheet"/>
                     <field name="using_of_tools"/>
@@ -486,8 +489,11 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="gp_candidate"/>
-                     <field name="gp_marksheet"/>
+                    <field name="gp_marksheet"/>
                     <field name="subject_area_1_2_3"/>
                     <field name="subject_area_4_5_6"/>
                     <field name="practical_record_journals"/>
@@ -880,6 +886,26 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_reallocate_candidates_wizard" model="ir.ui.view">
+            <field name="name">reallocate.candidates.wizard.form</field>
+            <field name="model">reallocate.candidates.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reallocate Candidates">
+                    <group>
+                        <field name="exam_batch" readonly="1"/>
+                        <field name="institute_id"/>
+                        <field name="examiner_id"/>
+                        <field name="candidate_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button string="Reallocate" type="object" name="action_reallocate" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
 
     </data>
 </odoo>

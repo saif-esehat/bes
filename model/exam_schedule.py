@@ -683,7 +683,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Assignment Wizard'
     exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty",tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",related='exam_duty.institute_id',required=True,tracking=True)
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
 
     
@@ -1853,12 +1853,13 @@ class ExamOralPractical(models.Model):
 class ExamOralPracticalExaminers(models.Model):
     _name = 'exam.type.oral.practical.examiners'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'display_name'
     _description= 'Examiners'
 
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="Exam Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",store=True,tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
@@ -1876,6 +1877,13 @@ class ExamOralPracticalExaminers(models.Model):
                     ('done', 'Completed')
                 ], string='Marksheet Remaining Status', default='pending',compute='compute_marksheet_done',store=True)
     
+    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+
+    @api.depends('examiner.name', 'subject.name', 'exam_date')
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{record.examiner.name} - {record.subject.name} - {record.exam_date}"
+
     @api.depends('candidates_count','candidate_done')
     def compute_marksheet_done(self):
         for record in self:
@@ -2339,6 +2347,7 @@ class ExamOralPracticalExaminers(models.Model):
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'display_name'
     _description= 'Marksheets'
 
     examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID",tracking=True)
@@ -2421,9 +2430,39 @@ class OralPracticalExaminersMarksheet(models.Model):
     gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
     mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
     
+    display_name = fields.Char(string='Name', compute='_compute_display_name')
+   
+    @api.depends('gp_candidate', 'ccmc_candidate')
+    def _compute_display_name(self):
+        for cousre in self.examiners_id.course:
+            for record in self:
+                if cousre.id == 1:
+                    record.display_name = f"{record.gp_candidate.name}"
+                else:
+                    record.display_name = f"{record.ccmc_candidate.name}"
 
-    
-    
+            
+
+    def open_reallocate_candidates(self):
+        # import wdb;wdb.set_trace();
+        assignment_id = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',self.examiners_id.dgs_batch.id),('institute_id','=',self.examiners_id.institute_id.id)])
+        
+        # examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id','=',assignment_id.id)])
+        
+        return {
+            'name': 'Reallocate Examiner Assignments',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'reallocate.candidates.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_candidate_ids': self.ids,  # Pass a list of candidate IDs
+                'default_exam_batch': assignment_id.dgs_batch.id,  
+                'default_institute_id': assignment_id.institute_id.id,
+                # 'default_examiner_id': examiner_id.id,
+            }
+        }
     
     # def open_oral_prac_candidate(self):
         
@@ -4608,7 +4647,29 @@ class CcmcCertificate(models.AbstractModel):
 #             'docs': docs1
 #             }
 
-    
+class ReallocateCandidatesWizard(models.TransientModel):
+    _name = 'reallocate.candidates.wizard'
+    _description = 'Reallocate Candidates Wizard'
+
+    # Define fields for the wizard
+    exam_batch = fields.Many2one('dgs.batches', string='Exam Batch', required=True)
+    institute_id = fields.Many2one('bes.institute', string='Institute', required=True)
+    examiner_id = fields.Many2one('exam.type.oral.practical.examiners', string='Examiner')
+    exam_date = fields.Date(string='Exam Date')
+    candidate_ids = fields.Many2many('exam.type.oral.practical.examiners.marksheet',relation="marksheets_ids", string='Candidates')
+
+    def action_reallocate(self):
+        import wdb;wdb.set_trace();
+        # Reallocate the candidates
+        assignment_id = request.env['exam.type.oral.practical'].sudo().search([('prac_oral_id','=',self.examiners_id.dgs_batch.id),('institute_id','=',self.examiners_id.institute_id.id)])
+        examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id', '=', self.examiner_id.id)])
+        # self.examiner_id
+        for candidate in self.candidate_ids:
+            # Update the candidate's allocation, assuming there's a field for it
+            print("Candidate ID:", candidate.id)
+        
+        return {'type': 'ir.actions.act_window_close'}
+
         
         
         
