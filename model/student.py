@@ -1220,7 +1220,7 @@ class CookeryBakeryLine(models.Model):
     cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
     cookery_bekary_start_time = fields.Datetime(string="Start Time")
     cookery_bekary_end_time = fields.Datetime(string="End Time")
-    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft")
     cookery_practical_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
 
     
@@ -1322,7 +1322,7 @@ class MekPrcticalLine(models.Model):
     mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True,tracking=True)
     
     mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
-    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
 
@@ -1428,7 +1428,7 @@ class MekOralLine(models.Model):
     mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True,tracking=True)
 
     mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak",tracking=True)
-    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
     
@@ -1509,7 +1509,7 @@ class GskPracticallLine(models.Model):
     
     gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks",store=True,tracking=True)
     gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
-    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
       
@@ -1595,7 +1595,7 @@ class GskOralLine(models.Model):
     
     gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True,tracking=True)
     gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
-    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
     
@@ -1676,7 +1676,7 @@ class CcmcOralLine(models.Model):
     gsk_ccmc = fields.Integer("GSK",related = 'exam_id.ccmc_gsk_oral.toal_ccmc_oral_rating')
     # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
-    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft")
     ccmc_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
     
 
