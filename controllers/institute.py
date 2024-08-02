@@ -1284,7 +1284,7 @@ class InstitutePortal(CustomerPortal):
     def AddShipVisits(self, **kw):
         
         # Extracting data from the HTML form
-        candidate_id = kw.get("candidate_id")
+        candidate_id = int(kw.get("candidate_id"))
         name_of_ships = kw.get("name_of_ships")
         imo_no = kw.get("imo_no")
         name_of_ports_visited = kw.get("name_of_ports_visited")
@@ -1320,14 +1320,14 @@ class InstitutePortal(CustomerPortal):
 
         # Create a record in the 'gp.candidate' model
         
-        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+        return request.redirect('/my/gpcandidateprofile/'+str(candidate_id))
 
 
     @http.route(['/my/addccmcshipvisit'], method=["POST", "GET"], type="http", auth="user", website=True)
     def AddCcmcShipVisits(self, **kw):
         
         # Extracting data from the HTML form
-        candidate_id = kw.get("candidate_id")
+        candidate_id = int(kw.get("candidate_id"))
         name_of_ships = kw.get("name_of_ships")
         imo_no = kw.get("imo_no")
         name_of_ports_visited = kw.get("name_of_ports_visited")
@@ -1357,7 +1357,7 @@ class InstitutePortal(CustomerPortal):
       
         
         
-        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
+        return request.redirect('/my/ccmccandidateprofile/'+str(candidate_id))
         
         
     @http.route(['/my/shipvisit/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -1497,6 +1497,10 @@ class InstitutePortal(CustomerPortal):
         }
         request.env["ccmc.candidate.stcw.certificate"].sudo().create(stcw_data)
         candidate = request.env["ccmc.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
         candidate._check_stcw_certificate()
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
