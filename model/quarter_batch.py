@@ -7,6 +7,67 @@ import io
 import base64
 
 
+class ReleaseAdmitCard(models.TransientModel):
+    _name = 'release.admit.card'
+    _description = 'Release Admit Card'
+
+    admit_card_type = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ], string='Admit Card Type',default='gp')
+    exam_region = fields.Many2one("exam.center",string="Region")
+    
+    
+    
+    def release_admit_card(self):
+        self.ensure_one()  # Ensure the wizard is accessed by a single record
+
+        exam_batch_id = self.env.context.get('active_id')
+        # self.admit_card_type
+                    
+        if not self.exam_region:
+            raise ValidationError("Please select an exam region.")
+        
+        if self.admit_card_type == 'gp':
+            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates.write({'hold_admit_card':False})
+            
+            message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            
+            return {
+                'name': 'Admit Card Released',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+            
+        elif self.admit_card_type == 'ccmc':
+            candidate_count = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates.write({'hold_admit_card':False})
+            
+            message = "CCMC Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            
+            return {
+                'name': 'Admit Card Released',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+            
+        
+        
+    
+
+
+
 
 class DGSBatch(models.Model):
     _name = "dgs.batches"
@@ -58,6 +119,19 @@ class DGSBatch(models.Model):
     
     visible_generate_report = fields.Boolean(string='Visible Generate Button',compute="show_generate_report_button",tracking=True)
 
+    def open_release_admit_card_wizard(self):
+        view_id = self.env.ref('bes.view_release_admit_card_form').id
+        
+        return {
+            'name': 'Release Admit Card',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'release.admit.card',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {}
+        }
     
     
     @api.depends('state','report_status')    

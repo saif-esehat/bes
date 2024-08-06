@@ -217,7 +217,7 @@
                 <filter string="Candidate Signature Pending" name="candidate_signature_status" domain="[('candidate_signature_status','=','pending')]" />
                 <filter string="Attendance Pending" name="attendance_criteria" domain="[('attendance_criteria','=','pending')]" />
                 <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" /> -->
-
+                <filter string="Previous Repeater" name="dgs_batch" domain="[('dgs_batch', '=', 'Previous Repeater'), ('candidate_image_status', '=', 'pending'), ('candidate_signature_status', '=', 'pending')]"/>
                 <searchpanel>
                     <!-- <field name="dgs_batch" enable_counters="1"/> -->
                     <field name="exam_region" enable_counters="1"/>
@@ -241,6 +241,7 @@
                     </form>
                 </field>
         </record>
+
 
 
 
@@ -560,6 +561,85 @@
             </field>
         </record>
 
+
+        <record id="previous_gp_candidate_tree" model="ir.ui.view">
+            <field name="name">gp.candidate.tree.previous.repeater</field>
+            <field name="model">gp.candidate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="indos_no"  optional="show"/>
+                    <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="name"  optional="show"/>
+                    <field name="gender"  optional="show"/>
+                    <field name="candidate_code"  optional="show"/>
+                    <field name="institute_id"  optional="show"/>
+                    <field name="institute_batch_id"  optional="show"/>
+                    <field name="roll_no"  optional="show"/>
+                    <field name="age" optional="hide"/>
+                    <field name="dob"  optional="hide"/>
+                    <field name="street" optional="hide"/>
+                    <field name="street2" optional="hide"/>
+                    <field name="city"  optional="hide"/>
+                    <field name="zip" optional="hide"/>
+                    <field name="state_id"  optional="hide"/>
+                    <field name="phone" optional="hide"/>
+                    <field name="mobile" optional="hide"/>
+                    <field name="email"  optional="hide"/>
+                    <field name="tenth_percent" optional="hide"/>
+                    <field name="twelve_percent" optional="hide"/>
+                    <field name="iti_percent"  optional="hide"/>
+                    <field name="sc_st"  optional="show"/>
+                    <!-- <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/> -->
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
+                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
+                    <field name="ship_visits_count"  optional="hide"/>
+                    <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
+                    <!-- <field name="result_status"  optional="show" widget="badge" decoration-success= " result_status == 'passed'" decoration-danger=" result_status == 'failed'"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="previous_ccmc_candidate_tree" model="ir.ui.view">
+            <field name="name">previous.ccmc.candidate.tree</field>
+            <field name="model">ccmc.candidate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="indos_no"  optional="show"/>
+                    <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="name"  optional="show"/>
+                    <field name="gender"  optional="show"/>
+                    <field name="candidate_code"  optional="show"/>
+                    <field name="institute_id"  optional="show"/>
+                    <field name="institute_batch_id"  optional="show"/>
+                    <field name="roll_no"  optional="show"/>
+                    <field name="age" optional="hide"/>
+                    <field name="dob"  optional="hide"/>
+                    <field name="street" optional="hide"/>
+                    <field name="street2" optional="hide"/>
+                    <field name="city"  optional="hide"/>
+                    <field name="zip" optional="hide"/>
+                    <field name="state_id"  optional="hide"/>
+                    <field name="phone" optional="hide"/>
+                    <field name="mobile" optional="hide"/>
+                    <field name="email"  optional="hide"/>
+                    <field name="tenth_percent" optional="hide"/>
+                    <field name="twelve_percent" optional="hide"/>
+                    <field name="iti_percent"  optional="hide"/>
+                    <field name="sc_st"  optional="show"/>
+                   <!-- <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/> -->
+                    <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
+                    <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
+                    <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
+                    <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
+                    <field name="ship_visits_count"  optional="hide"/>
+                    <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
+                </tree>
+            </field>
+        </record>
         <!-- <record id="gp_candidate_search" model="ir.ui.view">
             <field name="name">gp.candidate.search</field>
             <field name="model">gp.candidate</field>

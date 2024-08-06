@@ -3811,7 +3811,8 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
-    
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
+
     exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Center',store=True)
 
     exam_id = fields.Char(string="Roll No", copy=False, readonly=True,tracking=True)

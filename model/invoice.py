@@ -14,7 +14,6 @@ class BatchInvoice(models.Model):
     preferred_exam_region = fields.Many2one('exam.center', string='Preferred Exam Region')
     
     
-    
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate')
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate')
     
@@ -225,8 +224,8 @@ class CustomPaymentRegister(models.TransientModel):
                                 "gsk_oral_prac_carry_forward":gsk_oral_prac_carry_forward,
                                 "mek_oral_prac_carry_forward":mek_oral_prac_carry_forward,
                                 "mek_online_carry_forward":mek_online_carry_forward,
-                                "gsk_online_carry_forward":gsk_online_carry_forward
-
+                                "gsk_online_carry_forward":gsk_online_carry_forward,
+                                "hold_admit_card":True
                                 })
         
         elif invoice.ccmc_repeater_candidate_ok:
@@ -315,7 +314,8 @@ class CustomPaymentRegister(models.TransientModel):
                                       "ccmc_online":cookery_bakery_qb_input.id,
                                       "cookery_gsk_online_carry_forward":cookery_gsk_online_carry_forward,
                                       "cookery_oral_carry_forward":cookery_oral_carry_forward,
-                                      "cookery_prac_carry_forward":cookery_prac_carry_forward
+                                      "cookery_prac_carry_forward":cookery_prac_carry_forward,
+                                      "hold_admit_card":True
                                       })  
 
                     
