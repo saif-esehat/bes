@@ -238,7 +238,7 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/gpcandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyExam(self,batch_id, **kw):
         # import wdb; wdb.set_trace()
-        raise ValidationError("Not Allowed")
+        # raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
@@ -257,7 +257,7 @@ class GPCandidatePortal(CustomerPortal):
     
     @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyCCMCExam(self,batch_id, **kw):
-        raise ValidationError("Not Allowed")
+        # raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         
         partner_id = request.env.user.id
@@ -457,6 +457,24 @@ class GPCandidatePortal(CustomerPortal):
                 # import wdb; wdb.set_trace()
                 
                 # exams_register.register_exam_web(dgs_batch_id,candidate)
+                if kwargs.get('gender'):
+                    gender = kwargs.get('gender')
+                if kwargs.get('mobile'):
+                    mobile = kwargs.get('mobile')
+                if kwargs.get('email'):
+                    email = kwargs.get('email')
+                if kwargs.get('ship_visit'):
+                    ship_visit = kwargs.get('ship_visit')
+
+                if candidate:
+                    candidate.sudo().write({
+                        'gender': gender,
+                        'mobile': mobile,
+                        'email': email,
+                        'ship_visited': ship_visit
+                    })
+
+
                 if candidate:
                     transaction_id = kwargs.get('upi_utr_no')
                     transaction_date = kwargs.get('payment_date')
@@ -530,3 +548,56 @@ class GPCandidatePortal(CustomerPortal):
 
         
         return json.dumps({"amount":amount})
+    
+    @http.route(['/my/gprepeatercandidate/addstcw'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def AddGPRepeaterSTCW(self, **kw):
+        candidate_user_id = request.env.user.id
+        candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        if request.httprequest.method == 'POST':
+            dgs_batch_id = int(kw.get('batch_id'))
+            course_name = kw.get('course_name')
+            institute_name = kw.get('institute_name')
+            marine_training_inst_number = kw.get('marine_training_inst_number')
+            candidate_cert_no = kw.get('candidate_cert_no')
+            course_start_date = kw.get('course_start_date')
+            course_end_date = kw.get('course_end_date')
+
+            stcw_data = {
+                'candidate_id' : candidate.id,
+                'course_name': course_name,
+                'institute_name': institute_name,
+                'marine_training_inst_number': marine_training_inst_number,
+                'candidate_cert_no': candidate_cert_no,
+                'course_start_date': course_start_date,
+                'course_end_date': course_end_date,
+            }
+            request.env["gp.candidate.stcw.certificate"].sudo().create(stcw_data)
+            request.env.cr.commit()
+        # candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate.id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+
+        
+        return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
+    
+    @http.route(['/my/gprepeatercandidate/stcw/delete'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def DeleteGPRepeaterSTCW(self, **kw):
+        # import wdb; wdb.set_trace();
+        candidate_user_id = request.env.user.id
+        candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        dgs_batch_id = int(kw.get('batch_id'))
+        stcw_id = kw.get("gp_stcw_id")
+        request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        # candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))

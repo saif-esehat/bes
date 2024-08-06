@@ -117,7 +117,7 @@ class GPCandidate(models.Model):
     #     ('no', 'No')
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
-    
+    ship_visited = fields.Boolean("Ship Visited",tracking=True)
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
     
     

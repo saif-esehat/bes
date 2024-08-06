@@ -1364,13 +1364,6 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <!-- <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="mti_indos_no">Indos No.</label>
-                                                                            <input type="text" class="form-control" id="mti_indos_no" name="mti_indos_no"/>
-                                                                        </div>
-                                                                    </div> -->
-
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="candidate_cert_no">Candidate Certificate Number</label>

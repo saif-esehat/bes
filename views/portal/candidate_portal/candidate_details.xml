@@ -141,7 +141,7 @@
     </template>
         
     <template id="exam_application_form_template" name="Exam Application Form">
-        <t t-call="website.layout">
+        <t t-call="portal.portal_layout">
             <script>
                 document.addEventListener('DOMContentLoaded', function(event) {
 
@@ -216,89 +216,114 @@
             });
             </script>
             <div class="container mt16">
-                <h1>Application Form GP Rating(Repeater)</h1>
-                <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of Application for Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
+                <h2>Application Form GP Rating (Repeater) Examination</h2>
+                <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
+                <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
                 <form action="/my/application/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                    <input type="hidden" name="batch_id" t-att-value="batch.id" />
+                    <input type="hidden" name="batch_id" id="batch_id" t-attf-value="{{batch.id}}" />
                     <div class="form-group row">
-                        <div class="col-lg-8">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0"><strong>Full Name:</strong></p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                <t t-out="candidate.name"/>
-                                            </p>
-                                        </div>
+                        <div class="col-lg-9">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong>Full Name:</strong></p>
                                     </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0"><strong>Indos No:</strong></p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                <t t-out="candidate.indos_no"/>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0"><strong>Code No:</strong></p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                <t t-out="candidate.candidate_code"/>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0"><strong>Parent Training Institute:</strong></p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                <t t-out="candidate.institute_id.name"/>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0"><strong>Address:</strong></p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <label>Address Line 1: </label>
-                                            <span class="text-muted mb-0">
-                                                <t t-out="candidate.street"/>
-                                            </span><br/>
-                                            <label>Address Line 2: </label>
-                                            <span class="text-muted mb-0">
-                                                <t t-out="candidate.street2"/>
-                                            </span><br/>
-                                            <label>Dist/City: </label>
-                                            <span class="text-muted mb-0">
-                                                <t t-out="candidate.city"/>
-                                            </span><br/>
-                                            <label>State: </label>
-                                            <span class="text-muted mb-0">
-                                                <t t-out="candidate.state_id.name"/>
-                                            </span><br/>
-                                            <label>Pincode: </label>
-                                            <span class="text-muted mb-0">
-                                                <t t-out="candidate.zip"/>
-                                            </span>
-                                        </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.name"/>
+                                        </p>
                                     </div>
                                 </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong>Indos No:</strong></p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.indos_no"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong>Code No:</strong></p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.candidate_code"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong><label for="gender">Gender: <strong class="text-danger">*</strong></label></strong></p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <!-- <label for="gender">Gender</label> -->
+                                            <select class="form-control" id="gender" name="gender" required="1">
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                            </select>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong>Parent Training Institute:</strong></p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+                                            <t t-out="candidate.institute_id.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong>Address:</strong></p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <label>Address Line 1: </label>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.street"/>
+                                        </span><br/>
+                                        <label>Address Line 2: </label>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.street2"/>
+                                        </span><br/>
+                                        <label>Dist/City: </label>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.city"/>
+                                        </span><br/>
+                                        <label>State: </label>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.state_id.name"/>
+                                        </span><br/>
+                                        <label>Pincode: </label>
+                                        <span class="text-muted mb-0">
+                                            <t t-out="candidate.zip"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
+                                        <input type="number" class="form-control" id="mobile" name="mobile" t-att-value="candidate.mobile"/>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
+                                        <input type="email" class="form-control" id="email" name="email" t-att-value="candidate.email"/>
+                                    </div>
+                                </div>                                    
                             </div>
                         </div>
+
+
+
                         <div class="col-3 text-center">
                             <div class="row justify-content-center mb-2">
                                 <div class="col-12">
@@ -319,20 +344,98 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <p class="mb-0"><strong>Application For:</strong></p>
-                        </div>
-                        <div class="col-9">
-                            <p class="text-muted">
-                                <t t-out="batch.batch_name"/>
-                            </p>
+                    <div class="form-group row">
+                        <div class="col-lg-9">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <p class="mb-0"><strong>Ship Visit: <span class="text-danger">*</span></strong></p>
+                                    </div>
+                                    <div class="col-9">
+                                        <input type="checkbox" id="ship_visit" name="ship_visit" required="True" t-att-checked="candidate.ship_visited"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="mb-0"><strong>STCW Certificates: <span class="text-danger">*</span></strong></p>
+                                    </div>
+                                    <div class="col-9">
+                                        <p class="text-muted">
+                                            <a href="#" data-toggle="modal" data-target="#AddGPRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <div class="table-responsive border rounded border-top-0 mb-5">
+                        <script>
+                            function openSTCWDeleteModal(button) {
+                                <!-- debugger -->
+                                // Retrieve the data-id attribute value from the clicked button
+                                var dataId = button.getAttribute('data-id');
+                                var candidate_id = button.getAttribute('candidate-id');
+                                // Update the content of the modal with the retrieved data
+                                document.getElementById('gp_stcw_id').value = dataId;
+                                document.getElementById('candidate_id').value = candidate_id;
+                
+                                }
+                        </script>
+                        <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Course</th>
+                                    <th>Institute Name</th>
+                                    <th>MTI Number</th>
+                                    <th>INDOS No.</th>
+                                    <th>Candidate Certificate Number</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
+                                                                
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.course_name" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.institute_name.name" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.marine_training_inst_number" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.candidate_id.indos_no" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.candidate_cert_no" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.course_start_date" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.course_end_date" />
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    
                     <div class="form-group row">
                         <div class="col-md-6">
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
-                            <label for="exam_centre">Exam Region Selected</label>
+                            <label for="exam_centre">Exam Region Selected <strong class="text-danger">*</strong></label>
                             <t t-set="exam_month" t-value="batch.to_date.strftime('%B')"/>
                             <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
@@ -369,13 +472,14 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="name">No. of Attempts</label>
-                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="exam.attempt_number"/>
+                            <label for="name">Attempt Number :</label>
+                            <t t-set="attempt_no" t-value="(exam.attempt_number) + 1"/>
+                            <input type="text" t-att-disabled="1" name="name" id="name" class="form-control" t-att-value="attempt_no"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination(s)</label><br/>
+                            <label for="exam_parts">Applied for Examination(s)  <strong class="text-danger">*</strong></label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
@@ -524,7 +628,7 @@
                     <hr/>
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <strong class="text-danger">The candidate shall pay the fees through QR Code. Other Modes of Payment will not be accepted.</strong>
+                            <strong class="text-danger">The candidate shall pay the fees through QR Code Only. Other Modes of Payment are not acceptable.</strong>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -539,27 +643,124 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <label for="upi_utr_no">Transaction ID/ UTR No.</label>
+                            <label for="upi_utr_no">Transaction ID/ UTR No. <strong class="text-danger">*</strong></label>
                             <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
                         </div>
                         <div class="col-md-3">
-                            <label for="amount">Amount</label>
+                            <label for="amount">Amount <strong class="text-danger">*</strong></label>
                             <input type="number" name="amount" id="amount" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
-                            <label for="payment_date">Date</label>
+                            <label for="payment_date">Date <strong class="text-danger">*</strong></label>
                             <input type="date" name="payment_date" id="payment_date" required="True" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB):</label><br/>
+                            <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB): <strong class="text-danger">*</strong></label><br/>
                             <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" /><br/><br/>
                         </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Submit</button><strong class="text-danger pl-5">Kindly fill in all the details before submission</strong>
                 </form>
+
+                <div class="modal fade" id="DeleteSTCW" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/gprepeatercandidate/stcw/delete" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete STCW</h5>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete ?
+                                    <input type="hidden" id="gp_stcw_id" name="gp_stcw_id"/>
+                                    <input type="hidden" name="batch_id" id="batch_id" t-attf-value="{{batch.id}}" />
+                                    <input type="hidden" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}"/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="modal fade" id="AddGPRepeaterStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/gprepeatercandidate/addstcw" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" id="batch_id" name="batch_id" t-attf-value="{{batch.id}}" />
+                            <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add STCW Certificate</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="course_name">Course</label>
+                                                <select class="form-control" id="course_name" name="course_name" required="1">
+                                                    <option value="pst">PST</option>
+                                                    <option value="efa">EFA</option>
+                                                    <option value="fpff">FPFF</option>
+                                                    <option value="pssr">PSSR</option>
+                                                    <option value="stsdsd">STSDSD</option>
+                                                    <option value="bst">BST</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="institute_name">Institute Name</label>
+                                                <select class="form-control" id="institute_name" name="institute_name" required="1">
+                                                    <t t-foreach="institutes" t-as="institute">
+                                                        <option t-attf-value="{{institute.id}}">
+                                                            <t t-out="institute.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="marine_training_inst_number">MTI Number</label>
+                                                <input type="text" class="form-control" id="marine_training_inst_number" name="marine_training_inst_number" required="1"/>
+                                                <input type="hidden" class="form-control" t-attf-value="{{candidate.id}}" id="candidate_id" name="candidate_id"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="candidate_cert_no">Candidate Certificate Number</label>
+                                                <input type="text" class="form-control" id="candidate_cert_no" name="candidate_cert_no" required="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="course_start_date">Course Start Date</label>
+                                                <input type="date" class="form-control" id="course_start_date" name="course_start_date" required="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="course_end_date">Course End Date</label>
+                                                <input type="date" class="form-control" id="course_end_date" name="course_end_date" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
             </div>
         </t>
     </template>
@@ -640,10 +841,10 @@
             });
             </script>
             <div class="container mt16">
-                <h1>Application Form CCMC Rating(Repeater)</h1>
+                <h1>Application Form CCMC Rating (Repeater) Examination</h1>
                 <form action="/my/ccmcapplication/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                    <input type="hidden" name="batch_id" t-att-value="batch.id" />
+                    <input type="hidden" name="batch_id" t-attf-value="{{batch.id}}" />
                     <div class="form-group row">
                         <div class="form-group row">
                             <div class="col-lg-8">
