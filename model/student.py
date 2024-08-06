@@ -46,7 +46,7 @@ class GPCandidate(models.Model):
         ('male', 'Male'),
         ('female', 'Female')
     ],string="Gender",default='male',tracking=True)
-    age = fields.Float("Age",tracking=True)
+    age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("GP Candidate Code No.",tracking=True)
     roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
@@ -401,16 +401,16 @@ class GPCandidate(models.Model):
             }
         }
         
-    # @api.depends('dob')
-    # def _compute_age(self):
-    #     for record in self:
-    #         if record.dob:
-    #             birthdate = datetime.datetime.strptime(str(record.dob), '%Y-%m-%d').date()
-    #             today = datetime.datetime.now().date()
-    #             delta = today - birthdate
-    #             record.age = delta.days // 365
-    #         else:
-    #             record.age = 0
+    @api.depends('dob')
+    def _compute_age(self):
+        for record in self:
+            if record.dob:
+                birthdate = datetime.datetime.strptime(str(record.dob), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                record.age = delta.days // 365
+            else:
+                record.age = 0
     
     
     def detect_current_month(self):
@@ -663,7 +663,7 @@ class CCMCCandidate(models.Model):
     ],string="Gender",default='male',tracking=True)
     invoice_generated = fields.Boolean("Invoice Generated")
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
-    age = fields.Float("Age",tracking=True)
+    age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
     roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
@@ -901,16 +901,16 @@ class CCMCCandidate(models.Model):
 
 
 
-    # @api.depends('dob')
-    # def _compute_age(self):
-    #     for record in self:
-    #         if record.dob:
-    #             birthdate = datetime.datetime.strptime(str(record.dob), '%Y-%m-%d').date()
-    #             today = datetime.datetime.now().date()
-    #             delta = today - birthdate
-    #             record.age = delta.days // 365
-    #         else:
-    #             record.age = 0
+    @api.depends('dob')
+    def _compute_age(self):
+        for record in self:
+            if record.dob:
+                birthdate = datetime.datetime.strptime(str(record.dob), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                record.age = delta.days // 365
+            else:
+                record.age = 0
     
     def open_ccmc_candidate_exams(self):
         
