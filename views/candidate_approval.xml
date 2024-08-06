@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+
+        <record id="view_repeater_candidate_approval_tree" model="ir.ui.view">
+            <field name="name">repeater.candidate.approval.tree</field>
+            <field name="model">repeater.candidate.approval</field>
+            <field name="arch" type="xml">
+                <tree string="Repeater Candidate Approval">
+                    <field name="candidate_image" widget="image" />
+                    <field name="name" />
+                    <field name="course" />
+                    <field name="indos_no" />
+                    <field name="candidate_code" />
+                    <field name="institute_id" />
+                    <field name="gender" />
+                    <field name="email" />
+                    <field name="phone" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_repeater_candidate_approval_form" model="ir.ui.view">
+            <field name="name">repeater.candidate.approval.form</field>
+            <field name="model">repeater.candidate.approval</field>
+            <field name="arch" type="xml">
+
+                <form string="Repeater Candidate Approval">
+                    <header>
+                        <field name="state" widget="statusbar" />
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="candidate_image" widget="image" />
+                                <field name="candidate_image_name" invisible="1" />
+                            </group>
+                            <group>
+                                <field name="candidate_signature" widget="image" />
+                                <field name="candidate_signature_name" invisible="1" />
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="course" />
+                                <field name="indos_no" />
+                                <field name="candidate_code" />
+                            </group>
+                            <group>
+                                <field name="institute_id" />
+                                <field name="gender" />
+                                <field name="email" />
+                                <field name="phone" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="many2many_tags"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+
+
+
+
+    </data>
+</odoo>

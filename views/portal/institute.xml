@@ -2176,6 +2176,14 @@
                                     document.getElementById('batch_id').value = dataId;
 
                                     }
+                                    
+                                    function openSTCWModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('batch_id').value = dataId;
+
+                                    }
 
                                     function onOpenAddCandidateModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
@@ -2327,6 +2335,49 @@
      
 
                         }
+
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const minicoyCheckbox = document.getElementById('minicoy');
+                            const tenthInput = document.getElementById('tenth_input');
+                            const twelveInput = document.getElementById('twelve_input');
+                            const itiInput = document.getElementById('iti_input');
+                            const eighthInput = document.getElementById('eighth_grade_input');
+                            const stateSelect = document.getElementById('state_id');
+                            const scStSelect = document.getElementById('sc_st');
+                        
+                            minicoyCheckbox.addEventListener('change', function() {
+                                if (this.checked) {
+                                    // Set state to Lakshadweep (id 595)
+                                    stateSelect.value = "595"; // Ensure this matches the value in your dropdown
+                        
+                                    // Show 8th input only if SC/ST is selected as ST
+                                    if (scStSelect.value === "st") {
+                                        eighthInput.style.display = 'block';
+                                    } else {
+                                        eighthInput.style.display = 'none';
+                                    }
+                        
+                                    // Show 10th, 12th, and ITI inputs
+                                    tenthInput.style.display = 'block';
+                                    twelveInput.style.display = 'block';
+                                    itiInput.style.display = 'block';
+                                } else {
+                                    // Hide 8th input
+                                    eighthInput.style.display = 'none';
+                                }
+                            });
+                        
+                            // Add event listener for SC/ST selection
+                            scStSelect.addEventListener('change', function() {
+                                if (minicoyCheckbox.checked &amp;&amp; this.value === "st") {
+                                    eighthInput.style.display = 'block';
+                                } else {
+                                    eighthInput.style.display = 'none';
+                                }
+                            });
+                        });
+                        
+                        
                                                                 
                         
 
@@ -2392,6 +2443,11 @@
                         <a href="/my/gpbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>                    
+                        
+                        <!-- <t t-if="ins_batch.candidate_count > 0">
+                            <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
+                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
+                        </t> -->
                     </div>
                     <div class="">
                         <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
@@ -2403,6 +2459,41 @@
 
             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download instruction</a> -->
 
+
+            <div class="modal fade" id="uploadSTCWModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Candidate STCW</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Modal content goes here -->
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadgpcandidatestcwdata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="batch_id" name="batch_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="modal fade" id="uploadCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -2542,13 +2633,34 @@
                                             <div class="form-group">
                                                 <label for="state_id">State</label>
                                                 <select class="form-control" id="state_id" name="state_id">
-
-                                                        <option value="not_avai">
-                                                            Not available
+                                                    <t t-foreach="states" t-as="state">
+                                                        <option t-attf-value="{{state.id}}">
+                                                            <t t-out="state.name"/>
                                                         </option>
+                                                    </t>
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="sc_st">To be mentioned if SC /ST /OBC (for age relaxation)</label>
+                                                <select class="form-control" id="sc_st" name="sc_st" required="1">
+                                                    <option value="general">General</option>
+                                                    <option value="sc">SC</option>
+                                                    <option value="st">ST</option>
+                                                    <option value="obc">OBC</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="minicoy" name="minicoy"/>
+                                                <label class="form-check-label" for="minicoy">Tick the box if candidate is from Minicoy</label>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
@@ -2569,34 +2681,35 @@
                                                 <input type="email" class="form-control" id="email" name="email"/>
                                             </div>
                                         </div>
-
+                                                                                
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" id="eighth_grade_input" style="display:none;">
+                                                <label for="eighth_percent">% 8th Std in Eng.</label>
+                                                <input type="number" class="form-control" id="eighth_percent" name="eighth_percent"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="tenth_input">
                                                 <label for="tenth_percent">% Xth Std in Eng.</label>
                                                 <input type="number" class="form-control" id="tenth_percent" name="tenth_percent"/>
                                             </div>
                                         </div>
-
+                                        
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" id="twelve_input">
                                                 <label for="twelve_percent">% 12th Std in Eng.</label>
                                                 <input type="number" class="form-control" id="twelve_percent" name="twelve_percent"/>
                                             </div>
                                         </div>
-
+                                        
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" id="iti_input">
                                                 <label for="iti_percent">% ITI</label>
                                                 <input type="number" class="form-control" id="iti_percent" name="iti_percent"/>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <div class="form-group form-check">
-                                                <input type="checkbox" class="form-check-input" id="sc_st" name="sc_st"/>
-                                                <label class="form-check-label" for="sc_st">To be mentioned if Candidate SC/ST</label>
-                                            </div>
-                                        </div>
 
                                         <!-- <div class="form-group row">
                                             <div class="col-sm-10">
@@ -2972,6 +3085,14 @@
                                         document.getElementById('confirm_ccmc_candidate_batch_id').value = batchId;
                                     }
 
+                                    function openCCMCSTCWModal(button) {
+                                        // Retrieve the data-id attribute value from the clicked button
+                                        var dataId = button.getAttribute('batch-id');
+                                        // Update the content of the modal with the retrieved data
+                                        document.getElementById('ccmc_batch_id').value = dataId;
+
+                                    }
+
 
                                     function onOpenAddCandidateModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
@@ -3141,6 +3262,48 @@
 
                         }
 
+                        
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const minicoyCheckbox = document.getElementById('minicoy');
+                            const tenthInput = document.getElementById('tenth_input');
+                            const twelveInput = document.getElementById('twelve_input');
+                            const itiInput = document.getElementById('iti_input');
+                            const eighthInput = document.getElementById('eighth_grade_input');
+                            const stateSelect = document.getElementById('state_id');
+                            const scStSelect = document.getElementById('sc_st');
+                        
+                            minicoyCheckbox.addEventListener('change', function() {
+                                if (this.checked) {
+                                    // Set state to Lakshadweep (id 595)
+                                    stateSelect.value = "595"; // Ensure this matches the value in your dropdown
+                        
+                                    // Show 8th input only if SC/ST is selected as ST
+                                    if (scStSelect.value === "st") {
+                                        eighthInput.style.display = 'block';
+                                    } else {
+                                        eighthInput.style.display = 'none';
+                                    }
+                        
+                                    // Show 10th, 12th, and ITI inputs
+                                    tenthInput.style.display = 'block';
+                                    twelveInput.style.display = 'block';
+                                    itiInput.style.display = 'block';
+                                } else {
+                                    // Hide 8th input
+                                    eighthInput.style.display = 'none';
+                                }
+                            });
+                        
+                            // Add event listener for SC/ST selection
+                            scStSelect.addEventListener('change', function() {
+                                if (minicoyCheckbox.checked &amp;&amp; this.value === "st") {
+                                    eighthInput.style.display = 'block';
+                                } else {
+                                    eighthInput.style.display = 'none';
+                                }
+                            });
+                        });
+                        
                                     
 
                                     
@@ -3203,12 +3366,53 @@
                         <a href="/my/ccmcbatch/candidates/download_format" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate Format</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-modal-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openccmcUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
+                    
+                        <!-- <t t-if="ins_batch.candidate_count > 0">
+                            <a t-attf-href="/my/ccmcbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
+                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadCCMCSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
+                        </t> -->
                     </div>
                     <div class="">
                         <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
                     </div>
                 </div>
             </t>
+
+            <div class="modal fade" id="uploadCCMCSTCWModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Candidate STCW</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <!-- Modal content goes here -->
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadccmccandidatestcwdata" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="ccmc_batch_id" name="ccmc_batch_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    <!-- <div id="loader-overlay" style="display: none;">
+                                        <div id="loader">
+                                            Uploading
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="modal fade" id="uploadCcmcCandidateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -3274,7 +3478,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
-                                                <input t-att-disabled="1" type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                <input type="text" class="form-control" id="indos_no" name="indos_no" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -3337,6 +3541,23 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
+                                            <div class="form-group form-check">
+                                                <label for="sc_st">To be mentioned if SC /ST /OBC (for age relaxation)</label>
+                                                <select class="form-control" id="sc_st" name="sc_st" required="1">
+                                                    <option value="general">General</option>
+                                                    <option value="sc">SC</option>
+                                                    <option value="st">ST</option>
+                                                    <option value="obc">OBC</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="minicoy" name="minicoy"/>
+                                                <label class="form-check-label" for="minicoy">Tick the box if candidate is from Minicoy</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
                                                 <input type="text" class="form-control" id="phone" name="phone"/>
@@ -3357,31 +3578,32 @@
                                             </div>
                                         </div>
 
+                                        
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" id="eighth_grade_input" style="display:none;">
+                                                <label for="eighth_percent">% 8th Std in Eng.</label>
+                                                <input type="number" class="form-control" id="eighth_percent" name="eighth_percent"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="tenth_input">
                                                 <label for="tenth_percent">% Xth Std in Eng.</label>
                                                 <input type="number" class="form-control" id="tenth_percent" name="tenth_percent"/>
                                             </div>
                                         </div>
-
+                                        
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" id="twelve_input">
                                                 <label for="twelve_percent">% 12th Std in Eng.</label>
                                                 <input type="number" class="form-control" id="twelve_percent" name="twelve_percent"/>
                                             </div>
                                         </div>
-
+                                        
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" id="iti_input">
                                                 <label for="iti_percent">% ITI</label>
                                                 <input type="number" class="form-control" id="iti_percent" name="iti_percent"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group form-check">
-                                                <input type="checkbox" class="form-check-input" id="sc_st" name="sc_st"/>
-                                                <label class="form-check-label" for="sc_st">To be mentioned if Candidate SC/ST</label>
                                             </div>
                                         </div>
                                     </div>
