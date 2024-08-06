@@ -244,16 +244,19 @@ class GPCandidatePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
         current_year = datetime.datetime.now().year
+        
+        invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
+
         vals = {
             'candidate': candidate,
             'exam': exam,
             'batch':batch,
             'year':current_year
         }
-        if exam.state == '1-in_process':
-            return request.render("bes.exam_in_process", vals)
-        else:
+        if not invoice_exist:
             return request.render("bes.exam_application_form_template", vals)
+        else:
+            return request.render("bes.application_status", vals)
     
     @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyCCMCExam(self,batch_id, **kw):
@@ -278,7 +281,7 @@ class GPCandidatePortal(CustomerPortal):
         #     return request.render("bes.no_previous_exam_found", vals)
         
         if exam.state == '1-in_process':
-            return request.render("bes.exam_in_process", vals)
+            return request.render("bes.application_status", vals)
         else:
             return request.render("bes.ccmc_exam_application_form_template", vals)
 
@@ -303,7 +306,23 @@ class GPCandidatePortal(CustomerPortal):
             
             invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',dgs_batch_id)])   
             
-         
+            if kwargs.get('gender'):
+                gender = kwargs.get('gender')
+            if kwargs.get('mobile'):
+                mobile = kwargs.get('mobile')
+            if kwargs.get('email'):
+                email = kwargs.get('email')
+            if kwargs.get('ship_visit'):
+                ship_visit = kwargs.get('ship_visit')
+
+            if candidate:
+                candidate.sudo().write({
+                    'gender': gender,
+                    'mobile': mobile,
+                    'email': email,
+                    'ship_visited': ship_visit
+                })
+
             if not invoice_exist:
                 line_items = []
                 cookery_prac = kwargs.get('cookery_practical')
@@ -459,10 +478,16 @@ class GPCandidatePortal(CustomerPortal):
                 # exams_register.register_exam_web(dgs_batch_id,candidate)
                 if kwargs.get('gender'):
                     gender = kwargs.get('gender')
+                else:
+                    gender = candidate.gender
                 if kwargs.get('mobile'):
                     mobile = kwargs.get('mobile')
+                else:
+                    mobile = candidate.mobile
                 if kwargs.get('email'):
                     email = kwargs.get('email')
+                else:
+                    email = candidate.email
                 if kwargs.get('ship_visit'):
                     ship_visit = kwargs.get('ship_visit')
 
@@ -601,3 +626,56 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
         
         return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
+    
+    @http.route(['/my/ccmcrepeatercandidate/addstcw'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def AddCCMCRepeaterSTCW(self, **kw):
+        candidate_user_id = request.env.user.id
+        candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        if request.httprequest.method == 'POST':
+            dgs_batch_id = int(kw.get('batch_id'))
+            course_name = kw.get('course_name')
+            institute_name = kw.get('institute_name')
+            marine_training_inst_number = kw.get('marine_training_inst_number')
+            candidate_cert_no = kw.get('candidate_cert_no')
+            course_start_date = kw.get('course_start_date')
+            course_end_date = kw.get('course_end_date')
+
+            stcw_data = {
+                'candidate_id' : candidate.id,
+                'course_name': course_name,
+                'institute_name': institute_name,
+                'marine_training_inst_number': marine_training_inst_number,
+                'candidate_cert_no': candidate_cert_no,
+                'course_start_date': course_start_date,
+                'course_end_date': course_end_date,
+            }
+            request.env["ccmc.candidate.stcw.certificate"].sudo().create(stcw_data)
+            request.env.cr.commit()
+        # candidate = request.env["gp.candidate"].sudo().search([('id','=',candidate.id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+
+        
+        return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
+    
+    @http.route(['/my/ccmcrepeatercandidate/stcw/delete'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def DeleteCCCMCRepeaterSTCW(self, **kw):
+        # import wdb; wdb.set_trace();
+        candidate_user_id = request.env.user.id
+        candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        dgs_batch_id = int(kw.get('batch_id'))
+        stcw_id = kw.get("ccmc_stcw_id")
+        request.env['ccmc.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)]).unlink()
+        
+        request.env.cr.commit()
+        # candidate = request.env["gp.candidate"].sudo().search([('id','=',kw.get("candidate_id"))])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
