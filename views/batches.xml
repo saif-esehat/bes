@@ -247,6 +247,33 @@
 
         <!-- CCMC batches -->
 
+
+        <record id="view_release_admit_card_form" model="ir.ui.view">
+            <field name="name">release.admit.card.form</field>
+            <field name="model">release.admit.card</field>
+            <field name="arch" type="xml">
+                <form string="Release Admit Card">
+                    <sheet>
+                        <group>
+                            <field name="admit_card_type"/>
+                            <field name="exam_region" options="{'no_create':True}"/>
+                            
+                        </group>
+                        <footer>
+                            <button name="release_admit_card" string="Generate Admit Card" type="object" class="oe_highlight"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_release_admit_card" model="ir.actions.act_window">
+            <field name="name">Release Admit Card</field>
+            <field name="res_model">release.admit.card</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         
 
         <record id="ccmc_batch_form" model="ir.ui.view">
@@ -449,6 +476,7 @@
                         <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
                         <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
                         <button name="generate_report" string="Generate Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_generate_report', '=', False)]}"  />
+                        <button name="open_release_admit_card_wizard" string="Release Admite Card" type="object" class="btn-primary" />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
