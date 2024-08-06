@@ -2173,7 +2173,7 @@
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('batch-id');
                                     // Update the content of the modal with the retrieved data
-                                    document.getElementById('batch_id').value = dataId;
+                                    document.getElementById('upload_batch_id').value = dataId;
 
                                     }
                                     
@@ -2508,7 +2508,7 @@
 
                                 <form method="post" action="/my/uploadgpcandidatedata" enctype="multipart/form-data">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <input type="hidden" id="batch_id" name="batch_id" />
+                                    <input type="hidden" id="upload_batch_id" name="upload_batch_id" />
                                     <div class="form-group">
                                         <label for="fileUpload">XLSX Upload</label>
                                         <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>

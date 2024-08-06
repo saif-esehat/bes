@@ -443,7 +443,11 @@ class InstitutePortal(CustomerPortal):
             name = kw.get("name")
             indos_no = kw.get("indos_no")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
-            dob = kw.get("dob")
+            date_str = kw.get("dob")
+            try:
+                dob = datetime.strptime(date_str, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValidationError("Invalid Date of Birth format. Please use YYYY-MM-DD.")
             street = kw.get("street")
             street2 = kw.get("street2")
             city = kw.get("city")
@@ -458,6 +462,10 @@ class InstitutePortal(CustomerPortal):
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
 
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
+
             candidate_data = {
                 "name": name,
                 "indos_no": indos_no,
@@ -465,6 +473,7 @@ class InstitutePortal(CustomerPortal):
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
+                "age": age,
                 "street": street,
                 "street2": street2,
                 "city": city,
@@ -500,7 +509,11 @@ class InstitutePortal(CustomerPortal):
             name = kw.get("name")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
             indos_no = kw.get("indos_no")
-            dob = kw.get("dob")
+            date_str = kw.get("dob")
+            try:
+                dob = datetime.strptime(date_str, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValidationError("Invalid Date of Birth format. Please use YYYY-MM-DD.")
             street = kw.get("street")
             street2 = kw.get("street2")
             city = kw.get("city")
@@ -515,6 +528,9 @@ class InstitutePortal(CustomerPortal):
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
 
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
             
             candidate_data = {
                 "name": name,
@@ -523,6 +539,7 @@ class InstitutePortal(CustomerPortal):
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
+                "age": age,
                 "street": street,
                 "street2": street2,
                 "city": city,
@@ -2664,11 +2681,12 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
+        # import wdb; wdb.set_trace()
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
+        batch_id = int(kw.get("upload_batch_id"))
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
@@ -2740,7 +2758,7 @@ class InstitutePortal(CustomerPortal):
                     date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
                 else:
                     date_value = datetime.strptime(date_value, '%d-%b-%Y')
-                dob = date_value
+                dob = date_value.date()
             except:
                 raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
@@ -2852,6 +2870,11 @@ class InstitutePortal(CustomerPortal):
                     raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
             except :
                 raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
+            
+
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
 
             try:
                 new_candidate = request.env['gp.candidate'].sudo().create({
@@ -2860,6 +2883,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_id': institute_id,
                     'indos_no': indos_no,
                     'dob': dob,
+                    'age': age,
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,
@@ -2988,7 +3012,7 @@ class InstitutePortal(CustomerPortal):
                     date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
                 else:
                     date_value = datetime.strptime(date_value, '%d-%b-%Y')
-                dob = date_value
+                dob = date_value.date()
             except :
                 raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
@@ -3102,6 +3126,10 @@ class InstitutePortal(CustomerPortal):
             except :
                 raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
 
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
+
             try:
                 new_candidate = request.env['ccmc.candidate'].sudo().create({
                     'name': full_name,
@@ -3109,6 +3137,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_id': institute_id,
                     'indos_no': indos_no,
                     'dob': dob,
+                    'age': age,
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,
