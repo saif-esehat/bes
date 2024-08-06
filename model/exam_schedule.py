@@ -2429,6 +2429,7 @@ class GPExam(models.Model):
         ('pending_approval', 'Pending Approval'),
         ('approved', 'Approved'),
     ], string='Exam Violation', default='na',tracking=True)
+    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
@@ -2437,8 +2438,6 @@ class GPExam(models.Model):
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
     gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
     mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
-    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
-    
     
     gsk_oral_marks = fields.Float("GSK Oral/Journal",readonly=True,tracking=True)
     mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True,tracking=True)
@@ -2457,6 +2456,13 @@ class GPExam(models.Model):
     mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True,tracking=True)
     overall_marks = fields.Float("Overall Marks",readonly=True,tracking=True)
     overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)
+    
+    # Attempting Exams
+    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac')
+    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac')
+    attempting_mek_online = fields.Boolean('attempting_mek_online')
+    attempting_gsk_online = fields.Boolean('attempting_gsk_online')
+    
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -3687,6 +3693,12 @@ class CCMCExam(models.Model):
     ccmc_gsk_oral_marks = fields.Float("CCMC GSK Oral",readonly=True,tracking=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_gsk_oral_percentage = fields.Float("CCMC GSK Oral Percentage",readonly=True,tracking=True)
+    
+    # Attempting Exams
+    attempting_cookery = fields.Boolean("Attempting Cookery Bakery",tracking=True)
+    attempting_oral = fields.Boolean("Attempting CCMC Oral",tracking=True)
+    attempting_online = fields.Boolean("Attempting CCMC Online",tracking=True)
+    
     ccmc_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
