@@ -1447,9 +1447,38 @@
     <template id="application_status" name="Exam In Process">
         <t t-call="website.layout">
             <div class="container mt16">
-                <h1>Exam In Process</h1>
-                <p>The last exam is still in process. Please wait for it to complete before registering for a new exam.</p>
-            </div>
+                <h1>Repeater Application Status</h1>
+                <t t-if="invoice_exist and exam.state == '1-in_process' and not exam.hold_admit_card">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-success pl-2" style="font-size:20px;">Admit Card Generated, available for download in Candidate Profile.</strong>
+                    </div>
+                </t>
+                <t t-elif="invoice_exist and exam.state == '1-in_process'">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-success pl-2" style="font-size:20px;">Profile and Fees Payment Verified, Awaiting allocation of Exam Center and Admit Card Generation.</strong>
+                    </div>
+                </t>
+                <t t-elif="exam.state == '2-done'">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-warning pl-2" style="font-size:20px;">Examinations completed, Awaiting Results Declaration.</strong>
+                    </div>
+                </t>
+                <t t-elif="exam.state == '3-certified'">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-success pl-2" style="font-size:20px;"> Certificate Generated, available for download in Candidate Profile.</strong>
+                    </div>
+                </t>
+                <t t-elif="invoice_exist">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-nowrap" style="font-size:20px;">Your Application for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-warning pl-2" style="font-size:20px;">Pending Verification of Candidate Profile and Fees Payment.</strong>
+                    </div>
+                </t>
+            </div>                        
         </t>
     </template>
 

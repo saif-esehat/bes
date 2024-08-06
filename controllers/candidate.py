@@ -237,7 +237,6 @@ class GPCandidatePortal(CustomerPortal):
     
     @http.route(['/gpcandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     def applyExam(self,batch_id, **kw):
-        # import wdb; wdb.set_trace()
         # raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         partner_id = request.env.user.id
@@ -251,8 +250,12 @@ class GPCandidatePortal(CustomerPortal):
             'candidate': candidate,
             'exam': exam,
             'batch':batch,
-            'year':current_year
+            'year':current_year,
+            'invoice_exist':invoice_exist
         }
+        
+        # import wdb; wdb.set_trace()
+        
         if not invoice_exist:
             return request.render("bes.exam_application_form_template", vals)
         else:
