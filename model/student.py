@@ -37,6 +37,7 @@ class GPCandidate(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
+    previous_repeater = fields.Boolean(string='Previous Attempted')
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image',tracking=True)
     candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
@@ -655,7 +656,7 @@ class CCMCCandidate(models.Model):
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
     candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
-    
+    previous_repeater = fields.Boolean(string='Previous Attempted')
     name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
     gender = fields.Selection([
         ('male','Male'),

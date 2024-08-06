@@ -46,10 +46,13 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/ccmccandidate/repeater/5" >
                                 Apply for Repeater Exam
                         </a>
+<<<<<<< HEAD
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/invoices" title="Invoices &amp; Bills">
                                 Invoices &amp; Bills
                             <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>
                         </a>
+=======
+>>>>>>> 6fbde2721cc35155188935898f6aebcac4145309
                     </div>
                 </t>
                 <t t-elif="env.user.has_group('bes.group_institute')">

@@ -496,7 +496,7 @@ class DGSBatch(models.Model):
     #     }
         
             
-        return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
+        # return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
     #     return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
 
         
