@@ -594,6 +594,7 @@ class InstituteCcmcBatches(models.Model):
         ('issued', 'Issued')
     ],default="pending", string='Admit Card Status')
     
+    
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",compute='_compute_batch_capacity')
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
