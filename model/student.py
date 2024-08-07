@@ -118,7 +118,7 @@ class GPCandidate(models.Model):
     #     ('no', 'No')
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
-    
+    ship_visited = fields.Boolean("Ship Visited",tracking=True)
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
     
     
@@ -488,6 +488,7 @@ class GPCandidate(models.Model):
     
     @api.model
     def create(self, values):
+        # import wdb; wdb.set_trace()
         institute_batch_id  = int(values['institute_batch_id'])
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
@@ -499,6 +500,13 @@ class GPCandidate(models.Model):
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])  
        
         if candidate_count <= capacity:
+            if values["dob"]:
+                birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                values['age'] = delta.days // 365
+            else:
+                values['age'] = 0
             gp_candidate = super(GPCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -656,7 +664,7 @@ class CCMCCandidate(models.Model):
     ],string="Gender",default='male',tracking=True)
     invoice_generated = fields.Boolean("Invoice Generated")
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
-    age = fields.Char("Age",compute="_compute_age",tracking=True)
+    age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
     roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
@@ -722,6 +730,7 @@ class CCMCCandidate(models.Model):
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
         # Ship Visits
+    ship_visited = fields.Boolean("Ship Visited",tracking=True)
     ship_visits = fields.One2many("ccmc.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
 
 
@@ -1047,6 +1056,13 @@ class CCMCCandidate(models.Model):
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
         
         if candidate_count <= capacity:
+            if values["dob"]:
+                birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                values['age'] = delta.days // 365
+            else:
+                values['age'] = 0
             ccmc_candidate = super(CCMCCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -2298,7 +2314,7 @@ class SEPCandidateLine(models.Model):
     _name = 'sep.candidate.line'
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate Line'
-    rec_name = 'institute_batch_id'
+    _rec_name = 'institute_batch_id'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
 
@@ -2346,3 +2362,26 @@ class SEPCertificateReport(models.AbstractModel):
             'records': records,
             'data': data,
         }
+
+
+# class ComingGPRepeatersCandidates(models.Model):
+#     _name = 'coming.gp.repeater.candidate'
+#     _inherit = ['mail.thread','mail.activity.mixin']
+#     _description = 'Coming Repeater Candidates'
+#     _rec_name = 'indos_no'
+    
+    
+#     indos_no = fields.Char("Indos No",tracking=True)
+#     name = fields.Char("Name",tracking=True)
+#     candidate_code = fields.Char("Candidate Code",tracking=True)
+
+# class ComingCCMCRepeatersCandidates(models.Model):
+#     _name = 'coming.ccmc.repeater.candidate'
+#     _inherit = ['mail.thread','mail.activity.mixin']
+#     _description = 'Coming Repeater Candidates'
+#     _rec_name = 'indos_no'
+    
+    
+#     indos_no = fields.Char("Indos No",tracking=True)
+#     name = fields.Char("Name",tracking=True)
+#     candidate_code = fields.Char("Candidate Code",tracking=True)

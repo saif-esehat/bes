@@ -1870,4 +1870,83 @@
             </field>
         </record>
     </data>
+
+    <!-- <record id="view_coming_gp_repeater_candidate_tree" model="ir.ui.view">
+        <field name="name">coming.gp.repeater.candidate.tree</field>
+        <field name="model">coming.gp.repeater.candidate</field>
+        <field name="arch" type="xml">
+            <tree string="Coming GP Repeater Candidates">
+                <field name="indos_no"/>
+                <field name="name"/>
+                <field name="candidate_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_coming_gp_repeater_candidate_form" model="ir.ui.view">
+        <field name="name">coming.gp.repeater.candidate.form</field>
+        <field name="model">coming.gp.repeater.candidate</field>
+        <field name="arch" type="xml">
+            <form string="Coming GP Repeater Candidate">
+                <group>
+                    <field name="indos_no"/>
+                    <field name="name"/>
+                    <field name="candidate_code"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_coming_gp_repeater_candidate" model="ir.actions.act_window">
+        <field name="name">Coming GP Repeater Candidates</field>
+        <field name="res_model">coming.gp.repeater.candidate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first Coming GP Repeater Candidate
+            </p>
+        </field>
+    </record>
+
+
+
+
+    <record id="view_coming_ccmc_repeater_candidate_tree" model="ir.ui.view">
+        <field name="name">coming.ccmc.repeater.candidate.tree</field>
+        <field name="model">coming.ccmc.repeater.candidate</field>
+        <field name="arch" type="xml">
+            <tree string="Coming CCMC Repeater Candidates">
+                <field name="indos_no"/>
+                <field name="name"/>
+                <field name="candidate_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_coming_ccmc_repeater_candidate_form" model="ir.ui.view">
+        <field name="name">coming.ccmc.repeater.candidate.form</field>
+        <field name="model">coming.ccmc.repeater.candidate</field>
+        <field name="arch" type="xml">
+            <form string="Coming CCMC Repeater Candidate">
+                <group>
+                    <field name="indos_no"/>
+                    <field name="name"/>
+                    <field name="candidate_code"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_coming_ccmc_repeater_candidate" model="ir.actions.act_window">
+        <field name="name">Coming CCMC Repeater Candidates</field>
+        <field name="res_model">coming.ccmc.repeater.candidate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first Coming CCMC Repeater Candidate
+            </p>
+        </field>
+    </record> -->
+
+    
 </odoo>

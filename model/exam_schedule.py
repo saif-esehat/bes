@@ -385,7 +385,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     _description = 'Examiner Assignment Wizard'
     
     exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty",tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",related='exam_duty.institute_id',tracking=True)
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
     
@@ -404,11 +404,11 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     def update_marksheet(self):
             records = self.examiner_lines_ids
             
-            candidate_with_ccmc_oral_prac = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_oral_prac_assignment','=',False)]).ids
-            candidate_with_ccmc_gsk_oral = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_gsk_oral_assignment','=',False)]).ids
+            candidate_with_ccmc_oral_prac = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')]).ids
+            candidate_with_ccmc_gsk_oral = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_gsk_oral_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')]).ids
 
 
-            candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('ccmc_online_status','in',('pending','failed')),('ccmc_online_assignment','=',False)]).ids
+            candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('ccmc_online_status','in',('pending','failed')),('ccmc_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')]).ids
 
         
             examiners_ccmc_prac_oral = records.filtered(lambda r: r.subject.name == 'CCMC' and r.exam_type == 'practical_oral').ids
@@ -638,20 +638,20 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
             # import wdb;wdb.set_trace() 
-            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_oral_prac_assignment','=',False)])
+            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_oral_prac_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')])
             
     
     @api.depends('institute_id')
     def _compute_ccmc_gsk_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_gsk_oral_assignment','=',False)])
+            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('oral_prac_status','in',('pending','failed')),('ccmc_gsk_oral_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')])
     
     @api.depends('institute_id')
     def _compute_ccmc_online_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_online_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('ccmc_online_status','in',('pending','failed')),('ccmc_online_assignment','=',False)])
+            record.ccmc_online_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('ccmc_online_status','in',('pending','failed')),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')])
 
 
 class CCMCExaminerAssignmentLineWizard(models.TransientModel):
@@ -705,15 +705,15 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         records = self.examiner_lines_ids
         unique_exam_dates = list(set(record.exam_date for record in records))
         
-        candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed')]).ids
-        candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','=','passed'),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed')]).ids
-        candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','=','passed'),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed')]).ids
+        candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
+        candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('gsk_oral_prac_status','in',('pending','failed')),('mek_oral_prac_status','=','passed'),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
+        candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('gsk_oral_prac_status','=','passed'),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
         
         print(candidate_with_mek)
         
-        candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed')]).ids
-        candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_status','=','passed'),('gsk_online_assignment','=',False),('stcw_criterias','=','passed')]).ids
-        candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('gsk_online_status','=','passed'),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('stcw_criterias','=','passed')]).ids
+        candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('gsk_online_status','in',('pending','failed')),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
+        candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('gsk_online_status','in',('pending','failed')),('mek_online_status','=','passed'),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
+        candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('gsk_online_status','=','passed'),('mek_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
 
 
         examiners_gsk = records.filtered(lambda r: r.subject.name == 'GSK' and r.exam_type == 'practical_oral').ids
@@ -1081,23 +1081,23 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     def _compute_gsk_prac_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('gsk_oral_prac_assignment','=',False)])
+            record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('gsk_oral_prac_status','in',('pending','failed')),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
 
     @api.depends('institute_id')
     def _compute_mek_prac_oral_candidates(self):
         for record in self:
-            record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False)])
+            record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('mek_oral_prac_status','in',('pending','failed')),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
 
 
     @api.depends('institute_id')
     def _compute_gsk_online_candidates(self):
         for record in self:
-            record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_assignment','=',False)])
+            record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('gsk_online_status','in',('pending','failed')),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
     
     @api.depends('institute_id')
     def _compute_mek_online_candidates(self):
         for record in self:
-            record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('mek_online_status','in',('pending','failed')),('gsk_online_assignment','=',False)])
+            record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('mek_online_status','in',('pending','failed')),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
     
     #CCMC Course
     
@@ -2069,189 +2069,7 @@ class ExamOralPracticalExaminers(models.Model):
                     'url': url,
                     'target': 'new',
                 }
-
-
-
-        # examiner = self.examiner
-        # # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        # # examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('id','=',assignment_id)])
-        # examiner_assignments = self
-
-        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',self.id)])
-
-        # # import wdb;wdb.set_trace();
-        
-        # for exam in examiner_assignments:
-        #     if examiner.subject_id.name == 'GSK':
-        #         assignment = exam.id
-                
-        # # for candidate in assignment.gp_oral_prac
-
-        # excel_buffer = io.BytesIO()
-
-        # # Create a new Excel workbook and add a worksheet
-        # workbook = xlsxwriter.Workbook(excel_buffer)
-        # # workbook   = xlsxwriter.Workbook('filename.xlsx')
-
-        # gsk_oral_sheet = workbook.add_worksheet('GSK Oral')
-        # gsk_practical_sheet = workbook.add_worksheet('GSK Practical')
-        
-        # locked = workbook.add_format({'locked':True,'border':1,'font_size': 18})
-        # unlocked = workbook.add_format({'locked':False, 'border':1 })
-        # # Set the wrap text format
-        # wrap_format = workbook.add_format({'text_wrap': True})
-        
-        # #For GSK Oral Marksheet
-        # # gsk_oral_sheet.set_column('A:XDF',None, unlocked)
-        # gsk_oral_sheet.set_column('A2:A2',50, unlocked)
-        # gsk_oral_sheet.set_column('B2:B2',20, unlocked)
-        # gsk_oral_sheet.set_column('C2:C2',30, unlocked)
-        # gsk_oral_sheet.set_column('D2:E2',40, unlocked)
-        # gsk_oral_sheet.set_column('F2:F2',30, unlocked)
-        # gsk_oral_sheet.set_column('G:G',15, unlocked)
-            
-        # gsk_oral_sheet.protect()
-        # date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
-
-        # header_format = workbook.add_format({   
-        #                                         'border':1,
-        #                                         'bold': True,
-        #                                         'align': 'center',
-        #                                         'valign': 'vcenter',
-        #                                         'font_color': 'black',
-        #                                         'locked':True,
-        #                                         'font_size': 15,
-        #                                         'text_wrap': True,
-        #                                     })
-        
-        # merge_format = workbook.add_format({    
-        #                                         'border':1,
-        #                                         'bold':     True,
-        #                                         'align':    'center',
-        #                                         'valign':   'vcenter',
-        #                                         'font_size': 20,
-        #                                         'font_color': 'black',
-        #                                         'text_wrap': True,
-        #                                     })
-        
-        # instruction = workbook.add_format({
-        #                                         'bold':     True,
-        #                                         'align':    'center',
-        #                                         'valign':   'vcenter',
-        #                                         'font_size': 12,
-        #                                         'font_color': 'red',
-        #                                         'text_wrap': True,
-        #                                     })
-
-        # gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        # gsk_oral_sheet.write("E1:F1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
-        # header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
-        #   'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
-        #   'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
-        #   'Practical Record Book and Journal \n 25 Marks', 'Remarks']
-        # for col, value in enumerate(header_oral):
-        #     gsk_oral_sheet.write(1, col, value, header_format)
-        
-          
-        # candidate_list = [] #List of Candidates
-        # roll_no = []
-        # candidate_code = [] #Candidates Code No.
-        # marks_values_5 = [1,2,3,4,5]
-        # marks_values_6 = [1,2,3,4,5,6]
-        # marks_values_8 = [1,2,3,4,5,6,7,8]
-        # marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        # marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
-        # marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
-        # marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-        # marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
-        # remarks = ['Absent','Good','Average','Weak']
-
-        # for candidate in marksheets:
-        #     candidate_list.append(candidate.gp_candidate.name)
-        #     roll_no.append(candidate.gp_marksheet.exam_id)
-        #     candidate_code.append(candidate.gp_candidate.candidate_code)
-        
-        # # import wdb;wdb.set_trace();
-        
-        # for i, candidate in enumerate(candidate_list):
-        #     gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
-
-        # for i, code in enumerate(roll_no):
-        #     gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
-
-        # for i, code in enumerate(candidate_code):
-        #     gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
-        #     gsk_oral_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-        #     gsk_oral_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-        #     gsk_oral_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_25 })
-        #     gsk_oral_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': remarks })
-
-       
-        # #For GSK Practical Marksheet
-        # # gsk_practical_sheet.set_column('A:XDF',None, unlocked)
-        # gsk_practical_sheet.set_column('A2:A2',50, unlocked)
-        # gsk_practical_sheet.set_column('B2:B2',20, unlocked)
-        # gsk_practical_sheet.set_column('C2:C2',30, unlocked)
-        # gsk_practical_sheet.set_column('D2:G2',35, unlocked)
-        # gsk_practical_sheet.set_column('F2:F2',50, unlocked)
-        # gsk_practical_sheet.set_column('H2:H2',15, unlocked)
-            
-        # gsk_practical_sheet.protect()
-        
-        
-        # # Merge 3 cells over two rows.
-        # gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        
-        # header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
-        #   '-Climb the mast with safe practices \n -Prepare and throw Heaving Line \n Rigging Bosun\'s Chair and self lower and hoist \n 30 Marks', #D
-        #   '-Rig a stage for painting shipside \n -Rig a Pilot Ladder \n -Rig scaffolding to work at a height  \n 30 marks',#E
-        #   '-Making fast Ropes and Wires \n -Use Rope-Stopper / Chain Stopper \n -Knots, Bends, Hitches \n -Whippings/Seizing/Splicing Ropes/Wires \n ·Taking Soundings with sounding rod / sounding taps \n ·Reading of Draft \n .Mannual lifting of weight (30 Marks)',#G
-        #   '-Recognise buyos and flags \n -Hoisting a Flag correctly \n -Steering and Helm Orders \n 10 Marks',#G
-        # #   '-Rigging Bosuns Chair and self lower and hoist \n 8 marks',
-        #     'Remarks']
-        # for col, value in enumerate(header_prac):
-        #     gsk_practical_sheet.write(1, col, value, header_format)
-        
-        # # # import wdb;wdb.set_trace();
-        
-        # for i, candidate in enumerate(candidate_list):
-        #     gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
-            
-        # for i, code in enumerate(roll_no):
-        #     gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
-
-        # for i, code in enumerate(candidate_code):
-        #     gsk_practical_sheet.write('C{}'.format(i+3), code, locked)
-        #     gsk_practical_sheet.data_validation('D{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-        #     gsk_practical_sheet.data_validation('E{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-        #     gsk_practical_sheet.data_validation('F{}'.format(i+3), {'validate': 'list', 'source': marks_values_30 })
-        #     gsk_practical_sheet.data_validation('G{}'.format(i+3), {'validate': 'list', 'source': marks_values_10 })
-        #     gsk_practical_sheet.data_validation('H{}'.format(i+3), {'validate': 'list', 'source': remarks })
-        
-        # workbook.close()
-
-        # # Set the buffer position to the beginning
-        # excel_buffer.seek(0)
-
-        # date = examiner_assignments[0].exam_date
-        
-        # file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
-        
-        # # Generate a response with the Excel file
-        # # response = request.make_response(
-        # #     excel_buffer.getvalue(),
-        # #     headers=[
-        # #         ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-        # #         ('Content-Disposition', 'attachment; filename='+file_name)
-        # #     ]
-        # # )
-
-        # # Clean up the buffer
-        # excel_buffer.close()
-
-        # return excel_buffer
-        
-        
+     
     
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
@@ -2611,6 +2429,7 @@ class GPExam(models.Model):
         ('pending_approval', 'Pending Approval'),
         ('approved', 'Approved'),
     ], string='Exam Violation', default='na',tracking=True)
+    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
@@ -2619,8 +2438,6 @@ class GPExam(models.Model):
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
     gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
     mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
-    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
-    
     
     gsk_oral_marks = fields.Float("GSK Oral/Journal",readonly=True,tracking=True)
     mek_oral_marks = fields.Float("MEK Oral/Journal",readonly=True,tracking=True)
@@ -2639,6 +2456,13 @@ class GPExam(models.Model):
     mek_percentage = fields.Float("MEK Oral/Practical Percentage",readonly=True,tracking=True)
     overall_marks = fields.Float("Overall Marks",readonly=True,tracking=True)
     overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)
+    
+    # Attempting Exams
+    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac')
+    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac')
+    attempting_mek_online = fields.Boolean('attempting_mek_online')
+    attempting_gsk_online = fields.Boolean('attempting_gsk_online')
+    
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -2719,13 +2543,18 @@ class GPExam(models.Model):
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Ship Visit Criteria',store=True ,compute='_check_ship_visit_criteria')
+    ], string='Ship Visit Criteria',store=True ,related='gp_candidate.ship_visit_criteria')
 
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Complied'),
-    ], string='Attendance Criteria',store=True,compute="_check_attendance_criteria")
+    ], string='Attendance Criteria',store=True,related='gp_candidate.attendance_criteria')
     
+    admit_card_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('issued', 'Issued')
+    ],default="pending", string='Admit Card Status',store=True,related='gp_candidate.institute_batch_id.admit_card_status')
+
     state = fields.Selection([
         ('1-in_process', 'In Process'),
         ('2-done', 'Done'),
@@ -3864,6 +3693,12 @@ class CCMCExam(models.Model):
     ccmc_gsk_oral_marks = fields.Float("CCMC GSK Oral",readonly=True,tracking=True)
     ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
     ccmc_gsk_oral_percentage = fields.Float("CCMC GSK Oral Percentage",readonly=True,tracking=True)
+    
+    # Attempting Exams
+    attempting_cookery = fields.Boolean("Attempting Cookery Bakery",tracking=True)
+    attempting_oral = fields.Boolean("Attempting CCMC Oral",tracking=True)
+    attempting_online = fields.Boolean("Attempting CCMC Online",tracking=True)
+    
     ccmc_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -3885,7 +3720,7 @@ class CCMCExam(models.Model):
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Attendance Criteria' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Attendance Criteria' ,related='ccmc_candidate.attendance_criteria',tracking=True)
 
     
     
@@ -3901,17 +3736,21 @@ class CCMCExam(models.Model):
         ('passed', 'Passed'),
     ], string='CCMC Online Status',default="pending",tracking=True)
     
+    admit_card_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('issued', 'Issued')
+    ],default="pending", string='Admit Card Status',store=True,related='ccmc_candidate.institute_batch_id.admit_card_status')
     
     
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='STCW Criteria',compute="compute_certificate_criteria",tracking=True)
+    ], string='STCW Criteria',related='ccmc_candidate.stcw_criteria',tracking=True)
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Ship Visit Criteria',compute="compute_certificate_criteria",tracking=True)
+    ], string='Ship Visit Criteria',related='ccmc_candidate.ship_visit_criteria',tracking=True)
     
     exam_violation_state = fields.Selection([
         ('na', 'N/A'),
