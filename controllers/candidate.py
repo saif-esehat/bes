@@ -241,7 +241,8 @@ class GPCandidatePortal(CustomerPortal):
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
-        exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         current_year = datetime.datetime.now().year
         
         invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
@@ -249,11 +250,12 @@ class GPCandidatePortal(CustomerPortal):
 
         vals = {
             'candidate': candidate,
-            'exam': exam,
+            'exam': previous_exam,
             'batch':batch,
             'year':current_year,
             'invoice_exist':invoice_exist,
-            'course':course
+            'course':course,
+            'new_exam':new_exam
         }
         
         # import wdb; wdb.set_trace()
