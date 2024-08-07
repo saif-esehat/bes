@@ -2368,6 +2368,14 @@
                                     eighthInput.style.display = 'none';
                                 }
                             });
+
+                            // Form submission validation
+                            form.addEventListener('submit', function(event) {
+                                if (minicoyCheckbox.checked &amp;&amp; scStSelect.value === "st" &amp;&amp; !eighthPercentCheckbox.checked) {
+                                    event.preventDefault();
+                                    alert('You must check the 8th Std Passed checkbox to submit the form.');
+                                }
+                            });
                         });
                         
                         
@@ -2675,11 +2683,9 @@
                                             </div>
                                         </div>
                                                                                 
-                                        <div class="col-md-6">
-                                            <div class="form-group" id="eighth_grade_input" style="display:none;">
-                                                <label for="eighth_percent">% 8th Std in Eng.</label>
-                                                <input type="number" class="form-control" id="eighth_percent" name="eighth_percent"/>
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="eighth_percent">8th Std Passed</label>
+                                            <input type="checkbox" class="form-control" t-attf-id="eighth_percent" name="eighth_percent"/>
                                         </div>
                                         
                                         <div class="col-md-6">

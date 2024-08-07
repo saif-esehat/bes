@@ -245,13 +245,15 @@ class GPCandidatePortal(CustomerPortal):
         current_year = datetime.datetime.now().year
         
         invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
+        course = "GP"
 
         vals = {
             'candidate': candidate,
             'exam': exam,
             'batch':batch,
             'year':current_year,
-            'invoice_exist':invoice_exist
+            'invoice_exist':invoice_exist,
+            'course':course
         }
         
         # import wdb; wdb.set_trace()
@@ -271,22 +273,25 @@ class GPCandidatePortal(CustomerPortal):
         exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
         # import wdb; wdb.set_trace()
         # last_exam_record = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',self.id)], order='attempt_number desc', limit=1)
-        
+        invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
+        course = "CCMC"
         
         vals = {
             'candidate': candidate,
             'exam': exam,
-            'batch':batch
+            'batch':batch,
+            'invoice_exist':invoice_exist,
+            'course':course
         }
 
         # if len(exam) <= 0:
         #     # raise ValidationError("No previous Exam Found .Candidate Must be registered through batches")
         #     return request.render("bes.no_previous_exam_found", vals)
         
-        if exam.state == '1-in_process':
-            return request.render("bes.application_status", vals)
-        else:
+        if not invoice_exist:
             return request.render("bes.ccmc_exam_application_form_template", vals)
+        else:
+            return request.render("bes.application_status", vals)
 
        
     @http.route('/my/ccmcapplication/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
@@ -311,10 +316,16 @@ class GPCandidatePortal(CustomerPortal):
             
             if kwargs.get('gender'):
                 gender = kwargs.get('gender')
+            else:
+                gender = candidate.gender
             if kwargs.get('mobile'):
                 mobile = kwargs.get('mobile')
+            else:
+                mobile = candidate.mobile
             if kwargs.get('email'):
                 email = kwargs.get('email')
+            else:
+                email = candidate.email
             if kwargs.get('ship_visit'):
                 ship_visit = kwargs.get('ship_visit')
 

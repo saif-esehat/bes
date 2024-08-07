@@ -280,10 +280,10 @@
                                         <p class="mb-0"><strong><label for="gender">Gender: <strong class="text-danger">*</strong></label></strong></p>
                                     </div>
                                     <div class="col-sm-3">
-                                            <select class="form-control" id="gender" name="gender" required="1">
-                                                <option value="male">Male</option>
-                                                <option value="female">Female</option>
-                                            </select>
+                                        <select class="form-control" id="gender" name="gender" required="1">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <hr/>
@@ -352,7 +352,7 @@
                                         </t>
                                     </div>
                                 </div>
-                                
+                                <hr/>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
@@ -406,13 +406,11 @@
                         <div class="col-lg-9">
                             <div class="card-body">
                                 <div class="row">
-
                                     <div class="col-8">
                                         <p class="mb-3">
                                             <strong>Whether Ship Visit was completed during training: <span class="text-danger">*</span></strong>
                                         </p>
                                     </div>
-
                                     <div class="col-3">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" id="ship_visit_yes" name="ship_visit" value="true" t-att-checked="candidate.ship_visited" required="True"/>
@@ -427,8 +425,6 @@
                                             </label>
                                         </div>
                                     </div>
-                                    
-
                                     <div class="col-9">
                                         <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandtory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                     </div>
@@ -919,6 +915,7 @@
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
+                <p>All Fields are mandatory</p>
                 <form action="/my/ccmcapplication/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" id="batch_id" t-attf-value="{{batch.id}}" />
@@ -963,11 +960,10 @@
                                         <p class="mb-0"><strong><label for="gender">Gender: <strong class="text-danger">*</strong></label></strong></p>
                                     </div>
                                     <div class="col-sm-3">
-                                        <!-- <label for="gender">Gender</label> -->
-                                            <select class="form-control" id="gender" name="gender" required="1">
-                                                <option value="male">Male</option>
-                                                <option value="female">Female</option>
-                                            </select>
+                                        <select class="form-control" id="gender" name="gender" required="1">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <hr/>
@@ -987,39 +983,80 @@
                                         <p class="mb-0"><strong>Address:</strong></p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <label>Address Line 1: </label>
-                                        <span class="text-muted mb-0">
-                                            <t t-out="candidate.street"/>
-                                        </span><br/>
-                                        <label>Address Line 2: </label>
-                                        <span class="text-muted mb-0">
-                                            <t t-out="candidate.street2"/>
-                                        </span><br/>
-                                        <label>Dist/City: </label>
-                                        <span class="text-muted mb-0">
-                                            <t t-out="candidate.city"/>
-                                        </span><br/>
-                                        <label>State: </label>
-                                        <span class="text-muted mb-0">
-                                            <t t-out="candidate.state_id.name"/>
-                                        </span><br/>
-                                        <label>Pincode: </label>
-                                        <span class="text-muted mb-0">
-                                            <t t-out="candidate.zip"/>
-                                        </span>
+                                        <!-- Check if any of the address fields are filled -->
+                                        <t t-if="candidate.street or candidate.street2 or candidate.city or candidate.state_id or candidate.zip">
+                                            <!-- If any address field is filled, disable all inputs -->
+                                            <div class="form-group">
+                                                <label>Address Line 1: </label>
+                                                <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Line 2: </label>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Dist/City: </label>
+                                                <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>State: </label>
+                                                <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pincode: </label>
+                                                <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <!-- If no address field is filled, show editable inputs -->
+                                            <div class="form-group">
+                                                <label>Address Line 1: </label>
+                                                <input type="text" class="form-control" id="address_line_1" name="street"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Line 2: </label>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Dist/City: </label>
+                                                <input type="text" class="form-control" id="city" name="city"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>State: </label>
+                                                <input type="text" class="form-control" id="state" name="state_id"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pincode: </label>
+                                                <input type="text" class="form-control" id="zip" name="zip"/>
+                                            </div>
+                                        </t>
                                     </div>
                                 </div>
                                 <hr/>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
-                                        <input type="number" class="form-control" id="mobile" name="mobile" t-att-value="candidate.mobile"/>
+                                        <t t-if="candidate.mobile">
+                                            <input type="number" class="form-control" id="mobile" name="mobile"
+                                                   t-att-value="candidate.mobile" disabled="true"/>
+                                        </t>
+                                        <t t-else="">
+                                            <input type="number" class="form-control" id="mobile" name="mobile"
+                                                   t-att-value="candidate.mobile"/>
+                                        </t>
                                     </div>
                                     <div class="col-md-8">
                                         <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
-                                        <input type="email" class="form-control" id="email" name="email" t-att-value="candidate.email"/>
+                                        <t t-if="candidate.email">
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                   t-att-value="candidate.email" disabled="true"/>
+                                        </t>
+                                        <t t-else="">
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                   t-att-value="candidate.email"/>
+                                        </t>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
 
@@ -1049,16 +1086,29 @@
                         <div class="col-lg-9">
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="col-8">
+                                        <p class="mb-3">
+                                            <strong>Whether Ship Visit was completed during training: <span class="text-danger">*</span></strong>
+                                        </p>
+                                    </div>
                                     <div class="col-3">
-                                        <p class="mb-0"><strong>Ship Visit: <span class="text-danger">*</span></strong></p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="ship_visit_yes" name="ship_visit" value="true" t-att-checked="candidate.ship_visited" required="True"/>
+                                            <label class="form-check-label" for="ship_visit_yes">
+                                                Yes
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="ship_visit_no" name="ship_visit" value="false" t-att-checked="not candidate.ship_visited" required="True"/>
+                                            <label class="form-check-label" for="ship_visit_no">
+                                                No
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-9">
-                                        <input type="checkbox" id="ship_visit" name="ship_visit" required="True" t-att-checked="candidate.ship_visited"/>
+                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandtory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                     </div>
-                                    <div class="col-3">
-                                        <p class="mb-0"><strong>STCW Certificates: <span class="text-danger">*</span></strong></p>
-                                    </div>
-                                    <div class="col-9">
+                                    <div class="col-6">
                                         <p class="text-muted">
                                             <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
                                         </p>
@@ -1159,9 +1209,15 @@
                                 </select>
                             </t>
                         </div>
+
                         <div class="col-md-6">
-                            <label for="training_institute">Parent Training Institute</label>
-                            <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            <label for="training_institute">Exam Center</label>
+                            <t t-if="exam_month not in ['March','September']">
+                                <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" t-att-value="candidate.institute_id.name"/>
+                            </t>
+                            <t t-else="">
+                                <input type="text" t-att-disabled="1"  name="training_institute" id="training_institute" class="form-control" placeholder="To be Announced"/>
+                            </t>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -1173,7 +1229,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-4">
-                            <label for="exam_parts">Applied for Examination(s)</label><br/>
+                            <label for="exam_parts">Applied for Examination(s) <strong class="text-danger">*</strong></label><br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
@@ -1447,7 +1503,7 @@
     <template id="application_status" name="Exam In Process">
         <t t-call="website.layout">
             <div class="container mt16">
-                <h1>Repeater Application Status</h1>
+                <h1><t t-out="course"/> Repeater Examination Application Status</h1>
                 <t t-if="invoice_exist and exam.state == '1-in_process' and not exam.hold_admit_card">
                     <div class="d-flex justify-content-between">
                         <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
