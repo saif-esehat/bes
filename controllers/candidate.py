@@ -272,18 +272,19 @@ class GPCandidatePortal(CustomerPortal):
         
         partner_id = request.env.user.id
         candidate = request.env["ccmc.candidate"].sudo().search([('user_id', '=', partner_id)])
-        exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        previous_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
         # import wdb; wdb.set_trace()
-        # last_exam_record = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',self.id)], order='attempt_number desc', limit=1)
+        new_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
         course = "CCMC"
         
         vals = {
             'candidate': candidate,
-            'exam': exam,
+            'exam': previous_exam,
             'batch':batch,
             'invoice_exist':invoice_exist,
-            'course':course
+            'course':course,
+            'new_exam':new_exam
         }
 
         # if len(exam) <= 0:

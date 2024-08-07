@@ -2423,7 +2423,7 @@ class GPExam(models.Model):
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
-    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+    exam_region = fields.Many2one('exam.center',string='Exam Region',store=True)
     exam_violation_state = fields.Selection([
         ('na', 'N/A'),
         ('pending_approval', 'Pending Approval'),
