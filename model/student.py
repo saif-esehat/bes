@@ -671,7 +671,7 @@ class CCMCCandidate(models.Model):
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
-                      
+    
     street = fields.Char("Street",tracking=True)
     street2 = fields.Char("Street2",tracking=True)
     city = fields.Char("City",tracking=True)
