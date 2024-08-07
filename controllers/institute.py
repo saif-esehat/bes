@@ -611,7 +611,7 @@ class InstitutePortal(CustomerPortal):
 
         batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',kw.get("delete_ccmc_candidate_batch_id"))])
         
-        candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).user_id
+        candidate_user_id = request.env['ccmc.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).user_id
         if not candidate_user_id:
             request.env['ccmc.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).unlink()
             
