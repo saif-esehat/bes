@@ -607,10 +607,10 @@ class InstituteCcmcBatches(models.Model):
     @api.depends('institute_id')
     def _compute_batch_capacity(self):
         for rec in self:
-            # if rec.institute_id.courses[1].course.course_code and rec.institute_id.courses[1].course.course_code == 'CCMC':
-            #     # import wdb; wdb.set_trace()
-            #     rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
-            rec.dgs_approved_capacity = 100
+            if len(rec.institute_id.courses) > 1 and rec.institute_id.courses[1].course.course_code == 'CCMC':
+                rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
+            else:
+                rec.dgs_approved_capacity = 100  # Fallback value
 
     @api.depends("admit_card_alloted")
     def _compute_admit_card_count(self):
