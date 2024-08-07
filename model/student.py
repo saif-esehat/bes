@@ -666,9 +666,9 @@ class CCMCCandidate(models.Model):
                       
     street = fields.Char("Street",tracking=True)
     street2 = fields.Char("Street2",tracking=True)
-    city = fields.Char("City",required=True,tracking=True)
-    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')],tracking=True)
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True,tracking=True)
+    city = fields.Char("City",tracking=True)
+    zip = fields.Char("Zip", validators=[api.constrains('zip')],tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],tracking=True)
     phone = fields.Char("Phone", validators=[api.constrains('phone')],tracking=True)
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
     email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
