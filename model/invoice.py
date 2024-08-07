@@ -260,6 +260,7 @@ class CustomPaymentRegister(models.TransientModel):
             
             ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
             'ccmc_candidate':invoice.ccmc_candidate.id,
+            'exam_region':invoice.preferred_exam_region.id,
             'exam_id':exam_id,
             'dgs_batch':dgs_batch,
             'cookery_practical':cookery_practical,

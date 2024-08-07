@@ -50,7 +50,7 @@ class ReleaseAdmitCard(models.TransientModel):
             candidates = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
             candidates.write({'hold_admit_card':False})
             
-            message = "CCMC Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name
             
             return {
                 'name': 'Admit Card Released',
