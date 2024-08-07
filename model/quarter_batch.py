@@ -23,6 +23,13 @@ class ReleaseAdmitCard(models.TransientModel):
         self.ensure_one()  # Ensure the wizard is accessed by a single record
 
         exam_batch_id = self.env.context.get('active_id')
+        
+        exam_batch = self.env['dgs.batches'].sudo().search([('id','=',exam_batch_id)])
+        mumbai_region = exam_batch.mumbai_region
+        kolkata_region = exam_batch.kolkatta_region
+        chennai_region = exam_batch.chennai_region
+        delhi_region = exam_batch.delhi_region
+        kochi_region = exam_batch.kochi_region
         # self.admit_card_type
                     
         if not self.exam_region:
@@ -33,7 +40,24 @@ class ReleaseAdmitCard(models.TransientModel):
             candidates = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
             candidates.write({'hold_admit_card':False})
             
-            message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            if self.exam_region.name == 'MUMBAI' and mumbai_region:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif self.exam_region.name == 'KOLKATA' and kolkatta_region:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif self.exam_region.name == 'CHENNAI' and chennai_region:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif self.exam_region.name == 'DELHI' and delhi_region:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif self.exam_region.name == 'KOCHI' and kochi_region:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif self.exam_region.name == 'GOA' and goa_region:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name
+            else:
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"
+
+            
+            
+            
             
             return {
                 'name': 'Admit Card Released',
@@ -50,7 +74,24 @@ class ReleaseAdmitCard(models.TransientModel):
             candidates = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
             candidates.write({'hold_admit_card':False})
             
-            message = "CCMC Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            
+            if self.exam_region.name == 'MUMBAI' and mumbai_region:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif self.exam_region.name == 'KOLKATA' and kolkatta_region:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif self.exam_region.name == 'CHENNAI' and chennai_region:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif self.exam_region.name == 'DELHI' and delhi_region:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif self.exam_region.name == 'KOCHI' and kochi_region:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif self.exam_region.name == 'GOA' and goa_region:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name
+            else:
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"
+
+            
+            
             
             return {
                 'name': 'Admit Card Released',
