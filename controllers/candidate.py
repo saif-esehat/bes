@@ -301,6 +301,10 @@ class GPCandidatePortal(CustomerPortal):
             
             candidate_user_id = request.env.user.id
             candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+            
+            if candidate.dgs_batch.id == 4:
+                candidate.write({'previous_repeater':True})
+            
             dgs_batch_id =int(kwargs.get('batch_id'))
             
 

@@ -73,6 +73,7 @@ class CustomPaymentRegister(models.TransientModel):
     def action_create_payments(self):
         # import wdb;wdb.set_trace()
         # Your custom code here before or after calling the super method
+        # import wdb;wdb.set_trace()
         action = super(CustomPaymentRegister, self).action_create_payments()
         # import wdb;wdb.set_trace();
         account_move_id = self.env.context['active_id']

@@ -462,6 +462,12 @@ class InstitutePortal(CustomerPortal):
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
 
+            if kw.get('minicoy') and sc_st == 'st' and not eighth_percent:
+                error = f"{name} is not eligible for GP. \n Candidate should be 8th Passed to be eligible"
+                return request.render("bes.not_eligible", {
+                    "error": error
+                })
+
             today = datetime.now().date()
             delta = today - dob
             age = delta.days // 365
@@ -527,6 +533,13 @@ class InstitutePortal(CustomerPortal):
             twelve_percent = kw.get("twelve_percent")
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
+
+            if kw.get('minicoy') and sc_st == 'st' and not eighth_percent:
+                error = f"{name} is not eligible for CCMC. \n Candidate should be 8th Passed to be eligible"
+                return request.render("bes.not_eligible", {
+                    "error": error
+                })
+                # raise ValidationError("Candidate Should be 8th Passed to be eligible")
 
             today = datetime.now().date()
             delta = today - dob

@@ -2337,6 +2337,10 @@
                             const eighthInput = document.getElementById('eighth_grade_input');
                             const stateSelect = document.getElementById('state_id');
                             const scStSelect = document.getElementById('sc_st');
+                            const eighthGradeContainer = document.getElementById('eighth_grade_container');
+                            const minicoyContainer = document.getElementById('minicoyContainer');
+                            const eighthPercentCheckbox = document.getElementById('eighth_percent');
+                            const form = document.querySelector('form');
                         
                             minicoyCheckbox.addEventListener('change', function() {
                                 if (this.checked) {
@@ -2345,38 +2349,40 @@
                         
                                     // Show 8th input only if SC/ST is selected as ST
                                     if (scStSelect.value === "st") {
-                                        eighthInput.style.display = 'block';
+                                        if (eighthGradeContainer) eighthGradeContainer.style.display = 'block';
+                                        if (tenthInput) tenthInput.style.display = 'none';
+                                        if (twelveInput) twelveInput.style.display = 'none';
+                                        if (itiInput) itiInput.style.display = 'none';
                                     } else {
-                                        eighthInput.style.display = 'none';
+                                        if (eighthGradeContainer) eighthGradeContainer.style.display = 'none';
+                                        if (tenthInput) tenthInput.style.display = 'block';
+                                        if (twelveInput) twelveInput.style.display = 'block';
+                                        if (itiInput) itiInput.style.display = 'block';
                                     }
-                        
-                                    // Show 10th, 12th, and ITI inputs
-                                    tenthInput.style.display = 'block';
-                                    twelveInput.style.display = 'block';
-                                    itiInput.style.display = 'block';
                                 } else {
-                                    // Hide 8th input
-                                    eighthInput.style.display = 'none';
+                                    if (eighthGradeContainer) eighthGradeContainer.style.display = 'block';
+                                    if (tenthInput) tenthInput.style.display = 'block';
+                                    if (twelveInput) twelveInput.style.display = 'block';
+                                    if (itiInput) itiInput.style.display = 'block';
                                 }
                             });
                         
                             // Add event listener for SC/ST selection
                             scStSelect.addEventListener('change', function() {
                                 if (minicoyCheckbox.checked &amp;&amp; this.value === "st") {
-                                    eighthInput.style.display = 'block';
+                                    if (eighthGradeContainer) eighthGradeContainer.style.display = 'block';
+                                    if (tenthInput) tenthInput.style.display = 'none';
+                                    if (twelveInput) twelveInput.style.display = 'none';
+                                    if (itiInput) itiInput.style.display = 'none';
                                 } else {
-                                    eighthInput.style.display = 'none';
-                                }
-                            });
-
-                            // Form submission validation
-                            form.addEventListener('submit', function(event) {
-                                if (minicoyCheckbox.checked &amp;&amp; scStSelect.value === "st" &amp;&amp; !eighthPercentCheckbox.checked) {
-                                    event.preventDefault();
-                                    alert('You must check the 8th Std Passed checkbox to submit the form.');
+                                    if (eighthGradeContainer) eighthGradeContainer.style.display = 'none';
+                                    if (tenthInput) tenthInput.style.display = 'block';
+                                    if (twelveInput) twelveInput.style.display = 'block';
+                                    if (itiInput) itiInput.style.display = 'block';
                                 }
                             });
                         });
+                        
                         
                         
                                                                 
@@ -2655,13 +2661,20 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group form-check">
                                                 <input type="checkbox" class="form-check-input" id="minicoy" name="minicoy"/>
                                                 <label class="form-check-label" for="minicoy">Tick the box if candidate is from Minicoy</label>
                                             </div>
                                         </div>
                                         
+                                        <div class="col-md-6" id="eighth_grade_container" style="display:none;">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="eighth_percent" name="eighth_percent"/>
+                                                <label  class="form-check-label" for="eighth_percent">8th Std Passed</label>
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
@@ -2681,11 +2694,6 @@
                                                 <label for="email">Email</label>
                                                 <input type="email" class="form-control" id="email" name="email"/>
                                             </div>
-                                        </div>
-                                                                                
-                                        <div class="form-group">
-                                            <label for="eighth_percent">8th Std Passed</label>
-                                            <input type="checkbox" class="form-control" t-attf-id="eighth_percent" name="eighth_percent"/>
                                         </div>
                                         
                                         <div class="col-md-6">
@@ -3270,6 +3278,10 @@
                             const eighthInput = document.getElementById('eighth_grade_input');
                             const stateSelect = document.getElementById('state_id');
                             const scStSelect = document.getElementById('sc_st');
+                            const eighthGradeContainer = document.getElementById('eighth_grade_container');
+                            const minicoyContainer = document.getElementById('minicoyContainer');
+                            const eighthPercentCheckbox = document.getElementById('eighth_percent');
+                            const form = document.querySelector('form');
                         
                             minicoyCheckbox.addEventListener('change', function() {
                                 if (this.checked) {
@@ -3278,27 +3290,36 @@
                         
                                     // Show 8th input only if SC/ST is selected as ST
                                     if (scStSelect.value === "st") {
-                                        eighthInput.style.display = 'block';
+                                        if (eighthGradeContainer) eighthGradeContainer.style.display = 'block';
+                                        if (tenthInput) tenthInput.style.display = 'none';
+                                        if (twelveInput) twelveInput.style.display = 'none';
+                                        if (itiInput) itiInput.style.display = 'none';
                                     } else {
-                                        eighthInput.style.display = 'none';
+                                        if (eighthGradeContainer) eighthGradeContainer.style.display = 'none';
+                                        if (tenthInput) tenthInput.style.display = 'block';
+                                        if (twelveInput) twelveInput.style.display = 'block';
+                                        if (itiInput) itiInput.style.display = 'block';
                                     }
-                        
-                                    // Show 10th, 12th, and ITI inputs
-                                    tenthInput.style.display = 'block';
-                                    twelveInput.style.display = 'block';
-                                    itiInput.style.display = 'block';
                                 } else {
-                                    // Hide 8th input
-                                    eighthInput.style.display = 'none';
+                                    if (eighthGradeContainer) eighthGradeContainer.style.display = 'block';
+                                    if (tenthInput) tenthInput.style.display = 'block';
+                                    if (twelveInput) twelveInput.style.display = 'block';
+                                    if (itiInput) itiInput.style.display = 'block';
                                 }
                             });
                         
                             // Add event listener for SC/ST selection
                             scStSelect.addEventListener('change', function() {
                                 if (minicoyCheckbox.checked &amp;&amp; this.value === "st") {
-                                    eighthInput.style.display = 'block';
+                                    if (eighthGradeContainer) eighthGradeContainer.style.display = 'block';
+                                    if (tenthInput) tenthInput.style.display = 'none';
+                                    if (twelveInput) twelveInput.style.display = 'none';
+                                    if (itiInput) itiInput.style.display = 'none';
                                 } else {
-                                    eighthInput.style.display = 'none';
+                                    if (eighthGradeContainer) eighthGradeContainer.style.display = 'none';
+                                    if (tenthInput) tenthInput.style.display = 'block';
+                                    if (twelveInput) twelveInput.style.display = 'block';
+                                    if (itiInput) itiInput.style.display = 'block';
                                 }
                             });
                         });
@@ -3540,7 +3561,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group form-check">
+                                            <div class="form-group">
                                                 <label for="sc_st">To be mentioned if SC /ST /OBC (for age relaxation)</label>
                                                 <select class="form-control" id="sc_st" name="sc_st" required="1">
                                                     <option value="general">General</option>
@@ -3550,10 +3571,18 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+
+                                        <div class="col-md-6">
                                             <div class="form-group form-check">
                                                 <input type="checkbox" class="form-check-input" id="minicoy" name="minicoy"/>
                                                 <label class="form-check-label" for="minicoy">Tick the box if candidate is from Minicoy</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6" id="eighth_grade_container" style="display:none;">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="eighth_percent" name="eighth_percent"/>
+                                                <label  class="form-check-label" for="eighth_percent">8th Std Passed</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -3574,14 +3603,6 @@
                                             <div class="form-group">
                                                 <label for="email">Email</label>
                                                 <input type="email" class="form-control" id="email" name="email"/>
-                                            </div>
-                                        </div>
-
-                                        
-                                        <div class="col-md-6">
-                                            <div class="form-group" id="eighth_grade_input" style="display:none;">
-                                                <label for="eighth_percent">% 8th Std in Eng.</label>
-                                                <input type="number" class="form-control" id="eighth_percent" name="eighth_percent"/>
                                             </div>
                                         </div>
                                         
@@ -5565,6 +5586,15 @@
 
                 
             </t>
+        </t>
+    </template>
+
+    <template id="not_eligible" name="No Previous Exam Found">
+        <t t-call="website.layout">
+            <div class="container mt16">
+                <h1>Candidate is not Eligible</h1>
+                <p class="text-danger"><t t-out="error"/></p>
+            </div>
         </t>
     </template>
 
