@@ -84,7 +84,26 @@ class GPCandidate(models.Model):
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Fees Paid", default='no',tracking=True)
+    ],string="Fees Paid by Institute", default='no',tracking=True)
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            last_exam_dgs_batch = last_exam.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',last_exam_dgs_batch),('gp_candidate','=',rec.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
+            
+            
+            
     
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
@@ -749,7 +768,25 @@ class CCMCCandidate(models.Model):
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Fees Paid", default='no',tracking=True)
+    ],string="Fees Paid by Institute", default='no',tracking=True)
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            last_exam = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            last_exam_dgs_batch = last_exam.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',last_exam_dgs_batch),('ccmc_candidate','=',rec.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
+                
+            
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     

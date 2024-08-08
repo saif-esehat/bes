@@ -141,7 +141,7 @@
                 '|',
                 ('candidate_image_status', '=', 'pending'),
                 ('candidate_signature_status', '=', 'pending'),
-                ('stcw_criteria', '=', 'pending')
+
             ]</field>
             <!-- <field name="domain">[('previous_repeater', '=', True),('candaidate_image_status', '=', 'pending'),('candaidate_image_status', '=', 'pending')]</field> -->
         </record>
@@ -151,6 +151,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="previous_ccmc_candidate_tree"/>
             <field name="act_window_id" ref="previous_candidate_ccmc_rating_menu"/>
+            
         </record>
 
         
@@ -169,7 +170,8 @@
                 ('previous_repeater', '=', True),
                 '|',
                 ('candidate_image_status', '=', 'pending'),
-                ('candidate_signature_status', '=', 'pending')
+                ('candidate_signature_status', '=', 'pending'),
+
             ]</field>
         </record>
 

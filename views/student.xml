@@ -211,7 +211,7 @@
                 <field name="indos_no"/>
                 <field name="candidate_code"  />
                 <field name="roll_no" />
-                <filter string="Fees Paid" name="fees_paid" context="{'group_by':'fees_paid'}"/>
+                <filter string="Fees Paid by Institute" name="fees_paid" context="{'group_by':'fees_paid'}"/>
                 <filter string="STCW Pending" name="stcw_pending" domain="[('stcw_criteria','=','pending')]" />
                 <!-- <filter string="Candidate Image Pending" name="candidate_image_status" domain="[('candidate_image_status','=','pending')]" />
                 <filter string="Candidate Signature Pending" name="candidate_signature_status" domain="[('candidate_signature_status','=','pending')]" />
@@ -345,7 +345,7 @@
                             <field name="iti_percent" />
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
-                            <field name="fees_paid"/>
+                            <field name="fees_paid" string="Fees Paid by Institute"/>
                             <field name="invoice_no"/>
                             <field name="withdrawn_state"/>
                             <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
@@ -549,7 +549,8 @@
                     <field name="twelve_percent" optional="hide"/>
                     <field name="iti_percent"  optional="hide"/>
                     <field name="sc_st"  optional="show"/>
-                    <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="fees_paid" string="Fees Paid By Institute"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="fees_paid_candidate" string="Fees Paid By Candidate"  optional="show" widget="badge"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
                     <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
@@ -813,7 +814,7 @@
                             <field name="iti_percent" />
                             <field name="sc_st"/>
                             <field name="candidate_attendance_record"/>
-                            <field name="fees_paid"/>
+                            <field name="fees_paid" />
                             <field name="invoice_no"/>
                             
                         </group>
@@ -991,7 +992,8 @@
                     <field name="twelve_percent" optional="hide"/>
                     <field name="iti_percent"  optional="hide"/>
                     <field name="sc_st"  optional="show"/>
-                   <field name="fees_paid"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="fees_paid" string="Fees Paid By Institute"  optional="show" widget="badge" decoration-success= "fees_paid == 'yes'" decoration-danger="fees_paid == 'no'"/>
+                    <field name="fees_paid_candidate"  optional="show" widget="badge"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'" decoration-danger="candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'" decoration-danger="candidate_signature_status == 'pending'"/>
                     <field name="stcw_criteria"  optional="show" widget="badge" decoration-success= "stcw_criteria == 'passed'" decoration-danger="stcw_criteria == 'pending'"/>
