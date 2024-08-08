@@ -298,160 +298,8 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <div class="col-9">
-                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
-                                    </div>
-                                    <div class="col-6">
-                                        <p class="text-muted">
-                                            <a href="#" data-toggle="modal" data-target="#AddGPRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
-                                        </p>
-                                    </div>
-                                <div class="table-responsive border rounded border-top-0 mb-5">
-                                    <script>
-                                        function openSTCWDeleteModal(button) {
-                                            <!-- debugger -->
-                                            // Retrieve the data-id attribute value from the clicked button
-                                            var dataId = button.getAttribute('data-id');
-                                            var candidate_id = button.getAttribute('candidate-id');
-                                            // Update the content of the modal with the retrieved data
-                                            document.getElementById('gp_stcw_id').value = dataId;
-                                            document.getElementById('candidate_id').value = candidate_id;
-                            
-                                            }
-                                    </script>
-                                    <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Action</th>
-                                                <th>Course</th>
-                                                <th>Institute Name</th>
-                                                <th>MTI Number</th>
-                                                <th>INDOS No.</th>
-                                                <th>Candidate Certificate Number</th>
-                                                <th>Start Date</th>
-                                                <th>End Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
-                                                <tr>
-                                                    <td>
-                                                        <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
-                                                                            
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
-                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
-                                                            </svg>
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.course_name" />
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.institute_name.name" />
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.marine_training_inst_number" />
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.candidate_id.indos_no" />
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.candidate_cert_no" />
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.course_start_date" />
-                                                    </td>
-                                                    <td>
-                                                        <t t-out="stcw_certificate.course_end_date" />
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0"><strong>Address:</strong></p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <!-- Check if any of the address fields are filled -->
-                                        <t t-if="candidate.street or candidate.street2 or candidate.city or candidate.state_id or candidate.zip">
-                                            <!-- If any address field is filled, disable all inputs -->
-                                            <div class="form-group">
-                                                <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
-                                            </div>
-                                        </t>
-                                        <t t-else="">
-                                            <!-- If no address field is filled, show editable inputs -->
-                                            <div class="form-group">
-                                                <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street" required="1"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2" required="1"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city" required="1"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id" required="1"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip" required="1"/>
-                                            </div>
-                                        </t>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
-                                        <t t-if="candidate.mobile">
-                                            <input type="number" class="form-control" id="mobile" name="mobile"
-                                                   t-att-value="candidate.mobile" disabled="true"/>
-                                        </t>
-                                        <t t-else="">
-                                            <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
-                                        </t>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
-                                        <t t-if="candidate.email">
-                                            <input type="email" class="form-control" id="email" name="email"
-                                                   t-att-value="candidate.email" disabled="true"/>
-                                        </t>
-                                        <t t-else="">
-                                            <input type="email" class="form-control" id="email" name="email" required="1"/>
-                                        </t>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-
-
-
                         <div class="col-3 text-center">
                             <div class="row justify-content-center mb-2">
                                 <div class="col-12">
@@ -495,14 +343,170 @@
                                             </label>
                                         </div>
                                     </div>
-                                    
+                                    <div class="col-9">
+                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-muted">
+                                            <a href="#" data-toggle="modal" data-target="#AddGPRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    
-                    
+                    <div class="table-responsive border rounded border-top-0 mb-5">
+                        <script>
+                            function openSTCWDeleteModal(button) {
+                                <!-- debugger -->
+                                // Retrieve the data-id attribute value from the clicked button
+                                var dataId = button.getAttribute('data-id');
+                                var candidate_id = button.getAttribute('candidate-id');
+                                // Update the content of the modal with the retrieved data
+                                document.getElementById('gp_stcw_id').value = dataId;
+                                document.getElementById('candidate_id').value = candidate_id;
+                
+                                }
+                        </script>
+                        <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Course</th>
+                                    <th>Institute Name</th>
+                                    <th>MTI Number</th>
+                                    <th>INDOS No.</th>
+                                    <th>Candidate Certificate Number</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
+                                                                
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.course_name" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.institute_name.name" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.marine_training_inst_number" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.candidate_id.indos_no" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.candidate_cert_no" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.course_start_date" />
+                                        </td>
+                                        <td>
+                                            <t t-out="stcw_certificate.course_end_date" />
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
+                            <t t-if="candidate.mobile">
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                       t-att-value="candidate.mobile" disabled="true"/>
+                            </t>
+                            <t t-else="">
+                                <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
+                            </t>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
+                            <t t-if="candidate.email">
+                                <input type="email" class="form-control" id="email" name="email"
+                                       t-att-value="candidate.email" disabled="true"/>
+                            </t>
+                            <t t-else="">
+                                <input type="email" class="form-control" id="email" name="email" required="1"/>
+                            </t>
+                        </div>
+                    </div>
+       
+                    <hr/>
+                    <div class="form-group row">
+                        <div class="col-lg-9">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0"><strong>Address:</strong></p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <!-- Check if any of the address fields are filled -->
+                                    <t t-if="candidate.street or candidate.street2 or candidate.city or candidate.state_id or candidate.zip">
+                                        <!-- If any address field is filled, disable all inputs -->
+                                        <div class="form-group">
+                                            <label>Address Line 1: </label>
+                                            <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Address Line 2: </label>
+                                            <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Dist/City: </label>
+                                            <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>State: </label>
+                                            <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pincode: </label>
+                                            <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <!-- If no address field is filled, show editable inputs -->
+                                        <div class="form-group">
+                                            <label>Address Line 1: </label>
+                                            <input type="text" class="form-control" id="address_line_1" name="street" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Address Line 2: </label>
+                                            <input type="text" class="form-control" id="address_line_2" name="street2" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Dist/City: </label>
+                                            <input type="text" class="form-control" id="city" name="city" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>State: </label>
+                                            <input type="text" class="form-control" id="state" name="state_id" required="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pincode: </label>
+                                            <input type="text" class="form-control" id="zip" name="zip" required="1"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                        
+                    <hr/>
+ 
                     <div class="form-group row">
                         <div class="col-md-6">
                             <!-- <span t-esc="batch.to_date.strftime('%B')"/> -->
@@ -978,89 +982,9 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0"><strong>Address:</strong></p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <!-- Check if any of the address fields are filled -->
-                                        <t t-if="candidate.street or candidate.street2 or candidate.city or candidate.state_id or candidate.zip">
-                                            <!-- If any address field is filled, disable all inputs -->
-                                            <div class="form-group">
-                                                <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
-                                            </div>
-                                        </t>
-                                        <t t-else="">
-                                            <!-- If no address field is filled, show editable inputs -->
-                                            <div class="form-group">
-                                                <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip"/>
-                                            </div>
-                                        </t>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
-                                        <t t-if="candidate.mobile">
-                                            <input type="number" class="form-control" id="mobile" name="mobile"
-                                                   t-att-value="candidate.mobile" disabled="true"/>
-                                        </t>
-                                        <t t-else="">
-                                            <input type="number" class="form-control" id="mobile" name="mobile"
-                                                   t-att-value="candidate.mobile"/>
-                                        </t>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
-                                        <t t-if="candidate.email">
-                                            <input type="email" class="form-control" id="email" name="email"
-                                                   t-att-value="candidate.email" disabled="true"/>
-                                        </t>
-                                        <t t-else="">
-                                            <input type="email" class="form-control" id="email" name="email"
-                                                   t-att-value="candidate.email"/>
-                                        </t>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-
-
+                        
                         <div class="col-3 text-center">
                             <div class="row justify-content-center mb-2">
                                 <div class="col-12">
@@ -1081,7 +1005,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group row">
                         <div class="col-lg-9">
                             <div class="card-body">
@@ -1117,7 +1040,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive border rounded border-top-0 mb-5">
                         <script>
                             function openCCMCSTCWDeleteModal(button) {
@@ -1182,6 +1104,96 @@
                             </tbody>
                         </table>
                     </div>
+
+
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
+                            <t t-if="candidate.mobile">
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                       t-att-value="candidate.mobile" disabled="true"/>
+                            </t>
+                            <t t-else="">
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                       t-att-value="candidate.mobile"/>
+                            </t>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
+                            <t t-if="candidate.email">
+                                <input type="email" class="form-control" id="email" name="email"
+                                       t-att-value="candidate.email" disabled="true"/>
+                            </t>
+                            <t t-else="">
+                                <input type="email" class="form-control" id="email" name="email"
+                                       t-att-value="candidate.email"/>
+                            </t>
+                        </div>
+                    </div>
+                        <hr/>
+                        <div class="form-group row">
+                            <div class="col-lg-9">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0"><strong>Address:</strong></p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <!-- Check if any of the address fields are filled -->
+                                        <t t-if="candidate.street or candidate.street2 or candidate.city or candidate.state_id or candidate.zip">
+                                            <!-- If any address field is filled, disable all inputs -->
+                                            <div class="form-group">
+                                                <label>Address Line 1: </label>
+                                                <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Line 2: </label>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Dist/City: </label>
+                                                <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>State: </label>
+                                                <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pincode: </label>
+                                                <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <!-- If no address field is filled, show editable inputs -->
+                                            <div class="form-group">
+                                                <label>Address Line 1: </label>
+                                                <input type="text" class="form-control" id="address_line_1" name="street"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Line 2: </label>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Dist/City: </label>
+                                                <input type="text" class="form-control" id="city" name="city"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>State: </label>
+                                                <input type="text" class="form-control" id="state" name="state_id"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pincode: </label>
+                                                <input type="text" class="form-control" id="zip" name="zip"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    
+
+
 
                     <div class="form-group row">
                         <div class="col-md-6">
