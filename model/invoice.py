@@ -112,7 +112,7 @@ class CustomPaymentRegister(models.TransientModel):
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
             last_exam = self.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', invoice.gp_candidate.id)], order='attempt_number desc', limit=1)
             
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':invoice.gp_candidate.id , "dgs_batch": dgs_exam  , "exam_id":exam_id })
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':invoice.gp_candidate.id , "dgs_batch": dgs_exam  , "exam_id":exam_id ,"exam_region":invoice.preferred_exam_region.id})
             
             applied = []
             
@@ -260,6 +260,7 @@ class CustomPaymentRegister(models.TransientModel):
             
             ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
             'ccmc_candidate':invoice.ccmc_candidate.id,
+            'exam_region':invoice.preferred_exam_region.id,
             'exam_id':exam_id,
             'dgs_batch':dgs_batch,
             'cookery_practical':cookery_practical,

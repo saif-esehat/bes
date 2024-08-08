@@ -2423,7 +2423,7 @@ class GPExam(models.Model):
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
-    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Region',store=True)
+    exam_region = fields.Many2one('exam.center',string='Exam Region',store=True)
     exam_violation_state = fields.Selection([
         ('na', 'N/A'),
         ('pending_approval', 'Pending Approval'),
@@ -2663,7 +2663,6 @@ class GPExam(models.Model):
 
     hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
     hold_certificate = fields.Boolean("Hold Certificate", default=False)
-    show_hold_admit_card = fields.Boolean("Hide Hold Admit Card button",compute='_compute_hide_button')
 
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
@@ -2813,18 +2812,6 @@ class GPExam(models.Model):
     def ReleaseAdmitCard(self):
         self.sudo().write({
             'hold_admit_card':False,
-        })
-
-
-    @api.depends('state', 'hold_admit_card')
-    def _compute_hide_button(self):
-        if self.state != '1-in_process':
-            self.sudo().write({
-            'show_hold_admit_card':True
-        })
-        else:
-            self.sudo().write({
-            'show_hold_admit_card':False
         })
 
     def HoldCertificate(self):
@@ -3641,8 +3628,9 @@ class CCMCExam(models.Model):
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False)
 
-    exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Center',store=True)
+    exam_region = fields.Many2one('exam.center',string='Exam Center',store=True)
 
     exam_id = fields.Char(string="Roll No", copy=False, readonly=True,tracking=True)
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
@@ -3869,6 +3857,28 @@ class CCMCExam(models.Model):
     def reissue_approved(self):
         self.state = '6-pending_reissue_approved'
         
+
+    def HoldAdmitCard(self):
+        self.sudo().write({
+            'hold_admit_card': True,
+        })
+
+    def ReleaseAdmitCard(self):
+        self.sudo().write({
+            'hold_admit_card': False,
+        })
+
+
+    def HoldCertificate(self):
+        self.sudo().write({
+            'hold_certificate':True
+        })
+
+    def ReleaseCertificate(self):
+        self.sudo().write({
+            'hold_certificate':False
+        })
+
     def approve_violation(self):
         
         self.exam_violation_state = 'approved'

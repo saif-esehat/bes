@@ -331,23 +331,23 @@
                                             <!-- If no address field is filled, show editable inputs -->
                                             <div class="form-group">
                                                 <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street"/>
+                                                <input type="text" class="form-control" id="address_line_1" name="street" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2"/>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city"/>
+                                                <input type="text" class="form-control" id="city" name="city" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id"/>
+                                                <input type="text" class="form-control" id="state" name="state_id" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip"/>
+                                                <input type="text" class="form-control" id="zip" name="zip" required="1"/>
                                             </div>
                                         </t>
                                     </div>
@@ -361,8 +361,7 @@
                                                    t-att-value="candidate.mobile" disabled="true"/>
                                         </t>
                                         <t t-else="">
-                                            <input type="number" class="form-control" id="mobile" name="mobile"
-                                                   t-att-value="candidate.mobile"/>
+                                            <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
                                         </t>
                                     </div>
                                     <div class="col-md-8">
@@ -372,8 +371,7 @@
                                                    t-att-value="candidate.email" disabled="true"/>
                                         </t>
                                         <t t-else="">
-                                            <input type="email" class="form-control" id="email" name="email"
-                                                   t-att-value="candidate.email"/>
+                                            <input type="email" class="form-control" id="email" name="email" required="1"/>
                                         </t>
                                     </div>
                                 </div>
@@ -426,7 +424,7 @@
                                         </div>
                                     </div>
                                     <div class="col-9">
-                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandtory for Application)</span>:  <span class="text-danger">*</span></strong></p>
+                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                     </div>
                                     <div class="col-6">
                                         <p class="text-muted">
@@ -553,7 +551,7 @@
                             <label for="exam_parts">Applied for Examination(s)  <strong class="text-danger">*</strong></label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input" required="1"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
@@ -565,20 +563,20 @@
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input" required="1"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
                             <t t-else="">
                                 <div class="form-check">
-                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input"/>
+                                    <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input" />
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input" required="1"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -591,7 +589,7 @@
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input" required="1"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -1106,7 +1104,7 @@
                                         </div>
                                     </div>
                                     <div class="col-9">
-                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandtory for Application)</span>:  <span class="text-danger">*</span></strong></p>
+                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                     </div>
                                     <div class="col-6">
                                         <p class="text-muted">
@@ -1504,34 +1502,40 @@
         <t t-call="website.layout">
             <div class="container mt16">
                 <h1><t t-out="course"/> Repeater Examination Application Status</h1>
-                <t t-if="invoice_exist and exam.state == '1-in_process' and not exam.hold_admit_card">
+                <t t-if="invoice_exist and new_exam.state == '1-in_process' and not new_exam.hold_admit_card">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
                         <strong class="text-success pl-2" style="font-size:20px;">Admit Card Generated, available for download in Candidate Profile.</strong>
                     </div>
                 </t>
-                <t t-elif="invoice_exist and exam.state == '1-in_process'">
+                <t t-elif="invoice_exist and new_exam.state == '1-in_process' and new_exam.hold_admit_card">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
                         <strong class="text-success pl-2" style="font-size:20px;">Profile and Fees Payment Verified, Awaiting allocation of Exam Center and Admit Card Generation.</strong>
                     </div>
                 </t>
-                <t t-elif="exam.state == '2-done'">
+                <t t-elif="new_exam.state == '2-done'">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
                         <strong class="text-warning pl-2" style="font-size:20px;">Examinations completed, Awaiting Results Declaration.</strong>
                     </div>
                 </t>
-                <t t-elif="exam.state == '3-certified'">
+                <t t-elif="new_exam.state == '3-certified'">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
                         <strong class="text-success pl-2" style="font-size:20px;"> Certificate Generated, available for download in Candidate Profile.</strong>
                     </div>
                 </t>
-                <t t-elif="invoice_exist">
+                <t t-elif="invoice_exist.state == 'posted'">
                     <div class="d-flex justify-content-between">
                         <p class="text-nowrap" style="font-size:20px;">Your Application for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
                         <strong class="text-warning pl-2" style="font-size:20px;">Pending Verification of Candidate Profile and Fees Payment.</strong>
+                    </div>
+                </t>
+                <t t-elif="invoice_exist and invoice_exist.state == 'draft'">
+                    <div class="d-flex justify-content-between">
+                        <p class="text-nowrap" style="font-size:20px;">Your Application for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-danger pl-2" style="font-size:20px;">Your amount is incorrect please contact BES.</strong>
                     </div>
                 </t>
             </div>                        
