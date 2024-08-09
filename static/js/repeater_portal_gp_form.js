@@ -201,7 +201,7 @@ odoo.define('bes.RepeaterPortal', function (require) {
                             }else{
                                  // Create and append new div
                                  var newDiv = document.createElement('div');
-                                 newDiv.textContent = 'Invalid Course Combination';
+                                 newDiv.textContent = 'The STCW certificates data is incorrect .Kindly recheck. \nMinimum Requirement STSDSD is Mandatory and secondly BST or (PST+PSSR+EFA+FPFF) is mandatory. Form submission cannot proceed without STCW Certificates';
                                  newDiv.className = 'alert alert-danger';
                                  newDiv.setAttribute('role', 'alert');
                                  alert_element.appendChild(newDiv);
