@@ -390,6 +390,7 @@
                                         <!-- <field name='candidate_id'/> -->
                                         <field name='course_name'/>
                                         <field name="institute_name"/>
+                                        <field name="other_institute"/>
                                         <field name='marine_training_inst_number'/>
                                         <field name="mti_indos_no"/>
 

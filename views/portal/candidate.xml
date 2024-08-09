@@ -336,7 +336,7 @@
                                 <t t-out="rec.gp_candidate.name" />
                             </td>
         
-                            <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+                            <!-- <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/> -->
 
                             <td class="text-center">
                                 <t t-if="hold_admit_card">

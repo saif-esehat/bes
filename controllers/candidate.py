@@ -4,7 +4,7 @@ from odoo import fields
 from odoo import http
 from werkzeug.utils import secure_filename
 import base64
-import datetime
+from datetime import datetime
 from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
 import json
@@ -243,7 +243,7 @@ class GPCandidatePortal(CustomerPortal):
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
         new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
-        current_year = datetime.datetime.now().year
+        # current_year = datetime.datetime.now().year
         
         invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
         course = "GP"
@@ -252,7 +252,7 @@ class GPCandidatePortal(CustomerPortal):
             'candidate': candidate,
             'exam': previous_exam,
             'batch':batch,
-            'year':current_year,
+            # 'year':current_year,
             'invoice_exist':invoice_exist,
             'course':course,
             'new_exam':new_exam
@@ -343,6 +343,32 @@ class GPCandidatePortal(CustomerPortal):
                     'email': email,
                     'ship_visited': ship_visit
                 })
+            # Extracting data from the HTML form
+            candidate_id = candidate.id
+            name_of_ships = "Ship In Campus"
+            imo_no = "Na"
+            name_of_ports_visited = "Na"
+            time_spent_on_ship = 8
+            date_of_visits = datetime.today().date()  # Correct type for date fields
+            bridge = True
+            eng_room = True
+            cargo_area = True
+
+
+            # Assuming 'gp.candidate' is the model
+            candidate_data = {
+                "candidate_id":candidate_id,
+                "name_of_ships": name_of_ships,
+                "imo_no": imo_no,
+                "name_of_ports_visited": name_of_ports_visited,
+                "date_of_visits": date_of_visits,
+                "time_spent_on_ship": time_spent_on_ship,
+                "bridge": bridge,
+                "eng_room": eng_room,
+                "cargo_area": cargo_area,
+            }
+            
+            request.env['ccmc.candidate.ship.visits'].sudo().create(candidate_data)
 
             if not invoice_exist:
                 line_items = []
@@ -524,6 +550,40 @@ class GPCandidatePortal(CustomerPortal):
                         'ship_visited': ship_visit
                     })
 
+                # import wdb; wdb.set_trace()
+                # Ensure correct types for dates and datetimes
+                date_of_visits = datetime.today().date()  # Correct type for date fields
+                time_spent_on_ship = datetime.now()  # Correct type for datetime fields
+
+                candidate_data = {
+                    "candidate_id": candidate.id,
+                    "name_of_ships": "Ship In Campus",
+                    "imo_no": "Na",
+                    "name_of_ports_visited": "Na",
+                    "date_of_visits": date_of_visits,  # Pass as datetime.date
+                    "time_spent_on_ship": time_spent_on_ship,  # Pass as datetime.datetime
+                    "bridge": True,
+                    "eng_room": True,
+                    "cargo_area": True,
+                }
+
+                # Check types and content of candidate_data before creating
+                print("Candidate Data:============================================", candidate_data)
+
+                try:
+                    request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
+                except Exception as e:
+                    print("Error creating record:", e)
+
+                # Check STCW criteria
+                candidate._check_stcw_certificate()
+
+                if candidate.stcw_criteria == 'pending':
+                    raise ValidationError("STCW Criteria not Complied.")
+                elif candidate.stcw_criteria == 'passed':
+                    pass
+
+
 
                 if candidate:
                     transaction_id = kwargs.get('upi_utr_no')
@@ -632,6 +692,44 @@ class GPCandidatePortal(CustomerPortal):
 
         
         return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
+
+    # @http.route('/my/gprepeatercandidate/addstcw', type='json', auth='user', methods=['POST'])
+    # def AddGPRepeaterSTCW(self, **kw):
+    #     candidate_user_id = request.env.user.id
+    #     candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        
+    #     try:
+    #         dgs_batch_id = int(kw.get('batch_id'))
+    #         course_name = kw.get('course_name')
+    #         institute_name = kw.get('institute_name')
+    #         other_institute = kw.get('other_institute_name')
+    #         marine_training_inst_number = kw.get('marine_training_inst_number')
+    #         candidate_cert_no = kw.get('candidate_cert_no')
+    #         course_start_date = kw.get('course_start_date')
+    #         course_end_date = kw.get('course_end_date')
+
+    #         stcw_data = {
+    #             'candidate_id': candidate.id,
+    #             'course_name': course_name,
+    #             'institute_name': institute_name,
+    #             'other_institute': other_institute,
+    #             'marine_training_inst_number': marine_training_inst_number,
+    #             'candidate_cert_no': candidate_cert_no,
+    #             'course_start_date': course_start_date,
+    #             'course_end_date': course_end_date,
+    #         }
+    #         request.env["gp.candidate.stcw.certificate"].sudo().create(stcw_data)
+    #         request.env.cr.commit()
+            
+    #         candidate._check_sign()
+    #         candidate._check_image()
+    #         candidate._check_ship_visit_criteria()
+    #         candidate._check_attendance_criteria()
+    #         candidate._check_stcw_certificate()
+            
+    #         return {'success': True, 'message': 'STCW certificate added successfully.'}
+    #     except Exception as e:
+    #         return {'success': False, 'message': str(e)}
     
     @http.route(['/my/gprepeatercandidate/stcw/delete'], type='http', auth="user", website=True, methods=['GET', 'POST'])
     def DeleteGPRepeaterSTCW(self, **kw):
@@ -660,6 +758,7 @@ class GPCandidatePortal(CustomerPortal):
             dgs_batch_id = int(kw.get('batch_id'))
             course_name = kw.get('course_name')
             institute_name = kw.get('institute_name')
+            other_institute = kw.get('other_institute_name')
             marine_training_inst_number = kw.get('marine_training_inst_number')
             candidate_cert_no = kw.get('candidate_cert_no')
             course_start_date = kw.get('course_start_date')
@@ -669,6 +768,7 @@ class GPCandidatePortal(CustomerPortal):
                 'candidate_id' : candidate.id,
                 'course_name': course_name,
                 'institute_name': institute_name,
+                'other_institute': other_institute,
                 'marine_training_inst_number': marine_training_inst_number,
                 'candidate_cert_no': candidate_cert_no,
                 'course_start_date': course_start_date,

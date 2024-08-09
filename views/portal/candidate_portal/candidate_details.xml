@@ -230,6 +230,50 @@
                 }
             });
             
+            function toggleInstituteInput() {
+                var instituteSelect = document.getElementById("institute_name");
+                var otherInstituteContainer = document.getElementById("other_institute_name_container");
+        
+                if (instituteSelect.value == "114") { // The ID for "Others"
+                    otherInstituteContainer.style.display = "block";
+                } else {
+                    otherInstituteContainer.style.display = "none";
+                }
+            }
+
+            $(document).ready(function () {
+                $('#AddGPRepeaterStcw form').on('submit', function (event) {
+                    event.preventDefault(); // Prevent the default form submission
+                    
+                    var form = $(this);
+                    var formData = new FormData(this);
+                    var actionUrl = form.attr('action');
+                    var csrfToken = form.find('input[name="csrf_token"]').val(); // Extract CSRF token
+        
+                    $.ajax({
+                        url: actionUrl,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        headers: {
+                            'X-CSRFToken': csrfToken
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                $('#AddGPRepeaterStcw').modal('hide'); // Hide the modal
+                                // Optionally, update parts of the page with new data
+                            } else {
+                                console.error('Error:', data.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Request failed', error);
+                        }
+                    });
+                });
+            });
+        
             </script>
             <div class="container mt16">
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
@@ -346,19 +390,48 @@
                                     <div class="col-9">
                                         <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                     </div>
-                                    <div class="col-6">
+
+
+                                    <!-- <div class="col-6">
                                         <p class="text-muted">
                                             <a href="#" data-toggle="modal" data-target="#AddGPRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
                                         </p>
+
+                                    </div> -->
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <p class="mb-0"><strong>Course: <span class="text-danger">*</span></strong></p>
+                                        <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p class="mb-0"><strong>Institute Name: <span class="text-danger">*</span></strong></p>
+                                        <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p class="mb-0"><strong>Other Institute Name: <span class="text-danger">*</span></strong></p>
+                                        <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p class="mb-0"><strong>Certificate No.: <span class="text-danger">*</span></strong></p>
+                                        <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p class="mb-0"><strong>Start Date: <span class="text-danger">*</span></strong></p>
+                                        <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p class="mb-0"><strong>End Date: <span class="text-danger">*</span></strong></p>
+                                        <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive border rounded border-top-0 mb-5">
+                    <!-- <div class="table-responsive border rounded border-top-0 mb-5">
                         <script>
                             function openSTCWDeleteModal(button) {
-                                <!-- debugger -->
+
                                 // Retrieve the data-id attribute value from the clicked button
                                 var dataId = button.getAttribute('data-id');
                                 var candidate_id = button.getAttribute('candidate-id');
@@ -374,6 +447,7 @@
                                     <th>Action</th>
                                     <th>Course</th>
                                     <th>Institute Name</th>
+                                    <th>Other Institute Name</th>
                                     <th>MTI Number</th>
                                     <th>INDOS No.</th>
                                     <th>Candidate Certificate Number</th>
@@ -400,6 +474,9 @@
                                             <t t-out="stcw_certificate.institute_name.name" />
                                         </td>
                                         <td>
+                                            <t t-out="stcw_certificate.other_institute" />
+                                        </td>
+                                        <td>
                                             <t t-out="stcw_certificate.marine_training_inst_number" />
                                         </td>
                                         <td>
@@ -418,7 +495,9 @@
                                 </t>
                             </tbody>
                         </table>
-                    </div>
+                    </div> -->
+
+
                     <hr/>
                     <div class="row">
                         <div class="col-md-4">
@@ -791,7 +870,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="institute_name">Institute Name</label>
-                                                <select class="form-control" id="institute_name" name="institute_name" required="1">
+                                                <select class="form-control" id="institute_name" name="institute_name" required="1" onchange="toggleInstituteInput()">
                                                     <t t-foreach="institutes" t-as="institute">
                                                         <option t-attf-value="{{institute.id}}">
                                                             <t t-out="institute.name"/>
@@ -800,11 +879,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" id="other_institute_name_container" style="display: none;">
                                             <div class="form-group">
-                                                <label for="marine_training_inst_number">MTI Number</label>
-                                                <input type="text" class="form-control" id="marine_training_inst_number" name="marine_training_inst_number" required="1"/>
-                                                <input type="hidden" class="form-control" t-attf-value="{{candidate.id}}" id="candidate_id" name="candidate_id"/>
+                                                <label for="other_institute_name">Other Institute Name</label>
+                                                <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1516,40 +1594,30 @@
         <t t-call="website.layout">
             <div class="container mt16">
                 <h1><t t-out="course"/> Repeater Examination Application Status</h1>
+
                 <t t-if="invoice_exist and new_exam.state == '1-in_process' and not new_exam.hold_admit_card">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-success pl-2" style="font-size:20px;">Admit Card Generated, available for download in Candidate Profile.</strong>
-                    </div>
-                </t>
-                <t t-elif="invoice_exist and new_exam.state == '1-in_process' and new_exam.hold_admit_card">
-                    <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-success pl-2" style="font-size:20px;">Profile and Fees Payment Verified, Awaiting allocation of Exam Center and Admit Card Generation.</strong>
-                    </div>
-                </t>
-                <t t-elif="new_exam.state == '2-done'">
-                    <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-warning pl-2" style="font-size:20px;">Examinations completed, Awaiting Results Declaration.</strong>
-                    </div>
-                </t>
-                <t t-elif="new_exam.state == '3-certified'">
-                    <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="new_exam.exam_id"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-success pl-2" style="font-size:20px;"> Certificate Generated, available for download in Candidate Profile.</strong>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application No. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-success pl-2" style="font-size:20px;">Admit Card Generated,Please download. 
+                        <t t-if="course == 'GP'">
+                            <a t-attf-href="/my/gpexam/list/download_admit_card/{{new_exam.id}}" class="fa">Download Admit Card</a>
+                        </t>
+                        <t t-elif="course == 'CCMC'">
+                            <a t-attf-href="/my/ccmcexam/list/download_admit_card/{{new_exam.id}}" class="fa">Download Admit Card</a>
+                        </t>
+                        </strong>
                     </div>
                 </t>
                 <t t-elif="invoice_exist.state == 'posted'">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-warning pl-2" style="font-size:20px;">Pending Verification of Candidate Profile and Fees Payment.</strong>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-warning pl-2" style="font-size:20px;">Application in Process.</strong>
                     </div>
                 </t>
                 <t t-elif="invoice_exist and invoice_exist.state == 'draft'">
                     <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-danger pl-2" style="font-size:20px;">Your amount is incorrect please contact BES.</strong>
+                        <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                        <strong class="text-danger pl-2" style="font-size:20px;">Your Payment Details are incorrect please contact BES (022-49606713).</strong>
                     </div>
                 </t>
             </div>                        

@@ -17,7 +17,7 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket">
                                 Raise a Query
                         </a>
-
+                        <t t-set="repeater" t-value="env['gp.exam.schedule'].sudo().search([('state','!=','3-certified')])"/>
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/8">
                                 Apply for Repeater Exam
                         </a>
