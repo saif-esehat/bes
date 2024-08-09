@@ -29,7 +29,7 @@ odoo.define('bes.RepeaterPortal', function (require) {
                     isFormValid = false;
                     alert("Please fill in all required fields.");
                 }
-                debugger
+                
 
                 if (InstituteSelected === "Others" && otherInstituteName === "") {
                     isFormValid = false;
@@ -127,7 +127,7 @@ odoo.define('bes.RepeaterPortal', function (require) {
 }),
         
     
-    publicWidget.registry.DeleteStcw = publicWidget.Widget.extend(
+    publicWidget.registry.DeleteSTCW = publicWidget.Widget.extend(
                 {
 
                     selector : ".delete_stcw_gp",
@@ -142,5 +142,92 @@ odoo.define('bes.RepeaterPortal', function (require) {
                     
                 }
                 )
+    
+    publicWidget.registry.submitRepeaterForm = publicWidget.Widget.extend(
+                    {
+    
+                        selector : 'form[name="gp_repeater_submit"]',
+                        events:{
+                            'submit':"_onSubmitGPRepeater"
+                        },
+    
+                        _onSubmitGPRepeater : function(evt) {
+                           evt.preventDefault();
+                           var tableData = [];
+                           var gpstcwlisttable = document.getElementById("gpstcwlist").querySelectorAll("tr")
+                           for (var i = 0; i < gpstcwlisttable.length; i++){
+                            var cells = gpstcwlisttable[i].querySelectorAll('td, input');
+                            var rowData = {
+                                course: cells[1].textContent,
+                                institute_id : cells[2].value,
+                                other_institute_name : cells[4].textContent,
+                                candidate_certificate_no : cells[5].textContent,
+                                course_startdate : cells[6].textContent,
+                                course_enddate : cells[7].textContent
+                            };
+                            tableData.push(rowData);
+                           }
+                           
+                           const validCombinations = [
+                            ["bst", "stsdsd"],
+                            ["stsdsd", "pst", "efa", "pssr"]
+                          ];
+                           
+                           document.getElementById('stcw_table_data').value = JSON.stringify(tableData);
+                           
+                           var stcw_valid = this._checkCourseCombination(tableData, validCombinations);
+                          
+                           if (stcw_valid) {
+                            
+                               document.getElementById('gp_repeater_submission_form').submit();
+
+                            
+
+                           }else{
+
+                            var alert_element = document.getElementById('alert_id');
+                            if (alert_element && alert_element.querySelector('div')) {
+                                
+                                // Remove existing div
+                                var existingDiv = alert_element.querySelector('div');
+                                alert_element.removeChild(existingDiv);
+                            
+                                // Create and append new div
+                                var newDiv = document.createElement('div');
+                                newDiv.textContent = 'Invalid Course Combination';
+                                newDiv.className = 'alert alert-danger';
+                                newDiv.setAttribute('role', 'alert');
+                                alert_element.appendChild(newDiv);
+                            }else{
+                                 // Create and append new div
+                                 var newDiv = document.createElement('div');
+                                 newDiv.textContent = 'Invalid Course Combination';
+                                 newDiv.className = 'alert alert-danger';
+                                 newDiv.setAttribute('role', 'alert');
+                                 alert_element.appendChild(newDiv);
+                            }
+
+                            
+                           }
+                        //    debugger
+
+                    
+                        },
+
+                        _checkCourseCombination:function(coursesList,validCombinations){
+                            const courseNames = coursesList.map(course => course.course);
+
+                            for (let combination of validCombinations) {
+                                if (combination.every(course => courseNames.includes(course))) {
+                                return true;
+                                }
+                            }
+
+                            return false;
+                        }
+
+                        
+                    }
+                    )
 }
 );

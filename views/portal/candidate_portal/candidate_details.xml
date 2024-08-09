@@ -280,9 +280,11 @@
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
                 <p>All Fields are mandatory</p>
-                <form action="/my/application/view" enctype="multipart/form-data" method="post">
+                <form id="gp_repeater_submission_form" name="gp_repeater_submit" action="/my/application/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" id="batch_id" t-attf-value="{{batch.id}}" />
+                    <input type="hidden" name="stcw_table_data" id="stcw_table_data"  />
+
                     <div class="form-group row">
                         <div class="col-lg-9">
                             <div class="card-body">
@@ -492,15 +494,15 @@
                 
                                 }
                         </script>
-                        <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                        <table  class="table rounded mb-0 bg-white o_portal_my_doc_table">
                             <thead>
                                 <tr>
                                     <th>Action</th>
                                     <th>Course</th>
                                     <th>Institute Name</th>
                                     <th>Other Institute Name</th>
-                                    <th>MTI Number</th>
-                                    <th>INDOS No.</th>
+                                    <!-- <th>MTI Number</th>
+                                    <th>INDOS No.</th> -->
                                     <th>Candidate Certificate Number</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
@@ -869,6 +871,11 @@
 
                     <button type="submit" class="btn btn-primary">Submit</button><strong class="text-danger pl-5">Kindly fill in all the details before submission</strong>
                 </form>
+
+                <div id="alert_id" style="padding:20px" >
+                    
+                </div>
+                
 
                 <div class="modal fade" id="DeleteSTCW" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">

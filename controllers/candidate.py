@@ -459,9 +459,24 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
-            # import wdb; wdb.set_trace()
+            import wdb; wdb.set_trace()
             candidate_user_id = request.env.user.id
             candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+            
+            stcw_data = json.loads(kwargs.get('stcw_table_data'))
+            
+            
+            for stcw in stcw_data:
+                data = {
+                   'candidate_id' : candidate.id,
+                   'course_name' : stcw['course'],
+                   'candidate_cert_no': stcw['candidate_certificate_no'],
+                   'institute_name': int(stcw['institute_id']),
+                   'other_institute': stcw['other_institute_name'],
+                   'course_start_date': stcw['course_startdate'],
+                   'course_end_date' : stcw['course_enddate']
+                }
+                request.env['gp.candidate.stcw.certificate'].sudo().create(data)
             
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
@@ -582,12 +597,12 @@ class GPCandidatePortal(CustomerPortal):
                     print("Error creating record:", e)
 
                 # Check STCW criteria
-                candidate._check_stcw_certificate()
+                # candidate._check_stcw_certificate()
 
-                if candidate.stcw_criteria == 'pending':
-                    raise ValidationError("STCW Criteria not Complied.")
-                elif candidate.stcw_criteria == 'passed':
-                    pass
+                # if candidate.stcw_criteria == 'pending':
+                #     raise ValidationError("STCW Criteria not Complied.")
+                # elif candidate.stcw_criteria == 'passed':
+                #     pass
 
 
 
