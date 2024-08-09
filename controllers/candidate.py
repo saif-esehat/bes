@@ -247,6 +247,10 @@ class GPCandidatePortal(CustomerPortal):
         
         invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
         course = "GP"
+        # import wdb; wdb.set_trace()
+
+        if batch.form_deadline < datetime.today().date():
+            raise ValidationError(f"Last date of submission of Application for Repeater ({batch.to_date.strftime('%B %Y')}) examination is Over.")
 
         vals = {
             'candidate': candidate,
@@ -258,7 +262,6 @@ class GPCandidatePortal(CustomerPortal):
             'new_exam':new_exam
         }
         
-        # import wdb; wdb.set_trace()
         
         if not invoice_exist:
             return request.render("bes.exam_application_form_template", vals)
@@ -277,6 +280,9 @@ class GPCandidatePortal(CustomerPortal):
         new_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
         course = "CCMC"
+
+        if batch.form_deadline < datetime.today().date():
+            raise ValidationError(f"Last date of submission of Application for Repeater ({batch.to_date.strftime('%B %Y')}) examination is Over.")
         
         vals = {
             'candidate': candidate,

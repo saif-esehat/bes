@@ -399,31 +399,82 @@
 
                                     </div> -->
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <p class="mb-0"><strong>Course: <span class="text-danger">*</span></strong></p>
-                                        <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p class="mb-0"><strong>Institute Name: <span class="text-danger">*</span></strong></p>
-                                        <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p class="mb-0"><strong>Other Institute Name: <span class="text-danger">*</span></strong></p>
-                                        <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p class="mb-0"><strong>Certificate No.: <span class="text-danger">*</span></strong></p>
-                                        <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p class="mb-0"><strong>Start Date: <span class="text-danger">*</span></strong></p>
-                                        <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <p class="mb-0"><strong>End Date: <span class="text-danger">*</span></strong></p>
-                                        <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
-                                    </div>
+                            </div>
+                        </div>
+                        <t t-set="stcw_criteria" t-value="candidate.stcw_criteria"/>
+                        <!-- <input type="hidden" name="stcw_criteria" t-att-value="record.stcw_criteria"/> -->
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Course: <span class="text-danger">*</span></strong></p>
+                                    <input type="text" class="form-control" id="mobile" name="mobile" required="1" placeholder="BST" disabled='1'/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Institute Name: <span class="text-danger">*</span></strong></p>
+                                    <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Other Institute Name: <span class="text-danger">*</span></strong></p>
+                                    <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Certificate No.: <span class="text-danger">*</span></strong></p>
+                                    <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Start Date: <span class="text-danger">*</span></strong></p>
+                                    <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>End Date: <span class="text-danger">*</span></strong></p>
+                                    <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Course: <span class="text-danger">*</span></strong></p>
+                                    <input type="text" class="form-control" id="course_name" name="course_name"
+                                        t-att-required="candidate.stcw_criteria == 'pending'"
+                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
+                                        placeholder="BST"/>
+                                </div>
+                
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Institute Name: <span class="text-danger">*</span></strong></p>
+                                    <input type="text" class="form-control" id="institute_name" name="institute_name"
+                                        t-att-required="candidate.stcw_criteria == 'pending'"
+                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
+                                        placeholder="Institute Name"/>
+                                </div>
+                
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Other Institute Name: <span class="text-danger">*</span></strong></p>
+                                    <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"
+                                        t-att-required="candidate.stcw_criteria == 'pending'"
+                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
+                                        placeholder="Other Institute Name"/>
+                                </div>
+                
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Certificate No.: <span class="text-danger">*</span></strong></p>
+                                    <input type="number" class="form-control" id="certificate_no" name="certificate_no"
+                                        t-att-required="candidate.stcw_criteria == 'pending'"
+                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
+                                        placeholder="Certificate Number"/>
+                                </div>
+                
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>Start Date: <span class="text-danger">*</span></strong></p>
+                                    <input type="date" class="form-control" id="start_date" name="start_date"
+                                        t-att-required="candidate.stcw_criteria == 'pending'"
+                                        t-att-disabled="candidate.stcw_criteria == 'passed'"/>
+                                </div>
+                
+                                <div class="col-sm-2">
+                                    <p class="m-0"><strong>End Date: <span class="text-danger">*</span></strong></p>
+                                    <input type="date" class="form-control" id="end_date" name="end_date"
+                                        t-att-required="candidate.stcw_criteria == 'pending'"
+                                        t-att-disabled="candidate.stcw_criteria == 'passed'"/>
                                 </div>
                             </div>
                         </div>
