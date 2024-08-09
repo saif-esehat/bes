@@ -241,39 +241,6 @@
                 }
             }
 
-            $(document).ready(function () {
-                $('#AddGPRepeaterStcw form').on('submit', function (event) {
-                    event.preventDefault(); // Prevent the default form submission
-                    
-                    var form = $(this);
-                    var formData = new FormData(this);
-                    var actionUrl = form.attr('action');
-                    var csrfToken = form.find('input[name="csrf_token"]').val(); // Extract CSRF token
-        
-                    $.ajax({
-                        url: actionUrl,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        headers: {
-                            'X-CSRFToken': csrfToken
-                        },
-                        success: function (data) {
-                            if (data.success) {
-                                $('#AddGPRepeaterStcw').modal('hide'); // Hide the modal
-                                // Optionally, update parts of the page with new data
-                            } else {
-                                console.error('Error:', data.message);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Request failed', error);
-                        }
-                    });
-                });
-            });
-        
             </script>
             <div class="container mt16">
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
@@ -387,99 +354,28 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-9">
-                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
-                                    </div>
 
+                                    <t t-if="candidate.stcw_criteria == 'pending'">
+                                        <div class="col-9">
+                                            <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
+                                        </div>
+    
+    
+                                        <div class="col-6">
+                                            <p class="text-muted">
+                                                <a href="#" data-toggle="modal" data-target="#AddGPRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
+                                            </p>
+    
+                                        </div>
+                                    </t>
+    
 
-                                    <!-- <div class="col-6">
-                                        <p class="text-muted">
-                                            <a href="#" data-toggle="modal" data-target="#AddGPRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
-                                        </p>
-
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
-                        <t t-set="stcw_criteria" t-value="candidate.stcw_criteria"/>
-                        <!-- <input type="hidden" name="stcw_criteria" t-att-value="record.stcw_criteria"/> -->
-                        <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Course: <span class="text-danger">*</span></strong></p>
-                                    <input type="text" class="form-control" id="mobile" name="mobile" required="1" placeholder="BST" disabled='1'/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Institute Name: <span class="text-danger">*</span></strong></p>
-                                    <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Other Institute Name: <span class="text-danger">*</span></strong></p>
-                                    <input type="text" class="form-control" id="mobile" name="mobile" required="1"/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Certificate No.: <span class="text-danger">*</span></strong></p>
-                                    <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Start Date: <span class="text-danger">*</span></strong></p>
-                                    <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>End Date: <span class="text-danger">*</span></strong></p>
-                                    <input type="date" class="form-control" id="mobile" name="mobile" required="1"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Course: <span class="text-danger">*</span></strong></p>
-                                    <input type="text" class="form-control" id="course_name" name="course_name"
-                                        t-att-required="candidate.stcw_criteria == 'pending'"
-                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
-                                        placeholder="BST"/>
-                                </div>
-                
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Institute Name: <span class="text-danger">*</span></strong></p>
-                                    <input type="text" class="form-control" id="institute_name" name="institute_name"
-                                        t-att-required="candidate.stcw_criteria == 'pending'"
-                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
-                                        placeholder="Institute Name"/>
-                                </div>
-                
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Other Institute Name: <span class="text-danger">*</span></strong></p>
-                                    <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"
-                                        t-att-required="candidate.stcw_criteria == 'pending'"
-                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
-                                        placeholder="Other Institute Name"/>
-                                </div>
-                
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Certificate No.: <span class="text-danger">*</span></strong></p>
-                                    <input type="number" class="form-control" id="certificate_no" name="certificate_no"
-                                        t-att-required="candidate.stcw_criteria == 'pending'"
-                                        t-att-disabled="candidate.stcw_criteria == 'passed'"
-                                        placeholder="Certificate Number"/>
-                                </div>
-                
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>Start Date: <span class="text-danger">*</span></strong></p>
-                                    <input type="date" class="form-control" id="start_date" name="start_date"
-                                        t-att-required="candidate.stcw_criteria == 'pending'"
-                                        t-att-disabled="candidate.stcw_criteria == 'passed'"/>
-                                </div>
-                
-                                <div class="col-sm-2">
-                                    <p class="m-0"><strong>End Date: <span class="text-danger">*</span></strong></p>
-                                    <input type="date" class="form-control" id="end_date" name="end_date"
-                                        t-att-required="candidate.stcw_criteria == 'pending'"
-                                        t-att-disabled="candidate.stcw_criteria == 'passed'"/>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
-                    <!-- <div class="table-responsive border rounded border-top-0 mb-5">
+                    <div class="table-responsive border rounded border-top-0 mb-5">
                         <script>
                             function openSTCWDeleteModal(button) {
 
@@ -546,7 +442,7 @@
                                 </t>
                             </tbody>
                         </table>
-                    </div> -->
+                    </div>
 
 
                     <hr/>
@@ -1157,14 +1053,16 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-9">
-                                        <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
-                                    </div>
-                                    <div class="col-6">
-                                        <p class="text-muted">
-                                            <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
-                                        </p>
-                                    </div>
+                                    <t t-if="candidate.stcw_criteria == 'pending'">
+                                        <div class="col-9">
+                                            <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="text-muted">
+                                                <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
+                                            </p>
+                                        </div>
+                                    </t>
                                 </div>
                             </div>
                         </div>
@@ -1185,7 +1083,9 @@
                         <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                             <thead>
                                 <tr>
-                                    <th>Action</th>
+                                    <t t-if="candidate.stcw_criteria == 'pending'">
+                                        <th>Action</th>
+                                    </t>
                                     <th>Course</th>
                                     <th>Institute Name</th>
                                     <th>MTI Number</th>
@@ -1198,15 +1098,17 @@
                             <tbody>
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
-                                        <td>
-                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openCCMCSTCWDeleteModal(this)" data-target="#CCMCDeleteSTCW">
-                                                                
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
-                                                </svg>
-                                            </button>
-                                        </td>
+                                        <t t-if="candidate.stcw_criteria == 'pending'">
+                                            <td>
+                                                <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openCCMCSTCWDeleteModal(this)" data-target="#CCMCDeleteSTCW">
+                                                                    
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        </t>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
                                         </td>

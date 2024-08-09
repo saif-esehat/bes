@@ -250,7 +250,10 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
         if batch.form_deadline < datetime.today().date():
-            raise ValidationError(f"Last date of submission of Application for Repeater ({batch.to_date.strftime('%B %Y')}) examination is Over.")
+            raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
+        
+
+        
 
         vals = {
             'candidate': candidate,
@@ -282,7 +285,7 @@ class GPCandidatePortal(CustomerPortal):
         course = "CCMC"
 
         if batch.form_deadline < datetime.today().date():
-            raise ValidationError(f"Last date of submission of Application for Repeater ({batch.to_date.strftime('%B %Y')}) examination is Over.")
+            raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
         
         vals = {
             'candidate': candidate,
@@ -697,9 +700,9 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
 
         
-        return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
+    #     return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
 
-    # @http.route('/my/gprepeatercandidate/addstcw', type='json', auth='user', methods=['POST'])
+    # @http.route('/my/gprepeatercandidate/addstcw', type='http', auth='user', methods=['POST'])
     # def AddGPRepeaterSTCW(self, **kw):
     #     candidate_user_id = request.env.user.id
     #     candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
@@ -733,9 +736,10 @@ class GPCandidatePortal(CustomerPortal):
     #         candidate._check_attendance_criteria()
     #         candidate._check_stcw_certificate()
             
-    #         return {'success': True, 'message': 'STCW certificate added successfully.'}
+    #     #     return {'success': True, 'message': 'STCW certificate added successfully.'}
     #     except Exception as e:
-    #         return {'success': False, 'message': str(e)}
+    #         pass
+    #     #     return {'success': False, 'message': str(e)}
     
     @http.route(['/my/gprepeatercandidate/stcw/delete'], type='http', auth="user", website=True, methods=['GET', 'POST'])
     def DeleteGPRepeaterSTCW(self, **kw):

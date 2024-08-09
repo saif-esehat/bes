@@ -909,16 +909,16 @@ class CCMCCandidate(models.Model):
 
             # if all_types_exist and all_cert_nos_present:
 
-            if exam_count > 1:
-                if all_types_exist:
-                    record.stcw_criteria = 'passed'
-                else:
-                    record.stcw_criteria = 'pending'
-            elif exam_count in [0,1]:
-                if all_types_exist and all_cert_nos_present:
-                    record.stcw_criteria = 'passed'
-                else:
-                    record.stcw_criteria = 'pending'
+            # if exam_count > 1:
+            #     if all_types_exist:
+            #         record.stcw_criteria = 'passed'
+            #     else:
+            #         record.stcw_criteria = 'pending'
+            # elif exam_count in [0,1]:
+            if all_types_exist and all_cert_nos_present:
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
         
     
     @api.constrains('ship_visits')
