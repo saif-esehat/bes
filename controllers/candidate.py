@@ -330,7 +330,7 @@ class GPCandidatePortal(CustomerPortal):
     def viewCCMCApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
             
-            import wdb;wdb.set_trace()
+            # import wdb;wdb.set_trace()
             candidate_user_id = request.env.user.id
             candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             
