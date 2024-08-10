@@ -251,6 +251,8 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" id="batch_id" t-attf-value="{{batch.id}}" />
                     <input type="hidden" name="stcw_table_data" id="stcw_table_data"  />
+                    <input type="hidden" name="certificate_criteria" id="certificate_criteria"  t-att-value="candidate.stcw_criteria"/>
+
 
                     <div class="form-group row">
                         <div class="col-lg-9">
@@ -344,13 +346,13 @@
                                     </div>
                                     <div class="col-3">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" id="ship_visit_yes" name="ship_visit" value="true" t-att-checked="candidate.ship_visited" required="True"/>
+                                            <input class="form-check-input" type="radio" id="ship_visit_yes" name="ship_visit" t-att-checked="True"  />
                                             <label class="form-check-label" for="ship_visit_yes">
                                                 Yes
                                             </label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" id="ship_visit_no" name="ship_visit" value="false" t-att-checked="not candidate.ship_visited" required="True"/>
+                                            <input class="form-check-input" type="radio" id="ship_visit_no" name="ship_visit" t-att-checked="False" />
                                             <label class="form-check-label" for="ship_visit_no">
                                                 No
                                             </label>
@@ -860,7 +862,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary add_stcw_gp">Add</button>
+                                    <button type="button" class="btn btn-primary add_stcw_ccmc">Add</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
@@ -1530,7 +1532,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Add</button>
+                                    <button type="submit" class="btn btn-primary add_stcw_ccmc">Add</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
