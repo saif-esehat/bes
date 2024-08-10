@@ -9,6 +9,20 @@ from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
 import json
 
+from functools import wraps
+from odoo.exceptions import AccessError
+
+
+def check_user_groups(group_xml_id):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self,*args, **kwargs):
+            if not request.env.user.has_group(group_xml_id):
+                raise AccessError("You Do not have Access")
+            return func(self,*args, **kwargs)
+        return wrapper
+    return decorator
+
 
 
 def _rotate_session(httprequest):
@@ -236,7 +250,8 @@ class GPCandidatePortal(CustomerPortal):
         return result
     
     @http.route(['/gpcandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
-    def applyExam(self,batch_id, **kw):
+    @check_user_groups("bes.group_gp_candidates")
+    def applyExam(self,batch_id, **kw):        
         # raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
         partner_id = request.env.user.id
@@ -250,7 +265,10 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
 
         if batch.form_deadline < datetime.today().date():
-            raise ValidationError(f"Last date of submission of Application for Repeater ({batch.to_date.strftime('%B %Y')}) examination is Over.")
+            raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
+        
+
+        
 
         vals = {
             'candidate': candidate,
@@ -269,6 +287,7 @@ class GPCandidatePortal(CustomerPortal):
             return request.render("bes.application_status", vals)
     
     @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_ccmc_candidates")
     def applyCCMCExam(self,batch_id, **kw):
         # raise ValidationError("Not Allowed")
         batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
@@ -282,7 +301,7 @@ class GPCandidatePortal(CustomerPortal):
         course = "CCMC"
 
         if batch.form_deadline < datetime.today().date():
-            raise ValidationError(f"Last date of submission of Application for Repeater ({batch.to_date.strftime('%B %Y')}) examination is Over.")
+            raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
         
         vals = {
             'candidate': candidate,
@@ -459,24 +478,29 @@ class GPCandidatePortal(CustomerPortal):
     @http.route('/my/application/view', type='http', auth="user", website=True, methods=['GET', 'POST'])
     def viewApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
-            # import wdb; wdb.set_trace()
+            import wdb; wdb.set_trace()
             candidate_user_id = request.env.user.id
             candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
             
-            stcw_data = json.loads(kwargs.get('stcw_table_data'))
+            if kwargs.get('stcw_table_data'):
+                stcw_data = json.loads(kwargs.get('stcw_table_data'))
             
+            # document.getElementById("gpstcwlist")
             
-            for stcw in stcw_data:
-                data = {
-                   'candidate_id' : candidate.id,
-                   'course_name' : stcw['course'],
-                   'candidate_cert_no': stcw['candidate_certificate_no'],
-                   'institute_name': int(stcw['institute_id']),
-                   'other_institute': stcw['other_institute_name'],
-                   'course_start_date': stcw['course_startdate'],
-                   'course_end_date' : stcw['course_enddate']
-                }
-                request.env['gp.candidate.stcw.certificate'].sudo().create(data)
+            if candidate.stcw_criteria == 'passed':
+                print("Done")
+            else:
+                for stcw in stcw_data:
+                    data = {
+                    'candidate_id' : candidate.id,
+                    'course_name' : stcw['course'],
+                    'candidate_cert_no': stcw['candidate_certificate_no'],
+                    'institute_name': int(stcw['institute_id']),
+                    'other_institute': stcw['other_institute_name'],
+                    'course_start_date': stcw['course_startdate'],
+                    'course_end_date' : stcw['course_enddate']
+                    }
+                    request.env['gp.candidate.stcw.certificate'].sudo().create(data)
             
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
@@ -712,9 +736,9 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
 
         
-        return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
+    #     return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
 
-    # @http.route('/my/gprepeatercandidate/addstcw', type='json', auth='user', methods=['POST'])
+    # @http.route('/my/gprepeatercandidate/addstcw', type='http', auth='user', methods=['POST'])
     # def AddGPRepeaterSTCW(self, **kw):
     #     candidate_user_id = request.env.user.id
     #     candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
@@ -748,9 +772,10 @@ class GPCandidatePortal(CustomerPortal):
     #         candidate._check_attendance_criteria()
     #         candidate._check_stcw_certificate()
             
-    #         return {'success': True, 'message': 'STCW certificate added successfully.'}
+    #     #     return {'success': True, 'message': 'STCW certificate added successfully.'}
     #     except Exception as e:
-    #         return {'success': False, 'message': str(e)}
+    #         pass
+    #     #     return {'success': False, 'message': str(e)}
     
     @http.route(['/my/gprepeatercandidate/stcw/delete'], type='http', auth="user", website=True, methods=['GET', 'POST'])
     def DeleteGPRepeaterSTCW(self, **kw):
