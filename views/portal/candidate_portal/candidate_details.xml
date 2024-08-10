@@ -956,6 +956,16 @@
                     otherInstituteContainer.style.display = "none";
                 }
             }
+            document.querySelector('form').addEventListener('submit', function(event) {
+                // Get the value of the selected radio button
+                var selectedValue = document.querySelector('input[name="ship_visit"]:checked').value;
+        
+                // If the value is 'false' (No), prevent the form from submitting
+                if (selectedValue === 'false') {
+                    alert('The form can only be submitted if the ship visit was completed.');
+                    event.preventDefault();
+                }
+            });
             </script>
             <div class="container mt16">
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
@@ -1058,13 +1068,13 @@
                                     </div>
                                     <div class="col-3">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" id="ship_visit_yes" name="ship_visit" value="true" t-att-checked="candidate.ship_visited" required="True"/>
+                                            <input class="form-check-input" type="radio" id="ship_visit_yes" name="ship_visit" value="true" required="True"/>
                                             <label class="form-check-label" for="ship_visit_yes">
                                                 Yes
                                             </label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" id="ship_visit_no" name="ship_visit" value="false" t-att-checked="not candidate.ship_visited" required="True"/>
+                                            <input class="form-check-input" type="radio" id="ship_visit_no" name="ship_visit" value="false" required="True"/>
                                             <label class="form-check-label" for="ship_visit_no">
                                                 No
                                             </label>
