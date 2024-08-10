@@ -232,6 +232,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
         }
       },
     })),
+    
     (publicWidget.registry.DeleteSTCW = publicWidget.Widget.extend({
       selector: ".delete_stcw_gp",
       events: {
@@ -261,7 +262,6 @@ odoo.define("bes.RepeaterPortal", function (require) {
     
       var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
 
-      debugger;
   
       var certificate_criteria = document.getElementById(
         "certificate_criteria"
