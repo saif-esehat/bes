@@ -265,6 +265,8 @@ class GPCandidatePortal(CustomerPortal):
             'new_exam':new_exam
         }
         
+        if previous_exam.state == '3-certified':
+            return request.render("bes.application_status", vals)
         
         if not invoice_exist:
             return request.render("bes.exam_application_form_template", vals)
@@ -299,7 +301,9 @@ class GPCandidatePortal(CustomerPortal):
         # if len(exam) <= 0:
         #     # raise ValidationError("No previous Exam Found .Candidate Must be registered through batches")
         #     return request.render("bes.no_previous_exam_found", vals)
-        
+        if previous_exam.state == '3-certified':
+            return request.render("bes.application_status", vals)
+
         if not invoice_exist:
             return request.render("bes.ccmc_exam_application_form_template", vals)
         else:
@@ -378,6 +382,11 @@ class GPCandidatePortal(CustomerPortal):
             }
             
             request.env['ccmc.candidate.ship.visits'].sudo().create(candidate_data)
+
+            candidate._check_ship_visit_criteria()
+            candidate._check_attendance_criteria()
+            candidate._check_stcw_certificate()
+
 
             if not invoice_exist:
                 line_items = []
@@ -591,21 +600,12 @@ class GPCandidatePortal(CustomerPortal):
                     "cargo_area": True,
                 }
 
-                # Check types and content of candidate_data before creating
-                print("Candidate Data:============================================", candidate_data)
+                request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
 
-                try:
-                    request.env['gp.candidate.ship.visits'].sudo().create(candidate_data)
-                except Exception as e:
-                    print("Error creating record:", e)
+                candidate._check_ship_visit_criteria()
+                candidate._check_attendance_criteria()
+                candidate._check_stcw_certificate()
 
-                # Check STCW criteria
-                # candidate._check_stcw_certificate()
-
-                # if candidate.stcw_criteria == 'pending':
-                #     raise ValidationError("STCW Criteria not Complied.")
-                # elif candidate.stcw_criteria == 'passed':
-                #     pass
 
 
 

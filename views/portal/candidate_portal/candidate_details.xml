@@ -761,7 +761,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB): <strong class="text-danger">*</strong></label><br/>
-                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" /><br/><br/>
+                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
                         </div>
                     </div>
 
@@ -956,16 +956,6 @@
                     otherInstituteContainer.style.display = "none";
                 }
             }
-            document.querySelector('form').addEventListener('submit', function(event) {
-                // Get the value of the selected radio button
-                var selectedValue = document.querySelector('input[name="ship_visit"]:checked').value;
-        
-                // If the value is 'false' (No), prevent the form from submitting
-                if (selectedValue === 'false') {
-                    alert('The form can only be submitted if the ship visit was completed.');
-                    event.preventDefault();
-                }
-            });
             </script>
             <div class="container mt16">
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
@@ -1142,15 +1132,12 @@
                                         <td>
                                             <t t-out="stcw_certificate.institute_name.name" />
                                         </td>
-                                        <td>
-                                            <t t-out="stcw_certificate.other_institute" />
-                                        </td>
                                         <!-- <td>
                                             <t t-out="stcw_certificate.marine_training_inst_number" />
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.candidate_id.indos_no" />
-                                        </td> -->
+                                        </td> --> 
                                         <td>
                                             <t t-out="stcw_certificate.candidate_cert_no" />
                                         </td>
@@ -1446,7 +1433,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="transaction_slip">Attach Receipt/Bill (max file size - 1 MB): <strong class="text-danger">*</strong></label><br/>
-                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" /><br/><br/>
+                            <input type="file" id="attachments" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" required="True"/><br/><br/>
                         </div>
                     </div>
 
@@ -1600,6 +1587,19 @@
                     <div class="d-flex justify-content-between">
                         <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
                         <strong class="text-danger pl-2" style="font-size:20px;">Your Payment Details are incorrect please contact BES (022-49606713).</strong>
+                    </div>
+                </t>
+                
+                <t t-elif="exam.state == '3-certified'">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-success pl-2" style="font-size:20px;">Certificate Generated,Please download. 
+                            <t t-if="course == 'GP'">
+                                <a t-attf-href="/my/gpexam/list/download_certificate/{{exam.id}}" class="fa">Download Certificate</a>
+                            </t>
+                            <t t-elif="course == 'CCMC'">
+                                <a t-attf-href="/my/ccmcexam/list/download_certificate/{{exam.id}}" class="fa">Download Certificate</a>
+                            </t>
+                        </strong>
                     </div>
                 </t>
             </div>                        
