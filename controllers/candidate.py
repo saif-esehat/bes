@@ -607,7 +607,7 @@ class GPCandidatePortal(CustomerPortal):
                 # import wdb; wdb.set_trace()
                 # Ensure correct types for dates and datetimes
                 date_of_visits = datetime.today().date()  # Correct type for date fields
-                time_spent_on_ship = datetime.now()  # Correct type for datetime fields
+
 
                 candidate_data = {
                     "candidate_id": candidate.id,
@@ -615,7 +615,7 @@ class GPCandidatePortal(CustomerPortal):
                     "imo_no": "Na",
                     "name_of_ports_visited": "Na",
                     "date_of_visits": date_of_visits,  # Pass as datetime.date
-                    "time_spent_on_ship": time_spent_on_ship,  # Pass as datetime.datetime
+                    "time_spent_on_ship": 8,  # Pass as datetime.datetime
                     "bridge": True,
                     "eng_room": True,
                     "cargo_area": True,

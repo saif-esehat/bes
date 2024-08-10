@@ -129,14 +129,13 @@ odoo.define("bes.RepeaterPortal", function (require) {
         debugger;
 
         var selectedInstitute = document.getElementById("institute_name");
-        var selectedIndex =
-          document.getElementById("institute_name").selectedIndex;
+        var selectedIndex = document.getElementById("institute_name").selectedIndex;
         var InstituteSelected = selectedInstitute.options[selectedIndex].text;
 
         var courseName = document.getElementById("course_name").value;
         var instituteName = document.getElementById("institute_name").value;
-        // var otherInstituteName = document.getElementById('other_institute_name').value;
-        var otherInstituteName = "";
+        var otherInstituteName = document.getElementById('other_institute_name').value;
+
 
         var candidateCertNo =
           document.getElementById("candidate_cert_no").value;
@@ -165,7 +164,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
         if (!isFormValid) {
           console.log("Form validation failed");
         } else {
-          var tbody = document.getElementById("gpstcwlist");
+          var tbody = document.getElementById("ccmcstcwlist");
 
           // Create a new row element
           var newRow = document.createElement("tr");
@@ -232,6 +231,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
         }
       },
     })),
+    
     (publicWidget.registry.DeleteSTCW = publicWidget.Widget.extend({
       selector: ".delete_stcw_gp",
       events: {
@@ -244,7 +244,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       },
     }));
 
-  publicWidget.registry.submitRepeaterForm = publicWidget.Widget.extend({
+  publicWidget.registry.submitGPRepeaterForm = publicWidget.Widget.extend({
     selector: 'form[name="gp_repeater_submit"]',
     events: {
       submit: "_onSubmitGPRepeater",
@@ -261,7 +261,6 @@ odoo.define("bes.RepeaterPortal", function (require) {
     
       var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
 
-      debugger;
   
       var certificate_criteria = document.getElementById(
         "certificate_criteria"
@@ -323,6 +322,103 @@ odoo.define("bes.RepeaterPortal", function (require) {
       
         if (stcw_valid && ship_visit_yes) {
           document.getElementById("gp_repeater_submission_form").submit();
+        }
+      }
+      //    debugger
+    },
+
+    _checkCourseCombination: function (coursesList, validCombinations) {
+      const courseNames = coursesList.map((course) => course.course);
+
+      for (let combination of validCombinations) {
+        if (combination.every((course) => courseNames.includes(course))) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+  });
+
+  publicWidget.registry.submitCCMCRepeaterForm = publicWidget.Widget.extend({
+    selector: 'form[name="ccmc_repeater_submit"]',
+    events: {
+      submit: "_onSubmitCCMCRepeater",
+    },
+
+    _onSubmitCCMCRepeater: function (evt) {
+      evt.preventDefault();
+      debugger
+
+      var tableData = [];
+
+      var gpstcwlisttable = document
+        .getElementById("ccmcstcwlist")
+        .querySelectorAll("tr");
+    
+      var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
+
+  
+      var certificate_criteria = document.getElementById(
+        "certificate_criteria"
+      ).value;
+
+      if (certificate_criteria == "passed" && ship_visit_yes) {
+        document.getElementById("ccmc_repeater_submission_form").submit();
+      } else {
+        if (certificate_criteria != 'passed') {
+          for (var i = 0; i < gpstcwlisttable.length; i++) {
+            var cells = gpstcwlisttable[i].querySelectorAll("td, input");
+            var rowData = {
+              course: cells[1].textContent,
+              institute_id: cells[2].value,
+              other_institute_name: cells[4].textContent,
+              candidate_certificate_no: cells[5].textContent,
+              course_startdate: cells[6].textContent,
+              course_enddate: cells[7].textContent,
+            };
+            tableData.push(rowData);
+          }
+      
+          const validCombinations = [
+            ["bst", "stsdsd"],
+            ["stsdsd", "pst", "efa", "pssr"],
+          ];
+      
+          document.getElementById("stcw_table_data").value = JSON.stringify(tableData);
+      
+          var stcw_valid = this._checkCourseCombination(tableData, validCombinations);
+        }else{
+            var stcw_valid = true;
+        }
+      
+        var alert_element = document.getElementById("alert_id");
+        if (alert_element) {
+          // Remove existing div if present
+          var existingDiv = alert_element.querySelector("div");
+          if (existingDiv) {
+            alert_element.removeChild(existingDiv);
+          }
+        }
+      
+        if (!stcw_valid) {
+          var newDiv = document.createElement("div");
+          newDiv.textContent = "The STCW certificates data is incorrect. Kindly recheck. \nMinimum Requirement STSDSD is Mandatory and secondly BST or (PST+PSSR+EFA+FPFF) is mandatory. Form submission cannot proceed without STCW Certificates";
+          newDiv.className = "alert alert-danger";
+          newDiv.setAttribute("role", "alert");
+          alert_element.appendChild(newDiv);
+        }
+      
+        if (!ship_visit_yes) {
+          var newDiv = document.createElement("div");
+          newDiv.textContent = "Ship Visit Must be Yes in Order to apply for Exam";
+          newDiv.className = "alert alert-danger";
+          newDiv.setAttribute("role", "alert");
+          alert_element.appendChild(newDiv);
+        }
+      
+        if (stcw_valid && ship_visit_yes) {
+          document.getElementById("ccmc_repeater_submission_form").submit();
         }
       }
       //    debugger

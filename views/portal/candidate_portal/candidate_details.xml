@@ -964,9 +964,12 @@
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
                 <p>All Fields are mandatory</p>
-                <form action="/my/ccmcapplication/view" enctype="multipart/form-data" method="post">
+                <form id="ccmc_repeater_submission_form" name="ccmc_repeater_submit"  action="/my/ccmcapplication/view" enctype="multipart/form-data" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" name="batch_id" id="batch_id" t-attf-value="{{batch.id}}" />
+                    <input type="hidden" name="stcw_table_data" id="stcw_table_data"  />
+                    <input type="hidden" name="certificate_criteria" id="certificate_criteria"  t-att-value="candidate.stcw_criteria"/>
+
                     <div class="form-group row">
                         <div class="col-lg-9">
                             <div class="card-body">
@@ -1114,7 +1117,7 @@
                                     <th>End Date</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="ccmcstcwlist">
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
                                         <!-- <t t-if="candidate.stcw_criteria == 'pending'"> -->
@@ -1441,6 +1444,9 @@
 
                     <button type="submit" class="btn btn-primary">Submit</button><strong class="text-warning pl-5">Kindly fill in all the details before submission</strong>
                 </form>
+                <div id="alert_id" style="padding:20px" >
+                    
+                </div>
 
                 <div class="modal fade" id="CCMCDeleteSTCW" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -1534,6 +1540,9 @@
                                 </div>
                             </div>
                         </form>
+                        <div id="alert_id" style="padding:20px" >
+                    
+                        </div>
                     </div>
                 </div>
             </div>
