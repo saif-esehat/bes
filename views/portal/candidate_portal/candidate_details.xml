@@ -402,7 +402,7 @@
                                     <th>End Date</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="gpstcwlist" >
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
                                         <td>
@@ -791,7 +791,7 @@
                 
                 <div class="modal fade" id="AddGPRepeaterStcw" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/gprepeatercandidate/addstcw" enctype="multipart/form-data">
+                        <form method="post" action="/my" >
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="hidden" id="batch_id" name="batch_id" t-attf-value="{{batch.id}}" />
                             <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
@@ -829,7 +829,7 @@
                                         <div class="col-md-6" id="other_institute_name_container" style="display: none;">
                                             <div class="form-group">
                                                 <label for="other_institute_name">Other Institute Name</label>
-                                                <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"/>
+                                                <input type="text" class="form-control" id="other_institute_name" name="other_institute_name" required="1"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -853,7 +853,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Add</button>
+                                    <button type="button" class="btn btn-primary add_stcw_gp">Add</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
