@@ -343,6 +343,11 @@
 
     </template>
 
+    <template id="portal_inherited_invoices" inherit_id="account.portal_my_invoices">
+         <xpath expr="//span[@class='badge badge-pill badge-info']" position="replace">
+            <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"/><span class="d-none d-md-inline"> Awaiting Payment Confirmation</span></span>
+         </xpath>
+    </template>
 
 
 
