@@ -443,7 +443,11 @@ class InstitutePortal(CustomerPortal):
             name = kw.get("name")
             indos_no = kw.get("indos_no")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
-            dob = kw.get("dob")
+            date_str = kw.get("dob")
+            try:
+                dob = datetime.strptime(date_str, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValidationError("Invalid Date of Birth format. Please use YYYY-MM-DD.")
             street = kw.get("street")
             street2 = kw.get("street2")
             city = kw.get("city")
@@ -458,6 +462,16 @@ class InstitutePortal(CustomerPortal):
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
 
+            if kw.get('minicoy') and sc_st == 'st' and not eighth_percent:
+                error = f"{name} is not eligible for GP. \n Candidate should be at minimum 8th Passed to be eligible"
+                return request.render("bes.not_eligible", {
+                    "error": error
+                })
+
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
+
             candidate_data = {
                 "name": name,
                 "indos_no": indos_no,
@@ -465,6 +479,7 @@ class InstitutePortal(CustomerPortal):
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
+                "age": age,
                 "street": street,
                 "street2": street2,
                 "city": city,
@@ -500,7 +515,11 @@ class InstitutePortal(CustomerPortal):
             name = kw.get("name")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
             indos_no = kw.get("indos_no")
-            dob = kw.get("dob")
+            date_str = kw.get("dob")
+            try:
+                dob = datetime.strptime(date_str, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValidationError("Invalid Date of Birth format. Please use YYYY-MM-DD.")
             street = kw.get("street")
             street2 = kw.get("street2")
             city = kw.get("city")
@@ -515,6 +534,15 @@ class InstitutePortal(CustomerPortal):
             iti_percent = kw.get("iti_percent")
             sc_st = kw.get("sc_st")
 
+            if kw.get('minicoy') and sc_st == 'st' and not eighth_percent:
+                error = f"{name} is not eligible for CCMC. \n Candidate should be at minimum 8th Passed to be eligible"
+                return request.render("bes.not_eligible", {
+                    "error": error
+                })
+
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
             
             candidate_data = {
                 "name": name,
@@ -523,6 +551,7 @@ class InstitutePortal(CustomerPortal):
                 "institute_batch_id":batch_id,
                 "institute_id":institute_id,
                 "dob": dob,
+                "age": age,
                 "street": street,
                 "street2": street2,
                 "city": city,
@@ -581,7 +610,7 @@ class InstitutePortal(CustomerPortal):
 
         batch = request.env['institute.ccmc.batches'].sudo().search([('id','=',kw.get("delete_ccmc_candidate_batch_id"))])
         
-        candidate_user_id = request.env['gp.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).user_id
+        candidate_user_id = request.env['ccmc.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).user_id
         if not candidate_user_id:
             request.env['ccmc.candidate'].sudo().search([('id','=',kw.get('ccmc_candidate_id'))]).unlink()
             
@@ -1284,7 +1313,7 @@ class InstitutePortal(CustomerPortal):
     def AddShipVisits(self, **kw):
         
         # Extracting data from the HTML form
-        candidate_id = kw.get("candidate_id")
+        candidate_id = int(kw.get("candidate_id"))
         name_of_ships = kw.get("name_of_ships")
         imo_no = kw.get("imo_no")
         name_of_ports_visited = kw.get("name_of_ports_visited")
@@ -1320,14 +1349,14 @@ class InstitutePortal(CustomerPortal):
 
         # Create a record in the 'gp.candidate' model
         
-        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+        return request.redirect('/my/gpcandidateprofile/'+str(candidate_id))
 
 
     @http.route(['/my/addccmcshipvisit'], method=["POST", "GET"], type="http", auth="user", website=True)
     def AddCcmcShipVisits(self, **kw):
         
         # Extracting data from the HTML form
-        candidate_id = kw.get("candidate_id")
+        candidate_id = int(kw.get("candidate_id"))
         name_of_ships = kw.get("name_of_ships")
         imo_no = kw.get("imo_no")
         name_of_ports_visited = kw.get("name_of_ports_visited")
@@ -1357,7 +1386,7 @@ class InstitutePortal(CustomerPortal):
       
         
         
-        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
+        return request.redirect('/my/ccmccandidateprofile/'+str(candidate_id))
         
         
     @http.route(['/my/shipvisit/delete'], method=["POST", "GET"], type="http", auth="user", website=True)
@@ -1497,6 +1526,10 @@ class InstitutePortal(CustomerPortal):
         }
         request.env["ccmc.candidate.stcw.certificate"].sudo().create(stcw_data)
         candidate = request.env["ccmc.candidate"].sudo().search([('id','=',candidate_id)])
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
         candidate._check_stcw_certificate()
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
@@ -2660,11 +2693,12 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/uploadgpcandidatedata'], type="http", auth="user", website=True)
     def UploadGPCandidateData(self, **kw):
+        # import wdb; wdb.set_trace()
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
+        batch_id = int(kw.get("upload_batch_id"))
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
@@ -2736,7 +2770,7 @@ class InstitutePortal(CustomerPortal):
                     date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
                 else:
                     date_value = datetime.strptime(date_value, '%d-%b-%Y')
-                dob = date_value
+                dob = date_value.date()
             except:
                 raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
@@ -2848,6 +2882,11 @@ class InstitutePortal(CustomerPortal):
                     raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
             except :
                 raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
+            
+
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
 
             try:
                 new_candidate = request.env['gp.candidate'].sudo().create({
@@ -2856,6 +2895,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_id': institute_id,
                     'indos_no': indos_no,
                     'dob': dob,
+                    'age': age,
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,
@@ -2984,7 +3024,7 @@ class InstitutePortal(CustomerPortal):
                     date_value = xlrd.xldate_as_datetime(date_value, workbook.datemode)
                 else:
                     date_value = datetime.strptime(date_value, '%d-%b-%Y')
-                dob = date_value
+                dob = date_value.date()
             except :
                 raise ValidationError(f"Invalid or Missing Date of Birth in row {row_num + 1}, Please use the given format and check for unwanted spaces")
 
@@ -3098,6 +3138,10 @@ class InstitutePortal(CustomerPortal):
             except :
                 raise ValidationError(f"Please Mention if candidate belong to SC/ ST/ OBC or General in row {row_num + 1}")
 
+            today = datetime.now().date()
+            delta = today - dob
+            age = delta.days // 365
+
             try:
                 new_candidate = request.env['ccmc.candidate'].sudo().create({
                     'name': full_name,
@@ -3105,6 +3149,7 @@ class InstitutePortal(CustomerPortal):
                     'institute_id': institute_id,
                     'indos_no': indos_no,
                     'dob': dob,
+                    'age': age,
                     'institute_batch_id': batch_id,
                     'street': street1,
                     'street2': street2,

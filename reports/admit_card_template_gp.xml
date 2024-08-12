@@ -18,7 +18,29 @@
                             </t>
                         </div>  
                         <div style="font-size: 20px; text-align: center; margin-bottom: 30px;">
-                            <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
+                            <t t-if="o.attempt_number == 1">
+                                <strong>Exam Center: <t t-esc="o.registered_institute.name"/></strong>
+                            </t>
+                            <t t-elif="o.attempt_number > 1">
+                                <t t-if="o.exam_region.id == 1">
+                                    <strong>Exam Center: <t t-esc="o.dgs_batch.mumbai_region.name"/></strong>
+                                </t>
+                                <t t-elif="o.exam_region.id == 3">
+                                    <strong>Exam Center: <t t-esc="o.dgs_batch.delhi_region.name"/></strong>
+                                </t>
+                                <t t-elif="o.exam_region.id == 4">
+                                    <strong>Exam Center: <t t-esc="o.dgs_batch.goa_region.name"/></strong>
+                                </t>
+                                <t t-elif="o.exam_region.id == 5">
+                                    <strong>Exam Center: <t t-esc="o.dgs_batch.kolkatta_region.name"/></strong>
+                                </t>
+                                <t t-elif="o.exam_region.id == 6">
+                                    <strong>Exam Center: <t t-esc="o.dgs_batch.chennai_region.name"/></strong>
+                                </t>
+                                <t t-elif="o.exam_region.id == 8">
+                                    <strong>Exam Center: <t t-esc="o.dgs_batch.kochi_region.name"/></strong>
+                                </t>
+                            </t>
                         </div>
 
                     </div>
@@ -72,19 +94,12 @@
                             </div>
                         </div>
                         
-                        <div style="text-align: center; font-size: 22px; margin-bottom: 10px;">
-                            <t t-if="o.attempt_number == 1">
-                                <strong>Admit Card - GP Fresh Candidate</strong>
-                            </t>
-                            <t t-else="">
-                                 <div class="row" style="margin-bottom:4px;">
-                                    <div class="col-6">
-                                    <span style="font-size:20px;">Institute: </span>
-                                    <span style="font-size:20px;"><t t-esc="o.institute_id.name"/></span>  
-                                </div>
-                        </div>   
-                            </t>
-                        </div> 
+                        <div class="row" style="margin-bottom:4px;">
+                            <div class="col-6">
+                                <span style="font-size:20px;">Institute: </span>
+                                <span style="font-size:20px;"><t t-esc="o.institute_id.name"/></span>  
+                            </div>
+                        </div>
 
                         <div class="row" style="margin-bottom:4px;">
                             <div class="col-6">
@@ -124,19 +139,19 @@
                                     </thead>
                                     <tbody>
 
-                                        <tr scope="row" t-if="o.gsk_oral_prac_status == 'pending' or o.gsk_oral_prac_status == 'failed'">
+                                        <tr scope="row" t-if="o.attempting_gsk_oral_prac">
                                             <td style="border: 1px solid black;">GSK Practical &amp; Oral</td>
                                         </tr>
 
-                                        <tr scope="row" t-if="o.gsk_online_status == 'pending' or o.gsk_online_status == 'failed'">
+                                        <tr scope="row" t-if="o.attempting_gsk_online">
                                             <td style="border: 1px solid black;">GSK Online</td>
 
                                         </tr>
-                                        <tr scope="row" t-if="o.mek_oral_prac_status == 'pending' or o.mek_oral_prac_status == 'failed'">
+                                        <tr scope="row" t-if="o.attempting_mek_oral_prac">
                                             <td style="border: 1px solid black;">MEK Practical &amp; Oral</td>
 
                                         </tr>
-                                        <tr scope="row" t-if="o.mek_online_status == 'pending' or o.mek_online_status == 'failed'">
+                                        <tr scope="row" t-if="o.attempting_mek_online">
                                             <td style="border: 1px solid black;">MEK Online</td>
                                         </tr>
                                         
