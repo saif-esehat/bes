@@ -1167,6 +1167,7 @@
                                     <!-- </t> -->
                                     <th>Course</th>
                                     <th>Institute Name</th>
+                                    <th>Other Institute Name</th>
                                     <th>Candidate Certificate Number</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
