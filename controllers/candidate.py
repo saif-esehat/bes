@@ -884,3 +884,22 @@ class GPCandidatePortal(CustomerPortal):
             if not certificate.other_institute:
                 return json.dumps({"other_institute_name":False})
         return json.dumps({"other_institute_name":True})
+   
+    @http.route(['/my/gp/update-inst'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def GPUpdateOtherInstitute(self, **kw):
+        candidate_user_id = request.env.user.id
+        if request.httprequest.method == 'POST':
+            candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+            dgs_batch_id = int(kw.get('batch_id'))
+            stcw_id = kw.get("gp_stcw_line_id")
+            stcw = request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)])
+            # import wdb; wdb.set_trace();
+            stcw.sudo().write({'other_institute': kw.get('other_institute_name')})
+        
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
