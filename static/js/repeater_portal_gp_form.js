@@ -448,7 +448,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
           
               document.getElementById("stcw_table_data").value = JSON.stringify(tableData);
           
-              var stcw_valid = this._checkCourseCombination(tableData, validCombinations);
+              var stcw_valid = this.indexValue.checkCourse(tableData, validCombinations);
             }else{
                 var stcw_valid = true;
             }
