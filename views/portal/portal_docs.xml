@@ -17,10 +17,13 @@
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/helpdesk_ticket">
                                 Raise a Query
                         </a>
-
-                        <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-attf-href="/gpcandidate/repeater/7">
-                                Apply for Repeater Exam
-                        </a>
+                        <t t-set="gp_repeater" t-value="env['dgs.batches'].sudo().search([('repeater_batch','=',True)], order='create_date desc', limit=1)" />
+                        
+                        <t t-if="gp_repeater">
+                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" t-att-href="gp_repeater.gp_url">
+                                    Apply for Repeater Exam
+                            </a>
+                        </t>
                         <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/invoices" title="Invoices &amp; Bills">
                                     Invoices &amp; Bills
                             <span class="badge badge-secondary badge-pill" data-oe-model="ir.ui.view" data-oe-id="482" data-oe-field="arch" data-oe-xpath="/t[1]/a[1]/t[3]/span[1]" data-placeholder_count="invoice_count">5</span>

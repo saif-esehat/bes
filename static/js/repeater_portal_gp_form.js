@@ -306,7 +306,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       
         if (!stcw_valid) {
           var newDiv = document.createElement("div");
-          newDiv.textContent = "The STCW certificates data is incorrect. Kindly recheck. \nMinimum Requirement STSDSD is Mandatory and secondly BST or (PST+PSSR+EFA+FPFF) is mandatory. Form submission cannot proceed without STCW Certificates";
+          newDiv.textContent = "STCW is pending. Minimum requirement is BST + STSTD OR PST+ BFF+ PSSR+ MFA + STSTD";
           newDiv.className = "alert alert-danger";
           newDiv.setAttribute("role", "alert");
           alert_element.appendChild(newDiv);
@@ -403,7 +403,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       
         if (!stcw_valid) {
           var newDiv = document.createElement("div");
-          newDiv.textContent = "The STCW certificates data is incorrect. Kindly recheck. \nMinimum Requirement STSDSD is Mandatory and secondly BST or (PST+PSSR+EFA+FPFF) is mandatory. Form submission cannot proceed without STCW Certificates";
+          newDiv.textContent =  "STCW is pending. Minimum requirement is BST + STSTD OR PST+ BFF+ PSSR+ MFA + STSTD";
           newDiv.className = "alert alert-danger";
           newDiv.setAttribute("role", "alert");
           alert_element.appendChild(newDiv);
