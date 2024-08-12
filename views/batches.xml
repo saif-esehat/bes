@@ -495,6 +495,7 @@
                             <field name="visible_generate_report" invisible="1"/>
                             <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="form_deadline_start" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="mumbai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="kolkatta_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
