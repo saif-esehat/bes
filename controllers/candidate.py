@@ -330,9 +330,29 @@ class GPCandidatePortal(CustomerPortal):
     def viewCCMCApplication(self, **kwargs):
         if request.httprequest.method == 'POST':
             
-            
+            # import wdb;wdb.set_trace()
             candidate_user_id = request.env.user.id
             candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+            
+            if kwargs.get('stcw_table_data'):
+                stcw_data = json.loads(kwargs.get('stcw_table_data'))
+
+            if candidate.stcw_criteria == 'passed':
+                print("Done")
+            else:
+                for stcw in stcw_data:
+                    data = {
+                    'candidate_id' : candidate.id,
+                    'course_name' : stcw['course'],
+                    'candidate_cert_no': stcw['candidate_certificate_no'],
+                    'institute_name': int(stcw['institute_id']),
+                    'other_institute': stcw['other_institute_name'],
+                    'course_start_date': stcw['course_startdate'],
+                    'course_end_date' : stcw['course_enddate']
+                    }
+                    request.env['ccmc.candidate.stcw.certificate'].sudo().create(data)
+            
+            
             
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
@@ -850,3 +870,22 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
         
         return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
+   
+    @http.route(['/my/gp/update-inst'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def GPUpdateOtherInstitute(self, **kw):
+        candidate_user_id = request.env.user.id
+        if request.httprequest.method == 'POST':
+            candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+            dgs_batch_id = int(kw.get('batch_id'))
+            stcw_id = kw.get("gp_stcw_line_id")
+            stcw = request.env['gp.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)])
+            # import wdb; wdb.set_trace();
+            stcw.sudo().write({'other_institute': kw.get('other_institute_name')})
+        
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))

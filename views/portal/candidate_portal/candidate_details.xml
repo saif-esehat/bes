@@ -304,7 +304,7 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0"><strong>Parent Training Institute:</strong></p>
+                                        <p class="mb-0"><strong>Pre-Sea Training Institute:</strong></p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
@@ -391,6 +391,17 @@
                                 document.getElementById('candidate_id').value = candidate_id;
                 
                                 }
+                            
+                                function openGPUpdateInstModal(a) {
+
+                                // Retrieve the data-id attribute value from the clicked button
+                                var dataId = a.getAttribute('stcw-id');
+                                var candidate_id = a.getAttribute('candidate-id');
+                                // Update the content of the modal with the retrieved data
+                                document.getElementById('gp_stcw_line_id').value = dataId;
+                                document.getElementById('candidate_id').value = candidate_id;
+                
+                                }
                         </script>
                         <table  class="table rounded mb-0 bg-white o_portal_my_doc_table">
                             <thead>
@@ -399,8 +410,7 @@
                                     <th>Course</th>
                                     <th>Institute Name</th>
                                     <th>Other Institute Name</th>
-                                    <!-- <th>MTI Number</th>
-                                    <th>INDOS No.</th> -->
+                                    <!-- <th>MTI Number</th> -->
                                     <th>Candidate Certificate Number</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
@@ -410,29 +420,34 @@
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
                                         <td>
-                                            <!-- <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
-                                                                
+                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
                                                 </svg>
-                                            </button> -->
+                                            </button>
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
                                         </td>
                                         <td>
-                                            <t t-out="stcw_certificate.institute_name.name" />
+                                            <t t-esc="stcw_certificate.institute_name.name" />
                                         </td>
                                         <td>
-                                            <t t-out="stcw_certificate.other_institute" />
+                                            <!-- Conditional display based on institute name and other_institute field -->
+                                            <t t-if="stcw_certificate.institute_name.name == 'Others' or stcw_certificate.institute_name.id == 114">
+                                                <t t-if="stcw_certificate.other_institute">
+                                                    <t t-esc="stcw_certificate.other_institute" />
+                                                </t>
+                                                <t t-else="">
+                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPUpdateOtherInst" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Institute Name</a>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="stcw_certificate.institute_name.name" />
+                                            </t>
                                         </td>
-                                        <!-- <td>
-                                            <t t-out="stcw_certificate.marine_training_inst_number" />
-                                        </td>
-                                        <td>
-                                            <t t-out="stcw_certificate.candidate_id.indos_no" />
-                                        </td> -->
+  
                                         <td>
                                             <t t-out="stcw_certificate.candidate_cert_no" />
                                         </td>
@@ -443,6 +458,7 @@
                                             <t t-out="stcw_certificate.course_end_date" />
                                         </td>
                                     </tr>
+                                    
                                 </t>
                             </tbody>
                         </table>
@@ -869,6 +885,37 @@
                         </form>
                     </div>
                 </div>
+
+                <div class="modal fade" id="GPUpdateOtherInst" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/gp/update-inst" >
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" id="batch_id" name="batch_id" t-attf-value="{{batch.id}}" />
+                            <input type="hidden" id="gp_stcw_line_id" name="gp_stcw_line_id"/>
+                            <input type="hidden" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}"/>
+                            <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Other Institute</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="other_institute_name">Other Institute Name</label>
+                                                <input type="text" class="form-control" id="other_institute_name" name="other_institute_name" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 
             </div>
         </t>
@@ -1020,7 +1067,7 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0"><strong>Parent Training Institute:</strong></p>
+                                        <p class="mb-0"><strong>Pre-Sea Training Institute:</strong></p>
                                     </div>
                                     <div class="col-sm-9">
                                         <p class="text-muted mb-0">
@@ -1075,7 +1122,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <t t-if="candidate.stcw_criteria == 'pending'">
+                                    <!-- <t t-if="candidate.stcw_criteria == 'pending'"> -->
                                         <div class="col-9">
                                             <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                         </div>
@@ -1084,7 +1131,7 @@
                                                 <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
                                             </p>
                                         </div>
-                                    </t>
+                                    <!-- </t> -->
                                 </div>
                             </div>
                         </div>
@@ -1105,13 +1152,11 @@
                         <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                             <thead>
                                 <tr>
-                                    <t t-if="candidate.stcw_criteria == 'pending'">
+                                    <!-- <t t-if="candidate.stcw_criteria == 'pending'"> -->
                                         <th>Action</th>
-                                    </t>
+                                    <!-- </t> -->
                                     <th>Course</th>
                                     <th>Institute Name</th>
-                                    <!-- <th>MTI Number</th>
-                                    <th>INDOS No.</th> -->
                                     <th>Candidate Certificate Number</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
@@ -1120,29 +1165,24 @@
                             <tbody id="ccmcstcwlist">
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
-                                        <!-- <t t-if="candidate.stcw_criteria == 'pending'"> -->
-                                            <td>
-                                                <!-- <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openCCMCSTCWDeleteModal(this)" data-target="#CCMCDeleteSTCW">
-                                                                    
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
-                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
-                                                    </svg>
-                                                </button> -->
-                                            </td>
-                                        <!-- </t> -->
+                                        <td>
+                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openCCMCSTCWDeleteModal(this)" data-target="#CCMCDeleteSTCW">
+                                                                
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                </svg>
+                                            </button>
+                                        </td>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.institute_name.name" />
                                         </td>
-                                        <!-- <td>
-                                            <t t-out="stcw_certificate.marine_training_inst_number" />
-                                        </td>
                                         <td>
-                                            <t t-out="stcw_certificate.candidate_id.indos_no" />
-                                        </td> --> 
+                                            <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
+                                        </td> 
                                         <td>
                                             <t t-out="stcw_certificate.candidate_cert_no" />
                                         </td>
