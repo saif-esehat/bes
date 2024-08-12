@@ -217,6 +217,7 @@
                 <filter string="Candidate Signature Pending" name="candidate_signature_status" domain="[('candidate_signature_status','=','pending')]" />
                 <filter string="Attendance Pending" name="attendance_criteria" domain="[('attendance_criteria','=','pending')]" />
                 <filter string="Ship Visit Pending" name="ship_visit_criteria" domain="[('ship_visit_criteria','=','pending')]" /> -->
+                <filter string="Previous Repeater" name="dgs_batch" domain="[('dgs_batch', '=', 'Previous Repeater'), ('candidate_image_status', '=', 'pending'), ('candidate_signature_status', '=', 'pending')]"/>
 
                 <searchpanel>
                     <!-- <field name="dgs_batch" enable_counters="1"/> -->
@@ -338,6 +339,7 @@
 
                         <group style="width:50%;">
                             <field name="qualification"/>
+                            <field name="eighth_percent" />
                             <field name="tenth_percent" />
                             <field name="twelve_percent" />
                             <field name="iti_percent" />
@@ -726,6 +728,7 @@
 
                         <group style="width:50%;">
                             <field name="qualification"/>
+                            <field name="eighth_percent" />
                             <field name="tenth_percent" />
                             <field name="twelve_percent" />
                             <field name="iti_percent" />

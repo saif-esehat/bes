@@ -7,6 +7,67 @@ import io
 import base64
 
 
+class ReleaseAdmitCard(models.TransientModel):
+    _name = 'release.admit.card'
+    _description = 'Release Admit Card'
+
+    admit_card_type = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ], string='Admit Card Type',default='gp')
+    exam_region = fields.Many2one("exam.center",string="Region")
+    
+    
+    
+    def release_admit_card(self):
+        self.ensure_one()  # Ensure the wizard is accessed by a single record
+
+        exam_batch_id = self.env.context.get('active_id')
+        # self.admit_card_type
+                    
+        if not self.exam_region:
+            raise ValidationError("Please select an exam region.")
+        
+        if self.admit_card_type == 'gp':
+            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates.write({'hold_admit_card':False})
+            
+            message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            
+            return {
+                'name': 'Admit Card Released',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+            
+        elif self.admit_card_type == 'ccmc':
+            candidate_count = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates.write({'hold_admit_card':False})
+            
+            message = "CCMC Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name
+            
+            return {
+                'name': 'Admit Card Released',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+            
+        
+        
+    
+
+
+
 
 class DGSBatch(models.Model):
     _name = "dgs.batches"
@@ -16,7 +77,7 @@ class DGSBatch(models.Model):
     _description= 'Batches'
     
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
-    is_current_batch = fields.Boolean(string='Is Current Batch', default=False,tracking=True)
+    is_current_batch = fields.Boolean(string='Current Fresher Batch', default=False,tracking=True)
     to_date = fields.Date(string='To Date', 
                       widget="date", 
                       date_format="%b-%y",tracking=True)
@@ -29,35 +90,48 @@ class DGSBatch(models.Model):
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
-    mumbai_region = fields.Many2one("bes.institute",string="Mumbai Institute",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
-    kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Institute",tracking=True,domain="[('exam_center.name', '=','KOLKATA')]")
-    chennai_region = fields.Many2one("bes.institute",string="Chennai Institute",tracking=True,domain="[('exam_center.name', '=','CHENNAI')]")
-    delhi_region = fields.Many2one("bes.institute",string="Delhi Institute",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
-    kochi_region = fields.Many2one("bes.institute",string="Kochi Institute",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
-    goa_region = fields.Many2one("bes.institute",string="Goa Institute",tracking=True,domain="[('exam_center.name', '=','GOA')]")
+    mumbai_region = fields.Many2one("bes.institute",string="Mumbai Region",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
+    kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Region",tracking=True,domain="[('exam_center.name', '=','KOLKATA')]")
+    chennai_region = fields.Many2one("bes.institute",string="Chennai Region",tracking=True,domain="[('exam_center.name', '=','CHENNAI')]")
+    delhi_region = fields.Many2one("bes.institute",string="Delhi Region",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
+    kochi_region = fields.Many2one("bes.institute",string="Kochi Region",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
+    goa_region = fields.Many2one("bes.institute",string="Goa Region",tracking=True,domain="[('exam_center.name', '=','GOA')]")
     state = fields.Selection([
         ('1-on_going', 'On-Going'),
         ('2-confirmed', 'Confirmed'),
         ('3-dgs_approved', 'Approved')     
     ], string='State', default='1-on_going',tracking=True)
 
-    repeater_batch = fields.Boolean("Is Repeater Batch",default=False,tracking=True)
+    repeater_batch = fields.Boolean("Repeater Batch",default=False,tracking=True)
     gp_url = fields.Char('URL for GP candidates',compute="_compute_url")
-    ccmc_url = fields.Char('URL for ccmc candidates',compute="_compute_ccmc_url")
-    form_deadline = fields.Date(string="Registration Form Dead Line",tracking=True)
+    ccmc_url = fields.Char('URL for CCMC candidates',compute="_compute_ccmc_url")
+    form_deadline = fields.Date(string="Last Date of Registration for Examination",tracking=True)
     
-    gp_plot_image = fields.Binary(string='Pass Percentage Plot')
-    ccmc_plot_image = fields.Binary(string='Pass Percentage Plot')
+    gp_plot_image = fields.Binary(string='Pass Percentage Graph')
+    ccmc_plot_image = fields.Binary(string='Pass Percentage Graph')
     
     report_status = fields.Selection([
         ('pending', 'Pending'),
         ('generated', 'Generated'),
     
-    ], string='Report Status', default='pending',tracking=True)
+    ], string='Exam Result Report Status', default='pending',tracking=True)
     
     
     visible_generate_report = fields.Boolean(string='Visible Generate Button',compute="show_generate_report_button",tracking=True)
 
+    def open_release_admit_card_wizard(self):
+        view_id = self.env.ref('bes.view_release_admit_card_form').id
+        
+        return {
+            'name': 'Release Admit Card',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'release.admit.card',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {}
+        }
     
     
     @api.depends('state','report_status')    

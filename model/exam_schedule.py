@@ -683,7 +683,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Examiner Assignment Wizard'
     exam_duty = fields.Many2one("exam.type.oral.practical",string="Exam Duty",tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",related='exam_duty.institute_id',required=True,tracking=True)
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
 
     
@@ -1853,12 +1853,13 @@ class ExamOralPractical(models.Model):
 class ExamOralPracticalExaminers(models.Model):
     _name = 'exam.type.oral.practical.examiners'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'display_name'
     _description= 'Examiners'
 
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="Exam Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
-    institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",store=True,tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
@@ -1876,6 +1877,13 @@ class ExamOralPracticalExaminers(models.Model):
                     ('done', 'Completed')
                 ], string='Marksheet Remaining Status', default='pending',compute='compute_marksheet_done',store=True)
     
+    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+
+    @api.depends('examiner.name', 'subject.name', 'exam_date')
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{record.examiner.name} - {record.subject.name} - {record.exam_date}"
+
     @api.depends('candidates_count','candidate_done')
     def compute_marksheet_done(self):
         for record in self:
@@ -2339,6 +2347,7 @@ class ExamOralPracticalExaminers(models.Model):
 class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'display_name'
     _description= 'Marksheets'
 
     examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID",tracking=True)
@@ -2354,7 +2363,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     journal = fields.Integer("Journal",tracking=True,related='mek_oral.journal')
     mek_oral_total_marks = fields.Integer("Oral Total Marks", store=True,tracking=True,related='mek_oral.mek_oral_total_marks')
     mek_oral_remarks = fields.Text("Remarks",tracking=True,related='mek_oral.mek_oral_remarks')
-
+    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",related='mek_oral.mek_oral_draft_confirm',tracking=True)
 
     mek_prac = fields.Many2one("gp.mek.practical.line","MEK Practical",tracking=True)
     using_hand_plumbing_tools_task_3 = fields.Integer("Using Hand & Plumbing Tools (Task 3)",tracking=True,related='mek_prac.using_hand_plumbing_tools_task_3')
@@ -2363,6 +2372,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     prac_electrical = fields.Integer("Electrical (1 Task)",tracking=True,related='mek_prac.electrical')
     mek_practical_total_marks = fields.Integer("Practical Total Marks",store=True,tracking=True,related='mek_prac.mek_practical_total_marks')
     mek_practical_remarks = fields.Text(" Remarks",tracking=True,related='mek_prac.mek_practical_remarks')
+    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True,related='mek_prac.mek_practical_draft_confirm')
 
     gsk_oral = fields.Many2one("gp.gsk.oral.line","GSK Oral",tracking=True)
     subject_area_1_2_3 = fields.Integer("Subject Area 1, 2, 3 ",tracking=True,related='gsk_oral.subject_area_1_2_3')
@@ -2370,6 +2380,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     practical_record_journals = fields.Integer("Practical Record Book and Journal",tracking=True,related='gsk_oral.practical_record_journals')
     gsk_oral_total_marks = fields.Integer("Oral Total Marks", store=True,tracking=True,related='gsk_oral.gsk_oral_total_marks')
     gsk_oral_remarks = fields.Text(" Remarks",tracking=True,related='gsk_oral.gsk_oral_remarks')
+    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True,related='gsk_oral.gsk_oral_draft_confirm')
 
 
     gsk_prac = fields.Many2one("gp.gsk.practical.line","GSK Practical",tracking=True)
@@ -2379,6 +2390,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     fast_ropes_knots_bend_sounding_rod = fields.Integer("·Making fast Ropes and Wires ·Use Rope-Stopper / Chain Stopper.Knots, Bends, Hitches .Whippings/Seizing/Splicing Ropes/Wires .Reeve 3- fold / 2 fold purchase·Taking Soundings with sounding rod / sounding taps ·Reading of Draft .Mannual lifting of weight",tracking=True,related='gsk_prac.fast_ropes_knots_bend_sounding_rod')
     gsk_practical_total_marks = fields.Integer("Practical Total Marks",store=True,tracking=True,related='gsk_prac.gsk_practical_total_marks')
     gsk_practical_remarks = fields.Text("Remarks",tracking=True,related='gsk_prac.gsk_practical_remarks')
+    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True,related='gsk_prac.gsk_practical_draft_confirm')
 
 
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
@@ -2396,6 +2408,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     knowledge_of_menu = fields.Integer("Knowledge of menu",tracking=True,related='cookery_bakery.knowledge_of_menu')
     total_mrks = fields.Integer("Total",store=True,tracking=True,related='cookery_bakery.total_mrks')
     cookery_practical_remarks = fields.Char("Remarks",tracking=True,related='cookery_bakery.cookery_practical_remarks')
+    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",related='cookery_bakery.cookery_draft_confirm')
 
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
     house_keeping = fields.Integer("House Keeping",tracking=True,related='ccmc_oral.house_keeping')
@@ -2406,6 +2419,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     gsk_ccmc = fields.Integer("GSK",related='ccmc_oral.gsk_ccmc',tracking=True)
     toal_ccmc_rating = fields.Integer("Total", store=True,tracking=True,related='ccmc_oral.toal_ccmc_rating')
     ccmc_oral_remarks = fields.Char(" Remarks",tracking=True,related='ccmc_oral.ccmc_oral_remarks')
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",related='ccmc_oral.ccmc_oral_draft_confirm')
     
 
     ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
@@ -2413,6 +2427,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     safety_ccmc = fields.Integer("Safety",related='ccmc_gsk_oral.safety_ccmc',tracking=True)
     toal_ccmc_oral_rating = fields.Integer("Total", store=True,tracking=True,related='ccmc_gsk_oral.toal_ccmc_oral_rating')
     ccmc_gsk_oral_remarks = fields.Char(" Remarks",tracking=True,related='ccmc_gsk_oral.ccmc_gsk_oral_remarks')
+    ccmc__gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",related='ccmc_gsk_oral.ccmc_oral_draft_confirm')
     
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
 
@@ -2421,9 +2436,40 @@ class OralPracticalExaminersMarksheet(models.Model):
     gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
     mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
     
+    display_name = fields.Char(string='Name', compute='_compute_display_name')
+   
+    @api.depends('gp_candidate', 'ccmc_candidate')
+    def _compute_display_name(self):
+        for cousre in self.examiners_id.course:
+            for record in self:
+                if cousre.id == 1:
+                    record.display_name = f"{record.gp_candidate.name}"
+                else:
+                    record.display_name = f"{record.ccmc_candidate.name}"
 
-    
-    
+            
+
+    def open_reallocate_candidates(self):
+        # import wdb;wdb.set_trace();
+        assignment_id = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',self.examiners_id.dgs_batch.id),('institute_id','=',self.examiners_id.institute_id.id)])
+        
+        examiner_id = self.examiners_id.id
+        # examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id','=',assignment_id.id)])
+        
+        return {
+            'name': 'Reallocate Examiner Assignments',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'reallocate.candidates.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_candidate_ids': self.ids,  # Pass a list of candidate IDs
+                'default_exam_batch': assignment_id.dgs_batch.id,  
+                'default_institute_id': assignment_id.institute_id.id,
+                'default_examiner_id': examiner_id,
+            }
+        }
     
     # def open_oral_prac_candidate(self):
         
@@ -3765,7 +3811,8 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
-    
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
+
     exam_region = fields.Many2one('exam.center',related='registered_institute.exam_center',string='Exam Center',store=True)
 
     exam_id = fields.Char(string="Roll No", copy=False, readonly=True,tracking=True)
@@ -4608,7 +4655,56 @@ class CcmcCertificate(models.AbstractModel):
 #             'docs': docs1
 #             }
 
-    
+class ReallocateCandidatesWizard(models.TransientModel):
+    _name = 'reallocate.candidates.wizard'
+    _description = 'Reallocate Candidates Wizard'
+
+    # Define fields for the wizard
+    exam_batch = fields.Many2one('dgs.batches', string='Exam Batch', required=True)
+    institute_id = fields.Many2one('bes.institute', string='Institute', required=True)
+    examiner_id = fields.Many2one('exam.type.oral.practical.examiners', string='Examiner')
+    exam_date = fields.Date(string='Exam Date')
+    candidate_ids = fields.Many2many('exam.type.oral.practical.examiners.marksheet',relation="marksheets_ids", string='Candidates')
+
+    def action_reallocate(self):
+        confirmed_candidates = []  # List to hold names of confirmed candidates
+
+        for candidate in self.candidate_ids:
+            # Check the course for the candidate
+            if candidate.examiners_id.course.id == 1:
+                if candidate.examiners_id.subject.name == 'GSK':
+                    # Check if both oral and practical drafts are confirmed
+                    if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
+                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate 
+                    elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                        confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                        candidate.examiners_id.compute_candidates_done()
+                elif candidate.examiners_id.subject.name == 'MEK':
+                    if candidate.mek_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.mek_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
+                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                    elif candidate.mek_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.mek_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                        confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                        candidate.examiners_id.compute_candidates_done()
+            elif candidate.examiners_id.course.id == 2:
+                if candidate.examiners_id.subject.name == 'CCMC':
+                    if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
+                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                    elif candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                        confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                        candidate.examiners_id.compute_candidates_done()
+
+                    if candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft':
+                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                    elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
+                        confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                        candidate.examiners_id.compute_candidates_done()
+                        
+        # Raise an error if there are confirmed candidates
+        if confirmed_candidates:
+            raise ValidationError("Candidates Already Confirmed: {}".format(", ".join(confirmed_candidates)))
+
+        return {'type': 'ir.actions.act_window_close'}  # Close the wizard after reallocation
+
         
         
         

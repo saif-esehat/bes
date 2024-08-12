@@ -17,6 +17,7 @@
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
+        'views/candidate_approval.xml',
         'views/portal/candidate.xml',
         'views/portal/examiner_portal/examiner_online_exam.xml',
         'views/portal/examiner_portal/candidate_selection.xml',
