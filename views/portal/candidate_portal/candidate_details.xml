@@ -410,7 +410,6 @@
                                     <th>Course</th>
                                     <th>Institute Name</th>
                                     <th>Other Institute Name</th>
-                                    <!-- <th>MTI Number</th> -->
                                     <th>Candidate Certificate Number</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
@@ -420,12 +419,12 @@
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
                                         <td>
-                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
+                                            <!-- <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openSTCWDeleteModal(this)" data-target="#DeleteSTCW">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
                                                 </svg>
-                                            </button>
+                                            </button> -->
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
@@ -1148,6 +1147,17 @@
                                 document.getElementById('candidate_id').value = candidate_id;
                 
                                 }
+                                
+                            function openCCMCUpdateInstModal(a) {
+                                // Retrieve the data-id attribute value from the clicked button
+                                var dataId = a.getAttribute('stcw-id');
+                                var candidate_id = a.getAttribute('candidate-id');
+                                // Update the content of the modal with the retrieved data
+                                document.getElementById('ccmc_stcw_line_id').value = dataId;
+                                document.getElementById('candidate_id').value = candidate_id;
+                
+                                }
+
                         </script>
                         <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                             <thead>
@@ -1166,13 +1176,13 @@
                                 <t t-foreach="candidate.stcw_certificate" t-as="stcw_certificate">
                                     <tr>
                                         <td>
-                                            <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openCCMCSTCWDeleteModal(this)" data-target="#CCMCDeleteSTCW">
+                                            <!-- <button type="button" class="btn btn-danger" t-attf-data-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-toggle="modal" onclick="openCCMCSTCWDeleteModal(this)" data-target="#CCMCDeleteSTCW">
                                                                 
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
                                                 </svg>
-                                            </button>
+                                            </button> -->
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
@@ -1181,7 +1191,18 @@
                                             <t t-out="stcw_certificate.institute_name.name" />
                                         </td>
                                         <td>
-                                            <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
+                                            <!-- Conditional display based on institute name and other_institute field -->
+                                            <t t-if="stcw_certificate.institute_name.name == 'Others' or stcw_certificate.institute_name.id == 114">
+                                                <t t-if="stcw_certificate.other_institute">
+                                                    <t t-esc="stcw_certificate.other_institute" />
+                                                </t>
+                                                <t t-else="">
+                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#CCMCUpdateOtherInst" onclick="openCCMCUpdateInstModal(this)" class="btn btn-primary">Update Institute Name</a>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="stcw_certificate.institute_name.name" />
+                                            </t>
                                         </td> 
                                         <td>
                                             <t t-out="stcw_certificate.candidate_cert_no" />
@@ -1583,6 +1604,37 @@
                         <div id="alert_id" style="padding:20px" >
                     
                         </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="CCMCUpdateOtherInst" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="post" action="/my/ccmc/update-inst" >
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <input type="hidden" id="batch_id" name="batch_id" t-attf-value="{{batch.id}}" />
+                            <input type="hidden" id="ccmc_stcw_line_id" name="ccmc_stcw_line_id"/>
+                            <input type="hidden" id="candidate_id" name="candidate_id" t-attf-value="{{candidate.id}}"/>
+                            <t t-set="institutes" t-value="env['bes.institute'].sudo().search([])"/>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Update Other Institute</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="other_institute_name">Other Institute Name</label>
+                                                <input type="text" class="form-control" id="other_institute_name" name="other_institute_name" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

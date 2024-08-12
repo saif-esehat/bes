@@ -889,3 +889,22 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
         
         return request.redirect('/gpcandidate/repeater/'+str(dgs_batch_id))
+
+    @http.route(['/my/ccmc/update-inst'], type='http', auth="user", website=True, methods=['GET', 'POST'])
+    def CCMCUpdateOtherInstitute(self, **kw):
+        candidate_user_id = request.env.user.id
+        if request.httprequest.method == 'POST':
+            candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+            dgs_batch_id = int(kw.get('batch_id'))
+            stcw_id = kw.get("ccmc_stcw_line_id")
+            stcw = request.env['ccmc.candidate.stcw.certificate'].sudo().search([('id','=',stcw_id)])
+            # import wdb; wdb.set_trace();
+            stcw.sudo().write({'other_institute': kw.get('other_institute_name')})
+        
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
+        return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
