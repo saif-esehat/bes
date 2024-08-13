@@ -425,7 +425,6 @@
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
                                                 </svg>
                                             </button> -->
-                                            <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPEditSTCW" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Edit STCW</a>
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
@@ -436,14 +435,15 @@
                                         <td>
                                             <!-- Conditional display based on institute name and other_institute field -->
                                             <t t-if="stcw_certificate.institute_name.name == 'Others' or stcw_certificate.institute_name.id == 114">
-                                                <t t-if="stcw_certificate.other_institute">
+                                                <!-- <t t-if="stcw_certificate.other_institute">
                                                     <t t-esc="stcw_certificate.other_institute" />
                                                 </t>
-                                                <t t-else="">
+                                                <t t-else=""> -->
+                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPEditSTCW" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Other Institute</a>
                                                 </t>
                                             </t>
                                             <t t-else="">
-                                                <t t-esc="stcw_certificate.institute_name.name" />
+                                                <!-- <t t-esc="stcw_certificate.institute_name.name" /> -->
                                             </t>
                                         </td>
   
@@ -1200,7 +1200,7 @@
                                                 </t>
                                             </t>
                                             <t t-else="">
-                                                <t t-esc="stcw_certificate.institute_name.name" />
+                                                <!-- <t t-esc="stcw_certificate.institute_name.name" /> -->
                                             </t>
                                         </td> 
                                         <td>
