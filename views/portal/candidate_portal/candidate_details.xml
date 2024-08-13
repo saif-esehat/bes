@@ -515,11 +515,16 @@
                                         <td>
                                             <!-- Conditional display based on institute name and other_institute field -->
                                             <t t-if="stcw_certificate.institute_name.name == 'Others' or stcw_certificate.institute_name.id == 114">
-                                                <t t-if="stcw_certificate.other_institute">
+                                                <!-- <t t-if="stcw_certificate.other_institute">
                                                     <t t-esc="stcw_certificate.other_institute" />
                                                 </t>
+<<<<<<< HEAD
                                                 <t t-else="">
                                                     <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPUpdateOtherInst" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Other Institute</a>
+=======
+                                                <t t-else=""> -->
+                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPEditSTCW" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Other Institute</a>
+>>>>>>> 8462bcff94a4dcc9c3ba94b8b9c2c43d70e36593
                                                 </t>
                                             </t>
                                             <t t-else="">
