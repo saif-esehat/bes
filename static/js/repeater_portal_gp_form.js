@@ -28,6 +28,12 @@ odoo.define("bes.RepeaterPortal", function (require) {
       var isFormValid = true;
       const courseStartDatec = new Date(document.getElementById('course_start_date').value);
       const courseEndDatec = new Date(document.getElementById('course_end_date').value);
+      
+      if (courseStartDatec > courseEndDatec) {
+        alert('Course end date cannot be before than course start date.');
+        return;
+      }
+
 
       if (
         courseName === "" ||
@@ -54,15 +60,15 @@ odoo.define("bes.RepeaterPortal", function (require) {
         const restrictedCourseNames = ['efa', 'pssr', 'pst', 'fpff'];
 
 
-        if (courseStartDatec > courseEndDatec) {
-          alert('Course start date cannot be later than course end date.');
-          return;
-        }
+        // if (courseStartDatec > courseEndDatec) {
+        //   alert('Course start date cannot be later than course end date.');
+        //   return;
+        // }
 
-        if (courseStartDatec < courseEndDatec) {
-          alert('Course end date cannot be later than course start date.');
-          return;
-        }
+        // if (courseStartDatec < courseEndDatec) {
+        //   alert('Course end date cannot be later than course start date.');
+        //   return;
+        // }
 
         
         for (let i = 0; i < rows.length; i++) {
@@ -197,6 +203,15 @@ odoo.define("bes.RepeaterPortal", function (require) {
         const courseStartDatec = new Date(document.getElementById('course_start_date').value);
         const courseEndDatec = new Date(document.getElementById('course_end_date').value);
 
+        //  if (courseStartDatec > courseEndDatec) {
+        //       alert('Course start date cannot be later than course end date.');
+        //       return;
+        //     }
+
+        if (courseStartDatec > courseEndDatec) {
+              alert('Course end date cannot be before than course start date.');
+              return;
+            }
 
         var candidateCertNo = document.getElementById("candidate_cert_no").value;
         var courseStartDate = document.getElementById("course_start_date").value;
@@ -232,15 +247,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
             const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
             const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
 
-            if (courseStartDatec > courseEndDatec) {
-              alert('Course start date cannot be later than course end date.');
-              return;
-            }
-
-            if (courseStartDatec < courseEndDatec) {
-              alert('Course end date cannot be later than course start date.');
-              return;
-            }
+           
 
   
             if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
