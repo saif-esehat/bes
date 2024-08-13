@@ -276,7 +276,7 @@
 
                     // Display the selected subjects or a message if none are selected
                     if (selectedSubjects.length &gt; 0) {
-                        selectedSubjectsElement.textContent = 'You have selected these subjects: ' + selectedSubjects.join(', ');
+                        selectedSubjectsElement.innerHTML = 'You have selected these subjects: <strong class='text-danger'>' + selectedSubjects.join(', ') + '</strong>';
                     } else {
                         selectedSubjectsElement.textContent = 'You have not selected any subjects.';
                     }
