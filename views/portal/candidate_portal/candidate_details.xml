@@ -323,6 +323,8 @@
             
             </script>
             <div class="container mt16">
+                <span>Click <a href="https://www.google.com" target="_blank">here</a> to read instructions to fill the form</span>
+
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
@@ -511,7 +513,7 @@
                                                 </svg>
                                             </button> -->
                                         </td>
-                                        <td>
+                                        <td class="text-uppercase">
                                             <t t-out="stcw_certificate.course_name" />
                                         </td>
                                         <td>
@@ -1177,6 +1179,7 @@
             
             </script>
             <div class="container mt16">
+                <span>Click <a href="https://www.google.com" target="_blank">here</a> to read instructions to fill the form</span>
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
@@ -1302,7 +1305,7 @@
                                             </p>
                                             <ol class="list-group list-group-numbered">
                                                 <h3>Minimum requirement is</h3>
-                                                <li class="list-group-item">BST + STSDTD</li>
+                                                <li class="list-item">BST + STSDTD</li>
                                                     <span class="text-center">OR</span>
                                                 <li class="list-group-item">PST + EFA + PSSR + FPFF + STSDTD</li>
                                             </ol>

@@ -343,7 +343,7 @@ class GPCandidatePortal(CustomerPortal):
                 for stcw in stcw_data:
                     data = {
                     'candidate_id' : candidate.id,
-                    'course_name' : stcw['course'],
+                    'course_name' : stcw['course'].lower(),
                     'candidate_cert_no': stcw['candidate_certificate_no'],
                     'institute_name': int(stcw['institute_id']),
                     'other_institute': stcw['other_institute_name'],
@@ -522,7 +522,7 @@ class GPCandidatePortal(CustomerPortal):
                 for stcw in stcw_data:
                     data = {
                     'candidate_id' : candidate.id,
-                    'course_name' : stcw['course'],
+                    'course_name' : stcw['course'].lower(),
                     'candidate_cert_no': stcw['candidate_certificate_no'],
                     'institute_name': int(stcw['institute_id']),
                     'other_institute': stcw['other_institute_name'],
