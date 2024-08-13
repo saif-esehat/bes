@@ -439,7 +439,7 @@
                                                     <t t-esc="stcw_certificate.other_institute" />
                                                 </t>
                                                 <t t-else="">
-                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPEditSTCW" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Other Institute</a>
+                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPUpdateOtherInst" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Other Institute</a>
                                                 </t>
                                             </t>
                                             <t t-else="">
@@ -1197,6 +1197,7 @@
                                                 </t>
                                                 <t t-else="">
                                                     <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#CCMCUpdateOtherInst" onclick="openCCMCUpdateInstModal(this)" class="btn btn-primary">Update Institute Name</a>
+                                                    <!-- <t t-esc="stcw_certificate.institute_name.name" /> -->
                                                 </t>
                                             </t>
                                             <t t-else="">
