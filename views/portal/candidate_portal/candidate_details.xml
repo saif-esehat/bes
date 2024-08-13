@@ -1696,13 +1696,8 @@
                 
                 <t t-elif="exam.state == '3-certified'">
                     <div class="d-flex justify-content-between">
-                        <strong class="text-success pl-2" style="font-size:20px;">Certificate Generated,Please download. 
-                            <t t-if="course == 'GP'">
-                                <a t-attf-href="/my/gpexam/list/download_certificate/{{exam.id}}" class="fa">Download Certificate</a>
-                            </t>
-                            <t t-elif="course == 'CCMC'">
-                                <a t-attf-href="/my/ccmcexam/list/download_certificate/{{exam.id}}" class="fa">Download Certificate</a>
-                            </t>
+                        <strong class="text-success pl-2" style="font-size:20px;">You are Already Passed. 
+                            
                         </strong>
                     </div>
                 </t>
