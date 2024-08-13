@@ -885,6 +885,7 @@ class GPCandidatePortal(CustomerPortal):
                 return json.dumps({"other_institute_name":False})
         return json.dumps({"other_institute_name":True})
     
+    
     @http.route(['/my/checkotherinstituteccmc'], type='http', auth="user", method=['GET'])
     def CheckOthersInstituteCCMC(self, **kwargs):
         candidate_user_id = request.env.user.id

@@ -425,6 +425,7 @@
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
                                                 </svg>
                                             </button> -->
+                                            <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPEditSTCW" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Edit STCW</a>
                                         </td>
                                         <td>
                                             <t t-out="stcw_certificate.course_name" />
@@ -439,7 +440,6 @@
                                                     <t t-esc="stcw_certificate.other_institute" />
                                                 </t>
                                                 <t t-else="">
-                                                    <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#GPUpdateOtherInst" onclick="openGPUpdateInstModal(this)" class="btn btn-primary">Update Institute Name</a>
                                                 </t>
                                             </t>
                                             <t t-else="">
@@ -1162,9 +1162,7 @@
                         <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                             <thead>
                                 <tr>
-                                    <!-- <t t-if="candidate.stcw_criteria == 'pending'"> -->
-                                        <th>Action</th>
-                                    <!-- </t> -->
+                                    <th>Action</th>
                                     <th>Course</th>
                                     <th>Institute Name</th>
                                     <th>Other Institute Name</th>
@@ -1696,8 +1694,13 @@
                 
                 <t t-elif="exam.state == '3-certified'">
                     <div class="d-flex justify-content-between">
-                        <strong class="text-success pl-2" style="font-size:20px;">You are Already Passed. 
-                            
+                        <strong class="text-success pl-2" style="font-size:20px;">You are already passed. 
+                            <!-- <t t-if="course == 'GP'">
+                                <a t-attf-href="/my/gpexam/list/download_certificate/{{exam.id}}" class="fa">Download Certificate</a>
+                            </t>
+                            <t t-elif="course == 'CCMC'">
+                                <a t-attf-href="/my/ccmcexam/list/download_certificate/{{exam.id}}" class="fa">Download Certificate</a>
+                            </t> -->
                         </strong>
                     </div>
                 </t>
