@@ -515,4 +515,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       return false;
     },
   });
+
+
+
 });

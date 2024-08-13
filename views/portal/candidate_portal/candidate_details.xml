@@ -241,6 +241,86 @@
                 }
             }
 
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize variables for input elements
+                var mobileInput = document.getElementById('mobile');
+                var emailInput = document.getElementById('email');
+                var errorParagraph = document.getElementById('mobile-error');
+                var checkboxes = document.querySelectorAll('.exam-checkbox');
+                var selectedSubjectsElement = document.getElementById('selected-subjects');
+            
+                // Disable mobile and email inputs if they already have values
+                if (mobileInput.value) {
+                    mobileInput.disabled = true;
+                }
+                if (emailInput.value) {
+                    emailInput.disabled = true;
+                }
+            
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Set the max attribute of date inputs to today's date
+                document.getElementById('payment_date').setAttribute('max', today);
+                document.getElementById('course_start_date').setAttribute('max', today);
+                document.getElementById('course_end_date').setAttribute('max', today);
+            
+                // Function to update the list of selected subjects
+                function updateSelectedSubjects() {
+                    var selectedSubjects = [];
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            selectedSubjects.push(checkbox.nextElementSibling.textContent.trim());
+                        }
+                    });
+
+                    // Display the selected subjects or a message if none are selected
+                    if (selectedSubjects.length &gt; 0) {
+                        selectedSubjectsElement.textContent = 'You have selected these subjects: ' + selectedSubjects.join(', ');
+                    } else {
+                        selectedSubjectsElement.textContent = 'You have not selected any subjects.';
+                    }
+                }
+
+                // Attach change event listeners to checkboxes
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateSelectedSubjects);
+                });
+
+                // Initialize the selected subjects message on page load
+                updateSelectedSubjects();
+
+            
+                // Function to validate mobile number length
+                function validateMobileLength(input) {
+                    var value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+            
+                    // Trim value to 10 digits if necessary
+                    if (value.length &gt; 10) {
+                        input.value = value.slice(0, 10);
+                    }
+            
+                    // Display an error message if the input length is less than 10 digits
+                    if (value.length &lt; 10 &amp;&amp; value.length &gt; 0) {
+                        errorParagraph.textContent = "Mobile number must be exactly 10 digits.";
+                        input.setCustomValidity("Mobile number must be exactly 10 digits.");
+                    } else if (value.length === 10) {
+                        errorParagraph.textContent = ""; // Clear error message
+                        input.setCustomValidity(""); // Clear custom validity
+                    } else {
+                        errorParagraph.textContent = ""; // Clear error message if input is empty
+                        input.setCustomValidity(""); // Clear custom validity
+                    }
+                }
+            
+                // Attach input event listener to mobile input for validation
+                if (mobileInput) {
+                    mobileInput.addEventListener('input', function() {
+                        validateMobileLength(mobileInput);
+                    });
+                }
+            });
+            
             </script>
             <div class="container mt16">
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
@@ -473,8 +553,9 @@
                                        t-att-value="candidate.mobile" disabled="true"/>
                             </t>
                             <t t-else="">
-                                <input type="number" class="form-control" id="mobile" name="mobile" required="1"/>
-                            </t>
+                                <input type="text" class="form-control validate_num" id="mobile" name="mobile" required="1" maxlength="10"/>
+                                <span id="mobile-error" class="text-danger"></span>
+                            </t> 
                         </div>
                         <div class="col-md-8">
                             <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
@@ -602,7 +683,7 @@
                             <label for="exam_parts">Applied for Examination(s)  <strong class="text-danger">*</strong></label><br/>
                             <t t-if="exam.gsk_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input" />
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input exam-checkbox"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
@@ -610,11 +691,12 @@
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
-                                </div>                            </t>
+                                </div>                            
+                            </t>
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input" />
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input exam-checkbox"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
@@ -627,7 +709,7 @@
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input exam-checkbox"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -640,7 +722,7 @@
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input" />
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input exam-checkbox" />
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
@@ -738,6 +820,9 @@
                         </div>
     
 
+                    </div>
+                    <div class="form-group row">
+                        <p id="selected-subjects">You have selected these subjects:</p>
                     </div>
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
@@ -1004,6 +1089,87 @@
                     otherInstituteContainer.style.display = "none";
                 }
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize variables for input elements
+                var mobileInput = document.getElementById('mobile');
+                var emailInput = document.getElementById('email');
+                var errorParagraph = document.getElementById('mobile-error');
+                var checkboxes = document.querySelectorAll('.exam-checkbox');
+                var selectedSubjectsElement = document.getElementById('selected-subjects');
+            
+                // Disable mobile and email inputs if they already have values
+                if (mobileInput.value) {
+                    mobileInput.disabled = true;
+                }
+                if (emailInput.value) {
+                    emailInput.disabled = true;
+                }
+            
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Set the max attribute of date inputs to today's date
+                document.getElementById('payment_date').setAttribute('max', today);
+                document.getElementById('course_start_date').setAttribute('max', today);
+                document.getElementById('course_end_date').setAttribute('max', today);
+            
+                // Function to update the list of selected subjects
+                function updateSelectedSubjects() {
+                    var selectedSubjects = [];
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            selectedSubjects.push(checkbox.nextElementSibling.textContent.trim());
+                        }
+                    });
+            
+                    // Display the selected subjects or a message if none are selected
+                    if (selectedSubjects.length &gt; 0) {
+                        selectedSubjectsElement.textContent = 'You have selected these subjects: ' + selectedSubjects.join(', ');
+                    } else {
+                        selectedSubjectsElement.textContent = 'You have not selected any subjects.';
+                    }
+                }
+            
+                // Attach change event listeners to checkboxes
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updateSelectedSubjects);
+                });
+            
+                // Initialize the selected subjects message on page load
+                updateSelectedSubjects();
+            
+                // Function to validate mobile number length
+                function validateMobileLength(input) {
+                    var value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+            
+                    // Trim value to 10 digits if necessary
+                    if (value.length &gt; 10) {
+                        input.value = value.slice(0, 10);
+                    }
+            
+                    // Display an error message if the input length is less than 10 digits
+                    if (value.length &lt; 10 &amp;&amp; value.length &gt; 0) {
+                        errorParagraph.textContent = "Mobile number must be exactly 10 digits.";
+                        input.setCustomValidity("Mobile number must be exactly 10 digits.");
+                    } else if (value.length === 10) {
+                        errorParagraph.textContent = ""; // Clear error message
+                        input.setCustomValidity(""); // Clear custom validity
+                    } else {
+                        errorParagraph.textContent = ""; // Clear error message if input is empty
+                        input.setCustomValidity(""); // Clear custom validity
+                    }
+                }
+            
+                // Attach input event listener to mobile input for validation
+                if (mobileInput) {
+                    mobileInput.addEventListener('input', function() {
+                        validateMobileLength(mobileInput);
+                    });
+                }
+            });
+            
+            
             </script>
             <div class="container mt16">
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
@@ -1121,7 +1287,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <!-- <t t-if="candidate.stcw_criteria == 'pending'"> -->
+                                    <t t-if="candidate.stcw_criteria == 'pending'">
                                         <div class="col-9">
                                             <p class="mb-0"><strong>Enter your STCW Certificates Details <span class="text-danger">(Mandatory for Application)</span>:  <span class="text-danger">*</span></strong></p>
                                         </div>
@@ -1130,7 +1296,7 @@
                                                 <a href="#" data-toggle="modal" data-target="#AddCCMCRepeaterStcw" class="btn btn-primary">Add STCW Certificate</a>
                                             </p>
                                         </div>
-                                    <!-- </t> -->
+                                    </t>
                                 </div>
                             </div>
                         </div>
@@ -1197,7 +1363,6 @@
                                                 </t>
                                                 <t t-else="">
                                                     <a href="#" data-toggle="modal" t-attf-stcw-id="{{stcw_certificate.id}}" t-attf-candidate-id="{{candidate.id}}" data-target="#CCMCUpdateOtherInst" onclick="openCCMCUpdateInstModal(this)" class="btn btn-primary">Update Institute Name</a>
-                                                    <!-- <t t-esc="stcw_certificate.institute_name.name" /> -->
                                                 </t>
                                             </t>
                                             <t t-else="">
@@ -1229,9 +1394,10 @@
                                        t-att-value="candidate.mobile" disabled="true"/>
                             </t>
                             <t t-else="">
-                                <input type="number" class="form-control" id="mobile" name="mobile"
-                                       t-att-value="candidate.mobile"/>
-                            </t>
+                                <input type="text" class="form-control validate_num" id="mobile" name="mobile" required="1" maxlength="10"/>
+                                <span id="mobile-error" class="text-danger"></span>
+                            </t>                            
+                            
                         </div>
                         <div class="col-md-8">
                             <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
@@ -1358,7 +1524,7 @@
                             <label for="exam_parts">Applied for Examination(s) <strong class="text-danger">*</strong></label><br/>
                             <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_practical" value="ccmc_practical_repeater" id="cookery_practical" class="form-check-input exam-checkbox"/>
                                     <label for="cookery_practical" class="form-check-label">Cookery And Bakery</label>
                                 </div>
                             </t>
@@ -1371,7 +1537,7 @@
 
                             <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_oral" value="ccmc_oral_repeater" id="cookery_oral" class="form-check-input exam-checkbox"/>
                                     <label for="cookery_oral" class="form-check-label">Cookery Oral</label>
                                 </div>
                             </t>
@@ -1384,7 +1550,7 @@
 
                             <t t-if="exam.ccmc_online_status == 'failed'">
                                 <div class="form-check">
-                                    <input type="checkbox" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input"/>
+                                    <input type="checkbox" name="cookery_gsk_online" value="ccmc_online_repeater" id="cookery_gsk_online" class="form-check-input exam-checkbox"/>
                                     <label for="cookery_gsk_online" class="form-check-label">Cookery/GSK Online</label>
                                 </div>
                             </t>
@@ -1459,6 +1625,9 @@
                                 </t>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group row">
+                        <p id="selected-subjects">You have selected these subjects:</p>
                     </div>
                     <div class="form-group row">
                         <p>Total amount to be paid for booking of exams</p>
