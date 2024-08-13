@@ -10,6 +10,8 @@ odoo.define("bes.RepeaterPortal", function (require) {
       click: "_onAddGP",
     },
     _onAddGP: function (evt) {
+
+      
       var selectedInstitute = document.getElementById("institute_name");
       var selectedIndex =
         document.getElementById("institute_name").selectedIndex;
@@ -24,6 +26,8 @@ odoo.define("bes.RepeaterPortal", function (require) {
       var courseStartDate = document.getElementById("course_start_date").value;
       var courseEndDate = document.getElementById("course_end_date").value;
       var isFormValid = true;
+      const courseStartDatec = new Date(document.getElementById('course_start_date').value);
+      const courseEndDatec = new Date(document.getElementById('course_end_date').value);
 
       if (
         courseName === "" ||
@@ -46,6 +50,58 @@ odoo.define("bes.RepeaterPortal", function (require) {
         console.log("Form validation failed");
       } else {
         var tbody = document.getElementById("gpstcwlist");
+        const rows = tbody.getElementsByTagName('tr');
+        const restrictedCourseNames = ['efa', 'pssr', 'pst', 'fpff'];
+
+
+        if (courseStartDatec > courseEndDatec) {
+          alert('Course start date cannot be later than course end date.');
+          return;
+        }
+
+        if (courseStartDatec < courseEndDatec) {
+          alert('Course end date cannot be later than course start date.');
+          return;
+        }
+
+        
+        for (let i = 0; i < rows.length; i++) {
+          const course_name = rows[i].getElementsByTagName('td')[1].innerText;
+          const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
+          const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
+
+          if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
+          (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) || 
+          (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)) {
+              alert('Course Start Date and End Date is Overlapping from the Previous Certificates');
+              return;
+          }
+
+
+          
+           // Check if course_name is 'bst' and courseName is in the restricted list
+
+           if (restrictedCourseNames.includes(course_name)) {
+            // If courseName is 'bst', prevent addition
+            if (courseName === 'bst') {
+              alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF  is present.');
+              return;
+            }
+          }
+
+
+          if (course_name === 'bst' && restrictedCourseNames.includes(courseName)) {
+            alert('Error: You cannot add this course with "bst" as the course name.');
+            return;
+          }
+          
+          // Original check for duplicate course names
+          if (course_name === courseName) {
+            alert('You cannot add Multiple Courses With the Same Name');
+            return;
+          }
+        }
+
 
         // Create a new row element
         var newRow = document.createElement("tr");
@@ -137,12 +193,13 @@ odoo.define("bes.RepeaterPortal", function (require) {
         var courseName = document.getElementById("course_name").value;
         var instituteName = document.getElementById("institute_name").value;
         var otherInstituteName = document.getElementById('other_institute_name').value;
+        
+        const courseStartDatec = new Date(document.getElementById('course_start_date').value);
+        const courseEndDatec = new Date(document.getElementById('course_end_date').value);
 
 
-        var candidateCertNo =
-          document.getElementById("candidate_cert_no").value;
-        var courseStartDate =
-          document.getElementById("course_start_date").value;
+        var candidateCertNo = document.getElementById("candidate_cert_no").value;
+        var courseStartDate = document.getElementById("course_start_date").value;
         var courseEndDate = document.getElementById("course_end_date").value;
         var isFormValid = true;
 
@@ -167,6 +224,62 @@ odoo.define("bes.RepeaterPortal", function (require) {
           console.log("Form validation failed");
         } else {
           var tbody = document.getElementById("ccmcstcwlist");
+          const rows = tbody.getElementsByTagName('tr');
+          const restrictedCourseNames = ['efa', 'pssr', 'pst', 'fpff'];
+
+          for (let i = 0; i < rows.length; i++) {
+            const course_name = rows[i].getElementsByTagName('td')[1].innerText;
+            const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
+            const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
+
+            if (courseStartDatec > courseEndDatec) {
+              alert('Course start date cannot be later than course end date.');
+              return;
+            }
+
+            if (courseStartDatec < courseEndDatec) {
+              alert('Course end date cannot be later than course start date.');
+              return;
+            }
+
+  
+            if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
+            (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) || 
+            (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)) {
+                alert('Course Start Date and End Date is Overlapping from the Previous Certificates');
+                return;
+            }
+            
+             // Validate that courseStartDate is not later than courseEndDate
+            
+  
+            
+             // Check if course_name is 'bst' and courseName is in the restricted list
+  
+             if (restrictedCourseNames.includes(course_name)) {
+              // If courseName is 'bst', prevent addition
+              if (courseName === 'bst') {
+                alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF  is present.');
+                return;
+              }
+            }
+  
+  
+            if (course_name === 'bst' && restrictedCourseNames.includes(courseName)) {
+              alert('Error: You cannot add this course with "bst" as the course name.');
+              return;
+            }
+            
+            // Original check for duplicate course names
+            if (course_name === courseName) {
+              alert('You cannot add Multiple Courses With the Same Name');
+              return;
+            }
+          }
+
+
+          
+
 
           // Create a new row element
           var newRow = document.createElement("tr");
@@ -226,7 +339,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
           document.getElementById("course_start_date").value = "";
           document.getElementById("course_end_date").value = "";
 
-          var modal = document.getElementById("AddGPRepeaterStcw");
+          var modal = document.getElementById("AddCCMCRepeaterStcw");
           if (modal) {
             $(modal).modal("hide"); // Assuming you are using Bootstrap for the modal
           }
