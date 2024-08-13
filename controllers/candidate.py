@@ -872,7 +872,7 @@ class GPCandidatePortal(CustomerPortal):
         return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
     
     
-    @http.route(['/my/checkotherinstitute'], type='http', auth="user", method=['GET'])
+    @http.route(['/my/checkotherinstitutegp'], type='http', auth="user", method=['GET'])
     def CheckOthersInstituteGP(self, **kwargs):
         candidate_user_id = request.env.user.id
         candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
@@ -884,6 +884,19 @@ class GPCandidatePortal(CustomerPortal):
             if not certificate.other_institute:
                 return json.dumps({"other_institute_name":False})
         return json.dumps({"other_institute_name":True})
+    
+    @http.route(['/my/checkotherinstituteccmc'], type='http', auth="user", method=['GET'])
+    def CheckOthersInstituteCCMC(self, **kwargs):
+        candidate_user_id = request.env.user.id
+        candidate = request.env['ccmc.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        stcw_certificates = candidate.stcw_certificate.filtered(lambda cert: cert.institute_name.id == 114 )
+
+        for certificate in stcw_certificates:
+            if not certificate.other_institute:
+                return json.dumps({"other_institute_name":False})
+        return json.dumps({"other_institute_name":True})
+   
+   
    
     @http.route(['/my/gp/update-inst'], type='http', auth="user", website=True, methods=['GET', 'POST'])
     def GPUpdateOtherInstitute(self, **kw):
