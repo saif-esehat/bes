@@ -72,39 +72,42 @@ odoo.define("bes.RepeaterPortal", function (require) {
 
         
         for (let i = 0; i < rows.length; i++) {
-          const course_name = rows[i].getElementsByTagName('td')[1].innerText;
+          // Get the course name from the current row (keeping original case)
+          const course_name = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+          
+          // Get the start and end dates from the current row
           const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
           const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
-
-          if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
-          (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) || 
-          (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)) {
+      
+          // Check if the new course dates overlap with any existing course dates
+          if (
+              (courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) ||  // New course starts within an existing course
+              (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) ||  // New course ends within an existing course
+              (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)  // New course spans across the entire duration of an existing course
+          ) {
               alert('Course Start Date and End Date is Overlapping from the Previous Certificates');
-              return;
+              return;  // Prevent submission if overlapping dates are found
           }
-
-
-          
-           // Check if course_name is 'bst' and courseName is in the restricted list
-
-           if (restrictedCourseNames.includes(course_name)) {
-            // If courseName is 'bst', prevent addition
-            if (courseName === 'bst') {
-              alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF  is present.');
-              return;
-            }
+      
+          // Check if the current course in the table is one of the restricted courses (EFA, PSSR, PST, FPFF)
+          if (restrictedCourseNames.includes(course_name)) {
+              // If the new course being added is 'bst', prevent addition since 'bst' cannot coexist with the restricted courses
+              if (courseName.toLowerCase() === 'bst') {  // Convert courseName to lowercase for comparison
+                  alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF is present.');
+                  return;  // Prevent submission if the new course is 'bst' and a restricted course already exists
+              }
           }
-
-
-          if (course_name === 'bst' && restrictedCourseNames.includes(courseName)) {
-            alert('Error: You cannot add this course with "bst" as the course name.');
-            return;
+      
+          // Check if the current course in the table is 'bst' and the new course being added is in the restricted list
+          if (course_name === 'bst' && restrictedCourseNames.includes(courseName.toLowerCase())) {
+              alert('Error: You cannot add this course with "bst" as the course name.');
+              return;  // Prevent submission if 'bst' already exists and the new course is in the restricted list
           }
-          
-          // Original check for duplicate course names
-          if (course_name === courseName) {
-            alert('You cannot add Multiple Courses With the Same Name');
-            return;
+      
+          // Check for duplicate course names
+          if (course_name === courseName.toLowerCase()) {
+              alert('You cannot add Multiple Courses With the Same Name');
+              return;  // Prevent submission if a course with the same name already exists
           }
         }
 
@@ -129,7 +132,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
 
         // courseName
         var course = document.createElement("td");
-        course.textContent = courseName.toUpperCase();
+        course.textContent = courseName.toUpperCase();  // Convert to uppercase for display
         newRow.appendChild(course);
 
         var institute = document.createElement("td");
@@ -243,46 +246,45 @@ odoo.define("bes.RepeaterPortal", function (require) {
           const restrictedCourseNames = ['efa', 'pssr', 'pst', 'fpff'];
 
           for (let i = 0; i < rows.length; i++) {
-            const course_name = rows[i].getElementsByTagName('td')[1].innerText;
+            // Get the course name from the current row (keeping original case)
+            const course_name = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+            
+            // Get the start and end dates from the current row
             const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
             const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
-
-           
-
-  
-            if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
-            (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) || 
-            (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)) {
+        
+            // Check if the new course dates overlap with any existing course dates
+            if (
+                (courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) ||  // New course starts within an existing course
+                (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) ||  // New course ends within an existing course
+                (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)  // New course spans across the entire duration of an existing course
+            ) {
                 alert('Course Start Date and End Date is Overlapping from the Previous Certificates');
-                return;
+                return;  // Prevent submission if overlapping dates are found
             }
-            
-             // Validate that courseStartDate is not later than courseEndDate
-            
-  
-            
-             // Check if course_name is 'bst' and courseName is in the restricted list
-  
-             if (restrictedCourseNames.includes(course_name)) {
-              // If courseName is 'bst', prevent addition
-              if (courseName === 'bst') {
-                alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF  is present.');
-                return;
-              }
+        
+            // Check if the current course in the table is one of the restricted courses (EFA, PSSR, PST, FPFF)
+            if (restrictedCourseNames.includes(course_name)) {
+                // If the new course being added is 'bst', prevent addition since 'bst' cannot coexist with the restricted courses
+                if (courseName.toLowerCase() === 'bst') {  // Convert courseName to lowercase for comparison
+                    alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF is present.');
+                    return;  // Prevent submission if the new course is 'bst' and a restricted course already exists
+                }
             }
-  
-  
-            if (course_name === 'bst' && restrictedCourseNames.includes(courseName)) {
-              alert('Error: You cannot add this course with "bst" as the course name.');
-              return;
+        
+            // Check if the current course in the table is 'bst' and the new course being added is in the restricted list
+            if (course_name === 'bst' && restrictedCourseNames.includes(courseName.toLowerCase())) {
+                alert('Error: You cannot add this course with "bst" as the course name.');
+                return;  // Prevent submission if 'bst' already exists and the new course is in the restricted list
             }
-            
-            // Original check for duplicate course names
-            if (course_name === courseName) {
-              alert('You cannot add Multiple Courses With the Same Name');
-              return;
+        
+            // Check for duplicate course names
+            if (course_name === courseName.toLowerCase()) {
+                alert('You cannot add Multiple Courses With the Same Name');
+                return;  // Prevent submission if a course with the same name already exists
             }
           }
+        
 
 
           
