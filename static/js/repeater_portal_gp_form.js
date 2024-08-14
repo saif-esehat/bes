@@ -10,6 +10,8 @@ odoo.define("bes.RepeaterPortal", function (require) {
       click: "_onAddGP",
     },
     _onAddGP: function (evt) {
+
+      
       var selectedInstitute = document.getElementById("institute_name");
       var selectedIndex =
         document.getElementById("institute_name").selectedIndex;
@@ -24,6 +26,14 @@ odoo.define("bes.RepeaterPortal", function (require) {
       var courseStartDate = document.getElementById("course_start_date").value;
       var courseEndDate = document.getElementById("course_end_date").value;
       var isFormValid = true;
+      const courseStartDatec = new Date(document.getElementById('course_start_date').value);
+      const courseEndDatec = new Date(document.getElementById('course_end_date').value);
+      
+      if (courseStartDatec > courseEndDatec) {
+        alert('Course end date cannot be before than course start date.');
+        return;
+      }
+
 
       if (
         courseName === "" ||
@@ -46,6 +56,58 @@ odoo.define("bes.RepeaterPortal", function (require) {
         console.log("Form validation failed");
       } else {
         var tbody = document.getElementById("gpstcwlist");
+        const rows = tbody.getElementsByTagName('tr');
+        const restrictedCourseNames = ['efa', 'pssr', 'pst', 'fpff'];
+
+
+        // if (courseStartDatec > courseEndDatec) {
+        //   alert('Course start date cannot be later than course end date.');
+        //   return;
+        // }
+
+        // if (courseStartDatec < courseEndDatec) {
+        //   alert('Course end date cannot be later than course start date.');
+        //   return;
+        // }
+
+        
+        for (let i = 0; i < rows.length; i++) {
+          const course_name = rows[i].getElementsByTagName('td')[1].innerText;
+          const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
+          const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
+
+          if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
+          (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) || 
+          (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)) {
+              alert('Course Start Date and End Date is Overlapping from the Previous Certificates');
+              return;
+          }
+
+
+          
+           // Check if course_name is 'bst' and courseName is in the restricted list
+
+           if (restrictedCourseNames.includes(course_name)) {
+            // If courseName is 'bst', prevent addition
+            if (courseName === 'bst') {
+              alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF  is present.');
+              return;
+            }
+          }
+
+
+          if (course_name === 'bst' && restrictedCourseNames.includes(courseName)) {
+            alert('Error: You cannot add this course with "bst" as the course name.');
+            return;
+          }
+          
+          // Original check for duplicate course names
+          if (course_name === courseName) {
+            alert('You cannot add Multiple Courses With the Same Name');
+            return;
+          }
+        }
+
 
         // Create a new row element
         var newRow = document.createElement("tr");
@@ -67,7 +129,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
 
         // courseName
         var course = document.createElement("td");
-        course.textContent = courseName;
+        course.textContent = courseName.toUpperCase();
         newRow.appendChild(course);
 
         var institute = document.createElement("td");
@@ -124,6 +186,8 @@ odoo.define("bes.RepeaterPortal", function (require) {
       events: {
         click: "_onAddCCMC",
       },
+
+      
       _onAddCCMC: function (evt) {
         evt.preventDefault();
         debugger;
@@ -135,12 +199,22 @@ odoo.define("bes.RepeaterPortal", function (require) {
         var courseName = document.getElementById("course_name").value;
         var instituteName = document.getElementById("institute_name").value;
         var otherInstituteName = document.getElementById('other_institute_name').value;
+        
+        const courseStartDatec = new Date(document.getElementById('course_start_date').value);
+        const courseEndDatec = new Date(document.getElementById('course_end_date').value);
 
+        //  if (courseStartDatec > courseEndDatec) {
+        //       alert('Course start date cannot be later than course end date.');
+        //       return;
+        //     }
 
-        var candidateCertNo =
-          document.getElementById("candidate_cert_no").value;
-        var courseStartDate =
-          document.getElementById("course_start_date").value;
+        if (courseStartDatec > courseEndDatec) {
+              alert('Course end date cannot be before than course start date.');
+              return;
+            }
+
+        var candidateCertNo = document.getElementById("candidate_cert_no").value;
+        var courseStartDate = document.getElementById("course_start_date").value;
         var courseEndDate = document.getElementById("course_end_date").value;
         var isFormValid = true;
 
@@ -165,6 +239,54 @@ odoo.define("bes.RepeaterPortal", function (require) {
           console.log("Form validation failed");
         } else {
           var tbody = document.getElementById("ccmcstcwlist");
+          const rows = tbody.getElementsByTagName('tr');
+          const restrictedCourseNames = ['efa', 'pssr', 'pst', 'fpff'];
+
+          for (let i = 0; i < rows.length; i++) {
+            const course_name = rows[i].getElementsByTagName('td')[1].innerText;
+            const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
+            const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
+
+           
+
+  
+            if ((courseStartDatec >= rowDateFrom && courseStartDatec <= rowDateTo) || 
+            (courseEndDatec >= rowDateFrom && courseEndDatec <= rowDateTo) || 
+            (courseStartDatec <= rowDateFrom && courseEndDatec >= rowDateTo)) {
+                alert('Course Start Date and End Date is Overlapping from the Previous Certificates');
+                return;
+            }
+            
+             // Validate that courseStartDate is not later than courseEndDate
+            
+  
+            
+             // Check if course_name is 'bst' and courseName is in the restricted list
+  
+             if (restrictedCourseNames.includes(course_name)) {
+              // If courseName is 'bst', prevent addition
+              if (courseName === 'bst') {
+                alert('Error: You cannot add "bst" when any of course from EFA, PSSR, PST, FPFF  is present.');
+                return;
+              }
+            }
+  
+  
+            if (course_name === 'bst' && restrictedCourseNames.includes(courseName)) {
+              alert('Error: You cannot add this course with "bst" as the course name.');
+              return;
+            }
+            
+            // Original check for duplicate course names
+            if (course_name === courseName) {
+              alert('You cannot add Multiple Courses With the Same Name');
+              return;
+            }
+          }
+
+
+          
+
 
           // Create a new row element
           var newRow = document.createElement("tr");
@@ -186,7 +308,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
 
           // courseName
           var course = document.createElement("td");
-          course.textContent = courseName;
+          course.textContent = courseName.toUpperCase();
           newRow.appendChild(course);
 
           var institute = document.createElement("td");
@@ -224,7 +346,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
           document.getElementById("course_start_date").value = "";
           document.getElementById("course_end_date").value = "";
 
-          var modal = document.getElementById("AddGPRepeaterStcw");
+          var modal = document.getElementById("AddCCMCRepeaterStcw");
           if (modal) {
             $(modal).modal("hide"); // Assuming you are using Bootstrap for the modal
           }
@@ -261,70 +383,105 @@ odoo.define("bes.RepeaterPortal", function (require) {
     
       var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
 
-  
-      var certificate_criteria = document.getElementById(
-        "certificate_criteria"
-      ).value;
+      // debugger
 
-      if (certificate_criteria == "passed" && ship_visit_yes) {
-        document.getElementById("gp_repeater_submission_form").submit();
-      } else {
-        if (certificate_criteria != 'passed') {
-          for (var i = 0; i < gpstcwlisttable.length; i++) {
-            var cells = gpstcwlisttable[i].querySelectorAll("td, input");
-            var rowData = {
-              course: cells[1].textContent,
-              institute_id: cells[2].value,
-              other_institute_name: cells[4].textContent,
-              candidate_certificate_no: cells[5].textContent,
-              course_startdate: cells[6].textContent,
-              course_enddate: cells[7].textContent,
-            };
-            tableData.push(rowData);
-          }
-      
-          const validCombinations = [
-            ["bst", "stsdsd"],
-            ["stsdsd", "pst", "efa", "pssr"],
-          ];
-      
-          document.getElementById("stcw_table_data").value = JSON.stringify(tableData);
-      
-          var stcw_valid = this._checkCourseCombination(tableData, validCombinations);
+      $.ajax({
+        url: "/my/checkotherinstitutegp", // Update the URL with your actual route
+        method: "GET",
+        indexValue: {checkCourse:this._checkCourseCombination,},
+        dataType: "json",
+        success: function(data) {
+        // Handle the successful response
+
+        if (!data.other_institute_name) {
+
+          var alert_element = document.getElementById("alert_id");
+
+          if (!data.other_institute_name) {
+              var newDiv = document.createElement("div");
+              newDiv.textContent = "Other Institute Name Must be entered";
+              newDiv.className = "alert alert-danger";
+              newDiv.setAttribute("role", "alert");
+              alert_element.appendChild(newDiv);
+        }
+
+          
         }else{
-            var stcw_valid = true;
-        }
-      
-        var alert_element = document.getElementById("alert_id");
-        if (alert_element) {
-          // Remove existing div if present
-          var existingDiv = alert_element.querySelector("div");
-          if (existingDiv) {
-            alert_element.removeChild(existingDiv);
+          
+          var certificate_criteria = document.getElementById(
+            "certificate_criteria"
+          ).value;
+    
+          if (certificate_criteria == "passed" && ship_visit_yes) {
+            document.getElementById("gp_repeater_submission_form").submit();
+          } else {
+            if (certificate_criteria != 'passed') {
+              for (var i = 0; i < gpstcwlisttable.length; i++) {
+                var cells = gpstcwlisttable[i].querySelectorAll("td, input");
+                var rowData = {
+                  course: cells[1].textContent.toLowerCase(),
+                  institute_id: cells[2].value,
+                  other_institute_name: cells[4].textContent,
+                  candidate_certificate_no: cells[5].textContent,
+                  course_startdate: cells[6].textContent,
+                  course_enddate: cells[7].textContent,
+                };
+                tableData.push(rowData);
+              }
+          
+              const validCombinations = [
+                ["bst", "stsdsd"],
+                ["stsdsd", "pst", "efa", "pssr"],
+              ];
+          
+              document.getElementById("stcw_table_data").value = JSON.stringify(tableData);
+          
+              var stcw_valid = this.indexValue.checkCourse(tableData, validCombinations);
+            }else{
+                var stcw_valid = true;
+            }
+          
+            var alert_element = document.getElementById("alert_id");
+            if (alert_element) {
+              // Remove existing div if present
+              var existingDiv = alert_element.querySelector("div");
+              if (existingDiv) {
+                alert_element.removeChild(existingDiv);
+              }
+            }
+          
+            if (!stcw_valid) {
+              var newDiv = document.createElement("div");
+              newDiv.textContent = "STCW is pending. Minimum requirement is BST + STSTD OR PST+ BFF+ PSSR+ MFA + STSTD";
+              newDiv.className = "alert alert-danger";
+              newDiv.setAttribute("role", "alert");
+              alert_element.appendChild(newDiv);
+            }
+          
+            if (!ship_visit_yes) {
+              var newDiv = document.createElement("div");
+              newDiv.textContent = "Ship Visit Must be Yes in Order to apply for Exam";
+              newDiv.className = "alert alert-danger";
+              newDiv.setAttribute("role", "alert");
+              alert_element.appendChild(newDiv);
+            }
+          
+            if (stcw_valid && ship_visit_yes) {
+              document.getElementById("gp_repeater_submission_form").submit();
+            }
           }
+
+
         }
-      
-        if (!stcw_valid) {
-          var newDiv = document.createElement("div");
-          newDiv.textContent = "The STCW certificates data is incorrect. Kindly recheck. \nMinimum Requirement STSDSD is Mandatory and secondly BST or (PST+PSSR+EFA+FPFF) is mandatory. Form submission cannot proceed without STCW Certificates";
-          newDiv.className = "alert alert-danger";
-          newDiv.setAttribute("role", "alert");
-          alert_element.appendChild(newDiv);
+          
+          
+        },
+        error: function(xhr, status, error) {
+        // Handle errors
+        console.error("Error loading data:", status, error);
         }
-      
-        if (!ship_visit_yes) {
-          var newDiv = document.createElement("div");
-          newDiv.textContent = "Ship Visit Must be Yes in Order to apply for Exam";
-          newDiv.className = "alert alert-danger";
-          newDiv.setAttribute("role", "alert");
-          alert_element.appendChild(newDiv);
-        }
-      
-        if (stcw_valid && ship_visit_yes) {
-          document.getElementById("gp_repeater_submission_form").submit();
-        }
-      }
-      //    debugger
+    });
+     
     },
 
     _checkCourseCombination: function (coursesList, validCombinations) {
@@ -337,7 +494,9 @@ odoo.define("bes.RepeaterPortal", function (require) {
       }
 
       return false;
-    },
+    }
+
+    // END HERE
   });
 
   publicWidget.registry.submitCCMCRepeaterForm = publicWidget.Widget.extend({
@@ -358,69 +517,109 @@ odoo.define("bes.RepeaterPortal", function (require) {
     
       var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
 
-  
-      var certificate_criteria = document.getElementById(
-        "certificate_criteria"
-      ).value;
+      $.ajax({
+        url: "/my/checkotherinstituteccmc", // Update the URL with your actual route
+        method: "GET",
+        indexValue: {checkCourse:this._checkCourseCombination,},
+        dataType: "json",
+        success: function(data) {
+        // Handle the successful response
 
-      if (certificate_criteria == "passed" && ship_visit_yes) {
-        document.getElementById("ccmc_repeater_submission_form").submit();
-      } else {
-        if (certificate_criteria != 'passed') {
-          for (var i = 0; i < gpstcwlisttable.length; i++) {
-            var cells = gpstcwlisttable[i].querySelectorAll("td, input");
-            var rowData = {
-              course: cells[1].textContent,
-              institute_id: cells[2].value,
-              other_institute_name: cells[4].textContent,
-              candidate_certificate_no: cells[5].textContent,
-              course_startdate: cells[6].textContent,
-              course_enddate: cells[7].textContent,
-            };
-            tableData.push(rowData);
-          }
-      
-          const validCombinations = [
-            ["bst", "stsdsd"],
-            ["stsdsd", "pst", "efa", "pssr"],
-          ];
-      
-          document.getElementById("stcw_table_data").value = JSON.stringify(tableData);
-      
-          var stcw_valid = this._checkCourseCombination(tableData, validCombinations);
+        if (!data.other_institute_name) {
+
+          var alert_element = document.getElementById("alert_id");
+
+          if (!data.other_institute_name) {
+              var newDiv = document.createElement("div");
+              newDiv.textContent = "Other Institute Name Must be entered";
+              newDiv.className = "alert alert-danger";
+              newDiv.setAttribute("role", "alert");
+              alert_element.appendChild(newDiv);
+        }
+
+          
         }else{
-            var stcw_valid = true;
-        }
-      
-        var alert_element = document.getElementById("alert_id");
-        if (alert_element) {
-          // Remove existing div if present
-          var existingDiv = alert_element.querySelector("div");
-          if (existingDiv) {
-            alert_element.removeChild(existingDiv);
+
+          var certificate_criteria = document.getElementById(
+            "certificate_criteria"
+          ).value;
+    
+          if (certificate_criteria == "passed" && ship_visit_yes) {
+            document.getElementById("ccmc_repeater_submission_form").submit();
+          } else {
+            if (certificate_criteria != 'passed') {
+              for (var i = 0; i < gpstcwlisttable.length; i++) {
+                var cells = gpstcwlisttable[i].querySelectorAll("td, input");
+                var rowData = {
+                  course: cells[1].textContent.toLowerCase(),
+                  institute_id: cells[2].value,
+                  other_institute_name: cells[4].textContent,
+                  candidate_certificate_no: cells[5].textContent,
+                  course_startdate: cells[6].textContent,
+                  course_enddate: cells[7].textContent,
+                };
+                tableData.push(rowData);
+              }
+          
+              const validCombinations = [
+                ["bst", "stsdsd"],
+                ["stsdsd", "pst", "efa", "pssr"],
+              ];
+          
+              document.getElementById("stcw_table_data").value = JSON.stringify(tableData);
+          
+              var stcw_valid = this.indexValue.checkCourse(tableData, validCombinations);
+            }else{
+                var stcw_valid = true;
+            }
+          
+            var alert_element = document.getElementById("alert_id");
+            if (alert_element) {
+              // Remove existing div if present
+              var existingDiv = alert_element.querySelector("div");
+              if (existingDiv) {
+                alert_element.removeChild(existingDiv);
+              }
+            }
+          
+            if (!stcw_valid) {
+              var newDiv = document.createElement("div");
+              newDiv.textContent =  "STCW is pending. Minimum requirement is BST + STSTD OR PST+ BFF+ PSSR+ MFA + STSTD";
+              newDiv.className = "alert alert-danger";
+              newDiv.setAttribute("role", "alert");
+              alert_element.appendChild(newDiv);
+            }
+          
+            if (!ship_visit_yes) {
+              var newDiv = document.createElement("div");
+              newDiv.textContent = "Ship Visit Must be Yes in Order to apply for Exam";
+              newDiv.className = "alert alert-danger";
+              newDiv.setAttribute("role", "alert");
+              alert_element.appendChild(newDiv);
+            }
+          
+            if (stcw_valid && ship_visit_yes) {
+              document.getElementById("ccmc_repeater_submission_form").submit();
+            }
           }
+          
+
         }
+          
+          
+        },
+        error: function(xhr, status, error) {
+        // Handle errors
+        console.error("Error loading data:", status, error);
+        }
+    })
+
+  
+      // Start HERE
       
-        if (!stcw_valid) {
-          var newDiv = document.createElement("div");
-          newDiv.textContent = "The STCW certificates data is incorrect. Kindly recheck. \nMinimum Requirement STSDSD is Mandatory and secondly BST or (PST+PSSR+EFA+FPFF) is mandatory. Form submission cannot proceed without STCW Certificates";
-          newDiv.className = "alert alert-danger";
-          newDiv.setAttribute("role", "alert");
-          alert_element.appendChild(newDiv);
-        }
-      
-        if (!ship_visit_yes) {
-          var newDiv = document.createElement("div");
-          newDiv.textContent = "Ship Visit Must be Yes in Order to apply for Exam";
-          newDiv.className = "alert alert-danger";
-          newDiv.setAttribute("role", "alert");
-          alert_element.appendChild(newDiv);
-        }
-      
-        if (stcw_valid && ship_visit_yes) {
-          document.getElementById("ccmc_repeater_submission_form").submit();
-        }
-      }
+     
+
+      // END HERE
       //    debugger
     },
 
@@ -436,4 +635,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       return false;
     },
   });
+
+
+
 });
