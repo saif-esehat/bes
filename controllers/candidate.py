@@ -264,9 +264,12 @@ class GPCandidatePortal(CustomerPortal):
         course = "GP"
         # import wdb; wdb.set_trace()
 
+        if batch.form_deadline_start > datetime.today().date():
+            raise ValidationError(f"Form Submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is not Started Yet.")
+        
         if batch.form_deadline < datetime.today().date():
             raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
-        
+
 
         
 
@@ -302,9 +305,12 @@ class GPCandidatePortal(CustomerPortal):
         invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
         course = "CCMC"
 
+        if batch.form_deadline_start > datetime.today().date():
+            raise ValidationError(f"Form Submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is not Started Yet.")
+        
         if batch.form_deadline < datetime.today().date():
             raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
-        
+
         vals = {
             'candidate': candidate,
             'exam': previous_exam,

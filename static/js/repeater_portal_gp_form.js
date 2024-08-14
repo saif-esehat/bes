@@ -11,6 +11,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
     },
     _onAddGP: function (evt) {
 
+      debugger
       
       var selectedInstitute = document.getElementById("institute_name");
       var selectedIndex =
@@ -74,10 +75,20 @@ odoo.define("bes.RepeaterPortal", function (require) {
         for (let i = 0; i < rows.length; i++) {
           // Get the course name from the current row (keeping original case)
           const course_name = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
-          
+          const certificate_number = rows[i].getElementsByTagName('td')[4].innerText
           // Get the start and end dates from the current row
           const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
           const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
+
+          if (certificate_number === candidateCertNo) {
+            alert('Duplicate Certificate Value')
+            return;  // Prevent submission if 'bst' already exists and the new course is in the restricted list
+        }
+
+          if (course_name === 'bst' && restrictedCourseNames.includes(courseName.toLowerCase())) {
+            alert('Error: You cannot add this course with "bst" as the course name.');
+            return;  // Prevent submission if 'bst' already exists and the new course is in the restricted list
+        }
       
           // Check if the new course dates overlap with any existing course dates
           if (
@@ -193,7 +204,6 @@ odoo.define("bes.RepeaterPortal", function (require) {
       
       _onAddCCMC: function (evt) {
         evt.preventDefault();
-        debugger;
 
         var selectedInstitute = document.getElementById("institute_name");
         var selectedIndex = document.getElementById("institute_name").selectedIndex;
@@ -248,7 +258,12 @@ odoo.define("bes.RepeaterPortal", function (require) {
           for (let i = 0; i < rows.length; i++) {
             // Get the course name from the current row (keeping original case)
             const course_name = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
-            
+            const certificate_number = rows[i].getElementsByTagName('td')[4].innerText
+
+            if (certificate_number === candidateCertNo) {
+              alert('Duplicate Certificate Value')
+              return;  // Prevent submission if 'bst' already exists and the new course is in the restricted list
+          }
             // Get the start and end dates from the current row
             const rowDateFrom = new Date(rows[i].getElementsByTagName('td')[5].innerText);
             const rowDateTo = new Date(rows[i].getElementsByTagName('td')[6].innerText);
