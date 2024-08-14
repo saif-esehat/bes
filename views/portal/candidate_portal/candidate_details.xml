@@ -1132,7 +1132,7 @@
             
                     // Display the selected subjects or a message if none are selected
                     if (selectedSubjects.length &gt; 0) {
-                        selectedSubjectsElement.textContent = 'You have selected these subjects: <strong class='text-danger'>' + selectedSubjects.join(', ') + '</strong>';
+                        selectedSubjectsElement.innerHTML = 'You have selected these subjects: <strong class='text-danger'>' + selectedSubjects.join(', ') + '</strong>';
                     } else {
                         selectedSubjectsElement.textContent = 'You have not selected any subjects.';
                     }
@@ -1305,7 +1305,7 @@
                                             </p>
                                             <ol class="list-group list-group-numbered">
                                                 <h3>Minimum requirement is</h3>
-                                                <li class="list-item">BST + STSDTD</li>
+                                                <li class="list-group-item">BST + STSDTD</li>
                                                     <span class="text-center">OR</span>
                                                 <li class="list-group-item">PST + EFA + PSSR + FPFF + STSDTD</li>
                                             </ol>
