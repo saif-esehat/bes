@@ -368,6 +368,24 @@
                   action="ccmc_repeater_invoices_action"
                   groups="account.group_account_manager"
                   sequence="0" />
+        
+        <record id="institute_batches_invoices_actions" model="ir.actions.act_window">
+            <field name="name">Institute Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',
+                ('gp_batch_ok', '=', True),
+                ('ccmc_batch_ok', '=', True)
+            ]</field>
+        </record>
+        
+
+        <menuitem id="menu_institute_invoices" 
+                  parent="account.menu_finance_receivables" 
+                  name="Institute Invoices"
+                  action="institute_batches_invoices_actions"
+                  groups="account.group_account_manager"
+                  sequence="0" />
 
         
 
