@@ -74,7 +74,12 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb;wdb.set_trace()
         # Your custom code here before or after calling the super method
         # import wdb;wdb.set_trace()
-                
+        
+        group_name = 'bes.group_no_register_payment_access'  # Replace with the desired group's XML ID
+        group = self.env.ref(group_name, raise_if_not_found=False)
+        
+        if group:
+            raise ValidationError("Not Allowed")        
         
         
         action = super(CustomPaymentRegister, self).action_create_payments()
