@@ -74,6 +74,7 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb;wdb.set_trace()
         # Your custom code here before or after calling the super method
         # import wdb;wdb.set_trace()
+                
         
         
         action = super(CustomPaymentRegister, self).action_create_payments()
