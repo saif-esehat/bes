@@ -371,7 +371,13 @@
                     <!-- <field name="gsk_online_marks" optional="show"  widget="badge" decoration-success="gsk_online_marks > 45" decoration-danger="gsk_online_marks &lt; 45"/> -->
                     <!-- <field name="mek_online_marks" optional="show"  widget="badge" decoration-success="mek_online_marks > 45" decoration-danger="mek_online_marks &lt; 45"/> -->
                     <field name="gsk_online_marks" optional="show" widget="badge" decoration-warning="attempting_gsk_online"/>
-                    <field name="mek_online_marks" optional="show" widget="badge" decoration-warning="attempting_mek_online"/>
+                    
+                    <t t-if="!mek_online_marks">
+                        <field name="mek_online_marks" optional="show" widget="badge" decoration-warning="attempting_mek_online" />
+                    </t>
+                    <t t-elif="mek_online_marks">
+                        <field name="mek_online_marks" optional="show" widget="badge" decoration-warning="attempting_mek_online" />
+                    </t>
 
              
 

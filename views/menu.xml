@@ -331,6 +331,44 @@
                   action="open_ec_ccmc_exam_schedule"
                   sequence="2" />
 
+        <record id="gp_repeater_invoices_action" model="ir.actions.act_window">
+            <field name="name">GP Repeater Candidate Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[
+                ('gp_repeater_candidate_ok', '=', True)
+            ]</field>
+            <field name="context">{'group_by': 'repeater_exam_batch'}</field>
+
+        </record>
+        
+
+        <menuitem id="menu_gp_repeater_invoices" 
+                  parent="account.menu_finance_receivables" 
+                  name="GP Repeater Candidate Invoices"
+                  groups="account.group_account_manager"
+                  action="gp_repeater_invoices_action"
+                  sequence="0" />
+        
+        <record id="ccmc_repeater_invoices_action" model="ir.actions.act_window">
+            <field name="name">CCMC Repeater Candidate Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[
+                ('ccmc_repeater_candidate_ok', '=', True)
+            ]</field>
+            <field name="context">{'group_by': 'repeater_exam_batch'}</field>
+
+        </record>
+        
+
+        <menuitem id="menu_ccmc_repeater_invoices" 
+                  parent="account.menu_finance_receivables" 
+                  name="CCMC Repeater Candidate Invoices"
+                  action="ccmc_repeater_invoices_action"
+                  groups="account.group_account_manager"
+                  sequence="0" />
+
         
 
 
