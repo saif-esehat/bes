@@ -366,7 +366,7 @@ class CustomPaymentRegister(models.TransientModel):
                 ccmc_exam_schedule.write({
                                         "registered_institute":registered_institute,
                                         "cookery_bakery":cookery_bakery.id,
-                                        "cookery_bakery_prac_status":cookery_bakery_prac_status
+                                        "cookery_bakery_prac_status":cookery_bakery_prac_status,
                                         "ccmc_gsk_oral":ccmc_gsk_oral.id,
                                         "ccmc_oral":ccmc_oral.id,
                                         "ccmc_oral_prac_status":ccmc_oral_prac_status,
