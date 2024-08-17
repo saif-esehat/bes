@@ -76,9 +76,8 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb;wdb.set_trace()
         
         group_name = 'bes.group_no_register_payment_access'  # Replace with the desired group's XML ID
-        group = self.env.ref(group_name, raise_if_not_found=False)
         
-        if group:
+        if self.env.user.has_group(group_name) :
             raise ValidationError("Not Allowed")        
         
         
