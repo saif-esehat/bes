@@ -37,8 +37,8 @@ class ReleaseAdmitCard(models.TransientModel):
             raise ValidationError("Please select an exam region.")
         
         if self.admit_card_type == 'gp':
-            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
-            candidates = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([('hold_admit_card','=',False),('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['gp.exam.schedule'].sudo().search([('hold_admit_card','=',False),('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
             
             
             if self.exam_region.name == 'MUMBAI' and mumbai_region:
@@ -160,6 +160,8 @@ class DGSBatch(models.Model):
     repeater_batch = fields.Boolean("Repeater Batch",default=False,tracking=True)
     gp_url = fields.Char('URL for GP candidates',compute="_compute_url")
     ccmc_url = fields.Char('URL for CCMC candidates',compute="_compute_ccmc_url")
+    
+    form_deadline_start = fields.Date(string="Start Date of Registration for Examination",tracking=True)
     form_deadline = fields.Date(string="Last Date of Registration for Examination",tracking=True)
     
     gp_plot_image = fields.Binary(string='Pass Percentage Graph')
@@ -414,7 +416,7 @@ class DGSBatch(models.Model):
     def _compute_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_url = base_url +"/gpcandidate/repeater/"+str(record.id)
+            new_url = "/gpcandidate/repeater/"+str(record.id)
             if record.repeater_batch:
                 record.gp_url = new_url
             else:
@@ -424,7 +426,7 @@ class DGSBatch(models.Model):
     def _compute_ccmc_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_url = base_url +"/ccmccandidate/repeater/"+str(self.id)
+            new_url = "/ccmccandidate/repeater/"+str(record.id)
             if record.repeater_batch:
                 record.ccmc_url = new_url
             else:

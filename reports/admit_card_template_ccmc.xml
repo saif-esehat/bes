@@ -93,7 +93,7 @@
 
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-9">
-                            <span style="font-size:20px;">Institute: </span>
+                            <span style="font-size:20px;">Pre-Sea Institute: </span>
                             <span style="font-size:20px;"><t t-esc="o.institute_id.name"/></span>  
                         </div>
                     </div>

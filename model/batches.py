@@ -610,8 +610,7 @@ class InstituteCcmcBatches(models.Model):
         for rec in self:
             if len(rec.institute_id.courses) > 1 and rec.institute_id.courses[1].course.course_code == 'CCMC':
                 rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
-            else:
-                rec.dgs_approved_capacity = 100  # Fallback value
+            # rec.dgs_approved_capacity = 100
 
     @api.depends("admit_card_alloted")
     def _compute_admit_card_count(self):
