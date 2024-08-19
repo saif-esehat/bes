@@ -492,6 +492,7 @@
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
                             <field name="repeater_batch"/>
+                            <field name="is_march_september"/>
                             <field name="visible_generate_report" invisible="1"/>
                             <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
