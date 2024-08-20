@@ -2413,20 +2413,7 @@ class GpAdmitCardRelease(models.TransientModel):
     result_message = fields.Text(string='Result', readonly=True)
 
     def release_gp_admit_card(self, *args, **kwargs):
-        # Get exam IDs from context
-        exam_ids = self.env.context.get('default_exam_ids', [])
-        if not exam_ids:
-            return
-        
-        exams = self.env['gp.exam.schedule'].browse(exam_ids)
-        
-        # Extract region from the first exam (assuming all exams have the same region)
-        exam_region_id = exams[0].exam_region.id
-
-        # import wdb; wdb.set_trace()
-
-        # Get the exam batch
-        exam_batch_id = exams[0].dgs_batch.id
+        exam_batch_id = self.env.context.get('active_id')
         exam_batch = self.env['dgs.batches'].sudo().browse(exam_batch_id)
 
         # Define region mapping
@@ -2439,47 +2426,34 @@ class GpAdmitCardRelease(models.TransientModel):
             'GOA': exam_batch.goa_region
         }
 
-        # Get the region name
-        exam_region = self.env['exam.center'].browse(exam_region_id)
-        region_name = exam_region.name
-
-        # Get the corresponding registered institute
-        registered_institute = region_map.get(region_name)
-
-        # Search for candidates
+        # Get the candidates that need to be updated
         candidates = self.env['gp.exam.schedule'].sudo().search([
-            ('exam_id', '=', exam_batch_id),
             ('dgs_batch', '=', exam_batch_id),
-            ('exam_region', '=', exam_region_id),
-            ('hold_admit_card', '=', True)  # Assuming you want to update candidates with 'hold_admit_card' True
+            ('exam_region', '=', self.exam_region.id)
         ])
         candidates_count = len(candidates)
 
-        # Update candidates
-        if registered_institute:
-            candidates.write({
-                'hold_admit_card': False,
-                'registered_institute': registered_institute.id
-            })
-            self.result_message = f"GP Admit Card Released for {candidates_count} candidates in {region_name}. The exam center set is {registered_institute.name}."
+        # Assign registered institute based on the region and mark hold_admit_card as False
+        selected_region = region_map.get(self.exam_region.name)
+        if selected_region:
+            candidates.write({'hold_admit_card': False, 'registered_institute': selected_region.id})
+            message = f"GP Admit Card Released for {candidates_count} candidates in {self.exam_region.name}. The exam center set is {selected_region.name}."
         else:
             candidates.write({'hold_admit_card': False})
-            self.result_message = f"GP Admit Card Released for {candidates_count} candidates in {region_name} but the exam center is not set."
+            message = f"GP Admit Card Released for {candidates_count} candidates in {self.exam_region.name} but the exam center is not set."
 
-        # Update candidates count in the wizard
-        self.candidates_count = candidates_count
-
-        # Return to the wizard view with updated results
+        # Return a notification
         return {
-            'type': 'ir.actions.act_window',
-            'name': 'Release GP Admit Card',
-            'res_model': 'gp.admit.card.release',
-            'view_mode': 'form',
-            'view_id': self.env.ref('bes.view_gp_admit_card_release_form').id,
-            'target': 'new',
-            'res_id': self.id,
-            'context': self.env.context,
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Success',
+                'message': message,
+                'type': 'success',
+                'sticky': False
+            }
         }
+
 
     
     

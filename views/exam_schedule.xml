@@ -424,10 +424,10 @@
                             <field name="admit_card_type"/>
                             <field name="exam_region" options="{'no_create':True}"/>
                         </group>
-                        <group>
+                        <!-- <group>
                             <field name="candidates_count" readonly="1"/>
                             <field name="result_message" readonly="1" widget="text"/>
-                        </group>
+                        </group> -->
                         <footer>
                             <button name="release_gp_admit_card" string="Generate Admit Card" type="object" class="oe_highlight"/>
                             <button string="Close" class="btn-secondary" special="cancel"/>

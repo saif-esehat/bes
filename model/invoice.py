@@ -75,6 +75,11 @@ class CustomPaymentRegister(models.TransientModel):
         # Your custom code here before or after calling the super method
         # import wdb;wdb.set_trace()
         
+        group_name = 'bes.group_no_register_payment_access'  # Replace with the desired group's XML ID
+        
+        if self.env.user.has_group(group_name) :
+            raise ValidationError("Not Allowed")        
+        
         
         action = super(CustomPaymentRegister, self).action_create_payments()
         
@@ -90,7 +95,7 @@ class CustomPaymentRegister(models.TransientModel):
         #     import wdb;wdb.set_trace();
         print("gopppppppppppppppppppppppppppppppppppppp")
         for invoice in invoices:
-          
+    
         
         # import wdb; wdb.set_trace(); 
             if invoice.gp_batch_ok: #in GP Invoice
@@ -125,30 +130,32 @@ class CustomPaymentRegister(models.TransientModel):
                 exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
                 last_exam = self.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', invoice.gp_candidate.id)], order='attempt_number desc', limit=1)
                 
-                gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':invoice.gp_candidate.id , "dgs_batch": dgs_exam  , "exam_id":exam_id ,"exam_region":invoice.preferred_exam_region.id})
+                gp_exam_schedule = self.env["gp.exam.schedule"].sudo().create({'gp_candidate':invoice.gp_candidate.id , "dgs_batch": dgs_exam  , "exam_id":exam_id ,"exam_region":invoice.preferred_exam_region.id})
                 
                 applied = []
                 
                 for line in invoice.invoice_line_ids:
                     if line.product_id.default_code == 'mek_po_repeater':
-                        mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':invoice.gp_candidate.id})
-                        mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':invoice.gp_candidate.id})
+                        mek_practical = self.env["gp.mek.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'mek_parent':invoice.gp_candidate.id})
+                        mek_oral = self.env["gp.mek.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':invoice.gp_candidate.id})
                         mek_practical_marks = last_exam.mek_practical_marks
                         mek_oral_marks = last_exam.mek_oral_marks
                         mek_total = last_exam.mek_total
                         mek_percentage = last_exam.mek_percentage
+                        mek_oral_prac_status = 'pending'
                         mek_oral_prac_carry_forward = False
                         attempting_mek_oral_prac = True
                         applied.append(line.product_id.default_code)
                     
                     if line.product_id.default_code == 'gsk_po_repeater':
-                        gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':invoice.gp_candidate.id})
-                        gsk_oral = self.env["gp.gsk.oral.line"].create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':invoice.gp_candidate.id})
+                        gsk_practical = self.env["gp.gsk.practical.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':invoice.gp_candidate.id})
+                        gsk_oral = self.env["gp.gsk.oral.line"].sudo().create({"exam_id":gp_exam_schedule.id,'gsk_oral_parent':invoice.gp_candidate.id})
                     
                         gsk_practical_marks = last_exam.gsk_practical_marks
                         gsk_oral_marks = last_exam.gsk_oral_marks
                         gsk_total = last_exam.gsk_total
                         gsk_percentage = last_exam.gsk_percentage
+                        gsk_oral_prac_status = 'pending'
                         gsk_oral_prac_carry_forward = False
                         attempting_gsk_oral_prac = True
                         applied.append(line.product_id.default_code)
@@ -161,6 +168,7 @@ class CustomPaymentRegister(models.TransientModel):
                         gsk_online_carry_forward = False
                         gsk_online_marks = last_exam.gsk_online_marks
                         gsk_online_percentage = last_exam.gsk_online_percentage
+                        gsk_online_status = "pending"
                         attempting_gsk_online = True
                         applied.append(line.product_id.default_code)
                     
@@ -171,6 +179,7 @@ class CustomPaymentRegister(models.TransientModel):
                         mek_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id ,'dgs_batch':dgs_exam  })
                         mek_online_carry_forward = False
                         mek_online_marks = last_exam.mek_online_marks
+                        mek_online_status = "pending"
                         attempting_mek_online = True
                         mek_online_percentage = last_exam.mek_online_percentage
                         applied.append(line.product_id.default_code)
@@ -188,6 +197,7 @@ class CustomPaymentRegister(models.TransientModel):
                         mek_oral_marks = last_exam.mek_oral_marks
                         mek_total = last_exam.mek_total
                         mek_percentage = last_exam.mek_percentage
+                        mek_oral_prac_status = last_exam.mek_oral_prac_status
                     
                     if subject == 'gsk_po_repeater':
                         gsk_practical = last_exam.gsk_prac
@@ -196,6 +206,7 @@ class CustomPaymentRegister(models.TransientModel):
                         gsk_oral_marks = last_exam.gsk_oral_marks
                         gsk_total = last_exam.gsk_total
                         gsk_percentage = last_exam.gsk_percentage
+                        gsk_oral_prac_status = last_exam.gsk_oral_prac_status
                         gsk_oral_prac_carry_forward = True
                         attempting_gsk_oral_prac = False
                     
@@ -203,6 +214,7 @@ class CustomPaymentRegister(models.TransientModel):
                         gsk_survey_qb_input = last_exam.gsk_online
                         gsk_online_marks = last_exam.gsk_online_marks
                         gsk_online_percentage = last_exam.gsk_online_percentage
+                        gsk_online_status = last_exam.gsk_online_status
                         gsk_online_carry_forward = True
                         attempting_gsk_online = False
                     
@@ -210,6 +222,7 @@ class CustomPaymentRegister(models.TransientModel):
                         mek_survey_qb_input = last_exam.mek_online
                         mek_online_carry_forward = True
                         mek_online_marks = last_exam.mek_online_marks
+                        mek_online_status = last_exam.mek_online_status
                         mek_online_percentage = last_exam.mek_online_percentage
                         attempting_mek_online = False
                 
@@ -227,7 +240,9 @@ class CustomPaymentRegister(models.TransientModel):
                                     "mek_prac":mek_practical.id,
                                     "gsk_oral":gsk_oral.id,
                                     "gsk_prac":gsk_practical.id , 
-                                    "gsk_online":gsk_survey_qb_input.id, 
+                                    "gsk_online":gsk_survey_qb_input.id,
+                                    "gsk_online_status":gsk_online_status,
+                                    "gsk_oral_prac_status":gsk_oral_prac_status, 
                                     "mek_online":mek_survey_qb_input.id,
                                     "gsk_practical_marks":gsk_practical_marks,
                                     "gsk_oral_marks":gsk_oral_marks,
@@ -238,7 +253,9 @@ class CustomPaymentRegister(models.TransientModel):
                                     "mek_total":mek_total,
                                     "mek_percentage":mek_percentage,
                                     "mek_online_marks":mek_online_marks,
+                                    "mek_online_status":mek_online_status,
                                     "mek_online_percentage":mek_online_percentage,
+                                    "mek_oral_prac_status":mek_oral_prac_status,
                                     "gsk_online_marks":gsk_online_marks,
                                     "gsk_online_percentage":gsk_online_percentage,
                                     "overall_marks":overall_marks,
@@ -294,20 +311,23 @@ class CustomPaymentRegister(models.TransientModel):
                         cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
                         cookery_bakery_qb_input = cookery_bakery_qb_input._create_answer(user=invoice.ccmc_candidate.user_id)
                         cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id})
+                        ccmc_online_status = 'pending'
                         cookery_gsk_online_carry_forward = False
                         applied.append(line.product_id.default_code)
                         attempting_online = True
                         
                     if line.product_id.default_code == 'ccmc_practical_repeater':
-                        cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':invoice.ccmc_candidate.id})
+                        cookery_bakery = self.env["ccmc.cookery.bakery.line"].sudo().create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':invoice.ccmc_candidate.id})
                         cookery_prac_carry_forward = False
+                        cookery_bakery_prac_status = 'pending'
                         applied.append(line.product_id.default_code)
                         attempting_cookery = True
                         
                     if line.product_id.default_code == 'ccmc_oral_repeater':
-                        ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':invoice.ccmc_candidate.id})
-                        ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':invoice.ccmc_candidate.id})
+                        ccmc_oral = self.env["ccmc.oral.line"].sudo().create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':invoice.ccmc_candidate.id})
+                        ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].sudo().create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':invoice.ccmc_candidate.id})
                         cookery_oral_carry_forward = False
+                        ccmc_oral_prac_status = 'pending'
                         applied.append(line.product_id.default_code)
                         attempting_oral = True
 
@@ -318,18 +338,21 @@ class CustomPaymentRegister(models.TransientModel):
                 for subject in carry_forward_subjects:
                     if subject == 'ccmc_practical_repeater':
                         cookery_bakery = last_exam.cookery_bakery
+                        cookery_bakery_prac_status = last_exam.cookery_bakery_prac_status
                         cookery_prac_carry_forward = True
                         attempting_cookery = False
                         
                         
                     if subject == 'ccmc_oral_repeater':
                         ccmc_oral = last_exam.ccmc_oral
+                        ccmc_oral_prac_status = last_exam.ccmc_oral_prac_status
                         ccmc_gsk_oral = last_exam.ccmc_gsk_oral
                         cookery_oral_carry_forward = True
                         attempting_oral = False
                     
                     if subject == 'ccmc_online_repeater':
                         cookery_bakery_qb_input = last_exam.ccmc_online
+                        ccmc_online_status = last_exam.ccmc_online_status
                         cookery_gsk_online_carry_forward = True
                         attempting_online = False
                         
@@ -342,9 +365,12 @@ class CustomPaymentRegister(models.TransientModel):
                 ccmc_exam_schedule.write({
                                         "registered_institute":registered_institute,
                                         "cookery_bakery":cookery_bakery.id,
+                                        "cookery_bakery_prac_status":cookery_bakery_prac_status,
                                         "ccmc_gsk_oral":ccmc_gsk_oral.id,
                                         "ccmc_oral":ccmc_oral.id,
+                                        "ccmc_oral_prac_status":ccmc_oral_prac_status,
                                         "ccmc_online":cookery_bakery_qb_input.id,
+                                        "ccmc_online_status":ccmc_online_status,
                                         "cookery_gsk_online_carry_forward":cookery_gsk_online_carry_forward,
                                         "cookery_oral_carry_forward":cookery_oral_carry_forward,
                                         "cookery_prac_carry_forward":cookery_prac_carry_forward,

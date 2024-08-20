@@ -492,18 +492,94 @@
                             <field name="batch_name"/>
                             <field name="is_current_batch"/>
                             <field name="repeater_batch"/>
+                            <field name="is_march_september"/>
                             <field name="visible_generate_report" invisible="1"/>
                             <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="form_deadline_start" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="mumbai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="kolkatta_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="chennai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="delhi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="kochi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
-                            <field name="goa_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="mumbai_region" attrs="{'invisible': [('is_march_september', '=', True)]}"/>
                         </group>
+
+                                                
+                        <group>
+                            <!-- Mumbai Region -->
+                            <group style="width:33%">
+                                <field name="mumbai_region" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="mumbai_prac_oral_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="mumbai_online_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <!-- Kolkatta Region -->
+                            <group style="width:33%">
+                                <field name="kolkatta_region" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="kolkatta_prac_oral_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="kolkatta_online_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <!-- Chennai Region -->
+                            <group style="width:33%">
+                                <field name="chennai_region" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="chennai_prac_oral_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="chennai_online_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <!-- Delhi Region -->
+                            <group style="width:33%">
+                                <field name="delhi_region" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="delhi_prac_oral_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="delhi_online_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <!-- Kochi Region -->
+                            <group style="width:33%">
+                                <field name="kochi_region" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="kochi_prac_oral_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="kochi_online_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <!-- Goa Region -->
+                            <group style="width:33%">
+                                <field name="goa_region" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="goa_prac_oral_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                            <group style="width:33%">
+                                <field name="goa_online_date" attrs="{'invisible': [('is_march_september', '=', False)]}"/>
+                            </group>
+                        </group>
+                        
                         <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <field name="from_date" string="Exam Start Date"/>
                             <field name="to_date" string="Exam End Date"/>

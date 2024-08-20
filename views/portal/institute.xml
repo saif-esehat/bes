@@ -2451,10 +2451,10 @@
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>                    
                         
-                        <!-- <t t-if="ins_batch.candidate_count > 0">
+                        <t t-if="ins_batch.candidate_count > 0">
                             <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
-                        </t> -->
+                        </t>
                     </div>
                     <div class="">
                         <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>

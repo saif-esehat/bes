@@ -6,7 +6,7 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','hr','hr_expense','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
+ 'depends':['base','product','hr','hr_expense','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
  'data': [
         'data/roll_no_sequence.xml',
         'data/exam_sequence.xml',
@@ -53,6 +53,13 @@
         'reports/dgs_report.xml',
         'reports/attendance_sheet.xml',
         'reports/summarised_report.xml',
+        'views/sep_batches.xml',
+        'views/sep_candidate.xml',
+        'reports/sep_candidate_certificate.xml',
+       
+        # 'views/sep_batches.xml',
+        # 'views/sep_candidate.xml',
+        # 'reports/sep_candidate_certificate.xml',
         
         
 ],
