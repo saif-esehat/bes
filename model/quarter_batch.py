@@ -145,12 +145,12 @@ class DGSBatch(models.Model):
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
-    mumbai_region = fields.Many2one("bes.institute",string="Mumbai Region",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
-    kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Region",tracking=True,domain="[('exam_center.name', '=','KOLKATA')]")
-    chennai_region = fields.Many2one("bes.institute",string="Chennai Region",tracking=True,domain="[('exam_center.name', '=','CHENNAI')]")
-    delhi_region = fields.Many2one("bes.institute",string="Delhi Region",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
-    kochi_region = fields.Many2one("bes.institute",string="Kochi Region",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
-    goa_region = fields.Many2one("bes.institute",string="Goa Region",tracking=True,domain="[('exam_center.name', '=','GOA')]")
+    mumbai_region = fields.Many2one("bes.institute",string="Mumbai Region",tracking=True,domain="[('exam_center.id', '=',1)]")
+    kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Region",tracking=True,domain="[('exam_center.id', '=',5)]")
+    chennai_region = fields.Many2one("bes.institute",string="Chennai Region",tracking=True,domain="[('exam_center.id', '=',7)]")
+    delhi_region = fields.Many2one("bes.institute",string="Delhi Region",tracking=True,domain="[('exam_center.id', '=',3)]")
+    kochi_region = fields.Many2one("bes.institute",string="Kochi Region",tracking=True,domain="[('exam_center.id', '=',8)]")
+    goa_region = fields.Many2one("bes.institute",string="Goa Region",tracking=True,domain="[('exam_center.id', '=',4)]")
     state = fields.Selection([
         ('1-on_going', 'On-Going'),
         ('2-confirmed', 'Confirmed'),

@@ -162,10 +162,13 @@
                     <field name="name"/>
                     <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'" optional="show"/>
                     <field name="exam_center"  optional="show"/>
-                    <field name="mobile"  optional="show"/>
-                    <field name="phone"  optional="show"/>
-                    <field name="pan_no"  optional="show"/>
                     <field name="dob"  optional="show"/>
+                    <field name="mobile"  optional="show"/>
+                    <field name="phone"  optional="hide"/>
+                    <field name="pan_no"  optional="show"/>
+                    <field name="acc_no"  optional="show"/>
+                    <field name="ifsc_code"  optional="show"/>
+                    <field name="bank_name"  optional="show"/>
                     <field name="present_designation"  optional="show"/>
                     <field name="designation"  optional="show"/>
                     <field name="competency_no"  optional="show"/>
