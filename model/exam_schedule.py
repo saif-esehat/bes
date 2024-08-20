@@ -2413,34 +2413,41 @@ class GpAdmitCardRelease(models.TransientModel):
     result_message = fields.Text(string='Result', readonly=True)
 
     def release_gp_admit_card(self, *args, **kwargs):
-        exam_batch_id = self.env.context.get('active_id')
-        exam_batch = self.env['dgs.batches'].sudo().browse(exam_batch_id)
-
-        # Define region mapping
-        region_map = {
-            'MUMBAI': exam_batch.mumbai_region,
-            'KOLKATA': exam_batch.kolkatta_region,
-            'CHENNAI': exam_batch.chennai_region,
-            'DELHI': exam_batch.delhi_region,
-            'KOCHI': exam_batch.kochi_region,
-            'GOA': exam_batch.goa_region
-        }
-
-        # Get the candidates that need to be updated
-        candidates = self.env['gp.exam.schedule'].sudo().search([
-            ('dgs_batch', '=', exam_batch_id),
-            ('exam_region', '=', self.exam_region.id)
-        ])
-        candidates_count = len(candidates)
-
-        # Assign registered institute based on the region and mark hold_admit_card as False
-        selected_region = region_map.get(self.exam_region.name)
-        if selected_region:
-            candidates.write({'hold_admit_card': False, 'registered_institute': selected_region.id})
-            message = f"GP Admit Card Released for {candidates_count} candidates in {self.exam_region.name}. The exam center set is {selected_region.name}."
-        else:
-            candidates.write({'hold_admit_card': False})
-            message = f"GP Admit Card Released for {candidates_count} candidates in {self.exam_region.name} but the exam center is not set."
+        exam_ids = self.env.context.get('active_ids')
+        candidates = self.env["gp.exam.schedule"].sudo().browse(exam_ids)
+        
+        
+        for candidate in candidates:
+            mumbai_region = candidate.dgs_batch.mumbai_region
+            kolkata_region = candidate.dgs_batch.kolkatta_region
+            chennai_region = candidate.dgs_batch.chennai_region
+            delhi_region = candidate.dgs_batch.delhi_region
+            kochi_region = candidate.dgs_batch.kochi_region
+            goa_region = candidate.dgs_batch.goa_region
+            
+            # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                
+            if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                candidates.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                candidates.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif candidate.exam_region.name == 'GOA' and goa_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+            else:
+                candidates.write({'hold_admit_card':False})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"    
 
         # Return a notification
         return {
@@ -2448,7 +2455,7 @@ class GpAdmitCardRelease(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'title': 'Success',
-                'message': message,
+                'message': "test",
                 'type': 'success',
                 'sticky': False
             }
@@ -2760,20 +2767,20 @@ class GPExam(models.Model):
     #             record.stcw_criteria = 'pending'
     @api.model
     def action_open_gp_admit_card_release_wizard(self, exam_ids=None):
-        view_id = self.env.ref('bes.view_gp_admit_card_release_form').id
+        view_id = self.env.ref('bes.view_release_admit_card_form_gp').id
         # import wdb; wdb.set_trace();
-        if exam_ids:
-            # Get the exam regions of all selected exams
-            exams = self.env['gp.exam.schedule'].browse(exam_ids)
-            exam_regions = exams.mapped('exam_region')
+        # if exam_ids:
+        #     # Get the exam regions of all selected exams
+        #     exams = self.env['gp.exam.schedule'].browse(exam_ids)
+        #     exam_regions = exams.mapped('exam_region')
 
-            # Check if all selected exams have the same region
-            if len(set(exam_regions.ids)) == 1:
-                exam_ids = exams.ids  # Retain only candidates with the same region
-            else:
-                # Filter exams to include only those with the same region as the first exam
-                exams = exams.filtered(lambda e: e.exam_region == exam_regions[0])
-                exam_ids = exams.ids
+        #     # Check if all selected exams have the same region
+        #     if len(set(exam_regions.ids)) == 1:
+        #         exam_ids = exams.ids  # Retain only candidates with the same region
+        #     else:
+        #         # Filter exams to include only those with the same region as the first exam
+        #         exams = exams.filtered(lambda e: e.exam_region == exam_regions[0])
+        #         exam_ids = exams.ids
 
         # Proceed with the wizard
         return {

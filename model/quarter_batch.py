@@ -42,9 +42,6 @@ class ReleaseAdmitCard(models.TransientModel):
             
             
             if self.exam_region.name == 'MUMBAI' and mumbai_region:
-                print("mumbai")
-                print(mumbai_region)
-                print(mumbai_region.id)
                 candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
                 message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
             elif self.exam_region.name == 'KOLKATA' and kolkata_region:

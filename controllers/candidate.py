@@ -199,8 +199,11 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCertificateGP(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
-        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',int(exam_id))])
+        
         print("INSIDE DOWNLOAD Certificate")
+        
+        print("Indos" + str(exam_id.indos_no))
         report_action = request.env.ref('bes.report_gp_certificate')
         # certificate_available = request.env['gp.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
@@ -215,6 +218,7 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         print("INSIDE DOWNLOAD Certificate")
+
         report_action = request.env.ref('bes.report_ccmc_certificate')
         # certificate_available = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
