@@ -7,7 +7,7 @@
             <field name="res_model">sep.candidates</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">SEP Batches</p>
+                <p class="o_view_nocontent_smiling_face">SEP Candidate</p>
             </field>
         </record>
 
@@ -68,6 +68,12 @@
             </tree>
         </field>
         </record>
+
+        <menuitem id="sep_candidate_menu" 
+                  parent="sep_menu" 
+                  name="SEP Candidates"
+                  action="sep_candidates_action"
+                  sequence="10" />
 
 
       

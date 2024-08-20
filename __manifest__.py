@@ -56,6 +56,7 @@
         'views/sep_batches.xml',
         'views/sep_candidate.xml',
         'reports/sep_candidate_certificate.xml',
+       
         
         
 ],

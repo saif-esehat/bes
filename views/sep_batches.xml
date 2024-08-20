@@ -18,7 +18,6 @@
                 <form>
                    <header>
                         <!-- Button to open Sep Candidates related to this batch -->
-                        <!-- <button name="%(sep_candidates_action)d" string="View Candidates" type="action" class="oe_highlight"/> -->
                          <button string="View Candidates" type="object" name="show_sep_candidate_model" class="btn-primary"/>
                 
                     </header>
@@ -56,17 +55,7 @@
         <menuitem id="menu_sep_batches" name="SEP Batches"
            parent="sep_menu" action="sep_batches_action" sequence="10"/>
 
-         <menuitem id="sep_candidate_menu" 
-                  parent="sep_menu" 
-                  name="SEP Candidates"
-                  action="sep_candidates_action"
-                  sequence="10" />
-
-
-
-
-
-
+        
 
 
 
