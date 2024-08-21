@@ -389,7 +389,9 @@
                                 <field name="expense_sheet" />
                                 <field name="time_sheet" />
                                 <field name="status" invisible="1" />
-                                <field name="marksheets"  />
+                                <field name="candidates_count" string="Candidates Assigned" style="text-align: {center};"/>
+                                <field name="candidate_done" style="text-align: {center};"/>
+                                <!-- <field name="marksheets"  /> -->
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
                                 <field name="marksheet_image" widget="binary" filename="marksheet_image_name" />
                                 <field name="marksheet_uploaded"/>
