@@ -42,9 +42,6 @@ class ReleaseAdmitCard(models.TransientModel):
             
             
             if self.exam_region.name == 'MUMBAI' and mumbai_region:
-                print("mumbai")
-                print(mumbai_region)
-                print(mumbai_region.id)
                 candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
                 message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
             elif self.exam_region.name == 'KOLKATA' and kolkata_region:
@@ -151,11 +148,42 @@ class DGSBatch(models.Model):
     delhi_region = fields.Many2one("bes.institute",string="Delhi Region",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
     kochi_region = fields.Many2one("bes.institute",string="Kochi Region",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
     goa_region = fields.Many2one("bes.institute",string="Goa Region",tracking=True,domain="[('exam_center.name', '=','GOA')]")
+    
+    mumbai_prac_oral_date = fields.Date(string="Mumbai Practical/Oral Date")
+    mumbai_online_date = fields.Date(sting="Mumbai Online Date")
+
+    kolkatta_prac_oral_date = fields.Date(string="Kolkatta Practical/Oral Date")
+    kolkatta_online_date = fields.Date(string="Kolkatta Online Date")
+    
+    chennai_prac_oral_date = fields.Date(string="Chennai Practical/Oral Date")
+    chennai_online_date  = fields.Date(string="Chennai Online Date")
+    
+    delhi_prac_oral_date = fields.Date(string="Delhi Practical/Oral Date")
+    delhi_online_date  = fields.Date(string="Delhi Online Date")
+    
+    kochi_prac_oral_date = fields.Date(string="Kochi Practical/Oral Date")
+    kochi_online_date  =  fields.Date(string="Kochi Online Date")
+    
+    goa_prac_oral_date = fields.Date(string="Goa Practical/Oral Date")
+    goa_online_date  =  fields.Date(string="Goa Online Date")
+    
+    
+
+    
     state = fields.Selection([
         ('1-on_going', 'On-Going'),
         ('2-confirmed', 'Confirmed'),
         ('3-dgs_approved', 'Approved')     
     ], string='State', default='1-on_going',tracking=True)
+    
+    is_march_september = fields.Boolean(string="March/September Examination",compute="_compute_march_september",tracking=True)
+    
+    def _compute_march_september(self):
+        for record in self:
+            if record.to_date.strftime('%B') in ['March','September']:
+                record.is_march_september = True
+            else:
+                record.is_march_september = False
 
     repeater_batch = fields.Boolean("Repeater Batch",default=False,tracking=True)
     gp_url = fields.Char('URL for GP candidates',compute="_compute_url")

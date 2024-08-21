@@ -117,7 +117,7 @@
 
 
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
-                        <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
+                        <!-- <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/> -->
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
                         
@@ -343,6 +343,7 @@
                 <tree>
                     <header>
                         <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
+                        <button name="action_open_gp_admit_card_release_wizard" string="Release Admit Card" type="object" class="oe_highlight"/>
                     </header>
                     <field name="exam_id" optional="show"/>
                      <field name="institute_code" force_save="1" optional="show"/>
@@ -353,20 +354,24 @@
                     <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
-                    <!-- <field name="gsk_oral_marks" optional="show" string="GSK Oral" widget="badge" decoration-success="gsk_oral_marks >= 45" decoration-danger="gsk_oral_marks &lt; 45 or gsk_oral_marks == 0"/>
-                    <field name="gsk_practical_marks" optional="show" string="GSK Practical" widget="badge" decoration-success="gsk_practical_marks >= 60" decoration-danger="gsk_practical_marks &lt; 60 or gsk_practical_marks == 0"/> -->
+
+                    <field name="attempting_gsk_oral_prac" optional="hide"/>
+                    <field name="attempting_mek_oral_prac" optional="hide"/>
+                    <field name="attempting_mek_online" optional="hide"/>
+                    <field name="attempting_gsk_online" optional="hide"/>
+
                     <field name="gsk_oral_marks" optional="show" string="GSK Oral"/>
                     <field name="gsk_practical_marks"  optional="show"  string="GSK Practical"/>
-                    <field name="gsk_total"/>
-                    <!-- <field name="mek_oral_marks" optional="show"  string="MEK Oral"  widget="badge" decoration-success="mek_oral_marks > 45" decoration-danger="mek_oral_marks &lt; 45"/>
-                    <field name="mek_practical_marks" optional="show" string="MEK Practical"  widget="badge" decoration-success="mek_practical_marks > 60" decoration-danger="mek_practical_marks &lt; 60" /> -->
+                    <field name="gsk_total" optional="show" string="GSK P&amp;O Total" decoration-warning="attempting_gsk_oral_prac"/>
+                   
                     <field name="mek_oral_marks" optional="show"  string="MEK Oral"/>
                     <field name="mek_practical_marks" optional="show" string="MEK Practical"/>
-                    <field name="mek_total" />
-                    <!-- <field name="gsk_online_marks" optional="show"  widget="badge" decoration-success="gsk_online_marks > 45" decoration-danger="gsk_online_marks &lt; 45"/> -->
-                    <!-- <field name="mek_online_marks" optional="show"  widget="badge" decoration-success="mek_online_marks > 45" decoration-danger="mek_online_marks &lt; 45"/> -->
-                    <field name="gsk_online_marks" optional="show"/>
-                    <field name="mek_online_marks" optional="show"/>
+                    <field name="mek_total" optional="show" string="MEK P&amp;O Total" decoration-warning="attempting_mek_oral_prac"/>
+
+                    <field name="gsk_online_marks" optional="show" decoration-warning="attempting_gsk_online"/>
+                    <field name="mek_online_marks" optional="show" decoration-warning="attempting_mek_online"/>
+
+             
 
 
                     <field name="overall_marks" optional="show"/>
@@ -402,6 +407,31 @@
                 </field>
             </field>
         </record> -->
+        <record id="action_gp_admit_card_release" model="ir.actions.act_window">
+            <field name="name">Release GP Admit Card</field>
+            <field name="res_model">gp.admit.card.release</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_release_admit_card_form_gp" model="ir.ui.view">
+            <field name="name">release.admit.card.gp.form</field>
+            <field name="model">gp.admit.card.release</field>
+            <field name="arch" type="xml">
+                <form string="Release GP Admit Card">
+                    <sheet>
+                        <group>
+                            <span>Are you sure you want to release Admit card for selected candidate</span>
+                        </group>
+                        <footer>
+                            <button name="release_gp_admit_card" string="Generate Admit Card" type="object" class="oe_highlight"/>
+                            <button string="Close" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
 
         <record id="ccmc_exam_schedule_form" model="ir.ui.view">
             <field name="name">ccmc.exam.schedule.form</field>
@@ -424,7 +454,7 @@
                         attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', False)]}"/>
 
                        <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
-                        <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/>
+                        <!-- <button name="move_done" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-in_process'),]}"/> -->
                         <button name="send_certificate_email" string="Send Certificate" type="object" attrs="{'invisible': [('state', '!=', '3-certified')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="1-in_process,2-done"/>
                         

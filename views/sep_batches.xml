@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="sep_batches_action" model="ir.actions.act_window">
+            <field name="name">SEP Batches</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sep.batches</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">SEP Batches</p>
+            </field>
+        </record>
+
+         <record id="sep_batches_forms" model="ir.ui.view">
+            <field name="name">sep.batches.form</field>
+            <field name="model">sep.batches</field>
+            <field name="arch" type="xml">
+                <form>
+                   <header>
+                        <!-- Button to open Sep Candidates related to this batch -->
+                         <button string="View Candidates" type="object" name="show_sep_candidate_model" class="btn-primary"/>
+                
+                    </header>
+                    <group>
+                        <field name="name" placeholder="Enter batch name" style="width: 50%;"/>
+                        <field name="start_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+                        <field name="end_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+                        <field name="issue_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+
+                    </group>
+                   
+                </form>
+            </field>
+        </record>
+
+        <record id="sep_batches_tree" model="ir.ui.view">
+        <field name="name">sep.batches.tree</field>
+        <field name="model">sep.batches</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                 <field name="issue_date"/>
+            </tree>
+        </field>
+        </record>
+
+         <menuitem id="sep_menu" name="SEP"  sequence="1"
+                  groups="bes.group_bes_admin" web_icon="bes,static/description/sep.png"/>
+                
+
+
+
+        <menuitem id="menu_sep_batches" name="SEP Batches"
+           parent="sep_menu" action="sep_batches_action" sequence="10"/>
+
+        
+
+
+
+</data>
+</odoo>

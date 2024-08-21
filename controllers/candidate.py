@@ -199,8 +199,11 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCertificateGP(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
-        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',int(exam_id))])
+        
         print("INSIDE DOWNLOAD Certificate")
+        
+        print("Indos" + str(exam_id.indos_no))
         report_action = request.env.ref('bes.report_gp_certificate')
         # certificate_available = request.env['gp.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
@@ -215,6 +218,7 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         print("INSIDE DOWNLOAD Certificate")
+
         report_action = request.env.ref('bes.report_ccmc_certificate')
         # certificate_available = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
@@ -257,6 +261,8 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        # if not previous_exam:
+        #     raise ValidationError("Not Allowed")
         new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         # current_year = datetime.datetime.now().year
         
@@ -734,6 +740,7 @@ class GPCandidatePortal(CustomerPortal):
     def AddGPRepeaterSTCW(self, **kw):
         candidate_user_id = request.env.user.id
         candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        
         if request.httprequest.method == 'POST':
             dgs_batch_id = int(kw.get('batch_id'))
             course_name = kw.get('course_name')

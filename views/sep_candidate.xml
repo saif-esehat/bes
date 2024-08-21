@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="sep_candidates_action" model="ir.actions.act_window">
+            <field name="name">SEP Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sep.candidates</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">SEP Candidate</p>
+            </field>
+        </record>
+
+         
+        <record id="view_sep_candidates_form" model="ir.ui.view">
+        <field name="name">sep.candidates.form</field>
+        <field name="model">sep.candidates</field>
+        <field name="arch" type="xml">
+            <form string="Sep Candidate">
+                <sheet>
+
+                            <!-- Candidate Photo at the top-left corner with widget -->
+                            <field name="photo" widget="image" class="oe_avatar" />
+                   
+                        <group>
+                        <group>
+                     
+                            <!-- Candidate Details -->
+                            <field name="certificate_no" />
+                            <field name="indos_no" />
+                            <field name="name" />
+                            <field name="dob" placeholder="DD/MM/YY"/>
+                            <field name="email" placeholder="Enter email address"/>
+                            <field name="first_day_signature" />
+                            <field name="second_day_signature" />
+                        </group>
+                        <group>
+                            <field name="cdc_no" />
+                            <field name="phone" />
+                            <field name="batch_id" />
+                            <field name="vaccination_rtpcr" />
+                            <field name="remark" />
+                        </group>
+                        </group>
+                  
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+        <record id="sep_candidates_tree" model="ir.ui.view">
+        <field name="name">sep.candidates.tree</field>
+        <field name="model">sep.candidates</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="certificate_no" />
+                <field name="name"/>
+                <field name="dob"/>
+                <field name="indos_no"/>
+                <field name="cdc_no"/>
+                 <field name="phone"/>
+                <field name="email"/>
+                <field name="first_day_signature" />
+                <field name="second_day_signature" />
+                <field name="vaccination_rtpcr" />
+                <field name="remark" />
+                <field name="batch_id"/>
+            </tree>
+        </field>
+        </record>
+
+        <menuitem id="sep_candidate_menu" 
+                  parent="sep_menu" 
+                  name="SEP Candidates"
+                  action="sep_candidates_action"
+                  sequence="10" />
+
+
+      
+
+
+
+
+
+
+</data>
+</odoo>

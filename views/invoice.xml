@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+
+         <record id="view_account_payment_register_form_inherit_buttons" model="ir.ui.view">
+            <field name="name">account.payment.register.form.button.inherit</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_create_payments']" position="replace">
+                    <button string="Confirm Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q"/>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="account_move_inherit_form" model="ir.ui.view">
             <field name="name">account.move.form.inherit.bes</field>
             <field name="model">account.move</field>
@@ -60,4 +73,5 @@
             </field>
         </record>
 
+       
 </odoo>
