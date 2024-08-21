@@ -126,21 +126,91 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
+                                        <t t-if="o.dgs_batch.is_march_september">
+                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_cookery or o.attempting_oral">Exam Date P&amp;O</th>
+                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_online">Exam Date Online</th>
+                                        </t>
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     <tr scope="row" t-if="o.attempting_cookery">
                                         <td style="border: 1px solid black;">Practical</td>
+                                        <t t-if="o.dgs_batch.is_march_september">
+                                            <td style="border: 1px solid black;">
+                                                <t t-if="o.exam_region.id == 1">
+                                                    <t t-esc="o.dgs_batch.mumbai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 3">
+                                                    <t t-esc="o.dgs_batch.delhi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 4">
+                                                    <t t-esc="o.dgs_batch.goa_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 5">
+                                                    <t t-esc="o.dgs_batch.kolkatta_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 6">
+                                                    <t t-esc="o.dgs_batch.chennai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 8">
+                                                    <t t-esc="o.dgs_batch.kochi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                            </td>
+                                        </t>
                                     </tr>
 
+                                    <!-- MEK Practical & Oral -->
                                     <tr scope="row" t-if="o.attempting_oral">
                                         <td style="border: 1px solid black;">Oral</td>
-
+                                        <t t-if="o.dgs_batch.is_march_september">
+                                            <td style="border: 1px solid black;">
+                                                <t t-if="o.exam_region.id == 1">
+                                                    <t t-esc="o.dgs_batch.mumbai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 3">
+                                                    <t t-esc="o.dgs_batch.delhi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 4">
+                                                    <t t-esc="o.dgs_batch.goa_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 5">
+                                                    <t t-esc="o.dgs_batch.kolkatta_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 6">
+                                                    <t t-esc="o.dgs_batch.chennai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 8">
+                                                    <t t-esc="o.dgs_batch.kochi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                            </td>
+                                        </t>
                                     </tr>
+                                
+                                    <!-- GSK Online -->
                                     <tr scope="row" t-if="o.attempting_online">
                                         <td style="border: 1px solid black;">Online</td>
-
+                                        <t t-if="o.dgs_batch.is_march_september">
+                                            <td style="border: 1px solid black;">
+                                                <t t-if="o.exam_region.id == 1">
+                                                    <t t-esc="o.dgs_batch.mumbai_online_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 3">
+                                                    <t t-esc="o.dgs_batch.delhi_online_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 4">
+                                                    <t t-esc="o.dgs_batch.goa_online_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 5">
+                                                    <t t-esc="o.dgs_batch.kolkatta_online_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 6">
+                                                    <t t-esc="o.dgs_batch.chennai_online_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                                <t t-elif="o.exam_region.id == 8">
+                                                    <t t-esc="o.dgs_batch.kochi_online_date.strftime('%d-%b-%Y')"/>
+                                                </t>
+                                            </td>
+                                        </t>
                                     </tr>
                                 </tbody>
                             </table>
