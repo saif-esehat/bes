@@ -441,7 +441,7 @@ class InstitutePortal(CustomerPortal):
         
         if request.httprequest.method == 'POST':
             name = kw.get("name")
-            indos_no = kw.get("indos_no")
+            indos_no = kw.get("indos_no").replace(" ", "")
             gender = 'male' if kw.get("gender") == 'Male' else 'female'
             date_str = kw.get("dob")
             try:
@@ -2750,7 +2750,7 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             # try:
             try:
-                indos_no = row[0]
+                indos_no = row[0].replace(" ", "")
             except:
                 raise ValidationError(f"Missing Indos No in row {row_num + 1}, Please use the given format and check for unwanted spaces")
             
@@ -3004,7 +3004,7 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             # try: 
             try:
-                indos_no = row[0]
+                indos_no = row[0].replace(" ", "")
             except:
                 raise ValidationError(f"Missing Indos No in row {row_num + 1}, Please use the given format and check for unwanted spaces")
             
