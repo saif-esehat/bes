@@ -35,6 +35,8 @@
                             <field name="exam_co_ordinator"/>
                             <field name="mobile"/>
                             <field name="email" />
+                            <field name="repeater_region" />
+
                         </group>
                     </sheet>
                     <div class="oe_chatter">

@@ -37,6 +37,7 @@ class GPCandidate(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
+    previous_repeater = fields.Boolean(string='Previous Attempted')
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image',tracking=True)
     candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
@@ -62,6 +63,7 @@ class GPCandidate(models.Model):
     phone = fields.Char("Phone",tracking=True)
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
     email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
+    eighth_percent = fields.Boolean("8th Std Passed",tracking=True)
     tenth_percent = fields.Integer("% Xth Std in Eng.",tracking=True)
     twelve_percent = fields.Integer("% 12th Std in Eng.",tracking=True)
     iti_percent = fields.Integer("% ITI",tracking=True)
@@ -82,12 +84,32 @@ class GPCandidate(models.Model):
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Fees Paid", default='no',tracking=True)
+    ],string="Fees Paid by Institute", default='no',tracking=True)
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            last_exam_dgs_batch = last_exam.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',last_exam_dgs_batch),('gp_candidate','=',rec.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
+            
+            
+            
     
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     batch_exam_registered = fields.Boolean("Batch Registered",tracking=True)
     invoice_generated = fields.Boolean("Invoice Generated")
     qualification = fields.Selection([
+        ('eight', '8th std'),
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
@@ -115,7 +137,7 @@ class GPCandidate(models.Model):
     #     ('no', 'No')
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
-    
+    ship_visited = fields.Boolean("Ship Visited",tracking=True)
     ship_visits = fields.One2many("gp.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
     
     
@@ -277,16 +299,16 @@ class GPCandidate(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            if gp_exam_count > 1:
-                if all_types_exist:
-                    record.stcw_criteria = 'passed'
-                else:
-                    record.stcw_criteria = 'pending'
-            elif gp_exam_count == 1:
-                if all_types_exist and all_cert_nos_present:
-                    record.stcw_criteria = 'passed'
-                else:
-                    record.stcw_criteria = 'pending'
+            # if gp_exam_count > 1:
+            #     if all_types_exist:
+            #         record.stcw_criteria = 'passed'
+            #     else:   
+            #         record.stcw_criteria = 'pending'
+            # elif gp_exam_count in [0,1]:
+            if all_types_exist and all_cert_nos_present:
+                record.stcw_criteria = 'passed'
+            else:
+                record.stcw_criteria = 'pending'
         
     
     @api.depends('ship_visits')
@@ -485,6 +507,7 @@ class GPCandidate(models.Model):
     
     @api.model
     def create(self, values):
+        # import wdb; wdb.set_trace()
         institute_batch_id  = int(values['institute_batch_id'])
 
         gp_batches = self.env["institute.gp.batches"].search([('id','=',institute_batch_id)])
@@ -496,6 +519,13 @@ class GPCandidate(models.Model):
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])  
        
         if candidate_count <= capacity:
+            if values["dob"]:
+                birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                values['age'] = delta.days // 365
+            else:
+                values['age'] = 0
             gp_candidate = super(GPCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -594,6 +624,7 @@ class GPSTCWCandidate(models.Model):
         ('bst', 'BST')
     ],string="Course",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
+    other_institute = fields.Char("Other Institute Name",tracking=True)
     marine_training_inst_number = fields.Char("MTI Number",tracking=True)
     mti_indos_no = fields.Char("Indos No.",tracking=True)
     candidate_cert_no = fields.Char("Candidate Certificate Number",tracking=True)
@@ -645,7 +676,7 @@ class CCMCCandidate(models.Model):
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
     candidate_signature_name = fields.Char("Candidate Signature",tracking=True)
     candidate_signature = fields.Binary(string='Candidate Signature', attachment=True, help='Select an image',tracking=True)
-    
+    previous_repeater = fields.Boolean(string='Previous Attempted')
     name = fields.Char("Full Name of Candidate as in INDOS",required=True,tracking=True)
     gender = fields.Selection([
         ('male','Male'),
@@ -653,22 +684,23 @@ class CCMCCandidate(models.Model):
     ],string="Gender",default='male',tracking=True)
     invoice_generated = fields.Boolean("Invoice Generated")
     user_id = fields.Many2one("res.users", "Portal User",tracking=True)    
-    age = fields.Char("Age",compute="_compute_age",tracking=True)
+    age = fields.Float("Age",compute="_compute_age",tracking=True)
     indos_no = fields.Char("Indos No.",tracking=True)
     candidate_code = fields.Char("CCMC Candidate Code No.",tracking=True)
     roll_no = fields.Char("Roll No.",tracking=True,compute="_update_rollno")
     dob = fields.Date("DOB",help="Date of Birth", 
                       widget="date", 
                       date_format="%d-%b-%y",tracking=True)
-                      
+    
     street = fields.Char("Street",tracking=True)
     street2 = fields.Char("Street2",tracking=True)
-    city = fields.Char("City",required=True,tracking=True)
-    zip = fields.Char("Zip",required=True, validators=[api.constrains('zip')],tracking=True)
-    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True,tracking=True)
+    city = fields.Char("City",tracking=True)
+    zip = fields.Char("Zip", validators=[api.constrains('zip')],tracking=True)
+    state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],tracking=True)
     phone = fields.Char("Phone", validators=[api.constrains('phone')],tracking=True)
     mobile = fields.Char("Mobile", validators=[api.constrains('mobile')],tracking=True)
     email = fields.Char("Email", validators=[api.constrains('email')],tracking=True)
+    eighth_percent = fields.Boolean("8th Std Passed",tracking=True)
     tenth_percent = fields.Char("% Xth Std in Eng.",tracking=True)
     twelve_percent = fields.Char("% 12th Std in Eng.",tracking=True)
     iti_percent = fields.Char("% ITI",tracking=True)
@@ -682,6 +714,7 @@ class CCMCCandidate(models.Model):
     ship_visits_count = fields.Char("No. of Ship Visits",tracking=True)
     ccmc_exam = fields.Many2many("ccmc.exam.schedule",string="Exam",tracking=True)
     qualification = fields.Selection([
+        ('eight', '8th std'),
         ('tenth', '10th std'),
         ('twelve', '12th std'),
         ('iti', 'ITI')
@@ -717,6 +750,7 @@ class CCMCCandidate(models.Model):
     # ],string="Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for CCMC and whether same has been informed to the DGS (YES/ NO)", default='no')
     
         # Ship Visits
+    ship_visited = fields.Boolean("Ship Visited",tracking=True)
     ship_visits = fields.One2many("ccmc.candidate.ship.visits","candidate_id",string="Ship Visit",tracking=True)
 
 
@@ -735,7 +769,25 @@ class CCMCCandidate(models.Model):
     fees_paid = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ],string="Fees Paid", default='no',tracking=True)
+    ],string="Fees Paid by Institute", default='no',tracking=True)
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            last_exam = self.env['ccmc.exam.schedule'].search([('ccmc_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            last_exam_dgs_batch = last_exam.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',last_exam_dgs_batch),('ccmc_candidate','=',rec.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
+                
+            
 
     invoice_no = fields.Char("Invoice No",compute="_compute_invoice_no",store=True,tracking=True)
     
@@ -848,6 +900,7 @@ class CCMCCandidate(models.Model):
 
             course_type_already  = [course.course_name for course in record.stcw_certificate]
             # import wdb; wdb.set_trace();    
+            exam_count = self.env['ccmc.exam.schedule'].sudo().search_count([('ccmc_candidate','=',record.id)])          
 
             # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = self.check_combination_exists(course_type_already)
@@ -856,8 +909,13 @@ class CCMCCandidate(models.Model):
 
             # if all_types_exist and all_cert_nos_present:
 
-            if all_types_exist:
-                # import wdb; wdb.set_trace();
+            # if exam_count > 1:
+            #     if all_types_exist:
+            #         record.stcw_criteria = 'passed'
+            #     else:
+            #         record.stcw_criteria = 'pending'
+            # elif exam_count in [0,1]:
+            if all_types_exist and all_cert_nos_present:
                 record.stcw_criteria = 'passed'
             else:
                 record.stcw_criteria = 'pending'
@@ -1036,6 +1094,13 @@ class CCMCCandidate(models.Model):
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
         
         if candidate_count <= capacity:
+            if values["dob"]:
+                birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
+                today = datetime.datetime.now().date()
+                delta = today - birthdate
+                values['age'] = delta.days // 365
+            else:
+                values['age'] = 0
             ccmc_candidate = super(CCMCCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -1151,6 +1216,7 @@ class CCMCSTCWCandidate(models.Model):
         ('bst', 'BST')
     ],string="Course",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
+    other_institute = fields.Char("Other Institute Name",tracking=True)
     marine_training_inst_number = fields.Char("Marine Training Institute Number",tracking=True)
     mti_indos_no = fields.Char("MTI Indos No.",tracking=True)
     candidate_cert_no = fields.Char("Candidate Certificate Number",tracking=True)
@@ -1210,7 +1276,7 @@ class CookeryBakeryLine(models.Model):
     cookery_examiner = fields.Many2one("bes.examiner",string="Examiner")
     cookery_bekary_start_time = fields.Datetime(string="Start Time")
     cookery_bekary_end_time = fields.Datetime(string="End Time")
-    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    cookery_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft")
     cookery_practical_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
 
     
@@ -1312,7 +1378,7 @@ class MekPrcticalLine(models.Model):
     mek_practical_total_marks = fields.Integer("Total Marks", compute="_compute_mek_practical_total_marks", store=True,tracking=True)
     
     mek_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
-    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    mek_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
 
@@ -1418,7 +1484,7 @@ class MekOralLine(models.Model):
     mek_oral_total_marks = fields.Integer("Total Marks", compute="_compute_mek_oral_total_marks", store=True,tracking=True)
 
     mek_oral_remarks = fields.Text("Remarks Mention if Absent / Good / Average / Weak",tracking=True)
-    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    mek_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
     
@@ -1499,7 +1565,7 @@ class GskPracticallLine(models.Model):
     
     gsk_practical_total_marks = fields.Integer("Total Marks",compute="_compute_gsk_practical_total_marks",store=True,tracking=True)
     gsk_practical_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
-    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    gsk_practical_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
       
@@ -1585,7 +1651,7 @@ class GskOralLine(models.Model):
     
     gsk_oral_total_marks = fields.Integer("Total Marks",compute='_compute_gsk_oral_total_marks', store=True,tracking=True)
     gsk_oral_remarks = fields.Text(" Remarks Mention if Absent / Good  /Average / Weak ",tracking=True)
-    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft",tracking=True)
+    gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",tracking=True)
 
 
     
@@ -1666,7 +1732,7 @@ class CcmcOralLine(models.Model):
     gsk_ccmc = fields.Integer("GSK",related = 'exam_id.ccmc_gsk_oral.toal_ccmc_oral_rating')
     # safety_ccmc = fields.Integer("Safety",tracking=True)
     toal_ccmc_rating = fields.Integer("Total", compute="_compute_ccmc_rating_total", store=True)
-    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="State",default="draft")
+    ccmc_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft")
     ccmc_oral_remarks = fields.Char(" Remarks Mention if Absent / Good  /Average / Weak ")
     
 
@@ -2208,7 +2274,7 @@ class CandidateCCMCRegisterExamWizard(models.TransientModel):
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
             ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':self.candidate_id.id,'institute_id': self.institute_id.id})
-
+            
         else:
             cookery_bakery = self.ccmc_exam.cookery_bakery
             ccmc_oral =self.ccmc_exam.ccmc_oral
@@ -2287,7 +2353,7 @@ class SEPCandidateLine(models.Model):
     _name = 'sep.candidate.line'
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'GP Candidate Line'
-    rec_name = 'institute_batch_id'
+    _rec_name = 'institute_batch_id'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch",tracking=True)
 
@@ -2335,3 +2401,26 @@ class SEPCertificateReport(models.AbstractModel):
             'records': records,
             'data': data,
         }
+
+
+# class ComingGPRepeatersCandidates(models.Model):
+#     _name = 'coming.gp.repeater.candidate'
+#     _inherit = ['mail.thread','mail.activity.mixin']
+#     _description = 'Coming Repeater Candidates'
+#     _rec_name = 'indos_no'
+    
+    
+#     indos_no = fields.Char("Indos No",tracking=True)
+#     name = fields.Char("Name",tracking=True)
+#     candidate_code = fields.Char("Candidate Code",tracking=True)
+
+# class ComingCCMCRepeatersCandidates(models.Model):
+#     _name = 'coming.ccmc.repeater.candidate'
+#     _inherit = ['mail.thread','mail.activity.mixin']
+#     _description = 'Coming Repeater Candidates'
+#     _rec_name = 'indos_no'
+    
+    
+#     indos_no = fields.Char("Indos No",tracking=True)
+#     name = fields.Char("Name",tracking=True)
+#     candidate_code = fields.Char("Candidate Code",tracking=True)

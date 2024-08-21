@@ -7,6 +7,119 @@ import io
 import base64
 
 
+class ReleaseAdmitCard(models.TransientModel):
+    _name = 'release.admit.card'
+    _description = 'Release Admit Card'
+
+    admit_card_type = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ], string='Admit Card Type',default='gp')
+    exam_region = fields.Many2one("exam.center",string="Region")
+    
+    
+    
+    def release_admit_card(self):
+        self.ensure_one()  # Ensure the wizard is accessed by a single record
+
+        exam_batch_id = self.env.context.get('active_id')
+        
+        exam_batch = self.env['dgs.batches'].sudo().search([('id','=',exam_batch_id)])
+        mumbai_region = exam_batch.mumbai_region
+        kolkata_region = exam_batch.kolkatta_region
+        chennai_region = exam_batch.chennai_region
+        delhi_region = exam_batch.delhi_region
+        kochi_region = exam_batch.kochi_region
+        goa_region = exam_batch.goa_region
+        # self.admit_card_type
+                    
+        if not self.exam_region:
+            raise ValidationError("Please select an exam region.")
+        
+        if self.admit_card_type == 'gp':
+            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([('hold_admit_card','=',False),('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['gp.exam.schedule'].sudo().search([('hold_admit_card','=',False),('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            
+            
+            if self.exam_region.name == 'MUMBAI' and mumbai_region:
+                candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif self.exam_region.name == 'KOLKATA' and kolkata_region:
+                candidates.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif self.exam_region.name == 'CHENNAI' and chennai_region:
+                candidates.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif self.exam_region.name == 'DELHI' and delhi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif self.exam_region.name == 'KOCHI' and kochi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif self.exam_region.name == 'GOA' and goa_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+            else:
+                candidates.write({'hold_admit_card':False})
+                message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"    
+            
+            return {
+                'name': 'Admit Card Released',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+            
+        elif self.admit_card_type == 'ccmc':
+            candidate_count = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+            candidates = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
+           
+            
+            
+            if self.exam_region.name == 'MUMBAI' and mumbai_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':mumbai_region.id})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif self.exam_region.name == 'KOLKATA' and kolkata_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':kolkata_region.id})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif self.exam_region.name == 'CHENNAI' and chennai_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':chennai_region.id})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif self.exam_region.name == 'DELHI' and delhi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif self.exam_region.name == 'KOCHI' and kochi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif self.exam_region.name == 'GOA' and goa_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name
+            else:
+                candidates.write({'hold_admit_card':False})
+                message = "CCMC Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"
+
+            
+            
+            
+            return {
+                'name': 'Admit Card Released',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+            
+        
+        
+    
+
+
+
 
 class DGSBatch(models.Model):
     _name = "dgs.batches"
@@ -16,7 +129,7 @@ class DGSBatch(models.Model):
     _description= 'Batches'
     
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
-    is_current_batch = fields.Boolean(string='Is Current Batch', default=False,tracking=True)
+    is_current_batch = fields.Boolean(string='Current Fresher Batch', default=False,tracking=True)
     to_date = fields.Date(string='To Date', 
                       widget="date", 
                       date_format="%b-%y",tracking=True)
@@ -29,35 +142,81 @@ class DGSBatch(models.Model):
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
-    mumbai_region = fields.Many2one("bes.institute",string="Mumbai Institute",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
-    kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Institute",tracking=True,domain="[('exam_center.name', '=','KOLKATA')]")
-    chennai_region = fields.Many2one("bes.institute",string="Chennai Institute",tracking=True,domain="[('exam_center.name', '=','CHENNAI')]")
-    delhi_region = fields.Many2one("bes.institute",string="Delhi Institute",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
-    kochi_region = fields.Many2one("bes.institute",string="Kochi Institute",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
-    goa_region = fields.Many2one("bes.institute",string="Goa Institute",tracking=True,domain="[('exam_center.name', '=','GOA')]")
+    mumbai_region = fields.Many2one("bes.institute",string="Mumbai Region",tracking=True,domain="[('exam_center.name', '=','MUMBAI')]")
+    kolkatta_region = fields.Many2one("bes.institute",string="Kolkatta Region",tracking=True,domain="[('exam_center.name', '=','KOLKATA')]")
+    chennai_region = fields.Many2one("bes.institute",string="Chennai Region",tracking=True,domain="[('exam_center.name', '=','CHENNAI')]")
+    delhi_region = fields.Many2one("bes.institute",string="Delhi Region",tracking=True,domain="[('exam_center.name', '=','DELHI')]")
+    kochi_region = fields.Many2one("bes.institute",string="Kochi Region",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
+    goa_region = fields.Many2one("bes.institute",string="Goa Region",tracking=True,domain="[('exam_center.name', '=','GOA')]")
+    
+    mumbai_prac_oral_date = fields.Date(string="Mumbai Practical/Oral Date")
+    mumbai_online_date = fields.Date(sting="Mumbai Online Date")
+
+    kolkatta_prac_oral_date = fields.Date(string="Kolkatta Practical/Oral Date")
+    kolkatta_online_date = fields.Date(string="Kolkatta Online Date")
+    
+    chennai_prac_oral_date = fields.Date(string="Chennai Practical/Oral Date")
+    chennai_online_date  = fields.Date(string="Chennai Online Date")
+    
+    delhi_prac_oral_date = fields.Date(string="Delhi Practical/Oral Date")
+    delhi_online_date  = fields.Date(string="Delhi Online Date")
+    
+    kochi_prac_oral_date = fields.Date(string="Kochi Practical/Oral Date")
+    kochi_online_date  =  fields.Date(string="Kochi Online Date")
+    
+    goa_prac_oral_date = fields.Date(string="Goa Practical/Oral Date")
+    goa_online_date  =  fields.Date(string="Goa Online Date")
+    
+    
+
+    
     state = fields.Selection([
         ('1-on_going', 'On-Going'),
         ('2-confirmed', 'Confirmed'),
         ('3-dgs_approved', 'Approved')     
     ], string='State', default='1-on_going',tracking=True)
-
-    repeater_batch = fields.Boolean("Is Repeater Batch",default=False,tracking=True)
-    gp_url = fields.Char('URL for GP candidates',compute="_compute_url")
-    ccmc_url = fields.Char('URL for ccmc candidates',compute="_compute_ccmc_url")
-    form_deadline = fields.Date(string="Registration Form Dead Line",tracking=True)
     
-    gp_plot_image = fields.Binary(string='Pass Percentage Plot')
-    ccmc_plot_image = fields.Binary(string='Pass Percentage Plot')
+    is_march_september = fields.Boolean(string="March/September Examination",compute="_compute_march_september",tracking=True)
+    
+    def _compute_march_september(self):
+        for record in self:
+            if record.to_date.strftime('%B') in ['March','September']:
+                record.is_march_september = True
+            else:
+                record.is_march_september = False
+
+    repeater_batch = fields.Boolean("Repeater Batch",default=False,tracking=True)
+    gp_url = fields.Char('URL for GP candidates',compute="_compute_url")
+    ccmc_url = fields.Char('URL for CCMC candidates',compute="_compute_ccmc_url")
+    
+    form_deadline_start = fields.Date(string="Start Date of Registration for Examination",tracking=True)
+    form_deadline = fields.Date(string="Last Date of Registration for Examination",tracking=True)
+    
+    gp_plot_image = fields.Binary(string='Pass Percentage Graph')
+    ccmc_plot_image = fields.Binary(string='Pass Percentage Graph')
     
     report_status = fields.Selection([
         ('pending', 'Pending'),
         ('generated', 'Generated'),
     
-    ], string='Report Status', default='pending',tracking=True)
+    ], string='Exam Result Report Status', default='pending',tracking=True)
     
     
     visible_generate_report = fields.Boolean(string='Visible Generate Button',compute="show_generate_report_button",tracking=True)
 
+    def open_release_admit_card_wizard(self):
+        view_id = self.env.ref('bes.view_release_admit_card_form').id
+        
+        return {
+            'name': 'Release Admit Card',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'release.admit.card',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {}
+        }
     
     
     @api.depends('state','report_status')    
@@ -285,7 +444,7 @@ class DGSBatch(models.Model):
     def _compute_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_url = base_url +"/gpcandidate/repeater/"+str(record.id)
+            new_url = "/gpcandidate/repeater/"+str(record.id)
             if record.repeater_batch:
                 record.gp_url = new_url
             else:
@@ -295,7 +454,7 @@ class DGSBatch(models.Model):
     def _compute_ccmc_url(self):
         for record in self:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_url = base_url +"/ccmccandidate/repeater/"+str(self.id)
+            new_url = "/ccmccandidate/repeater/"+str(record.id)
             if record.repeater_batch:
                 record.ccmc_url = new_url
             else:
@@ -422,6 +581,7 @@ class DGSBatch(models.Model):
     #     }
         
             
+        # return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
     #     return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
 
         
@@ -536,16 +696,22 @@ class ShipVisitReport(models.Model):
 
 
 class ShipVisitReportModel(models.AbstractModel):
-    _name = "report.bes.ship_visit_report"
+    _name = "report.bes.candidate_ship_visit_reports"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description = "Ship Visit Report"
+    _description = "Ship Visit Reports"
     
     
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
         
-        docs1 = self.env['dgs.batches'].sudo().browse(docids)
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)        
+        gp_ship_visits = self.env['gp.candidate.ship.visits'].sudo().search([('dgs_batch','=',docs1.id)])
+        print('gp_ship_visits.institute.id')
+        institutes_data = gp_ship_visits.sorted(key=lambda r: r.institute_code).institute.ids
+        print(institutes_data)
+        
+        
         
         # batch_id = docs1.id
         # institutes_data = []
@@ -567,7 +733,7 @@ class ShipVisitReportModel(models.AbstractModel):
             # 'docids': docids,
             'doc_model': 'dgs.batches',
             'docs':docs1,
-            'institutes_data':institutes_data
+            # 'institutes_data':institutes_data
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,

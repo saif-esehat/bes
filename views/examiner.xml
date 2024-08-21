@@ -162,10 +162,13 @@
                     <field name="name"/>
                     <field name="state" widget="badge" decoration-success= "state == 'active'"  decoration-danger= "state == 'inactive'" optional="show"/>
                     <field name="exam_center"  optional="show"/>
-                    <field name="mobile"  optional="show"/>
-                    <field name="phone"  optional="show"/>
-                    <field name="pan_no"  optional="show"/>
                     <field name="dob"  optional="show"/>
+                    <field name="mobile"  optional="show"/>
+                    <field name="phone"  optional="hide"/>
+                    <field name="pan_no"  optional="show"/>
+                    <field name="acc_no"  optional="show"/>
+                    <field name="ifsc_code"  optional="show"/>
+                    <field name="bank_name"  optional="show"/>
                     <field name="present_designation"  optional="show"/>
                     <field name="designation"  optional="show"/>
                     <field name="competency_no"  optional="show"/>
@@ -325,16 +328,16 @@
                                 <field name="candidate_count" string="Candidate"  widget="statinfo"/>
                             </button>
                         </div> -->
-                        <group style="width:100%;">
+                        <group style="width:50%;">
                             <field name="dgs_batch"/>
                         </group> 
                        
                         <!-- <group style="width:50%;">
                             <field name="institute_code"/>
                         </group> -->
-                        <!-- <group style="width:50%;">
-                            <field name="institute_id"/>
-                        </group> -->
+                        <group style="width:50%;">
+                            <field name="institute_id" domain="[('exam_center','=', exam_region)]"/>
+                        </group>
                         <group style="width:50%;">
                             <field name="course" required="1" />
                         </group>
@@ -463,6 +466,9 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="gp_candidate"/>
                     <field name="gp_marksheet"/>
                     <field name="using_of_tools"/>
@@ -471,12 +477,14 @@
                     <field name="journal"/>
                     <field name="mek_oral_total_marks"/>
                     <field name="mek_oral_remarks"/>
+                    <field name="mek_oral_draft_confirm"/>
                     <field name="using_hand_plumbing_tools_task_3"/>
                     <field name="use_of_chipping_tools_paint"/>
                     <field name="welding_lathe"/>
                     <field name="prac_electrical"/>
                     <field name="mek_practical_total_marks"/>
                     <field name="mek_practical_remarks"/>
+                    <field name="mek_practical_draft_confirm"/>
                 </tree>
             </field>
         </record>
@@ -486,19 +494,24 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="gp_candidate"/>
-                     <field name="gp_marksheet"/>
+                    <field name="gp_marksheet"/>
                     <field name="subject_area_1_2_3"/>
                     <field name="subject_area_4_5_6"/>
                     <field name="practical_record_journals"/>
                     <field name="gsk_oral_total_marks"/>
                     <field name="gsk_oral_remarks"/>
+                    <field name="gsk_oral_draft_confirm"/>
                     <field name="climbing_mast_bosun_chair"/>
                     <field name="buoy_flags_recognition"/>
                     <field name="rig_stage_rig_pilot_rig_scaffolding"/>
                     <field name="fast_ropes_knots_bend_sounding_rod"/>
                     <field name="gsk_practical_total_marks"/>
                     <field name="gsk_practical_remarks"/>
+                    <field name="gsk_practical_draft_confirm"/>
                 </tree>
             </field>
         </record>
@@ -603,6 +616,9 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
                     <field name="hygien_grooming"/>
@@ -619,6 +635,7 @@
                     <field name="knowledge_of_menu"/>
                     <field name="total_mrks"/>
                     <field name="cookery_practical_remarks"/>
+                    <field name="cookery_draft_confirm"/>
                     <field name="house_keeping"/>
                     <field name="f_b"/>
                     <field name="orals_house_keeping"/>
@@ -627,6 +644,7 @@
                     <field name="gsk_ccmc"/>
                     <field name="toal_ccmc_rating"/>
                     <field name="ccmc_oral_remarks"/>
+                    <field name="ccmc_oral_draft_confirm"/>
                 </tree>
             </field>
         </record>
@@ -711,6 +729,9 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
                     <!-- <field name="ccmc_gsk_oral"/> -->
@@ -718,6 +739,7 @@
                     <field name="safety_ccmc"/>
                     <field name="toal_ccmc_oral_rating"/>
                     <field name="ccmc_gsk_oral_remarks"/>
+                    <field name="ccmc__gsk_oral_draft_confirm"/>
                 </tree>
             </field>
         </record>
@@ -880,6 +902,26 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_reallocate_candidates_wizard" model="ir.ui.view">
+            <field name="name">reallocate.candidates.wizard.form</field>
+            <field name="model">reallocate.candidates.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reallocate Candidates">
+                    <group>
+                        <field name="exam_batch" readonly="1"/>
+                        <field name="institute_id"/>
+                        <field name="examiner_id"/>
+                        <field name="candidate_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button string="Reallocate" type="object" name="action_reallocate" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
 
     </data>
 </odoo>

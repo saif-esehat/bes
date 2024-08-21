@@ -6,7 +6,7 @@
  'website': "http://www.esehat.org", 
  'category': 'Uncategorized', 
  'version': '13.0.1', 
- 'depends':['product','hr','hr_expense','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
+ 'depends':['base','product','hr','hr_expense','portal','survey','website','sale','odoo_website_helpdesk','account','mail'],
  'data': [
         'data/roll_no_sequence.xml',
         'data/exam_sequence.xml',
@@ -17,6 +17,7 @@
         'views/portal/candidate_portal/candidate_details.xml',
         'views/portal/portal_docs.xml',
         'views/portal/institute.xml',
+        'views/candidate_approval.xml',
         'views/portal/candidate.xml',
         'views/portal/examiner_portal/examiner_online_exam.xml',
         'views/portal/examiner_portal/candidate_selection.xml',
@@ -52,19 +53,28 @@
         'reports/dgs_report.xml',
         'reports/attendance_sheet.xml',
         'reports/summarised_report.xml',
+        'views/sep_batches.xml',
+        'views/sep_candidate.xml',
+        'reports/sep_candidate_certificate.xml',
+       
+        # 'views/sep_batches.xml',
+        # 'views/sep_candidate.xml',
+        # 'reports/sep_candidate_certificate.xml',
         
         
 ],
 'assets': {
 		'web.assets_frontend': [
                         'bes/views/portal/static/src/js/candidate_oral_practical.js',
-                        'bes/static/js/examiner_portal_marksheet.js'
+                        'bes/static/js/examiner_portal_marksheet.js',
+                        'bes/static/js/repeater_portal_gp_form.js'
 		],
                 'web.assets_qweb': [
                         'bes/static/src/xml/gp_exam_tree_button.xml',
                 ],
                 'web.assets_backend': [
                         'bes/static/src/js/gp_exam_tree_button.js',
+                        'bes/static/src/css/customs_color.css',
                 ],
                 
 	},

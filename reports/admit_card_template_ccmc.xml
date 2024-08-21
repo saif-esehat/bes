@@ -17,8 +17,30 @@
                             <strong>Admit Card - CCMC Repeater Candidate</strong>
                         </t>
                     </div>
-                    <div style="font-size: 20px; text-align: center; margin-bottom: 10px;">
-                        <strong>Exam Center: <span><t t-esc="o.registered_institute.name"/></span></strong>
+                    <div style="font-size: 20px; text-align: center; margin-bottom: 30px;">
+                        <t t-if="o.attempt_number == 1">
+                            <strong>Exam Center: <t t-esc="o.registered_institute.name"/></strong>
+                        </t>
+                        <t t-elif="o.attempt_number > 1">
+                            <t t-if="o.exam_region.id == 1">
+                                <strong>Exam Center: <t t-esc="o.dgs_batch.mumbai_region.name"/></strong>
+                            </t>
+                            <t t-elif="o.exam_region.id == 3">
+                                <strong>Exam Center: <t t-esc="o.dgs_batch.delhi_region.name"/></strong>
+                            </t>
+                            <t t-elif="o.exam_region.id == 4">
+                                <strong>Exam Center: <t t-esc="o.dgs_batch.goa_region.name"/></strong>
+                            </t>
+                            <t t-elif="o.exam_region.id == 5">
+                                <strong>Exam Center: <t t-esc="o.dgs_batch.kolkatta_region.name"/></strong>
+                            </t>
+                            <t t-elif="o.exam_region.id == 6">
+                                <strong>Exam Center: <t t-esc="o.dgs_batch.chennai_region.name"/></strong>
+                            </t>
+                            <t t-elif="o.exam_region.id == 8">
+                                <strong>Exam Center: <t t-esc="o.dgs_batch.kochi_region.name"/></strong>
+                            </t>
+                        </t>
                     </div>
                 </div>
 
@@ -68,6 +90,13 @@
                             <span style="font-size:20px;"><t t-esc="o.ccmc_candidate.indos_no"/></span>  
                         </div>
                     </div>
+
+                    <div class="row" style="margin-bottom:4px;">
+                        <div class="col-9">
+                            <span style="font-size:20px;">Pre-Sea Institute: </span>
+                            <span style="font-size:20px;"><t t-esc="o.institute_id.name"/></span>  
+                        </div>
+                    </div>
                     
                     <div class="row" style="margin-bottom:4px;">
                         <div class="col-6">
@@ -101,15 +130,15 @@
                                 </thead>
                                 <tbody>
 
-                                    <tr scope="row" t-if="o.cookery_bakery_prac_status == 'pending' or o.cookery_bakery_prac_status == 'failed'">
+                                    <tr scope="row" t-if="o.attempting_cookery">
                                         <td style="border: 1px solid black;">Practical</td>
                                     </tr>
 
-                                    <tr scope="row" t-if="o.ccmc_oral_prac_status == 'pending' or o.ccmc_oral_prac_status == 'failed'">
+                                    <tr scope="row" t-if="o.attempting_oral">
                                         <td style="border: 1px solid black;">Oral</td>
 
                                     </tr>
-                                    <tr scope="row" t-if="o.ccmc_online_status == 'pending' or o.ccmc_online_status == 'failed'">
+                                    <tr scope="row" t-if="o.attempting_online">
                                         <td style="border: 1px solid black;">Online</td>
 
                                     </tr>

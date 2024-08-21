@@ -143,7 +143,39 @@ class InstituteGPBatches(models.Model):
                 record.candidate_user_invoice_criteria = False
  
 
+    @api.model
+    def action_delete_batches(self, batch_ids=None):
+        if batch_ids is None or not batch_ids:
+            raise ValidationError("No batches selected for deletion.")
 
+        # Retrieve records to be deleted based on provided IDs
+        batches_to_delete = self.browse(batch_ids)
+        
+        if not batches_to_delete:
+            raise ValidationError("No valid batches found to delete.")
+        
+        # Construct message with batch names and corresponding institute names
+        batch_info = []
+        for batch in batches_to_delete:
+            institute_name = batch.institute_id.name or 'Unknown Institute'
+            batch_info.append(f"(Institute: {institute_name}) - {batch.batch_name} \n")
+        
+        batch_info_str = ', '.join(batch_info)
+        
+        # Pass the message and batch IDs to the wizard
+        return {
+            'name': 'Batch Delete Confirmation',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.delete.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {
+                'default_message': f"Batches to be deleted:\n{batch_info_str}",
+                'batch_ids': batch_ids,
+            }
+        }
+    
             
     
     
@@ -562,6 +594,7 @@ class InstituteCcmcBatches(models.Model):
         ('issued', 'Issued')
     ],default="pending", string='Admit Card Status')
     
+    
     dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",compute='_compute_batch_capacity')
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
@@ -575,9 +608,9 @@ class InstituteCcmcBatches(models.Model):
     @api.depends('institute_id')
     def _compute_batch_capacity(self):
         for rec in self:
-            if rec.institute_id.courses[1].course.course_code and rec.institute_id.courses[1].course.course_code == 'CCMC':
-                # import wdb; wdb.set_trace()
+            if len(rec.institute_id.courses) > 1 and rec.institute_id.courses[1].course.course_code == 'CCMC':
                 rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
+            # rec.dgs_approved_capacity = 100
 
     @api.depends("admit_card_alloted")
     def _compute_admit_card_count(self):
@@ -665,7 +698,38 @@ class InstituteCcmcBatches(models.Model):
         self.write({"ccmc_state":'4-invoiced'})
         
         
+    @api.model
+    def action_delete_batches(self, batch_ids=None):
+        if batch_ids is None or not batch_ids:
+            raise ValidationError("No batches selected for deletion.")
 
+        # Retrieve records to be deleted based on provided IDs
+        batches_to_delete = self.browse(batch_ids)
+        
+        if not batches_to_delete:
+            raise ValidationError("No valid batches found to delete.")
+        
+        # Construct message with batch names and corresponding institute names
+        batch_info = []
+        for batch in batches_to_delete:
+            institute_name = batch.institute_id.name or 'Unknown Institute'
+            batch_info.append(f"(Institute: {institute_name}) - {batch.ccmc_batch_name} \n")
+        
+        batch_info_str = ', '.join(batch_info)
+        
+        # Pass the message and batch IDs to the wizard
+        return {
+            'name': 'Batch Delete Confirmation',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.delete.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {
+                'default_message': f"Batches to be deleted:\n{batch_info_str}",
+                'batch_ids': batch_ids,
+            }
+        }
           
     
     def create_invoice_ccmc(self):
