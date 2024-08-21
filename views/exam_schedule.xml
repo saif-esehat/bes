@@ -595,9 +595,17 @@
                     <field name="registered_institute"/>
                     <field name="exam_region"/>
                     <field name="institute_id"/>
-                    <field name="cookery_practical"/> 
-                    <field name="cookery_oral"/> 
-                    <field name="cookery_gsk_online"/>                    
+
+                    <field name="attempting_cookery" invisible="1"/>
+                    <field name="attempting_oral" invisible="1"/>
+                    <field name="attempting_online" invisible="1"/>
+
+                    <field name="cookery_practical" decoration-warning="attempting_cookery"/> 
+                    
+                    <field name="cookery_oral"  decoration-warning="attempting_oral"/> 
+                    
+                    <field name="cookery_gsk_online"  decoration-warning="attempting_online"/>                    
+                    
                     <field name="overall_marks"/>
                     <field name="exam_criteria"/>
                     <field name="certificate_criteria"/>

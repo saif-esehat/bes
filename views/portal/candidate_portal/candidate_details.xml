@@ -1618,7 +1618,7 @@
                                 <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-danger">Cookery And Bakery</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.cookery_bakery_prac_status == 'passed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-success">Cookery And Bakery</span>
                                 </t>
                             </div>
