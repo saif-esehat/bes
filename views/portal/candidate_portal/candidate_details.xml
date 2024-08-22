@@ -1668,11 +1668,11 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" oninput="this.value = this.value.replace(/\./g, '');"/>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
-                            <input type="number" name="amount" id="amount" required="True" class="form-control" />
+                            <input type="number" name="amount" id="amount" required="True" class="form-control" oninput="this.value = this.value.replace(/\./g, '');" />
                         </div>
                         <div class="col-md-3">
                             <label for="payment_date">Date <strong class="text-danger">*</strong></label>
