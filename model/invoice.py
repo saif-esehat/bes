@@ -8,7 +8,30 @@ class CandidateInvoiceResetWizard(models.TransientModel):
     
     
     def reset_invoice(self):
-        print("Working")
+        
+        invoice_id = self.env.context.get('active_id')
+        model_name = self.env.context.get('params').get('model')
+
+        invoices = self.env[model_name].sudo().browse(invoice_id)
+        
+        # import wdb;wdb.set_trace()
+        
+        if invoices.gp_repeater_candidate_ok:
+            invoices.write({'gp_candidate':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
+            invoices.button_draft()
+        elif invoices.ccmc_repeater_candidate_ok:
+            invoices.write({'ccmc_candidate':False , 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
+            invoices.button_draft()
+            
+        
+
+        
+
+        
+
+        
+
+        
 
 
 
@@ -28,7 +51,15 @@ class BatchInvoice(models.Model):
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate')
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate')
     
+    visible_reset_invoice = fields.Boolean("Visible Reset Invoice", compute="_compute_visible_reset_invoice")
     
+    def _compute_visible_reset_invoice(self):
+        for record in self:
+            if record.gp_repeater_candidate_ok or record.ccmc_repeater_candidate_ok and record.state == 'posted':
+                record.visible_reset_invoice = True
+            else:
+                record.visible_reset_invoice = False
+                
     batch = fields.Many2one("institute.gp.batches","Batch")
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")

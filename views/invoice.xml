@@ -20,9 +20,11 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_register_payment']" position="after">
-                        <button name="open_candidate_invoice_reset_wizard" id="account_invoice_payment_btn" type="object" class="oe_highlight" attrs="{'invisible' : [('show_reset_to_draft_button', '=', False),'|', ('gp_repeater_candidate_ok', '=', False), ('ccmc_repeater_candidate_ok', '=', False)]}"  string="Reset Candidate Invoice" />
+                        <!-- <button name="open_candidate_invoice_reset_wizard" id="account_invoice_payment_btn" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('show_reset_to_draft_button', '=', False), '|', ('gp_repeater_candidate_ok', '=', False), ('ccmc_repeater_candidate_ok', '=', False)]}"   string="Reset Candidate Invoice" /> -->
+                        <button name="open_candidate_invoice_reset_wizard" id="reset_invoice_button" type="object" class="oe_highlight" attrs="{'invisible': [('visible_reset_invoice', '=', False)]}" string="Reset Candidate Invoice" />
                 </xpath>
                 <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="visible_reset_invoice" invisible="1"/>
                     <field name="gp_batch_ok" invisible="1"/>
                     <field name="preferred_exam_region" attrs="{'invisible': [('gp_repeater_candidate_ok', '=', False),('ccmc_repeater_candidate_ok', '=', False)]}" />
                     <field name="gp_repeater_candidate_ok" invisible="1"/>
