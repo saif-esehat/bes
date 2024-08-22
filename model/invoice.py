@@ -1,6 +1,17 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError,ValidationError
 
+class CandidateInvoiceResetWizard(models.TransientModel):
+    _name = 'candidate.invoice.reset.wizard'
+    _description = 'Candidate Invoice Reset Wizard'
+    
+    
+    
+    def reset_invoice(self):
+        print("Working")
+
+
+
 
 class BatchInvoice(models.Model):
     _inherit = "account.move"
@@ -30,6 +41,14 @@ class BatchInvoice(models.Model):
     file_name = fields.Char("Transaction Slip Filename")
     transaction_date = fields.Date("Transaction Date")
     
+    def open_candidate_invoice_reset_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Reset Candidate Invoice',
+            'res_model': 'candidate.invoice.reset.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+        }
     
     def open_gp_candidate(self):
         
