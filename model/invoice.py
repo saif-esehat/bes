@@ -10,17 +10,17 @@ class CandidateInvoiceResetWizard(models.TransientModel):
     def reset_invoice(self):
         
         invoice_id = self.env.context.get('active_id')
-        model_name = self.env.context.get('params').get('model')
+        model_name = 'account.move'
 
         invoices = self.env[model_name].sudo().browse(invoice_id)
         
         # import wdb;wdb.set_trace()
         
         if invoices.gp_repeater_candidate_ok:
-            invoices.write({'gp_candidate':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
+            invoices.write({'gp_candidate':False,'transaction_id':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
             invoices.button_draft()
         elif invoices.ccmc_repeater_candidate_ok:
-            invoices.write({'ccmc_candidate':False , 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
+            invoices.write({'ccmc_candidate':False ,'transaction_id':False, 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
             invoices.button_draft()
             
         
