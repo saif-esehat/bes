@@ -2587,7 +2587,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
-                                                <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                <input type="text" class="form-control" id="indos_no" name="indos_no" maxlength="8" oninput="this.value = this.value.replace(/\s+|[^a-zA-Z0-9]/g, '');" />
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -3498,7 +3499,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="indos_no">Indos No.</label>
-                                                <input type="text" class="form-control" id="indos_no" name="indos_no" />
+                                                <input type="text" class="form-control" id="indos_no" name="indos_no" maxlength="8" oninput="this.value = this.value.replace(/\s+|[^a-zA-Z0-9]/g, '');" />
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">

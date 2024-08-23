@@ -130,14 +130,14 @@
                             <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                         </t>
                         <div class="row">
-                            <div class="col-4">
-                                <table class="table" style="border-collapse: collapse;">
+                            <div >
+                                <table class="table" style="border-collapse: collapse;" >
                                     <thead>
                                         <tr>
                                             <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
                                             <t t-if="o.dgs_batch.is_march_september">
-                                                <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_gsk_oral_prac or o.attempting_mek_oral_prac">Exam Date P&amp;O</th>
-                                                <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_gsk_online or o.attempting_mek_online">Exam Date Online</th>
+                                                <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_gsk_oral_prac or o.attempting_mek_oral_prac or o.attempting_gsk_online or o.attempting_mek_online">Exam Date </th>
+                                                <!-- <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_gsk_online or o.attempting_mek_online">Exam Date Online</th> -->
                                             </t>
                                         </tr>
                                     </thead>

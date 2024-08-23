@@ -261,6 +261,8 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        # if not previous_exam:
+        #     raise ValidationError("Not Allowed")
         new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         # current_year = datetime.datetime.now().year
         
@@ -738,6 +740,7 @@ class GPCandidatePortal(CustomerPortal):
     def AddGPRepeaterSTCW(self, **kw):
         candidate_user_id = request.env.user.id
         candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        
         if request.httprequest.method == 'POST':
             dgs_batch_id = int(kw.get('batch_id'))
             course_name = kw.get('course_name')

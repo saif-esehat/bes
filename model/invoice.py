@@ -288,7 +288,7 @@ class CustomPaymentRegister(models.TransientModel):
                 cookery_gsk_online_percentage = last_exam.cookery_gsk_online_percentage
                 overall_percentage = last_exam.overall_percentage
                 
-                ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({
+                ccmc_exam_schedule = self.env["ccmc.exam.schedule"].sudo().create({
                 'ccmc_candidate':invoice.ccmc_candidate.id,
                 'exam_region':invoice.preferred_exam_region.id,
                 'exam_id':exam_id,
@@ -362,7 +362,7 @@ class CustomPaymentRegister(models.TransientModel):
                     registered_institute = invoice.ccmc_candidate.institute_id.id                
 
                 
-                ccmc_exam_schedule.write({
+                ccmc_exam_schedule.sudo().write({
                                         "registered_institute":registered_institute,
                                         "cookery_bakery":cookery_bakery.id,
                                         "cookery_bakery_prac_status":cookery_bakery_prac_status,
