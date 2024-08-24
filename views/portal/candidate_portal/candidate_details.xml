@@ -292,7 +292,7 @@
 
             
                 // Function to validate mobile number length
-                function validateMobileLength(input) {
+                <!-- function validateMobileLength(input) {
                     var value = input.value.replace(/\D/g, ''); // Remove non-digit characters
             
                     // Trim value to 10 digits if necessary
@@ -311,14 +311,14 @@
                         errorParagraph.textContent = ""; // Clear error message if input is empty
                         input.setCustomValidity(""); // Clear custom validity
                     }
-                }
+                } -->
             
                 // Attach input event listener to mobile input for validation
-                if (mobileInput) {
+                <!-- if (mobileInput) {
                     mobileInput.addEventListener('input', function() {
                         validateMobileLength(mobileInput);
                     });
-                }
+                } -->
             });
             
             </script>

@@ -900,6 +900,19 @@ class GPCandidatePortal(CustomerPortal):
                 return json.dumps({"other_institute_name":False})
         return json.dumps({"other_institute_name":True})
     
+    @http.route(['/my/checktransaction'], type='json', auth="user", method=['POST'])
+    def CheckTransaction(self, **kw):
+                    
+        upi_utr_no = request.jsonrequest["upi_utr_no"]
+        print(request.jsonrequest)
+        print(upi_utr_no)
+        invoice = request.env['account.move'].sudo().search([('transaction_id','=',upi_utr_no)], limit=1)
+        if invoice:
+            return json.dumps({"invoice_valid":True})
+        else:
+            return json.dumps({"invoice_valid":False})
+        
+    
     
     @http.route(['/my/checkotherinstituteccmc'], type='http', auth="user", method=['GET'])
     def CheckOthersInstituteCCMC(self, **kwargs):
