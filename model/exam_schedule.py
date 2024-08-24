@@ -2709,6 +2709,22 @@ class GPExam(models.Model):
         ('absent', 'Absent'),
     ],string="Absent Status",compute="_compute_absent_status",store=True)
     
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            dgs_batch_id = rec.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',dgs_batch_id),('gp_candidate','=',rec.gp_candidate.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
+    
     @api.depends('gsk_oral_prac_attendance','gsk_online_attendance','mek_oral_prac_attendance','mek_online_attendance')
     def _compute_absent_status(self):
         for record in self:
@@ -3912,6 +3928,22 @@ class CCMCExam(models.Model):
         ('pending', 'Pending'),
         ('done', 'Done'),
     ],string="Candidate-Sign",compute="_check_sign",default="pending",store=True)
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            dgs_batch_id = rec.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',dgs_batch_id),('ccmc_candidate','=',rec.ccmc_candidate.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
     
     absent_status = fields.Selection([
         ('present', 'Present'),
