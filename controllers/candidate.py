@@ -261,8 +261,8 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
-        # if not previous_exam:
-        #     raise ValidationError("Not Allowed")
+        if previous_exam.attempt_number == 7:
+            raise ValidationError("Max Exam Attempt Exceded")
         new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         # current_year = datetime.datetime.now().year
         
@@ -306,6 +306,8 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["ccmc.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        if previous_exam.attempt_number == 7:
+            raise ValidationError("Max Exam Attempt Exceded")
         # import wdb; wdb.set_trace()
         new_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
