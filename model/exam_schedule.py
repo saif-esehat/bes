@@ -2166,7 +2166,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     _inherit = ['mail.thread','mail.activity.mixin']
     _rec_name = 'display_name'
-    _description= 'Marksheets'
+    _description= 'Marksheetsss'
 
     examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate",tracking=True)

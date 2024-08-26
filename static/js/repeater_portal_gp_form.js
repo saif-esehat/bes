@@ -389,7 +389,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       submit: "_onSubmitGPRepeater",
     },
 
-    _onSubmitGPRepeater: function (evt) {
+    _onSubmitGPRepeater: async function (evt) {
       evt.preventDefault();
 
       var tableData = [];
@@ -397,12 +397,66 @@ odoo.define("bes.RepeaterPortal", function (require) {
       var gpstcwlisttable = document
         .getElementById("gpstcwlist")
         .querySelectorAll("tr");
+
+      
+      var upi_utr_no = document.getElementById("upi_utr_no").value
     
       var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
 
+      var transaction = {
+        "upi_utr_no": upi_utr_no,
+      }
+
+      let response = await $.ajax({
+        url: "/my/checktransaction", // Update the URL with your actual route
+        data: JSON.stringify(transaction),
+        type: "POST",
+        contentType: 'application/json'
+    });
+
+      var invoice_valid = JSON.parse(response.result).invoice_valid;
+      if (invoice_valid) {
+        var alert_element = document.getElementById("alert_id");
+        var newDiv = document.createElement("div");
+        newDiv.textContent = "UPI Transaction already found in the System";
+        newDiv.className = "alert alert-danger";
+        newDiv.setAttribute("role", "alert");
+        alert_element.appendChild(newDiv);
+        return; // Stop further execution if invoice_valid is true
+    }
+
+
+
+
+
+      // await $.ajax({
+      //   url: "/my/checktransaction", // Update the URL with your actual route
+      //   data: JSON.stringify(transaction),
+      //   type: "POST",
+      //   contentType: 'application/json',
+      //   success: function (data) {
+      //     var alert_element = document.getElementById("alert_id");
+      //     var invocie_valid = JSON.parse(data.result).invoice_valid
+
+      //     if (invocie_valid) {
+
+      //       var newDiv = document.createElement("div");
+      //       newDiv.textContent = "UPI Transaction already found in the System";
+      //       newDiv.className = "alert alert-danger";
+      //       newDiv.setAttribute("role", "alert");
+      //       alert_element.appendChild(newDiv);
+      //       evt.preventDefault();
+      //       return;
+
+      //     }
+
+
+      //   }
+
+      // })
       // debugger
 
-      $.ajax({
+      await $.ajax({
         url: "/my/checkotherinstitutegp", // Update the URL with your actual route
         method: "GET",
         indexValue: {checkCourse:this._checkCourseCombination,},
@@ -412,6 +466,8 @@ odoo.define("bes.RepeaterPortal", function (require) {
 
         if (!data.other_institute_name) {
 
+          
+          
           var alert_element = document.getElementById("alert_id");
 
           if (!data.other_institute_name) {
