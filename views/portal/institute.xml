@@ -3179,6 +3179,47 @@
                                         });
                                     }); -->
 
+                                    function displayImage(input) {
+                                        const cardImg = document.querySelector('.card-img');
+                                        const file = input.files[0];
+                    
+                                        if (file) {
+                                        const reader = new FileReader();
+                    
+                                        reader.onload = function (e) {
+                                            cardImg.src = e.target.result;
+                                        };
+                    
+                                        reader.readAsDataURL(file);
+                                        }
+                                    }
+                    
+                                    function displaySignImage(input) {
+                                        const cardImg = document.querySelector('.sign-img');
+                                        const file = input.files[0];
+                    
+                                        if (file) {
+                                        const reader = new FileReader();
+                    
+                                        reader.onload = function (e) {
+                                            cardImg.src = e.target.result;
+                                        };
+                    
+                                        reader.readAsDataURL(file);
+                                        }
+                                    }
+
+                                    function ccmcopenImageAndSign(e) {
+                                        debugger
+                                        // Retrieve the data-id attribute value from the clicked button
+                                        var dataId = e.getAttribute('data-id');
+                                        var batchId = e.getAttribute('batch-id');
+                                        // Update the content of the modal with the retrieved data
+                                        document.getElementById('image_candidate_id').value = dataId;
+                                        document.getElementById('ccmc_candidate_batch_ids').value = batchId;
+
+                                    }
+
                                     function openccmcUploadModal(button) {
                                     <!-- debugger -->
                                     // Retrieve the data-id attribute value from the clicked button
@@ -3885,6 +3926,52 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="ccmcupdateimage" tabindex="-1" role="dialog" aria-labelledby="updateCcmcCandidateImageLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateCcmcCandidateImageLabel">Update Candidate Image and Signature</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <!-- <span aria-hidden="true">&times;</span> -->
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form to upload image and signature -->
+                            <form action="/my/ccmc_update_candidate_image_and_signature" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="candidate_id" id="image_candidate_id"/>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" name="ccmc_batch_id" id="ccmc_candidate_batch_ids" />
+                                <!-- <t  t-set="candidate"  t-value="env['gp.candidate'].sudo().search([('id','=','candidate_id')])"/> -->
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <div class="card-img-container">
+                                            <img t-attf-src="#" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label for="candidate_photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="candidate_photo" name="candidate_photo" accept="image/*" onchange="displayImage(this)"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <div class="card-img-container">
+                                            <img t-attf-src="#" class="card-img-top sign-img" style="width: 150px;" alt="Candidate Photo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label for="signature_photo" class="form-label">Signature Photo</label>
+                                        <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*" onchange="displaySignImage(this)" />
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">CCMC Candidate</t>
@@ -3927,7 +4014,7 @@
                                     <span class="text-success">Done</span>
                                 </t>
                                 <t t-else="">
-                                    <span class="text-danger">Pending</span>
+                                    <a href="#" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#ccmcupdateimage"  t-attf-data-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="ccmcopenImageAndSign(this)" class="btn btn-primary btn_cta">Update Image</a>
                                 </t>
                             </td>
                             <td class="text-center">
@@ -3935,7 +4022,7 @@
                                     <span class="text-success">Done</span>
                                 </t>
                                 <t t-else="">
-                                    <span class="text-danger">Pending</span>
+                                    <a href="#" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#ccmcupdateimage" t-attf-data-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="ccmcopenImageAndSign(this)" class="btn btn-primary btn_cta">Update Sign</a>
                                 </t>
                             </td>
                             <td class="text-center">
