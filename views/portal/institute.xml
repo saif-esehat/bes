@@ -671,7 +671,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Indos No.</label>
-                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" t-att-value ="candidate.indos_no"/>
+                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" t-att-value ="candidate.indos_no" maxlength="8" oninput="this.value = this.value.replace(/\s+|[^a-zA-Z0-9]/g, '');"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -2141,6 +2141,35 @@
                                             $('#loader-overlay').show();
                                         });
                                     }); -->
+                                    function displayImage(input) {
+                                        const cardImg = document.querySelector('.card-img');
+                                        const file = input.files[0];
+                    
+                                        if (file) {
+                                        const reader = new FileReader();
+                    
+                                        reader.onload = function (e) {
+                                            cardImg.src = e.target.result;
+                                        };
+                    
+                                        reader.readAsDataURL(file);
+                                        }
+                                    }
+                    
+                                    function displaySignImage(input) {
+                                        const cardImg = document.querySelector('.sign-img');
+                                        const file = input.files[0];
+                    
+                                        if (file) {
+                                        const reader = new FileReader();
+                    
+                                        reader.onload = function (e) {
+                                            cardImg.src = e.target.result;
+                                        };
+                    
+                                        reader.readAsDataURL(file);
+                                        }
+                                    }
 
                                     function onOpenDeleteCandidateModal(button){
                                         
@@ -2175,6 +2204,17 @@
                                     var dataId = button.getAttribute('batch-id');
                                     // Update the content of the modal with the retrieved data
                                     document.getElementById('batch_id').value = dataId;
+
+                                    }
+
+                                    function openImageAndSign(e) {
+                                    <!-- debugger -->
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = e.getAttribute('data-id');
+                                    var batchId = e.getAttribute('batch-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('image_candidate_id').value = dataId;
+                                    document.getElementById('gp_candidate_batch_id').value = batchId;
 
                                     }
 
@@ -2451,7 +2491,7 @@
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openUploadModal(this)" data-target="#uploadCandidateModal" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>                    
                         
-                        <t t-if="ins_batch.candidate_count > 0">
+                        <t t-if="ins_batch.all_candidates_have_indos">
                             <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
                         </t>
@@ -2871,6 +2911,79 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="gpupdateimage" tabindex="-1" role="dialog" aria-labelledby="updateGpCandidateImageLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateGpCandidateImageLabel">Update Candidate Image and Signature</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <!-- <span aria-hidden="true">&times;</span> -->
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form to upload image and signature -->
+                            <form action="/my/update_candidate_image_and_signature" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="candidate_id" id="image_candidate_id"/>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" name="batch_id" id="gp_candidate_batch_id" />
+                                <!-- <t  t-set="candidate"  t-value="env['gp.candidate'].sudo().search([('id','=','candidate_id')])"/> -->
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <div class="card-img-container">
+                                            <img t-attf-src="#" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label for="candidate_photo" class="form-label">Candidate Photo</label>
+                                        <input type="file" class="form-control" id="candidate_photo" name="candidate_photo" accept="image/*" onchange="displayImage(this)"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <div class="card-img-container">
+                                            <img t-attf-src="#" class="card-img-top sign-img" style="width: 150px;" alt="Candidate Photo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label for="signature_photo" class="form-label">Signature Photo</label>
+                                        <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*" onchange="displaySignImage(this)" />
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal fade" id="gpupdatesign" tabindex="-1" role="dialog" aria-labelledby="updateGpCandidateSignLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateGpCandidateSignLabel">Update Candidate Image and Signature</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/my/update_candidate_image_and_signature" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="candidate_id" id="candidate_id"  />
+                                <input type="hidden" id="gp_candidate_batch_id"  t-att-value="batch_id"/>
+                                <div class="form-group">
+                                    <label for="candidate_photo" class="form-label">Candidate Photo</label>
+                                    <input type="file" class="form-control" id="candidate_photo" name="candidate_photo" accept="image/*"  />
+                                </div>
+                                <div class="form-group">
+                                    <label for="signature_photo" class="form-label">Signature Photo</label>
+                                    <input type="file" class="form-control" id="signature_photo" name="signature_photo" accept="image/*"  />
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
 
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
             <t t-call="portal.portal_searchbar">
@@ -2887,14 +3000,14 @@
                         <th>GP Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
+                        <th>Image Status</th>
+                        <th>Sign Status</th>
                         <th>Login Id</th>
                         <th>GP Candidate Code No.</th>
                         <th style="text-align: center;">Fees Paid<br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#pay_all_modal"  data-toggle="modal">Pay All</a></th>
                         <th style="text-align: center;">Attendance 1 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_1_modal"  data-toggle="modal">More Info</a></th>
                         <th style="text-align: center;">Attendance 2 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_2_modal"  data-toggle="modal">More Info</a></th>
 
-                        <th>Image Status</th>
-                        <th>Sign Status</th>
                         <!-- <th>Attendance</th> -->
                         <th>Ship Visis</th>
                         <th>STCW</th>
@@ -2914,6 +3027,23 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.roll_no" />
+                            </td>
+                            
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_image_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <a href="#" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#gpupdateimage"  t-attf-data-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="openImageAndSign(this)" class="btn btn-primary btn_cta">Update Image</a>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_signature_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <a href="#" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#gpupdateimage" t-attf-data-id="{{candidate.id}}" t-attf-batch-id="{{batch_id}}" onclick="openImageAndSign(this)" class="btn btn-primary btn_cta">Update Sign</a>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <t t-if="candidate.user_id">
@@ -2946,22 +3076,6 @@
                                 </select>
                             </td>
 
-                            <td class="text-center">
-                                <t t-if="candidate.candidate_image_status == 'done'">
-                                    <span class="text-success">Done</span>
-                                </t>
-                                <t t-else="">
-                                    <span class="text-danger">Pending</span>
-                                </t>
-                            </td>
-                            <td class="text-center">
-                                <t t-if="candidate.candidate_signature_status == 'done'">
-                                    <span class="text-success">Done</span>
-                                </t>
-                                <t t-else="">
-                                    <span class="text-danger">Pending</span>
-                                </t>
-                            </td>
                             <!-- <td class="text-center">
                                 <t t-if="candidate.attendance_criteria == 'passed'">
                                     <span class="text-success">Complied</span>
@@ -3388,10 +3502,10 @@
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-modal-id="{{batch_id}}" data-target="#uploadCcmcCandidateModal" onclick="openccmcUploadModal(this)" class="btn btn-primary btn_cta">Upload Bulk Candidate</a>
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
                     
-                        <!-- <t t-if="ins_batch.candidate_count > 0">
+                        <t t-if="ins_batch.all_candidates_have_indos">
                             <a t-attf-href="/my/ccmcbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadCCMCSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
-                        </t> -->
+                        </t>
                     </div>
                     <div class="">
                         <a href="/my/upload_instructions" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta ">Uploading instructions</a>
@@ -3782,13 +3896,13 @@
                         <th>CCMC Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
+                        <th>Image Status</th>
+                        <th>Sign Status</th>
                         <th>Login Id.</th>
                         <th>CCMC Candidate Code No.</th>
                         <th style="text-align: center;">Fees Paid<br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#pay_all_modal"  data-toggle="modal">Pay All</a></th>
                         <th style="text-align: center;">Attendance 1 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_1_modal"  data-toggle="modal">More Info</a></th>
                         <th style="text-align: center;">Attendance 2 <br/><a style="display: inline-block;font-size: smaller;" href="#" data-target="#attendance_compliance_2_modal"  data-toggle="modal">More Info</a></th>
-                        <th>Image Status</th>
-                        <th>Sign Status</th>
                         <th>Ship Visis</th>
                         <th>STCW</th>
                         <th>View/Update</th>
@@ -3807,6 +3921,22 @@
                             </td>
                             <td class="text-center">
                                 <t t-out="candidate.roll_no" />
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_image_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="candidate.candidate_signature_status == 'done'">
+                                    <span class="text-success">Done</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-danger">Pending</span>
+                                </t>
                             </td>
                             <td class="text-center">
                                 <t t-if="candidate.user_id">
@@ -3839,22 +3969,7 @@
 
                                 </select>
                             </td>
-                            <td class="text-center">
-                                <t t-if="candidate.candidate_image_status == 'done'">
-                                    <span class="text-success">Done</span>
-                                </t>
-                                <t t-else="">
-                                    <span class="text-danger">Pending</span>
-                                </t>
-                            </td>
-                            <td class="text-center">
-                                <t t-if="candidate.candidate_signature_status == 'done'">
-                                    <span class="text-success">Done</span>
-                                </t>
-                                <t t-else="">
-                                    <span class="text-danger">Pending</span>
-                                </t>
-                            </td>
+
                             <!-- <td class="text-center">
                                 <t t-if="candidate.attendance_criteria == 'passed'">
                                     <span class="text-success">Complied</span>
@@ -4555,7 +4670,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="indos_no">Indos No.</label>
-                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" t-att-value ="candidate.indos_no"/>
+                                                    <input type="text" class="form-control" id="indos_no" name="indos_no" t-att-value ="candidate.indos_no" maxlength="8" oninput="this.value = this.value.replace(/\s+|[^a-zA-Z0-9]/g, '');"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">

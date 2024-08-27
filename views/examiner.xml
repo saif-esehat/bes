@@ -767,6 +767,7 @@
                     <field name="dgs_batch"/>
                     <field name="exam_type"/>
                     <field name="course"/>
+                    <field name="institute_id"/>
                     <field name="exam_region"/>
                     <field name="expense_sheet_status"/>
                     <!-- <field name="subject"/> -->

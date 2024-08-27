@@ -1140,6 +1140,7 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'institute_id'
     _description= 'Practical&Oral'
 
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
@@ -2117,6 +2118,8 @@ class ExamOralPracticalExaminers(models.Model):
     
     def open_marksheet_list(self):
         
+        name = f"{self.examiner.name} - {self.dgs_batch.batch_name} - {self.subject.name}"
+#  - {self.institute_id.name}
         if self.subject.name == 'GSK':
             if self.exam_type == 'practical_oral':
                 views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
@@ -2149,9 +2152,9 @@ class ExamOralPracticalExaminers(models.Model):
                         (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
             
         
-        
         return {
-            'name': 'Marksheet',
+        # Breadcrum
+            'name': name,
             'domain': [('examiners_id', '=', self.id)],
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,form',  # Specify both tree and form views
@@ -2166,7 +2169,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     _name = 'exam.type.oral.practical.examiners.marksheet'
     _inherit = ['mail.thread','mail.activity.mixin']
     _rec_name = 'display_name'
-    _description= 'Marksheetsss'
+    _description= 'Marksheets'
 
     examiners_id = fields.Many2one("exam.type.oral.practical.examiners",string="Examiners ID",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate",string="GP Candidate",tracking=True)
@@ -4697,12 +4700,14 @@ class ReallocateCandidatesWizard(models.TransientModel):
                     elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                         confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         candidate.examiners_id.compute_candidates_done()
+
                 elif candidate.examiners_id.subject.name == 'MEK':
-                    if candidate.mek_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.mek_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
+                    if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
                         candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.mek_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.mek_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                    elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
                         confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         candidate.examiners_id.compute_candidates_done()
+                        
             elif candidate.examiners_id.course.id == 2:
                 if candidate.examiners_id.subject.name == 'CCMC':
                     if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
