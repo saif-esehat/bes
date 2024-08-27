@@ -858,6 +858,8 @@ class InstitutePortal(CustomerPortal):
             contract_terms = kw.get("contract_terms")
             course_name = kw.get('course_name')
             # courses_taught = kw.get("courses_taught")
+            courses_id = kw.get("courses_taught")
+            courses_taught = request.env['course.master'].sudo().search([('id','=',int(courses_id))])
 
             
             faculty_data = {
@@ -869,8 +871,8 @@ class InstitutePortal(CustomerPortal):
                 "designation": designation,
                 "qualification": qualification,
                 "contract_terms": contract_terms,
-                "course_name":course_name
-                # "courses_taught": courses_taught
+                "course_name":course_name,
+                "courses_taught": courses_taught
 
             }
             # import wdb; wdb.set_trace();
@@ -882,7 +884,7 @@ class InstitutePortal(CustomerPortal):
         
         
         vals = {"states" : states,"batch_id":batch_id,"page_name":"ccmc_faculty_form","batch_name":batch_name}
-        return request.render("bes.gp_faculty_form_view", vals)
+        return request.render("bes.ccmc_faculty_form_view", vals)
 
    
 
@@ -1020,11 +1022,12 @@ class InstitutePortal(CustomerPortal):
             [('ccmc_batches_id', '=', batch_id)])
         vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id}
         # self.env["gp.candidate"].sudo().search([('')])
-        return request.render("bes.gp_faculty_portal_list", vals)
+        return request.render("bes.ccmc_faculty_portal_list", vals)
 
 
     @http.route(['/my/gpbatch/faculties/profile/<int:batch_id>/<int:faculties_id>'], type="http", auth="user", website=True)
     def GPFacultyProfileView(self,batch_id ,faculties_id, **kw):
+        # import  wdb; wdb.set_trace()
         user_id = request.env.user.id
         
         institute = request.env["bes.institute"].sudo().search(
@@ -1042,6 +1045,26 @@ class InstitutePortal(CustomerPortal):
         vals = {'faculties': faculties, 'page_name': 'gp_faculty_list','batch_id':batch_id, 'batches':batches}
 
         return request.render("bes.gp_faculty_profile_view", vals)
+    
+    @http.route(['/my/ccmcbatch/faculties/profile/<int:batch_id>/<int:faculties_id>'], type="http", auth="user", website=True)
+    def CCMCFacultyProfileView(self,batch_id ,faculties_id, **kw):
+        user_id = request.env.user.id
+        
+        institute = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)])
+        
+        batches = request.env["institute.ccmc.batches"].sudo().search(
+            [('id', '=', batch_id)])
+
+        # import wdb; wdb.set_trace()
+        
+        faculties = request.env["institute.faculty"].sudo().search(
+            [('id', '=', faculties_id)])
+        
+        
+        vals = {'faculties': faculties, 'page_name': 'ccmc_faculty_list','batch_id':batch_id, 'batches':batches}
+
+        return request.render("bes.ccmc_faculty_profile_view", vals)
    
     @http.route(['/my/institute_document/list'], type="http", auth="user", website=True)
     def InstituteDocumentList(self, **kw):
@@ -3240,6 +3263,37 @@ class InstitutePortal(CustomerPortal):
         # batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
         vals = {}
         return request.render("bes.gp_faculty_profile_view", vals)
+    
+    @http.route(['/my/ccmcupdatefacultydetails'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateCCMCFacultyDetails(self,**kw):
+        
+        # import wdb; wdb.set_trace() 
+
+        faculties = request.env["institute.faculty"].sudo().search(
+            [('id', '=', kw.get('faculty_id'))])
+        # import wdb; wdb.set_trace() 
+        if request.httprequest.method == 'POST':
+            
+            faculty_details = {
+                'faculty_name':kw.get('full_name'),
+                'dob':kw.get('dob'),
+                'designation':kw.get('designation'),
+                'qualification':kw.get('qualification'),
+                'contract_terms':kw.get('contract'),
+                'courses_taught':kw.get('courses_taught'),
+            }
+            
+            for key, value in faculty_details.items():
+                if value:
+                    faculties.write({key: value})
+
+            # return request.render("bes.gp_faculty_profile_view")
+            return request.redirect('/my/ccmcbatch/faculties/profile/'+str(kw.get("batch_id")+'/'+str(kw.get("faculty_id"))))
+            
+        
+        # batches = request.env["institute.gp.batches"].sudo().search([('id', '=', batch_id)])
+        vals = {}
+        return request.render("bes.ccmc_faculty_profile_view", vals)
     
 
     @http.route(['/my/deletefaculty'], type="http", auth="user", website=True)
