@@ -879,7 +879,7 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" oninput="this.value = this.value.replace(/\s/g, '');"/>
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
@@ -893,7 +893,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB): <strong class="text-danger">*</strong></label><br/>
-                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
+                            <input type="file" id="transaction_slip"  accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
                         </div>
                     </div>
 
@@ -1691,7 +1691,7 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" />
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/\./g, '');" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>

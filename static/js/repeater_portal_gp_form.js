@@ -418,7 +418,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       if (invoice_valid) {
         var alert_element = document.getElementById("alert_id");
         var newDiv = document.createElement("div");
-        newDiv.textContent = "UPI Transaction already found in the System";
+        newDiv.textContent = "UTR number is duplicated , already registered in the system";
         newDiv.className = "alert alert-danger";
         newDiv.setAttribute("role", "alert");
         alert_element.appendChild(newDiv);
@@ -578,7 +578,7 @@ odoo.define("bes.RepeaterPortal", function (require) {
       submit: "_onSubmitCCMCRepeater",
     },
 
-    _onSubmitCCMCRepeater: function (evt) {
+    _onSubmitCCMCRepeater: async function (evt) {
       evt.preventDefault();
       debugger
 
@@ -587,6 +587,33 @@ odoo.define("bes.RepeaterPortal", function (require) {
       var gpstcwlisttable = document
         .getElementById("ccmcstcwlist")
         .querySelectorAll("tr");
+      
+      var upi_utr_no = document.getElementById("upi_utr_no").value
+
+      var transaction = {
+        "upi_utr_no": upi_utr_no,
+      }
+
+      
+
+      let response = await $.ajax({
+        url: "/my/checktransaction", // Update the URL with your actual route
+        data: JSON.stringify(transaction),
+        type: "POST",
+        contentType: 'application/json'
+    });
+
+      var invoice_valid = JSON.parse(response.result).invoice_valid;
+      
+      if (invoice_valid) {
+        var alert_element = document.getElementById("alert_id");
+        var newDiv = document.createElement("div");
+        newDiv.textContent = "UTR number is duplicated , already registered in the system";
+        newDiv.className = "alert alert-danger";
+        newDiv.setAttribute("role", "alert");
+        alert_element.appendChild(newDiv);
+        return; // Stop further execution if invoice_valid is true
+    }
     
       var ship_visit_yes =  document.getElementById('ship_visit_yes').checked
 
