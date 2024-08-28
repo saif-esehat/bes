@@ -154,7 +154,7 @@ class GPCandidate(models.Model):
     user_state = fields.Selection([
         ('active', 'Active'),
         ('inactive', 'Inactive')
-    ], string='User Status',compute="_compute_user_state",default="inactive",tracking=True)
+    ], string='User Status',compute="_compute_user_state",store=True,default="inactive",tracking=True)
     
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
