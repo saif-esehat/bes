@@ -276,9 +276,6 @@ class GPCandidatePortal(CustomerPortal):
         if batch.form_deadline < datetime.today().date():
             raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
 
-
-        
-
         vals = {
             'candidate': candidate,
             'exam': previous_exam,
