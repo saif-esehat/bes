@@ -56,6 +56,10 @@
         'views/sep_batches.xml',
         'views/sep_candidate.xml',
         'reports/sep_candidate_certificate.xml',
+        'views/iv_exam/iv_batches.xml',
+        'views/iv_exam/iv_candidates.xml',
+        'views/iv_exam/candidats_application.xml',
+        'reports/iv_candidate_admit_card.xml',
        
         # 'views/sep_batches.xml',
         # 'views/sep_candidate.xml',
@@ -81,7 +85,8 @@
             '/bes/static/src/css/report_css.scss',
             '/bes/static/src/css/style_gp.css',
             '/bes/static/src/css/style_ccmc.css',
-            '/bes/static/src/css/dgs_report.css'
+            '/bes/static/src/css/dgs_report.css',
+           
 
         ],
 }
