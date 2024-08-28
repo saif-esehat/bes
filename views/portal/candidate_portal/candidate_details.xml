@@ -292,7 +292,7 @@
 
             
                 // Function to validate mobile number length
-                function validateMobileLength(input) {
+                <!-- function validateMobileLength(input) {
                     var value = input.value.replace(/\D/g, ''); // Remove non-digit characters
             
                     // Trim value to 10 digits if necessary
@@ -311,14 +311,14 @@
                         errorParagraph.textContent = ""; // Clear error message if input is empty
                         input.setCustomValidity(""); // Clear custom validity
                     }
-                }
+                } -->
             
                 // Attach input event listener to mobile input for validation
-                if (mobileInput) {
+                <!-- if (mobileInput) {
                     mobileInput.addEventListener('input', function() {
                         validateMobileLength(mobileInput);
                     });
-                }
+                } -->
             });
             
             </script>
@@ -693,12 +693,18 @@
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.gsk_online_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>                            
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input exam-checkbox"/>
+                                    <label for="gsk_online" class="form-check-label">GSK Online</label>
+                                </div>                            
+                            </t> -->
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
@@ -706,12 +712,18 @@
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.mek_online_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input" />
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input exam-checkbox"/>
+                                    <label for="mek_online" class="form-check-label">MEK Online</label>
+                                </div>                            
+                            </t> -->
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
@@ -719,12 +731,18 @@
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.gsk_oral_prac_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input exam-checkbox"/>
+                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
+                                </div>
+                            </t> -->
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
@@ -732,12 +750,18 @@
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.mek_oral_prac_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input exam-checkbox" />
+                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
+                                </div>
+                            </t> -->
 
                         </div>
                         <div class="col-md-4">
@@ -855,7 +879,7 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" oninput="this.value = this.value.replace(/\s/g, '');"/>
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
@@ -869,7 +893,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB): <strong class="text-danger">*</strong></label><br/>
-                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
+                            <input type="file" id="transaction_slip"  accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
                         </div>
                     </div>
 
@@ -1608,25 +1632,34 @@
                                 <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-danger">Cookery And Bakery</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.cookery_bakery_prac_status == 'passed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-success">Cookery And Bakery</span>
                                 </t>
+                                <!-- <t t-elif="not exam">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t> -->
                             </div>
                             <div class="form-check">
                                 <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                     <span id="ccmc_oral_prac_status" class="badge badge-danger">Cookery Oral</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.ccmc_oral_prac_status == 'passed'">
                                     <span id="ccmc_oral_prac_status" class="badge badge-success">Cookery Oral</span>
                                 </t>
+                                <!-- <t t-elif="not exam">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t> -->
                             </div>
                             <div class="form-check">
                                 <t t-if="exam.ccmc_online_status == 'failed'">
                                     <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.ccmc_online_status == 'passed'">
                                     <span id="ccmc_online_status" class="badge badge-success">Cookery/GSK Online</span>
                                 </t>
+                                <!-- <t t-elif="not exam">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t> -->
                             </div>
                         </div>
                     </div>
@@ -1658,7 +1691,7 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" />
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/\./g, '');" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>

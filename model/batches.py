@@ -74,6 +74,22 @@ class InstituteGPBatches(models.Model):
     mek_survey_qb = fields.Many2one("survey.survey",string="Mek Question Bank",tracking=True)
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
     
+    all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
+
+    def _compute_all_candidates_have_indos(self):
+        for record in self:
+            # import wdb; wdb.set_trace()
+            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id)])
+
+            if candidate_count > 0:
+                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '=', '')])
+                if candidate_count == candidates_with_indos:
+                    record.all_candidates_have_indos = True
+                else:
+                    record.all_candidates_have_indos = False
+            else:
+                record.all_candidates_have_indos = False
+
     @api.depends('institute_id')
     def _compute_batch_capacity(self):
         for rec in self:
@@ -604,6 +620,22 @@ class InstituteCcmcBatches(models.Model):
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     
     admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
+
+    all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
+
+    def _compute_all_candidates_have_indos(self):
+        for record in self:
+            # import wdb; wdb.set_trace()
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id)])
+
+            if candidate_count > 0:
+                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '=', '')])
+                if candidate_count == candidates_with_indos:
+                    record.all_candidates_have_indos = True
+                else:
+                    record.all_candidates_have_indos = False
+            else:
+                record.all_candidates_have_indos = False
 
     @api.depends('institute_id')
     def _compute_batch_capacity(self):

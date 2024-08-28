@@ -3881,3 +3881,63 @@ class InstitutePortal(CustomerPortal):
 
         return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
+    # New Code
+    @http.route(['/my/update_candidate_image_and_signature'], methods=['POST','GET'], type='http', auth='user', website=True)
+    def update_candidate_image_and_signature(self, **kw):
+        # import wdb; wdb.set_trace()
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(kw.get("candidate_id")))]
+        )
+
+        
+        candidate_image = kw.get("candidate_photo").read()
+        candidate_image_name = kw.get('candidate_photo').filename
+        if candidate_image and candidate_image_name:
+            candidate.write({
+                'candidate_image': base64.b64encode(candidate_image),
+                'candidate_image_name': candidate_image_name
+            })
+        
+        signature_photo = kw.get("signature_photo").read()
+        signature_photo_name = kw.get('signature_photo').filename
+        if signature_photo and signature_photo_name:
+            candidate.write({
+                'candidate_signature': base64.b64encode(signature_photo),
+                'candidate_signature_name': signature_photo_name
+            })
+
+        candidate._check_sign()
+        candidate._check_image()
+
+        
+        return request.redirect('/my/gpbatch/candidates/' + str(kw.get("batch_id")))
+
+    @http.route(['/my/ccmc_update_candidate_image_and_signature'], methods=['POST','GET'], type='http', auth='user', website=True)
+    def ccmc_update_candidate_image_and_signature(self, **kw):
+        # import wdb; wdb.set_trace()
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(kw.get("candidate_id")))]
+        )
+
+        
+        candidate_image = kw.get("candidate_photo").read()
+        candidate_image_name = kw.get('candidate_photo').filename
+        if candidate_image and candidate_image_name:
+            candidate.write({
+                'candidate_image': base64.b64encode(candidate_image),
+                'candidate_image_name': candidate_image_name
+            })
+        
+        signature_photo = kw.get("signature_photo").read()
+        signature_photo_name = kw.get('signature_photo').filename
+        if signature_photo and signature_photo_name:
+            candidate.write({
+                'candidate_signature': base64.b64encode(signature_photo),
+                'candidate_signature_name': signature_photo_name
+            })
+
+        candidate._check_sign()
+        candidate._check_image()
+
+        
+        return request.redirect('/my/ccmcbatch/candidates/' + str(kw.get("ccmc_batch_id")))
