@@ -79,6 +79,7 @@ class BatchWizard(models.TransientModel):
                         if self.exam_batch_name == 'jan':
                             self.batch_name = 'Jan - June'
                             self.env['institute.ccmc.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
                                 "institute_id": institute.id,
                                 "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
                                 "ccmc_from_date": self.from_date,
@@ -93,6 +94,7 @@ class BatchWizard(models.TransientModel):
                         if self.exam_batch_name == 'jan':
                             self.batch_name = 'Jan - June'
                             self.env['institute.ccmc.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
                                 "institute_id": institute.id,
                                 "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
                                 "ccmc_from_date": self.from_date,
@@ -106,6 +108,7 @@ class BatchWizard(models.TransientModel):
                         if self.exam_batch_name == 'july':
                             self.batch_name = 'July - Dec'
                             self.env['institute.ccmc.batches'].create({
+                                "dgs_batch": self.dgs_batch.id,
                                 "institute_id": institute.id,
                                 "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
                                 "ccmc_from_date": self.from_date,
