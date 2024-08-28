@@ -199,8 +199,11 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCertificateGP(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
-        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',int(exam_id))])
+        
         print("INSIDE DOWNLOAD Certificate")
+        
+        print("Indos" + str(exam_id.indos_no))
         report_action = request.env.ref('bes.report_gp_certificate')
         # certificate_available = request.env['gp.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
@@ -215,6 +218,7 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         print("INSIDE DOWNLOAD Certificate")
+
         report_action = request.env.ref('bes.report_ccmc_certificate')
         # certificate_available = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
@@ -257,6 +261,8 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        if previous_exam.attempt_number == 7:
+            raise ValidationError("Max Exam Attempt Exceded")
         new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         # current_year = datetime.datetime.now().year
         
@@ -269,9 +275,6 @@ class GPCandidatePortal(CustomerPortal):
         
         if batch.form_deadline < datetime.today().date():
             raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
-
-
-        
 
         vals = {
             'candidate': candidate,
@@ -300,6 +303,8 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["ccmc.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
+        if previous_exam.attempt_number == 7:
+            raise ValidationError("Max Exam Attempt Exceded")
         # import wdb; wdb.set_trace()
         new_exam = request.env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
         invoice_exist = request.env['account.move'].sudo().search([('ccmc_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
@@ -734,6 +739,7 @@ class GPCandidatePortal(CustomerPortal):
     def AddGPRepeaterSTCW(self, **kw):
         candidate_user_id = request.env.user.id
         candidate = request.env['gp.candidate'].sudo().search([('user_id', '=', candidate_user_id)], limit=1)
+        
         if request.httprequest.method == 'POST':
             dgs_batch_id = int(kw.get('batch_id'))
             course_name = kw.get('course_name')
@@ -890,6 +896,19 @@ class GPCandidatePortal(CustomerPortal):
             if not certificate.other_institute:
                 return json.dumps({"other_institute_name":False})
         return json.dumps({"other_institute_name":True})
+    
+    @http.route(['/my/checktransaction'], type='json', auth="user", method=['POST'])
+    def CheckTransaction(self, **kw):
+                    
+        upi_utr_no = request.jsonrequest["upi_utr_no"]
+        print(request.jsonrequest)
+        print(upi_utr_no)
+        invoice = request.env['account.move'].sudo().search([('transaction_id','=',upi_utr_no)], limit=1)
+        if invoice:
+            return json.dumps({"invoice_valid":True})
+        else:
+            return json.dumps({"invoice_valid":False})
+        
     
     
     @http.route(['/my/checkotherinstituteccmc'], type='http', auth="user", method=['GET'])

@@ -220,14 +220,14 @@
                 var emailInput = document.getElementById('email');
             
                 // Check if candidate.mobile is empty
-                if (mobileInput.value) {
+                <!-- if (mobileInput.value) {
                     mobileInput.disabled = true;
                 }
             
                 // Check if candidate.email is empty
                 if (emailInput.value) {
                     emailInput.disabled = true;
-                }
+                } -->
             });
             
             function toggleInstituteInput() {
@@ -250,12 +250,12 @@
                 var selectedSubjectsElement = document.getElementById('selected-subjects');
             
                 // Disable mobile and email inputs if they already have values
-                if (mobileInput.value) {
+                <!-- if (mobileInput.value) {
                     mobileInput.disabled = true;
-                }
-                if (emailInput.value) {
+                } -->
+                <!-- if (emailInput.value) {
                     emailInput.disabled = true;
-                }
+                } -->
             
                 // Get today's date in YYYY-MM-DD format
                 const today = new Date().toISOString().split('T')[0];
@@ -292,7 +292,7 @@
 
             
                 // Function to validate mobile number length
-                function validateMobileLength(input) {
+                <!-- function validateMobileLength(input) {
                     var value = input.value.replace(/\D/g, ''); // Remove non-digit characters
             
                     // Trim value to 10 digits if necessary
@@ -311,14 +311,14 @@
                         errorParagraph.textContent = ""; // Clear error message if input is empty
                         input.setCustomValidity(""); // Clear custom validity
                     }
-                }
+                } -->
             
                 // Attach input event listener to mobile input for validation
-                if (mobileInput) {
+                <!-- if (mobileInput) {
                     mobileInput.addEventListener('input', function() {
                         validateMobileLength(mobileInput);
                     });
-                }
+                } -->
             });
             
             </script>
@@ -557,21 +557,20 @@
                             <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
                             <t t-if="candidate.mobile">
                                 <input type="number" class="form-control" id="mobile" name="mobile"
-                                       t-att-value="candidate.mobile" disabled="true"/>
+                                       t-att-value="candidate.mobile" required="true" />
                             </t>
                             <t t-else="">
-                                <input type="text" class="form-control validate_num" id="mobile" name="mobile" required="1" maxlength="10"/>
+                                <input type="text" class="form-control validate_num" id="mobile" name="mobile" required="true" maxlength="10"/>
                                 <span id="mobile-error" class="text-danger"></span>
                             </t> 
                         </div>
                         <div class="col-md-8">
                             <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
                             <t t-if="candidate.email">
-                                <input type="email" class="form-control" id="email" name="email"
-                                       t-att-value="candidate.email" disabled="true"/>
+                                <input type="email" class="form-control" id="email" name="email" t-att-value="candidate.email" required="true" />
                             </t>
                             <t t-else="">
-                                <input type="email" class="form-control" id="email" name="email" required="1"/>
+                                <input type="email" class="form-control" id="email" name="email" required="true"/>
                             </t>
                         </div>
                     </div>
@@ -589,23 +588,23 @@
                                         <!-- If any address field is filled, disable all inputs -->
                                         <div class="form-group">
                                             <label>Address Line 1: </label>
-                                            <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
+                                            <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' required="1" />
                                         </div>
                                         <div class="form-group">
                                             <label>Address Line 2: </label>
-                                            <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
+                                            <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' required="1" />
                                         </div>
                                         <div class="form-group">
                                             <label>Dist/City: </label>
-                                            <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
+                                            <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' required="1" />
                                         </div>
                                         <div class="form-group">
                                             <label>State: </label>
-                                            <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
+                                            <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' required="1"/>
                                         </div>
                                         <div class="form-group">
                                             <label>Pincode: </label>
-                                            <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
+                                            <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' required="1"/>
                                         </div>
                                     </t>
                                     <t t-else="">
@@ -659,8 +658,8 @@
 
                                <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
 
-                               <select name="exam_centre" id="exam_centre" class="form-control">
-
+                               <select name="exam_centre" id="exam_centre" class="form-control" t-att-required="1">
+                                    <option value=""></option>
                                     <t t-foreach="region_repeater" t-as="region">
                                         <option t-att-value="region.id"><t t-esc="region.name"/></option> 
                                     </t>
@@ -694,12 +693,18 @@
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.gsk_online_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1"  name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
                                 </div>                            
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input exam-checkbox"/>
+                                    <label for="gsk_online" class="form-check-label">GSK Online</label>
+                                </div>                            
+                            </t> -->
 
                             <t t-if="exam.mek_online_status == 'failed'">
                                 <div class="form-check">
@@ -707,12 +712,18 @@
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.mek_online_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input" />
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input exam-checkbox"/>
+                                    <label for="mek_online" class="form-check-label">MEK Online</label>
+                                </div>                            
+                            </t> -->
 
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
@@ -720,12 +731,18 @@
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.gsk_oral_prac_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input exam-checkbox"/>
+                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
+                                </div>
+                            </t> -->
 
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
@@ -733,12 +750,18 @@
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <t t-else="">
+                            <t t-elif="exam.mek_oral_prac_status == 'passed'">
                                 <div class="form-check">
                                     <input type="checkbox" t-att-disabled="1" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input"/>
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
+                            <!-- <t t-elif="not exam">
+                                <div class="form-check">
+                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input exam-checkbox" />
+                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
+                                </div>
+                            </t> -->
 
                         </div>
                         <div class="col-md-4">
@@ -855,12 +878,12 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <label for="upi_utr_no">Transaction ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
+                            <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" oninput="this.value = this.value.replace(/\s/g, '');"/>
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
-                            <input type="number" name="amount" id="amount" required="True" class="form-control" />
+                            <input type="number" name="amount" id="amount" required="True" class="form-control" oninput="this.value = this.value.replace(/\./g, '');" />
                         </div>
                         <div class="col-md-3">
                             <label for="payment_date">Date <strong class="text-danger">*</strong></label>
@@ -870,7 +893,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="transaction_slip">Upload Receipt/Bill (max file size - 1 MB): <strong class="text-danger">*</strong></label><br/>
-                            <input type="file" id="transaction_slip" accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
+                            <input type="file" id="transaction_slip"  accept=".xlsx, .csv, .pdf , .jpeg , .png" name="transaction_slip" t-att-multiple="1" required="True"/><br/><br/>
                         </div>
                     </div>
 
@@ -1106,12 +1129,7 @@
                 var selectedSubjectsElement = document.getElementById('selected-subjects');
             
                 // Disable mobile and email inputs if they already have values
-                if (mobileInput.value) {
-                    mobileInput.disabled = true;
-                }
-                if (emailInput.value) {
-                    emailInput.disabled = true;
-                }
+             
             
                 // Get today's date in YYYY-MM-DD format
                 const today = new Date().toISOString().split('T')[0];
@@ -1405,10 +1423,10 @@
                             <p class="mb-0"><strong>Mobile: <span class="text-danger">*</span></strong></p>
                             <t t-if="candidate.mobile">
                                 <input type="number" class="form-control" id="mobile" name="mobile"
-                                       t-att-value="candidate.mobile" disabled="true"/>
+                                       t-att-value="candidate.mobile" required="true" />
                             </t>
                             <t t-else="">
-                                <input type="text" class="form-control validate_num" id="mobile" name="mobile" required="1" maxlength="10"/>
+                                <input type="text" class="form-control validate_num" id="mobile" name="mobile" required="true" maxlength="10"/>
                                 <span id="mobile-error" class="text-danger"></span>
                             </t>                            
                             
@@ -1417,11 +1435,10 @@
                             <p class="mb-0"><strong>E-mail: <span class="text-danger">*</span></strong></p>
                             <t t-if="candidate.email">
                                 <input type="email" class="form-control" id="email" name="email"
-                                       t-att-value="candidate.email" disabled="true"/>
+                                       t-att-value="candidate.email"  required="true"/>
                             </t>
                             <t t-else="">
-                                <input type="email" class="form-control" id="email" name="email"
-                                       t-att-value="candidate.email"/>
+                                <input type="email" class="form-control" id="email" name="email" required="true"/>
                             </t>
                         </div>
                     </div>
@@ -1438,46 +1455,46 @@
                                             <!-- If any address field is filled, disable all inputs -->
                                             <div class="form-group">
                                                 <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' disabled="true"/>
+                                                <input type="text" class="form-control" id="address_line_1" name="street" t-att-value='candidate.street' required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' disabled="true"/>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2" t-att-value='candidate.street2' required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' disabled="true"/>
+                                                <input type="text" class="form-control" id="city" name="city" t-att-value='candidate.city' required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' disabled="true"/>
+                                                <input type="text" class="form-control" id="state" name="state_id" t-att-value='candidate.state_id.name' required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' disabled="true"/>
+                                                <input type="text" class="form-control" id="zip" name="zip" t-att-value='candidate.zip' required="1"/>
                                             </div>
                                         </t>
                                         <t t-else="">
                                             <!-- If no address field is filled, show editable inputs -->
                                             <div class="form-group">
                                                 <label>Address Line 1: </label>
-                                                <input type="text" class="form-control" id="address_line_1" name="street"/>
+                                                <input type="text" class="form-control" id="address_line_1" name="street" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Address Line 2: </label>
-                                                <input type="text" class="form-control" id="address_line_2" name="street2"/>
+                                                <input type="text" class="form-control" id="address_line_2" name="street2" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Dist/City: </label>
-                                                <input type="text" class="form-control" id="city" name="city"/>
+                                                <input type="text" class="form-control" id="city" name="city" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>State: </label>
-                                                <input type="text" class="form-control" id="state" name="state_id"/>
+                                                <input type="text" class="form-control" id="state" name="state_id" required="1"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Pincode: </label>
-                                                <input type="text" class="form-control" id="zip" name="zip"/>
+                                                <input type="text" class="form-control" id="zip" name="zip" required="1"/>
                                             </div>
                                         </t>
                                     </div>
@@ -1497,18 +1514,15 @@
                                 <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
                                 <select name="exam_centre" id="exam_centre" class="form-control" t-att-readonly="1">
-
                                     <t t-foreach="fresher_region" t-as="region">
                                         <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
                                 </select>
                             </t>
                             <t t-else="">
-
                                 <t t-set="region_repeater" t-value="env['exam.center'].sudo().search([('repeater_region','=',True)])"/>
-
-                               <select name="exam_centre" id="exam_centre" class="form-control">
-
+                                <select name="exam_centre" id="exam_centre" class="form-control" t-att-required="1">
+                                    <option value=""></option>
                                     <t t-foreach="region_repeater" t-as="region">
                                         <option t-att-value="region.id"><t t-esc="region.name"/></option>
                                     </t>
@@ -1618,25 +1632,34 @@
                                 <t t-if="exam.cookery_bakery_prac_status == 'failed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-danger">Cookery And Bakery</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.cookery_bakery_prac_status == 'passed'">
                                     <span id="cookery_bakery_prac_status" class="badge badge-success">Cookery And Bakery</span>
                                 </t>
+                                <!-- <t t-elif="not exam">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t> -->
                             </div>
                             <div class="form-check">
                                 <t t-if="exam.ccmc_oral_prac_status == 'failed'">
                                     <span id="ccmc_oral_prac_status" class="badge badge-danger">Cookery Oral</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.ccmc_oral_prac_status == 'passed'">
                                     <span id="ccmc_oral_prac_status" class="badge badge-success">Cookery Oral</span>
                                 </t>
+                                <!-- <t t-elif="not exam">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t> -->
                             </div>
                             <div class="form-check">
                                 <t t-if="exam.ccmc_online_status == 'failed'">
                                     <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
                                 </t>
-                                <t t-else="">
+                                <t t-elif="exam.ccmc_online_status == 'passed'">
                                     <span id="ccmc_online_status" class="badge badge-success">Cookery/GSK Online</span>
                                 </t>
+                                <!-- <t t-elif="not exam">
+                                    <span id="ccmc_online_status" class="badge badge-danger">Cookery/GSK Online</span>
+                                </t> -->
                             </div>
                         </div>
                     </div>
@@ -1667,12 +1690,12 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <label for="upi_utr_no">Transaction ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control"/>
+                            <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
+                            <input type="text" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/\./g, '');" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
-                            <input type="number" name="amount" id="amount" required="True" class="form-control" />
+                            <input type="number" name="amount" id="amount" required="True" class="form-control" oninput="this.value = this.value.replace(/\./g, '');" />
                         </div>
                         <div class="col-md-3">
                             <label for="payment_date">Date <strong class="text-danger">*</strong></label>

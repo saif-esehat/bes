@@ -1140,6 +1140,7 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
 class ExamOralPractical(models.Model):
     _name = 'exam.type.oral.practical'
     _inherit = ['mail.thread','mail.activity.mixin']
+    _rec_name = 'institute_id'
     _description= 'Practical&Oral'
 
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
@@ -1869,7 +1870,7 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
-    candidates_count = fields.Integer("Candidates",compute='compute_candidates_count')
+    candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
@@ -2121,6 +2122,8 @@ class ExamOralPracticalExaminers(models.Model):
     
     def open_marksheet_list(self):
         
+        name = f"{self.examiner.name} - {self.dgs_batch.batch_name} - {self.subject.name}"
+#  - {self.institute_id.name}
         if self.subject.name == 'GSK':
             if self.exam_type == 'practical_oral':
                 views = [(self.env.ref("bes.view_marksheet_gp_tree_gsk").id, 'tree'),  # Define tree view
@@ -2153,9 +2156,9 @@ class ExamOralPracticalExaminers(models.Model):
                         (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
             
         
-        
         return {
-            'name': 'Marksheet',
+        # Breadcrum
+            'name': name,
             'domain': [('examiners_id', '=', self.id)],
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,form',  # Specify both tree and form views
@@ -2403,11 +2406,69 @@ class IntegrityViolationWizard(models.TransientModel):
             #         'res_model': model,
             #         'res_id': record.id,
             #     })
+class GpAdmitCardRelease(models.TransientModel):
+    _name = 'gp.admit.card.release'
+    _description = 'GP Admit Card Release'
+
+    exam_ids = fields.Many2many('gp.exam.schedule', string='Exams')
+    admit_card_type = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ], string='Admit Card Type', default='gp')
+    exam_region = fields.Many2one('exam.center', string='Region')
+    candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
+    result_message = fields.Text(string='Result', readonly=True)
+
+    def release_gp_admit_card(self, *args, **kwargs):
+        exam_ids = self.env.context.get('active_ids')
+        candidates = self.env["gp.exam.schedule"].sudo().browse(exam_ids)
+        
+        
+        for candidate in candidates:
+            mumbai_region = candidate.dgs_batch.mumbai_region
+            kolkata_region = candidate.dgs_batch.kolkatta_region
+            chennai_region = candidate.dgs_batch.chennai_region
+            delhi_region = candidate.dgs_batch.delhi_region
+            kochi_region = candidate.dgs_batch.kochi_region
+            goa_region = candidate.dgs_batch.goa_region
+            
+            # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                
+            if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                candidates.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                candidates.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif candidate.exam_region.name == 'GOA' and goa_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+            else:
+                candidates.write({'hold_admit_card':False})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"    
+
+        # Return a notification
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Success',
+                'message': "test",
+                'type': 'success',
+                'sticky': False
+            }
+        }
 
 
-
-
-    
     
     
 class GPExam(models.Model):
@@ -2711,6 +2772,37 @@ class GPExam(models.Model):
     #             record.stcw_criteria = 'passed'
     #         else:
     #             record.stcw_criteria = 'pending'
+    @api.model
+    def action_open_gp_admit_card_release_wizard(self, exam_ids=None):
+        view_id = self.env.ref('bes.view_release_admit_card_form_gp').id
+        # import wdb; wdb.set_trace();
+        # if exam_ids:
+        #     # Get the exam regions of all selected exams
+        #     exams = self.env['gp.exam.schedule'].browse(exam_ids)
+        #     exam_regions = exams.mapped('exam_region')
+
+        #     # Check if all selected exams have the same region
+        #     if len(set(exam_regions.ids)) == 1:
+        #         exam_ids = exams.ids  # Retain only candidates with the same region
+        #     else:
+        #         # Filter exams to include only those with the same region as the first exam
+        #         exams = exams.filtered(lambda e: e.exam_region == exam_regions[0])
+        #         exam_ids = exams.ids
+
+        # Proceed with the wizard
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Release GP Admit Card',
+            'res_model': 'gp.admit.card.release',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'new',
+            'context': {
+                'default_exam_ids': exam_ids,
+            }
+        }
+
+
     
     def format_name(self,name):
         words = name.split()
@@ -3622,6 +3714,70 @@ class GPCertificate(models.AbstractModel):
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
 
 
+class CcmcAdmitCardRelease(models.TransientModel):
+    _name = 'ccmc.admit.card.release'
+    _description = 'CCMC Admit Card Release'
+
+    exam_ids = fields.Many2many('ccmc.exam.schedule', string='Exams')
+    admit_card_type = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ], string='Admit Card Type', default='ccmc')
+    exam_region = fields.Many2one('exam.center', string='Region')
+    candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
+    result_message = fields.Text(string='Result', readonly=True)
+
+    def release_ccmc_admit_card(self, *args, **kwargs):
+        exam_ids = self.env.context.get('active_ids')
+        candidates = self.env["ccmc.exam.schedule"].sudo().browse(exam_ids)
+        
+        
+        for candidate in candidates:
+            mumbai_region = candidate.dgs_batch.mumbai_region
+            kolkata_region = candidate.dgs_batch.kolkatta_region
+            chennai_region = candidate.dgs_batch.chennai_region
+            delhi_region = candidate.dgs_batch.delhi_region
+            kochi_region = candidate.dgs_batch.kochi_region
+            goa_region = candidate.dgs_batch.goa_region
+            
+            # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                
+            if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+            elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                candidates.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+            elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                candidates.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+            elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+            elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+            elif candidate.exam_region.name == 'GOA' and goa_region:
+                candidates.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+            else:
+                candidates.write({'hold_admit_card':False})
+                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"    
+
+        # Return a notification
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Success',
+                'message': "test",
+                'type': 'success',
+                'sticky': False
+            }
+        }
+
+
+
 class CCMCExam(models.Model):
     _name = "ccmc.exam.schedule"
     _rec_name = "exam_id"
@@ -3832,6 +3988,22 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Absent Status")
+
+    @api.model
+    def action_open_ccmc_admit_card_release_wizard(self, exam_ids=None):
+        view_id = self.env.ref('bes.view_release_admit_card_form_ccmc').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Release CCMC Admit Card',
+            'res_model': 'ccmc.admit.card.release',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'new',
+            'context': {
+                'default_exam_ids': exam_ids,
+            }
+        }
 
     @api.depends('ccmc_candidate.candidate_image')
     def _check_image(self):
@@ -4532,12 +4704,14 @@ class ReallocateCandidatesWizard(models.TransientModel):
                     elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                         confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         candidate.examiners_id.compute_candidates_done()
+
                 elif candidate.examiners_id.subject.name == 'MEK':
-                    if candidate.mek_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.mek_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
+                    if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
                         candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.mek_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.mek_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                    elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
                         confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         candidate.examiners_id.compute_candidates_done()
+                        
             elif candidate.examiners_id.course.id == 2:
                 if candidate.examiners_id.subject.name == 'CCMC':
                     if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':

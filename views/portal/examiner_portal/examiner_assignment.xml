@@ -593,6 +593,7 @@
                     <tr >
                         <th class="text-left">Candidate Name</th>
                         <th class="text-center">Roll No.</th>
+                        <th class="text-center">Attendance</th>
 
                         <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Online Subject</th>
                         <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Token</th>
@@ -714,6 +715,15 @@
 
                                 
                             </td>
+
+                            <td  t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'practical_oral'" class="text-center">
+                                <select id="attendance" name="attendance">
+                                    <option value=""></option>
+                                    <option value="present">Present</option>
+                                    <option value="absent">Absent</option>
+                                   
+                                </select>
+                            </td>
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'"  class="text-center">
                                 <t t-out="marksheet.gsk_oral.subject_area_1_2_3"/>
                             </td>
@@ -822,9 +832,9 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                             </td>
-                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                             <!-- <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.mek_total"/>
-                            </td>
+                            </td> -->
                              <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <!-- <t t-out="marksheet.mek_prac.(mek_total)/(175)"/> -->
                             </td>
