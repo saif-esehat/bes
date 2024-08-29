@@ -6,6 +6,7 @@ import xlsxwriter
 from datetime import datetime
 import xlrd
 
+
     
 class IVCandidates(models.Model):
     _name = "iv.candidates"
@@ -37,3 +38,29 @@ class IVCandidates(models.Model):
     remark = fields.Text(string="Remark")
     examination_date = fields.Date(string="Examination Date")
     certificate_valid_date = fields.Date(string="Certificate Valid Date")
+
+
+    @api.constrains('certificate_valid_date')
+    def _check_certificate_valid_date(self):
+        for record in self:
+            if not record.certificate_valid_date:
+                raise ValidationError("The Certificate Valid Date must be filled.")
+
+    @api.constrains('batch_id')
+    def _check_batch_id(self):
+        for record in self:
+            if not record.batch_id:
+                raise ValidationError("The Batch must be filled.")
+
+
+    @api.constrains('dob')
+    def _check_dob(self):
+        for record in self:
+            if not record.dob:
+                raise ValidationError("DOB must be filled.")
+
+    @api.constrains('examination_date')
+    def _check_examination_date(self):
+        for record in self:
+            if not record.examination_date:
+                raise ValidationError("Examination date must be filled.")

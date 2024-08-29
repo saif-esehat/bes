@@ -26,6 +26,25 @@ class IVBatches(models.Model):
     issue_date = fields.Date(string="Issue Date")
 
 
+    @api.constrains('issue_date')
+    def _check_issue_date(self):
+        for record in self:
+            if not record.issue_date:
+                raise ValidationError("The Issue Date must be filled.")
+
+    @api.constrains('start_date')
+    def _check_start_date(self):
+        for record in self:
+            if not record.start_date:
+                raise ValidationError("The Start Date must be filled.")
+
+    @api.constrains('end_date')
+    def _check_end_date(self):
+        for record in self:
+            if not record.end_date:
+                raise ValidationError("The End Date must be filled.")
+
+
    
 
     def show_iv_candidate_model(self):

@@ -184,3 +184,12 @@ class CandidatesApplication(models.Model):
                 record.qr_code_image = qr_image_base64
             else:
                 record.qr_code_image = False
+
+
+    # @api.constrains('dob')
+    # def _check_dob(self):
+    #     for record in self:
+    #         if not record.dob:
+    #             raise ValidationError("DOB must be filled.")
+
+   
