@@ -16,6 +16,7 @@
             <field name="model">candidates.application</field>
             <field name="arch" type="xml">
                 <form>
+                   <sheet>
                      
                     
                     <group>
@@ -312,7 +313,7 @@
                     <h4>(Bord Of Examination For Seafarers Trust, Navi Mumbai)</h4>
 
                     
-                   
+                 </sheet>
                 </form>
             </field>
         </record>

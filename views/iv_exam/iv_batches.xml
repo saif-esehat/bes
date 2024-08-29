@@ -16,6 +16,7 @@
             <field name="model">iv.batches</field>
             <field name="arch" type="xml">
                 <form>
+                   <sheet>
                    <header>
                          <button string="View Candidates" type="object" name="show_iv_candidate_model" class="btn-primary"/>
                 
@@ -27,6 +28,7 @@
                         <field name="issue_date" placeholder="DD/MM/YY" style="width: 50%;"/>
 
                     </group>
+                 </sheet>
                    
                 </form>
             </field>
