@@ -126,14 +126,17 @@
                         </div>
                         <t t-if="applications">
                             <t t-foreach="applications" t-as="app">
-                                <div style="padding: 0; margin: 0;">
+                              
+                               <div style="padding: 0; margin: 0;">
                                     <span style="font-size:15px; color: #A0522D;">District: -</span>
-                                    <span style="font-size:15px; font-weight: bold; color: skyblue;">
-                                        <t t-if="app.dob">
-                                            <t t-esc="app.dob.strftime('%d-%m-%Y')"/>, 
-                                        </t>
-                                        <t t-esc="app.street"/>, Tal/Dist- <t t-esc="app.district"/>,
-                                    </span>
+                                    <t t-if="app">
+                                        <span style="font-size:15px; font-weight: bold; color: skyblue;">
+                                            <t t-if="app.dob">
+                                                <t t-esc="app.dob.strftime('%d-%m-%Y')"/>, 
+                                            </t>
+                                            <t t-esc="app.street"/>, Tal/Dist- <t t-esc="app.district"/>,
+                                        </span>
+                                    </t>
                                 </div>
                                 <div style="padding: 0; margin: 0;">
                                     <span style="font-size:15px; color: #A0522D;">State: -</span>
@@ -161,6 +164,8 @@
                                         <img t-attf-src="data:image/png;base64,{{app.candidate_signature}}" style="width: 250px; height: 50px;" />
                                     </div>
                                 </div>
+                             </t>
+                            </t>
                                 <div style="padding: 0; margin: 20px 0 0 0; text-indent: 50px;">
                                     <span style="font-size:15px; color: #A0522D;">Any master who fails to deliver up a Certificate which
                                     has been cancelled or suspended is liable to penalty, not
@@ -173,11 +178,12 @@
                                     forthwith to the Chief Port Officer, Maharashtra Maritime
                                     Board, Mumbai.</span>
                                 </div>
-                                
-                            </t>
-                        </t>
-                        <t t-if="batch">
-                            <t t-foreach="batch" t-as="iv">
+                            
+                              
+                            <!-- </t>
+                        </t> -->
+                        <t t-if="batches">
+                            <t t-foreach="batches" t-as="iv">
                             <div style="padding: 0; margin: 20px 0 0 0; text-indent: 50px;">
                                 <span style="font-size:15px; color: #A0522D;">This Certificate is given upon an examination passed at</span>
                                 <span style="font-size:15px; color: skyblue;">Mumbai, Maharashtra</span>
@@ -294,21 +300,25 @@
                                 <t t-esc="o.grade_applied"/>.
                             </span>
                         </div>
-                        <div style="padding: 0; margin: 20px 0 0 0;">
-                            <span style="font-size:15px; color: #A0522D; text-indent: 50px; padding-left: 150px;">This </span>
+                        <t t-if="batches">
+                            <t t-foreach="batches" t-as="b">
+                                <div style="padding: 0; margin: 20px 0 0 0;">
+                                    <span style="font-size:15px; color: #A0522D; text-indent: 50px; padding-left: 150px;">This </span>
 
-                            <!-- Display date with specific styles -->
-                            <t t-set="day" t-value="iv.start_date.strftime('%d') + 'th'"/>
-                            <t t-set="month_year" t-value="iv.start_date.strftime('%B, %Y')"/>
-                            
-                            <span style="font-size:15px; color: skyblue;">
-                                <t t-esc="day"/> <!-- Day with 'th' in sky blue -->
-                            </span>
-                            <span style="font-size:15px; color: #A0522D;"> day of </span>
-                            <span style="font-size:15px; color: skyblue;">
-                                <t t-esc="month_year"/> <!-- Month and year in sky blue -->
-                            </span>
-                        </div>
+                                    <!-- Display date with specific styles -->
+                                    <t t-set="day" t-value="b.start_date.strftime('%d') + 'th'"/>
+                                    <t t-set="month_year" t-value="b.start_date.strftime('%B, %Y')"/>
+                                    
+                                    <span style="font-size:15px; color: skyblue;">
+                                        <t t-esc="day"/> <!-- Day with 'th' in sky blue -->
+                                    </span>
+                                    <span style="font-size:15px; color: #A0522D;"> day of </span>
+                                    <span style="font-size:15px; color: skyblue;">
+                                        <t t-esc="month_year"/> <!-- Month and year in sky blue -->
+                                    </span>
+                                </div>
+                            </t>
+                        </t>
                         <div style="padding: 0; margin: 40px 0 0 0; text-indent: 30px;">
 
                             <img t-attf-src="data:image/png;base64,{{o.photo}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px;"/>
