@@ -1019,7 +1019,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="state">Status</label>
-                                        <select class="form-control" id="state" name="state">
+                                        <select class="form-control" id="state" name="state" >
                                             <option value="draft" t-att-selected="mek_prac_marksheet.mek_practical_draft_confirm == 'draft'">Draft</option>
                                             <option value="confirm" t-att-selected="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'">Confirm</option>
                                         
