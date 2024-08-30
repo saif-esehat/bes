@@ -68,6 +68,22 @@
                         </tr>
                     </t>
                 </table>
+
+                <!-- Footer Section -->
+                <div class="footer" style="width: 100%; margin-top: 20px; font-size: 12px;">
+                    <table style="width: 40%; padding-top: 5px;">
+                        <tr style="border: 1px solid black;">
+                            <td style="text-align: left; width: 200px; height: 50px; padding: 10px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-size: 16px; padding-left: 10px;">
+                                <span style="display: block;">Examiner Signature</span>
+                                <strong>Examiner Name: </strong><t t-esc="o.examiner.name"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </t>
         </t>
     </template>
@@ -78,7 +94,7 @@
             <t t-foreach="docs" t-as="o">
 
 
-                   <div class="header">
+                <div class="header">
                     <table style="width:100%; border: 1px solid black;" >
                         <tr>
                             <th style="border: 1px solid black;" rowspan="2">
@@ -144,6 +160,22 @@
                         </tr>
                     </t>
                 </table>
+
+                <!-- Footer Section -->
+                <div class="footer" style="width: 100%; margin-top: 20px; font-size: 12px;">
+                    <table style="width: 40%; padding-top: 5px;">
+                        <tr style="border: 1px solid black;">
+                            <td style="text-align: left; width: 200px; height: 50px; padding: 10px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-size: 16px; padding-left: 10px;">
+                                <span style="display: block;">Examiner Signature</span>
+                                <strong>Examiner Name: </strong><t t-esc="o.examiner.name"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </t>
         </t>
     </template>

@@ -2229,3 +2229,73 @@ class ExaminerPortal(CustomerPortal):
         image_data = f"data:image/jpeg;base64,{image_base64}"
 
         return request.render("bes.view_marksheet_image_template", {'image_data': image_data,'examiner_assignment':examiner_assignment})
+    
+
+    @http.route('/my/uploadmekattendance', type='http', auth='user', methods=['POST'], csrf=False)
+    def upload_mek_attendance(self, **post):
+        # Retrieve form data
+        # import wdb ; wdb.set_trace()
+        batch_id = post.get('batch_id')
+        mek_attendance_id = post.get('mek_attendance_id')
+        file = post.get('fileUpload').read()
+        filename = post.get('fileUpload').filename
+
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('dgs_batch.id', '=', batch_id),
+            ('id','=',mek_attendance_id),
+        ])
+        examiner_assignments.sudo().write({
+            'attendance_sheet_uploaded': True,
+            'attendance_sheet_file':  base64.b64encode(file),
+            'attendance_sheet_name': filename
+        })
+                
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
+    @http.route('/my/uploadgskattendance', type='http', auth='user', methods=['POST'], csrf=False)
+    def upload_gsk_attendance(self, **post):
+        # Retrieve form data
+        # import wdb ; wdb.set_trace()
+        batch_id = post.get('batch_id')
+        mek_attendance_id = post.get('attendance_id')
+        file = post.get('fileUpload').read()
+        filename = post.get('fileUpload').filename
+
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('dgs_batch.id', '=', batch_id),
+            ('id','=',mek_attendance_id),
+        ])
+        examiner_assignments.sudo().write({
+            'attendance_sheet_uploaded': True,
+            'attendance_sheet_file':  base64.b64encode(file),
+            'attendance_sheet_name': filename
+        })
+                
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
+    @http.route('/my/uploadccmcattendance', type='http', auth='user', methods=['POST'], csrf=False)
+    def upload_ccmc_attendance(self, **post):
+        # Retrieve form data
+        # import wdb ; wdb.set_trace()
+        batch_id = post.get('batch_id')
+        mek_attendance_id = post.get('attendance_id')
+        
+        # Retrieve files from request
+        uploaded_files = request.httprequest.files.getlist('fileUpload')
+
+        # Process each file
+        for file in uploaded_files:
+            file_content = file.read()
+            file_name = file.filename
+
+            examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+                ('dgs_batch.id', '=', batch_id),
+                ('id', '=', mek_attendance_id),
+            ])
+
+            # Write each file to the examiner assignments
+            examiner_assignments.sudo().write({
+                'attendance_sheet_uploaded': True,
+                'attendance_sheet_file': base64.b64encode(file_content),
+                'attendance_sheet_name': file_name
+            })
+                
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))

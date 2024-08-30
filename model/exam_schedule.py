@@ -1920,6 +1920,10 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    attendance_sheet_uploaded = fields.Boolean(string="Attendance Sheet Uploaded",tracking=True)
+    attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
+    attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
+
     absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
     candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
     
