@@ -582,6 +582,12 @@
                                     <div class="form-group">
                                         <label for="fileUpload">XLSX Upload</label>
                                         <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
                                     </div>
                                     <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
                                 </form>
@@ -611,6 +617,11 @@
                                     <input type="hidden" id="gsk_attendance_id" name="attendance_id" />
                                     <div class="form-group">
                                         <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
                                         <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
                                     </div>
                                     <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
@@ -642,7 +653,12 @@
                                     <input type="hidden" id="ccmc_attendance_id" name="attendance_id" />
                                     <div class="form-group">
                                         <label for="fileUpload">XLSX Upload</label>
-                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload" t-att-multiple="1"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
                                     </div>
                                     <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
                                 </form>

@@ -2237,18 +2237,40 @@ class ExaminerPortal(CustomerPortal):
         # import wdb ; wdb.set_trace()
         batch_id = post.get('batch_id')
         mek_attendance_id = post.get('mek_attendance_id')
-        file = post.get('fileUpload').read()
-        filename = post.get('fileUpload').filename
-
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+        # Retrieve the record to which files should be attached
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([
             ('dgs_batch.id', '=', batch_id),
-            ('id','=',mek_attendance_id),
+            ('id', '=', mek_attendance_id),
         ])
-        examiner_assignments.sudo().write({
-            'attendance_sheet_uploaded': True,
-            'attendance_sheet_file':  base64.b64encode(file),
-            'attendance_sheet_name': filename
-        })
+
+        # Retrieve files from request
+        uploaded_files = request.httprequest.files.getlist('fileUpload')
+
+        # Only proceed if there are uploaded files
+        if not uploaded_files:
+            return request.redirect("/my/assignments/batches/candidates/" + str(batch_id) + '/' + str(mek_attendance_id))
+
+        # Process each file and create an attachment
+        attachment_ids = []
+        for file in uploaded_files:
+            if file.filename:  # Check if a file was actually uploaded
+                file_content = file.read()
+                file_name = file.filename
+
+                # Create attachment record
+                attachment = request.env['ir.attachment'].sudo().create({
+                    'name': file_name,
+                    'datas': base64.b64encode(file_content),
+                    'res_model': 'exam.type.oral.practical.examiners',
+                    'res_id': examiner_assignment.id,
+                    'type': 'binary',
+                })
+                attachment_ids.append(attachment.id)
+
+        # Link all attachments to the examiner assignment record
+        if attachment_ids:
+            examiner_assignment.sudo().write({'attendance_sheet_files': [(6, 0, attachment_ids)],
+                                              'attendance_sheet_uploaded': True})
                 
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
     @http.route('/my/uploadgskattendance', type='http', auth='user', methods=['POST'], csrf=False)
@@ -2257,18 +2279,40 @@ class ExaminerPortal(CustomerPortal):
         # import wdb ; wdb.set_trace()
         batch_id = post.get('batch_id')
         mek_attendance_id = post.get('attendance_id')
-        file = post.get('fileUpload').read()
-        filename = post.get('fileUpload').filename
-
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+        # Retrieve the record to which files should be attached
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([
             ('dgs_batch.id', '=', batch_id),
-            ('id','=',mek_attendance_id),
+            ('id', '=', mek_attendance_id),
         ])
-        examiner_assignments.sudo().write({
-            'attendance_sheet_uploaded': True,
-            'attendance_sheet_file':  base64.b64encode(file),
-            'attendance_sheet_name': filename
-        })
+
+        # Retrieve files from request
+        uploaded_files = request.httprequest.files.getlist('fileUpload')
+
+        # Only proceed if there are uploaded files
+        if not uploaded_files:
+            return request.redirect("/my/assignments/batches/candidates/" + str(batch_id) + '/' + str(mek_attendance_id))
+
+        # Process each file and create an attachment
+        attachment_ids = []
+        for file in uploaded_files:
+            if file.filename:  # Check if a file was actually uploaded
+                file_content = file.read()
+                file_name = file.filename
+
+                # Create attachment record
+                attachment = request.env['ir.attachment'].sudo().create({
+                    'name': file_name,
+                    'datas': base64.b64encode(file_content),
+                    'res_model': 'exam.type.oral.practical.examiners',
+                    'res_id': examiner_assignment.id,
+                    'type': 'binary',
+                })
+                attachment_ids.append(attachment.id)
+
+        # Link all attachments to the examiner assignment record
+        if attachment_ids:
+            examiner_assignment.sudo().write({'attendance_sheet_files': [(6, 0, attachment_ids)],
+                                              'attendance_sheet_uploaded': True})
                 
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
     @http.route('/my/uploadccmcattendance', type='http', auth='user', methods=['POST'], csrf=False)
@@ -2278,24 +2322,39 @@ class ExaminerPortal(CustomerPortal):
         batch_id = post.get('batch_id')
         mek_attendance_id = post.get('attendance_id')
         
+         # Retrieve the record to which files should be attached
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('dgs_batch.id', '=', batch_id),
+            ('id', '=', mek_attendance_id),
+        ])
+
         # Retrieve files from request
         uploaded_files = request.httprequest.files.getlist('fileUpload')
 
-        # Process each file
+        # Only proceed if there are uploaded files
+        if not uploaded_files:
+            return request.redirect("/my/assignments/batches/candidates/" + str(batch_id) + '/' + str(mek_attendance_id))
+
+        # Process each file and create an attachment
+        attachment_ids = []
         for file in uploaded_files:
-            file_content = file.read()
-            file_name = file.filename
+            if file.filename:  # Check if a file was actually uploaded
+                file_content = file.read()
+                file_name = file.filename
 
-            examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
-                ('dgs_batch.id', '=', batch_id),
-                ('id', '=', mek_attendance_id),
-            ])
+                # Create attachment record
+                attachment = request.env['ir.attachment'].sudo().create({
+                    'name': file_name,
+                    'datas': base64.b64encode(file_content),
+                    'res_model': 'exam.type.oral.practical.examiners',
+                    'res_id': examiner_assignment.id,
+                    'type': 'binary',
+                })
+                attachment_ids.append(attachment.id)
 
-            # Write each file to the examiner assignments
-            examiner_assignments.sudo().write({
-                'attendance_sheet_uploaded': True,
-                'attendance_sheet_file': base64.b64encode(file_content),
-                'attendance_sheet_name': file_name
-            })
+        # Link all attachments to the examiner assignment record
+        if attachment_ids:
+            examiner_assignment.sudo().write({'attendance_sheet_files': [(6, 0, attachment_ids)],
+                                              'attendance_sheet_uploaded': True})
                 
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))

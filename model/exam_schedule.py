@@ -1921,7 +1921,8 @@ class ExamOralPracticalExaminers(models.Model):
     marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
     marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
     attendance_sheet_uploaded = fields.Boolean(string="Attendance Sheet Uploaded",tracking=True)
-    attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
+    # attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
+    attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
     attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
 
     absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
