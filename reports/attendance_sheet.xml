@@ -8,24 +8,36 @@
                     <table style="width:100%; border: 1px solid black;">
                         <tr>
                             <th style="border: 1px solid black;" rowspan="2">
-                                <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg" style="max-width: 100px; max-height: 100px;padding:8px;"/>
+                                <img class="img img-responsive img-top"
+                                    src="/bes/static/src/img/logo_bes.jpg"
+                                    style="max-width: 100px; max-height: 100px;padding:8px;" />
                             </th>
-                            <th style="width:100%; border: 1px solid black;padding:10px; text-align:center" >
-                                <strong style="white-space: nowrap; ">Board of Examinations for Seafarers Trust</strong>
+                            <th
+                                style="width:100%; border: 1px solid black;padding:10px; text-align:center">
+                                <strong style="white-space: nowrap; ">Board of Examinations for
+                                    Seafarers Trust</strong>
                             </th>
                         </tr>
-                        <tr style="width:100%; border: 1px solid black;padding:10px; text-align:center">
+                        <tr
+                            style="width:100%; border: 1px solid black;padding:10px; text-align:center">
                             <th style="white-space: nowrap;">
-                                <span style="text-align:center" >
+                                <span style="text-align:center">
                                     Online Attendance Sheet CCMC Rating
                                 </span>
                             </th>
                         </tr>
-                        <tr  style="width:100%; border: 1px solid black;padding:10px; ">
+                        <tr style="width:100%; border: 1px solid black;padding:10px; ">
                             <th colspan="2" style="white-space: nowrap; padding:5px">
-                                <span style="float:left;" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
-                                <span style="margin-left:150px;" >Subject : <span style="text-align:center" ><t t-esc="o.subject.name"/></span></span>
-                                <span style="float:right;" >Date : <span style="text-align:right" ><t t-esc="o.exam_date"/></span></span>
+                                <span style="float:left;">Venue : <span style="text-align:left">
+                                        <t t-esc="o.institute_id.name" />
+                                    </span></span>
+                                <span style="margin-left:150px;">Subject : <span
+                                        style="text-align:center">
+                                        <t t-esc="o.subject.name" />
+                                    </span></span>
+                                <span style="float:right;">Date : <span style="text-align:right">
+                                        <t t-esc="o.exam_date.strftime('%d-%b-%Y')" />
+                                    </span></span>
                             </th>
                         </tr>
                     </table>
@@ -33,7 +45,7 @@
 
 
                 <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-                    <t t-set="index" t-value="0"/>
+                    <t t-set="index" t-value="0" />
                     <tr>
                         <th style="border: 1px solid black; padding: 8px;">Sr No.</th>
                         <th style="border: 1px solid black; padding: 8px;">Candidate Code No.</th>
@@ -44,25 +56,26 @@
                         <th style="border: 1px solid black; padding: 8px;">Sign</th>
                     </tr>
                     <t t-foreach="o.marksheets" t-as="candidate">
-                        <t t-set="index" t-value="index + 1"/>
+                        <t t-set="index" t-value="index + 1" />
                         <tr>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-esc="index"/>
+                                <span t-esc="index" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.candidate_code"/>
+                                <span
+                                    t-field="candidate.ccmc_marksheet.ccmc_candidate.candidate_code" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.ccmc_marksheet.exam_id"/>
+                                <span t-field="candidate.ccmc_marksheet.exam_id" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.name"/>
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.name" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.indos_no"/>
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.indos_no" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.dob"/>
+                                <span t-field="candidate.ccmc_marksheet.ccmc_candidate.dob" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;width: 150px;"></td>
                         </tr>
@@ -79,7 +92,8 @@
                         <tr>
                             <td style="text-align: left; font-size: 16px; padding-left: 10px;">
                                 <span style="display: block;">Examiner Signature</span>
-                                <strong>Examiner Name: </strong><t t-esc="o.examiner.name"/>
+                                <strong>Examiner Name: </strong>
+                                <t t-esc="o.examiner.name" />
                             </td>
                         </tr>
                     </table>
@@ -95,68 +109,95 @@
 
 
                 <div class="header">
-                    <table style="width:100%; border: 1px solid black;" >
+                    <table style="width:100%; border: 1px solid black;">
                         <tr>
                             <th style="border: 1px solid black;" rowspan="2">
-                                <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg" style="max-width: 100px; max-height: 100px;padding:8px;"/>
+                                <img class="img img-responsive img-top"
+                                    src="/bes/static/src/img/logo_bes.jpg"
+                                    style="max-width: 100px; max-height: 100px;padding:8px;" />
                             </th>
-                            <th style="width:100%; border: 1px solid black;padding:10px; text-align:center" >
-                                <strong style="white-space: nowrap; ">Board of Examinations for Seafarers Trust</strong>
+                            <th
+                                style="width:100%; border: 1px solid black;padding:10px; text-align:center">
+                                <strong style="white-space: nowrap; ">Board of Examinations for
+                                    Seafarers Trust</strong>
                             </th>
                         </tr>
-                        <tr style="width:100%; border: 1px solid black;padding:10px; text-align:center">
+                        <tr
+                            style="width:100%; border: 1px solid black;padding:10px; text-align:center">
                             <th style="white-space: nowrap;">
-                                <span style="text-align:center" >
+                                <span style="text-align:center">
                                     Online Attendance Sheet GP Rating
                                 </span>
                             </th>
                         </tr>
-                        <tr  style="width:100%; border: 1px solid black;padding:10px; ">
+                        <tr style="width:100%; border: 1px solid black;padding:10px; ">
                             <th colspan="2" style="white-space: nowrap; padding:5px">
-                                <span style="float:left;" >Venue : <span style="text-align:left" ><t t-esc="o.institute_id.name"/></span></span>
-                                <span style="margin-left:150px;" >Subject : <span style="text-align:center" ><t t-esc="o.subject.name"/></span></span>
-                                <span style="float:right;" >Date : <span style="text-align:right" ><t t-esc="o.exam_date"/></span></span>
+                                <span style="float:left;">Venue : <span style="text-align:left">
+                                        <t t-esc="o.institute_id.name" />
+                                    </span></span>
+                                <span style="margin-left:150px;">Subject : <span
+                                        style="text-align:center">
+                                        <t t-esc="o.subject.name" />
+                                    </span></span>
+                                <span style="float:right;">Date : <span style="text-align:right">
+                                        <t t-esc="o.exam_date.strftime('%d-%b-%Y')" />
+                                    </span></span>
                             </th>
                         </tr>
                     </table>
                 </div>
 
 
-
-
-                <table  class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-                    <t t-set="index" t-value="0"/>
+                <table class="table table-condensed"
+                    style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                    <t t-set="index" t-value="0" />
                     <tr>
                         <th style="border: 1px solid black; padding: 8px;">Sr No.</th>
                         <th style="border: 1px solid black; padding: 8px;">Candidate Code No.</th>
                         <th style="border: 1px solid black; padding: 8px;">Roll No.</th>
                         <th style="border: 1px solid black; padding: 8px;">Name of Candidate</th>
                         <th style="border: 1px solid black; padding: 8px;">INDoS No.</th>
-                        <th style="border: 1px solid black; padding: 8px;">Dob</th>
-                        <th style="border: 1px solid black; padding: 8px;">Sign</th>
+                        <th style="border: 1px solid black; padding: 8px;">DOB</th>
+                        <th style="border: 1px solid black; padding: 8px;">Mek Sign</th>
+                        <th style="border: 1px solid black; padding: 8px;">Gsk Sign</th>
                     </tr>
                     <t t-foreach="o.marksheets" t-as="candidate">
-                        <t t-set="index" t-value="index + 1"/>
+                        <t t-set="index" t-value="index + 1" />
                         <tr>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-esc="index"/>
+                                <span t-esc="index" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.gp_marksheet.gp_candidate.candidate_code"/>
+                                <span t-field="candidate.gp_marksheet.gp_candidate.candidate_code" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.gp_marksheet.exam_id"/>
+                                <span t-field="candidate.gp_marksheet.exam_id" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.gp_marksheet.gp_candidate.name"/>
+                                <span t-field="candidate.gp_marksheet.gp_candidate.name" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.gp_marksheet.gp_candidate.indos_no"/>
+                                <span t-field="candidate.gp_marksheet.gp_candidate.indos_no" />
                             </td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <span t-field="candidate.gp_marksheet.gp_candidate.dob"/>
+                                <span t-field="candidate.gp_marksheet.gp_candidate.dob" />
                             </td>
-                            <td style="border: 1px solid black; padding: 8px;width: 150px;"></td>
+                            <!-- Mek Sign -->
+                            <td style="border: 1px solid black; padding: 8px; width: 150px; background-color: lightgrey;"
+                                t-if="not candidate.gp_marksheet.attempting_mek_online">
+                                Not Attempting
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px; width: 150px;"
+                                t-if="candidate.gp_marksheet.attempting_mek_online">
+                            </td>
+                            <!-- Gsk Sign -->
+                            <td style="border: 1px solid black; padding: 8px; width: 150px; background-color: lightgrey;"
+                                t-if="not candidate.gp_marksheet.attempting_gsk_online">
+                                Not Attempting
+                            </td>
+                            <td style="border: 1px solid black; padding: 8px; width: 150px;"
+                                t-if="candidate.gp_marksheet.attempting_gsk_online">
+                            </td>
                         </tr>
                     </t>
                 </table>
@@ -171,7 +212,8 @@
                         <tr>
                             <td style="text-align: left; font-size: 16px; padding-left: 10px;">
                                 <span style="display: block;">Examiner Signature</span>
-                                <strong>Examiner Name: </strong><t t-esc="o.examiner.name"/>
+                                <strong>Examiner Name: </strong>
+                                <t t-esc="o.examiner.name" />
                             </td>
                         </tr>
                     </table>
