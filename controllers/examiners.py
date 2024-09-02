@@ -1073,10 +1073,12 @@ class ExaminerPortal(CustomerPortal):
 
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
-
-        date = examiner_assignments[0].exam_date
         
-        file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
+        print(examiner_assignments)
+
+        date = examiner_assignments.exam_date
+        
+        file_name = str(examiner_assignments.examiner.name)+"-GSK-"+str(date)+".xlsx"
         
         # Generate a response with the Excel file
         response = request.make_response(
@@ -1303,7 +1305,7 @@ class ExaminerPortal(CustomerPortal):
         
         date = examiner_assignments[0].exam_date
         
-        file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
+        file_name = examiner_assignments.examiner.name+"-MEK-"+str(date)+".xlsx"
 
        
         # Generate a response with the Excel file

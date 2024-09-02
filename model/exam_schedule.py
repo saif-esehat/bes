@@ -2042,9 +2042,11 @@ class ExamOralPracticalExaminers(models.Model):
     
     def download_marksheet(self):
         
+        batch_id = self.dgs_batch.id
+        
         if self.exam_type == 'practical_oral' and self.subject.name == 'GSK':
         
-            url = '/open_candidate_form/download_gsk_marksheet/7/'+str(self.id)
+            url = '/open_candidate_form/download_gsk_marksheet/'+str(batch_id)+'/'+str(self.id)
             
             return {
                     'type': 'ir.actions.act_url',
@@ -2054,7 +2056,7 @@ class ExamOralPracticalExaminers(models.Model):
         
         elif self.exam_type == 'practical_oral' and self.subject.name == 'MEK':
         
-            url = '/open_candidate_form/download_mek_marksheet/7/'+str(self.id)
+            url = '/open_candidate_form/download_mek_marksheet/'+str(batch_id)+'/'+str(self.id)
             
             return {
                     'type': 'ir.actions.act_url',
@@ -2064,7 +2066,7 @@ class ExamOralPracticalExaminers(models.Model):
             
         elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC':
         
-            url = '/open_ccmc_candidate_form/download_ccmc_practical_marksheet/7/'+str(self.id)
+            url = '/open_ccmc_candidate_form/download_ccmc_practical_marksheet/'+str(batch_id)+'/'+str(self.id)
             
             return {
                     'type': 'ir.actions.act_url',
@@ -2074,7 +2076,7 @@ class ExamOralPracticalExaminers(models.Model):
         
         elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC GSK Oral':
         
-            url = '/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/7/'+str(self.id)
+            url = '/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/'+str(batch_id)+'/'+str(self.id)
             
             return {
                     'type': 'ir.actions.act_url',
