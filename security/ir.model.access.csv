@@ -122,6 +122,8 @@ bes.access_attempt_wise_report_user,access_attempt_wise_report_user,model_attemp
 bes.access_summarised_gp_repeater_report_manager,access_summarised_gp_repeater_report_manager,bes.model_summarised_gp_repeater_report,group_bes_report,1,1,1,1
 bes.admin_access_repeater_admit_card,access_repeater_admit_card,bes.model_release_admit_card,bes.group_bes_admin,1,1,1,1
 bes.admin_acces_batch_pop_up,acces_batch_pop_up,bes.model_batch_pop_up_wizard,bes.group_bes_admin,1,1,1,1
+bes.admin_gp_admit_card_release,acces_gp_admit_card_release,bes.model_gp_admit_card_release,bes.group_bes_admin,1,1,1,1
+
 
 
 bes.access_sep_batches,access_sep_batches,bes.model_sep_batches,base.group_user,1,1,1,1
