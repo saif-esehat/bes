@@ -718,13 +718,6 @@
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
-                            <!-- <t t-elif="not exam">
-                                <div class="form-check">
-                                    <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input exam-checkbox"/>
-                                    <label for="mek_online" class="form-check-label">MEK Online</label>
-                                </div>                            
-                            </t> -->
-
                             <t t-if="exam.gsk_oral_prac_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input exam-checkbox"/>
@@ -737,13 +730,6 @@
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <!-- <t t-elif="not exam">
-                                <div class="form-check">
-                                    <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input exam-checkbox"/>
-                                    <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
-                                </div>
-                            </t> -->
-
                             <t t-if="exam.mek_oral_prac_status == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input exam-checkbox" />
@@ -756,12 +742,6 @@
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <!-- <t t-elif="not exam">
-                                <div class="form-check">
-                                    <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input exam-checkbox" />
-                                    <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
-                                </div>
-                            </t> -->
 
                         </div>
                         <div class="col-md-4">
