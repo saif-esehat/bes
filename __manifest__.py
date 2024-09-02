@@ -61,6 +61,7 @@
         'views/iv_exam/candidats_application.xml',
         'reports/iv_candidate_admit_card.xml',
         'views/iv_exam/candidate_remark.xml',
+        'views/iv_exam/iv_candidates_grade.xml',
        
         # 'views/sep_batches.xml',
         # 'views/sep_candidate.xml',

@@ -27,7 +27,7 @@ class CandidatesApplication(models.Model):
     candidate_signature = fields.Binary(string="Candidate Signature",attachment=True, help='Select an image')
 
     competency_deck = fields.Char(string="a) Competency (Deck/Engine)")
-    grade = fields.Char(string="b) Grade")
+    grade = fields.Many2one('candidates.grade',string="b) Grade")
     
     # 2. Details of the Candidate
     name = fields.Char(string="Name")
