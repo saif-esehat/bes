@@ -51,7 +51,7 @@
                     <h4> 2. Details of the Candidate </h4>
                     
                     <group>
-                        <field name="name"  style="width: 50%;"/>
+                        <field name="name" string="a) Name"  style="width: 50%;"/>
                     </group>
                     <group>
                         <group>
@@ -311,8 +311,232 @@
                     </group>
                     <b>In-Charge, IV/Port Examination</b>
                     <h4>(Bord Of Examination For Seafarers Trust, Navi Mumbai)</h4>
+                    <group></group>
+                   <notebook>
+                           
+                        <page string="Cheak Box List">
+                            <label for="application_from" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="application_from"/>
+                                </div>
+                                </group>
 
-                    
+                                <group attrs="{'invisible': [('application_from', '=', 'yes')]}">
+                                    <label for="remark_id_1" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_1"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <label for="attached_photo" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attached_photo"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attached_photo', '=', 'yes')]}">
+                                    <label for="remark_id_2" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_2"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <label for="origanal_se_certificate" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="origanal_se_certificate"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('origanal_se_certificate', '=', 'yes')]}">
+                                    <label for="remark_id_3" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_3"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                             <label for="apply_grade" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="apply_grade"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('apply_grade', '=', 'yes')]}">
+                                    <label for="remark_id_4" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_4"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <label for="notarize_affi" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="notarize_affi"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('notarize_affi', '=', 'yes')]}">
+                                    <label for="remark_id_5" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_5"/>
+                                    </div>
+                                </group>
+                            </group>
+
+
+                            <label for="attched_document" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_document"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_document', '=', 'yes')]}">
+                                    <label for="remark_id_6" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_6"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                             <label for="attched_photo_ed" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_photo_ed"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_photo_ed', '=', 'yes')]}">
+                                    <label for="remark_id_7" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_7"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                             <label for="attched_photo_dob" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_photo_dob"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_photo_dob', '=', 'yes')]}">
+                                    <label for="remark_id_8" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_8"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <label for="attched_photo_residential" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_photo_residential"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_photo_residential', '=', 'yes')]}">
+                                    <label for="remark_id_9" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_9"/>
+                                    </div>
+                                </group>
+                            </group>
+
+
+                             <label for="attched_photo_security" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_photo_security"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_photo_security', '=', 'yes')]}">
+                                    <label for="remark_id_10" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_10"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                             <label for="attched_photo_medical" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_photo_medical"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_photo_medical', '=', 'yes')]}">
+                                    <label for="remark_id_11" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_11"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <label for="attched_photo_idproof" />
+                            <group>
+                            
+                            <group>
+                            
+                                <div>
+                                    <field name="attched_photo_idproof"/>
+                                </div>
+                                </group>
+
+                                <group attrs="{'invisible': [('attched_photo_idproof', '=', 'yes')]}">
+                                    <label for="remark_id_12" string="Select Remarks"/>
+                                    <div>
+                                        <field name="remark_id_12"/>
+                                    </div>
+                                </group>
+                            </group>
+                            
+                             
+                        </page>
+                  
+                    </notebook>
                  </sheet>
                 </form>
             </field>
@@ -323,6 +547,7 @@
         <field name="model">candidates.application</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="name"/>
                 <field name="application_no"/>
                 <field name="roll_no"/>
                 

@@ -71,6 +71,9 @@ class BatchInvoice(models.Model):
     transaction_slip =  fields.Binary("Transaction Slip")
     file_name = fields.Char("Transaction Slip Filename")
     transaction_date = fields.Date("Transaction Date")
+    indos_no  = fields.Char(string="INDoS No.")
+    
+   
     
     def open_candidate_invoice_reset_wizard(self):
         return {
