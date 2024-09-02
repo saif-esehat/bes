@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="iv_batches_action" model="ir.actions.act_window">
+            <field name="name">IV Batches</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">iv.batches</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">IV Batches</p>
+            </field>
+        </record>
+
+         <record id="iv_batches_forms" model="ir.ui.view">
+            <field name="name">iv.batches.form</field>
+            <field name="model">iv.batches</field>
+            <field name="arch" type="xml">
+                <form>
+                   <sheet>
+                   <header>
+                         <button string="View Candidates" type="object" name="show_iv_candidate_model" class="btn-primary"/>
+                
+                    </header>
+                    <group>
+                    <group>
+                        <field name="name" placeholder="Enter batch name" style="width: 50%;"/>
+                         <field name="grade_preference" />
+                       
+                    </group>
+                    <group>
+                        <field name="start_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+                        <field name="end_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+                        <field name="issue_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+
+                    </group>
+                    </group>
+                 </sheet>
+                   
+                </form>
+            </field>
+        </record>
+
+        <record id="iv_batches_tree" model="ir.ui.view">
+        <field name="name">iv.batches.tree</field>
+        <field name="model">iv.batches</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                 <field name="issue_date"/>
+            </tree>
+        </field>
+        </record>
+
+         <menuitem id="iv_menu" name="IV Exam"  sequence="1"
+                  groups="bes.group_bes_admin" web_icon="bes,static/description/iv_exam.png"/>
+                
+
+
+
+        <menuitem id="menu_iv_batches" name="IV Batches"
+           parent="iv_menu" action="iv_batches_action" sequence="10"/>
+
+        
+
+
+
+</data>
+</odoo>

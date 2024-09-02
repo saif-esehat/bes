@@ -15,8 +15,28 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 
                 var gsk_marksheet_id = evt.target.id
 
+                var str = evt.target.id;
+                var parts = str.split('_');
+                var lastId = parts[parts.length - 1];
+                var attendance_id = document.getElementById('attendance_'+lastId).value
+                
+        
+
+                var attendance_element = document.getElementById('attendance_'+lastId)
+
+                var marksheet_gsk_status =   document.getElementById('marksheet_gsk_status_'+lastId)
+                
+                if (attendance_element.value == '') {
+
+                    alert("Attendance is Mandatory. Please Select Attendance")
+
+                    return ;
+                }
+
                 var postData = {
-                    id: gsk_marksheet_id // Assuming you want to pass the ID in the request body
+                    id: gsk_marksheet_id, // Assuming you want to pass the ID in the request body
+                    attendance_id : attendance_id,
+                    marksheet_gsk_status:marksheet_gsk_status
                 };
                 var result = [];
 
@@ -27,13 +47,25 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 $.ajax({
                     type: "POST",
                     url: '/confirm/gsk/marksheet',
+                    indexValue: {
+                        id: gsk_marksheet_id, // Assuming you want to pass the ID in the request body
+                        attendance_element : attendance_element,
+                        marksheet_gsk_status:marksheet_gsk_status
+                    },
                     data: JSON.stringify(postData),
                     contentType: 'application/json',
                     success: function (response) {
 
+               
+                        var marksheet_gsk_status = this.indexValue.marksheet_gsk_status
+                        this.indexValue.attendance_element.disabled = true
+                        var confirm_button_element = this.indexValue.id
+                        document.getElementById(confirm_button_element).remove()
+                        marksheet_gsk_status.children[0].innerText = 'Confirmed'
+                        
                         // debugger
-                        console.log("POST request successful:", response);
-                        location.reload();
+                        // console.log("POST request successful:", response);
+                        // location.reload();
 
                         // if response["status"]
                         // Handle success response
@@ -60,8 +92,28 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 
                 var mek_marksheet_id = evt.target.id
 
+                var str = evt.target.id;
+                var parts = str.split('_');
+                var lastId = parts[parts.length - 1];
+                var attendance_id = document.getElementById('attendance_'+lastId).value
+
+                var attendance_element = document.getElementById('attendance_'+lastId)
+
+                var marksheet_mek_status =   document.getElementById('marksheet_mek_status_'+lastId)
+
+                if (attendance_element.value == '') {
+
+                    alert("Attendance is Mandatory. Please Select Attendance")
+
+                    return ;
+                }
+
+                debugger
+
                 var postData = {
-                    id: mek_marksheet_id // Assuming you want to pass the ID in the request body
+                    id: mek_marksheet_id, // Assuming you want to pass the ID in the request body
+                    attendance_id: attendance_id,
+                    marksheet_mek_status: marksheet_mek_status
                 };
                 var result = [];
 
@@ -72,12 +124,23 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 $.ajax({
                     type: "POST",
                     url: '/confirm/mek/marksheet',
+                    indexValue: {
+                        id: mek_marksheet_id, // Assuming you want to pass the ID in the request body
+                        attendance_element : attendance_element,
+                        marksheet_mek_status:marksheet_mek_status
+                    },
                     data: JSON.stringify(postData) ,
                     contentType: 'application/json',                    
                     success: function (response) {
+
+                        var marksheet_gsk_status = this.indexValue.marksheet_mek_status
+                        this.indexValue.attendance_element.disabled = true
+                        var confirm_button_element = this.indexValue.id
+                        document.getElementById(confirm_button_element).remove()
+                        marksheet_gsk_status.children[0].innerText = 'Confirmed'
                         // debugger
                         console.log("POST request successful:", response);
-                        location.reload();
+                        // location.reload();
 
                         // if response["status"]
                         // Handle success response

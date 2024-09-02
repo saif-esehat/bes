@@ -322,6 +322,7 @@
                     <header>
                             <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
                     </header>
+                  
                     <sheet>
                          <!-- <div class="oe_button_box" name="button_box">
                             <button name="open_oral_prac_candidate" type="object" class="oe_stat_button" icon="fa-align-justify">
@@ -380,9 +381,12 @@
                                 <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
                                     string="Attendance Sheet"
                                     type="object"
-                                    class="btn-primary"
+                                    class="btn-info"
                                     icon="fa-download"/>
-
+                                    
+                                <!-- <field name="attendance_sheet_file" widget="binary" filename="attendance_sheet_name"/> -->
+                                <field name="attendance_sheet_files" widget="many2many_tags"/>
+                                <field name="attendance_sheet_uploaded"/>
                                 <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
                                 <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
                                 <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
@@ -446,6 +450,7 @@
             <field name="model">exam.type.oral.practical.examiners</field>
             <field name="arch" type="xml">
                 <tree>
+                 
                     <field name="dgs_batch"/>
                     <field name="subject"/>
                     <field name="examiner"/>
@@ -763,7 +768,10 @@
             <field name="name">exam.type.oral.practical.tree</field>
             <field name="model">exam.type.oral.practical</field>
             <field name="arch" type="xml">
+               
                 <tree>
+               
+                
                     <field name="dgs_batch"/>
                     <field name="exam_type"/>
                     <field name="course"/>
