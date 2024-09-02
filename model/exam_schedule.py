@@ -1927,6 +1927,8 @@ class ExamOralPracticalExaminers(models.Model):
 
     absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
     candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
+    # Add One2many field
+    assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
     
     
     @api.depends('marksheets')

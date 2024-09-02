@@ -158,8 +158,8 @@
                         <th style="border: 1px solid black; padding: 8px;">Name of Candidate</th>
                         <th style="border: 1px solid black; padding: 8px;">INDoS No.</th>
                         <th style="border: 1px solid black; padding: 8px;">DOB</th>
-                        <th style="border: 1px solid black; padding: 8px;">Mek Sign</th>
-                        <th style="border: 1px solid black; padding: 8px;">Gsk Sign</th>
+                        <th style="border: 1px solid black; padding: 8px;">MEK Online</th>
+                        <th style="border: 1px solid black; padding: 8px;">GSK Online</th>
                     </tr>
                     <t t-foreach="o.marksheets" t-as="candidate">
                         <t t-set="index" t-value="index + 1" />
@@ -183,7 +183,7 @@
                                 <span t-field="candidate.gp_marksheet.gp_candidate.dob" />
                             </td>
                             <!-- Mek Sign -->
-                            <td style="border: 1px solid black; padding: 8px; width: 150px; background-color: lightgrey;"
+                            <td style="border: 1px solid black; padding: 8px; width: 150px; background-color: black; color:white;"
                                 t-if="not candidate.gp_marksheet.attempting_mek_online">
                                 Not Attempting
                             </td>
@@ -191,7 +191,7 @@
                                 t-if="candidate.gp_marksheet.attempting_mek_online">
                             </td>
                             <!-- Gsk Sign -->
-                            <td style="border: 1px solid black; padding: 8px; width: 150px; background-color: lightgrey;"
+                            <td style="border: 1px solid black; padding: 8px; width: 150px; background-color: black; color:white;"
                                 t-if="not candidate.gp_marksheet.attempting_gsk_online">
                                 Not Attempting
                             </td>
