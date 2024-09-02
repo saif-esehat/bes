@@ -381,9 +381,12 @@
                                 <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
                                     string="Attendance Sheet"
                                     type="object"
-                                    class="btn-primary"
+                                    class="btn-info"
                                     icon="fa-download"/>
-
+                                    
+                                <!-- <field name="attendance_sheet_file" widget="binary" filename="attendance_sheet_name"/> -->
+                                <field name="attendance_sheet_files" widget="many2many_tags"/>
+                                <field name="attendance_sheet_uploaded"/>
                                 <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
                                 <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
                                 <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->

@@ -267,6 +267,35 @@
 
                                     }
 
+                                    function openMekAttendanceModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    var assignId = button.getAttribute('mek-assign-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('ass_batch_id').value = dataId;
+                                    document.getElementById('mek_attendance_id').value = assignId;
+                                    }
+
+                                    function openGskAttendanceModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    var assignId = button.getAttribute('gsk-assign-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('gsk_batch_id').value = dataId;
+                                    document.getElementById('gsk_attendance_id').value = assignId;
+                                    }
+                                    
+                                    function openCcmcAttendanceModal(button) {
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('batch-id');
+                                    var assignId = button.getAttribute('ccmc-assign-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('ccmc_batch_id').value = dataId;
+                                    document.getElementById('ccmc_attendance_id').value = assignId;
+                                    }
+
+                                    
+
                                     function openMekUploadModal(button) {
                                     // Retrieve the data-id attribute value from the clicked button
                                     var dataId = button.getAttribute('mek-batch-id');
@@ -516,6 +545,7 @@
            
             <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
             <t t-set="marksheet_uploaded" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_uploaded"/>
+            <t t-set="attendance_sheet_uploaded" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).attendance_sheet_uploaded"/>
             <t t-set="marksheet_image" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_image"/>
             <t t-set="exam_date" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_date"/>
             <t t-set="extended" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).extended"/>
@@ -534,7 +564,137 @@
             
             <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
 
-           
+            <!-- Upload MEK Attendance Sheet  -->
+            <div class="modal fade" id="uploadMekAttendanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Attendance Sheet</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadmekattendance" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="ass_batch_id" name="batch_id" />
+                                    <input type="hidden" id="mek_attendance_id" name="mek_attendance_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- Upload GSK Attendance Sheet  -->
+            <div class="modal fade" id="uploadGskAttendanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Attendance Sheet</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadgskattendance" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="gsk_batch_id" name="batch_id" />
+                                    <input type="hidden" id="gsk_attendance_id" name="attendance_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload CCMC Attendance Sheet  -->
+            <div class="modal fade" id="uploadCcmcAttendanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Attendance Sheet</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="container mt-5">
+
+                                <form method="post" action="/my/uploadccmcattendance" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="ccmc_batch_id" name="batch_id" />
+                                    <input type="hidden" id="ccmc_attendance_id" name="attendance_id" />
+                                    <div class="form-group">
+                                        <label for="fileUpload">XLSX Upload</label>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                        <input type="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png" name="fileUpload" id="fileUpload"/>
+                                    </div>
+                                    <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="exam_type == 'online'">
+                <t t-if="examiner_subject == 'MEK'">
+                    <t t-if="date_valid">
+                        <t t-if="not attendance_sheet_uploaded">
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-mek-assign-id="{{assignment_id}}" onclick="openMekAttendanceModal(this)" data-target="#uploadMekAttendanceModal" class="btn btn-primary btn_cta">Upload MEK Attendance Sheet</a>
+                        </t>
+                    </t>
+                </t>
+                <t t-if="examiner_subject == 'GSK'">
+                    <t t-if="date_valid">
+                        <t t-if="not attendance_sheet_uploaded">
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-gsk-assign-id="{{assignment_id}}" onclick="openGskAttendanceModal(this)" data-target="#uploadGskAttendanceModal" class="btn btn-primary btn_cta">Upload GSK Attendance Sheet</a>
+                        </t>
+                    </t>
+                </t>
+                <t t-if="examiner_subject == 'CCMC'">
+                    <t t-if="date_valid">
+                        <t t-if="not attendance_sheet_uploaded">
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcAttendanceModal(this)" data-target="#uploadCcmcAttendanceModal" class="btn btn-primary btn_cta">Upload CCMC Attendance Sheet</a>
+                        </t>
+                    </t>
+                </t>
+            </t>
 
 
             <t t-if="exam_type == 'practical_oral'">
@@ -596,7 +756,7 @@
                         <th class="text-center">Attendance</th>
 
                         <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Online Subject</th>
-                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Token</th>
+                        <th t-if="examiner_subject in ['GSK','MEK'] and exam_type == 'online'" class="text-center">Tokens</th>
                         <!-- GSK Oral Subjects -->
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 1, 2, 3</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">Subject Area 4, 5, 6</th>
