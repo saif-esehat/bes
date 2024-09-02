@@ -22,11 +22,17 @@
                 
                     </header>
                     <group>
+                    <group>
                         <field name="name" placeholder="Enter batch name" style="width: 50%;"/>
+                         <field name="grade_preference" />
+                       
+                    </group>
+                    <group>
                         <field name="start_date" placeholder="DD/MM/YY" style="width: 50%;"/>
                         <field name="end_date" placeholder="DD/MM/YY" style="width: 50%;"/>
                         <field name="issue_date" placeholder="DD/MM/YY" style="width: 50%;"/>
 
+                    </group>
                     </group>
                  </sheet>
                    

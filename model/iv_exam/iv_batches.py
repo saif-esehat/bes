@@ -25,6 +25,16 @@ class IVBatches(models.Model):
     end_date = fields.Date(string="End Date")
     issue_date = fields.Date(string="Issue Date")
 
+    grade_preference = fields.Selection([
+        ('first', 'First Class Master'),
+        ('second', 'Second Class Master'),
+        ('serang', 'Serang'),
+        ('inland', 'Inland Vessel'),
+        ('first_engine', 'First Class Engine Driver'),
+        ('second_engine', 'Second Class Engine Driver'),
+
+        ], string='Grade')
+
 
     @api.constrains('issue_date')
     def _check_issue_date(self):

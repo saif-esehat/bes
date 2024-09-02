@@ -131,4 +131,3 @@ bes.access_iv_batches,access_iv_batches,bes.model_iv_batches,base.group_user,1,1
 bes.access_iv_candidates,access_iv_candidates,bes.model_iv_candidates,base.group_user,1,1,1,1
 bes.access_candidates_application,access_candidates_application,bes.model_candidates_application,base.group_user,1,1,1,1
 bes.access_candidates_remark,access_candidates_remark,bes.model_candidates_remark,base.group_user,1,1,1,1
-bes.access_candidates_grade,access_candidates_grade,bes.model_candidates_grade,base.group_user,1,1,1,1

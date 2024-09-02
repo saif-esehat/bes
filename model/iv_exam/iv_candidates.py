@@ -22,7 +22,7 @@ class IVCandidates(models.Model):
     ranking_name = fields.Char(string="Name of the Rating’s")
     certificate_no = fields.Char(string="Certificate No.")
     roll_no = fields.Char(string="Roll No.")
-    grade_applied = fields.Char(string="Grade",compute="_compute_grade_applied")
+    grade_applied = fields.Char(string="Grade")
 
     dob = fields.Date(string="Date of Birth")
     photo = fields.Binary(string="Candidate Photo")
@@ -65,10 +65,4 @@ class IVCandidates(models.Model):
             if not record.examination_date:
                 raise ValidationError("Examination date must be filled.")
 
-    @api.depends('name')
-    def _compute_grade_applied(self):
-        for record in self:
-            # Find the corresponding CandidatesApplication record based on roll_no
-            application = self.env['candidates.application'].search([('name', '=', record.name)], limit=1)
-            record.grade_applied = application.grade.grade if application and application.grade else ''
-    
+   
