@@ -1,0 +1,64 @@
+<odoo>
+
+    <record id="open_examiner_expenses" model="ir.actions.act_window">
+        <field name="name">Examiner Expenses</field>
+        <field name="res_model">examiner.expenses</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <record id="view_examiner_expenses_form" model="ir.ui.view">
+        <field name="name">examiner.expenses.form</field>
+        <field name="model">examiner.expenses</field>
+        <field name="arch" type="xml">
+            <form string="Examiner Expenses">
+                <header>
+                    <button name="action_set_ec_approval" string="EC Approval" type="object" class="btn-primary" states="draft"/>
+                    <button name="action_set_ceo_approval" string="CEO Approval" type="object" class="btn-primary" states="ec_approval"/>
+                    <button name="action_set_approved" string="Approved" type="object" class="btn-primary" states="ceo_approval"/>
+                    <button name="cancel" string="Cancel" type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="dgs_batch"/>
+                        <field name="examiner_id"/>
+                        <field name="team_lead"/>
+                    </group>
+                    <notebook>
+                        <page string="Assignment Expenses">
+                            <field name="assignment_expense_ids">
+                                <tree editable="bottom">
+                                    <field name="examiner_id"/>
+                                    <field name="assignment"/>
+                                    <field name="no_of_candidates"/>
+                                    <field name="price_per_unit"/>
+                                    <field name="total" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Miscellaneous Expenses">
+                            <field name="misc_expense_ids">
+                                <tree editable="bottom">
+                                    <field name="description"/>
+                                    <field name="price"/>
+                                    <field name="docs"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_examiner_expenses_tree" model="ir.ui.view">
+        <field name="name">examiner.expenses.tree</field>
+        <field name="model">examiner.expenses</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examiner_id"/>
+                <field name="team_lead"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

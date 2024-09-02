@@ -39,6 +39,7 @@
         'views/hr_employee.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
+        'views/examiner_expenses_views.xml',
         'views/menu.xml',
         'views/template.xml',
         'views/timesheet.xml',
