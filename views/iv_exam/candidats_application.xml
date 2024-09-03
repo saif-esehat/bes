@@ -22,6 +22,7 @@
                     <group>
                       <group>
                         <field name="application_no" placeholder="Application No" style="width: 50%;"/>
+                        <field name="indos_no" placeholder="INDOS No" style="width: 50%;"/>
                        </group>
                        <group>
                         <field name="roll_no" placeholder="Roll No" style="width: 50%;"/>
@@ -156,11 +157,11 @@
                     <b>b.Through NEFT (Account Detail Given Below)</b>
 
                     <group >
-                           <field name="bord_name" />
+                           <!-- <field name="bord_name" />
                            <field name="bank_name" />
                            <field name="branch_name" />
                            <field name="account_no" style="width: 50%;"/>
-                           <field name="ifsc_code" style="width: 50%;"/>
+                           <field name="ifsc_code" style="width: 50%;"/> -->
                            <field name="transection_id" style="width: 50%;"/>
                           
                     </group>
@@ -172,7 +173,7 @@
                               <field name="transection_amount" style="width: 50%;"/>
                         </group>
                     </group>
-                    <h4>7. List of documents to be Attached</h4>
+                    <!-- <h4>7. List of documents to be Attached</h4>
 
                      <group>
                         <label for="self_attched" string="a) Self-attached copy of previous COC (if any)" 
@@ -235,9 +236,9 @@
                        <label for="attched_driver_certificate" string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From" 
                             style="white-space: nowrap;"/>
                         <field name="attched_driver_certificate" nolabel="1"/>
-                    </group>
+                    </group> -->
 
-                    <h4>8. Declaration</h4>
+                    <!-- <h4>7. Declaration</h4>
                      <b>I do by, declare that, particulars contained in the application are correct and true to the best of my knowledge and belief, and that the attached documents are genuine and signed by the Person
                          whose names appear on them. I make this declaration consciously beliving it to be true.</b>
                     <group>
@@ -248,25 +249,25 @@
                         <group>
                             <field name="applicant_signature" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/>
                         </group>
-                    </group>
-                    <h4>9. For Assessing Officer's Use</h4>
+                    </group> -->
+                    <h4>7. For Assessing Officer's Use</h4>
                     <group>
                         <group>
                             <field name="application_eligible" />
-                            <field name="clause1" />
+                            <field name="hold" />
                         </group>
                         <group>
-                            <field name="application_date" />
-                            <field name="signature_bes" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/>
+                            <field name="application_date" widget='date' options="{'format': 'MM/DD/YYYY'}" />
+                            <!-- <field name="signature_bes" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/> -->
                         </group>
                     </group>
-                    <h4>10. For Office Staff Use Only</h4>
+                    <!-- <h4>8. For Office Staff Use Only</h4>
                     <group>
                         <field name="name_of_candidate" />
                         <field name="candidate_roll" style="width: 50%;"/>
                         <field name="grade_appearing" style="width: 50%;"/>
-                    </group>
-                    <h4>11. For Examiner's Use Only</h4>
+                    </group> -->
+                    <h4>8. For Examiner's Use Only</h4>
                     <strong>Note:-</strong><b>The Examiner should fill up following and, in all cases, as soon as 
                                               possible forward this paper to the Chief Co-ordinator IV examination, Navi Mumbai.
                                               If the applicant passes his Testimonials and previous Certificate if any must be sent
@@ -291,7 +292,7 @@
                             <field name="examiner_date" style="width: 50%;"/>
                         </group>
                     </group>
-                    <h4>12. For Examination Co-ordinator's Use Only</h4>
+                    <h4>9. For Examination Co-ordinator's Use Only</h4>
                     <group>
                        <label for="candidate_pf" string="I hereby, certify that the particulars contained above are correct The above-named candidate has been Declared FINALLY (Pass or Fail)" 
                             style="white-space: nowrap;"/>
@@ -310,7 +311,7 @@
                         <field name="coordinater_date" style="width: 50%;"/> 
                     </group>
                     <b>In-Charge, IV/Port Examination</b>
-                    <h4>(Bord Of Examination For Seafarers Trust, Navi Mumbai)</h4>
+                    <h4>(Board Of Examination For Seafarers Trust, Navi Mumbai)</h4>
                     <group></group>
                    <notebook>
                            

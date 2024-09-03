@@ -8,6 +8,7 @@ import xlrd
 import qrcode
 import logging
 
+
 _logger = logging.getLogger(__name__)
 
     
@@ -20,6 +21,7 @@ class CandidatesApplication(models.Model):
     _description= 'Candidates Application'
 
     application_no = fields.Char(string="Application No.")
+    indos_no = fields.Char(string="INDOs No")
     roll_no = fields.Char(string="Roll No.")
 
 
@@ -83,37 +85,37 @@ class CandidatesApplication(models.Model):
      # 6) detail of fees payments
     
     upi_no = fields.Char(string="UPI/UTR No.")
-    transaction_date = fields.Date(string="Date")
+    transaction_date = fields.Date(string="Date",required=False)
     amount = fields.Float(string="Amount")
     qr_code_image = fields.Binary(string="a) Through UPI",compute="generate_qr_code")
 
-    bord_name = fields.Char(string="Exam Bord Name")
-    bank_name = fields.Char(string="Bank Name")
-    branch_name = fields.Char(string="Branch Name")
-    account_no = fields.Integer(string="Account Number")
-    ifsc_code = fields.Char(string="IFSC Code")
+    # bord_name = fields.Char(string="Exam Board Name")
+    # bank_name = fields.Char(string="Bank Name")
+    # branch_name = fields.Char(string="Branch Name")
+    # account_no = fields.Integer(string="Account Number")
+    # ifsc_code = fields.Char(string="IFSC Code")
     transection_id = fields.Char(string="Transection ID")
     transection_date = fields.Date(string="Date")
     transection_amount = fields.Float(string="Amount")
 
     # 7)List of documents to be Attached
 
-    self_attched = fields.Binary(string="a) Self-attached copy of previous COC (if any)")
-    origanal_se_certi = fields.Binary(string="b) Original Sea Service Certificate")
-    original_notarize = fields.Binary(string="c) Original Notarize Affidavite")
-    attache_passport = fields.Binary(string="d) Self-attached copy of valid Passport OR Original Police Verification Certificate.")
-    attched_educatinal = fields.Binary(string="e) Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)")
-    attched_leaving = fields.Binary(string="f) Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate")
-    attched_photo = fields.Binary(string="g) Self-attached Photo copy of the Residential Address Proof")
-    attched_modular = fields.Binary(string="h) Self-attached copies of Modular Safety and Security Courses")
-    attched_medical = fields.Binary(string="i) Self-attached valid Medical Certificate")
-    attched_id_proof = fields.Binary(string="j) Self-attached photo copy of the ID Proof (Issued by Government)")
-    attched_upi = fields.Binary(string="k) UPI/NEFT Payment Receipt")
-    attched_driver_certificate = fields.Binary(string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From")
+    # self_attched = fields.Binary(string="a) Self-attached copy of previous COC (if any)")
+    # origanal_se_certi = fields.Binary(string="b) Original Sea Service Certificate")
+    # original_notarize = fields.Binary(string="c) Original Notarize Affidavite")
+    # attache_passport = fields.Binary(string="d) Self-attached copy of valid Passport OR Original Police Verification Certificate.")
+    # attched_educatinal = fields.Binary(string="e) Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)")
+    # attched_leaving = fields.Binary(string="f) Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate")
+    # attched_photo = fields.Binary(string="g) Self-attached Photo copy of the Residential Address Proof")
+    # attched_modular = fields.Binary(string="h) Self-attached copies of Modular Safety and Security Courses")
+    # attched_medical = fields.Binary(string="i) Self-attached valid Medical Certificate")
+    # attched_id_proof = fields.Binary(string="j) Self-attached photo copy of the ID Proof (Issued by Government)")
+    # attched_upi = fields.Binary(string="k) UPI/NEFT Payment Receipt")
+    # attched_driver_certificate = fields.Binary(string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From")
   
-    declaration_date = fields.Date(string="Date")
-    place = fields.Char(string="Place")
-    applicant_signature = fields.Binary(string="Signature of the Applicant")
+    # declaration_date = fields.Date(string="Date")
+    # place = fields.Char(string="Place")
+    # applicant_signature = fields.Binary(string="Signature of the Applicant")
 
     # 9 For Assessing Officer's Use
 
@@ -122,16 +124,23 @@ class CandidatesApplication(models.Model):
         ('not_eligible', 'Not Eligible'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
-    clause1 = fields.Char(string="Clause")
+    hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
-    signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
+    
+    @api.onchange('application_date')
+    def _onchange_application_date(self):
+        if self.application_date:
+            # Convert YYYY-MM-DD to MM/DD/YYYY for display
+            date_obj = datetime.datetime.strptime(self.application_date, '%Y-%m-%d')
+            self.application_date_text = date_obj.strftime('%m/%d/%Y')
+    # signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
 
 
 #    10) For Office Staff Use Only
   
-    name_of_candidate = fields.Char(string="Name Of the Candidate")
-    candidate_roll = fields.Integer(string="Candidate's Roll No.")
-    grade_appearing = fields.Char(string="Grade Appearing")
+    # name_of_candidate = fields.Char(string="Name Of the Candidate")
+    # candidate_roll = fields.Integer(string="Candidate's Roll No.")
+    # grade_appearing = fields.Char(string="Grade Appearing")
 
 #    11) For Examiner use only
         # part A
@@ -347,14 +356,20 @@ class CandidatesApplication(models.Model):
             else:
                 record.qr_code_image = False
 
+    @api.constrains('mobile')
+    def _check_mobile(self):
+        for record in self:
+            if record.mobile and (len(record.mobile) != 10 or not record.mobile.isdigit()):
+                raise ValidationError("Mobile number must contain exactly 10 digits.")
 
-    # @api.constrains('dob')
-    # def _check_dob(self):
-    #     for record in self:
-    #         if not record.dob:
-    #             raise ValidationError("DOB must be filled.")
+    @api.constrains('zip')
+    def _check_zip(self):
+        for record in self:
+            if record.zip and (len(record.zip) != 6 or not record.zip.isdigit()):
+                raise ValidationError("Zip code must contain exactly 6 digits.")
 
-   
+
+                
 class CandidatesRemark(models.Model):
     _name = "candidates.remark"
 
