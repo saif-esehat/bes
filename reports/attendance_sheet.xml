@@ -103,7 +103,7 @@
     </template>
 
 
-    <template id="attendance_sheet_online_gp">
+    <template id="  ">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
 
@@ -135,9 +135,9 @@
                                 <span style="float:left;">Venue : <span style="text-align:left">
                                         <t t-esc="o.institute_id.name" />
                                     </span></span>
-                                <span style="margin-left:150px;">Subject : <span
-                                        style="text-align:center">
-                                        <t t-esc="o.subject.name" />
+                                <span style="margin-left:150px;">Subjects : <span
+                                        style="text-align:center">GSK,MEK
+                                        <!-- <t t-esc="o.subject.name" /> -->
                                     </span></span>
                                 <span style="float:right;">Date : <span style="text-align:right">
                                         <t t-esc="o.exam_date.strftime('%d-%b-%Y')" />
@@ -158,8 +158,8 @@
                         <th style="border: 1px solid black; padding: 8px;">Name of Candidate</th>
                         <th style="border: 1px solid black; padding: 8px;">INDoS No.</th>
                         <th style="border: 1px solid black; padding: 8px;">DOB</th>
-                        <th style="border: 1px solid black; padding: 8px;">MEK Online</th>
-                        <th style="border: 1px solid black; padding: 8px;">GSK Online</th>
+                        <th style="border: 1px solid black; padding: 8px;">MEK Online Sign</th>
+                        <th style="border: 1px solid black; padding: 8px;">GSK Online Sign</th>
                     </tr>
                     <t t-foreach="o.marksheets" t-as="candidate">
                         <t t-set="index" t-value="index + 1" />
