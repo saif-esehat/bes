@@ -27,7 +27,16 @@ class CandidatesApplication(models.Model):
     candidate_signature = fields.Binary(string="Candidate Signature",attachment=True, help='Select an image')
 
     competency_deck = fields.Char(string="a) Competency (Deck/Engine)")
-    grade = fields.Char(string="b) Grade")
+    # grade = fields.Char(string="b) Grade")
+    grade = fields.Selection([
+        ('first', 'First Class Master'),
+        ('second', 'Second Class Master'),
+        ('serang', 'Serang'),
+        ('inland', 'Inland Vessel'),
+        ('first_engine', 'First Class Engine Driver'),
+        ('second_engine', 'Second Class Engine Driver'),
+
+        ], string='Grade')
     
     # 2. Details of the Candidate
     name = fields.Char(string="Name")

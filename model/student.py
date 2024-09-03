@@ -256,7 +256,7 @@ class GPCandidate(models.Model):
 
 
 
-    @api.depends('user_id')
+    @api.depends('user_id.active')
     def _compute_user_state(self):
         for record in self:
             if record.user_id and record.user_id.active:

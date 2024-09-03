@@ -64,3 +64,5 @@ class IVCandidates(models.Model):
         for record in self:
             if not record.examination_date:
                 raise ValidationError("Examination date must be filled.")
+
+   

@@ -62,6 +62,7 @@
         'views/iv_exam/candidats_application.xml',
         'reports/iv_candidate_admit_card.xml',
         'views/iv_exam/candidate_remark.xml',
+        
        
         # 'views/sep_batches.xml',
         # 'views/sep_candidate.xml',
@@ -72,6 +73,7 @@
 'assets': {
 		'web.assets_frontend': [
                         'bes/views/portal/static/src/js/candidate_oral_practical.js',
+                        'bes/views/portal/static/src/js/examiner_marksheet.js',
                         'bes/static/js/examiner_portal_marksheet.js',
                         'bes/static/js/repeater_portal_gp_form.js'
 		],

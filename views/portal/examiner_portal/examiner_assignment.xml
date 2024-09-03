@@ -880,8 +880,24 @@
                                 
                             </td>
 
-                            <td  t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'practical_oral'" class="text-center">
-                                <select id="attendance" name="attendance">
+                            <td  t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <select t-attf-id="attendance_{{marksheet.id}}" name="attendance" t-att-disabled="marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm'">
+                                    <option value="" t-att-selected="marksheet.gp_marksheet.gsk_oral_prac_attendance == ''" ></option>
+                                    <option value="present" t-att-selected="marksheet.gp_marksheet.gsk_oral_prac_attendance == 'present'">Present</option>
+                                    <option value="absent" t-att-selected="marksheet.gp_marksheet.gsk_oral_prac_attendance == 'absent'">Absent</option>
+                                   
+                                </select>
+                            </td>
+                            <td  t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <select t-attf-id="attendance_{{marksheet.id}}" name="attendance" t-att-disabled="marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and marksheet.mek_prac.mek_practical_draft_confirm == 'confirm'" >
+                                    <option value="" t-att-selected="marksheet.gp_marksheet.mek_oral_prac_attendance == ''"></option>
+                                    <option value="present" t-att-selected="marksheet.gp_marksheet.mek_oral_prac_attendance == 'present'" >Present</option>
+                                    <option value="absent" t-att-selected="marksheet.gp_marksheet.mek_oral_prac_attendance == 'absent'">Absent</option>
+                                   
+                                </select>
+                            </td>
+                            <td  t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <select t-attf-id="attendance_{{marksheet.id}}" name="attendance">
                                     <option value=""></option>
                                     <option value="present">Present</option>
                                     <option value="absent">Absent</option>
@@ -938,7 +954,7 @@
                                     <span class="text-warning">Disabled</span>
                                 </t>
                             </td>
-                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">
+                             <td t-attf-id="marksheet_gsk_status_{{marksheet.id}}" t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral' " class="text-left">
                                 <span t-if="marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm'" >
                                     Confirmed
                                 </span>
@@ -1015,7 +1031,7 @@
                                 </t>
                             </td>
                             
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
+                            <td t-attf-id="marksheet_mek_status_{{marksheet.id}}" t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <span t-if="marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and marksheet.mek_prac.mek_practical_draft_confirm == 'confirm'" >
                                     Confirmed
                                 </span>
