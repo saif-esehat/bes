@@ -1164,6 +1164,14 @@ class ExaminerPortal(CustomerPortal):
 
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+
+        remarks = ['Absent','Good','Average','Weak']
+        
        
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n Use of chipping Tools & Brushes & Paints \n 20 Marks',
@@ -1218,10 +1226,6 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write(f'G{row_num}', '', dropdown_format)
             mek_oral_sheet.write(f'H{row_num}', '', dropdown_format)
         
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         
         mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
         mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
@@ -1230,7 +1234,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_25 })
         
-        remarks = ['Absent','Good','Average','Weak']
+        
         mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
