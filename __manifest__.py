@@ -73,6 +73,7 @@
 'assets': {
 		'web.assets_frontend': [
                         'bes/views/portal/static/src/js/candidate_oral_practical.js',
+                        'bes/views/portal/static/src/js/examiner_marksheet.js',
                         'bes/static/js/examiner_portal_marksheet.js',
                         'bes/static/js/repeater_portal_gp_form.js'
 		],

@@ -183,18 +183,19 @@ class ExaminerPortal(CustomerPortal):
     
     @http.route(['/confirm/gsk/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmGSKMarksheet(self, **kw):
+     
         print("KW Confirm GSK")
         print(request.jsonrequest)
         data = request.jsonrequest
         marksheet_id = data["id"]
         last_part = marksheet_id.split('_')[-1]
         marksheet_id = int(last_part)
-
+        
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.gsk_oral.write({"gsk_oral_draft_confirm": 'confirm' })
         marksheet.gsk_prac.write({"gsk_practical_draft_confirm": 'confirm' })
+        marksheet.gp_marksheet.write({'gsk_oral_prac_attendance': data['attendance_id']})
 
-        # import wdb; wdb.set_trace()
         marksheet.examiners_id.compute_candidates_done()
         marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
@@ -224,9 +225,12 @@ class ExaminerPortal(CustomerPortal):
     def ConfirmMEKMarksheet(self, **kw):
         print("KW Confirm MEK")
         
+        # import wdb; wdb.set_trace()
+        
         print(request.jsonrequest)
         data = request.jsonrequest
         marksheet_id = data["id"]
+        
 # Split the string by underscore and take the last element
         last_part = marksheet_id.split('_')[-1]
 
@@ -237,6 +241,8 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.mek_oral.write({"mek_oral_draft_confirm": 'confirm' })
         marksheet.mek_prac.write({"mek_practical_draft_confirm": 'confirm' })
+        marksheet.gp_marksheet.write({'mek_oral_prac_attendance': data['attendance_id']})
+
         marksheet.examiners_id.compute_candidates_done()
         marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
@@ -1067,10 +1073,12 @@ class ExaminerPortal(CustomerPortal):
 
         # Set the buffer position to the beginning
         excel_buffer.seek(0)
-
-        date = examiner_assignments[0].exam_date
         
-        file_name = examiner.name+"-GSK-"+str(date)+".xlsx"
+        print(examiner_assignments)
+
+        date = examiner_assignments.exam_date
+        
+        file_name = str(examiner_assignments.examiner.name)+"-GSK-"+str(date)+".xlsx"
         
         # Generate a response with the Excel file
         response = request.make_response(
@@ -1156,6 +1164,14 @@ class ExaminerPortal(CustomerPortal):
 
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+
+        remarks = ['Absent','Good','Average','Weak']
+        
        
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n Use of chipping Tools & Brushes & Paints \n 20 Marks',
@@ -1210,10 +1226,6 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write(f'G{row_num}', '', dropdown_format)
             mek_oral_sheet.write(f'H{row_num}', '', dropdown_format)
         
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         
         mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
         mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
@@ -1222,7 +1234,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_25 })
         
-        remarks = ['Absent','Good','Average','Weak']
+        
         mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
@@ -1297,7 +1309,7 @@ class ExaminerPortal(CustomerPortal):
         
         date = examiner_assignments[0].exam_date
         
-        file_name = examiner.name+"-MEK-"+str(date)+".xlsx"
+        file_name = examiner_assignments.examiner.name+"-MEK-"+str(date)+".xlsx"
 
        
         # Generate a response with the Excel file
@@ -2358,3 +2370,18 @@ class ExaminerPortal(CustomerPortal):
                                               'attendance_sheet_uploaded': True})
                 
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
+    
+    # New Code
+    @http.route(['/my/assignments/expense/<int:batch_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentExpenseView(self,batch_id, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_expenses = request.env['examiner.expenses'].sudo().search([('dgs_batch.id','=',batch_id),('examiner_id','=',examiner.id)])
+        # import wdb; wdb.set_trace()
+        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'expenses','expenses':examiner_expenses}
+        return request.render("bes.examiner_assignment_expenses",vals)

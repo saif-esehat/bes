@@ -64,6 +64,8 @@ bes.admin_access_candidate_invoice_reset_wizard_manager,candidate_invoice_reset_
 bes.admin_access_candidate_inactive_wizard,candidate_inactive_wizard,model_candidate_inactive_wizard,bes.group_bes_admin,1,1,1,1
 
 bes.admin_access_dgs_batches,acess_dgs_batches,model_dgs_batches,bes.group_bes_admin,1,1,1,1
+bes.admin_access_batch_delete_wizard,access_batch_delete_wizard,model_batch_delete_wizard,bes.group_bes_admin,1,1,1,1
+bes.admin_ccmc_admit_card_release,access_ccmc_admit_card_release,model_ccmc_admit_card_release,bes.group_bes_admin,1,1,1,1
 
 bes.group_exam_coordinator_view_gp_stcw,access_candidate_exam_tree_view_gp_stcw,bes.model_gp_candidate_stcw_certificate,bes.group_exam_coordinator,1,0,0,0
 bes.group_exam_coordinator_view_gp_ship,access_candidate_exam_tree_view_gp_ship,bes.model_gp_candidate_ship_visits,bes.group_exam_coordinator,1,0,0,0
@@ -78,8 +80,9 @@ bes.group_ccmc_examiner_assignment_wizard,access_ccmc_examiner_assignment_wizard
 bes.group_ccmc_examiner_assignment_wizard_line,access_ccmc_examiner_assignment_wizard_line,model_ccmc_examiner_assignment_wizard_line,bes.group_exam_coordinator,1,1,1,1
 
 bes.group_examiner_assignment_wizard,access_examiner_assignment_wizard,model_examiner_assignment_wizard,bes.group_exam_coordinator,1,1,1,1
-
 bes.group_examiner_assignment_wizard_line,access_examiner_assignment_wizard_line,model_examiner_assignment_wizard_line,bes.group_exam_coordinator,1,1,1,1
+
+bes.exam_coordinator_reallocate_candidates_wizard,access_reallocate_candidates_wizard,bes.model_reallocate_candidates_wizard,bes.group_exam_coordinator,1,1,1,1
 
 
 bes.group_exam_coordinator_oral_prac_duty_course_subject,access_course_master_subject,bes.model_course_master_subject,bes.group_exam_coordinator,1,0,0,0
@@ -122,6 +125,8 @@ bes.access_attempt_wise_report_user,access_attempt_wise_report_user,model_attemp
 bes.access_summarised_gp_repeater_report_manager,access_summarised_gp_repeater_report_manager,bes.model_summarised_gp_repeater_report,group_bes_report,1,1,1,1
 bes.admin_access_repeater_admit_card,access_repeater_admit_card,bes.model_release_admit_card,bes.group_bes_admin,1,1,1,1
 bes.admin_acces_batch_pop_up,acces_batch_pop_up,bes.model_batch_pop_up_wizard,bes.group_bes_admin,1,1,1,1
+bes.admin_gp_admit_card_release,acces_gp_admit_card_release,bes.model_gp_admit_card_release,bes.group_bes_admin,1,1,1,1
+
 
 
 bes.access_sep_batches,access_sep_batches,bes.model_sep_batches,base.group_user,1,1,1,1
