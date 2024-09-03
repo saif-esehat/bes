@@ -3769,10 +3769,8 @@ class CcmcAdmitCardRelease(models.TransientModel):
                 # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
             else:
                 candidates.write({'hold_admit_card':False})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+" but the exam center is not set"    
-
-
-            message = "CCMC Admit Card Released for "+str(len(exam_ids))+ " Candidates"
+            
+            message = "CCMC Admit Card Released for the "+str(len(exam_ids))+" Candidates"  
 
         # Return a notification
         return {
