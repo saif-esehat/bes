@@ -132,7 +132,7 @@
                     <tr>
                         <th class="text-left">Batch</th>
                         <th class="text-left">Action</th>
-
+                        <th class="text-left">View Expense</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -144,6 +144,9 @@
                             </td>
                             <td class="text-left">
                                <a t-attf-href="/my/assignments/batches/{{batch.id}}">View</a>
+                            </td>
+                            <td class="text-left">
+                               <a t-attf-href="/my/assignments/expense/{{batch.id}}">View</a>
                             </td>
                         </tr>
                     </t>
@@ -244,6 +247,7 @@
             </t>
         </t>
     </template>
+
 
 
     <template id="examiner_assignment_candidate_list" name="Candidates">
@@ -1224,6 +1228,136 @@
                     </div>
                 </div>
             </div>
+        </t>
+    </template>
+
+    <template id="examiner_assignment_expenses" name="Institutes">
+        <script>
+                                    $(document).ready(function () {
+                                        $('#uploadBtn').on('click', function () {
+                                            // Show the overlay and loader when the upload button is clicked
+                                            $('#loader-overlay').show();
+                                        });
+                                    });
+        </script>
+        <style>
+                                /* CSS to style the loader and overlay */
+                                    #loader-overlay {
+                                        display: none;
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
+                                    }
+
+                                    #loader {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        /* Additional styling for the loader itself */
+                                        /* Adjust as needed */
+                                    }
+        </style>
+
+        <t t-call="portal.portal_layout">
+            <h2>Expense Report Form</h2>
+            <br/>
+                <label style="font-weight: bold;" class="form-label">Status :</label>
+                <t t-if="expenses.state == 'draft'">
+                    <span style="font-size:15px" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success-light" 
+                      name="state">Draft</span>
+                </t>
+                <t t-if="expenses.state == 'ec_approval'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-warning" 
+                      name="state">EC Approval</span>
+                </t>
+                <t t-if="expenses.state == 'ceo_approval'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success" 
+                      name="state">CEO Approval</span>
+                </t>
+                <t t-if="expenses.state == 'approved'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success" 
+                      name="state">Approved</span>
+                </t>
+                <!-- <t t-if="expenses.state == 'done'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success" 
+                      name="state">Paid</span>
+                </t> 
+                <t t-if="expenses.state == 'cancel'">
+                    <span style="font-size:15px; color:white;" 
+                      class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-danger" 
+                      name="state">Refused</span>
+                </t> -->
+            <br/>
+            <br/>
+
+            <div class="form-row" >
+                <div class="form-group" style="display: inline-block; width: 45%;">
+                    <strong for="examiner" class="form-label">Examiner:</strong>
+                    <br/>
+                    <span ><t t-esc="expenses.examiner_id.name"/></span>
+                </div>
+
+                <div class="form-group" style="display: inline-block; width: 45%;">
+                    <strong for="dgs_batch" class="form-label">DGS Batch:</strong>
+                    <br/>
+                    <span ><t t-esc="expenses.dgs_batch.batch_name"/></span>
+                </div>
+            </div>
+
+
+            <!-- <div class="table-responsive border rounded border-top-0 ">
+                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                
+                    <thead>
+                        <tr>
+                            <th class="text-left">Institute</th>
+                            <th class="text-left">Exam Type</th>
+                            <th class="text-left">Exam Date</th>
+                            <th class="text-left">No of Candidates</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <t t-foreach="expenses.assignment_expense_ids.assignment" t-as="assignment">
+                            <tr>
+                                <td class="text-left">
+                                    <t t-out="assignment.institute_id.name" />
+                                </td>
+                                <td class="text-left">
+                                    <t t-if="assignment.exam_type == 'practical_oral'">
+                                        Practical/Oral
+                                    </t>
+                                    <t t-else="assignment.exam_type == 'online'">
+                                        Online
+                                    </t>
+                                </td>
+                                <td class="text-center">
+                                    <t t-if="assignment.exam_type == 'practical_oral'">
+                                        <t t-out="assignment.exam_date.strftime('%d-%m-%y')" />
+                                    </t>
+                                    <t t-else="assignment.exam_type == 'online'">
+                                        <t t-out="assignment.exam_date.strftime('%d-%m-%y')" />
+                                    </t>
+                                </td>
+                                <td class="text-left">
+                                    <t t-out="len(assignment.marksheets)" />
+                                </td>
+                            </tr>
+                        </t>
+
+                    </tbody>
+                </table> 
+            </div> -->
         </t>
     </template>
 </odoo>

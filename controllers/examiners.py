@@ -2358,3 +2358,18 @@ class ExaminerPortal(CustomerPortal):
                                               'attendance_sheet_uploaded': True})
                 
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
+    
+    # New Code
+    @http.route(['/my/assignments/expense/<int:batch_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentExpenseView(self,batch_id, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_expenses = request.env['examiner.expenses'].sudo().search([('dgs_batch.id','=',batch_id),('examiner_id','=',examiner.id)])
+        # import wdb; wdb.set_trace()
+        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'expenses','expenses':examiner_expenses}
+        return request.render("bes.examiner_assignment_expenses",vals)
