@@ -404,9 +404,9 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     def update_marksheet(self):
             records = self.examiner_lines_ids
             
-            candidate_with_ccmc_oral_prac = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_cookery','=',True),('hold_admit_card','=',False),('ccmc_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')]).ids
-            candidate_with_ccmc_gsk_oral = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_oral','=',True),('hold_admit_card','=',False),('ccmc_gsk_oral_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')]).ids
-            candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')]).ids
+            candidate_with_ccmc_oral_prac = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_cookery','=',True),('hold_admit_card','=',False),('ccmc_oral_prac_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+            candidate_with_ccmc_gsk_oral = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_oral','=',True),('hold_admit_card','=',False),('ccmc_gsk_oral_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+            candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
 
         
             examiners_ccmc_prac_oral = records.filtered(lambda r: r.subject.name == 'CCMC' and r.exam_type == 'practical_oral').ids
@@ -636,20 +636,20 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
             # import wdb;wdb.set_trace() 
-            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_cookery','=',True),('hold_admit_card','=',False),('ccmc_oral_prac_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')])
+            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_cookery','=',True),('hold_admit_card','=',False),('ccmc_oral_prac_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
             
     
     @api.depends('institute_id')
     def _compute_ccmc_gsk_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_oral','=',True),('hold_admit_card','=',False),('ccmc_gsk_oral_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')])
+            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_oral','=',True),('hold_admit_card','=',False),('ccmc_gsk_oral_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     @api.depends('institute_id')
     def _compute_ccmc_online_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_online_candidates = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('ccmc_candidate.fees_paid','=','yes')])
+            record.ccmc_online_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
 
 
 class CCMCExaminerAssignmentLineWizard(models.TransientModel):
@@ -703,15 +703,15 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         records = self.examiner_lines_ids
         unique_exam_dates = list(set(record.exam_date for record in records))
         
-        candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
-        candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
-        candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',False),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
+        candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+        candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+        candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',False),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         
         print(candidate_with_mek)
         
-        candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
-        candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',False),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
-        candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',False),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')]).ids
+        candidate_with_gsk_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+        candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',False),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+        candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',False),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
 
 
         examiners_gsk = records.filtered(lambda r: r.subject.name == 'GSK' and r.exam_type == 'practical_oral').ids
@@ -1079,22 +1079,23 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     def _compute_gsk_prac_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
+            record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
 
     @api.depends('institute_id')
     def _compute_mek_prac_oral_candidates(self):
         for record in self:
-            record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
-
-
+            record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+    
     @api.depends('institute_id')
     def _compute_gsk_online_candidates(self):
         for record in self:
-            record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',False),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
+            record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+    
     @api.depends('institute_id')
     def _compute_mek_online_candidates(self):
         for record in self:
-            record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',False),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed'),('admit_card_status','=','issued'),('gp_candidate.fees_paid','=','yes')])
+    
+            record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     #CCMC Course
     
     

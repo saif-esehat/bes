@@ -1585,7 +1585,7 @@ class ExaminerPortal(CustomerPortal):
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().browse(assignment_id)
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
 
@@ -1641,6 +1641,13 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
+        
+        marks_values_5 = [1,2,3,4,5]
+        marks_values_6 = [1,2,3,4,5,6]
+        marks_values_8 = [1,2,3,4,5,6,7,8]
+        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Hygiene & Grooming \n 10 Marks', 
@@ -1711,12 +1718,7 @@ class ExaminerPortal(CustomerPortal):
             ccmc_cookery_bakery_sheet.write(f'N{row_num}', '', dropdown_format)
             ccmc_cookery_bakery_sheet.write(f'O{row_num}', '', dropdown_format)        
         
-        marks_values_5 = [1,2,3,4,5]
-        marks_values_6 = [1,2,3,4,5,6]
-        marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_9 = [1,2,3,4,5,6,7,8,9]
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
         
         ccmc_cookery_bakery_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
         ccmc_cookery_bakery_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
@@ -1825,7 +1827,7 @@ class ExaminerPortal(CustomerPortal):
 
         date = marksheets[0].examiners_id.exam_date
         
-        file_name = examiner.name+"-CCMC Practical-"+str(date)+".xlsx"
+        file_name = examiner_assignments.examiner.name+"-CCMC Practical-"+str(date)+".xlsx"
 
 
         # Generate a response with the Excel file
@@ -1850,7 +1852,7 @@ class ExaminerPortal(CustomerPortal):
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().browse(assignment_id)
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
 
@@ -1985,7 +1987,7 @@ class ExaminerPortal(CustomerPortal):
 
         date = marksheets[0].examiners_id.exam_date
         
-        file_name = examiner.name+"-CCMC-GSK-Oral-"+str(date)+".xlsx"
+        file_name = examiner_assignments.examiner.name+"-CCMC-GSK-Oral-"+str(date)+".xlsx"
 
 
         # Generate a response with the Excel file
