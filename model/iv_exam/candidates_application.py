@@ -63,7 +63,7 @@ class CandidatesApplication(models.Model):
     idendification = fields.Char("b) Identification Mark", tracking=True)
 
     number = fields.Char(string="Number")
-    certificate_compentency = fields.Binary(string="Certificate of Compentency")
+    # certificate_compentency = fields.Binary(string="Certificate of Compentency")
     grade1 = fields.Char(string="Grade")
     where_issued = fields.Char(string="Where Issued")
     date_of_issue = fields.Date(string="Date of Issue")
@@ -121,6 +121,7 @@ class CandidatesApplication(models.Model):
 
     application_eligible = fields.Selection([
         ('eligible', 'Eligible'),
+        ('hold', 'Hold'),
         ('not_eligible', 'Not Eligible'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
