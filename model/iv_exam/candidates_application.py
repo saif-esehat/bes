@@ -145,9 +145,10 @@ class CandidatesApplication(models.Model):
             '2CM': [],
             'SER': [],
             'ME': [],
-            'FED': [],
-            'SED': []
+            '1ED': [],
+            '2ED': []
         }
+        # import wdb; wdb.set_trace(); 
 
         # Group candidates by their grade
         for candidate in self:
@@ -155,20 +156,37 @@ class CandidatesApplication(models.Model):
                 if candidate.grade in candidates_by_grade:
                     candidates_by_grade[candidate.grade].append(candidate)
 
-        # Assign roll numbers and create iv.candidates records
-        for grade in ['1CM', '2CM', 'SER', 'ME', 'FED', 'SED']:
+        # Assign roll numbers and create/update iv.candidates records
+        for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
                 roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{count}"
                 candidate.sudo().write({'roll_no': roll_no})
-                self.env['iv.candidates'].sudo().create({
-                    'roll_no': roll_no,
-                    'name': candidate.name,
-                    'batch_id': candidate.batch.id,
-                    'dob': candidate.dob,
-                    'email': candidate.email,
-                    'phone': candidate.mobile
-                })
+                
+                # Check if the candidate with the same indos_no already exists
+                existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
+                
+                if existing_record:
+                    # Update the existing record
+                    existing_record.sudo().write({
+                        'roll_no': roll_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile
+                    })
+                else:
+                    # Create a new record
+                    self.env['iv.candidates'].sudo().create({
+                        'roll_no': roll_no,
+                        'indos_no': candidate.indos_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile
+                    })
                 count += 1
 
         return

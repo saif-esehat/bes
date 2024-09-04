@@ -153,7 +153,11 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 30px;">
-                            <strong style="text-decoration: underline;">Examination Date:- </strong><strong><t t-esc="o.examination_date.strftime('%d %B %Y')"/></strong>
+                            <strong style="text-decoration: underline;">Examination Date:- </strong><strong>
+                            <t t-if="o.examination_date">
+                                <t t-esc="o.examination_date.strftime('%d %B %Y')"/>
+                            </t>
+                            </strong>
                         </td>
                     </tr>
                     <tr>
@@ -169,11 +173,11 @@
                             In-Charge, IV- Examination, BES
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 5px;">
                             <b> . . . . . . . . . . . . . . . . . . . . . . . .Please tear it away from here. . . . . . . . . . . . . . . . . . . . . . </b>
                         </td>
-                    </tr>
+                    </tr> -->
                 <!-- </t> -->
             </table>
          </t>
