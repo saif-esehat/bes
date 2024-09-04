@@ -122,9 +122,10 @@ class CandidatesApplication(models.Model):
     application_eligible = fields.Selection([
         ('eligible', 'Eligible'),
         ('not_eligible', 'Not Eligible'),
+        ('hold', 'Hold'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
-    hold = fields.Char(string="Hold")
+    # hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
     
     @api.onchange('application_date')

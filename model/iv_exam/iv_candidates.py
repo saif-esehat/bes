@@ -65,4 +65,8 @@ class IVCandidates(models.Model):
             if not record.examination_date:
                 raise ValidationError("Examination date must be filled.")
 
+    def action_print_bulk_allotment(self):
+        # Logic to handle the printing of bulk allotment data
+        return self.env.ref('bes.iv_candidat_admit_card_action').report_action(self)
+
    
