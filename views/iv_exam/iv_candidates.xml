@@ -16,7 +16,7 @@
         <field name="name">iv.candidates.form</field>
         <field name="model">iv.candidates</field>
         <field name="arch" type="xml">
-            <form string="Sep Candidate">
+            <form string="IV Candidate">
                 <sheet>
 
                             <!-- Candidate Photo at the top-left corner with widget -->
@@ -60,7 +60,9 @@
         <field name="model">iv.candidates</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="certificate_no" />
+            <header>
+                <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
+            </header>                <field name="certificate_no" />
                 <field name="roll_no" />
                 <field name="name"/>
                 <field name="ranking_name" />
