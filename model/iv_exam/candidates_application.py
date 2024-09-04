@@ -133,7 +133,7 @@ class CandidatesApplication(models.Model):
         ('not_eligible', 'Not Eligible'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
-    hold = fields.Char(string="Hold")
+    # hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
 
 

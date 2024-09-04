@@ -16,7 +16,7 @@
         <field name="name">iv.candidates.form</field>
         <field name="model">iv.candidates</field>
         <field name="arch" type="xml">
-            <form string="Sep Candidate">
+            <form string="IV Candidate">
                 <sheet>
                     <div class="oe_button_box" name="button_box"  >
                         <button string="Written Exams" name="open_written_exams" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
@@ -65,7 +65,9 @@
         <field name="model">iv.candidates</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="certificate_no" />
+            <header>
+                <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
+            </header>                <field name="certificate_no" />
                 <field name="roll_no" />
                 <field name="name"/>
                 <field name="ranking_name" />

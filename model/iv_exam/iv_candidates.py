@@ -71,4 +71,10 @@ class IVCandidates(models.Model):
 
     def open_oral_exams(self):
         return
+    
+    
+    def action_print_bulk_allotment(self):
+        # Logic to handle the printing of bulk allotment data
+        return self.env.ref('bes.iv_candidat_admit_card_action').report_action(self)
+
    
