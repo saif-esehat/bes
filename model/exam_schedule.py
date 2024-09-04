@@ -2171,6 +2171,7 @@ class ExamOralPracticalExaminers(models.Model):
             'res_model': 'exam.type.oral.practical.examiners.marksheet',
             'views': views,
             'target': 'current',
+            'groups': 'bes.group_exam_coordinator',
         }
     
 
