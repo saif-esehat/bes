@@ -22,7 +22,7 @@
                             style="width:100%; border: 1px solid black;padding:10px; text-align:center; vertical-align: center;">
                             <th style="white-space: nowrap;">
                                 <span style="text-align:center">
-                                    Online Attendance Sheet CCMC Ratinga
+                                    Online Attendance Sheet CCMC Rating
                                 </span>
                             </th>
                         </tr>
@@ -53,7 +53,7 @@
                         <th style="border: 1px solid black; padding:6px;">Name of Candidate</th>
                         <th style="border: 1px solid black; padding:6px;">INDoS No.</th>
                         <th style="border: 1px solid black; padding:6px;">Dob</th>
-                        <th style="border: 1px solid black; padding:6px;">Sign</th>
+                        <th style="border: 1px solid black; padding:6px; width: 100px;">Sign</th>
                     </tr>
                     <t t-foreach="o.marksheets" t-as="candidate">
                         <t t-set="index" t-value="index + 1" />
@@ -77,7 +77,7 @@
                             <td style="border: 1px solid black; padding:6px; width: 100px;">
                                 <span t-field="candidate.ccmc_marksheet.ccmc_candidate.dob" />
                             </td>
-                            <td style="border: 1px solid black; padding:6px;width: 150px;"></td>
+                            <td style="border: 1px solid black; padding:6px;"></td>
                         </tr>
                     </t>
                 </table>
