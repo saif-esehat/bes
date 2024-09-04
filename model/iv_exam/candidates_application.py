@@ -64,7 +64,15 @@ class CandidatesApplication(models.Model):
 
     number = fields.Char(string="Number")
     # certificate_compentency = fields.Binary(string="Certificate of Compentency")
-    grade1 = fields.Char(string="Grade")
+    grade1 = fields.Selection([
+        ('first', 'First Class Master'),
+        ('second', 'Second Class Master'),
+        ('serang', 'Serang'),
+        ('inland', 'Inland Vessel'),
+        ('first_engine', 'First Class Engine Driver'),
+        ('second_engine', 'Second Class Engine Driver'),
+
+        ], string='Grade')
     where_issued = fields.Char(string="Where Issued")
     date_of_issue = fields.Date(string="Date of Issue")
     suspended = fields.Char(string="if at any time suspended or cancelled, state by which court authority")
@@ -127,6 +135,11 @@ class CandidatesApplication(models.Model):
 
     hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
+
+
+    def assign_rollno(self):
+        active_ids = self.env.context.get('active_ids')
+        return
     
     @api.onchange('application_date')
     def _onchange_application_date(self):

@@ -18,6 +18,11 @@
         <field name="arch" type="xml">
             <form string="Sep Candidate">
                 <sheet>
+                    <div class="oe_button_box" name="button_box"  >
+                        <button string="Written Exams" name="open_written_exams" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+                        <button string="Oral Exams" name="open_oral_exams" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+
+                    </div>
 
                             <!-- Candidate Photo at the top-left corner with widget -->
                             <field name="photo" widget="image" class="oe_avatar" />

@@ -17,6 +17,7 @@
             <field name="arch" type="xml">
                 <form>
                    <sheet>
+                   
                      
                     
                     <group>
@@ -546,6 +547,9 @@
         <field name="model">candidates.application</field>
         <field name="arch" type="xml">
             <tree>
+                <header>
+                    <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
+                </header>
                 <field name="name"/>
                 <field name="application_no"/>
                 <field name="roll_no"/>
