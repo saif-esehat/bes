@@ -3799,7 +3799,7 @@ class CCMCExam(models.Model):
 
     exam_region = fields.Many2one('exam.center',string='Exam Center',store=True)
 
-    exam_id = fields.Char(string="Roll No", copy=False, readonly=True,tracking=True)
+    exam_id = fields.Char(string="Roll No", copy=False, readonly=True)
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     ccmc_candidate = fields.Many2one("ccmc.candidate","CCMC Candidate",tracking=True)
