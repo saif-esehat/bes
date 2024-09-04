@@ -23,6 +23,7 @@ class CandidatesApplication(models.Model):
     application_no = fields.Char(string="Application No.")
     indos_no = fields.Char(string="INDOs No")
     roll_no = fields.Char(string="Roll No.")
+    batch = fields.Many2one('iv.batches')
 
 
     candidate_image = fields.Binary(string="Candidate Image")
@@ -31,12 +32,12 @@ class CandidatesApplication(models.Model):
     competency_deck = fields.Char(string="a) Competency (Deck/Engine)")
     # grade = fields.Char(string="b) Grade")
     grade = fields.Selection([
-        ('first', 'First Class Master'),
-        ('second', 'Second Class Master'),
-        ('serang', 'Serang'),
-        ('inland', 'Inland Vessel'),
-        ('first_engine', 'First Class Engine Driver'),
-        ('second_engine', 'Second Class Engine Driver'),
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
 
         ], string='Grade')
     
@@ -65,12 +66,12 @@ class CandidatesApplication(models.Model):
     number = fields.Char(string="Number")
     # certificate_compentency = fields.Binary(string="Certificate of Compentency")
     grade1 = fields.Selection([
-        ('first', 'First Class Master'),
-        ('second', 'Second Class Master'),
-        ('serang', 'Serang'),
-        ('inland', 'Inland Vessel'),
-        ('first_engine', 'First Class Engine Driver'),
-        ('second_engine', 'Second Class Engine Driver'),
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
 
         ], string='Grade')
     where_issued = fields.Char(string="Where Issued")
@@ -138,7 +139,38 @@ class CandidatesApplication(models.Model):
 
 
     def assign_rollno(self):
-        active_ids = self.env.context.get('active_ids')
+        count = 1
+        candidates_by_grade = {
+            '1CM': [],
+            '2CM': [],
+            'SER': [],
+            'ME': [],
+            'FED': [],
+            'SED': []
+        }
+
+        # Group candidates by their grade
+        for candidate in self:
+            if candidate.application_eligible == 'eligible':
+                if candidate.grade in candidates_by_grade:
+                    candidates_by_grade[candidate.grade].append(candidate)
+
+        # Assign roll numbers and create iv.candidates records
+        for grade in ['1CM', '2CM', 'SER', 'ME', 'FED', 'SED']:
+            candidates = candidates_by_grade[grade]
+            for candidate in candidates:
+                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{count}"
+                candidate.sudo().write({'roll_no': roll_no})
+                self.env['iv.candidates'].sudo().create({
+                    'roll_no': roll_no,
+                    'name': candidate.name,
+                    'batch_id': candidate.batch.id,
+                    'dob': candidate.dob,
+                    'email': candidate.email,
+                    'phone': candidate.mobile
+                })
+                count += 1
+
         return
     
     @api.onchange('application_date')

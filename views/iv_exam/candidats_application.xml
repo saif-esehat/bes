@@ -24,6 +24,8 @@
                       <group>
                         <field name="application_no" placeholder="Application No" style="width: 50%;"/>
                         <field name="indos_no" placeholder="INDOS No" style="width: 50%;"/>
+                        <field name="batch" placeholder="INDOS No" style="width: 50%;"/>
+
                        </group>
                        <group>
                         <field name="roll_no" placeholder="Roll No" style="width: 50%;"/>

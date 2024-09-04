@@ -22,7 +22,15 @@ class IVCandidates(models.Model):
     ranking_name = fields.Char(string="Name of the Rating’s")
     certificate_no = fields.Char(string="Certificate No.")
     roll_no = fields.Char(string="Roll No.")
-    grade_applied = fields.Char(string="Grade")
+    grade_applied = fields.Selection([
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
+
+        ], string='Grade')
 
     dob = fields.Date(string="Date of Birth")
     photo = fields.Binary(string="Candidate Photo")
@@ -40,11 +48,11 @@ class IVCandidates(models.Model):
     certificate_valid_date = fields.Date(string="Certificate Valid Date")
 
 
-    @api.constrains('certificate_valid_date')
-    def _check_certificate_valid_date(self):
-        for record in self:
-            if not record.certificate_valid_date:
-                raise ValidationError("The Certificate Valid Date must be filled.")
+    # @api.constrains('certificate_valid_date')
+    # def _check_certificate_valid_date(self):
+    #     for record in self:
+    #         if not record.certificate_valid_date:
+    #             raise ValidationError("The Certificate Valid Date must be filled.")
 
     @api.constrains('batch_id')
     def _check_batch_id(self):
@@ -59,11 +67,11 @@ class IVCandidates(models.Model):
             if not record.dob:
                 raise ValidationError("DOB must be filled.")
 
-    @api.constrains('examination_date')
-    def _check_examination_date(self):
-        for record in self:
-            if not record.examination_date:
-                raise ValidationError("Examination date must be filled.")
+    # @api.constrains('examination_date')
+    # def _check_examination_date(self):
+    #     for record in self:
+    #         if not record.examination_date:
+    #             raise ValidationError("Examination date must be filled.")
             
     def open_written_exams(self):
         return
