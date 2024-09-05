@@ -195,6 +195,8 @@ class DGSBatch(models.Model):
     gp_plot_image = fields.Binary(string='Pass Percentage Graph')
     ccmc_plot_image = fields.Binary(string='Pass Percentage Graph')
     
+    active = fields.Boolean(string="Active",default=True)
+    
     report_status = fields.Selection([
         ('pending', 'Pending'),
         ('generated', 'Generated'),
