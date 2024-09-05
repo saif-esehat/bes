@@ -137,6 +137,29 @@ class CandidatesApplication(models.Model):
     # hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
 
+    application_type = fields.Selection([
+        ('fresher', 'Fresher'),
+        ('repeater', 'Repeater'),  
+        ], string='Application Type', default='fresher')
+    
+    written = fields.Boolean("Written" ,default=True)
+    oral = fields.Boolean("Oral",default=True)
+
+    @api.onchange('application_type')
+    def default_exams_check(self):
+        for record in self:
+            if record.application_type == 'fresher':
+                record.written = True
+                record.oral = True
+            else:
+                record.written = False
+                record.oral = False
+
+
+
+
+
+
 
     def assign_rollno(self):
         count = 1
@@ -190,6 +213,37 @@ class CandidatesApplication(models.Model):
                 count += 1
 
         return
+    
+
+    @api.constrains('batch')
+    def _check_batch(self):
+        for record in self:
+            if not record.batch:
+                raise ValidationError("The Batch must be filled.")
+    
+    @api.constrains('dob')
+    def _check_dob(self):
+        for record in self:
+            if not record.dob:
+                raise ValidationError("The Date of Birth must be filled.")
+            
+    @api.constrains('grade')
+    def _check_grade(self):
+        for record in self:
+            if not record.grade:
+                raise ValidationError("The grade must be filled.")
+            
+    @api.constrains('indos_no')
+    def _check_indos_no(self):
+        for record in self:
+            if not record.indos_no:
+                raise ValidationError("The indos no must be filled.")
+            
+    @api.constrains('name')
+    def _check_name(self):
+        for record in self:
+            if not record.name:
+                raise ValidationError("The name must be filled.")
     
     @api.onchange('application_date')
     def _onchange_application_date(self):

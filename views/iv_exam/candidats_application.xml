@@ -24,7 +24,7 @@
                       <group>
                         <field name="application_no" placeholder="Application No" style="width: 50%;"/>
                         <field name="indos_no" placeholder="INDOS No" style="width: 50%;"/>
-                        <field name="batch" placeholder="INDOS No" style="width: 50%;"/>
+                        <field name="batch" placeholder="Batch" style="width: 50%;"/>
 
                        </group>
                        <group>
@@ -35,8 +35,8 @@
                      <field name="candidate_image" widget="image" class="oe_avatar" />
                       
                        
-                    <strong>Notes:-</strong><p><strong>(i)</strong> Before filling in the required particulars, the candidate should read carefully the Notice, Eligibility Criteria, and Declaration in (B).</p>
-                    <p><strong>(ii)</strong> Entire form is to be filled in 'CAPITAL LETTERS' only.</p>
+                    <!-- <strong>Notes:-</strong><p><strong>(i)</strong> Before filling in the required particulars, the candidate should read carefully the Notice, Eligibility Criteria, and Declaration in (B).</p>
+                    <p><strong>(ii)</strong> Entire form is to be filled in 'CAPITAL LETTERS' only.</p> -->
                     <group >
                      <div>
                         <div style="margin-bottom: 5px;">
@@ -50,6 +50,10 @@
                     <h4> 1. Certificate now required (grade applying for) </h4>
                      <group>
                         <field name="grade"  style="width: 50%;"/>
+                        <field name="application_type"  style="width: 50%;"/>
+                        <field name="written"  style="width: 50%;"/>
+                        <field name="oral"  style="width: 50%;"/>
+
                     </group>
                     <h4> 2. Details of the Candidate </h4>
                     
