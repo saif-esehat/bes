@@ -197,7 +197,9 @@ class CandidatesApplication(models.Model):
                         'batch_id': candidate.batch.id,
                         'dob': candidate.dob,
                         'email': candidate.email,
-                        'phone': candidate.mobile
+                        'phone': candidate.mobile,
+                        'grade_applied': candidate.grade,
+
                     })
                 else:
                     # Create a new record
@@ -208,11 +210,21 @@ class CandidatesApplication(models.Model):
                         'batch_id': candidate.batch.id,
                         'dob': candidate.dob,
                         'email': candidate.email,
-                        'phone': candidate.mobile
+                        'phone': candidate.mobile,
+                        'grade_applied': candidate.grade
                     })
                 count += 1
 
         return
+    
+    @api.model
+    def create(self, values):
+        existing_record = self.env['candidates.application'].sudo().search([('indos_no', '=', values.get('indos_no'))], limit=1)
+        
+        if existing_record:
+            raise ValidationError("Candidate with current INDOS no already exists.")
+        
+        return super(CandidatesApplication, self).create(values)
     
 
     @api.constrains('batch')
