@@ -17,12 +17,15 @@
             <field name="arch" type="xml">
                 <form>
                    <sheet>
+                   
                      
                     
                     <group>
                       <group>
                         <field name="application_no" placeholder="Application No" style="width: 50%;"/>
                         <field name="indos_no" placeholder="INDOS No" style="width: 50%;"/>
+                        <field name="batch" placeholder="Batch" style="width: 50%;"/>
+
                        </group>
                        <group>
                         <field name="roll_no" placeholder="Roll No" style="width: 50%;"/>
@@ -32,8 +35,8 @@
                      <field name="candidate_image" widget="image" class="oe_avatar" />
                       
                        
-                    <strong>Notes:-</strong><p><strong>(i)</strong> Before filling in the required particulars, the candidate should read carefully the Notice, Eligibility Criteria, and Declaration in (B).</p>
-                    <p><strong>(ii)</strong> Entire form is to be filled in 'CAPITAL LETTERS' only.</p>
+                    <!-- <strong>Notes:-</strong><p><strong>(i)</strong> Before filling in the required particulars, the candidate should read carefully the Notice, Eligibility Criteria, and Declaration in (B).</p>
+                    <p><strong>(ii)</strong> Entire form is to be filled in 'CAPITAL LETTERS' only.</p> -->
                     <group >
                      <div>
                         <div style="margin-bottom: 5px;">
@@ -46,8 +49,11 @@
                     </group>
                     <h4> 1. Certificate now required (grade applying for) </h4>
                      <group>
-                        <field name="competency_deck"  style="width: 50%;"/>
                         <field name="grade"  style="width: 50%;"/>
+                        <field name="application_type"  style="width: 50%;"/>
+                        <field name="written"  style="width: 50%;"/>
+                        <field name="oral"  style="width: 50%;"/>
+
                     </group>
                     <h4> 2. Details of the Candidate </h4>
                     
@@ -103,12 +109,12 @@
                     </group>
                      <h4> 4. Particulars of all previous Certificate Copies (if any) to be Submitted </h4>
                      <group>
-                        <group >
+                        <group>
                             <field name="number" />
                             <field name="grade1" />
                         </group>
                         <group>
-                            <field name="certificate_compentency" />
+                            <!-- <field name="certificate_compentency" /> -->
                             <field name="where_issued" />
                             <field name="date_of_issue" />
                         
@@ -315,7 +321,7 @@
                     <group></group>
                    <notebook>
                            
-                        <page string="Cheak Box List">
+                        <page string="Check List">
                             <label for="application_from" />
                             <group>
                             
@@ -326,7 +332,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('application_from', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_1" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_1"/>
@@ -344,7 +350,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attached_photo', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_2" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_2"/>
@@ -362,7 +368,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('origanal_se_certificate', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_3" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_3"/>
@@ -380,7 +386,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('apply_grade', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_4" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_4"/>
@@ -398,7 +404,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('notarize_affi', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_5" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_5"/>
@@ -417,7 +423,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_document', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_6" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_6"/>
@@ -435,7 +441,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_photo_ed', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_7" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_7"/>
@@ -453,7 +459,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_photo_dob', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_8" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_8"/>
@@ -471,7 +477,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_photo_residential', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_9" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_9"/>
@@ -490,7 +496,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_photo_security', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_10" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_10"/>
@@ -508,7 +514,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_photo_medical', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_11" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_11"/>
@@ -526,7 +532,7 @@
                                 </div>
                                 </group>
 
-                                <group attrs="{'invisible': [('attched_photo_idproof', '=', 'yes')]}">
+                                <group>
                                     <label for="remark_id_12" string="Select Remarks"/>
                                     <div>
                                         <field name="remark_id_12"/>
@@ -548,6 +554,9 @@
         <field name="model">candidates.application</field>
         <field name="arch" type="xml">
             <tree>
+                <header>
+                    <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
+                </header>
                 <field name="name"/>
                 <field name="application_no"/>
                 <field name="roll_no"/>
