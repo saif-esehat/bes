@@ -368,7 +368,7 @@
                                 <field name="course" required="1" invisible="1"  />
                                 <field name="exam_type" invisible="0"  />
                                 <field name="exam_region" invisible="1"/>
-                                <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]"  />
+                                <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]" attrs="{'readonly': [('all_marksheet_confirmed', '=', 'done')]}" />
                                 <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
                                 <field name="team_lead" invisible="1"/>
                                 <field name="exam_date"/>
@@ -399,6 +399,7 @@
                                 <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
                                 <field name="marksheet_image" widget="binary" filename="marksheet_image_name" />
                                 <field name="marksheet_uploaded"/>
+                                <field name="all_marksheet_confirmed" invisible="1"/>
                             </tree>
                         </field>
 

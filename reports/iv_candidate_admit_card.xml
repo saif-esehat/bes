@@ -18,10 +18,15 @@
         file="bes.reports_iv_candidate_certificates"/>
 
 <!-- IV Candidate Admit Card -->
-<template id="reports_iv_candidate_admit_card">
+<!-- <template id="reports_iv_candidate_admit_card">
         <t t-call="web.basic_layout">
+           <div class="col-md-6">
+            <table style="width:243pt; height:153pt; border: 1pt solid black; border-collapse:separate; border-radius:8pt; margin:5pt">
+            
             <div class="page">
+               
                 <t t-foreach="docs" t-as="o">
+                
                     <div class="header">
                         <div class="container" style="text-align: center; font-size: 24px; margin-bottom: 2px;">
                             <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
@@ -97,9 +102,87 @@
                  <b style="font-size:20px;">. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Please tear it away from here. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</b>
             </div>
 
-          
+           </table>
+         </div>
                
         </t>
+</template> -->
+<template id="reports_iv_candidate_admit_card">
+    <t t-call="web.basic_layout">
+        <div class="page">
+        <t t-foreach="docs" t-as="o">`
+            <table align="center" style="width:400pt; height:130pt; border: 1pt solid black; border-collapse: separate; border-radius:8pt; margin: auto; padding: 10pt;">
+                <!-- <t t-foreach="docs" t-as="o"> -->
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-size: 15px; padding-bottom: 2px;">
+                            <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
+                            <strong>ADMIT CARD – IV Examination MMB for FRESH Candidate</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="position: relative; text-align: left; padding: 5pt;">
+                            <img t-attf-src="data:image/png;base64,{{o.photo}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px; position: absolute; top: 0px; right: 0px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 5mm;">
+                            Name of the Candidate: <strong><t t-esc="o.name"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 14px; padding-bottom: 5mm;">
+                            Roll No: <strong><t t-esc="o.roll_no"/></strong>
+                        </td>
+                        <td style="font-size: 14px; padding-bottom: 5mm;">
+                            DOB: <strong><t t-esc="o.dob.strftime('%d-%m-%Y')"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
+                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
+                            Indos No: <strong><t t-esc="o.indos_no"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 30px;">
+                            <strong style="text-decoration: underline;">Examination Date:- </strong><strong>
+                            <t t-if="o.examination_date">
+                                <t t-esc="o.examination_date.strftime('%d %B %Y')"/>
+                            </t>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left; padding-bottom: 10px;">
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_signature}}" style="width: 250px; height: 50px; margin-bottom: 10px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 14px; text-align: left;">
+                            Signature of the Candidate
+                        </td>
+                        <td style="font-size: 14px; text-align: right;">
+                            In-Charge, IV- Examination, BES
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 5px;">
+                            <b> . . . . . . . . . . . . . . . . . . . . . . . .Please tear it away from here. . . . . . . . . . . . . . . . . . . . . . </b>
+                        </td>
+                    </tr> -->
+                <!-- </t> -->
+            </table>
+         </t>
+        </div>
+    </t>
 </template>
 
 

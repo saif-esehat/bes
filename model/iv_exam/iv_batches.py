@@ -26,14 +26,17 @@ class IVBatches(models.Model):
     issue_date = fields.Date(string="Issue Date")
 
     grade_preference = fields.Selection([
-        ('first', 'First Class Master'),
-        ('second', 'Second Class Master'),
-        ('serang', 'Serang'),
-        ('inland', 'Inland Vessel'),
-        ('first_engine', 'First Class Engine Driver'),
-        ('second_engine', 'Second Class Engine Driver'),
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
 
         ], string='Grade')
+    phase_no = fields.Char("Phase No")
+    port = fields.Char("Port")
+
 
 
     @api.constrains('issue_date')

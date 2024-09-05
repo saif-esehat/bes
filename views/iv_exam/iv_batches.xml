@@ -24,7 +24,9 @@
                     <group>
                     <group>
                         <field name="name" placeholder="Enter batch name" style="width: 50%;"/>
-                         <field name="grade_preference" />
+                         <!-- <field name="grade_preference" /> -->
+                        <field name="phase_no" />
+                        <field name="port" />
                        
                     </group>
                     <group>

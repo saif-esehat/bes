@@ -23,6 +23,7 @@ class CandidatesApplication(models.Model):
     application_no = fields.Char(string="Application No.")
     indos_no = fields.Char(string="INDOs No")
     roll_no = fields.Char(string="Roll No.")
+    batch = fields.Many2one('iv.batches')
 
 
     candidate_image = fields.Binary(string="Candidate Image")
@@ -31,12 +32,12 @@ class CandidatesApplication(models.Model):
     competency_deck = fields.Char(string="a) Competency (Deck/Engine)")
     # grade = fields.Char(string="b) Grade")
     grade = fields.Selection([
-        ('first', 'First Class Master'),
-        ('second', 'Second Class Master'),
-        ('serang', 'Serang'),
-        ('inland', 'Inland Vessel'),
-        ('first_engine', 'First Class Engine Driver'),
-        ('second_engine', 'Second Class Engine Driver'),
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
 
         ], string='Grade')
     
@@ -63,8 +64,16 @@ class CandidatesApplication(models.Model):
     idendification = fields.Char("b) Identification Mark", tracking=True)
 
     number = fields.Char(string="Number")
-    certificate_compentency = fields.Binary(string="Certificate of Compentency")
-    grade1 = fields.Char(string="Grade")
+    # certificate_compentency = fields.Binary(string="Certificate of Compentency")
+    grade1 = fields.Selection([
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
+
+        ], string='Grade')
     where_issued = fields.Char(string="Where Issued")
     date_of_issue = fields.Date(string="Date of Issue")
     suspended = fields.Char(string="if at any time suspended or cancelled, state by which court authority")
@@ -121,11 +130,66 @@ class CandidatesApplication(models.Model):
 
     application_eligible = fields.Selection([
         ('eligible', 'Eligible'),
+        ('hold', 'Hold'),
         ('not_eligible', 'Not Eligible'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
-    hold = fields.Char(string="Hold")
+    # hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
+
+
+    def assign_rollno(self):
+        count = 1
+        candidates_by_grade = {
+            '1CM': [],
+            '2CM': [],
+            'SER': [],
+            'ME': [],
+            '1ED': [],
+            '2ED': []
+        }
+        # import wdb; wdb.set_trace(); 
+
+        # Group candidates by their grade
+        for candidate in self:
+            if candidate.application_eligible == 'eligible':
+                if candidate.grade in candidates_by_grade:
+                    candidates_by_grade[candidate.grade].append(candidate)
+
+        # Assign roll numbers and create/update iv.candidates records
+        for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
+            candidates = candidates_by_grade[grade]
+            for candidate in candidates:
+                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{count}"
+                candidate.sudo().write({'roll_no': roll_no})
+                
+                # Check if the candidate with the same indos_no already exists
+                existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
+                
+                if existing_record:
+                    # Update the existing record
+                    existing_record.sudo().write({
+                        'roll_no': roll_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile
+                    })
+                else:
+                    # Create a new record
+                    self.env['iv.candidates'].sudo().create({
+                        'roll_no': roll_no,
+                        'indos_no': candidate.indos_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile
+                    })
+                count += 1
+
+        return
     
     @api.onchange('application_date')
     def _onchange_application_date(self):
