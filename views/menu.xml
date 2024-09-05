@@ -11,12 +11,52 @@
             </field>
         </record>
 
-        <record id="open_ec_gp_exam_schedule" model="ir.actions.act_window">
+        <record id="open_ec_gp_exam_schedule_mek_prac" model="ir.actions.act_window">
             <field name="name">GP Registered Candidate</field>
             <field name="res_model">gp.exam.schedule</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="bes.exam_center_registered_candidate_tree" />
-            <!-- Replace 'module_name' with the actual name of your module -->
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_mek_oral_prac', '=', True),                
+            ]</field>
+            <field name="context">{}</field>
+        </record>
+
+
+        <record id="open_ec_gp_exam_schedule_gsk_prac" model="ir.actions.act_window">
+            <field name="name">GP Registered Candidate</field>
+            <field name="res_model">gp.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_registered_candidate_tree" />
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_gsk_oral_prac', '=', True),                
+            ]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="open_ec_gp_exam_schedule_gsk_online" model="ir.actions.act_window">
+            <field name="name">GP Registered Candidate</field>
+            <field name="res_model">gp.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_registered_candidate_tree" />
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_gsk_online', '=', True),                
+            ]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="open_ec_gp_exam_schedule_mek_online" model="ir.actions.act_window">
+            <field name="name">GP Registered Candidate</field>
+            <field name="res_model">gp.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_registered_candidate_tree" />
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_mek_online', '=', True),                
+            ]</field>
             <field name="context">{}</field>
         </record>
 
@@ -33,6 +73,7 @@
             <field name="name">CCMC Registered Candidate</field>
             <field name="res_model">ccmc.exam.schedule</field>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
             <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
             <!-- Replace 'module_name' with the actual name of your module -->
             <field name="context">{}</field>
@@ -318,20 +359,43 @@
             parent="bes_batch_examiner_duty_menus_group_examiner"
             groups="group_exam_coordinator"
             name="Candidates" />
-
-        <menuitem id="candidate_gp_ec_menu"
+        
+        <menuitem id="candidate_gp_ec_menu_gsk"
             parent="candidate_ec_menu"
             groups="group_exam_coordinator"
-            name="GP Candidates"
-            action="open_ec_gp_exam_schedule"
+            name="GSK Practical/Oral Candidates"
+            action="open_ec_gp_exam_schedule_gsk_prac"
             sequence="1" />
+
+        <menuitem id="candidate_gp_ec_menu_mek"
+            parent="candidate_ec_menu"
+            groups="group_exam_coordinator"
+            name="MEK Practical/Oral Candidates"
+            action="open_ec_gp_exam_schedule_mek_prac"
+            sequence="2" />
+        
+        <menuitem id="candidate_gp_ec_menu_gsk_online"
+            parent="candidate_ec_menu"
+            groups="group_exam_coordinator"
+            name="GSK Online Candidates"
+            action="open_ec_gp_exam_schedule_gsk_online"
+            sequence="3" />
+        
+        <menuitem id="candidate_gp_ec_menu_mek_online"
+            parent="candidate_ec_menu"
+            groups="group_exam_coordinator"
+            name="MEK Online Candidates"
+            action="open_ec_gp_exam_schedule_mek_online"
+            sequence="4" />
+        
+        
 
         <menuitem id="candidate_ccmc_ec_menu"
             parent="candidate_ec_menu"
             groups="group_exam_coordinator"
             name="CCMC Candidates"
             action="open_ec_ccmc_exam_schedule"
-            sequence="2" />
+            sequence="5" />
 
         <record id="gp_repeater_invoices_action" model="ir.actions.act_window">
             <field name="name">GP Repeater Candidate Invoices</field>

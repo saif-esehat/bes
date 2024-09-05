@@ -379,7 +379,7 @@
                     <field name="stcw_criterias"  optional="show" widget="badge" decoration-success= "stcw_criterias == 'passed'" decoration-danger="stcw_criterias == 'pending'"/>
                     <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
                     <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
-                    <field name="absent_status"/>
+                    <field name="absent_status" optional="hide"/>
                     <!-- <field name="stcw_criteria" optional="show"/>
                     <field name="attendance_criteria" optional="show"/>
                     <field name="ship_visit_criteria" optional="show"/> -->
@@ -616,7 +616,7 @@
                     <field name="user_state"  widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
-                    <field name="absent_status"/> 
+                    <field name="absent_status" optional="hide"/> 
                     <field name="result" string="Result Status" decoration-success= "result == 'passed'"  decoration-danger= "result == 'failed'" widget="badge" optional="show"/>
                     <field name="result_status" string="Certificate Status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
                     <field name="state" widget="badge" optional="show" />
