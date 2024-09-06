@@ -972,14 +972,14 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
 
-        marks_values_5 = [1,2,3,4,5]
-        marks_values_6 = [1,2,3,4,5,6]
-        marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_12 = [1,2,3,4,5,6,7,8,9,10,11,12]
-        marks_values_18 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
-        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+        marks_values_5 = [0,1,2,3,4,5]
+        marks_values_6 = [0,1,2,3,4,5,6]
+        marks_values_8 = [0,1,2,3,4,5,6,7,8]
+        marks_values_10 = [0,1,2,3,4,5,6,7,8,9,10]
+        marks_values_12 = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+        marks_values_18 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+        marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         
         gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_25 })
         gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_25 })
@@ -1165,10 +1165,10 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+        marks_values_10 = [0,1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
 
         remarks = ['Absent','Good','Average','Weak']
         
@@ -1451,7 +1451,7 @@ class ExaminerPortal(CustomerPortal):
         
             
         # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        # return request.render("bes.examiner_assignment_candidate_list")
 
 
 
@@ -1642,12 +1642,12 @@ class ExaminerPortal(CustomerPortal):
         # Merge 3 cells over two rows.
         ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
         
-        marks_values_5 = [1,2,3,4,5]
-        marks_values_6 = [1,2,3,4,5,6]
-        marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_9 = [1,2,3,4,5,6,7,8,9]
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_5 = [0,1,2,3,4,5]
+        marks_values_6 = [0,1,2,3,4,5,6]
+        marks_values_8 = [0,1,2,3,4,5,6,7,8]
+        marks_values_9 = [0,1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [0,1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Hygiene & Grooming \n 10 Marks', 
@@ -1939,12 +1939,12 @@ class ExaminerPortal(CustomerPortal):
         for i, code in enumerate(candidate_code):
             ccmc_gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
         
-        marks_values_5 = [1,2,3,4,5]
-        marks_values_6 = [1,2,3,4,5,6]
-        marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_9 = [1,2,3,4,5,6,7,8,9]
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_5 = [0,1,2,3,4,5]
+        marks_values_6 = [0,1,2,3,4,5,6]
+        marks_values_8 = [0,1,2,3,4,5,6,7,8]
+        marks_values_9 = [0,1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [0,1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
         ccmc_gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
         ccmc_gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
