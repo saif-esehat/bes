@@ -893,7 +893,11 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet = workbook.add_worksheet('GSK Oral')
         gsk_practical_sheet = workbook.add_worksheet('GSK Practical')
         
-        locked = workbook.add_format({'locked':True})
+        locked = workbook.add_format({'locked':True,
+                                    'font_size': 14,
+                                    'align': 'center',  # Center align the text
+                                    'valign': 'vcenter',
+                                    'border': 1 })
         unlocked = workbook.add_format({'locked':False})
         # Set the wrap text format
         wrap_format = workbook.add_format({'text_wrap': True})
@@ -905,7 +909,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column('C2:C2',20, unlocked)
         gsk_oral_sheet.set_column('D2:E2',25, unlocked)
         gsk_oral_sheet.set_column('F2:F2',30, unlocked)
-        gsk_oral_sheet.set_column('G:G',15, unlocked)
+        gsk_oral_sheet.set_column('G:G',20, unlocked)
             
         gsk_oral_sheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yy','locked':False})
@@ -917,21 +921,26 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                                 'locked':True,
                                                 'text_wrap': True,
+                                                'border': 1  # Add border to clearly see the cells
                                             })
         
         merge_format = workbook.add_format({
                                                 'bold':     True,
-                                                'align':    'center',
+                                                # 'align':    'center',
                                                 'valign':   'vcenter',
                                                 'font_size': 20,
                                                 'font_color': 'black',
+                                                # 'text_wrap': True,
+                                                'border': 1  # Add border to clearly see the cells
                                             })
+        
         instruction = workbook.add_format({
                                                 'bold':     True,
                                                 # 'align':    'center',
                                                 'valign':   'vcenter',
                                                 'font_size': 10,
                                                 'font_color': 'red',
+                                                # 'text_wrap': True,
                                             })
         # Define a format for the drop-down cells
         dropdown_format = workbook.add_format({
@@ -943,7 +952,13 @@ class ExaminerPortal(CustomerPortal):
                                             })
 
         gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        gsk_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+       
+        gsk_oral_sheet.write("I1:J1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        
+       
+       
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Subject area 1 and 2 and 3 \n Minimum 8 question \n 25 marks',
           'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
@@ -985,7 +1000,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_25 })
         gsk_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_25 })
         
-        remarks = ['Absent','Good','Average','Weak']
+        remarks = [ 'Good','Average','Weak']
         gsk_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': remarks })
 
         # Example lists for candidates and their codes (replace with actual data)
@@ -1120,7 +1135,12 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet = workbook.add_worksheet('MEK Oral')
         mek_practical_sheet = workbook.add_worksheet('MEK Practical')
         
-        locked = workbook.add_format({'locked':True})
+        locked = workbook.add_format({'locked':True,
+                                    'font_size': 14,
+                                    'align': 'center',  # Center align the text
+                                    'valign': 'vcenter',
+                                    'border': 1 })
+        
         unlocked = workbook.add_format({'locked':False})
         # Set the wrap text format
         wrap_format = workbook.add_format({'text_wrap': True})
@@ -1131,7 +1151,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.set_column('B2:B2',10, unlocked)
         mek_oral_sheet.set_column('C2:C2',20, unlocked)
         mek_oral_sheet.set_column('D2:F2',20, unlocked)
-        mek_oral_sheet.set_column('G2:G2',15, unlocked)
+        mek_oral_sheet.set_column('G2:G2',20, unlocked)
         mek_oral_sheet.set_column('H2:H2',15, unlocked)
             
         mek_oral_sheet.protect()
@@ -1144,14 +1164,17 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                                 'locked':True,
                                                 'text_wrap': True,
+                                                'border': 1  # Add border to clearly see the cells
                                             })
         
         merge_format = workbook.add_format({
                                                 'bold':     True,
-                                                'align':    'center',
+                                                # 'align':    'center',
                                                 'valign':   'vcenter',
                                                 'font_size': 20,
                                                 'font_color': 'black',
+                                                # 'text_wrap': True,
+                                                'border': 1  # Add border to clearly see the cells
                                             })
         
         instruction = workbook.add_format({
@@ -1160,17 +1183,20 @@ class ExaminerPortal(CustomerPortal):
                                                 'valign':   'vcenter',
                                                 'font_size': 10,
                                                 'font_color': 'red',
+                                                # 'text_wrap': True,
                                             })
 
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        mek_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        mek_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+        mek_oral_sheet.write("I1:J1", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
         
         marks_values_10 = [0,1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
         marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
 
-        remarks = ['Absent','Good','Average','Weak']
+        remarks = ['Good','Average','Weak']
         
        
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
@@ -1258,7 +1284,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge cells in the first row for the practical sheet
         mek_practical_sheet.merge_range("A1:E1", examiner_assignments.institute_id.name, merge_format)
         mek_practical_sheet.write("F1:G1",examiner.name,merge_format)
-        mek_practical_sheet.write("G1:H1",examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+        mek_practical_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
 
         # Write the header row for the practical sheet
         header_prac = [
@@ -1621,14 +1647,26 @@ class ExaminerPortal(CustomerPortal):
                                                 'font_color': 'black',
                                                 'locked':True,
                                                 'text_wrap': True,
+                                                'border': 1  # Add border to clearly see the cells
                                             })
         
         merge_format = workbook.add_format({
                                                 'bold':     True,
-                                                'align':    'center',
+                                                # 'align':    'center',
                                                 'valign':   'vcenter',
                                                 'font_size': 20,
                                                 'font_color': 'black',
+                                                # 'text_wrap': True,
+                                                'border': 1  # Add border to clearly see the cells
+                                            })
+        
+        instruction = workbook.add_format({
+                                                'bold':     True,
+                                                # 'align':    'center',
+                                                'valign':   'vcenter',
+                                                'font_size': 10,
+                                                'font_color': 'red',
+                                                # 'text_wrap': True,
                                             })
         # Define a format for the drop-down cells
         dropdown_format = workbook.add_format({
@@ -1641,7 +1679,11 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        
+        ccmc_cookery_bakery_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_cookery_bakery_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+        ccmc_cookery_bakery_sheet.write("I1:J1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+
+
         marks_values_5 = [0,1,2,3,4,5]
         marks_values_6 = [0,1,2,3,4,5,6]
         marks_values_8 = [0,1,2,3,4,5,6,7,8]
@@ -1733,7 +1775,7 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.data_validation('N3:N1048576', {'validate': 'list', 'source': marks_values_9 })
         ccmc_cookery_bakery_sheet.data_validation('O3:O1048576', {'validate': 'list', 'source': marks_values_8 })
         
-        remarks = ['Absent','Good','Average','Weak']
+        remarks = ['Good','Average','Weak']
         # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
 
 
@@ -1762,7 +1804,11 @@ class ExaminerPortal(CustomerPortal):
 
         # Merge 3 cells over two rows.
         ccmc_oral_summary_sheet.merge_range("A1:G1",examiner_assignments.institute_id.name, merge_format)
-        
+        ccmc_oral_summary_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_oral_summary_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+
+
+
         header_prac = ['Name of the Candidate','Roll No', 'Candidate Code No',
           '-House keeping Practical \n 20 Marks',
           '-F&B services practical \n 20 Marks',
@@ -1909,7 +1955,11 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        
+        ccmc_gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+
+
+
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
             'GSK \n 10 Marks',
             'Safety \n 10 Marks'
@@ -1949,7 +1999,7 @@ class ExaminerPortal(CustomerPortal):
         ccmc_gsk_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
         ccmc_gsk_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
         
-        remarks = ['Absent','Good','Average','Weak']
+        remarks = ['Good','Average','Weak']
         # ccmc_cookery_bakery_sheet.data_validation('P3:P1048576', {'validate': 'list', 'source': remarks })
 
 
