@@ -1450,8 +1450,8 @@ class ExaminerPortal(CustomerPortal):
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             
-        # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
+        # return request.render("bes.examiner_assignment_candidate_list")
 
 
 
@@ -1573,8 +1573,8 @@ class ExaminerPortal(CustomerPortal):
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             
-        # return request.redirect("/my/assignments/batches/"+str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
+        # return request.render("bes.examiner_assignment_candidate_list")
 
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
