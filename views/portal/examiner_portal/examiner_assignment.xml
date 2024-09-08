@@ -540,6 +540,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                       
                             </div>
                             
                         </div>
@@ -556,7 +557,6 @@
             <t t-set="today_date" t-value="datetime.date.today()"/>
             <!-- <t t-set="today_date" t-value="datetime.datetime(2024, 6, 7).date()"/> -->
 
-            
             <t t-if="extended">
                 <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=7)"/>
             </t>
@@ -564,6 +564,7 @@
                 <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=7)"/>
             </t>
 
+            <!-- <span><t t-esc="extended_date"/></span> -->
             <!-- <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/> -->
             
             <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
