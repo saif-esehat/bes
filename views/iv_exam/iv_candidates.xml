@@ -67,7 +67,8 @@
             <tree>
             <header>
                 <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
-            </header>                <field name="certificate_no" />
+            </header>                
+                <field name="certificate_no" />
                 <field name="roll_no" />
                 <field name="name"/>
                 <field name="ranking_name" />

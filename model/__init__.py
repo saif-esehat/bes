@@ -26,5 +26,6 @@ from .iv_exam import iv_candidates
 from .iv_exam import candidates_application
 from .iv_exam import iv_candidate_admit_card
 from .iv_exam import iv_attendance_sheet
+from .iv_exam import iv_oral_attendance_sheet
 
 
