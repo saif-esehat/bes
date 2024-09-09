@@ -599,9 +599,9 @@
                     <field name="exam_region" optional="show"/>
                     <field name="institute_id" optional="show"/>
 
-                    <field name="attempting_cookery" invisible="1"/>
-                    <field name="attempting_oral" invisible="1"/>
-                    <field name="attempting_online" invisible="1"/>
+                    <field name="attempting_cookery" optional="hide"/>
+                    <field name="attempting_oral" optional="hide"/>
+                    <field name="attempting_online" optional="hide"/>
 
                     <field name="cookery_practical" decoration-warning="attempting_cookery" optional="show"/> 
                     

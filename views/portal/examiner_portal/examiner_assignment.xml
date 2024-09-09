@@ -776,7 +776,7 @@
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Practical Total</th>
-                        <!-- <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">GSK Total</th> -->
+                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">GSK Total</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
@@ -795,7 +795,7 @@
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding (1 Task) <br/>Lathe Work (1 Task) </th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Electrical (1 Task)</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Practical Total</th>
-                        <!-- <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Total</th> -->
+                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Total</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
                         
@@ -813,6 +813,7 @@
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Identification of Equipment</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">GSK</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">CCMC Oral Total</th>
+                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
                         
                         <!-- CCMC Practicals Subjects -->
@@ -915,7 +916,7 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_oral.practical_record_journals"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" id="gsk_oral_total_marks">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="gsk_oral_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
                             </td>
                             
@@ -941,12 +942,24 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.fast_ropes_knots_bend_sounding_rod"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" id="gsk_practical_total_marks">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="gsk_practical_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                             </td>
-                             <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.gp_marksheet.gsk_total"/>
-                            </td> -->
+                            <t t-set="gsk_total" t-value="int(marksheet.gsk_oral.gsk_oral_total_marks) + int(marksheet.gsk_prac.gsk_practical_total_marks)"/>
+                            <t t-set="gsk_percentage" t-value="(int(gsk_total)/175)*100"/>
+
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="gsk_total"/>
+                            </td> 
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-if="gsk_percentage > 60">
+                                    <span class="badge bg-success">Pass</span>
+                                </t>
+                                <t t-else="gsk_percentage &lt; 60">
+                                    <span class="badge bg-danger">Fail</span>
+                                </t>
+                            </td>
+
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
@@ -984,7 +997,7 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_oral.journal"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" id="mek_oral_total_marks">
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="mek_oral_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.mek_oral.mek_oral_total_marks"/>
                             </td>
                             
@@ -1011,22 +1024,28 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.electrical"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" id="mek_practical_total_marks">
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="mek_practical_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                             </td>
-                             <!-- <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.mek_prac.mek_total"/>
+                            <t t-set="mek_total" t-value="int(marksheet.mek_prac.mek_practical_total_marks) + int(marksheet.mek_oral.mek_oral_total_marks)"/>
+                            <t t-set="mek_percentage" t-value="(int(mek_total)/175)*100"/>
+
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-out="mek_total"/>
                             </td> 
-                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
-                                <t t-out="marksheet.mek_prac.(mek_total)/(175)"/>
-                            </td> -->
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-if="mek_percentage > 60">
+                                    <span class="badge bg-success">Pass</span>
+                                </t>
+                                <t t-else="mek_percentage &lt; 60">
+                                    <span class="badge bg-danger">Fail</span>
+                                </t>
+                            </td>
 
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-if="date_valid">
-                                    <!-- <t t-if="date_valid"> -->
-                                        <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                        <span class='p-2'>Edit</span></a>
-                                    <!-- </t> -->
+                                    <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
+                                    <span class='p-2'>Edit</span></a>
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>
@@ -1126,6 +1145,18 @@
                                 <t t-out="marksheet.ccmc_oral.toal_ccmc_rating"/>
                             </td>
 
+                            <t t-set="ccmc_oral_total" t-value="int(marksheet.ccmc_oral.toal_ccmc_rating)"/>
+                            <t t-set="ccmc_oral_percentage" t-value="(int(ccmc_oral_total)/100)*100"/>
+
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-if="ccmc_oral_percentage > 60">
+                                    <span class="badge bg-success">Pass</span>
+                                </t>
+                                <t t-else="ccmc_oral_percentage &lt; 60">
+                                    <span class="badge bg-danger">Fail</span>
+                                </t>
+                            </td>
+
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
@@ -1176,6 +1207,18 @@
                             </td>
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.cookery_bakery.total_mrks"/>
+                            </td>
+
+                            <t t-set="ccmc_practical_total" t-value="int(marksheet.cookery_bakery.total_mrks)"/>
+                            <t t-set="ccmc_practical_percentage" t-value="(int(ccmc_practical_total)/100)*100"/>
+
+                            <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-center">
+                                <t t-if="ccmc_practical_percentage > 60">
+                                    <span class="badge bg-success">Pass</span>
+                                </t>
+                                <t t-else="ccmc_practical_percentage &lt; 60">
+                                    <span class="badge bg-danger">Fail</span>
+                                </t>
                             </td>
 
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral'" class="text-left">
