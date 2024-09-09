@@ -8,6 +8,7 @@ import xlrd
 import qrcode
 import logging
 
+
 _logger = logging.getLogger(__name__)
 
     
@@ -20,7 +21,9 @@ class CandidatesApplication(models.Model):
     _description= 'Candidates Application'
 
     application_no = fields.Char(string="Application No.")
+    indos_no = fields.Char(string="INDOs No")
     roll_no = fields.Char(string="Roll No.")
+    batch = fields.Many2one('iv.batches')
 
 
     candidate_image = fields.Binary(string="Candidate Image")
@@ -29,12 +32,12 @@ class CandidatesApplication(models.Model):
     competency_deck = fields.Char(string="a) Competency (Deck/Engine)")
     # grade = fields.Char(string="b) Grade")
     grade = fields.Selection([
-        ('first', 'First Class Master'),
-        ('second', 'Second Class Master'),
-        ('serang', 'Serang'),
-        ('inland', 'Inland Vessel'),
-        ('first_engine', 'First Class Engine Driver'),
-        ('second_engine', 'Second Class Engine Driver'),
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
 
         ], string='Grade')
     
@@ -61,8 +64,16 @@ class CandidatesApplication(models.Model):
     idendification = fields.Char("b) Identification Mark", tracking=True)
 
     number = fields.Char(string="Number")
-    certificate_compentency = fields.Binary(string="Certificate of Compentency")
-    grade1 = fields.Char(string="Grade")
+    # certificate_compentency = fields.Binary(string="Certificate of Compentency")
+    grade1 = fields.Selection([
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
+
+        ], string='Grade')
     where_issued = fields.Char(string="Where Issued")
     date_of_issue = fields.Date(string="Date of Issue")
     suspended = fields.Char(string="if at any time suspended or cancelled, state by which court authority")
@@ -83,55 +94,183 @@ class CandidatesApplication(models.Model):
      # 6) detail of fees payments
     
     upi_no = fields.Char(string="UPI/UTR No.")
-    transaction_date = fields.Date(string="Date")
+    transaction_date = fields.Date(string="Date",required=False)
     amount = fields.Float(string="Amount")
     qr_code_image = fields.Binary(string="a) Through UPI",compute="generate_qr_code")
 
-    bord_name = fields.Char(string="Exam Bord Name")
-    bank_name = fields.Char(string="Bank Name")
-    branch_name = fields.Char(string="Branch Name")
-    account_no = fields.Integer(string="Account Number")
-    ifsc_code = fields.Char(string="IFSC Code")
+    # bord_name = fields.Char(string="Exam Board Name")
+    # bank_name = fields.Char(string="Bank Name")
+    # branch_name = fields.Char(string="Branch Name")
+    # account_no = fields.Integer(string="Account Number")
+    # ifsc_code = fields.Char(string="IFSC Code")
     transection_id = fields.Char(string="Transection ID")
     transection_date = fields.Date(string="Date")
     transection_amount = fields.Float(string="Amount")
 
     # 7)List of documents to be Attached
 
-    self_attched = fields.Binary(string="a) Self-attached copy of previous COC (if any)")
-    origanal_se_certi = fields.Binary(string="b) Original Sea Service Certificate")
-    original_notarize = fields.Binary(string="c) Original Notarize Affidavite")
-    attache_passport = fields.Binary(string="d) Self-attached copy of valid Passport OR Original Police Verification Certificate.")
-    attched_educatinal = fields.Binary(string="e) Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)")
-    attched_leaving = fields.Binary(string="f) Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate")
-    attched_photo = fields.Binary(string="g) Self-attached Photo copy of the Residential Address Proof")
-    attched_modular = fields.Binary(string="h) Self-attached copies of Modular Safety and Security Courses")
-    attched_medical = fields.Binary(string="i) Self-attached valid Medical Certificate")
-    attched_id_proof = fields.Binary(string="j) Self-attached photo copy of the ID Proof (Issued by Government)")
-    attched_upi = fields.Binary(string="k) UPI/NEFT Payment Receipt")
-    attched_driver_certificate = fields.Binary(string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From")
+    # self_attched = fields.Binary(string="a) Self-attached copy of previous COC (if any)")
+    # origanal_se_certi = fields.Binary(string="b) Original Sea Service Certificate")
+    # original_notarize = fields.Binary(string="c) Original Notarize Affidavite")
+    # attache_passport = fields.Binary(string="d) Self-attached copy of valid Passport OR Original Police Verification Certificate.")
+    # attched_educatinal = fields.Binary(string="e) Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)")
+    # attched_leaving = fields.Binary(string="f) Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate")
+    # attched_photo = fields.Binary(string="g) Self-attached Photo copy of the Residential Address Proof")
+    # attched_modular = fields.Binary(string="h) Self-attached copies of Modular Safety and Security Courses")
+    # attched_medical = fields.Binary(string="i) Self-attached valid Medical Certificate")
+    # attched_id_proof = fields.Binary(string="j) Self-attached photo copy of the ID Proof (Issued by Government)")
+    # attched_upi = fields.Binary(string="k) UPI/NEFT Payment Receipt")
+    # attched_driver_certificate = fields.Binary(string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From")
   
-    declaration_date = fields.Date(string="Date")
-    place = fields.Char(string="Place")
-    applicant_signature = fields.Binary(string="Signature of the Applicant")
+    # declaration_date = fields.Date(string="Date")
+    # place = fields.Char(string="Place")
+    # applicant_signature = fields.Binary(string="Signature of the Applicant")
 
     # 9 For Assessing Officer's Use
 
     application_eligible = fields.Selection([
         ('eligible', 'Eligible'),
+        ('hold', 'Hold'),
         ('not_eligible', 'Not Eligible'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
-    clause1 = fields.Char(string="Clause")
+    # hold = fields.Char(string="Hold")
     application_date = fields.Date(string="Application Date")
-    signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
+
+    application_type = fields.Selection([
+        ('fresher', 'Fresher'),
+        ('repeater', 'Repeater'),  
+        ], string='Application Type', default='fresher')
+    
+    written = fields.Boolean("Written" ,default=True)
+    oral = fields.Boolean("Oral",default=True)
+
+    @api.onchange('application_type')
+    def default_exams_check(self):
+        for record in self:
+            if record.application_type == 'fresher':
+                record.written = True
+                record.oral = True
+            else:
+                record.written = False
+                record.oral = False
+
+
+
+
+
+
+
+    def assign_rollno(self):
+        count = 1
+        candidates_by_grade = {
+            '1CM': [],
+            '2CM': [],
+            'SER': [],
+            'ME': [],
+            '1ED': [],
+            '2ED': []
+        }
+        # import wdb; wdb.set_trace(); 
+
+        # Group candidates by their grade
+        for candidate in self:
+            if candidate.application_eligible == 'eligible':
+                if candidate.grade in candidates_by_grade:
+                    candidates_by_grade[candidate.grade].append(candidate)
+
+        # Assign roll numbers and create/update iv.candidates records
+        for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
+            candidates = candidates_by_grade[grade]
+            for candidate in candidates:
+                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{count}"
+                candidate.sudo().write({'roll_no': roll_no})
+                
+                # Check if the candidate with the same indos_no already exists
+                existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
+                
+                if existing_record:
+                    # Update the existing record
+                    existing_record.sudo().write({
+                        'roll_no': roll_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile,
+                        'grade_applied': candidate.grade,
+
+                    })
+                else:
+                    # Create a new record
+                    self.env['iv.candidates'].sudo().create({
+                        'roll_no': roll_no,
+                        'indos_no': candidate.indos_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile,
+                        'grade_applied': candidate.grade
+                    })
+                count += 1
+
+        return
+    
+    @api.model
+    def create(self, values):
+        existing_record = self.env['candidates.application'].sudo().search([('indos_no', '=', values.get('indos_no'))], limit=1)
+        
+        if existing_record:
+            raise ValidationError("Candidate with current INDOS no already exists.")
+        
+        return super(CandidatesApplication, self).create(values)
+    
+
+    @api.constrains('batch')
+    def _check_batch(self):
+        for record in self:
+            if not record.batch:
+                raise ValidationError("The Batch must be filled.")
+    
+    @api.constrains('dob')
+    def _check_dob(self):
+        for record in self:
+            if not record.dob:
+                raise ValidationError("The Date of Birth must be filled.")
+            
+    @api.constrains('grade')
+    def _check_grade(self):
+        for record in self:
+            if not record.grade:
+                raise ValidationError("The grade must be filled.")
+            
+    @api.constrains('indos_no')
+    def _check_indos_no(self):
+        for record in self:
+            if not record.indos_no:
+                raise ValidationError("The indos no must be filled.")
+            
+    @api.constrains('name')
+    def _check_name(self):
+        for record in self:
+            if not record.name:
+                raise ValidationError("The name must be filled.")
+    
+    @api.onchange('application_date')
+    def _onchange_application_date(self):
+        if self.application_date:
+            # Convert YYYY-MM-DD to MM/DD/YYYY for display
+            date_obj = datetime.datetime.strptime(self.application_date, '%Y-%m-%d')
+            self.application_date_text = date_obj.strftime('%m/%d/%Y')
+    # signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
 
 
 #    10) For Office Staff Use Only
   
-    name_of_candidate = fields.Char(string="Name Of the Candidate")
-    candidate_roll = fields.Integer(string="Candidate's Roll No.")
-    grade_appearing = fields.Char(string="Grade Appearing")
+    # name_of_candidate = fields.Char(string="Name Of the Candidate")
+    # candidate_roll = fields.Integer(string="Candidate's Roll No.")
+    # grade_appearing = fields.Char(string="Grade Appearing")
 
 #    11) For Examiner use only
         # part A
@@ -347,14 +486,20 @@ class CandidatesApplication(models.Model):
             else:
                 record.qr_code_image = False
 
+    @api.constrains('mobile')
+    def _check_mobile(self):
+        for record in self:
+            if record.mobile and (len(record.mobile) != 10 or not record.mobile.isdigit()):
+                raise ValidationError("Mobile number must contain exactly 10 digits.")
 
-    # @api.constrains('dob')
-    # def _check_dob(self):
-    #     for record in self:
-    #         if not record.dob:
-    #             raise ValidationError("DOB must be filled.")
+    @api.constrains('zip')
+    def _check_zip(self):
+        for record in self:
+            if record.zip and (len(record.zip) != 6 or not record.zip.isdigit()):
+                raise ValidationError("Zip code must contain exactly 6 digits.")
 
-   
+
+                
 class CandidatesRemark(models.Model):
     _name = "candidates.remark"
 

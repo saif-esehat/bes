@@ -1106,7 +1106,7 @@ class ExaminerPortal(CustomerPortal):
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         batch_id = batch_id
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().browse(assignment_id)
 
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
 
@@ -1164,6 +1164,14 @@ class ExaminerPortal(CustomerPortal):
 
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("E1:H1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+
+        remarks = ['Absent','Good','Average','Weak']
+        
        
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Uses of Hand/ Plumbing/Carpentry Tools \n Use of chipping Tools & Brushes & Paints \n 20 Marks',
@@ -1218,10 +1226,6 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write(f'G{row_num}', '', dropdown_format)
             mek_oral_sheet.write(f'H{row_num}', '', dropdown_format)
         
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        marks_values_25 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-        marks_values_30 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
         
         mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
         mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
@@ -1230,7 +1234,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_25 })
         
-        remarks = ['Absent','Good','Average','Weak']
+        
         mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
@@ -1446,8 +1450,8 @@ class ExaminerPortal(CustomerPortal):
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             
-        # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
+        # return request.render("bes.examiner_assignment_candidate_list")
 
 
 
@@ -1569,8 +1573,8 @@ class ExaminerPortal(CustomerPortal):
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
             
-        # return request.redirect("/my/assignments/batches/"+str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/"+str(batch_id))
+        # return request.render("bes.examiner_assignment_candidate_list")
 
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
@@ -1581,7 +1585,7 @@ class ExaminerPortal(CustomerPortal):
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().browse(assignment_id)
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
 
@@ -1637,6 +1641,13 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_cookery_bakery_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
+        
+        marks_values_5 = [1,2,3,4,5]
+        marks_values_6 = [1,2,3,4,5,6]
+        marks_values_8 = [1,2,3,4,5,6,7,8]
+        marks_values_9 = [1,2,3,4,5,6,7,8,9]
+        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
+        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         
         header_oral = ['Name of the Candidate','Roll No', 'Candidate Code No',
           'Hygiene & Grooming \n 10 Marks', 
@@ -1707,12 +1718,7 @@ class ExaminerPortal(CustomerPortal):
             ccmc_cookery_bakery_sheet.write(f'N{row_num}', '', dropdown_format)
             ccmc_cookery_bakery_sheet.write(f'O{row_num}', '', dropdown_format)        
         
-        marks_values_5 = [1,2,3,4,5]
-        marks_values_6 = [1,2,3,4,5,6]
-        marks_values_8 = [1,2,3,4,5,6,7,8]
-        marks_values_9 = [1,2,3,4,5,6,7,8,9]
-        marks_values_10 = [1,2,3,4,5,6,7,8,9,10]
-        marks_values_20 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
         
         ccmc_cookery_bakery_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_10 })
         ccmc_cookery_bakery_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_10 })
@@ -1821,7 +1827,7 @@ class ExaminerPortal(CustomerPortal):
 
         date = marksheets[0].examiners_id.exam_date
         
-        file_name = examiner.name+"-CCMC Practical-"+str(date)+".xlsx"
+        file_name = examiner_assignments.examiner.name+"-CCMC Practical-"+str(date)+".xlsx"
 
 
         # Generate a response with the Excel file
@@ -1846,7 +1852,7 @@ class ExaminerPortal(CustomerPortal):
         batch_id = batch_id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
         # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().browse(assignment_id)
         marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
 
@@ -1981,7 +1987,7 @@ class ExaminerPortal(CustomerPortal):
 
         date = marksheets[0].examiners_id.exam_date
         
-        file_name = examiner.name+"-CCMC-GSK-Oral-"+str(date)+".xlsx"
+        file_name = examiner_assignments.examiner.name+"-CCMC-GSK-Oral-"+str(date)+".xlsx"
 
 
         # Generate a response with the Excel file
@@ -2366,3 +2372,18 @@ class ExaminerPortal(CustomerPortal):
                                               'attendance_sheet_uploaded': True})
                 
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(mek_attendance_id))
+    
+    # New Code
+    @http.route(['/my/assignments/expense/<int:batch_id>'], type="http", auth="user", website=True)
+    def ExaminerAssignmentExpenseView(self,batch_id, **kw):
+        # import wdb; wdb.set_trace()
+
+        user_id = request.env.user.id
+        batch_id = batch_id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+        # batch_info = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id','=',batch_id)])
+        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
+        examiner_expenses = request.env['examiner.expenses'].sudo().search([('dgs_batch.id','=',batch_id),('examiner_id','=',examiner.id)])
+        # import wdb; wdb.set_trace()
+        vals = {'assignments':examiner_assignments, 'examiner':examiner,'batch':batch_id,'page_name':'expenses','expenses':examiner_expenses}
+        return request.render("bes.examiner_assignment_expenses",vals)
