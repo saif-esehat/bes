@@ -6,7 +6,37 @@ import random
 import string
 
 
+class SurveySectionQuestionWizard(models.TransientModel):
+    _name = 'survey.question.section'
+    _description = 'My Wizard'
 
+    qb = fields.Many2one("survey.survey",string="Question Bank")
+    chapter = fields.Many2one("survey.question",string="Course")
+    description = fields.Text(string='Question Description')
+
+    def action_add_question(self):
+        print("Chapter "+ str(self.chapter.id))
+        print("QB "+ str(self.qb.id))
+
+        question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': self.description })
+        question_id.write({'page_id':self.chapter.id})
+        print("QB "+ str(question_id))
+        question_ids = self.chapter.question_ids.ids
+        # question_ids.append(question_id.id)
+        print(question_ids)
+        seq = 0
+        chapters = self.env['survey.question'].sudo().search([('survey_id','=',self.qb.id),('is_page','=',True)])
+        for chapter in chapters:
+            seq = seq + 1
+            chapter.write({'sequence':seq})
+            for question_id in chapter.question_ids:
+                question = self.env['survey.question'].sudo().search([('id','=',question_id)]).write({'page_id':self.chapter.id})
+                question.write({'sequence':seq+1})
+                
+            
+        
+        # self.chapter.write({'question_ids':[(6,0,question_id.id)]})
+        
 
 class InheritedSurvey(models.Model):
     _inherit = "survey.survey"
@@ -45,6 +75,21 @@ class InheritedSurvey(models.Model):
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
     
+    def action_open_add_section(self):
+        self.ensure_one()
+        return {
+            'name': 'Add Question Wizard',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'survey.question.section',
+            'target': 'new',
+            'context': {
+                'default_qb':self.id
+            }
+            
+        }
+
+    
     
     def generate_unique_string(self):
     # Define the length of the desired string
@@ -68,6 +113,10 @@ class InheritedSurvey(models.Model):
         self.exam_state = 'stopped'
     
     def done_exam(self):
+        self.exam_state = 'done'
+        
+    
+    def add_question_section(self):
         self.exam_state = 'done'
         
 
