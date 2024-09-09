@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="iv_written_exam_action" model="ir.actions.act_window">
+        <field name="name">IV Written Exam</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">iv.written.exam</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">IV Written Exam</p>
+        </field>
+    </record>
+
+    <record id="iv_oral_exam_action" model="ir.actions.act_window">
+        <field name="name">IV Oral Exam</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">iv.oral.exam</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">IV Oral Exam</p>
+        </field>
+    </record>
+
+         
+    <record id="iv_written_exam_form" model="ir.ui.view">
+        <field name="name">iv.written.exam.form</field>
+        <field name="model">iv.written.exam</field>
+        <field name="arch" type="xml">
+            <form string="IV Candidate">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="candidate" />
+                            <field name="batch_id" />
+                            <field name="grade" />
+
+                        </group>
+                        <group>
+                            <field name="marks" />
+                            <field name="attendance" />
+                            <field name="status" readonly="1"/>
+                        </group>
+                    </group>
+                
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="iv_oral_exam_form" model="ir.ui.view">
+        <field name="name">iv.oral.exam.form</field>
+        <field name="model">iv.oral.exam</field>
+        <field name="arch" type="xml">
+            <form string="IV Candidate">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="candidate" />
+                            <field name="batch_id" />
+                            <field name="grade" />
+
+                        </group>
+                        <group>
+                            <field name="marks" />
+                            <field name="attendance" />
+                            <field name="status" readonly="1"/>
+                        </group>
+                    </group>
+                
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="iv_written_exam_tree" model="ir.ui.view">
+        <field name="name">iv.written.exam.tree</field>
+        <field name="model">iv.written.exam</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="candidate" />
+                <field name="batch_id" />
+                <field name="grade" />
+                <field name="status" />
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="iv_oral_exam_tree" model="ir.ui.view">
+        <field name="name">iv.oral.exam.tree</field>
+        <field name="model">iv.oral.exam</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="candidate" />
+                <field name="batch_id" />
+                <field name="grade" />
+                <field name="attendance" />
+                <field name="status" />
+            </tree>
+        </field>
+    </record>
+
+
+
+
+    <menuitem id="iv_written_exam_menu" 
+                parent="menu_iv_examinations" 
+                name="Written Exam"
+                action="iv_written_exam_action"
+                sequence="10" />
+
+    <menuitem id="iv_oral_exam_menu" 
+                parent="menu_iv_examinations" 
+                name="IV Oral Exam"
+                action="iv_oral_exam_action"
+                sequence="11" />
+
+
+</data>
+</odoo>

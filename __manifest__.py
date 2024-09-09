@@ -65,6 +65,7 @@
         'views/iv_exam/iv_attendance_sheet.xml',
         'reports/iv_attandance_report/iv_written_attendance.xml',
         'views/iv_exam/iv_oral_attendance_sheet.xml',
+        'views/iv_exam/iv_exams.xml',
         'reports/iv_attandance_report/iv_oral_attendance.xml',
        
         # 'views/sep_batches.xml',
