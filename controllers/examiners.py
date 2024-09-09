@@ -919,6 +919,7 @@ class ExaminerPortal(CustomerPortal):
                                                 'align': 'center',
                                                 'valign': 'vcenter',
                                                 'font_color': 'black',
+                                                'font_size': 14,
                                                 'locked':True,
                                                 'text_wrap': True,
                                                 'border': 1  # Add border to clearly see the cells
@@ -938,7 +939,7 @@ class ExaminerPortal(CustomerPortal):
                                                 'bold':     True,
                                                 # 'align':    'center',
                                                 'valign':   'vcenter',
-                                                'font_size': 10,
+                                                'font_size': 15,
                                                 'font_color': 'red',
                                                 # 'text_wrap': True,
                                             })
@@ -955,7 +956,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
         gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
        
-        gsk_oral_sheet.write("I1:J1", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        gsk_oral_sheet.write("A2:D2", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         
        
        
@@ -964,28 +965,7 @@ class ExaminerPortal(CustomerPortal):
           'Subject area 4 and 5 and 6 \n Minimum 9 question \n 25 marks',
           'Practical Record Book and Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
-            gsk_oral_sheet.write(1, col, value, header_format)
-        
-          
-        candidate_list = [] #List of Candidates
-        roll_no = []
-        candidate_code = [] #Candidates Code No.
-
-        for candidate in marksheets:
-            candidate_list.append(candidate.gp_candidate.name)
-            roll_no.append(candidate.gp_marksheet.exam_id)
-            candidate_code.append(candidate.gp_candidate.candidate_code)
-        
-        # import wdb;wdb.set_trace();
-        
-        for i, candidate in enumerate(candidate_list):
-            gsk_oral_sheet.write('A{}'.format(i+3), candidate, locked)
-
-        for i, code in enumerate(roll_no):
-            gsk_oral_sheet.write('B{}'.format(i+3), code, locked)
-
-        for i, code in enumerate(candidate_code):
-            gsk_oral_sheet.write('C{}'.format(i+3), code, locked)
+            gsk_oral_sheet.write(2, col, value, header_format)
 
         marks_values_5 = [0,1,2,3,4,5]
         marks_values_6 = [0,1,2,3,4,5,6]
@@ -1010,17 +990,17 @@ class ExaminerPortal(CustomerPortal):
 
     # Write candidate data starting from the third row in the oral sheet
         for i, candidate in enumerate(candidate_list):
-            gsk_oral_sheet.write(f'A{i + 3}', candidate, locked)
-            gsk_oral_sheet.set_row(i + 2, 45)  # Set row height for data rows
+            gsk_oral_sheet.write(f'A{i + 4}', candidate, locked)
+            gsk_oral_sheet.set_row(i + 3, 45)  # Set row height for data rows
 
         for i, code in enumerate(roll_no):
-            gsk_oral_sheet.write(f'B{i + 3}', code, locked)
+            gsk_oral_sheet.write(f'B{i + 4}', code, locked)
 
         for i, code in enumerate(candidate_code):
-            gsk_oral_sheet.write(f'C{i + 3}', code, locked)
+            gsk_oral_sheet.write(f'C{i + 4}', code, locked)
 
             # Add data validation for scores in the oral sheet
-            row_num = i + 3
+            row_num = i + 4
             gsk_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_25})
             gsk_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_25})
             gsk_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_25})
@@ -1162,6 +1142,7 @@ class ExaminerPortal(CustomerPortal):
                                                 'align': 'center',
                                                 'valign': 'vcenter',
                                                 'font_color': 'black',
+                                                'font_size': 14,
                                                 'locked':True,
                                                 'text_wrap': True,
                                                 'border': 1  # Add border to clearly see the cells
@@ -1181,7 +1162,7 @@ class ExaminerPortal(CustomerPortal):
                                                 'bold':     True,
                                                 # 'align':    'center',
                                                 'valign':   'vcenter',
-                                                'font_size': 10,
+                                                'font_size': 15,
                                                 'font_color': 'red',
                                                 # 'text_wrap': True,
                                             })
@@ -1189,7 +1170,7 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         mek_oral_sheet.write("E1:F1",examiner.name,merge_format)
         mek_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
-        mek_oral_sheet.write("I1:J1", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
+        mek_oral_sheet.write("A2:D2", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
         
         marks_values_10 = [0,1,2,3,4,5,6,7,8,9,10]
         marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
@@ -1205,7 +1186,7 @@ class ExaminerPortal(CustomerPortal):
           'Electrical  \n 10 Marks',
           'Journal \n 25 Marks', 'Remarks']
         for col, value in enumerate(header_oral):
-            mek_oral_sheet.write(1, col, value, header_format)
+            mek_oral_sheet.write(2, col, value, header_format)
         
           
         candidate_list = [] #List of Candidates
@@ -1221,13 +1202,13 @@ class ExaminerPortal(CustomerPortal):
         
         
         for i, candidate in enumerate(candidate_list):
-            mek_oral_sheet.write('A{}'.format(i+3), candidate, locked)
+            mek_oral_sheet.write('A{}'.format(i+4), candidate, locked)
         
         for i, code in enumerate(roll_no):
-            mek_oral_sheet.write('B{}'.format(i+3), code, locked)
+            mek_oral_sheet.write('B{}'.format(i+4), code, locked)
 
         for i, code in enumerate(candidate_code):
-            mek_oral_sheet.write('C{}'.format(i+3), code, locked)
+            mek_oral_sheet.write('C{}'.format(i+4), code, locked)
             # Define a format for the drop-down cells
             dropdown_format = workbook.add_format({
                 'font_size': 18,  # Set the font size as needed
@@ -1238,7 +1219,7 @@ class ExaminerPortal(CustomerPortal):
             })
 
             # Add data validation for scores in the oral sheet
-            row_num = i + 3
+            row_num = i + 4
             mek_oral_sheet.data_validation(f'D{row_num}', {'validate': 'list', 'source': marks_values_20})
             mek_oral_sheet.data_validation(f'E{row_num}', {'validate': 'list', 'source': marks_values_20})
             mek_oral_sheet.data_validation(f'F{row_num}', {'validate': 'list', 'source': marks_values_10})
@@ -1366,7 +1347,7 @@ class ExaminerPortal(CustomerPortal):
         # workbook = xlsxwriter.Workbook(BytesIO(file_content))
         workbook = xlrd.open_workbook(file_contents=file_content)
         worksheet_oral = workbook.sheet_by_index(0)
-        for row_num in range(2, worksheet_oral.nrows):  # Assuming first row contains headers
+        for row_num in range(3, worksheet_oral.nrows):  # Assuming first row contains headers
             row = worksheet_oral.row_values(row_num)
             
             roll_no = row[1]
@@ -1476,8 +1457,6 @@ class ExaminerPortal(CustomerPortal):
         })
         
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+"/"+str(assignment_id))
-    
-        return request.redirect("/my/assignments/batches/"+str(batch_id)+"/"+str(assignment_id))
 
 
 
@@ -1493,7 +1472,7 @@ class ExaminerPortal(CustomerPortal):
         # workbook = xlsxwriter.Workbook(BytesIO(file_content))
         workbook = xlrd.open_workbook(file_contents=file_content)
         worksheet_oral = workbook.sheet_by_index(0)
-        for row_num in range(2, worksheet_oral.nrows):  # Assuming first row contains headers
+        for row_num in range(3, worksheet_oral.nrows):  # Assuming first row contains headers
             row = worksheet_oral.row_values(row_num)
             
             roll_no = row[1]
@@ -1600,8 +1579,6 @@ class ExaminerPortal(CustomerPortal):
         
         return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+"/"+str(assignment_id))
         
-        return request.redirect("/my/assignments/batches/"+str(batch_id)+"/"+str(assignment_id))
-
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
     def download_ccmc_practical_marksheet(self,batch_id,assignment_id, **rec):
