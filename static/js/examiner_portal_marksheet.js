@@ -149,7 +149,6 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     }
                 }
 
-                debugger;
 
                 var postData = {
                     id: mek_marksheet_id, // Assuming you want to pass the ID in the request body
@@ -210,6 +209,17 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
 
                 var gsk_oral_marksheet_id = evt.target.id
 
+                var str = evt.target.id;
+                var parts = str.split('_');
+                var lastId = parts[parts.length - 1];
+                var attendance_id = document.getElementById('attendance_'+lastId).value
+                
+                var attendance_element = document.getElementById('attendance_'+lastId)
+
+                var marksheet_mek_status =   document.getElementById('marksheet_mek_status_'+lastId)
+
+                debugger
+
                 var postData = {
                     id: gsk_oral_marksheet_id // Assuming you want to pass the ID in the request body
                 };
@@ -252,13 +262,48 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
             },
             _onConfirmCCMCOral: function(evt){
                 
-                // debugger
+                
 
-                var gsk_oral_marksheet_id = evt.target.id
+                var ccmc_oral_marksheet_id = evt.target.id
 
+                var str = evt.target.id;
+                var parts = str.split('_');
+                var lastId = parts[parts.length - 1];
+                var attendance_id = document.getElementById('attendance_'+lastId).value
+                
+                var attendance_element = document.getElementById('attendance_'+lastId)
+
+                var marksheet_ccmc_status =   document.getElementById('marksheet_cccm_status_'+lastId)
+
+
+                var ccmc_oral_total_marks = document.getElementById('ccmc_oral_total_'+lastId).innerText.trim();
+                var ccmc_prac_total_marks = document.getElementById('ccmc_prac_total_'+lastId).innerText.trim();
+
+                debugger
+
+
+                if (attendance_element.value == '') {
+
+                    alert("Attendance is Mandatory. Please Select Attendance")
+
+                    return ;
+                }
+
+                if (attendance_element.value === 'absent' && (parseInt(ccmc_oral_total_marks) !== 0 || parseInt(ccmc_prac_total_marks) !== 0)) {
+                    alert("Candidates marks should be 0 in order to marks them absent");
+
+                        return; // If the user cancels, stop further processin
+                }
+
+                
                 var postData = {
-                    id: gsk_oral_marksheet_id // Assuming you want to pass the ID in the request body
+                    id: ccmc_oral_marksheet_id, // Assuming you want to pass the ID in the request body
+                    attendance_element: attendance_element,
+                    attendance_id:attendance_id,
+                    marksheet_ccmc_status :marksheet_ccmc_status
                 };
+
+
                 var result = [];
 
 
@@ -268,15 +313,21 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 $.ajax({
                     type: "POST",
                     url: '/confirm/ccmc_oral/marksheet',
+                    indexValue: {
+                        id: ccmc_oral_marksheet_id, // Assuming you want to pass the ID in the request body
+                        attendance_element: attendance_element,
+                        marksheet_ccmc_status :marksheet_ccmc_status
+                    },
                     data: JSON.stringify(postData) ,
                     contentType: 'application/json',                    
                     success: function (response) {
                         // debugger
-                        console.log("POST request successful:", response);
-                        location.reload();
 
-                        // if response["status"]
-                        // Handle success response
+                        var marksheet_ccmc_oral_status = this.indexValue.marksheet_ccmc_status
+                        this.indexValue.attendance_element.disabled = true
+                        var confirm_button_element = this.indexValue.id
+                        document.getElementById(confirm_button_element).remove()
+                        marksheet_ccmc_oral_status.children[0].innerText = 'Confirmed'
                     },
                     error: function (xhr, status, error) {
                         // debugger
