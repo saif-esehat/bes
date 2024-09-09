@@ -48,8 +48,10 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
 
                 // Check if attendance is marked as 'present' but oral or practical marks are not present
                 if (attendance_element.value === 'present' && (parseInt(gsk_oral_marks) == 0 || parseInt(gsk_practical_marks) == 0)) {
-                    confirm("Are you sure you want to mark this  candidate present as their marks are 0?");   
-                    // return;
+                    var confirmation = confirm("Are you sure you want to mark this candidate present even though their marks are 0?");   
+                    if(!confirmation){
+                        return;
+                    }
                 }
 
 
@@ -141,8 +143,10 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 
                 // Check if attendance is marked as 'present' but oral or practical marks are not present
                 if (attendance_element.value === 'present' && (parseInt(mek_oral_marks) == 0 || parseInt(mek_practical_marks) == 0)) {
-                    confirm("Are you sure you want to mark this  candidate present as their marks are 0?");   
-                    // return;
+                    var confirmation = confirm("Are you sure you want to mark this candidate present even though their marks are 0?");   
+                    if(!confirmation){
+                        return;
+                    }
                 }
 
                 debugger;
