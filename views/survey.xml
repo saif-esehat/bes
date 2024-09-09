@@ -34,6 +34,7 @@
                 </div>
             </xpath>
 
+
         </template>
 
         <template id="survey_selection_key_inherited" inherit_id="survey.survey_selection_key">
@@ -113,6 +114,8 @@
                      <field name="start_time" />
                      <field name="end_time" />
                      <field name="exam_state" readonly="1" />
+                    <button string="Add Question" type="object" name="action_open_add_section" class="btn-primary"/>
+
                 </xpath>
                 <xpath expr="//field[@name='users_can_go_back']" position="after">
                     <field name="is_trigger_exam" />
@@ -170,6 +173,32 @@
                     <field name="q_no" />
                 </xpath>
             </field>
+        </record>
+
+
+        <record id="view_survey_question_section_form" model="ir.ui.view">
+            <field name="name">survey.question.section.form</field>
+            <field name="model">survey.question.section</field>
+            <field name="arch" type="xml">
+                <form string="My Wizard">
+                    <group>
+                        <field name="qb" readonly="1"/>
+                        <field name="chapter" string="Chapter" domain="[('survey_id', '=', qb),('is_page','=',True)]"/>
+                        <field name="description"/>
+                    </group>
+                    <footer>
+                        <button string="Add" type="object" name="action_add_question" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_survey_question_section_form_action" model="ir.actions.act_window">
+            <field name="name">Add Question</field>
+            <field name="res_model">survey.question.section</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
 
 
