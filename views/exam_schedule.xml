@@ -354,7 +354,7 @@
                     <field name="exam_region" readonly="1" optional="show"/>
                     <field name="institute_id" optional="show"/>
                     <field name="attempt_number" optional="show"/>
-
+                    <field name="fees_paid_candidate"  widget="badge"  optional="show"/>
                     <field name="attempting_gsk_oral_prac" optional="hide"/>
                     <field name="attempting_mek_oral_prac" optional="hide"/>
                     <field name="attempting_mek_online" optional="hide"/>
@@ -602,6 +602,7 @@
                     <field name="attempting_cookery" optional="hide"/>
                     <field name="attempting_oral" optional="hide"/>
                     <field name="attempting_online" optional="hide"/>
+                    <field name="fees_paid_candidate" widget="badge" optional="show"/>
 
                     <field name="cookery_practical" decoration-warning="attempting_cookery" optional="show"/> 
                     
