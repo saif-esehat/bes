@@ -257,11 +257,16 @@
                         <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
                    </header>
                     <sheet>
+                        
                         <div class="oe_button_box" name="button_box">
                             <button name="open_gp_candidate_exams" string="Exams" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
                         
+                        <widget name="web_ribbon" 
+                        title="Blacklisted" 
+                        attrs="{'invisible': [('black_listed', '!=', True)]}" 
+                        bg_color="bg-danger"/>
                         
 
                         <field name="elligiblity_criteria" invisible="1"/>
@@ -302,6 +307,7 @@
 
                             <field name="indos_no"/>
                             <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                            <field name="black_listed"/>
                             <field name="dob"/>
                             <field name="age"/>
                             <field name="result_status"/>
@@ -739,6 +745,11 @@
                         <!-- <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/> -->
                    </header>
                     <sheet>
+                        <widget name="web_ribbon" 
+                        title="Blacklisted" 
+                        attrs="{'invisible': [('black_listed', '!=', True)]}" 
+                        bg_color="bg-danger"/>
+
                     <div class="oe_button_box" name="button_box">
                             <button name="open_ccmc_candidate_exams" string="Exams" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
@@ -773,6 +784,7 @@
                             <field name="indos_no"/>
                             <field name="gender" placeholder="Gender" required="1"/>
                             <field name="ccmc_user_state" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
+                            <field name="black_listed"/>
                             <field name="dob"/>
                             <field name="age"/>
 
