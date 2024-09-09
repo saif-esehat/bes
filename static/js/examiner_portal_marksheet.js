@@ -42,8 +42,6 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 
                 // Check if attendance is marked as 'absent' but mek_oral or mek_practical marks are present
                 if (attendance_element.value === 'absent' && (parseInt(gsk_oral_marks) !== 0 || parseInt(gsk_practical_marks) !== 0)) {
-                    console.log("inside absent");
-                    
                     alert("Candidates marks should be 0 in order to marks them absent");
                     return;
                 }

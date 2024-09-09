@@ -931,7 +931,6 @@ class ExaminerPortal(CustomerPortal):
                                                 'valign':   'vcenter',
                                                 'font_size': 20,
                                                 'font_color': 'black',
-                                                # 'text_wrap': True,
                                                 'border': 1  # Add border to clearly see the cells
                                             })
         
@@ -1014,9 +1013,9 @@ class ExaminerPortal(CustomerPortal):
 
 
         # Set column widths for the practical sheet
-        gsk_practical_sheet.set_column('A2:A2', 50, unlocked)
-        gsk_practical_sheet.set_column('B2:B2', 20, unlocked)
-        gsk_practical_sheet.set_column('C2:C2', 30, unlocked)
+        gsk_practical_sheet.set_column('A2:A2', 35, unlocked)
+        gsk_practical_sheet.set_column('B2:B2', 10, unlocked)
+        gsk_practical_sheet.set_column('C2:C2', 20, unlocked)
         gsk_practical_sheet.set_column('D2:G2', 35, unlocked)
         gsk_practical_sheet.set_column('F2:F2', 50, unlocked)
         gsk_practical_sheet.set_column('H2:H2', 15, unlocked)
@@ -1024,7 +1023,7 @@ class ExaminerPortal(CustomerPortal):
         # Merge cells in the first row for the practical sheet
         gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         gsk_practical_sheet.write("E1:F1",examiner.name,merge_format)
-        gsk_practical_sheet.write("F1:G1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
+        gsk_practical_sheet.write("G1:H1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
 
 
         # Write the header row for the practical sheet
@@ -1044,6 +1043,7 @@ class ExaminerPortal(CustomerPortal):
         
         for i, candidate in enumerate(candidate_list):
             gsk_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+            gsk_practical_sheet.set_row(i + 2, 45)  # Set row height for data rows
             
         for i, code in enumerate(roll_no):
             gsk_practical_sheet.write('B{}'.format(i+3), code, locked)
@@ -1196,14 +1196,13 @@ class ExaminerPortal(CustomerPortal):
         for candidate in marksheets:
             candidate_list.append(candidate.gp_candidate.name)
             candidate_code.append(candidate.gp_candidate.candidate_code)
-
-            # import wdb;wdb.set_trace();
             roll_no.append(candidate.gp_marksheet.exam_id)
         
         
         for i, candidate in enumerate(candidate_list):
             mek_oral_sheet.write('A{}'.format(i+4), candidate, locked)
-        
+            mek_oral_sheet.set_row(i + 3, 45)  # Set row height for data rows
+
         for i, code in enumerate(roll_no):
             mek_oral_sheet.write('B{}'.format(i+4), code, locked)
 
@@ -1236,8 +1235,6 @@ class ExaminerPortal(CustomerPortal):
         
         mek_oral_sheet.data_validation('D3:D1048576', {'validate': 'list', 'source': marks_values_20 })
         mek_oral_sheet.data_validation('E3:E1048576', {'validate': 'list', 'source': marks_values_20 })
-        # mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
-        # mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('F3:F1048576', {'validate': 'list', 'source': marks_values_10 })
         mek_oral_sheet.data_validation('G3:G1048576', {'validate': 'list', 'source': marks_values_25 })
         
@@ -1245,26 +1242,17 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.data_validation('H3:H1048576', {'validate': 'list', 'source': remarks })
         
         #For GSK Practical Marksheet
-        mek_practical_sheet.set_column('A:XDF',None, unlocked)
-        mek_practical_sheet.set_column('A2:A2',35, unlocked)
-        mek_practical_sheet.set_column('B2:B2',10, unlocked)
-        mek_practical_sheet.set_column('C2:C2',20, unlocked)
-        mek_practical_sheet.set_column('D2:G2',25, unlocked)
-        mek_practical_sheet.set_column('H2:H2',15, unlocked)
-            
-           
-
         # Set column widths for the practical sheet
-        mek_practical_sheet.set_column('A2:A2', 50, unlocked)
-        mek_practical_sheet.set_column('B2:B2', 20, unlocked)
-        mek_practical_sheet.set_column('C2:C2', 30, unlocked)
+        mek_practical_sheet.set_column('A2:A2', 35, unlocked)
+        mek_practical_sheet.set_column('B2:B2', 10, unlocked)
+        mek_practical_sheet.set_column('C2:C2', 20, unlocked)
         mek_practical_sheet.set_column('D2:E2', 25, unlocked)
         mek_practical_sheet.set_column('F2:G2', 35, unlocked)
         mek_practical_sheet.set_column('H2:H2', 15, unlocked)
 
         # Merge cells in the first row for the practical sheet
-        mek_practical_sheet.merge_range("A1:E1", examiner_assignments.institute_id.name, merge_format)
-        mek_practical_sheet.write("F1:G1",examiner.name,merge_format)
+        mek_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        mek_practical_sheet.write("E1:F1",examiner.name,merge_format)
         mek_practical_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
 
         # Write the header row for the practical sheet
@@ -1284,12 +1272,13 @@ class ExaminerPortal(CustomerPortal):
         
         for i, candidate in enumerate(candidate_list):
             mek_practical_sheet.write('A{}'.format(i+3), candidate, locked)
+            mek_practical_sheet.set_row(i + 2, 45)  # Set row height for data rows
 
         for i, code in enumerate(roll_no):
             mek_practical_sheet.write('B{}'.format(i+3), code, locked)
 
         for i, code in enumerate(candidate_code):
-            mek_practical_sheet.write(f'C{i + 3}', code, locked)
+            mek_practical_sheet.write('C{}'.format(i+3), code, locked)
             
             # Add data validation for scores in the practical sheet
             row_num = i + 3
