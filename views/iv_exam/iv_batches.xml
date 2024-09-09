@@ -65,6 +65,9 @@
         <menuitem id="menu_iv_batches" name="IV Batches"
            parent="iv_menu" action="iv_batches_action" sequence="10"/>
 
+        <menuitem id="menu_iv_examinations" name="IV Examinations"
+           parent="iv_menu" sequence="11"/>
+
         
 
 

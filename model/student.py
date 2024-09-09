@@ -87,7 +87,8 @@ class GPCandidate(models.Model):
     ],string="Fees Paid by Institute", default='no',tracking=True)
     
     fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
-    
+    black_listed = fields.Boolean("Black Listed",tracking=True)
+
     def _fees_paid_by_candidate(self):
         for rec in self:
             last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
@@ -823,7 +824,8 @@ class CCMCCandidate(models.Model):
     ],string="Candidate-Sign",store=True,default="pending",compute="_check_sign")
     
     candidate_user_invoice_criteria = fields.Boolean('Criteria',compute= "_check_criteria",store=True)
-
+    black_listed = fields.Boolean("Black Listed",tracking=True)
+    
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
         for record in self:

@@ -4032,6 +4032,25 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Absent Status")
+    
+    cookery_prac_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Cookery Prac Attendance")
+    ccmc_oral_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Cookery Oral Attendance")
+    
+    ccmc_gsk_oral_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="CCMC GSK Oral Attendance")
+    
+    ccmc_online_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Cookery Online Attendance")
 
     @api.model
     def action_open_ccmc_admit_card_release_wizard(self, exam_ids=None):
