@@ -75,7 +75,6 @@ class InstituteGPBatches(models.Model):
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
     
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
-
     def _compute_all_candidates_have_indos(self):
         for record in self:
             # import wdb; wdb.set_trace()

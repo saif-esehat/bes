@@ -74,11 +74,51 @@ class IVCandidates(models.Model):
     #             raise ValidationError("Examination date must be filled.")
             
     def open_written_exams(self):
-        return
+        candidate_id = self.env['iv.written.exam'].sudo().search([('candidate.id','=',self.id)]).id  # Replace with the actual ID of the record you want to open
 
+        candidate = self.env['iv.written.exam'].browse(candidate_id)
+        # import wdb; wdb.set_trace(); 
+
+
+        if candidate:
+            # Open the record in a form view
+            
+        
+            return {
+                'name': 'Written Exams',
+                'domain': [('candidate.id', '=', self.id)],
+                'view_type': 'form',
+                'res_model': 'iv.written.exam',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'type': 'ir.actions.act_window'
+            }
+        else:
+            raise ValidationError("No Records Found")
+       
 
     def open_oral_exams(self):
-        return
+        candidate_id = self.env['iv.oral.exam'].sudo().search([('candidate.id','=',self.id)]).id  # Replace with the actual ID of the record you want to open
+
+        candidate = self.env['iv.oral.exam'].browse(candidate_id)
+        # import wdb; wdb.set_trace(); 
+
+
+        if candidate:
+            # Open the record in a form view
+            
+        
+            return {
+                'name': 'Oral Exams',
+                'domain': [('candidate.id', '=', self.id)],
+                'view_type': 'form',
+                'res_model': 'iv.oral.exam',
+                'view_id': False,
+                'view_mode': 'tree,form',
+                'type': 'ir.actions.act_window'
+            }
+        else:
+            raise ValidationError("No Records Found")
     
     
     def action_print_bulk_allotment(self):
