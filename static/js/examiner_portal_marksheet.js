@@ -46,6 +46,12 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     return;
                 }
 
+                // Check if attendance is marked as 'present' but oral or practical marks are not present
+                if (attendance_element.value === 'present' && (parseInt(gsk_oral_marks) == 0 || parseInt(gsk_practical_marks) == 0)) {
+                    confirm("Are you sure you want to mark this  candidate present as their marks are 0?");   
+                    return;
+                }
+
 
                 var postData = {
                     id: gsk_marksheet_id, // Assuming you want to pass the ID in the request body
@@ -131,6 +137,12 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                         alert("Candidates marks should be 0 in order to marks them absent");
 
                         return; // If the user cancels, stop further processin
+                }
+                
+                // Check if attendance is marked as 'present' but oral or practical marks are not present
+                if (attendance_element.value === 'present' && (parseInt(mek_oral_marks) == 0 || parseInt(mek_practical_marks) == 0)) {
+                    confirm("Are you sure you want to mark this  candidate present as their marks are 0?");   
+                    return;
                 }
 
                 debugger;

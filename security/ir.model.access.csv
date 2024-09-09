@@ -136,5 +136,7 @@ bes.access_iv_batches,access_iv_batches,bes.model_iv_batches,base.group_user,1,1
 bes.access_iv_candidates,access_iv_candidates,bes.model_iv_candidates,base.group_user,1,1,1,1
 bes.access_candidates_application,access_candidates_application,bes.model_candidates_application,base.group_user,1,1,1,1
 bes.access_candidates_remark,access_candidates_remark,bes.model_candidates_remark,base.group_user,1,1,1,1
+bes.access_application_hold_reason,access_application_hold_reason,bes.model_application_hold_reason,base.group_user,1,1,1,1
+
 bes.access_iv_attendance_sheet,access_iv_attendance_sheet,bes.model_iv_attendance_sheet,base.group_user,1,1,1,1
 bes.access_iv_oral_attendance_sheet,access_iv_oral_attendance_sheet,bes.model_iv_oral_attendance_sheet,base.group_user,1,1,1,1

@@ -22,9 +22,20 @@ class SurveySectionQuestionWizard(models.TransientModel):
         question_id.write({'page_id':self.chapter.id})
         print("QB "+ str(question_id))
         question_ids = self.chapter.question_ids.ids
-        question_ids.append(question_id.id)
+        # question_ids.append(question_id.id)
         print(question_ids)
-        self.chapter.write({'question_ids':[(6,0,question_id.id)]})
+        seq = 0
+        chapters = self.env['survey.question'].sudo().search([('survey_id','=',self.qb.id),('is_page','=',True)])
+        for chapter in chapters:
+            seq = seq + 1
+            chapter.write({'sequence':seq})
+            for question_id in chapter.question_ids:
+                question = self.env['survey.question'].sudo().search([('id','=',question_id)]).write({'page_id':self.chapter.id})
+                question.write({'sequence':seq+1})
+                
+            
+        
+        # self.chapter.write({'question_ids':[(6,0,question_id.id)]})
         
 
 class InheritedSurvey(models.Model):

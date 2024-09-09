@@ -17,7 +17,14 @@ class IVAttendanceSheet(models.Model):
     candidate_name = fields.Char(string="Candidate Name", store=True)
     
     roll_no = fields.Char(string="Roll No.")
-    grade_applied = fields.Char(string="Grade")
+    grade_applied = fields.Selection([
+        ('1CM', 'First Class Master'),
+        ('2CM', 'Second Class Master'),
+        ('SER', 'Serang'),
+        ('ME', 'Motor Engineer'),
+        ('1ED', 'First Class Engine Driver'),
+        ('2ED', 'Second Class Engine Driver'),
+        ], string='Grade')
 
     dob = fields.Date(string="Date of Birth")
     

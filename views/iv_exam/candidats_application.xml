@@ -71,6 +71,8 @@
                             <field name="education" placeholder="Enter Education" style="width: 50%;"/>
                             <field name="place_of_birth" placeholder="Enter Place of Birth" style="width: 50%;"/>
                             <field name="state_ids" placeholder="Select State" style="width: 50%;"/>
+                            <field name="zip" placeholder="ZIP" maxwidth="6"/>
+
                            
                         </group>
                     </group>
@@ -140,22 +142,13 @@
                      <group>
                       <field name="language_preference" style="width: 50%;"/>
                      </group>
-                      <!-- <h4> 6. Details of Fees Payments </h4>
-                     <group>
-                      <field name="upi_no" style="width: 50%;"/>
-                      <field name="transaction_date" style="width: 50%;"/>
-                      <field name="amount" style="width: 50%;"/>
-                     </group> -->
+                    
                       <h4>6. Details of Fees Payments</h4>
                        <group>
-                        <group style="width: 50%;">
-                            <field name="qr_code_image" widget="image" style="width: 100px; height: 100px;"/>
-                        </group>
-                      
-                           
+                       
                         <group style="width: 50%;">
                             <field name="upi_no" style="width: 50%;"/>
-                            <field name="transaction_date" style="width: 50%;"/>
+                            <field name="transaction_date" string="UPI Date" style="width: 50%;"/>
                             <field name="amount" style="width: 50%;"/>
                          </group>
                     </group>
@@ -173,89 +166,13 @@
                     </group>
                     <group>
                         <group>
-                             <field name="transection_date" style="width: 50%;"/>
+                             <field name="neft_date" string="NEFT Date" style="width: 50%;"/>
                         </group>
                         <group>
                               <field name="transection_amount" style="width: 50%;"/>
                         </group>
                     </group>
-                    <!-- <h4>7. List of documents to be Attached</h4>
-
-                     <group>
-                        <label for="self_attched" string="a) Self-attached copy of previous COC (if any)" 
-                            style="white-space: nowrap; width: 50%;"/>  
-                        <field name="self_attched" nolabel="1"/>
-                     </group>
-                     <group>
-                     <label for="origanal_se_certi" string="b) Original Sea Service Certificate" 
-                            style="white-space: nowrap; width: 70%;"/>  
-                        <field name="origanal_se_certi" nolabel="1"/>
-                    </group>
-                    <group>
-                        <label for="original_notarize" string="c) Original Notarize Affidavite" 
-                            style="white-space: nowrap;"/>  
-                        <field name="original_notarize" nolabel="1"/>
-                    </group>
-                    <group>
-                    <label for="attache_passport" string="d) Self-attached copy of valid Passport OR Original Police Verification Certificate." 
-                            style="white-space: nowrap;"/>  
-                        <field name="attache_passport" nolabel="1"/>
-                    </group>
-                     <group>
-                        <label for="attched_educatinal" string="e) Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_educatinal" nolabel="1"/>
-                    </group>
-                    <group>
-                        <label for="attched_leaving" string="f) Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_leaving" nolabel="1"/>
-                    </group>
-                    <group>
-                       <label for="attched_photo" string="g) Self-attached Photo copy of the Residential Address Proof" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_photo" nolabel="1"/>
-                    </group>
-
-                    <group>
-                       <label for="attched_modular" string="h) Self-attached copies of Modular Safety and Security Courses" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_modular" nolabel="1"/>
-                    </group>
-
-                    <group>
-                       <label for="attched_medical" string="i) Self-attached valid Medical Certificate" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_medical" nolabel="1"/>
-                    </group>
-                     <group>
-                       <label for="attched_id_proof" string="j) Self-attached photo copy of the ID Proof (Issued by Government)" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_id_proof" nolabel="1"/>
-                    </group>
-                    <group>
-                       <label for="attched_upi" string="k) UPI/NEFT Payment Receipt" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_upi" nolabel="1"/>
-                    </group>
-                     <group>
-                       <label for="attched_driver_certificate" string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From" 
-                            style="white-space: nowrap;"/>
-                        <field name="attched_driver_certificate" nolabel="1"/>
-                    </group> -->
-
-                    <!-- <h4>7. Declaration</h4>
-                     <b>I do by, declare that, particulars contained in the application are correct and true to the best of my knowledge and belief, and that the attached documents are genuine and signed by the Person
-                         whose names appear on them. I make this declaration consciously beliving it to be true.</b>
-                    <group>
-                        <group>
-                            <field name="declaration_date" />
-                            <field name="place" />
-                        </group>
-                        <group>
-                            <field name="applicant_signature" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/>
-                        </group>
-                    </group> -->
+                    
                     <h4>7. For Assessing Officer's Use</h4>
                     <group>
                         <group>
@@ -263,287 +180,16 @@
                             <!-- <field name="hold" /> -->
                         </group>
                         <group>
-                            <field name="application_date" widget='date' options="{'format': 'MM/DD/YYYY'}" />
+                            <field name="application_date" widget='date' />
                             <!-- <field name="signature_bes" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/> -->
                         </group>
+                        <field name="hold_reason" attrs="{'invisible': [('application_eligible', '=', 'eligible')]}">
+                            <tree editable="bottom">
+                                <field name="remark"/>
+                            </tree>
+                        </field>
                     </group>
-                    <!-- <h4>8. For Office Staff Use Only</h4>
-                    <group>
-                        <field name="name_of_candidate" />
-                        <field name="candidate_roll" style="width: 50%;"/>
-                        <field name="grade_appearing" style="width: 50%;"/>
-                    </group> -->
-                    <h4>8. For Examiner's Use Only</h4>
-                    <strong>Note:-</strong><b>The Examiner should fill up following and, in all cases, as soon as 
-                                              possible forward this paper to the Chief Co-ordinator IV examination, Navi Mumbai.
-                                              If the applicant passes his Testimonials and previous Certificate if any must be sent
-                                              with the paper to the Co-ordinator of IV examination</b>
-                    <h4 style="text-align: center;">Part (A)</h4><br></br>
-                    <h4 style="text-align: center;">Written Examination Result</h4>
-                    <group>
-                        <field name="date_written_exam" style="width: 50%;"/>
-                        <field name="written_exam_pf" style="width: 50%;"/>
-                    </group>
-                    <h4 style="text-align: center;">Part (B)</h4><br></br>
-                    <h4 style="text-align: center;">Oral Examination Result</h4>
-                    <group>
-                        <field name="date_oral_exam" style="width: 50%;"/>
-                        <field name="oral_exam_pf" style="width: 50%;"/>
-                    </group>
-                    <group>
-                        <group>
-                            <field name="signature_examiner" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/>
-                        </group>
-                        <group>
-                            <field name="examiner_date" style="width: 50%;"/>
-                        </group>
-                    </group>
-                    <h4>9. For Examination Co-ordinator's Use Only</h4>
-                    <group>
-                       <label for="candidate_pf" string="I hereby, certify that the particulars contained above are correct The above-named candidate has been Declared FINALLY (Pass or Fail)" 
-                            style="white-space: nowrap;"/>
-                        <field name="candidate_pf" nolabel="1"/>
-                    </group>
-                     <group>
-                        <group>
-                         <field name="coordinater_name" style="width: 70%;"/> 
-                        </group>
-                        <group>
-
-                         <field name="signature_coordinater" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="coordinater_date" style="width: 50%;"/> 
-                    </group>
-                    <b>In-Charge, IV/Port Examination</b>
-                    <h4>(Board Of Examination For Seafarers Trust, Navi Mumbai)</h4>
-                    <group></group>
-                   <notebook>
-                           
-                        <page string="Check List">
-                            <label for="application_from" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="application_from"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_1" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_1"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                            <label for="attached_photo" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attached_photo"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_2" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_2"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                            <label for="origanal_se_certificate" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="origanal_se_certificate"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_3" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_3"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                             <label for="apply_grade" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="apply_grade"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_4" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_4"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                            <label for="notarize_affi" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="notarize_affi"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_5" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_5"/>
-                                    </div>
-                                </group>
-                            </group>
-
-
-                            <label for="attched_document" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_document"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_6" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_6"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                             <label for="attched_photo_ed" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_photo_ed"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_7" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_7"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                             <label for="attched_photo_dob" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_photo_dob"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_8" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_8"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                            <label for="attched_photo_residential" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_photo_residential"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_9" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_9"/>
-                                    </div>
-                                </group>
-                            </group>
-
-
-                             <label for="attched_photo_security" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_photo_security"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_10" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_10"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                             <label for="attched_photo_medical" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_photo_medical"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_11" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_11"/>
-                                    </div>
-                                </group>
-                            </group>
-
-                            <label for="attched_photo_idproof" />
-                            <group>
-                            
-                            <group>
-                            
-                                <div>
-                                    <field name="attched_photo_idproof"/>
-                                </div>
-                                </group>
-
-                                <group>
-                                    <label for="remark_id_12" string="Select Remarks"/>
-                                    <div>
-                                        <field name="remark_id_12"/>
-                                    </div>
-                                </group>
-                            </group>
-                            
-                             
-                        </page>
-                  
-                    </notebook>
+                    
                  </sheet>
                 </form>
             </field>
