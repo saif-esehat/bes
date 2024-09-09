@@ -27,23 +27,25 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 var marksheet_gsk_status =   document.getElementById('marksheet_gsk_status_'+lastId)
 
                 // Get the values of gsk_oral and gsk_practical marks
-                var gsk_oral_marks = document.getElementById('gsk_oral_total_marks').innerText.trim();
-                var gsk_practical_marks = document.getElementById('gsk_practical_total_marks').innerText.trim();
+                var gsk_oral_marks = document.getElementById('gsk_oral_total_marks_'+lastId).innerText.trim();
+                var gsk_practical_marks = document.getElementById('gsk_practical_total_marks_'+lastId).innerText.trim();
                 
+
+                
+
                 if (attendance_element.value == '') {
 
                     alert("Attendance is Mandatory. Please Select Attendance")
 
                     return ;
                 }
-
                 
                 // Check if attendance is marked as 'absent' but mek_oral or mek_practical marks are present
-                if (attendance_element.value === 'absent' && (gsk_oral_marks !== 0 || gsk_practical_marks !== 0)) {
-                    var confirmation = alert("Candidates marks should be 0 in order to marks them absent");
-                    if (!confirmation) {
-                        return; // If the user cancels, stop further processing
-                    }
+                if (attendance_element.value === 'absent' && (parseInt(gsk_oral_marks) !== 0 || parseInt(gsk_practical_marks) !== 0)) {
+                    console.log("inside absent");
+                    
+                    alert("Candidates marks should be 0 in order to marks them absent");
+                    return;
                 }
 
 
@@ -116,8 +118,8 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 var marksheet_mek_status =   document.getElementById('marksheet_mek_status_'+lastId)
 
                 // Get the values of mek_oral and mek_practical marks
-                var mek_oral_marks = document.getElementById('mek_oral_total_marks').innerText.trim();
-                var mek_practical_marks = document.getElementById('mek_practical_total_marks').innerText.trim();
+                var mek_oral_marks = document.getElementById('mek_oral_total_marks_'+lastId).innerText.trim();
+                var mek_practical_marks = document.getElementById('mek_practical_total_marks_'+lastId).innerText.trim();
 
                 if (attendance_element.value == '') {
 
@@ -127,11 +129,10 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 }
 
                 // Check if attendance is marked as 'absent' but mek_oral or mek_practical marks are present
-                if (attendance_element.value === 'absent' && (mek_oral_marks !== '' || mek_practical_marks !== '')) {
-                    var confirmation = alert("Candidates marks should be 0 in order to marks them absent");
-                    if (!confirmation) {
-                        return; // If the user cancels, stop further processing
-                    }
+                if (attendance_element.value === 'absent' && (parseInt(mek_oral_marks) !== 0 || parseInt(mek_practical_marks) !== 0)) {
+                        alert("Candidates marks should be 0 in order to marks them absent");
+
+                        return; // If the user cancels, stop further processin
                 }
 
                 debugger;
