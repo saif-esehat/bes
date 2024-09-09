@@ -916,7 +916,7 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_oral.practical_record_journals"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" id="gsk_oral_total_marks">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="gsk_oral_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
                             </td>
                             
@@ -942,7 +942,7 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.fast_ropes_knots_bend_sounding_rod"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" id="gsk_practical_total_marks">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="gsk_practical_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                             </td>
                             <t t-set="gsk_total" t-value="int(marksheet.gsk_oral.gsk_oral_total_marks) + int(marksheet.gsk_prac.gsk_practical_total_marks)"/>
@@ -997,7 +997,7 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_oral.journal"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" id="mek_oral_total_marks">
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="mek_oral_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.mek_oral.mek_oral_total_marks"/>
                             </td>
                             
@@ -1024,7 +1024,7 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.electrical"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" id="mek_practical_total_marks">
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" t-attf-id="mek_practical_total_marks_{{marksheet.id}}">
                                 <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                             </td>
                             <t t-set="mek_total" t-value="int(marksheet.mek_prac.mek_practical_total_marks) + int(marksheet.mek_oral.mek_oral_total_marks)"/>
