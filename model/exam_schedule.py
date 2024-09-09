@@ -2597,7 +2597,7 @@ class GPExam(models.Model):
         for rec in self:
             # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
             # last_exam_dgs_batch = last_exam.dgs_batch.id
-            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',rec.id),('gp_candidate','=',rec.gp_candidate.id)],order='date desc')
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',rec.dgs_batch.id),('gp_candidate','=',rec.gp_candidate.id)],order='date desc')
             if invoice:
                 batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
                 if invoice.payment_state == 'paid':
@@ -3994,7 +3994,23 @@ class CCMCExam(models.Model):
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
-   
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            # last_exam_dgs_batch = last_exam.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',rec.dgs_batch.id),('ccmc_candidate','=',rec.ccmc_candidate.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
+    
     institute_code = fields.Char("Institute code",related='ccmc_candidate.institute_id.code',store=True,tracking=True)
     indos_no = fields.Char(string="INDoS No", related='ccmc_candidate.indos_no',store=True,tracking=True)
     
