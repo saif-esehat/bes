@@ -771,7 +771,7 @@ class CCMCCandidate(models.Model):
         ('no', 'No')
     ],string="Fees Paid by Institute", default='no',tracking=True)
     
-    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
     
     def _fees_paid_by_candidate(self):
         for rec in self:
