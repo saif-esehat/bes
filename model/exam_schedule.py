@@ -4001,7 +4001,7 @@ class CCMCExam(models.Model):
         for rec in self:
             # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
             # last_exam_dgs_batch = last_exam.dgs_batch.id
-            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',rec.dgs_batch.id),('gp_candidate','=',rec.gp_candidate.id)],order='date desc')
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',rec.dgs_batch.id),('ccmc_candidate','=',rec.ccmc_candidate.id)],order='date desc')
             if invoice:
                 batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
                 if invoice.payment_state == 'paid':
