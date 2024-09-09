@@ -9,7 +9,7 @@ import xlrd
 
     
 class IVAttendanceSheet(models.Model):
-    _name = "iv.attendance.sheet"
+    _name = "iv.oral.attendance.sheet"
     _description= 'IV Attendance Sheet'
 
     _rec_name = "candidate_name"
@@ -24,24 +24,23 @@ class IVAttendanceSheet(models.Model):
     indos_no = fields.Char(string="INDOs No")
 
     candidate_signature = fields.Binary(string="Candidate Signature")
+    class_no = fields.Char(string="Class Room: No.")
 
-    def action_print_bulk_attendance(self):
-        # Logic to handle the printing of bulk allotment data
-        return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
 
 class IVWrittenAttendance(models.AbstractModel):
-    _name = 'report.bes.reports_iv_written_attendance'
+    _name = 'report.bes.reports_iv_oral_attendance1'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs = self.env['iv.attendance.sheet'].sudo().browse(docids)
+        docs = self.env['iv.oral.attendance.sheet'].sudo().browse(docids)
         
         
         return {
             'docids': docids,
-            'doc_model': 'iv.attendance.sheet',
+            'doc_model': 'iv.oral.attendance.sheet',
             'data': data,
             'docs': docs,
         }
+
