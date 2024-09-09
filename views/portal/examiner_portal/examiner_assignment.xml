@@ -540,6 +540,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                       
                             </div>
                             
                         </div>
@@ -556,14 +557,15 @@
             <t t-set="today_date" t-value="datetime.date.today()"/>
             <!-- <t t-set="today_date" t-value="datetime.datetime(2024, 6, 7).date()"/> -->
 
-            
             <t t-if="extended">
                 <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=7)"/>
             </t>
             <t t-else="">
                 <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=7)"/>
             </t>
+            
 
+            <!-- <span><t t-esc="extended_date"/></span> -->
             <!-- <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/> -->
             
             <t t-set="date_valid" t-value="exam_date &lt;= today_date &lt;= extended_date"/>
@@ -774,7 +776,7 @@
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Recognise buyos and flags <br/>.Hoisting a Flag correctly <br/>.Steering and Helm Orders</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Making fast Ropes and Wires <br/>·Use Rope-Stopper / Chain Stopper <br/> Knots, Bends, Hitches <br/>.Whippings/Seizing/Splicing Ropes/Wires <br/> Taking Soundings with sounding rod / sounding taps<br/> ·Reading of Draft <br/>.Mannual lifting of weight </th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Gsk Practical Total</th>
-                        <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">GSK Total</th>
+                        <!-- <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">GSK Total</th> -->
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
 
@@ -793,7 +795,7 @@
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Welding (1 Task) <br/>Lathe Work (1 Task) </th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Electrical (1 Task)</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Practical Total</th>
-                        <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Total</th>
+                        <!-- <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">MEK Total</th> -->
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">Edit Marks</th>
                         
@@ -913,7 +915,7 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_oral.practical_record_journals"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" id="gsk_oral_total_marks">
                                 <t t-out="marksheet.gsk_oral.gsk_oral_total_marks"/>
                             </td>
                             
@@ -939,12 +941,12 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gsk_prac.fast_ropes_knots_bend_sounding_rod"/>
                             </td>
-                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                            <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center" id="gsk_practical_total_marks">
                                 <t t-out="marksheet.gsk_prac.gsk_practical_total_marks"/>
                             </td>
-                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
+                             <!-- <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.gp_marksheet.gsk_total"/>
-                            </td>
+                            </td> -->
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
@@ -982,7 +984,7 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_oral.journal"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" id="mek_oral_total_marks">
                                 <t t-out="marksheet.mek_oral.mek_oral_total_marks"/>
                             </td>
                             
@@ -1009,15 +1011,15 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.electrical"/>
                             </td>
-                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
+                            <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center" id="mek_practical_total_marks">
                                 <t t-out="marksheet.mek_prac.mek_practical_total_marks"/>
                             </td>
                              <!-- <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-out="marksheet.mek_prac.mek_total"/>
-                            </td> -->
+                            </td> 
                              <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-center">
-                                <!-- <t t-out="marksheet.mek_prac.(mek_total)/(175)"/> -->
-                            </td>
+                                <t t-out="marksheet.mek_prac.(mek_total)/(175)"/>
+                            </td> -->
 
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-if="date_valid">

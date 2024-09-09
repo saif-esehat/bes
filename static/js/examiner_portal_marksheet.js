@@ -25,6 +25,10 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 var attendance_element = document.getElementById('attendance_'+lastId)
 
                 var marksheet_gsk_status =   document.getElementById('marksheet_gsk_status_'+lastId)
+
+                // Get the values of gsk_oral and gsk_practical marks
+                var gsk_oral_marks = document.getElementById('gsk_oral_total_marks').innerText.trim();
+                var gsk_practical_marks = document.getElementById('gsk_practical_total_marks').innerText.trim();
                 
                 if (attendance_element.value == '') {
 
@@ -32,6 +36,16 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
 
                     return ;
                 }
+
+                
+                // Check if attendance is marked as 'absent' but mek_oral or mek_practical marks are present
+                if (attendance_element.value === 'absent' && (gsk_oral_marks !== 0 || gsk_practical_marks !== 0)) {
+                    var confirmation = alert("Candidates marks should be 0 in order to marks them absent");
+                    if (!confirmation) {
+                        return; // If the user cancels, stop further processing
+                    }
+                }
+
 
                 var postData = {
                     id: gsk_marksheet_id, // Assuming you want to pass the ID in the request body
@@ -101,6 +115,10 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
 
                 var marksheet_mek_status =   document.getElementById('marksheet_mek_status_'+lastId)
 
+                // Get the values of mek_oral and mek_practical marks
+                var mek_oral_marks = document.getElementById('mek_oral_total_marks').innerText.trim();
+                var mek_practical_marks = document.getElementById('mek_practical_total_marks').innerText.trim();
+
                 if (attendance_element.value == '') {
 
                     alert("Attendance is Mandatory. Please Select Attendance")
@@ -108,7 +126,15 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     return ;
                 }
 
-                debugger
+                // Check if attendance is marked as 'absent' but mek_oral or mek_practical marks are present
+                if (attendance_element.value === 'absent' && (mek_oral_marks !== '' || mek_practical_marks !== '')) {
+                    var confirmation = alert("Candidates marks should be 0 in order to marks them absent");
+                    if (!confirmation) {
+                        return; // If the user cancels, stop further processing
+                    }
+                }
+
+                debugger;
 
                 var postData = {
                     id: mek_marksheet_id, // Assuming you want to pass the ID in the request body

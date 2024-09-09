@@ -69,15 +69,49 @@
             <field name="context">{}</field>
         </record> -->
 
-        <record id="open_ec_ccmc_exam_schedule" model="ir.actions.act_window">
+        <record id="open_ec_ccmc_exam_schedule_cookery" model="ir.actions.act_window">
             <field name="name">CCMC Registered Candidate</field>
             <field name="res_model">ccmc.exam.schedule</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
             <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_cookery', '=', True),                
+            ]</field>
             <!-- Replace 'module_name' with the actual name of your module -->
             <field name="context">{}</field>
         </record>
+
+        <record id="open_ec_ccmc_exam_schedule_oral" model="ir.actions.act_window">
+            <field name="name">CCMC Registered Candidate</field>
+            <field name="res_model">ccmc.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
+            <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_oral', '=', True),                
+            ]</field>
+            <!-- Replace 'module_name' with the actual name of your module -->
+            <field name="context">{}</field>
+        </record>
+
+        <record id="open_ec_ccmc_exam_schedule_online" model="ir.actions.act_window">
+            <field name="name">CCMC Registered Candidate</field>
+            <field name="res_model">ccmc.exam.schedule</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
+            <field name="view_id" ref="bes.exam_center_ccmc_registered_candidate_tree" />
+            <field name="domain">[
+                ('hold_admit_card', '=', False),
+                ('attempting_online', '=', True),                
+            ]</field>
+            <!-- Replace 'module_name' with the actual name of your module -->
+            <field name="context">{}</field>
+        </record>
+
+       
 
         <record id="action_examination_report" model="ir.actions.act_window">
             <field name="name">Examination Reports</field>
@@ -111,7 +145,7 @@
         <menuitem id="institute_menu" parent="bes_menu" name="Institute Master"
             action="institute_action" sequence="2" />
 
-        <menuitem id="exam_menu" parent="bes_menu" name="Exam Master" sequence="3" />
+        <menuitem id="exam_menu" parent="bes_menu" name="Examiner Master" sequence="3" />
         <menuitem id="exam_center_menu" parent="exam_menu" name="Exam Region"
             action="exam_center_action" />
         <menuitem id="examiner_menu" parent="exam_menu" name="Examiner Master"
@@ -288,7 +322,7 @@
             web_icon="bes,static/description/books.png" />
 
 
-        <menuitem id="batches_menu" parent="bes_menu" name="Batches" />
+        <menuitem id="batches_menu" parent="bes_menu" name="Institute Batches" />
 
         <menuitem id="gp_batches_menu"
             parent="batches_menu" name="GP Batch"
@@ -300,7 +334,7 @@
 
         <menuitem id="dgs_batch_menu"
             parent="bes_menu"
-            name="Result Master"
+            name="Exam Batches"
             action="dgs_batch_action" />
 
         <menuitem id="report_master_menu"
@@ -390,12 +424,26 @@
         
         
 
-        <menuitem id="candidate_ccmc_ec_menu"
+        <menuitem id="candidate_ccmc_ec_menu_cookery"
             parent="candidate_ec_menu"
             groups="group_exam_coordinator"
-            name="CCMC Candidates"
-            action="open_ec_ccmc_exam_schedule"
+            name="CCMC Practical"
+            action="open_ec_ccmc_exam_schedule_cookery"
             sequence="5" />
+
+        <menuitem id="candidate_ccmc_ec_menu_oral"
+            parent="candidate_ec_menu"
+            groups="group_exam_coordinator"
+            name="CCMC Oral Candidate"
+            action="open_ec_ccmc_exam_schedule_oral"
+            sequence="6" />
+
+        <menuitem id="candidate_ccmc_ec_menu_online"
+            parent="candidate_ec_menu"
+            groups="group_exam_coordinator"
+            name="CCMC Oral Candidate"
+            action="open_ec_ccmc_exam_schedule_online"
+            sequence="6" />
 
         <record id="gp_repeater_invoices_action" model="ir.actions.act_window">
             <field name="name">GP Repeater Candidate Invoices</field>

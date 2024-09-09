@@ -589,34 +589,36 @@
                     <header>
                         <button name="action_open_ccmc_admit_card_release_wizard" string="Release Admit Card" type="object" class="oe_highlight"/>
                     </header>
-                    <field name="exam_id"/> 
-                    <field name="attempt_number"/> 
-                    <field name="institute_code"/> 
+                    <field name="exam_id"  optional="show"/> 
+                    <field name="attempt_number" optional="show"/> 
+                    <field name="institute_code" optional="show"/> 
                     <field name="exam_violation_state" optional="show"/>
-                    <field name="ccmc_candidate"/>
-                    <field name="candidate_code"/>
-                    <field name="registered_institute"/>
-                    <field name="exam_region"/>
-                    <field name="institute_id"/>
+                    <field name="ccmc_candidate"  optional="show"/>
+                    <field name="candidate_code" optional="show"/>
+                    <field name="registered_institute" optional="show"/>
+                    <field name="exam_region" optional="show"/>
+                    <field name="institute_id" optional="show"/>
 
                     <field name="attempting_cookery" invisible="1"/>
                     <field name="attempting_oral" invisible="1"/>
                     <field name="attempting_online" invisible="1"/>
 
-                    <field name="cookery_practical" decoration-warning="attempting_cookery"/> 
+                    <field name="cookery_practical" decoration-warning="attempting_cookery" optional="show"/> 
                     
-                    <field name="cookery_oral"  decoration-warning="attempting_oral"/> 
+                    <field name="cookery_oral"  decoration-warning="attempting_oral" optional="show"/> 
                     
-                    <field name="cookery_gsk_online"  decoration-warning="attempting_online"/>                    
+                    <field name="cookery_gsk_online"  decoration-warning="attempting_online" optional="show"/>                    
                     
-                    <field name="overall_marks"/>
-                    <field name="exam_criteria"/>
-                    <field name="certificate_criteria"/>
-                    <field name="ccmc_rank"/> 
-                    <field name="user_state"  widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="overall_marks" optional="show"/>
+                    <field name="exam_criteria" optional="show"/>
+                    <field name="certificate_criteria" optional="show"/>
+                    <field name="ccmc_rank" optional="show"/> 
+                    <field name="user_state" optional="show"  widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="candidate_image_status" optional="show" widget="badge" decoration-success= "candidate_image_status == 'done'"  decoration-danger= "candidate_image_status == 'pending'"/>
                     <field name="candidate_signature_status" optional="show" widget="badge" decoration-success= "candidate_signature_status == 'done'"  decoration-danger= "candidate_signature_status == 'pending'"/>
                     <field name="absent_status" optional="hide"/> 
+                    <field name="stcw_criteria" optional="hide" />
+                    <field name="attendance_criteria" optional="hide"/>
                     <field name="result" string="Result Status" decoration-success= "result == 'passed'"  decoration-danger= "result == 'failed'" widget="badge" optional="show"/>
                     <field name="result_status" string="Certificate Status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'" optional="show"/>
                     <field name="state" widget="badge" optional="show" />
