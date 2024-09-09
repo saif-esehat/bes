@@ -27,6 +27,8 @@
                             <field name="indos_no" />
                             <field name="candidate_name" />
                             <field name="dob"/>
+                            <field name="classroom_no"/>
+
                             
                         </group>
                         <group>
