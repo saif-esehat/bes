@@ -535,6 +535,7 @@
                 <tree>
                     <field name="indos_no"  optional="show"/>
                     <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
+                    <field name="black_listed" optional="hide"/>
                     <field name="user_id" optional="hide"/>
                     <field name="name"  optional="show"/>
                     <field name="gender"  optional="show"/>
@@ -986,6 +987,7 @@
                 <tree>
                     <field name="indos_no"  optional="show"/>
                     <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
+                    <field name="black_listed" optional="hide"/>
                     <field name="user_id" optional="hide"/>
                     <field name="name"  optional="show"/>
                     <field name="gender"  optional="show"/>
