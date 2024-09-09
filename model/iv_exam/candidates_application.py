@@ -94,8 +94,8 @@ class CandidatesApplication(models.Model):
      # 6) detail of fees payments
     
     upi_no = fields.Char(string="UPI/UTR No.")
-    transaction_date = fields.Date(string="Date",required=False)
-    amount = fields.Float(string="Amount")
+    transaction_date = fields.Date(string="UPI Date",required=False)
+    amount = fields.Float(string="UPI Amount")
     qr_code_image = fields.Binary(string="a) Through UPI",compute="generate_qr_code")
 
     # bord_name = fields.Char(string="Exam Board Name")
@@ -103,9 +103,9 @@ class CandidatesApplication(models.Model):
     # branch_name = fields.Char(string="Branch Name")
     # account_no = fields.Integer(string="Account Number")
     # ifsc_code = fields.Char(string="IFSC Code")
-    transection_id = fields.Char(string="Transection ID")
-    transection_date = fields.Date(string="Date")
-    transection_amount = fields.Float(string="Amount")
+    transection_id = fields.Char(string="Transaction ID")
+    neft_date = fields.Date(string="NEFT Date")
+    transection_amount = fields.Float(string="NEFT Amount")
 
     # 7)List of documents to be Attached
 
@@ -183,7 +183,7 @@ class CandidatesApplication(models.Model):
         for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
-                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{count}"
+                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{candidate.batch.start_date.year}/{count}"
                 candidate.sudo().write({'roll_no': roll_no})
                 
                 # Check if the candidate with the same indos_no already exists
@@ -217,14 +217,14 @@ class CandidatesApplication(models.Model):
 
         return
     
-    @api.model
-    def create(self, values):
-        existing_record = self.env['candidates.application'].sudo().search([('indos_no', '=', values.get('indos_no'))], limit=1)
+    # @api.model
+    # def create(self, values):
+    #     existing_record = self.env['candidates.application'].sudo().search([('indos_no', '=', values.get('indos_no'))], limit=1)
         
-        if existing_record:
-            raise ValidationError("Candidate with current INDOS no already exists.")
+    #     if existing_record:
+    #         raise ValidationError("Candidate with current INDOS no already exists.")
         
-        return super(CandidatesApplication, self).create(values)
+    #     return super(CandidatesApplication, self).create(values)
     
 
     @api.constrains('batch')
@@ -257,12 +257,7 @@ class CandidatesApplication(models.Model):
             if not record.name:
                 raise ValidationError("The name must be filled.")
     
-    @api.onchange('application_date')
-    def _onchange_application_date(self):
-        if self.application_date:
-            # Convert YYYY-MM-DD to MM/DD/YYYY for display
-            date_obj = datetime.datetime.strptime(self.application_date, '%Y-%m-%d')
-            self.application_date_text = date_obj.strftime('%m/%d/%Y')
+    
     # signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
 
 
@@ -394,6 +389,9 @@ class CandidatesApplication(models.Model):
     remark_id_12 = fields.Many2one('candidates.remark', string="Select Remarks")
 
 
+    hold_reason = fields.One2many('application.hold.reason','application_id',string="Hold Reason")
+
+
     @api.onchange('application_from')
     def _onchange_application_from(self):
         if self.application_from == 'yes':
@@ -504,3 +502,11 @@ class CandidatesRemark(models.Model):
     _name = "candidates.remark"
 
     name  = fields.Char(string="Remark")
+
+
+class HoldReason(models.Model):
+    _name = "application.hold.reason"
+
+    application_id = fields.Many2one('candidates.application')
+    remark  = fields.Many2one('candidates.remark',string="Remark")
+    

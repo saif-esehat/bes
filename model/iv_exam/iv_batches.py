@@ -73,6 +73,10 @@ class IVBatches(models.Model):
                 'default_batch_id': self.id,
             },
         }
-    
+    def close_batch(self):
+        for record in self:
+            applications = record.env['candidates.application'].sudo().search([('batch.id','=',record.id),('application_eligible','=','hold')])
+            for application in applications:
+                application.application_eligible = 'not_eligible'
 
    
