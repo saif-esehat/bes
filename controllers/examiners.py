@@ -1356,9 +1356,10 @@ class ExaminerPortal(CustomerPortal):
 
     @http.route('/my/uploadgskmarksheet', type='http', auth="user", website=True)
     def upload_gsk_marksheet(self,**kw):
+        # import wdb; wdb.set_trace()
         user_id = request.env.user.id
         batch_id = int(kw['batch_id'])
-        # import wdb;wdb.set_trace();
+        assignment_id = int(kw['gsk_assignment_ids'])
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
@@ -1468,16 +1469,15 @@ class ExaminerPortal(CustomerPortal):
 
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-        examiner_assignments.write({
+
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+        examiner_assignment.write({
             'marksheet_uploaded' : True
         })
-
-        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
-            
-        # return request.redirect("/my/assignments/batches/"+str(batch_id) + '/' +str(batch_id))
-        # return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+"/"+str(assignment_id))
+    
+        return request.redirect("/my/assignments/batches/"+str(batch_id)+"/"+str(assignment_id))
 
 
 
@@ -1486,6 +1486,7 @@ class ExaminerPortal(CustomerPortal):
         user_id = request.env.user.id
         # import wdb;wdb.set_trace();
         batch_id = int(kw['mek_batch_ids'])
+        assignment_id = int(kw['mek_assignment_ids'])
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename
 
@@ -1592,15 +1593,14 @@ class ExaminerPortal(CustomerPortal):
 
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-        examiner_assignments.write({
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+        examiner_assignment.write({
             'marksheet_uploaded' : True
         })
-        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
         
-            
-        # return request.redirect("/my/assignments/batches/"+str(batch_id))
-        return request.render("bes.examiner_assignment_candidate_list")
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+"/"+str(assignment_id))
+        
+        return request.redirect("/my/assignments/batches/"+str(batch_id)+"/"+str(assignment_id))
 
     
     @http.route('/open_ccmc_candidate_form/download_ccmc_practical_marksheet/<int:batch_id>/<int:assignment_id>', type='http', auth="user", website=True)
@@ -2181,15 +2181,13 @@ class ExaminerPortal(CustomerPortal):
 
                 })
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        examiner_assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch.id','=',batch_id),('examiner','=',examiner.id)])
-        # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
-        examiner_assignments.write({
+        examiner_assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+        examiner_assignment.write({
             'marksheet_uploaded' : True
         })
             
-        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+'/'+str(assignment_id))
-        # return request.render("bes.examiner_assignment_candidate_list")
-    
+        return request.redirect("/my/assignments/batches/candidates/"+str(batch_id)+"/"+str(assignment_id))
+            
     @http.route('/my/uploadccmcgskmarksheet', type='http', auth="user", website=True)
     def upload_ccmc_gsk_marksheet(self,**kw):
         # import wdb;wdb.set_trace();
