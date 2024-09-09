@@ -2572,6 +2572,7 @@ class GPExam(models.Model):
     
     edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
     
+    
 
     def _compute_is_in_group(self):
         for record in self:
@@ -2589,7 +2590,22 @@ class GPExam(models.Model):
         ('pending', 'Pending'),
         ('passed', 'Complied'),
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
-
+    
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    
+    def _fees_paid_by_candidate(self):
+        for rec in self:
+            # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
+            # last_exam_dgs_batch = last_exam.dgs_batch.id
+            invoice = self.env['account.move'].sudo().search([('repeater_exam_batch','=',rec.id),('gp_candidate','=',rec.gp_candidate.id)],order='date desc')
+            if invoice:
+                batch = invoice.repeater_exam_batch.to_date.strftime("%B %Y")
+                if invoice.payment_state == 'paid':
+                    rec.fees_paid_candidate = batch + ' - Paid'
+                else:
+                    rec.fees_paid_candidate = batch + ' - Not Paid'
+            else:
+                rec.fees_paid_candidate = 'No Fees Paid'
     
     # stcw_criteria = fields.Selection([
     #     ('', ''),
