@@ -216,28 +216,59 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 
                 var attendance_element = document.getElementById('attendance_'+lastId)
 
-                var marksheet_mek_status =   document.getElementById('marksheet_mek_status_'+lastId)
+                var marksheet_ccmc_status =   document.getElementById('marksheet_ccmc_gsk_status_'+lastId)
 
-                debugger
+                var ccmc_total_marks = document.getElementById('marksheet_ccmc_gsk_total_'+lastId).innerText.trim();
+
+
+
+                if (attendance_element.value == '') {
+
+                    alert("Attendance is Mandatory. Please Select Attendance")
+
+                    return ;
+                }
+
+                if (attendance_element.value === 'absent' && (parseInt(ccmc_total_marks) !== 0 )) {
+                    alert("Candidates marks should be 0 in order to marks them absent");
+
+                    return; // If the user cancels, stop further processin
+                }
+
+
+
+
+                
 
                 var postData = {
-                    id: gsk_oral_marksheet_id // Assuming you want to pass the ID in the request body
+                    id: gsk_oral_marksheet_id, // Assuming you want to pass the ID in the request body
+                    attendance_id: attendance_id,
+                    marksheet_ccmc_status: marksheet_ccmc_status,
+                    attendance_element:attendance_element
                 };
                 var result = [];
-
-
-              
                 
     
                 $.ajax({
                     type: "POST",
                     url: '/confirm/ccmcgsk/marksheet',
+                    indexValue: {
+                        id: gsk_oral_marksheet_id, // Assuming you want to pass the ID in the request body
+                        attendance_id: attendance_id,
+                        marksheet_ccmc_status: marksheet_ccmc_status,
+                        attendance_element:attendance_element
+                    },
                     data: JSON.stringify(postData) ,
                     contentType: 'application/json',                    
                     success: function (response) {
                         // debugger
+                        var marksheet_ccmc_status = this.indexValue.marksheet_ccmc_status
+                        this.indexValue.attendance_element.disabled = true
+                        var confirm_button_element = this.indexValue.id
+                        document.getElementById(confirm_button_element).remove()
+                        marksheet_ccmc_status.children[0].innerText = 'Confirmed'
                         console.log("POST request successful:", response);
-                        location.reload();
+                        // location.reload();
 
                         // if response["status"]
                         // Handle success response

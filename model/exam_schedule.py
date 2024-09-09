@@ -4042,6 +4042,11 @@ class CCMCExam(models.Model):
         ('absent', 'Absent'),
     ],string="Cookery Oral Attendance")
     
+    ccmc_gsk_oral_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="CCMC GSK Oral Attendance")
+    
     ccmc_online_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
