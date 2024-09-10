@@ -497,6 +497,14 @@ class CandidatesApplication(models.Model):
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
 
+    def action_print_hold_candidate(self):
+        # Get only the candidates with 'hold' status
+        hold_candidates = self.env['candidates.application'].search([('application_eligible', '=', 'hold')])
+        
+        # Logic to handle the printing of bulk allotment data for hold candidates
+        return self.env.ref('bes.reports_iv_hold_candidate1').report_action(hold_candidates)
+
+
                 
 class CandidatesRemark(models.Model):
     _name = "candidates.remark"
@@ -509,4 +517,21 @@ class HoldReason(models.Model):
 
     application_id = fields.Many2one('candidates.application')
     remark  = fields.Many2one('candidates.remark',string="Remark")
+
+
+class IVCanditateApplicationHold(models.AbstractModel):
+    _name = 'report.bes.reports_iv_hold_candidate_list'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        # Fetch the candidates with 'hold' status
+        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'hold')
+
+        return {
+            'docids': docids,
+            'doc_model': 'candidates.application',
+            'data': data,
+            'docs': docs,
+        }
     

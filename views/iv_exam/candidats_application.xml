@@ -225,6 +225,23 @@
                     </searchpanel>
                 </search>
             </field>
+        <field name="name">candidates.application.tree</field>
+        <field name="model">candidates.application</field>
+        <field name="arch" type="xml">
+            <tree>
+                <header>
+                    <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
+                    <button type="object" class="oe_highlight" name="action_print_hold_candidate"  string="IV Hold Candidats List" />
+                </header>
+                <field name="name"/>
+                <field name="application_no"/>
+                <field name="roll_no"/>
+                <field name="grade"/>
+                <field name="dob"/>
+                <field name="application_eligible"  string="Status"/>
+                
+            </tree>
+        </field>
         </record>
 
         

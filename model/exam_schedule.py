@@ -2591,7 +2591,7 @@ class GPExam(models.Model):
         ('passed', 'Complied'),
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
-    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
     
     def _fees_paid_by_candidate(self):
         for rec in self:
@@ -3995,7 +3995,7 @@ class CCMCExam(models.Model):
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
-    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate")
+    fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
     
     def _fees_paid_by_candidate(self):
         for rec in self:
@@ -4032,6 +4032,25 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Absent Status")
+    
+    cookery_prac_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Cookery Prac Attendance")
+    ccmc_oral_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Cookery Oral Attendance")
+    
+    ccmc_gsk_oral_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="CCMC GSK Oral Attendance")
+    
+    ccmc_online_attendance = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Cookery Online Attendance")
 
     @api.model
     def action_open_ccmc_admit_card_release_wizard(self, exam_ids=None):
