@@ -94,11 +94,11 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
-                    <field name="batch"/>
+                    <field name="batch_id"/>
                     
 
                     <searchpanel>
-                        <field name="batch" enable_counters="1"/>
+                        <field name="batch_id" enable_counters="1"/>
                     </searchpanel>
                 </search>
             </field>

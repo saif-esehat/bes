@@ -390,6 +390,9 @@ class CandidatesApplication(models.Model):
 
 
     hold_reason = fields.One2many('application.hold.reason','application_id',string="Hold Reason")
+    reporting_date = fields.Date('Reporting Date')
+    reporting_time = fields.Char('Reporting Time')
+
 
 
     @api.onchange('application_from')
