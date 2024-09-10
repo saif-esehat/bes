@@ -149,21 +149,27 @@
                                                 <td style="border: 1px solid black;">
                                                     <t t-if="o.exam_region.id == 1">
                                                         <t t-esc="o.dgs_batch.mumbai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.mumbai_prac_oral_to_date" t-esc="o.dgs_batch.mumbai_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 3">
                                                         <t t-esc="o.dgs_batch.delhi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.delhi_prac_oral_to_date" t-esc="o.dgs_batch.delhi_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 4">
                                                         <t t-esc="o.dgs_batch.goa_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.goa_prac_oral_to_date" t-esc="o.dgs_batch.goa_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 5">
                                                         <t t-esc="o.dgs_batch.kolkatta_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.kolkatta_prac_oral_to_date" t-esc="o.dgs_batch.kolkatta_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 6">
                                                         <t t-esc="o.dgs_batch.chennai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.chennai_prac_oral_to_date" t-esc="o.dgs_batch.chennai_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 8">
                                                         <t t-esc="o.dgs_batch.kochi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span>– <t t-if="o.dgs_batch.kochi_prac_oral_to_date" t-esc="o.dgs_batch.kochi_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                 </td>
                                             </t>
@@ -176,21 +182,27 @@
                                                 <td style="border: 1px solid black;">
                                                     <t t-if="o.exam_region.id == 1">
                                                         <t t-esc="o.dgs_batch.mumbai_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.mumbai_online_to_date" t-esc="o.dgs_batch.mumbai_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 3">
                                                         <t t-esc="o.dgs_batch.delhi_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.delhi_online_to_date" t-esc="o.dgs_batch.delhi_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 4">
                                                         <t t-esc="o.dgs_batch.goa_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.goa_online_to_date" t-esc="o.dgs_batch.goa_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 5">
                                                         <t t-esc="o.dgs_batch.kolkatta_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.kolkatta_online_to_date" t-esc="o.dgs_batch.kolkatta_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 6">
                                                         <t t-esc="o.dgs_batch.chennai_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.chennai_online_to_date" t-esc="o.dgs_batch.chennai_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 8">
                                                         <t t-esc="o.dgs_batch.kochi_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.kochi_online_to_date" t-esc="o.dgs_batch.kochi_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                 </td>
                                             </t>
@@ -203,21 +215,27 @@
                                                 <td style="border: 1px solid black;">
                                                     <t t-if="o.exam_region.id == 1">
                                                         <t t-esc="o.dgs_batch.mumbai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.mumbai_prac_oral_to_date" t-esc="o.dgs_batch.mumbai_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 3">
                                                         <t t-esc="o.dgs_batch.delhi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.delhi_prac_oral_to_date" t-esc="o.dgs_batch.delhi_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 4">
                                                         <t t-esc="o.dgs_batch.goa_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.goa_prac_oral_to_date" t-esc="o.dgs_batch.goa_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 5">
                                                         <t t-esc="o.dgs_batch.kolkatta_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.kolkatta_prac_oral_to_date" t-esc="o.dgs_batch.kolkatta_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 6">
                                                         <t t-esc="o.dgs_batch.chennai_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.chennai_prac_oral_to_date" t-esc="o.dgs_batch.chennai_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 8">
                                                         <t t-esc="o.dgs_batch.kochi_prac_oral_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.kochi_prac_oral_to_date" t-esc="o.dgs_batch.kochi_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                 </td>
                                             </t>
@@ -230,21 +248,29 @@
                                                 <td style="border: 1px solid black;">
                                                     <t t-if="o.exam_region.id == 1">
                                                         <t t-esc="o.dgs_batch.mumbai_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> – <t t-if="o.dgs_batch.mumbai_online_to_date" t-esc="o.dgs_batch.mumbai_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 3">
                                                         <t t-esc="o.dgs_batch.delhi_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.delhi_online_to_date" t-esc="o.dgs_batch.delhi_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 4">
                                                         <t t-esc="o.dgs_batch.goa_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.goa_online_to_date" t-esc="o.dgs_batch.goa_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 5">
                                                         <t t-esc="o.dgs_batch.kolkatta_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.kolkatta_online_to_date" t-esc="o.dgs_batch.kolkatta_online_to_date.strftime('%d-%b-%Y')"/></span>
+                                                        
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 6">
                                                         <t t-esc="o.dgs_batch.chennai_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.chennai_online_to_date" t-esc="o.dgs_batch.chennai_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
                                                     <t t-elif="o.exam_region.id == 8">
                                                         <t t-esc="o.dgs_batch.kochi_online_date.strftime('%d-%b-%Y')"/>
+                                                        <span> - <t t-if="o.dgs_batch.kochi_online_to_date" t-esc="o.dgs_batch.kochi_online_to_date.strftime('%d-%b-%Y')"/></span>
+
                                                     </t>
                                                 </td>
                                             </t>

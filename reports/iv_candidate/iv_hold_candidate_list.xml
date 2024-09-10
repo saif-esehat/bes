@@ -45,16 +45,16 @@
                                     <span t-esc="index" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.indos_no" />
+                                    <span t-esc="hold.indos_no" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.application_no" />
+                                    <span t-esc="hold.application_no" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.grade" />
+                                    <span t-esc="hold.grade" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.name" />
+                                    <span t-esc="hold.name" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-esc="hold.dob.strftime('%d-%m-%Y')" />

@@ -149,23 +149,41 @@ class DGSBatch(models.Model):
     kochi_region = fields.Many2one("bes.institute",string="Kochi Region",tracking=True,domain="[('exam_center.name', '=','KOCHI')]")
     goa_region = fields.Many2one("bes.institute",string="Goa Region",tracking=True,domain="[('exam_center.name', '=','GOA')]")
     
-    mumbai_prac_oral_date = fields.Date(string="Mumbai Practical/Oral Date")
-    mumbai_online_date = fields.Date(sting="Mumbai Online Date")
+    mumbai_prac_oral_date = fields.Date(string="Mumbai Practical/Oral From Date")
+    mumbai_prac_oral_to_date = fields.Date(string="Mumbai Practical/Oral To Date")
+    
+    mumbai_online_date = fields.Date(sting="Mumbai Online From Date")
+    mumbai_online_to_date = fields.Date(sting="Mumbai Online To Date")
 
-    kolkatta_prac_oral_date = fields.Date(string="Kolkatta Practical/Oral Date")
-    kolkatta_online_date = fields.Date(string="Kolkatta Online Date")
+    kolkatta_prac_oral_date = fields.Date(string="Kolkatta Practical/Oral From Date")
+    kolkatta_prac_oral_to_date = fields.Date(string="Kolkatta Practical/Oral To Date")
     
-    chennai_prac_oral_date = fields.Date(string="Chennai Practical/Oral Date")
-    chennai_online_date  = fields.Date(string="Chennai Online Date")
+    kolkatta_online_date = fields.Date(string="Kolkatta Online From Date")
+    kolkatta_online_to_date = fields.Date(string="Kolkatta Online To Date")
     
-    delhi_prac_oral_date = fields.Date(string="Delhi Practical/Oral Date")
-    delhi_online_date  = fields.Date(string="Delhi Online Date")
+    chennai_prac_oral_date = fields.Date(string="Chennai Practical/Oral From Date")
+    chennai_prac_oral_to_date = fields.Date(string="Chennai Practical/Oral To Date")
     
-    kochi_prac_oral_date = fields.Date(string="Kochi Practical/Oral Date")
-    kochi_online_date  =  fields.Date(string="Kochi Online Date")
+    chennai_online_date  = fields.Date(string="Chennai Online From Date")
+    chennai_online_to_date = fields.Date(string="Chennai Online To Date")
     
-    goa_prac_oral_date = fields.Date(string="Goa Practical/Oral Date")
-    goa_online_date  =  fields.Date(string="Goa Online Date")
+    delhi_prac_oral_date = fields.Date(string="Delhi Practical/Oral From Date")
+    delhi_prac_oral_to_date = fields.Date(string="Delhi Practical/Oral To Date")
+    
+    delhi_online_date  = fields.Date(string="Delhi Online From Date")
+    delhi_online_to_date = fields.Date(string="Delhi Online To Date")
+    
+    kochi_prac_oral_date = fields.Date(string="Kochi Practical/Oral From Date")
+    kochi_prac_oral_to_date = fields.Date(string="Kochi Practical/Oral To Date")
+    
+    kochi_online_date  =  fields.Date(string="Kochi Online From Date")
+    kochi_online_to_date = fields.Date(string="Kochi Online To Date")
+    
+    goa_prac_oral_date = fields.Date(string="Goa Practical/Oral From Date")
+    goa_prac_oral_to_date = fields.Date(string="Goa Practical/Oral To Date")
+    
+    goa_online_date  =  fields.Date(string="Goa Online From Date")
+    goa_online_to_date = fields.Date(string="Goa Online To Date")
     
     
 
