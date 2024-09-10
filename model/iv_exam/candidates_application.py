@@ -557,4 +557,21 @@ class IVCanditateApplicationNotEligible(models.AbstractModel):
             'data': data,
             'docs': docs,
         }
+
+
+class IVCanditateApplicationEligible(models.AbstractModel):
+    _name = 'report.bes.reports_iv_eligible_candidate_list'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        # Fetch the candidates with 'hold' status
+        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'eligible')
+
+        return {
+            'docids': docids,
+            'doc_model': 'candidates.application',
+            'data': data,
+            'docs': docs,
+        }
     
