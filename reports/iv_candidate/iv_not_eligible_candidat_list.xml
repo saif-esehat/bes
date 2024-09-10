@@ -2,26 +2,26 @@
 <odoo>
 
  <report
-        id="reports_iv_hold_candidate1"
-        string="IV  Hold Candidate List"
+        id="reports_iv_not_eligible_candidate"
+        string="IV  Not Eligible Candidate List"
         model="candidates.application"
         report_type="qweb-pdf"
-        name="bes.reports_iv_hold_candidate_list"
-        file="bes.reports_iv_hold_candidate_list"/>
+        name="bes.reports_iv_not_eligible_candidate_list"
+        file="bes.reports_iv_not_eligible_candidate_list"/>
 
 
 
-<template id="reports_iv_hold_candidate_list">
+<template id="reports_iv_not_eligible_candidate_list">
     <t t-call="web.basic_layout">
             <div class="page">
 
                 <h5 style="text-align: center; font-weight: bold;">
-                        Board of Examinations for Seafarers Trust (BES), Navi Mumbai
+                        Board of Examinations for Seafarers Trust (BES), Navi Mumbai.
                 </h5>
                 
                 <!-- Second Line -->
                 <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                        List of Hold (Fresh) Candidates
+                     Final List of Not Eligible (Fresh) Candidates. 
                 </h6>
 
                 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -38,30 +38,30 @@
                 </thead>
                 <tbody>
                         <t t-set="index" t-value="0" />
-                        <t t-foreach="docs" t-as="hold">
+                        <t t-foreach="docs" t-as="not_eligible">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
                                 <td  style="border: 1px solid black; padding:6px; text-align: center;">
                                     <span t-esc="index" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.indos_no" />
+                                    <span t-field="not_eligible.indos_no" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.application_no" />
+                                    <span t-field="not_eligible.application_no" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.grade" />
+                                    <span t-field="not_eligible.grade" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="hold.name" />
+                                    <span t-field="not_eligible.name" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-esc="hold.dob.strftime('%d-%m-%Y')" />
+                                    <span t-esc="not_eligible.dob.strftime('%d-%m-%Y')" />
                                 </td>
                                <td style="border: 1px solid black; padding:6px;">
                                 <ul style="list-style-type: disc; padding-left: 20px;">
-                                        <t t-foreach="hold.hold_reason" t-as="reason">
+                                        <t t-foreach="not_eligible.hold_reason" t-as="reason">
                                         <li>
                                                 <span t-field="reason.remark" />
                                         </li>
