@@ -497,12 +497,19 @@ class CandidatesApplication(models.Model):
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
 
-    def action_print_hold_candidate(self):
-        # Get only the candidates with 'hold' status
-        hold_candidates = self.env['candidates.application'].search([('application_eligible', '=', 'hold')])
+    # def action_print_hold_candidate(self):
+    #     # Get only the candidates with 'hold' status
+    #     hold_candidates = self.env['candidates.application'].search([('application_eligible', '=', 'hold')])
         
-        # Logic to handle the printing of bulk allotment data for hold candidates
-        return self.env.ref('bes.reports_iv_hold_candidate1').report_action(hold_candidates)
+    #     # Logic to handle the printing of bulk allotment data for hold candidates
+    #     return self.env.ref('bes.reports_iv_hold_candidate1').report_action(hold_candidates)
+
+    # def action_print_not_eligible_candidate(self):
+    #     # Get only the candidates with 'hold' status
+    #     not_eligible_candidates = self.env['candidates.application'].search([('application_eligible', '=', 'not_eligible')])
+        
+    #     # Logic to handle the printing of bulk allotment data for hold candidates
+    #     return self.env.ref('bes.reports_iv_hold_candidate1').report_action(not_eligible_candidates)
 
 
                 
@@ -527,6 +534,22 @@ class IVCanditateApplicationHold(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         # Fetch the candidates with 'hold' status
         docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'hold')
+
+        return {
+            'docids': docids,
+            'doc_model': 'candidates.application',
+            'data': data,
+            'docs': docs,
+        }
+
+class IVCanditateApplicationNotEligible(models.AbstractModel):
+    _name = 'report.bes.reports_iv_not_eligible_candidate_list'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        # Fetch the candidates with 'hold' status
+        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'not_eligible')
 
         return {
             'docids': docids,

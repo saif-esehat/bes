@@ -202,7 +202,7 @@
             <tree>
                 <header>
                     <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
-                    <button type="object" class="oe_highlight" name="action_print_hold_candidate"  string="IV Hold Candidats List" />
+                    <!-- <button type="object" class="oe_highlight" name="action_print_hold_candidate"  string="IV Hold Candidats List" /> -->
                 </header>
                 <field name="name"/>
                 <field name="application_no"/>
