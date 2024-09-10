@@ -33,6 +33,7 @@
                             <field name="candidate" />
                             <field name="batch_id" />
                             <field name="grade" />
+                            <field name="mmb_marks" />
 
                         </group>
                         <group>
@@ -58,6 +59,7 @@
                             <field name="candidate" />
                             <field name="batch_id" />
                             <field name="grade" />
+
 
                         </group>
                         <group>

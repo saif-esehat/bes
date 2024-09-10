@@ -23,6 +23,7 @@ class IVWrittenExam(models.Model):
         ('2ED', 'Second Class Engine Driver'),
         ], string='Grade')
     marks = fields.Float('Total Marks')
+    mmb_marks = fields.Float("MMB Marks")
     attendance = fields.Boolean('Candidate Present')
 
     status = fields.Selection([
@@ -31,13 +32,17 @@ class IVWrittenExam(models.Model):
         ('absent', 'Absent'),
         ], string='Status',default='failed',compute="_compute_status")
     
+    @api.onchange('marks')
+    def _change_marks(self):
+        for record in self:
+            record.mmb_marks = record.marks
 
-    @api.depends('attendance','marks')
+    @api.depends('attendance','mmb_marks')
     def _compute_status(self):
         for record in self:
-            if record.marks < 25:
+            if record.mmb_marks < 25:
                 record.status = 'failed'
-            if record.marks >= 25:
+            if record.mmb_marks >= 25:
                 record.status = 'passed'
             if record.attendance == False:
                 record.status = 'absent'
@@ -58,6 +63,7 @@ class IVOralExam(models.Model):
         ('1ED', 'First Class Engine Driver'),
         ('2ED', 'Second Class Engine Driver'),
         ], string='Grade')
+
     marks = fields.Float('Total Marks')
     attendance = fields.Boolean('Candidate Present')
 
@@ -67,7 +73,7 @@ class IVOralExam(models.Model):
         ('absent', 'Absent'),
         ], string='Status',default='failed',compute="_compute_status")
     
-
+   
     @api.depends('attendance','marks')
     def _compute_status(self):
         for record in self:
