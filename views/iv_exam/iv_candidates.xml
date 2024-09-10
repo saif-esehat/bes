@@ -88,6 +88,22 @@
         </field>
         </record>
 
+        <record id="iv_candidates_search" model="ir.ui.view">
+            <field name="name">iv.candidates.search</field>
+            <field name="model">iv.candidates</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="batch"/>
+                    
+
+                    <searchpanel>
+                        <field name="batch" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
         <menuitem id="iv_candidate_menu" 
                   parent="iv_menu" 
                   name="IV Candidates"
