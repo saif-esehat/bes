@@ -210,6 +210,8 @@
                     <field name="name"/>
                     <field name="application_no"/>
                     <field name="roll_no"/>
+                    <field name="grade"/>
+                    <field name="application_eligible" string="Status"/>
                     
                 </tree>
             </field>
