@@ -177,10 +177,14 @@
                     <group>
                         <group>
                             <field name="application_eligible" />
+                            <field name="reporting_date" string="Reporting Date" attrs="{'invisible': [('application_eligible', '!=', 'eligible')]}"/>
+
                             <!-- <field name="hold" /> -->
                         </group>
                         <group>
                             <field name="application_date" widget='date' />
+                            <field name="reporting_time" string="Reporting Time" attrs="{'invisible': [('application_eligible', '!=', 'eligible')]}"/>
+
                             <!-- <field name="signature_bes" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/> -->
                         </group>
                         <field name="hold_reason" attrs="{'invisible': [('application_eligible', '=', 'eligible')]}">
@@ -196,24 +200,40 @@
         </record>
 
         <record id="iv_candidats_application_tree" model="ir.ui.view">
-        <field name="name">candidates.application.tree</field>
-        <field name="model">candidates.application</field>
-        <field name="arch" type="xml">
-            <tree>
-                <header>
-                    <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
-                    <!-- <button type="object" class="oe_highlight" name="action_print_hold_candidate"  string="IV Hold Candidats List" /> -->
-                </header>
-                <field name="name"/>
-                <field name="application_no"/>
-                <field name="roll_no"/>
-                <field name="grade"/>
-                <field name="dob"/>
-                <field name="application_eligible"  string="Status"/>
-                
-            </tree>
-        </field>
+            <field name="name">candidates.application.tree</field>
+            <field name="model">candidates.application</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
+                    </header>
+                    <field name="name"/>
+                    <field name="application_no"/>
+                    <field name="roll_no"/>
+                    <field name="grade"/>
+                    <field name="application_eligible" string="Status"/>
+                    
+                </tree>
+            </field>
         </record>
+
+        <record id="iv_candidats_application_search" model="ir.ui.view">
+            <field name="name">candidates.application.search</field>
+            <field name="model">candidates.application</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="batch"/>
+                    
+
+                    <searchpanel>
+                        <field name="batch" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+        
+        
 
         
 

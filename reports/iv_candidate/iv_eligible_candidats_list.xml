@@ -3,7 +3,7 @@
 
  <report
         id="reports_iv_eligible_candidate"
-        string="IV  Not Eligible Candidate List"
+        string="IV  Eligible Candidate List"
         model="candidates.application"
         report_type="qweb-pdf"
         name="bes.reports_iv_eligible_candidate_list"
@@ -21,53 +21,65 @@
                 
                 <!-- Second Line -->
                 <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                     Final List of Not Eligible (Fresh) Candidates. 
+                     Final List of Eligible Candidates 
                 </h6>
 
                 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                 <thead>
+                   
                     <tr style="background-color: #d3d3d3; color: black;">
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Indos No</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Application Form Number</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%; ">Sr No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;" >Indos No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 8%;" >Application Form Number</th>
                         <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Grade Applied</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">D.O.B</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Deficiencies</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;" >Name</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">D.O.B</th>
+                        <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 20%;" >
+                            Reporting at BES Office for Documents Verification
+                        </th>
+                   
                     </tr>
+                    <tr style="background-color: #d3d3d3; color: black;">
+                        <th colspan="6" style="border: 1px solid black; padding: 8px; text-align: center; width: 40%;" ></th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;" >Date</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Time</th>
+                    </tr>
+                   
                 </thead>
                 <tbody>
                         <t t-set="index" t-value="0" />
-                        <t t-foreach="docs" t-as="not_eligible">
+                        <t t-foreach="docs" t-as="eligible">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
                                 <td  style="border: 1px solid black; padding:6px; text-align: center;">
                                     <span t-esc="index" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="not_eligible.indos_no" />
+                                    <span t-field="eligible.indos_no" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="not_eligible.application_no" />
+                                    <span t-field="eligible.application_no" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="not_eligible.grade" />
+                                    <span t-field="eligible.grade" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-field="not_eligible.name" />
+                                    <span t-field="eligible.name" />
                                 </td>
                                 <td  style="border: 1px solid black; padding:6px;text-align: center;">
-                                    <span t-esc="not_eligible.dob.strftime('%d-%m-%Y')" />
+                                    <span t-esc="eligible.dob.strftime('%d-%m-%Y')" />
                                 </td>
-                               <td style="border: 1px solid black; padding:6px;">
-                                <ul style="list-style-type: disc; padding-left: 20px;">
-                                        <t t-foreach="not_eligible.hold_reason" t-as="reason">
-                                        <li>
-                                                <span t-field="reason.remark" />
-                                        </li>
+                                <td style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <span t-esc="eligible.reporting_date.strftime('%d-%m-%Y')" />
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <t t-if="eligible.reporting_time">
+                                            <span t-esc="str(eligible.reporting_time) + ' hrs.'"/>
                                         </t>
-                                </ul>
-                                </td>
+                                        <t t-if="not eligible.reporting_time">
+                                            <!-- Empty cell if reporting_time is not available -->
+                                        </t>
+                                    </td>
                             </tr>
                            
                                
