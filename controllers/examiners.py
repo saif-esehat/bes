@@ -33,6 +33,73 @@ def check_user_groups(group_xml_id):
 
 class ExaminerPortal(CustomerPortal):
     
+    @http.route(['/confirm/online/marksheet'],method=["POST"],type="json", auth="user")
+    def OnlineAttendanceConfirm(self, **kw):
+        data = request.jsonrequest
+        print(data)
+        marksheet_id = data["marksheet_id"]
+        subject = data["subject"]
+        attendance = data["attendance"]
+        if subject == "MEK" and attendance == "present":
+            marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+            gp_marksheet = marksheet.gp_marksheet
+            if gp_marksheet.token:
+                token = gp_marksheet.token
+                gp_marksheet.write({"gsk_online_attendance":attendance})
+            else:
+                token = gp_marksheet.generate_token()
+                gp_marksheet.write({"token":token,"mek_online_attendance":attendance})
+            return json.dumps({"token":token})
+        elif subject == "MEK" and attendance == "absent":
+            marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+            gp_marksheet = marksheet.gp_marksheet
+            gp_marksheet.write({"mek_online_attendance":attendance})
+            return json.dumps({"token":False})
+        
+        
+        if subject == "GSK" and attendance == "present":
+            marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+            gp_marksheet = marksheet.gp_marksheet
+            if gp_marksheet.token:
+                token = gp_marksheet.token
+                gp_marksheet.write({"gsk_online_attendance":attendance})
+            else:
+                token = gp_marksheet.generate_token()
+                gp_marksheet.write({"token":token,"gsk_online_attendance":attendance})
+            return json.dumps({"token":token})
+        elif subject == "GSK" and attendance == "absent":
+            marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+            gp_marksheet = marksheet.gp_marksheet
+            gp_marksheet.write({"gsk_online_attendance":attendance})
+            return json.dumps({"token":False})
+        
+        
+        if subject == "CCMC" and attendance == "present":
+            marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+            ccmc_marksheet = marksheet.ccmc_marksheet
+            if ccmc_marksheet.token:
+                token = ccmc_marksheet.token
+                ccmc_marksheet.write({"ccmc_online_attendance":attendance})
+            else:
+                token = ccmc_marksheet.generate_token()
+                ccmc_marksheet.write({"token":token,"ccmc_online_attendance":attendance})
+            return json.dumps({"token":token})
+        elif subject == "CCMC" and attendance == "absent":
+            marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+            ccmc_marksheet = marksheet.ccmc_marksheet
+            ccmc_marksheet.write({"ccmc_online_attendance":attendance})
+            return json.dumps({"token":False})
+        
+        
+            
+            
+            
+        
+            
+        
+
+        # return  json.dumps({"status":"success"})
+    
     @http.route(['/my/examiner/online_exam'],type="http",auth="user",website=True)
     @check_user_groups("bes.group_examiners")
     def ExamListView(self,**kw):
