@@ -665,7 +665,11 @@
 
                     </group>
                     <field name="exam_id"/>
+<<<<<<< HEAD
                     <field name="indos_no"/>
+=======
+                     <field name="indos_no"/>
+>>>>>>> 8766eb1006cdd0013d251c57883660f558f6150f
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>
