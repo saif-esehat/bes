@@ -441,7 +441,7 @@
         <menuitem id="candidate_ccmc_ec_menu_online"
             parent="candidate_ec_menu"
             groups="group_exam_coordinator"
-            name="CCMC Oral Candidate"
+            name="CCMC Online Candidate"
             action="open_ec_ccmc_exam_schedule_online"
             sequence="6" />
 

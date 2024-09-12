@@ -338,7 +338,7 @@
         
                             <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
 
-                            <!-- <t t-if="show_admit_card"> -->
+                            <t t-if="show_admit_card">
                                 <td class="text-center">
                                     <t t-if="hold_admit_card">
                                         <span class="text-danger">On Hold</span>
@@ -347,7 +347,7 @@
                                         <a t-attf-href="/my/gpexam/list/download_admit_card/{{rec.id}}" class="fa">Download Admit Card</a>
                                     </t>
                                 </td>
-                            <!-- </t> -->
+                            </t>
 
                             <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
 

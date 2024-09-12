@@ -1160,6 +1160,7 @@ class ExamOralPractical(models.Model):
             view_id = self.env.ref('bes.examiner_assignment_wizard_form').id
             
             return {
+                'name': 'Examiner Assignment',
                 'view_type': 'form',
                 'view_mode': 'form',
                 'view_id': view_id,
