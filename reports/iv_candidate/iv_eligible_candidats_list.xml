@@ -24,55 +24,64 @@
                      Final List of Eligible Candidates 
                 </h6>
 
-                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <table >
+       
                 <thead>
-                   
+							
                     <tr style="background-color: #d3d3d3; color: black;">
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%; ">Sr No</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;" >Indos No</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 8%;" >Application Form Number</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Grade Applied</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;" >Name</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">D.O.B</th>
-                        <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 20%;" >
-                            Reporting at BES Office for Documents Verification
-                        </th>
-                   
-                    </tr>
-                    <tr style="background-color: #d3d3d3; color: black;">
-                        <th colspan="6" style="border: 1px solid black; padding: 8px; text-align: center; width: 40%;" ></th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;" >Date</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Time</th>
-                    </tr>
-                   
-                </thead>
+                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold ; width: 5%; ">Sr no</td>
+                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 5%; ">Indos No</td>
+                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 10%; ">Application form Number</td>
+                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 10%; ">Grade Applied </td>
+                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 10%; ">Name </td>
+                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 10%; ">D.O.B </td>
+                                <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; width: 20%; ">Reporting at BES office for Documents Verification</td>
+                               
+                            </tr>
+                            <tr style="background-color: #d3d3d3; color: black;">
+                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
+                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
+                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
+                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
+                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
+                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
+                                <td colspan="1" style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; ">Date</td>
+                                <td colspan="1" style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; ">Time</td>
+                            </tr>
+							
+						</thead>
                 <tbody>
                         <t t-set="index" t-value="0" />
                         <t t-foreach="docs" t-as="eligible">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
-                                <td  style="border: 1px solid black; padding:6px; text-align: center;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px; text-align: center;">
                                     <span t-esc="index" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.indos_no" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.application_no" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.grade" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.name" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-esc="eligible.dob.strftime('%d-%m-%Y')" />
                                 </td>
-                                <td style="border: 1px solid black; padding:6px; text-align: center;">
+                                <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <t t-if="eligible.reporting_date">
                                     <span t-esc="eligible.reporting_date.strftime('%d-%m-%Y')" />
+                                    </t>
+                                    <t t-if="not eligible.reporting_date">
+                                            <!-- Empty cell if reporting_time is not available -->
+                                        </t>
                                 </td>
-                                <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                <td colspan="1" style="border: 1px solid black; padding: 6px; text-align: center;">
                                         <t t-if="eligible.reporting_time">
                                             <span t-esc="str(eligible.reporting_time) + ' hrs.'"/>
                                         </t>

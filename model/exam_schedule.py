@@ -11,6 +11,8 @@ import math
 from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
 import xlsxwriter
+import random
+
 
 
 
@@ -2555,6 +2557,16 @@ class GPExam(models.Model):
     
     mek_oral_prac_assignment = fields.Boolean('mek_oral_prac_assignment')
     
+    token = fields.Char(string='Online Token',tracking=True)
+    
+    def generate_token(self):
+        return random.randint(100000, 999999)
+
+    
+    gsk_online_token_used = fields.Boolean('gsk_online_token_used')
+    
+    mek_online_token_used = fields.Boolean('mek_online_token_used')
+    
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -3882,6 +3894,13 @@ class CCMCExam(models.Model):
         ('passed', 'Passed'),
     ], string='CCMC Oral Status',default="pending",tracking=True)
     
+    token = fields.Char(string='Online Token',tracking=True)
+    
+    ccmc_online_token_used = fields.Boolean("CCMC Online Token Used",tracking=True)
+    
+    def generate_token(self):
+        return random.randint(100000, 999999)
+    
     ccmc_gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
@@ -4038,6 +4057,7 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Cookery Prac Attendance")
+    
     ccmc_oral_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
