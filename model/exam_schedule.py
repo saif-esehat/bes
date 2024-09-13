@@ -2567,6 +2567,10 @@ class GPExam(models.Model):
     
     mek_online_token_used = fields.Boolean('mek_online_token_used')
     
+    attempted_gsk_online = fields.Boolean('attempted_gsk_online')
+
+    attempted_mek_online = fields.Boolean('attempted_mek_online')
+    
     mek_online_status = fields.Selection([
         ('pending', 'Pending'),
         ('failed', 'Failed'),
