@@ -5,6 +5,9 @@ from io import BytesIO
 import xlsxwriter
 from datetime import datetime
 import xlrd
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
     
@@ -125,4 +128,27 @@ class IVCandidates(models.Model):
         # Logic to handle the printing of bulk allotment data
         return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
-   
+
+class IVCanditateIssuanceAdmitCard(models.AbstractModel):
+    _name = 'report.bes.reports_iv_candidate_issuance_admit_card_list'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        # Get the records
+        docs = self.env['iv.candidates'].sudo().browse(docids)
+        
+        # Define the order of grades
+        grade_order = ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']
+        
+        # Sort the records based on the grade_applied field
+        sorted_docs = docs.sorted(
+            key=lambda r: grade_order.index(r.grade_applied) if r.grade_applied in grade_order else len(grade_order)
+        )
+
+        return {
+            'docids': docids,
+            'doc_model': 'iv.candidates',
+            'data': data,
+            'docs': sorted_docs,  # Sorted by grade order
+        }
