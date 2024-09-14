@@ -48,6 +48,10 @@ class IVCandidates(models.Model):
     certificate_valid_date = fields.Date(string="Certificate Valid Date")
 
 
+    candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
+
+
+
     # @api.constrains('certificate_valid_date')
     # def _check_certificate_valid_date(self):
     #     for record in self:
@@ -125,4 +129,10 @@ class IVCandidates(models.Model):
         # Logic to handle the printing of bulk allotment data
         return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
-   
+
+class CandidateApplicationLine(models.Model):
+    _name = 'candidate.applications.line'
+
+    candidate_id = fields.Many2one('iv.candidates',string="Candidate")
+
+    application_id = fields.Many2one('candidates.application',string="Application")

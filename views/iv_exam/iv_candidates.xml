@@ -54,6 +54,11 @@
                             <field name="certificate_valid_date" />
                         </group>
                         </group>
+                    <field name="candidate_applications">
+                        <tree editable="bottom">
+                            <field name="application_id" />
+                        </tree>
+                    </field>
                   
                 </sheet>
             </form>
