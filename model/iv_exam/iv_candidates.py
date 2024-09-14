@@ -133,14 +133,7 @@ class IVCandidates(models.Model):
         return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
 
-<<<<<<< HEAD
-class CandidateApplicationLine(models.Model):
-    _name = 'candidate.applications.line'
 
-    candidate_id = fields.Many2one('iv.candidates',string="Candidate")
-
-    application_id = fields.Many2one('candidates.application',string="Application")
-=======
 class IVCanditateIssuanceAdmitCard(models.AbstractModel):
     _name = 'report.bes.reports_iv_candidate_issuance_admit_card_list'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -164,4 +157,10 @@ class IVCanditateIssuanceAdmitCard(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,  # Sorted by grade order
         }
->>>>>>> b83a1a0ac47b9c1b5414c6ec710b4a5edd72c7c2
+
+class CandidateApplicationLine(models.Model):
+    _name = 'candidate.applications.line'
+
+    candidate_id = fields.Many2one('iv.candidates',string="Candidate")
+
+    application_id = fields.Many2one('candidates.application',string="Application")
