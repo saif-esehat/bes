@@ -5,6 +5,69 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
     var ajax = require('web.ajax');
 
 
+    publicWidget.registry.ExaminerPortalGSKOnlineAttendance = publicWidget.Widget.extend(
+        {
+            selector : ".confirm_online_attendance",
+            events:{
+                'click':"_onConfirmOnlineAttendance"
+            },
+            _onConfirmOnlineAttendance: function(evt){
+
+
+                var marksheet_id = document.getElementById("confirm_modal_marksheet_id").value
+                var subject = document.getElementById("confirm_modal_subject").value
+                var attendance = document.getElementById("confirm_modal_attendance").value
+                debugger
+                var postData = {
+                    marksheet_id: marksheet_id,
+                    subject :subject,
+                    attendance:attendance
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '/confirm/online/marksheet',
+                    indexValue: {
+                        marksheet_id: marksheet_id,
+                        
+                    },
+                    data: JSON.stringify(postData),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        debugger
+                        var marksheet_id = this.indexValue.marksheet_id;
+                        var data = JSON.parse(response.result)
+                        if (data.token ) {
+                        document.getElementById("online_token_"+marksheet_id.toString()).innerText = data.token
+                        document.getElementById("attendance_confirm_"+marksheet_id.toString()).remove();
+                        document.getElementById("attendance_dropdown_"+marksheet_id.toString()).disabled=true;
+
+                        }else{
+                            document.getElementById("attendance_confirm_"+marksheet_id.toString()).remove();
+                            document.getElementById("attendance_dropdown_"+marksheet_id.toString()).disabled=true;
+                        }
+
+                        var modal = document.getElementById("attendanceConfirmationModal");
+                        if (modal) {
+                            $(modal).modal("hide"); // Assuming you are using Bootstrap for the modal
+                        }
+                        
+
+                    },
+                    error: function (xhr, status, error) {
+                        // debugger
+                        console.error("POST request failed:", error);
+                        
+                        // Handle error
+                    }
+                });
+                
+
+
+            }
+        }
+    ),
+
+
     publicWidget.registry.ExaminerPortalGSKMarksheet = publicWidget.Widget.extend(
         {
             selector : ".confirm_gsk_marksheet_class",

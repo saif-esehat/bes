@@ -508,9 +508,11 @@
                             </group>
                             <group style="width:33%">
                                 <field name="mumbai_prac_oral_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="mumbai_prac_oral_to_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             </group>
                             <group style="width:33%">
                                 <field name="mumbai_online_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="mumbai_online_to_date" attrs="{'invisible':  [('repeater_batch', '=', False)]}"/>
                             </group>
                         </group>
                         
@@ -521,9 +523,13 @@
                             </group>
                             <group style="width:33%">
                                 <field name="kolkatta_prac_oral_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="kolkatta_prac_oral_to_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                          
                             </group>
                             <group style="width:33%">
                                 <field name="kolkatta_online_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="kolkatta_online_to_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                
                             </group>
                         </group>
                         
@@ -534,9 +540,11 @@
                             </group>
                             <group style="width:33%">
                                 <field name="chennai_prac_oral_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="chennai_prac_oral_to_date" attrs="{'invisible':  [('repeater_batch', '=', False)]}"/>
                             </group>
                             <group style="width:33%">
                                 <field name="chennai_online_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="chennai_online_to_date" attrs="{'invisible':   [('repeater_batch',  '=', False)]}"/>
                             </group>
                         </group>
                         
@@ -547,9 +555,11 @@
                             </group>
                             <group style="width:33%">
                                 <field name="delhi_prac_oral_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="delhi_prac_oral_to_date" attrs="{'invisible':   [('repeater_batch', '=', False)]}"/>
                             </group>
                             <group style="width:33%">
                                 <field name="delhi_online_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="delhi_online_to_date" attrs="{'invisible':    [('repeater_batch', '=', False)]}"/>
                             </group>
                         </group>
                         
@@ -560,9 +570,11 @@
                             </group>
                             <group style="width:33%">
                                 <field name="kochi_prac_oral_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="kochi_prac_oral_to_date" attrs="{'invisible':    [('repeater_batch',  '=', False)]}"/>
                             </group>
                             <group style="width:33%">
                                 <field name="kochi_online_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="kochi_online_to_date" attrs="{'invisible':     [('repeater_batch', '=', False)]}"/>
                             </group>
                         </group>
                         
@@ -573,9 +585,11 @@
                             </group>
                             <group style="width:33%">
                                 <field name="goa_prac_oral_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="goa_prac_oral_to_date" attrs="{'invisible':     [('repeater_batch',   '=', False)]}"/>
                             </group>
                             <group style="width:33%">
                                 <field name="goa_online_date" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                                <field name="goa_online_to_date" attrs="{'invisible':      [('repeater_batch',  '=', False)]}"/>
                             </group>
                         </group>
                         

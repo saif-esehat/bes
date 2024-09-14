@@ -68,7 +68,10 @@
         'views/iv_exam/iv_exams.xml',
         'reports/iv_attandance_report/iv_oral_attendance.xml',
         'reports/iv_candidate/iv_hold_candidate_list.xml',
+        'reports/iv_candidate/iv_eligible_candidats_list.xml',
         'reports/iv_candidate/iv_not_eligible_candidat_list.xml',
+        'reports/iv_candidate/iv_candidate_issuance_admitcard.xml',
+ 
        
         # 'views/sep_batches.xml',
         # 'views/sep_candidate.xml',

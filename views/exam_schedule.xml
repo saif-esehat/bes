@@ -3,8 +3,6 @@
     <data>
         <!-- Exam Schedule -->
         
-
-
         <record id="bes_gp_exam_action" model="ir.actions.act_window">
             <field name="name">GP Exam</field>
             <field name="type">ir.actions.act_window</field>
@@ -667,6 +665,7 @@
 
                     </group>
                     <field name="exam_id"/>
+                    <field name="indos_no"/>
                     <field name="ccmc_candidate"/>
                     <field name="candidate_code"/>
                     <field name="institute_id"/>
