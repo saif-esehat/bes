@@ -51,6 +51,7 @@ class IVCandidates(models.Model):
     certificate_valid_date = fields.Date(string="Certificate Valid Date")
 
 
+
     # @api.constrains('certificate_valid_date')
     # def _check_certificate_valid_date(self):
     #     for record in self:
@@ -152,3 +153,5 @@ class IVCanditateIssuanceAdmitCard(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,  # Sorted by grade order
         }
+
+
