@@ -193,6 +193,17 @@
                             </tree>
                         </field>
                     </group>
+                   <group>
+                     <group>
+                            <field name="date_of_pst" />
+                            <field name="date_of_validity_pst" />
+                         
+                        </group>
+                        <group>
+                            <field name="date_of_fpff" />
+                            <field name="date_of_validity_fpff" />
+                        </group>
+                    </group>
                  
                     
                  </sheet>
