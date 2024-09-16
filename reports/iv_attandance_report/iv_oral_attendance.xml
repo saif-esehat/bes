@@ -3,7 +3,7 @@
 
  <report
         id="reports_iv_oral_attendance1"
-        string="IV  Written  Attendance Sheet"
+        string="IV  Oral Attendance Sheet"
         model="iv.oral.attendance.sheet"
         report_type="qweb-pdf"
         name="bes.reports_iv_oral_attendance_sheet1"

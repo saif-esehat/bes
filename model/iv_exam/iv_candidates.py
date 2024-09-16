@@ -50,6 +50,50 @@ class IVCandidates(models.Model):
     examination_date = fields.Date(string="Examination Date")
     certificate_valid_date = fields.Date(string="Certificate Valid Date")
 
+    candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
+
+    def create_attendance_record(self):
+        for candidate in self:
+            # Get the last candidate application
+            last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
+            
+            if last_application_line:
+                # Access the candidate's application
+                application = last_application_line.application_id
+
+                # Check the boolean fields 'written' and 'oral'
+                if application.written and not application.oral:
+                    # Create record in IVAttendanceSheet when only 'written' is True
+                    self.env['iv.attendance.sheet'].create({
+                        'candidate_name': candidate.name,
+                        'roll_no': candidate.roll_no,
+                        'grade_applied': candidate.grade_applied,
+                        'dob': candidate.dob,
+                        'indos_no': candidate.indos_no,
+                    })
+                
+                elif application.oral and not application.written:
+                    # Create record in IVOralAttendanceSheet when only 'oral' is True
+                    self.env['iv.oral.attendance.sheet'].create({
+                        'candidate_name': candidate.name,
+                        'roll_no': candidate.roll_no,
+                        'grade_applied': candidate.grade_applied,
+                        'dob': candidate.dob,
+                        'indos_no': candidate.indos_no,
+                    })
+                
+                elif application.written and application.oral:
+                    # Create record in both IVAttendanceSheet and IVOralAttendanceSheet when both are True
+                    self.env['iv.attendance.sheet'].create({
+                        'candidate_name': candidate.name,
+                        'roll_no': candidate.roll_no,
+                        'grade_applied': candidate.grade_applied,
+                        'dob': candidate.dob,
+                        'indos_no': candidate.indos_no,
+                    })
+                   
+
+
 
 
     # @api.constrains('certificate_valid_date')
@@ -130,6 +174,7 @@ class IVCandidates(models.Model):
         return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
 
+
 class IVCanditateIssuanceAdmitCard(models.AbstractModel):
     _name = 'report.bes.reports_iv_candidate_issuance_admit_card_list'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -153,5 +198,14 @@ class IVCanditateIssuanceAdmitCard(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,  # Sorted by grade order
         }
+
+
+class CandidateApplicationLine(models.Model):
+    _name = 'candidate.applications.line'
+
+    candidate_id = fields.Many2one('iv.candidates',string="Candidate")
+
+    application_id = fields.Many2one('candidates.application',string="Application")
+
 
 

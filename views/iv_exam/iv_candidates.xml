@@ -56,13 +56,11 @@
                       
                           
                         </group>
-                          <!-- <group>
-                          <field name="application_line_ids">
-                            <tree editable="bottom">
-                                <field name="candidate_application"/>
-                            </tree>
-                        </field>
-                       </group> -->
+                     <field name="candidate_applications">
+                        <tree editable="bottom">
+                            <field name="application_id" />
+                        </tree>
+                    </field>
                     
                   
                 </sheet>
@@ -77,6 +75,7 @@
             <tree>
             <header>
                 <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
+                <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
             </header>                
                 <field name="certificate_no" />
                 <field name="roll_no" />
