@@ -53,7 +53,15 @@
                             <field name="examination_date" />
                             <field name="certificate_valid_date" />
                         </group>
+                      
+                          
                         </group>
+                     <field name="candidate_applications">
+                        <tree editable="bottom">
+                            <field name="application_id" />
+                        </tree>
+                    </field>
+                    
                   
                 </sheet>
             </form>
@@ -67,6 +75,7 @@
             <tree>
             <header>
                 <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
+                <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
             </header>                
                 <field name="certificate_no" />
                 <field name="roll_no" />
@@ -110,6 +119,6 @@
                   action="iv_candidates_action"
                   sequence="10" />
 
-
+      
 </data>
 </odoo>
