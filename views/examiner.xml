@@ -469,6 +469,34 @@
             </field>
         </record>
 
+        <record id="commence_online_exam_tree" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.tree</field>
+            <field name="model">exam.type.oral.practical.examiners</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <!-- <header> -->
+                    <!-- </header> -->
+                    <field name="dgs_batch"/>
+                    <field name="subject"/>
+                    <field name="examiner"/>
+                    <field name="exam_type"/>
+                    <field name="institute_id"/>
+                    <field name="exam_region"/>
+                    <field name="exam_date"/>
+                    <field name="marksheets" invisible="1" />
+                    <field name="candidates_count"/>
+                    <field name="commence_exam"/>
+                    <button attrs="{'invisible': [('commence_exam', '!=', False)]}" string="Commence Exam" type="object" class="oe_highlight" name="commence_online_exam"/>
+                    <button attrs="{'invisible': [('commence_exam', '!=', True)]}" string="End Exam" type="object" class="oe_highlight" name="end_online_exam"/> 
+
+                    <!-- <field name="candidate_done"/> -->
+                    <!-- <field name="all_marksheet_confirmed"/> -->
+                    <!-- <field name="absent_candidates"/> -->
+                    <!-- <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>      -->
+                </tree>
+            </field>
+        </record>
+
         <record id="view_marksheet_gp_tree_mek" model="ir.ui.view">
             <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
