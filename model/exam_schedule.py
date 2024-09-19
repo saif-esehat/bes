@@ -1877,6 +1877,8 @@ class ExamOralPracticalExaminers(models.Model):
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
+    
+    
     all_marksheet_confirmed = fields.Selection([
                     ('na', 'Online'),
                     ('pending', 'Pending'),
@@ -1885,6 +1887,15 @@ class ExamOralPracticalExaminers(models.Model):
     
     display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
     active = fields.Boolean(string="Active",default=True)
+    commence_exam = fields.Boolean(string="Commence Exam",default=False)
+    
+    
+    def commence_online_exam(self):
+        self.commence_exam = True
+    
+    def end_online_exam(self):
+        self.commence_exam = False
+        
 
     
     @api.depends('examiner.name', 'subject.name', 'exam_date')
@@ -2419,6 +2430,72 @@ class IntegrityViolationWizard(models.TransientModel):
             #         'res_model': model,
             #         'res_id': record.id,
             #     })
+
+
+class ResetOnlineExamWizard(models.TransientModel):
+    _name = 'reset.online.exam.wizard'
+    
+    model = fields.Char("Model")
+    gp_subject = fields.Selection([('gsk','GSK'), ('mek', 'MEK')], string="GP Subject")
+    ccmc_subject = fields.Selection([('ccmc', 'CCMC')],default="ccmc", string="CCMC Subject")
+    
+    
+    
+    
+    def confirm_reset(self):
+        self.ensure_one()
+        
+        if self.model == "gp.exam.schedule":
+            if self.gp_subject == "gsk":
+                
+                active_id = self.env.context.get('active_id')
+                gp_exam = self.env[self.model].browse(active_id)
+                if not gp_exam.attempting_gsk_online:
+                    raise ValidationError("Candidate is Not Appearing for GSK online")
+                    
+                    
+                gp_exam.gsk_online.unlink()
+                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_NEW_2')])
+                gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
+
+                # print(gsk_predefined_questions)
+                
+                gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+                gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id, "dgs_batch":gp_exam.dgs_batch.id})
+                gp_exam.write({
+                    "gsk_online": gsk_survey_qb_input,
+                    "gsk_online_token_used": False,
+                    "attempted_gsk_online": False
+                    
+                })
+            elif self.gp_subject == "mek":
+                active_id = self.env.context.get('active_id')
+                gp_exam = self.env[self.model].browse(active_id)
+                if not gp_exam.attempting_mek_online:
+                    raise ValidationError("Candidate is Not Appearing for MEK online")
+                gp_exam.mek_online.unlink()
+                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_NEW_2')])
+                mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+                mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,"dgs_batch":gp_exam.dgs_batch.id})
+
+                gp_exam.write({
+                    "mek_online": mek_survey_qb_input,
+                    "mek_online_token_used": False,
+                    "attempted_mek_online": False
+                })
+                    
+
+                
+        
+        # Reset Online Exam
+    
+    
+    
+
+
+
+
+
 class GpAdmitCardRelease(models.TransientModel):
     _name = 'gp.admit.card.release'
     _description = 'GP Admit Card Release'
@@ -2917,6 +2994,25 @@ class GPExam(models.Model):
                 record.mek_oral_prac_attendance = ''
             
 
+    def open_reset_online_exam_wizard(self):
+        view_id = self.env.ref('bes.reset_online_exam_wizard').id
+        print(self.env.context)
+        print("model")
+        print(self.env.context.get("model"))
+        
+        
+        return {
+            'name': 'Reset Online Exam Wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'reset.online.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                "default_model": "gp.exam.schedule"
+                }
+        }
 
             
 

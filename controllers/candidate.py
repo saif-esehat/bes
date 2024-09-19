@@ -131,9 +131,10 @@ class GPCandidatePortal(CustomerPortal):
         
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
-        if registered_exam.gp_candidate:
-            gp_exam = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
-            survey_examiner_token = gp_exam.token
+        # if registered_exam.gp_candidate:
+        gp_exam = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
+        print(gp_exam)
+        survey_examiner_token = gp_exam.token
         # elif registered_exam.ccmc_candidate:
         #     ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         #     survey_examiner_token = ccmc_exam.token
@@ -142,26 +143,66 @@ class GPCandidatePortal(CustomerPortal):
         
         if survey_examiner_token == examiner_token:
             
-            if registered_exam.attempting_gsk_online and registered_exam.attempting_mek_online:
+            if gp_exam.attempting_gsk_online and gp_exam.attempting_mek_online:
+               
                 if online_subject == "MEK":
-                    registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
-                    vals = {"registered_exams":registered_exams, "error":"GSK Exam Must be Attempted First"}                    
-                    return request.render("bes.gp_exam_list_view", vals)
+                    if gp_exam.attempted_gsk_online:
+                        print("Comingh Gere")
+                        if gp_exam.mek_online_token_used:
+                            registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                            vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                    
+                            return request.render("bes.gp_exam_list_view", vals)
+                        else:
+                        
+                            gp_exam.write({"attempted_mek_online":True,'mek_online_token_used':True})
+                            exam_url = registered_exam.survey_id.survey_start_url
+                            identification_token = registered_exam.access_token
+                            return request.redirect(exam_url+"?answer_token="+identification_token)
+                            
+                    else:
+                            
+                        # gp_exam.write({"attempted_gsk_online":True,'gsk_online_token_used':True})
+                        registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                        vals = {"registered_exams":registered_exams, "error":"GSK Exam Must be Attempted First"}                    
+                        return request.render("bes.gp_exam_list_view", vals)
+                    
                 else:
+                    
+                    if gp_exam.gsk_online_token_used:
+                        registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                        vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                    
+                        return request.render("bes.gp_exam_list_view", vals)
+                    else:
+                        gp_exam.write({"attempted_mek_online":True,"attempted_gsk_online":True ,'gsk_online_token_used':True, "mek_online_token_used":True})
+                        exam_url = registered_exam.survey_id.survey_start_url
+                        identification_token = registered_exam.access_token
+                        return request.redirect(exam_url+"?answer_token="+identification_token)
+
+            elif gp_exam.attempting_mek_online:
+                
+                if gp_exam.mek_online_token_used:
+                    registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                    vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                    
+                    return request.render("bes.gp_exam_list_view", vals)
+                else:    
+                    gp_exam.write({"attempted_mek_online":True,'mek_online_token_used':True})
                     exam_url = registered_exam.survey_id.survey_start_url
                     identification_token = registered_exam.access_token
                     return request.redirect(exam_url+"?answer_token="+identification_token)
 
-            elif attempting_mek:
-                exam_url = registered_exam.survey_id.survey_start_url
-                identification_token = registered_exam.access_token
-                return request.redirect(exam_url+"?answer_token="+identification_token)
-
             
-            elif attempting_gsk:
-                exam_url = registered_exam.survey_id.survey_start_url
-                identification_token = registered_exam.access_token
-                return request.redirect(exam_url+"?answer_token="+identification_token)
+            elif gp_exam.attempting_gsk_online:
+                print("Data")
+                print(gp_exam.mek_online_token_used)
+                if gp_exam.gsk_online_token_used:
+                    registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                    vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                    
+                    return request.render("bes.gp_exam_list_view", vals)
+                else:
+                    gp_exam.write({"attempted_gsk_online":True,'gsk_online_token_used':True})
+                    exam_url = registered_exam.survey_id.survey_start_url
+                    identification_token = registered_exam.access_token
+                    return request.redirect(exam_url+"?answer_token="+identification_token)
 
             
         else:
@@ -182,13 +223,23 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace(); 
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
-        survey_examiner_token = registered_exam.examiner_token
+        if registered_exam.ccmc_candidate:
+            ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('id','=',survey_input_id)])
+            survey_examiner_token = ccmc_exam.token
         
         
         if survey_examiner_token == examiner_token:
-            exam_url = registered_exam.survey_id.survey_start_url
-            identification_token = registered_exam.access_token
-            return request.redirect(exam_url+"?answer_token="+identification_token)
+            if ccmc_exam.ccmc_online_token_used:
+                registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                # import wdb; wdb.set_trace(); 
+                vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                
+                return request.render("bes.ccmc_exam_list_view", vals)
+            
+            else:
+                ccmc_exam.write({'ccmc_online_token_used':True})
+                exam_url = registered_exam.survey_id.survey_start_url
+                identification_token = registered_exam.access_token
+                return request.redirect(exam_url+"?answer_token="+identification_token)
         else:
             
             registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
