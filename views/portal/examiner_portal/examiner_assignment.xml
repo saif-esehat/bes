@@ -417,23 +417,48 @@
                                     }
         </style>
         <t t-call="portal.portal_layout">
-            <div class="container">
-                <ol class='text-warning'>    
-                    <li>
-                        <span>Download the Excel sheet using the "Download Marksheet" button</span>
-                    </li>
-                    <li>
-                        <span>Fill the marks and save the excel file in you computer</span>
-                    </li>
-                    <li>
-                        <span>Navigate back to this same page and use the "Upload Marksheet" button to upload the marks</span>
-                    </li>
-                    <li>
-                        <span>To edit the marks use the "Edit" button and click on "Confirm" button to lock in the marks</span>
-                    </li>
-                    
-                </ol>
-            </div>
+            <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
+            <t t-set="commence_exam" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).commence_exam"/>
+
+            <t t-if="exam_type == 'practical_oral'" class="text-center">
+                <div class="container">
+                    <ol class='text-warning'>    
+                        <li>
+                            <span>Download the Excel sheet using the "Download Marksheet" button</span>
+                        </li>
+                        <li>
+                            <span>Fill the marks and save the excel file in you computer</span>
+                        </li>
+                        <li>
+                            <span>Navigate back to this same page and use the "Upload Marksheet" button to upload the marks</span>
+                        </li>
+                        <li>
+                            <span>To edit the marks use the "Edit" button and click on "Confirm" button to lock in the marks</span>
+                        </li>
+                        
+                    </ol>
+                </div>
+            </t>
+            <t t-if="exam_type == 'online'">
+                <t t-if="commence_exam">
+                    <div class="container">
+                        <ol class="text-warning m-3 mb-0">
+                            <li>You may start the exam</li>
+                            <li>Request candidate to login into the portal</li>
+                            <li>Confirm the attendance of each candidate to generate the token</li>
+                            <li>Provide the token to designated candidate to commence the exam</li>
+                        </ol>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <p class="text-warning m-3">To Commence Exam please Contact BES</p>
+                    </div>
+                </t>
+            </t>
+
+            <t t-elif="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'online'">
+            </t>
            <t t-call="portal.portal_table">
             <!-- Upload GSK marksheet  -->
                 <div class="modal fade" id="uploadGskMarksheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -593,8 +618,7 @@
                 </div>
 
            
-            <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
-            <t t-set="commence_exam" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).commence_exam"/>
+            
             <t t-set="marksheet_uploaded" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_uploaded"/>
             <t t-set="attendance_sheet_uploaded" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).attendance_sheet_uploaded"/>
             <t t-set="marksheet_image" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).marksheet_image"/>
