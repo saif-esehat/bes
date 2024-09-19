@@ -983,7 +983,12 @@
                             </t>
 
                             <td  t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'online'" class="text-center">
-                                <t t-out="examiner_subject" />
+                                <t t-if="marksheet.gp_marksheet.attempting_gsk_online and marksheet.gp_marksheet.attempting_mek_online">
+                                    GSK/MEK
+                                </t>
+                                <t t-else="">
+                                     <t t-out="examiner_subject" />
+                                </t>
                             </td>
 
                             <td t-attf-id="online_token_{{marksheet.id}}" t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'online'" class="text-center">
