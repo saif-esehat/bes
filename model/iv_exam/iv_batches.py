@@ -37,6 +37,8 @@ class IVBatches(models.Model):
     phase_no = fields.Char("Phase No")
     port = fields.Char("Port")
 
+    # class_capacity = fields.Integer(string="Class Capacity")
+
 
 
     @api.constrains('issue_date')
@@ -79,4 +81,4 @@ class IVBatches(models.Model):
             for application in applications:
                 application.application_eligible = 'not_eligible'
 
-   
+

@@ -71,6 +71,8 @@
         'reports/iv_candidate/iv_eligible_candidats_list.xml',
         'reports/iv_candidate/iv_not_eligible_candidat_list.xml',
         'reports/iv_candidate/iv_candidate_issuance_admitcard.xml',
+        'reports/iv_exam_report/iv_written_exam_a.xml',
+        'reports/iv_exam_report/iv_oral_exam_result.xml',
  
        
         # 'views/sep_batches.xml',
