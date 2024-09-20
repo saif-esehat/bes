@@ -565,7 +565,10 @@
             <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree>  
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="gp_candidate"/> 
                     <field name="gp_marksheet"/>
                     <field name="gsk_online"/>
@@ -578,6 +581,9 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="gp_candidate"/> 
                     <field name="gp_marksheet"/>
                     <field name="mek_online"/>
