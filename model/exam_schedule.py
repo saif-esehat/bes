@@ -2456,7 +2456,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                     
                     
                 gp_exam.gsk_online.unlink()
-                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_NEW_2')])
+                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_Final')])
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
@@ -2475,7 +2475,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
                 gp_exam.mek_online.unlink()
-                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_NEW_2')])
+                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_Final')])
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,"dgs_batch":gp_exam.dgs_batch.id})
 
