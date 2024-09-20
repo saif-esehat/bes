@@ -111,14 +111,20 @@
        <script>
 
                 function openTokenModal(button) {
-                // Retrieve the data-id attribute value from the clicked button
+
+                setTimeout(function() {
                 var dataId = button.getAttribute('data-id');
-                // Update the content of the modal with the retrieved data
                 document.getElementById('survey_input_id').value = dataId;
+                
+                    var subject = document.getElementById('online_subject_'+dataId).innerText;
+                    document.getElementById('online_subject').value = subject;
+                }, 1000); 
 
                 }
         
        </script>
+
+       
 
 
        <t t-call="portal.portal_layout">
@@ -137,6 +143,7 @@
                                     <div class="container mt-5">
 
                                         <input type="hidden" id="survey_input_id" name="survey_input_id"/>
+                                        <input type="hidden" id="online_subject" name="online_subject"/>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -178,15 +185,30 @@
                             <td class="text-center">
                                 <t t-out="registered_exam.survey_id.course.name" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-center" t-attf-id="online_subject_{{registered_exam.id}}">
                                 <t t-out="registered_exam.survey_id.subject.name" />
                             </td>
+                            <t t-if="registered_exam.survey_id.subject.name == 'GSK'">
+                                <t t-set="gp_exam_schedule" t-value="env['gp.exam.schedule'].sudo().search([('gsk_online','=',registered_exam.id)])" />
+                            </t>
+                            <t t-elif="registered_exam.survey_id.subject.name == 'MEK'">
+                                 <t t-set="gp_exam_schedule" t-value="env['gp.exam.schedule'].sudo().search([('mek_online','=',registered_exam.id)])" />
+                            </t>
+                            <!-- <t t-set="gp_exam_schedule" t-value="env['gp_exam_schedule'].sudo().search([('gsk_online','=',registered_exam.id)])" /> -->
+                            <!-- <td class="text-center">
+                                <t t-out="gp_exam_schedule" />
+                            </td> -->
                              <td class="text-center">
+<<<<<<< HEAD
                                 <!-- <t t-if="registered_exam.survey_id.exam_state == 'in_progress'"> -->
                                     <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
+=======
+                                <t t-if="gp_exam_schedule.token">
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+>>>>>>> 08432596ee28275494e0760590ccc0614e520eff
 
                                     <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
-                                <!-- </t> -->
+                                </t>
                                 <!-- <t t-else="">
 
                                 </t> -->
@@ -274,9 +296,16 @@
                             <td class="text-center">
                                 <t t-out="registered_exam.survey_id.subject.name" />
                             </td>
+                            <t t-set="ccmc_exam_schedule" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_online','=',registered_exam.id)])" />
+
                              <td class="text-center">
+<<<<<<< HEAD
                                     <t t-if="registered_exam.state != 'done'">
                                         <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
+=======
+                                    <t t-if="ccmc_exam_schedule.token">
+                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+>>>>>>> 08432596ee28275494e0760590ccc0614e520eff
 
                                     </t>
 

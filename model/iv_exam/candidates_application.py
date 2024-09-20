@@ -7,6 +7,7 @@ from datetime import datetime
 import xlrd
 import qrcode
 import logging
+from dateutil.relativedelta import relativedelta
 
 
 _logger = logging.getLogger(__name__)
@@ -392,6 +393,35 @@ class CandidatesApplication(models.Model):
     hold_reason = fields.One2many('application.hold.reason','application_id',string="Hold Reason")
     reporting_date = fields.Date('Reporting Date')
     reporting_time = fields.Char('Reporting Time')
+
+
+    date_of_pst = fields.Date(string="Date OF PST")
+    date_of_validity_pst = fields.Date(string="Date Of Validity Of PST",compute="_compute_date_of_validity_pst")
+
+    @api.depends('date_of_pst')
+    def _compute_date_of_validity_pst(self):
+        for record in self:
+            if record.date_of_pst:
+                # Adding 5 years to the date_of_pst
+                record.date_of_validity_pst = record.date_of_pst + relativedelta(years=5)
+            else:
+                record.date_of_validity_pst = False
+
+
+
+    date_of_fpff = fields.Date(string="Date Of FPFF")
+    date_of_validity_fpff = fields.Date(string="Date Of Validity Of FPFF",compute="_compute_date_of_validity_fpff")
+
+    @api.depends('date_of_fpff')
+    def _compute_date_of_validity_fpff(self):
+        for record in self:
+            if record.date_of_fpff:
+                # Adding 5 years to the date_of_fpff
+                record.date_of_validity_fpff = record.date_of_fpff + relativedelta(years=5)
+            else:
+                record.date_of_validity_fpff = False
+
+
 
 
 

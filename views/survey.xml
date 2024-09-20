@@ -59,16 +59,23 @@
                     <!-- <span t-esc="env['gp.candidate'].sudo().search([('user_id','=',request.env.user.id)])"/> -->
                     <t t-if="survey.subject.name == 'GSK'">
                         <t t-set="candidate" t-value="env['gp.candidate'].sudo().search([('user_id','=',request.env.user.id)]).id" />
-                        <t t-set="survey_input_id" t-value="env['survey.user_input'].sudo().search([('gp_candidate','=',candidate),('survey_id','=',survey.trigger_exam.id)])" />
+                        <t t-set="gp_exam" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate)],order='create_date desc', limit=1)" />
+                        <t t-set="attempting_mek_online" t-value="gp_exam.attempting_mek_online" />
+                        <t t-set="survey_input_id" t-value="gp_exam.mek_online" />
                         <!-- <span class="font-weight-bold" t-esc="survey.trigger_exam_url+'?answer_token='+survey_input_id.access_token"/> -->
-                        <t t-set="exam_url" t-value="survey.trigger_exam_url+'?answer_token='+survey_input_id.access_token" />
+                        <!-- <t t-set="exam_url" t-value="survey.trigger_exam_url+'?answer_token='+survey_input_id.access_token" /> -->
 
                     </t>
-                    <a role="button" class="btn btn-primary btn-lg" t-att-href="exam_url">
-                        <i role="img"/>
-                            Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/>
- Exam
-                    </a>
+                    <t t-if="attempting_mek_online" >
+                        <t t-set="exam_url" t-value="survey.trigger_exam_url+'?answer_token='+survey_input_id.access_token" />
+
+                        <a role="button" class="btn btn-primary btn-lg" t-att-href="exam_url">
+
+                            <i role="img"/>
+                                Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/>
+    Exam
+                        </a>
+                    </t>
 
                 </div>
             </xpath>

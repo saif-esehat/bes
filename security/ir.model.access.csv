@@ -126,6 +126,7 @@ bes.access_summarised_gp_repeater_report_manager,access_summarised_gp_repeater_r
 bes.admin_access_repeater_admit_card,access_repeater_admit_card,bes.model_release_admit_card,bes.group_bes_admin,1,1,1,1
 bes.admin_acces_batch_pop_up,acces_batch_pop_up,bes.model_batch_pop_up_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_gp_admit_card_release,acces_gp_admit_card_release,bes.model_gp_admit_card_release,bes.group_bes_admin,1,1,1,1
+bes.admin_access_reset_online_exam_wizard_manager,access_reset_online_exam_wizard_manager,model_reset_online_exam_wizard,bes.group_bes_admin,1,1,1,1
 
 
 
@@ -142,3 +143,4 @@ bes.access_iv_attendance_sheet,access_iv_attendance_sheet,bes.model_iv_attendanc
 bes.access_iv_oral_attendance_sheet,access_iv_oral_attendance_sheet,bes.model_iv_oral_attendance_sheet,base.group_user,1,1,1,1
 bes.access_iv_written_exam,access_iv_written_exam,bes.model_iv_written_exam,base.group_user,1,1,1,1
 bes.access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,base.group_user,1,1,1,1
+bes.access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,base.group_user,1,1,1,1
