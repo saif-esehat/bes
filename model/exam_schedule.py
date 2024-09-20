@@ -52,6 +52,9 @@ class BesBatches(models.Model):
                     sublist_index = i % len(subjects)
                     sublists[sublist_index].append(num)
                 
+
+                
+
                 
                 for i,subjects in enumerate(subjects):
                     subjects.write({'candidates':sublists[i],'state':'2-confirm'})
