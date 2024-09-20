@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+ <report
+        id="reports_iv_written_exam_a"
+        string="IV  Written Exam Result A"
+        model="iv.written.exam"
+        report_type="qweb-pdf"
+        name="bes.reports_iv_written_exam_a_list"
+        file="bes.reports_iv_written_exam_a_list"/>
+
+    <report
+            id="reports_iv_written_exam_b"
+            string="IV  Written Exam Result B"
+            model="iv.written.exam"
+            report_type="qweb-pdf"
+            name="bes.reports_iv_written_exam_b_list"
+            file="bes.reports_iv_written_exam_b_list"/>
+
+
+
+
+<template id="reports_iv_written_exam_a_list">
+    <t t-call="web.basic_layout">
+            <div class="page">
+            <div class="header">
+                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                     <h5 style="text-align: center; font-weight: bold;">
+                       Board of Examinations for Seafarers Trust (BES), Navi Mumbai
+                </h5>
+                
+                <!-- Second Line -->
+                <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                   Result (Provisional) of Inland Vessel Written Examination Held on - <span t-field="docs.batch_id.name" />
+                </h6>
+                   
+               
+                </table>
+                </div>
+
+              
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="background-color: #d3d3d3; color: black;">
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Indos No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Roll No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 25%;">Grade Applied</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 20%;">Name of the Candidates</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;background-color: lightgreen;"><span style="color: green;">Written Marks entered by BES (PassingMarks 25 out of 50)</span></th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Result as per BES</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;background-color: yellow;">Moderation (by MMB)</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Result by MMB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <t t-set="index" t-value="0" />
+                        <t t-foreach="docs" t-as="written">
+                            <t t-set="index" t-value="index + 1" />
+                            <tr>
+                                <td  style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <span t-esc="index" />
+                                </td>
+                                <td style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <span t-field="written.candidate.indos_no" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-field="written.candidate.roll_no" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-field="written.grade" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-field="written.candidate.name" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-esc="written.marks" />
+                                </td>
+                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.status == 'failed' else 'lightgreen' if written.status == 'passed' else ''};">
+                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-esc="written.status" />
+                                </td>
+                                  <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-esc="written.mmb_marks" />
+                                </td>
+                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.status == 'failed' else 'lightgreen' if written.status == 'passed' else ''};">
+                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-esc="written.status" />
+                                </td>
+                               
+                            </tr>
+                           
+                               
+             
+                        </t>
+                    </tbody>
+            </table>
+           
+            </div>
+        </t>
+</template>
+
+
+
+<template id="reports_iv_written_exam_b_list">
+    <t t-call="web.basic_layout">
+            <div class="page">
+            <div class="header">
+                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                     <h5 style="text-align: center; font-weight: bold;">
+                     Board of Examinations for Seafarers Trust (BES), Navi Mumbai
+                </h5>
+                
+                <!-- Second Line -->
+                <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                 Result (Provisional) of Inland Vessel Written Examination Held on -  <span t-field="docs.batch_id.name" />
+                </h6>
+                   
+               
+                </table>
+                </div>
+
+              
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="background-color: #d3d3d3; color: black;">
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Indos No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Roll No</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 25%;">Grade Applied</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 20%;">Name of the Candidates</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <t t-set="index" t-value="0" />
+                        <t t-foreach="docs" t-as="written">
+                            <t t-set="index" t-value="index + 1" />
+                            <tr>
+                                <td  style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <span t-esc="index" />
+                                </td>
+                                 <td style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <span t-field="written.candidate.indos_no" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-field="written.candidate.roll_no" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-field="written.grade" />
+                                </td>
+                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                    <span t-field="written.candidate.name" />
+                                </td>
+                             
+                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.status == 'failed' else 'lightgreen' if written.status == 'passed' else ''};">
+                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-esc="written.status" />
+                                </td>
+                              
+                               
+                            </tr>
+                           
+                               
+             
+                        </t>
+                    </tbody>
+            </table>
+           
+            </div>
+        </t>
+</template>
+
+
+</odoo>

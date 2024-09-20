@@ -14,7 +14,7 @@
 <template id="reports_iv_candidate_issuance_admit_card_list">
     <t t-call="web.basic_layout">
 
-                 <div class="header">
+                <div class="header">
                     <table style="width:100%; border: 1px solid black; font-family: 'TimesNewRoman';">
                           <h5 style="text-align: center; font-weight: bold;">
                             Board of Examinations for Seafarers Trust (BEST)
@@ -29,6 +29,7 @@
                    
                     </table>
                 </div>
+                
                 <div class="page">
                  
                     <div class="page-content">

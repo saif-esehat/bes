@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
- <report
+    <report
         id="reports_iv_written_attendance"
-        string="IV  Written  Attendance Sheet"
+        string="IV Written Attendance Sheet"
         model="iv.attendance.sheet"
         report_type="qweb-pdf"
-        name="bes.reports_iv_written_attendance_sheet"
-        file="bes.reports_iv_written_attendance_sheet"/>
+        name="bes.reports_iv_written_attendance_sheet1"
+        file="bes.reports_iv_written_attendance_sheet1"
+    />
 
-
-
-<template id="reports_iv_written_attendance_sheet">
+    <template id="reports_iv_written_attendance_sheet1">
     <t t-call="web.basic_layout">
-            <div class="page">
-                <!-- Table for Header Information -->
+            <!-- <div class="page"> -->
+            <div class="header">
                 <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
                     <tr>
                         <th colspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
@@ -32,46 +31,56 @@
                             </div>
                         </th>
                     </tr>
+                 
                     <tr>
                         <th colspan="10" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
-                            <strong>Written Attendance Sheet - IV Exam (MMB)</strong>
+                            <strong>Written Attendance Sheet - IV Exam (MMB) </strong>
                         </th>
+                      
                     </tr>
-                    <tr style="margin-bottom: 2px;">
+                    <tr >
                         <th colspan="8" style="border: 1px solid black; padding:10px; text-align:left; vertical-align: middle;">
                             <strong>Venue : Public Education Society Central School</strong>
                         </th>
                         <th colspan="2" style="border: 1px solid black; padding:10px; text-align:left; vertical-align: middle;">
-                            <strong>Class Room: No.</strong>
+                            <strong>Class No :  </strong>
                         </th>
                     </tr>
+                 
+                   
+               
                 </table>
+                </div>
 
-                <!-- Table for Attendance List -->
+            <t t-foreach="range(total_pages)" t-as="page">
+                <!-- Fetch the start and end index for the current page from page_splits -->
+                <t t-set="start_index" t-value="page_splits[page]['start']" />
+                <t t-set="end_index" t-value="page_splits[page]['end']" />
+
                 <table class="table table-condensed" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">Sr No.</th>
-                            <th colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">INDoS No.</th>
-                            <th colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">Roll No.</th>
-                            <th colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">Grade Applied.</th>
-                            <th colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">Name of Candidate</th>
-                            <th colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">DOB</th>
-                            <th colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">Sign</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">INDoS No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Roll No.</th>
+                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 25%;">Grade Applied</th>
+                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name of Candidate</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">DOB</th>
+                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Sign</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-set="index" t-value="0" />
-                        <t t-foreach="docs" t-as="attendance">
-                            <t t-set="index" t-value="index + 1" />
+                        <t t-set="record_index" t-value="start_index + 1" />
+                        <!-- Display records for the current page based on start and end indices -->
+                        <t t-foreach="docs[start_index:end_index]" t-as="attendance">
                             <tr>
                                 <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
-                                    <span t-esc="index" />
+                                    <span t-esc="record_index" />
                                 </td>
                                 <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="attendance.indos_no" />
                                 </td>
-                                <td colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="attendance.roll_no" />
                                 </td>
                                 <td colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">
@@ -83,35 +92,45 @@
                                 <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-esc="attendance.dob.strftime('%d-%m-%Y')" />
                                 </td>
-                                <td colspan="1" style="border: 1px solid black; padding:6px;"></td>
+                                <td colspan="2" style="border: 1px solid black; padding:6px;"></td>
                             </tr>
-                           
-                               
-             
+                            <t t-set="record_index" t-value="record_index + 1" />
                         </t>
                     </tbody>
                 </table>
-              
+
+                <t t-if="page &lt; total_pages - 1">
+                    <div style="page-break-before: always;"></div>
+                </t>
+            </t>
+
+
+            <div style="page-break-inside: avoid; margin-top: 20px;">
+                <div class="footer" style="width: 100%; font-size: 12px;">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                        <tr style="height: 50px;">
+                            <td style="font-size: 18px; text-align: left; vertical-align: bottom; padding-right: 50px;">
+                                <b>Name of Invigilator:</b>
+                            </td>
+                            <td style="font-size: 18px; text-align: right; vertical-align: bottom;">
+                                <b>Signature of Invigilator:</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
-        <div style="height: 30mm;"></div> 
 
-            <!-- Bottom Row for Invigilator Information -->
-            <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                <tr style="height: 50px;">
-                    <td style="font-size: 18px; text-align: left; vertical-align: bottom; padding-right: 50px;">
-                        <b>Name of Invigilator:</b>
-                    </td>
-                    <td style="font-size: 18px; text-align: right; vertical-align: bottom;">
-                        <b>Signature of Invigilator:</b>
-                    </td>
-                </tr>
-            </table>
+
+
+
+
+                    
     </t>
+   
 
-     <div style="page-break-before: always;"></div>
 </template>
 
 
-</odoo>
 
+</odoo>
