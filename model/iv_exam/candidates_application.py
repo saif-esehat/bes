@@ -195,6 +195,7 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 
                     })
                 else:
@@ -207,7 +208,8 @@ class CandidatesApplication(models.Model):
                         'dob': candidate.dob,
                         'email': candidate.email,
                         'phone': candidate.mobile,
-                        'grade_applied': candidate.grade
+                        'grade_applied': candidate.grade,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
                     })
                 count += 1
 

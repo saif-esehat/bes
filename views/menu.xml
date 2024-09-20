@@ -464,6 +464,24 @@
             action="gp_repeater_invoices_action"
             sequence="0" />
 
+        
+        <record id="survey_online_assignment_action" model="ir.actions.act_window">
+            <field name="name">Online Assignments</field>
+            <field name="res_model">exam.type.oral.practical.examiners</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bes.commence_online_exam_tree" />
+            <field name="domain">[
+                ('exam_type', '=', 'online')
+                ]</field>
+        </record>
+
+
+        <menuitem id="menu_survey_online_assignments"
+            parent="survey.menu_surveys"
+            name="Online Assignments"
+            action="survey_online_assignment_action"
+            sequence="0" />
+
         <record id="ccmc_repeater_invoices_action" model="ir.actions.act_window">
             <field name="name">CCMC Repeater Candidate Invoices</field>
             <field name="res_model">account.move</field>

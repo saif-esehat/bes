@@ -47,9 +47,7 @@
         <field name="model">iv.attendance.sheet</field>
         <field name="arch" type="xml">
             <tree>
-              <header>
-                <button name="action_print_bulk_attendance" type="object" string="Written Attendance " class="btn-primary"/>
-            </header>    
+          
                 <field name="indos_no" />
                 <field name="roll_no"/>
                 <field name="candidate_name" />
@@ -59,6 +57,11 @@
             </tree>
         </field>
         </record>
+
+
+
+   
+      
 
         <menuitem id="menu_iv_written_attendance" name="IV Attendance"
            parent="iv_menu"  sequence="1"/>

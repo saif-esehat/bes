@@ -1871,11 +1871,14 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
+    ipaddr = fields.Char("IP Address")    
     candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
+    
+    
     
     all_marksheet_confirmed = fields.Selection([
                     ('na', 'Online'),
@@ -1885,6 +1888,15 @@ class ExamOralPracticalExaminers(models.Model):
     
     display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
     active = fields.Boolean(string="Active",default=True)
+    commence_exam = fields.Boolean(string="Commence Exam",default=False)
+    
+    
+    def commence_online_exam(self):
+        self.commence_exam = True
+    
+    def end_online_exam(self):
+        self.commence_exam = False
+        
 
     
     @api.depends('examiner.name', 'subject.name', 'exam_date')
@@ -2280,7 +2292,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     def _compute_display_name(self):
         for cousre in self.examiners_id.course:
             for record in self:
-                if cousre.id == 1:
+                if cousre.id == 7:
                     record.display_name = f"{record.gp_candidate.name}"
                 else:
                     record.display_name = f"{record.ccmc_candidate.name}"
@@ -2292,6 +2304,9 @@ class OralPracticalExaminersMarksheet(models.Model):
         assignment_id = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',self.examiners_id.dgs_batch.id),('institute_id','=',self.examiners_id.institute_id.id)])
         
         examiner_id = self.examiners_id.id
+        
+        print(self.env.context.get("active_ids"))
+        
         # examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id','=',assignment_id.id)])
         
         return {
@@ -2302,7 +2317,7 @@ class OralPracticalExaminersMarksheet(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_candidate_ids': self.ids,  # Pass a list of candidate IDs
+                'default_candidate_ids': self.env.context.get("active_ids"),  # Pass a list of candidate IDs
                 'default_exam_batch': assignment_id.dgs_batch.id,  
                 'default_institute_id': assignment_id.institute_id.id,
                 'default_examiner_id': examiner_id,
@@ -2419,6 +2434,72 @@ class IntegrityViolationWizard(models.TransientModel):
             #         'res_model': model,
             #         'res_id': record.id,
             #     })
+
+
+class ResetOnlineExamWizard(models.TransientModel):
+    _name = 'reset.online.exam.wizard'
+    
+    model = fields.Char("Model")
+    gp_subject = fields.Selection([('gsk','GSK'), ('mek', 'MEK')], string="GP Subject")
+    ccmc_subject = fields.Selection([('ccmc', 'CCMC')],default="ccmc", string="CCMC Subject")
+    
+    
+    
+    
+    def confirm_reset(self):
+        self.ensure_one()
+        
+        if self.model == "gp.exam.schedule":
+            if self.gp_subject == "gsk":
+                
+                active_id = self.env.context.get('active_id')
+                gp_exam = self.env[self.model].browse(active_id)
+                if not gp_exam.attempting_gsk_online:
+                    raise ValidationError("Candidate is Not Appearing for GSK online")
+                    
+                    
+                gp_exam.gsk_online.unlink()
+                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_Final')])
+                gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
+
+                # print(gsk_predefined_questions)
+                
+                gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+                gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id, "dgs_batch":gp_exam.dgs_batch.id})
+                gp_exam.write({
+                    "gsk_online": gsk_survey_qb_input,
+                    "gsk_online_token_used": False,
+                    "attempted_gsk_online": False
+                    
+                })
+            elif self.gp_subject == "mek":
+                active_id = self.env.context.get('active_id')
+                gp_exam = self.env[self.model].browse(active_id)
+                if not gp_exam.attempting_mek_online:
+                    raise ValidationError("Candidate is Not Appearing for MEK online")
+                gp_exam.mek_online.unlink()
+                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_Final')])
+                mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+                mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,"dgs_batch":gp_exam.dgs_batch.id})
+
+                gp_exam.write({
+                    "mek_online": mek_survey_qb_input,
+                    "mek_online_token_used": False,
+                    "attempted_mek_online": False
+                })
+                    
+
+                
+        
+        # Reset Online Exam
+    
+    
+    
+
+
+
+
+
 class GpAdmitCardRelease(models.TransientModel):
     _name = 'gp.admit.card.release'
     _description = 'GP Admit Card Release'
@@ -2917,6 +2998,25 @@ class GPExam(models.Model):
                 record.mek_oral_prac_attendance = ''
             
 
+    def open_reset_online_exam_wizard(self):
+        view_id = self.env.ref('bes.reset_online_exam_wizard').id
+        print(self.env.context)
+        print("model")
+        print(self.env.context.get("model"))
+        
+        
+        return {
+            'name': 'Reset Online Exam Wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'reset.online.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                "default_model": "gp.exam.schedule"
+                }
+        }
 
             
 
@@ -4784,7 +4884,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
         for candidate in self.candidate_ids:
             # Check the course for the candidate
-            if candidate.examiners_id.course.id == 1:
+            if candidate.examiners_id.course.course_code == "GP":
                 if candidate.examiners_id.subject.name == 'GSK':
                     # Check if both oral and practical drafts are confirmed
                     if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
@@ -4800,7 +4900,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                         confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         candidate.examiners_id.compute_candidates_done()
                         
-            elif candidate.examiners_id.course.id == 2:
+            elif candidate.examiners_id.course.course_code == "CCMC":
                 if candidate.examiners_id.subject.name == 'CCMC':
                     if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
                         candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate

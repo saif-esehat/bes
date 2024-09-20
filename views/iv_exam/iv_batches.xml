@@ -28,6 +28,7 @@
                          <!-- <field name="grade_preference" /> -->
                         <field name="phase_no" />
                         <field name="port" />
+                         <!-- <field name="class_capacity" /> -->
                        
                     </group>
                     <group>
