@@ -199,6 +199,8 @@
                                 <t t-out="gp_exam_schedule" />
                             </td> -->
                              <td class="text-center">
+                                <!-- <t t-if="registered_exam.survey_id.exam_state == 'in_progress'"> -->
+                                    <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
                                 <t t-if="gp_exam_schedule.token">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
 
@@ -431,6 +433,7 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     <t t-foreach="registered_exams" t-as="rec">
                         <tr>
                             <td class="text-center">
@@ -439,18 +442,22 @@
                             <td class="text-center">
                                 <t t-out="rec.ccmc_candidate.name" />
                             </td>
+                            
                             <!-- <td class="text-center">
                                 <a t-attf-href="/my/gpcandidates/download_admit_card_from_url/{{rec.id}}" class="fa">Download Admit Card</a>
 
 
                             </td> -->
+                            <t t-set="hold_admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',rec.ccmc_candidate.id),('hold_admit_card','=',True)])"/>
+
                             <td class="text-center">
-                                <t  t-if="show_admit_card">
-                                    <a t-attf-href="/my/ccmcexam/list/download_admit_card/{{rec.id}}" class="fa">Download Admit Card</a>
+                                <t  t-if="hold_admit_card">
+                                    <span class="text-danger">On Hold</span>                                    
                                 </t>
-                                <!-- <t  t-else="">
-                                    <span class="text-danger">Pending</span>
-                                </t> -->
+                                <t  t-else="">
+                                    <a t-attf-href="/my/ccmcexam/list/download_admit_card/{{rec.id}}" class="fa">Download Admit Card</a>
+
+                                </t>
                             </td>
 
                             <td t-if="show_certificate" class="text-center">
