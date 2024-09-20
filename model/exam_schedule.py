@@ -664,11 +664,11 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
-        ('practical_oral', 'Practical/Oral'),
+        ('practical_oral', 'Practical (Cookery Bakery)'),
+        ('oral', 'Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
-    # no_candidates = fields.Integer('No. Of Candidates')
     no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
     
     
