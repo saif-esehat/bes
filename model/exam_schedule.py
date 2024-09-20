@@ -2292,7 +2292,7 @@ class OralPracticalExaminersMarksheet(models.Model):
     def _compute_display_name(self):
         for cousre in self.examiners_id.course:
             for record in self:
-                if cousre.id == 1:
+                if cousre.id == 7:
                     record.display_name = f"{record.gp_candidate.name}"
                 else:
                     record.display_name = f"{record.ccmc_candidate.name}"
@@ -2304,6 +2304,9 @@ class OralPracticalExaminersMarksheet(models.Model):
         assignment_id = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',self.examiners_id.dgs_batch.id),('institute_id','=',self.examiners_id.institute_id.id)])
         
         examiner_id = self.examiners_id.id
+        
+        print(self.env.context.get("active_ids"))
+        
         # examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id','=',assignment_id.id)])
         
         return {
@@ -2314,7 +2317,7 @@ class OralPracticalExaminersMarksheet(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_candidate_ids': self.ids,  # Pass a list of candidate IDs
+                'default_candidate_ids': self.env.context.get("active_ids"),  # Pass a list of candidate IDs
                 'default_exam_batch': assignment_id.dgs_batch.id,  
                 'default_institute_id': assignment_id.institute_id.id,
                 'default_examiner_id': examiner_id,
@@ -4881,7 +4884,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
         for candidate in self.candidate_ids:
             # Check the course for the candidate
-            if candidate.examiners_id.course.id == 1:
+            if candidate.examiners_id.course.course_code == "GP":
                 if candidate.examiners_id.subject.name == 'GSK':
                     # Check if both oral and practical drafts are confirmed
                     if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
@@ -4897,7 +4900,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                         confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         candidate.examiners_id.compute_candidates_done()
                         
-            elif candidate.examiners_id.course.id == 2:
+            elif candidate.examiners_id.course.course_code == "CCMC":
                 if candidate.examiners_id.subject.name == 'CCMC':
                     if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
                         candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
