@@ -103,6 +103,10 @@
                     <header>
                         <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', True)]}"/>
+
+                        <button name="open_reset_online_exam_wizard" string="Open Reset Exam" type="object" class="btn-primary"
+                        attrs="{'invisible': [('state', '!=', '1-in_process')]}"/>
+                        
                         <!-- "Release Admit Card" Button -->
                         <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', False)]}"/>
@@ -133,8 +137,8 @@
                             <field name="registered_institute" readonly="1"/>
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
-                             <field name="exam_violation_state" invisible="1"/>
-                             <field name="absent_status" invisible="1"/>
+                            <field name="exam_violation_state" invisible="1"/>
+                            <field name="absent_status" invisible="1"/>
                              
                             
                             <field name="reissued" readonly="1"/>
@@ -649,6 +653,28 @@
                 </form>
             </field>
         </record>
+
+        <record id="reset_online_exam_wizard" model="ir.ui.view">
+            <field name="name">reset.online.exam.wizard</field>
+            <field name="model">reset.online.exam.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reset Online Exam">
+                    <group>
+                        <field name="model" invisible="1" />
+
+                        <field name="gp_subject"/>
+                        <!-- <field name="ccmc_subject"/> -->
+
+
+                    </group>
+                    <footer>
+                        <button string="Confirm" type="object" name="confirm_reset" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
 
        <record model="ir.ui.view" id="ccmc_exam_schedul_search">
             <field name="name">ccmc.exam.schedule.search</field>
