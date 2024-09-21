@@ -151,7 +151,7 @@ class SurveyUserInputInherited(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Exam', required=True, readonly=True, ondelete='cascade')
     exam_center = fields.Many2one("exam.center","Exam Region",required=True)
     examiner_token = fields.Char(string="Examiner Token")
-    institute_id = fields.Many2one("bes.institute",string="Institute",compute="compute_institute_name",store=True)
+    institute_id = fields.Many2one("bes.institute",string="Institute")
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
@@ -166,14 +166,15 @@ class SurveyUserInputInherited(models.Model):
 
         return ''.join(random.choices('0123456789', k=6))
     
-    def compute_institute_name(self):
-        for record in self:
-            if record.gp_candidate:
-                institute_id = record.gp_candidate.institute_id
-            elif record.ccmc_candidate:
-                institute_id = record.ccmc_candidate.institute_id
-            else:
-                institute_id = False
+    # ,compute="compute_institute_name",store=True
+    # def compute_institute_name(self):
+    #     for record in self:
+    #         if record.gp_candidate:
+    #             institute_id = record.gp_candidate.institute_id
+    #         elif record.ccmc_candidate:
+    #             institute_id = record.ccmc_candidate.institute_id
+    #         else:
+    #             institute_id = False
     
     def generate_token(self):
         self.examiner_token = self.generate_unique_string()
