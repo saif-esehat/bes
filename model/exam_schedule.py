@@ -664,11 +664,11 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
-        ('practical_oral', 'Practical (Cookery Bakery)'),
-        ('oral', 'Oral'),
+        ('practical_oral', 'Practical/Oral'),
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
+    # no_candidates = fields.Integer('No. Of Candidates')
     no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
     
     
@@ -2517,6 +2517,8 @@ class GpAdmitCardRelease(models.TransientModel):
         exam_ids = self.env.context.get('active_ids')
         candidates = self.env["gp.exam.schedule"].sudo().browse(exam_ids)
         
+        # Count candidates who have already had their admit cards released
+        already_released_count = candidates.filtered(lambda c: not c.hold_admit_card)
         
         for candidate in candidates:
             mumbai_region = candidate.dgs_batch.mumbai_region
@@ -2527,7 +2529,8 @@ class GpAdmitCardRelease(models.TransientModel):
             goa_region = candidate.dgs_batch.goa_region
             
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                
+            candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
+            # import  wdb; wdb.set_trace()
             if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                 candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
                 # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
@@ -2549,7 +2552,13 @@ class GpAdmitCardRelease(models.TransientModel):
             else:
                 candidate.write({'hold_admit_card':False})
             
-            message = "GP Admit Card Released for "+str(len(exam_ids))+ " Candidates"
+            # message = "GP Admit Card Released for "+str(len(exam_ids))+ " Candidates"
+
+            # Calculate the total number of candidates and those whose admit cards were already released
+            total_candidates = len(exam_ids)
+            newly_released_count = total_candidates - len(already_released_count)
+            already_released_msg = f"Out of {total_candidates} selected candidates, {len(already_released_count)} admit cards were already released."
+            message = f"GP Admit Card Released for {newly_released_count} Candidates. {already_released_msg}"
 
         # Return a notification
         return {
@@ -3874,7 +3883,9 @@ class CcmcAdmitCardRelease(models.TransientModel):
         exam_ids = self.env.context.get('active_ids')
         candidates = self.env["ccmc.exam.schedule"].sudo().browse(exam_ids)
         
-        
+        # Count candidates who have already had their admit cards released
+        already_released_count = candidates.filtered(lambda c: not c.hold_admit_card)
+
         for candidate in candidates:
             mumbai_region = candidate.dgs_batch.mumbai_region
             kolkata_region = candidate.dgs_batch.kolkatta_region
@@ -3883,6 +3894,7 @@ class CcmcAdmitCardRelease(models.TransientModel):
             kochi_region = candidate.dgs_batch.kochi_region
             goa_region = candidate.dgs_batch.goa_region
             
+            candidate_release = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', candidate.ccmc_candidate.id), ('hold_admit_card', '=', True)])
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                 
             if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
@@ -3908,7 +3920,12 @@ class CcmcAdmitCardRelease(models.TransientModel):
                 print("Kolakata Not Set")
                 candidate.write({'hold_admit_card':False})
             
-            message = "CCMC Admit Card Released for the "+str(len(exam_ids))+" Candidates"  
+            # Calculate the total number of candidates and those whose admit cards were already released
+            total_candidates = len(exam_ids)
+            newly_released_count = total_candidates - len(already_released_count)
+            already_released_msg = f"Out of {total_candidates} selected candidates, {len(already_released_count)} admit cards were already released."
+            message = f"CCMC Admit Card Released for {newly_released_count} Candidates. {already_released_msg}"
+            # message = "CCMC Admit Card Released for the "+str(len(exam_ids))+" Candidates"  
 
         # Return a notification
         return {

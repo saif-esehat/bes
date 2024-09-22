@@ -17,6 +17,7 @@ import xlrd
 
 
 class InstitutePortal(CustomerPortal):
+    
 
     @http.route(['/my/gpbatch'], type="http", auth="user", website=True)
     def GPBatchList(self, **kw):
