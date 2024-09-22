@@ -222,10 +222,15 @@ class GPCandidatePortal(CustomerPortal):
         
         # import wdb; wdb.set_trace(); 
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
+     
+        # if registered_exam.ccmc_candidate:
         
-        if registered_exam.ccmc_candidate:
-            ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('id','=',survey_input_id)])
-            survey_examiner_token = ccmc_exam.token
+        ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',registered_exam.ccmc_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
+        print("ccmc_exam")
+        print(ccmc_exam)
+        print("ccmc_exam.token")
+        print(ccmc_exam.token)
+        survey_examiner_token = ccmc_exam.token
         
         
         if survey_examiner_token == examiner_token:

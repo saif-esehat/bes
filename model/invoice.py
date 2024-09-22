@@ -363,7 +363,7 @@ class CustomPaymentRegister(models.TransientModel):
                     if line.product_id.default_code == 'ccmc_online_repeater':
                         cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
                         cookery_bakery_qb_input = cookery_bakery_qb_input._create_answer(user=invoice.ccmc_candidate.user_id)
-                        cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id})
+                        cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id , 'dgs_batch': dgs_batch})
                         ccmc_online_status = 'pending'
                         cookery_gsk_online_carry_forward = False
                         applied.append(line.product_id.default_code)
