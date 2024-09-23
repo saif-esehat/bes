@@ -394,6 +394,8 @@ class CandidatesApplication(models.Model):
 
     date_of_pst = fields.Date(string="Date OF PST")
     date_of_validity_pst = fields.Date(string="Date Of Validity Of PST",compute="_compute_date_of_validity_pst")
+    application_entered_by = fields.Char("Application Entered By")
+
 
     @api.depends('date_of_pst')
     def _compute_date_of_validity_pst(self):

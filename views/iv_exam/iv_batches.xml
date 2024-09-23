@@ -32,9 +32,10 @@
                        
                     </group>
                     <group>
-                        <field name="start_date" placeholder="DD/MM/YY" style="width: 50%;"/>
-                        <field name="end_date" placeholder="DD/MM/YY" style="width: 50%;"/>
-                        <field name="issue_date" placeholder="DD/MM/YY" style="width: 50%;"/>
+                        <field name="start_date" style="width: 50%;"/>
+                        <field name="end_date" style="width: 50%;"/>
+                        <field name="issue_date" style="width: 50%;"/>
+                        <field name="written_exam_date" style="width: 50%;"/>
 
                     </group>
                     </group>

@@ -204,6 +204,9 @@
                             <field name="date_of_validity_fpff" />
                         </group>
                     </group>
+                    <group>
+                        <field name="application_entered_by" />
+                    </group>
                  
                     
                  </sheet>
