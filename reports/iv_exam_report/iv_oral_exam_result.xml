@@ -33,19 +33,19 @@
 <template id="reports_iv_oral_exam_a_list">
     <t t-call="web.basic_layout">
             <div class="page">
-            <div class="header">
-                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                     <h5 style="text-align: center; font-weight: bold;">
-                       Board of Examinations for Seafarers Trust (BES), Navi Mumbai
-                </h5>
+               <div class="header">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                        <h5 style="text-align: center; font-weight: bold;">
+                        Board of Examinations for Seafarers Trust (BES), Navi Mumbai
+                    </h5>
+                    
+                    <!-- Second Line -->
+                    <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                    Final Result of MMB Inland Vessel Oral Examination Held on -<span t-field="docs.batch_id.name" />
+                    </h6>
+                    
                 
-                <!-- Second Line -->
-                <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                  Final Result of MMB Inland Vessel Oral Examination Held on -<span t-field="docs.batch_id.name" />
-                </h6>
-                   
-               
-                </table>
+                    </table>
                 </div>
 
               

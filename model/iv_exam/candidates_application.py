@@ -557,7 +557,7 @@ class HoldReason(models.Model):
 
 
 class IVCanditateApplicationHold(models.AbstractModel):
-    _name = 'report.bes.reports_iv_hold_candidate_list'
+    _name = 'report.bes.reports_iv_hold_candidate_list1'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     
     @api.model
