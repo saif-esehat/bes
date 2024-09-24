@@ -4296,6 +4296,10 @@ class CCMCExam(models.Model):
                 record.result_status = 'pending'
             elif record.state == '4-pending':
                  record.result_status = 'failed'
+            elif record.state == '5-pending_reissue_approval':
+                record.result_status = 'pending'
+            elif record.state == '6-pending_reissue_approved':
+                record.result_status = 'pending'
     
     
     def open_reissue_wizard(self):
