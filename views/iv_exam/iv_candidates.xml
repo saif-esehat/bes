@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -123,4 +124,129 @@
      
       
 </data>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="iv_candidates_action" model="ir.actions.act_window">
+            <field name="name">IV Candidate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">iv.candidates</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">IV Candidate</p>
+            </field>
+        </record>
+
+         
+        <record id="view_iv_candidates_form" model="ir.ui.view">
+        <field name="name">iv.candidates.form</field>
+        <field name="model">iv.candidates</field>
+        <field name="arch" type="xml">
+            <form string="IV Candidate">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"  >
+                        <button string="Written Exams" name="open_written_exams" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+                        <button string="Oral Exams" name="open_oral_exams" type="object" class="oe_stat_button" icon="fa-align-justify"></button>
+
+                    </div>
+
+                            <!-- Candidate Photo at the top-left corner with widget -->
+                            <field name="photo" widget="image" class="oe_avatar" />
+                            <group>
+                            <field name="candidate_signature" widget="image" class="oe_avatar" options="{'size': [140, 50]}"/>
+                            </group>
+                        <group>
+                        <group>
+                     
+                            <!-- Candidate Details -->
+                            <field name="certificate_no" />
+                            <field name="indos_no" />
+                            <field name="roll_no" />
+                            <field name="name" />
+                            <field name="ranking_name" />
+                            <field name="grade_applied" />
+                            <field name="dob" placeholder="DD/MM/YY"/>
+                            <field name="email" placeholder="Enter email address"/>
+                            <!-- <field name="first_day_signature" />
+                            <field name="second_day_signature" /> -->
+                        </group>
+                        <group>
+                            <field name="cdc_no" />
+                            <field name="phone" />
+                            <field name="batch_id" />
+                            <field name="vaccination_rtpcr" />
+                            <field name="remark" />
+                            <field name="examination_date" />
+                            <field name="certificate_valid_date" />
+                        </group>
+                      
+                          
+                        </group>
+                     <field name="candidate_applications">
+                        <tree editable="bottom">
+                            <field name="application_id" />
+                        </tree>
+                    </field>
+                    
+                  
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+        <record id="iv_candidates_tree" model="ir.ui.view">
+        <field name="name">iv.candidates.tree</field>
+        <field name="model">iv.candidates</field>
+        <field name="arch" type="xml">
+            <tree>
+            <header>
+                <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
+                <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
+            </header>                
+                <field name="certificate_no" />
+                <field name="roll_no" />
+                <field name="name"/>
+                <field name="ranking_name" />
+                <field name="grade_applied" />
+                <field name="dob"/>
+                <field name="indos_no"/>
+                <field name="cdc_no"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <!-- <field name="first_day_signature" /> -->
+                <!-- <field name="second_day_signature" /> -->
+                <field name="vaccination_rtpcr" />
+                <field name="remark" />
+                <field name="batch_id"/>
+                 <field name="certificate_valid_date" />
+            </tree>
+        </field>
+        </record>
+
+        <record id="iv_candidates_search" model="ir.ui.view">
+            <field name="name">iv.candidates.search</field>
+            <field name="model">iv.candidates</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="batch_id"/>
+                    
+
+                    <searchpanel>
+                        <field name="batch_id" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <menuitem id="iv_candidate_menu" 
+                  parent="iv_menu" 
+                  name="IV Candidates"
+                  action="iv_candidates_action"
+                  sequence="10" />
+
+      
+</data>
+>>>>>>> 11654fd5 (save)
 </odoo>

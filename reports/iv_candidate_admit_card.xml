@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
@@ -359,4 +360,367 @@
 
 
 
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+ <report
+        id="iv_candidat_admit_card_action"
+        string="IV Candidate Admit Card"
+        model="iv.candidates"
+        report_type="qweb-pdf"
+        name="bes.reports_iv_candidate_admit_card"
+        file="bes.reports_iv_candidate_admit_card"/>
+
+  <report
+        id="iv_candidat_certificate_action"
+        string="IV Candidate Certificate"
+        model="iv.candidates"
+        report_type="qweb-pdf"
+        name="bes.reports_iv_candidate_certificates"
+        file="bes.reports_iv_candidate_certificates"/>
+
+
+<template id="reports_iv_candidate_admit_card">
+    <t t-call="web.basic_layout">
+        <div class="page">
+        <t t-foreach="docs" t-as="o">`
+            <table align="center" style="width:400pt; height:100pt; border: 1pt solid black; border-collapse: separate; border-radius:8pt; margin: auto; padding: 10pt;">
+                <!-- <t t-foreach="docs" t-as="o"> -->
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-size: 15px; padding-bottom: 2px;">
+                            <strong>BOARD OF EXAMINATIONS FOR SEAFARERS TRUST</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
+                            <strong>ADMIT CARD – IV Examination MMB for FRESH Candidate</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="position: relative; text-align: left; padding: 5pt;">
+                            <img t-attf-src="data:image/png;base64,{{o.photo}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px; position: absolute; top: 0px; right: 0px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 5mm;">
+                            Name of the Candidate: <strong><t t-esc="o.name"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 14px; padding-bottom: 5mm;">
+                            Roll No: <strong><t t-esc="o.roll_no"/></strong>
+                        </td>
+                        <td style="font-size: 14px; padding-bottom: 5mm;">
+                            DOB: <strong><t t-esc="o.dob.strftime('%d-%m-%Y')"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
+                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
+                            Indos No: <strong><t t-esc="o.indos_no"/></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 30px;">
+                            <strong style="text-decoration: underline;">Examination Date:- </strong><strong>
+                            <t t-if="o.examination_date">
+                                <t t-esc="o.examination_date.strftime('%d %B %Y')"/>
+                            </t>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left; padding-bottom: 10px;">
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_signature}}" style="width: 250px; height: 50px; margin-bottom: 10px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 14px; text-align: left;">
+                            Signature of the Candidate
+                        </td>
+                        <td style="font-size: 14px; text-align: right;">
+                            In-Charge, IV- Examination, BES
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 5px;">
+                            <b> . . . . . . . . . . . . . . . . . . . . . . . .Please tear it away from here. . . . . . . . . . . . . . . . . . . . . . </b>
+                        </td>
+                    </tr> -->
+                <!-- </t> -->
+            </table>
+         </t>
+        </div>
+    </t>
+</template>
+
+
+
+<template id="reports_iv_candidate_certificates">
+    <t t-call="web.basic_layout">
+        <div class="page">
+          
+            <t t-foreach="docs" t-as="o">
+            
+                    <div class="row" style="display: flex; align-items: flex-start; margin: 0; padding: 0;">
+                    <!-- Left Side -->
+                    <div class="col-6" style="display: flex; flex-direction: column; padding: 0; margin: 0;">
+                        <div style="display: flex; align-items: center; padding: 0; margin: 0;">
+                            <span style="font-size:15px; color: #A0522D; flex: 1;">No of Certificate: - </span>
+                            <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="o.certificate_no"/></span>
+                        </div>
+                        <div style="display: flex; align-items: center; padding: 0; margin: 0;">
+                            <span style="font-size:15px; color: #A0522D; flex: 1;">Bearer: - </span>
+                            <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="o.name"/></span>
+                        </div>
+                        <div style="padding: 0; margin: 0;">
+                            <span style="font-size:15px; color: #A0522D;">Date and place of Birth, showing Village, Police Thana and</span>
+                        </div>
+                        <t t-if="applications">
+                            <t t-foreach="applications" t-as="app">
+                              
+                               <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:15px; color: #A0522D;">District: -</span>
+                                    <t t-if="app">
+                                        <span style="font-size:15px; font-weight: bold; color: skyblue;">
+                                            <t t-if="app.dob">
+                                                <t t-esc="app.dob.strftime('%d-%m-%Y')"/>, 
+                                            </t>
+                                            <t t-esc="app.street"/>, Tal/Dist- <t t-esc="app.district"/>,
+                                        </span>
+                                    </t>
+                                </div>
+                                <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:15px; color: #A0522D;">State: -</span>
+                                    <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="app.state_ids.name"/></span>
+                                </div>
+                                <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:15px; color: #A0522D;">Residence, showing Village, Police Thana and District: -</span>
+                                    <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="app.street"/>, Tal/Dist-<t t-esc="app.district"/>,</span>
+                                </div>
+                                <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:15px; color: #A0522D;">State: -</span>
+                                    <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="app.state_id.name"/></span>
+                                </div>
+                                <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:15px; color: #A0522D;">Height: -</span>
+                                    <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="app.height"/></span>
+                                </div>
+                                <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:15px; color: #A0522D;">Personal description, stating particularly any permanent marks or scars: -</span>
+                                    <span style="font-size:15px; font-weight: bold; color: skyblue;"><t t-esc="app.idendification"/></span>
+                                </div>
+                                <div style="padding: 0; margin: 0;">
+                                    <span style="font-size:16px; font-weight: bold; color: skyblue;">Signature: -</span>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                        <img t-attf-src="data:image/png;base64,{{app.candidate_signature}}" style="width: 250px; height: 50px;" />
+                                    </div>
+                                </div>
+                             </t>
+                            </t>
+                                <div style="padding: 0; margin: 20px 0 0 0; text-indent: 50px;">
+                                    <span style="font-size:15px; color: #A0522D;">Any master who fails to deliver up a Certificate which
+                                    has been cancelled or suspended is liable to penalty, not
+                                    exceeding Rs. 500/- (and as declared by Govt. time to time.)</span>
+                                </div>
+                                <div style="padding: 0; margin: 20px 0 0 0; text-indent: 50px;">
+                                    <span style="font-size:15px; color: skyblue;">N.B</span>
+                                    <span style="font-size:15px; color: #A0522D;">. Any person other than the owner thereof,
+                                    becoming possessed of this Certificate is required to transmit it
+                                    forthwith to the Chief Port Officer, Maharashtra Maritime
+                                    Board, Mumbai.</span>
+                                </div>
+                            
+                              
+                            <!-- </t>
+                        </t> -->
+                        <t t-if="batches">
+                            <t t-foreach="batches" t-as="iv">
+                            <div style="padding: 0; margin: 20px 0 0 0; text-indent: 50px;">
+                                <span style="font-size:15px; color: #A0522D;">This Certificate is given upon an examination passed at</span>
+                                <span style="font-size:15px; color: skyblue;">Mumbai, Maharashtra</span>
+                                <span style="font-size:15px; color: #A0522D;">on</span>
+
+                                <!-- Display date with specific styles -->
+                                <t t-set="day" t-value="iv.issue_date.strftime('%d') + 'th'"/>
+                                <t t-set="month_year" t-value="iv.issue_date.strftime('%B, %Y')"/>
+                                
+                                <span style="font-size:15px; color: skyblue;">
+                                    <t t-esc="day"/> <!-- Day with 'th' in sky blue -->
+                                </span>
+                                <span style="font-size:15px; color: #A0522D;"> day of </span>
+                                <span style="font-size:15px; color: skyblue;">
+                                    <t t-esc="month_year"/> <!-- Month and year in sky blue -->
+                                </span>
+                                <span style="font-size:15px; color: #8B4513; font-weight: bold;">and is valid till </span>
+
+
+                                <t t-set="day" t-value="o.certificate_valid_date.strftime('%d') + 'th'"/>
+                                <t t-set="month_year" t-value="o.certificate_valid_date.strftime('%B, %Y')"/>
+                                
+                                <span style="font-size:15px; color: #8B4513; font-weight: bold;">
+                                    <t t-esc="day"/> <!-- Day with 'th' in sky blue -->
+                                </span>
+                                <span style="font-size:15px; color: #A0522D;"> day of </span>
+                                <span style="font-size:15px; color: #8B4513; font-weight: bold;">
+                                    <t t-esc="month_year"/>. <!-- Month and year in sky blue -->
+                                </span>
+                            </div>
+                        </t>
+                      </t>
+                      <div style=" align-items: center; padding-left: 50px; margin-top: 100px;">
+                            <div style="text-align: center; ">
+                                <span style="font-size:15px; color: #A0522D; text-align: center; font-weight: bold;">
+                                    CHIEF PORT OFFICER
+                                </span>
+                            </div>
+                            
+                            <span style="font-size:15px; color: #A0522D; font-weight: bold;">
+                                MAHARASHTRA MARITIME BOARD, MUMBAI
+                            </span>
+                           
+                        </div>
+                    
+                     </div>
+
+                    <!-- Right Side -->
+                    <div class="col-6" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0; margin: 0;">
+                        <div style="display: flex; justify-content: flex-end; align-items: center; padding-left: 180px; margin-bottom: 30px;">
+                            <img class="img img-responsive img-top" t-attf-src="/bes/static/src/img/logo_iv_candidate_certificate.jpg" style="width: 100px; height: 100px;" />
+                        </div>
+                        <div style="display: flex; justify-content: center; align-items: center; padding-left: 30px; margin: 0;">
+                            <strong style="font-size:18px; color: skyblue;">BY THE GOVERNMENT OF MAHARASHTRA</strong>
+                            <div style="text-align: center; margin-top: 10px;">
+                                <strong style="font-size:18px; color: skyblue;">CERTIFICATE OF COMPETENCY</strong>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 0px;">
+                                <strong style="font-size:18px; color: #A0522D;">TO ACT AS </strong>
+                        </div>
+
+                        <div style="padding: 0; margin: 0; text-align: center;">
+                            <t t-if="o.ranking_name">
+                                <!-- Split the text at 'OF' -->
+                                <t t-set="parts" t-value="o.ranking_name.split('OF')"/>
+                                
+                                <!-- Display text before 'OF' -->
+                                <t t-if="parts[0]">
+                                    <span style="font-size:18px; font-weight: bold; color: skyblue; display: block;">
+                                        <t t-esc="parts[0].strip()"/>
+                                    </span>
+                                </t>
+                                
+                                <!-- 'OF' on a new line -->
+                                <t t-if="len(parts) > 1">
+                                    <!-- <span style="font-size:18px; font-weight: bold; color: skyblue; display: block;">
+                                        OF
+                                    </span>
+                                     -->
+                                    <!-- Display text after 'OF' -->
+                                    <t t-if="parts[1]">
+                                        <span style="font-size:18px; font-weight: bold; color: skyblue; display: block;">
+                                            OF <t t-esc="parts[1].strip()"/>
+                                        </span>
+                                    </t>
+                                </t>
+                            </t>
+                        </div>
+                        <div style="padding: 0; margin: 20px 0 0 0;">
+                            <span style="font-size:15px; color: #A0522D; text-indent: 50px; padding-left: 20px;">To</span>
+                            <span style="font-size:15px; font-weight: bold; color: skyblue; padding-left: 40px;"> <!-- Adjust padding-left for the gap -->
+                                <t t-esc="o.name"/>
+                            </span>
+                        </div>
+
+                        <div style="padding: 0; margin: 20px 0 0 0; text-indent: 50px; padding-left: 20px;">
+                            <span style="font-size:15px; color: #A0522D; ">Whereas it has been reported to the Government of
+                            Maharashtra that you have been found, after examination, duly
+                            qualified to fulfill the duties of a </span>
+                            <span style="font-size:15px; font-weight: bold; color: #0000FF;"> <!-- Dark Blue Color -->
+                                <t t-esc="o.grade_applied"/>
+                            </span>
+                            <span style="font-size:15px; color: #A0522D; ">on an Inland Vessel
+                            under IV Act, 1917, I do hereby, in pursuance the said Act, grant
+                            you this  
+                            </span>
+                            <span style="font-size:18px; font-weight: bold; color: #0000FF;"> <!-- Dark Blue Color -->
+                                CERTIFICATE OF COMPETENCY
+                            </span>
+                            <span style="font-size:15px; color: #A0522D; ">to act as a
+                            </span>
+                             <span style="font-size:15px; font-weight: bold; color: #0000FF;"> <!-- Dark Blue Color -->
+                                <t t-esc="o.grade_applied"/>.
+                            </span>
+                        </div>
+                        <t t-if="batches">
+                            <t t-foreach="batches" t-as="b">
+                                <div style="padding: 0; margin: 20px 0 0 0;">
+                                    <span style="font-size:15px; color: #A0522D; text-indent: 50px; padding-left: 150px;">This </span>
+
+                                    <!-- Display date with specific styles -->
+                                    <t t-set="day" t-value="b.start_date.strftime('%d') + 'th'"/>
+                                    <t t-set="month_year" t-value="b.start_date.strftime('%B, %Y')"/>
+                                    
+                                    <span style="font-size:15px; color: skyblue;">
+                                        <t t-esc="day"/> <!-- Day with 'th' in sky blue -->
+                                    </span>
+                                    <span style="font-size:15px; color: #A0522D;"> day of </span>
+                                    <span style="font-size:15px; color: skyblue;">
+                                        <t t-esc="month_year"/> <!-- Month and year in sky blue -->
+                                    </span>
+                                </div>
+                            </t>
+                        </t>
+                        <div style="padding: 0; margin: 40px 0 0 0; text-indent: 30px;">
+
+                            <img t-attf-src="data:image/png;base64,{{o.photo}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px;"/>
+
+                            <span style="font-size:14px; font-weight: bold; color: #A0522D; margin-left: 5px;">
+                                By order of the Governor of Maharashtra
+                            </span>
+                        </div>
+
+                        <div style=" align-items: center; padding-left: 50px; margin-top: 20px;">
+                            <div style="text-align: center; ">
+                                <span style="font-size:15px; color: #A0522D; text-align: center; font-weight: bold;">
+                                    CHIEF PORT OFFICER
+                                </span>
+                            </div>
+                            
+                            <span style="font-size:15px; color: #A0522D; font-weight: bold;">
+                                MAHARASHTRA MARITIME BOARD, MUMBAI
+                            </span>
+                           
+                        </div>
+                        <div style="padding: 0; ">
+                            <span style="font-size:13px; color: #A0522D;">Issued vide Home Department, Mantralaya, Maharashtra Notification no.
+                            IVA. 08/2000/CR-134/Part-1/prt-1 Dt. 15th JUNE 2001</span>
+                        </div>
+                        <div style="text-align: center; ">
+                                <span style="font-size:15px; color: skyblue; text-align: center; font-weight: bold;">
+                                    [This book contains 8 pages]
+                                </span>
+                            </div>
+                                                
+                    </div>
+                </div>
+
+           </t>
+
+            
+        </div>
+    </t>
+</template>
+
+
+
+
+
+
+>>>>>>> 11654fd5 (save)
 </odoo>

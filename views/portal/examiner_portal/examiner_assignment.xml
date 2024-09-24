@@ -368,6 +368,19 @@
 
 
                                     }
+
+                                    function openCcmcOralUploadModal(button) {
+                                    <!-- debugger -->
+                                    // Retrieve the data-id attribute value from the clicked button
+                                    var dataId = button.getAttribute('ccmc-batch-id');
+                                    var assignId = button.getAttribute('ccmc-assign-id');
+                                    // Update the content of the modal with the retrieved data
+                                    document.getElementById('ccmc_oral_batch_ids').value = dataId;
+                                    document.getElementById('ccmc_oral_assignment_ids').value = assignId;
+                                    
+
+
+                                    }
                                     
                                     function openccmcgskUploadModal(button) {
                                     <!-- debugger -->
@@ -536,6 +549,37 @@
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="ccmc_batch_ids" name="ccmc_batch_ids" />
                                         <input type="hidden" id="ccmc_assignment_ids" name="ccmc_assignment_ids" />
+                                        <div class="form-group">
+                                            <label for="fileUpload">XLSX Upload</label>
+                                            <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
+                                        </div>
+                                        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Upload CCMC Marksheet  -->
+                <div class="modal fade" id="uploadCcmcMarksheetOralModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Upload Marksheet</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-5">
+
+                                    <form method="post" action="/my/uploadccmcoralmarksheet" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="ccmc_oral_batch_ids" name="ccmc_batch_ids" />
+                                        <input type="hidden" id="ccmc_oral_assignment_ids" name="ccmc_assignment_ids" />
                                         <div class="form-group">
                                             <label for="fileUpload">XLSX Upload</label>
                                             <input type="file" class="form-control-file" accept=".xlsx" name="fileUpload" id="fileUpload"/>
@@ -807,10 +851,18 @@
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'"> -->
                 <t t-if="examiner_subject == 'CCMC'">
-                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral &amp; Practical Marksheet</a>
+                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Practical Marksheet</a>
                     <t t-if="date_valid">
                         <t t-if="not marksheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Oral &amp; Practical Marksheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcUploadModal(this)" data-target="#uploadCcmcMarksheetModal" class="btn btn-primary btn_cta">Upload CCMC Practical Marksheet</a>
+                        </t>
+                    </t>
+                </t>
+                <t t-if="examiner_subject == 'CCMC'">
+                    <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral Marksheet</a>
+                    <t t-if="date_valid">
+                        <t t-if="not marksheet_uploaded">
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-ccmc-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcOralUploadModal(this)" data-target="#uploadCcmcMarksheetOralModal" class="btn btn-primary btn_cta">Upload CCMC Oral Marksheet</a>
                         </t>
                     </t>
                 </t>
