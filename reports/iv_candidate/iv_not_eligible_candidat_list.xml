@@ -15,16 +15,21 @@
     <t t-call="web.basic_layout">
             <div class="page">
 
-                <h5 style="text-align: center; font-weight: bold;">
-                        Board of Examinations for Seafarers Trust (BES), Navi Mumbai.
-                </h5>
+               
+                 <div class="header">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                           <h5 style="text-align: center; font-weight: bold;">
+                                    Board of Examinations for Seafarers Trust (BES), Navi Mumbai.
+                            </h5>
+                            
+                            <!-- Second Line -->
+                            <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                                Final List of Not Eligible (Fresh) Candidates. 
+                            </h6>
                 
-                <!-- Second Line -->
-                <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                     Final List of Not Eligible (Fresh) Candidates. 
-                </h6>
-
-                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    </table>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 5px;">
                 <thead>
                     <tr style="background-color: #d3d3d3; color: black;">
                         <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No</th>
@@ -32,7 +37,7 @@
                         <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Application Form Number</th>
                         <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Grade Applied</th>
                         <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name</th>
-                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">D.O.B</th>
+                        <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">D.O.B</th>
                         <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Deficiencies</th>
                     </tr>
                 </thead>
@@ -41,25 +46,25 @@
                         <t t-foreach="docs" t-as="not_eligible">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
-                                <td  style="border: 1px solid black; padding:6px; text-align: center;">
+                                <td  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
                                     <span t-esc="index" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
                                     <span t-field="not_eligible.indos_no" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
                                     <span t-field="not_eligible.application_no" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
                                     <span t-field="not_eligible.grade" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  style="border: 1px solid black; padding: 6px;  vertical-align: middle;">
                                     <span t-field="not_eligible.name" />
                                 </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
                                     <span t-esc="not_eligible.dob.strftime('%d-%m-%Y')" />
                                 </td>
-                               <td style="border: 1px solid black; padding:6px;">
+                               <td style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
                                 <ul style="list-style-type: disc; padding-left: 20px;">
                                         <t t-foreach="not_eligible.hold_reason" t-as="reason">
                                         <li>

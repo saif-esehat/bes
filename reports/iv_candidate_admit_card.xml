@@ -22,7 +22,7 @@
     <t t-call="web.basic_layout">
         <div class="page">
         <t t-foreach="docs" t-as="o">`
-            <table align="center" style="width:400pt; height:100pt; border: 1pt solid black; border-collapse: separate; border-radius:8pt; margin: auto; padding: 10pt;">
+            <table align="center" style="width:500pt; height:100pt; border: 1pt solid black; border-collapse: separate; border-radius:8pt; margin: auto; padding: 10pt;">
                 <!-- <t t-foreach="docs" t-as="o"> -->
                     <tr>
                         <td colspan="2" style="text-align: center; font-size: 15px; padding-bottom: 2px;">
@@ -54,7 +54,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
-                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
+                            Grade Applied for: <strong><span t-field="o.grade_applied" /></strong>
                         </td>
                     </tr>
                     <tr>
