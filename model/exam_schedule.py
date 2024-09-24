@@ -394,7 +394,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
     
-    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates",tracking=True)
+    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Cookery Bakery', compute="_compute_ccmc_prac_oral_candidates",tracking=True)
     ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates",tracking=True)
     ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates",tracking=True)
     
@@ -419,7 +419,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             num_examiners_ccmc_prac_oral = len(examiners_ccmc_prac_oral)
             
             
-            examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' and r.exam_type == 'oral').ids
+            examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' or r.subject.name == 'CCMC'  and r.exam_type == 'oral').ids
             ccmc_gsk_oral_assignments = {examiner: [] for examiner in examiners_ccmc_gsk_oral}
             num_examiners_ccmc_gsk_oral = len(examiners_ccmc_gsk_oral)
             
@@ -2196,7 +2196,7 @@ class ExamOralPracticalExaminers(models.Model):
                         (self.env.ref("bes.view_marksheet_ccmc_form_gsk_online").id, 'form')]
 
         
-        elif self.subject.name == 'CCMC GSK Oral':
+        elif self.subject.name == 'CCMC GSK Oral' or self.subject.name == 'CCMC' :
             if self.exam_type == 'practical_oral':
 
                  views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
