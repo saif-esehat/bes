@@ -35,7 +35,7 @@ class BesBatches(models.Model):
     examiners = fields.Many2many('bes.examiner', string="Examiners",tracking=True)
     # exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
     # exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
-    candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count",tracking=True)
+    candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count")
     
     
 
@@ -187,8 +187,8 @@ class ExamCandidate(models.Model):
     gsk_oral_id = fields.Many2one("oral.gsk","GSK Oral",tracking=True)
     
     
-    mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity",tracking=True)
-    gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity",tracking=True)
+    mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity")
+    gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity")
     
     
     def compute_mek_gsk_visiblity(self):
@@ -371,7 +371,7 @@ class ExamOnline(models.Model):
     subject = fields.Many2one("course.master.subject","Subject",tracking=True)
     start_time_online = fields.Datetime("Start Time",tracking=True)
     end_time_online = fields.Datetime("End Time",tracking=True)
-    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count",tracking=True)
+    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count")
     candidates = fields.Many2many("exam.schedule.bes.candidate","exam_type_online_candidate_rel","exam_type_online_id","exam_candidate_id",string="Candidate",tracking=True)
     
     @api.onchange('exam_schedule_id')
@@ -394,14 +394,14 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
     
-    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates",tracking=True)
-    ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates",tracking=True)
-    ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates",tracking=True)
+    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates")
+    ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates")
+    ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates")
     
     
     no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
-    examiner_required_ccmc_prac_oral = fields.Integer("Examiner Required For CCMC Prac/Oral Per Day",compute="_compute_examiners_ccmc_prac_oral",tracking=True)
-    examiner_required_ccmc_gsk_oral = fields.Integer("Examiner Required For CCMC GSK Oral Per Day",compute="_compute_examiners_ccmc_gsk_prac_oral",tracking=True)
+    examiner_required_ccmc_prac_oral = fields.Integer("Examiner Required For CCMC Prac/Oral Per Day",compute="_compute_examiners_ccmc_prac_oral")
+    examiner_required_ccmc_gsk_oral = fields.Integer("Examiner Required For CCMC GSK Oral Per Day",compute="_compute_examiners_ccmc_gsk_prac_oral")
     
     examiner_lines_ids = fields.One2many('ccmc.examiner.assignment.wizard.line', 'parent_id', string='Examiners',tracking=True)
     
@@ -672,7 +672,7 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     ], string='Exam Type', default='practical_oral',tracking=True)
     
     # no_candidates = fields.Integer('No. Of Candidates')
-    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
     
     
     @api.depends('ccmc_marksheet_ids')
@@ -691,13 +691,13 @@ class GPExaminerAssignmentWizard(models.TransientModel):
 
     
     #GP Course
-    gsk_prac_oral_candidates = fields.Integer('No. of Candidates In GSK Oral/Practical', compute="_compute_gsk_prac_oral_candidates",tracking=True)
-    mek_prac_oral_candidates = fields.Integer('No. of Candidates In MEK Oral/Practical', compute="_compute_mek_prac_oral_candidates",tracking=True)
-    gsk_online_candidates = fields.Integer('No. of Candidates In GSK Online',compute="_compute_gsk_online_candidates",tracking=True)
-    mek_online_candidates = fields.Integer('No. of Candidates In MEK Online',compute="_compute_mek_online_candidates",tracking=True)
+    gsk_prac_oral_candidates = fields.Integer('No. of Candidates In GSK Oral/Practical', compute="_compute_gsk_prac_oral_candidates")
+    mek_prac_oral_candidates = fields.Integer('No. of Candidates In MEK Oral/Practical', compute="_compute_mek_prac_oral_candidates")
+    gsk_online_candidates = fields.Integer('No. of Candidates In GSK Online',compute="_compute_gsk_online_candidates")
+    mek_online_candidates = fields.Integer('No. of Candidates In MEK Online',compute="_compute_mek_online_candidates")
     no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
-    examiner_required_mek = fields.Integer("Examiner Required For MEK Prac/Oral Per Day",compute="_compute_examiners_mek",tracking=True)
-    examiner_required_gsk = fields.Integer("Examiner Required For GSK Prac/Oral Per Day",compute="_compute_examiners_gsk",tracking=True)
+    examiner_required_mek = fields.Integer("Examiner Required For MEK Prac/Oral Per Day",compute="_compute_examiners_mek")
+    examiner_required_gsk = fields.Integer("Examiner Required For GSK Prac/Oral Per Day",compute="_compute_examiners_gsk")
 
     
     
@@ -1123,7 +1123,7 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
-    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
     
     
     @api.depends('gp_marksheet_ids')
@@ -1963,8 +1963,8 @@ class ExamOralPracticalExaminers(models.Model):
     attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
     attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
 
-    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
-    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
+    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True)
+    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True)
     # Add One2many field
     assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
     
@@ -2810,9 +2810,9 @@ class GPExam(models.Model):
     reissued = fields.Boolean("Reissued",tracking=True)
     reissued_date = fields.Date("Reissued Date",tracking=True)
 
-    url = fields.Char("URL",compute="_compute_url",store=True,tracking=True)
-    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True,tracking=True)
-    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url",tracking=True)
+    url = fields.Char("URL",compute="_compute_url",store=True)
+    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible",tracking=True)
     
@@ -2840,7 +2840,7 @@ class GPExam(models.Model):
         ('pending','Pending'),
         ('failed','Failed'),
         ('passed','Passed'),
-    ],string='Result',tracking=True,compute='_compute_result_status')
+    ],string='Result',compute='_compute_result_status')
     
     result = fields.Selection([
         ('failed','Failed'),
