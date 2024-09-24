@@ -4304,7 +4304,17 @@ class CCMCExam(models.Model):
     absent_status = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Absent Status")
+    ],compute="_compute_absent_status",string="Absent Status",store=True)
+    
+    @api.depends('cookery_prac_attendance','ccmc_gsk_oral_attendance','ccmc_online_attendance')
+    def _compute_absent_status(self):
+        for record in self:
+            if record.cookery_prac_attendance == 'absent' and record.ccmc_gsk_oral_attendance == 'absent' and record.ccmc_online_attendance == 'absent':
+                record.absent_status = "absent"
+            elif record.cookery_prac_attendance == 'absent' or record.ccmc_gsk_oral_attendance == 'absent' or record.ccmc_online_attendance == 'absent':
+                record.absent_status = "present"
+            else:
+                record.absent_status = "present"
     
     cookery_prac_attendance = fields.Selection([
         ('present', 'Present'),

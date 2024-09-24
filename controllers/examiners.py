@@ -334,7 +334,7 @@ class ExaminerPortal(CustomerPortal):
         marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
         marksheet.cookery_bakery.write({"cookery_draft_confirm": 'confirm' })
         marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
-        marksheet.ccmc_marksheet.write({"cookery_prac_attendance": data['attendance_id'] , "ccmc_oral_attendance": data['attendance_id'] })
+        marksheet.ccmc_marksheet.write({"cookery_prac_attendance": data['attendance_id']})
         marksheet.examiners_id.compute_candidates_done()
         marksheet.examiners_id.check_absent()
         return json.dumps({"status":"success"})
