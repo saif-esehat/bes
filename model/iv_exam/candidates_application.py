@@ -647,7 +647,6 @@ class CandidatesApplication(models.Model):
         ('ME', 'Motor Engineer'),
         ('1ED', 'First Class Engine Driver'),
         ('2ED', 'Second Class Engine Driver'),
-
         ], string='Grade')
     
     # 2. Details of the Candidate
@@ -692,11 +691,7 @@ class CandidatesApplication(models.Model):
 
    
 
-    language_preference = fields.Selection([
-        ('marathi', 'Marathi'),
-        ('hindi', 'Hindi'),
-        ('english', 'English')
-        ], string='Language Preference', default='english')
+    language_preference = fields.Char(string='Language Preference')
 
 
 
@@ -808,6 +803,7 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 
                     })
                 else:
@@ -820,7 +816,8 @@ class CandidatesApplication(models.Model):
                         'dob': candidate.dob,
                         'email': candidate.email,
                         'phone': candidate.mobile,
-                        'grade_applied': candidate.grade
+                        'grade_applied': candidate.grade,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
                     })
                 count += 1
 
@@ -854,11 +851,11 @@ class CandidatesApplication(models.Model):
             if not record.grade:
                 raise ValidationError("The grade must be filled.")
             
-    @api.constrains('indos_no')
-    def _check_indos_no(self):
-        for record in self:
-            if not record.indos_no:
-                raise ValidationError("The indos no must be filled.")
+    # @api.constrains('indos_no')
+    # def _check_indos_no(self):
+    #     for record in self:
+    #         if not record.indos_no:
+    #             raise ValidationError("The indos no must be filled.")
             
     @api.constrains('name')
     def _check_name(self):
@@ -1128,13 +1125,13 @@ class CandidatesApplication(models.Model):
     @api.constrains('mobile')
     def _check_mobile(self):
         for record in self:
-            if record.mobile and (len(record.mobile) != 10 or not record.mobile.isdigit()):
+            if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
                 raise ValidationError("Mobile number must contain exactly 10 digits.")
 
     @api.constrains('zip')
     def _check_zip(self):
         for record in self:
-            if record.zip and (len(record.zip) != 6 or not record.zip.isdigit()):
+            if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
 
