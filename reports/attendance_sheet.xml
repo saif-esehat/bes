@@ -183,19 +183,19 @@
                             </td>
                             <td
                                 style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman'; background-color: grey; color: white; text-align: center; vertical-align: center;"
-                                t-if="not candidate.gp_marksheet.attempting_mek_online">
-                                NA
-                            </td>
-                            <td style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman';"
-                                t-if="candidate.gp_marksheet.attempting_mek_online">
-                            </td>
-                            <td
-                                style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman'; background-color: grey; color: white; text-align: center; vertical-align: center;"
                                 t-if="not candidate.gp_marksheet.attempting_gsk_online">
                                 NA
                             </td>
                             <td style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman';"
                                 t-if="candidate.gp_marksheet.attempting_gsk_online">
+                            </td>
+                            <td
+                                style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman'; background-color: grey; color: white; text-align: center; vertical-align: center;"
+                                t-if="not candidate.gp_marksheet.attempting_mek_online">
+                                NA
+                            </td>
+                            <td style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman';"
+                                t-if="candidate.gp_marksheet.attempting_mek_online">
                             </td>
                         </tr>
                     </t>

@@ -2618,28 +2618,19 @@
 
                                     
         </script>
-        <!-- <style>
-                                /* CSS to style the loader and overlay */
-                                    #loader-overlay {
-                                        display: none;
-                                        position: fixed;
-                                        top: 0;
-                                        left: 0;
-                                        width: 100%;
-                                        height: 100%;
-                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
-                                    }
-
-                                    #loader {
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        /* Additional styling for the loader itself */
-                                        /* Adjust as needed */
-                                    }
-        </style> -->
+        <style>
+            /* Style for the first column to be sticky */
+            th.sticky, td.sticky {
+                position: sticky;
+                left: 0;
+                z-index: 1;
+                background-color: white; /* Adjust as needed */
+            }
+            /* Adjust the z-index for the table header */
+            th.sticky {
+                z-index: 2; /* Make sure the header stays above the content */
+            }
+        </style>
 
         <t t-call="portal.portal_layout">
             <div class="container">
@@ -3185,7 +3176,7 @@
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
-                        <th>GP Candidate Name</th>
+                        <th class="sticky">GP Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
                         <th>Image Status</th>
@@ -3207,7 +3198,7 @@
                 <tbody>
                     <t t-foreach="candidates" t-as="candidate">
                         <tr>
-                            <td class="text-center">
+                            <td class="text-center sticky">
                                 <t t-out="candidate.name" />
                             </td>
                             <td class="text-center">
@@ -3673,26 +3664,17 @@
                                     
         </script>
         <style>
-                                /* CSS to style the loader and overlay */
-                                    #loader-overlay {
-                                        display: none;
-                                        position: fixed;
-                                        top: 0;
-                                        left: 0;
-                                        width: 100%;
-                                        height: 100%;
-                                        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-                                        z-index: 9999; /* Adjust the z-index to appear over other elements */
-                                    }
-
-                                    #loader {
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        /* Additional styling for the loader itself */
-                                        /* Adjust as needed */
-                                    }
+            /* Style for the first column to be sticky */
+            th.sticky, td.sticky {
+                position: sticky;
+                left: 0;
+                z-index: 1;
+                background-color: white; /* Adjust as needed */
+            }
+            /* Adjust the z-index for the table header */
+            th.sticky {
+                z-index: 2; /* Make sure the header stays above the content */
+            }
         </style>
 
         <t t-call="portal.portal_layout">
@@ -4168,7 +4150,7 @@
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
-                        <th>CCMC Candidate Name</th>
+                        <th class="sticky">CCMC Candidate Name</th>
                         <th>Indos No.</th>
                         <th>Roll No.</th>
                         <th>Image Status</th>
@@ -4188,7 +4170,7 @@
                 <tbody>
                     <t t-foreach="candidates" t-as="candidate">
                         <tr>
-                            <td class="text-center">
+                            <td class="text-center sticky">
                                 <t t-out="candidate.name" />
                             </td>
                             <td class="text-center">
