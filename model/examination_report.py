@@ -190,8 +190,56 @@ class ExaminationReport(models.Model):
             print(attempt_numbers)
             
             for attempt_number in  attempt_numbers:
+                absent = 0
                 attempt_number = attempt_number
+                applied_records = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number)])
+                for record in applied_records:
+                    row = []
+                    if record.cookery_prac_carry_forward and record.cookery_bakery_prac_oral_status == 'passed':
+                        cookery_prac_status = "AP"
+                        row.append(cookery_prac_status)
+                    elif record.cookery_bakery_prac_oral_status == "passed":
+                        cookery_prac_status = "P"
+                        row.append(cookery_prac_status)
+                    elif record.cookery_prac_attendance:
+                        cookery_prac_status = "A"
+                        row.append(cookery_prac_status)
+                    else:
+                        cookery_prac_status = "F"
+                        row.append(cookery_prac_status)
+                    
+                    if record.cookery_oral_carry_forward and record.ccmc_oral_prac_status == 'passed':
+                        ccmc_oral_prac_status = "AP"
+                        row.append(ccmc_oral_prac_status)
+                    elif record.ccmc_oral_prac_status == "passed":
+                        ccmc_oral_prac_status = "P"
+                        row.append(ccmc_oral_prac_status)
+                    elif record.ccmc_gsk_oral_attendance:
+                        ccmc_oral_prac_status = "A"
+                        row.append(ccmc_oral_prac_status)
+                    else:
+                        ccmc_oral_prac_status = "F"
+                        row.append(ccmc_oral_prac_status)
+                        
+                    if record.cookery_gsk_online_carry_forward and record.ccmc_online_status == 'passed':
+                        ccmc_online_status = "AP"
+                        row.append(ccmc_online_status)
+                    elif record.ccmc_oral_prac_status == "passed":
+                        ccmc_online_status = "P"
+                        row.append(ccmc_online_status)
+                    elif record.ccmc_gsk_oral_attendance:
+                        ccmc_online_status = "A"
+                        row.append(ccmc_online_status)
+                    else:
+                        ccmc_online_status = "F"
+                        row.append(ccmc_online_status)
+                    
+                    allowed_values = {'AP', 'A'}
+                    if unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values):
+                        absent = absent + 1    
+                
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number)])
+                appeared = appeared - absent
                 passed = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number),('result','=','passed')])
                 print('appeared')
                 print(appeared)
@@ -505,23 +553,23 @@ class ExaminationReport(models.Model):
                 appeared = applied - absent                        
                 # appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
-                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_prac_carry_forward','=',False)])
-                practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed'),('cookery_prac_carry_forward','=',False)])
+                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_prac_carry_forward','=',False),('cookery_prac_attendance','=','present')])
+                practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed'),('cookery_prac_carry_forward','=',False),('cookery_prac_attendance','=','present')])
                 try :
                     practical_percentage = (practical/practical_appeared) * 100
                 except ZeroDivisionError:
                     practical_percentage = 0
                     
-                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_oral_carry_forward','=',False)])                
-                oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False)])
+                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_oral_carry_forward','=',False),('ccmc_gsk_oral_attendance','=','present')])                
+                oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False),('ccmc_gsk_oral_attendance','=','present')])
                 
                 try:
                     oral_percentage = (oral/oral_appeared) * 100
                 except ZeroDivisionError:
                     oral_percentage = 0
 
-                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_gsk_online_carry_forward','=',False)])                
-                online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False)])
+                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_gsk_online_carry_forward','=',False),('ccmc_online_attendance','=','present')])                
+                online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False),('ccmc_online_attendance','=','present')])
                 
                 try:
                     online_percentage = (online/online_appeared) * 100
