@@ -2482,7 +2482,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                     
                     
                 gp_exam.gsk_online.unlink()
-                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_Final')])
+                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION SEP-2024')])
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
@@ -2501,7 +2501,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
                 gp_exam.mek_online.unlink()
-                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_Final')])
+                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION SEP-2024')])
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,"dgs_batch":gp_exam.dgs_batch.id})
 
@@ -2510,6 +2510,27 @@ class ResetOnlineExamWizard(models.TransientModel):
                     "mek_online_token_used": False,
                     "attempted_mek_online": False
                 })
+                
+
+        elif self.model == "ccmc.exam.schedule":
+            if self.ccmc_subject == "ccmc":
+                active_id = self.env.context.get('active_id')
+                ccmc_exam = self.env[self.model].browse(active_id)
+                if not ccmc_exam.attempting_online:
+                    raise ValidationError("Candidate is Not Appearing for CCMC online")
+                
+                ccmc_exam.ccmc_online.unlink()
+                ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION SEP-2024')])
+                ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
+                ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,"dgs_batch":ccmc_exam.dgs_batch.id})
+
+                ccmc_exam.write({
+                    "ccmc_online": ccmc_qb_input,
+                    "ccmc_online_token_used": False,
+                    "attempted_ccmc_online": False
+                })
+                
+
                     
 
                 
@@ -4021,6 +4042,7 @@ class CCMCExam(models.Model):
         ('passed', 'Passed'),
     ], string='Cookery And Bakery',tracking=True)
     
+    attempted_ccmc_online = fields.Boolean("Attempted CCMC Online",tracking=True)
     
     cookery_oral = fields.Float("CCMC/GSK Oral",readonly=True,tracking=True)
     ccmc_gsk_oral_marks = fields.Float("CCMC GSK Oral",readonly=True,tracking=True)
@@ -4216,6 +4238,24 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Cookery Online Attendance")
+    
+    def open_reset_online_exam_wizard(self):
+        view_id = self.env.ref('bes.reset_online_exam_wizard').id
+
+        
+        
+        return {
+            'name': 'Reset Online Exam Wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'reset.online.exam.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                "default_model": "ccmc.exam.schedule"
+                }
+        }
 
     @api.model
     def action_open_ccmc_admit_card_release_wizard(self, exam_ids=None):

@@ -104,6 +104,8 @@
                         <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', True)]}"/>
 
+                        
+
                         <button name="open_reset_online_exam_wizard" string="Open Reset Exam" type="object" class="btn-primary"
                         attrs="{'invisible': [('state', '!=', '1-in_process')]}"/>
                         
@@ -445,6 +447,9 @@
                         <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', True)]}"/>
 
+                        <button name="open_reset_online_exam_wizard" string="Open Reset Exam" type="object" class="btn-primary"
+                        attrs="{'invisible': [('state', '!=', '1-in_process')]}"/>
+
                         <!-- "Release Admit Card" Button -->
                         <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', False)]}"/>
@@ -662,8 +667,8 @@
                     <group>
                         <field name="model" invisible="1" />
 
-                        <field name="gp_subject"/>
-                        <!-- <field name="ccmc_subject"/> -->
+                        <field name="gp_subject" attrs="{'invisible': [('model', '!=', 'gp.exam.schedule')]}" />
+                        <field name="ccmc_subject" attrs="{'invisible': [('model', '!=', 'ccmc.exam.schedule')]}"/>
 
 
                     </group>
