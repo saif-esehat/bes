@@ -421,7 +421,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             num_examiners_ccmc_prac_oral = len(examiners_ccmc_prac_oral)
             
             
-            examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' and r.exam_type == 'practical_oral').ids
+            examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' and r.exam_type == 'oral').ids
             ccmc_gsk_oral_assignments = {examiner: [] for examiner in examiners_ccmc_gsk_oral}
             num_examiners_ccmc_gsk_oral = len(examiners_ccmc_gsk_oral)
             
@@ -509,7 +509,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         
         for record in records:
             if record.subject.name == 'CCMC':
-                if record.exam_type == 'practical_oral':
+                if record.exam_type == 'practical_oral': #Means Cookery Bakery
                     
                     if record.no_candidates > 25:
                         raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
