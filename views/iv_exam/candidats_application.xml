@@ -58,7 +58,18 @@
                     <h4> 2. Details of the Candidate </h4>
                     
                     <group>
-                        <field name="name" string="a) Name"  style="width: 50%;"/>
+                        <!-- <field name="name" string="a) Name"  style="width: 50%;"/> -->
+                         <field name="name" string="a) Name" style="width: 50%;" 
+                            attrs="{'invisible': [('is_repeater', '=', True)]}"/>
+
+                          <field name="candidate_repeater" string="a) Candidate Repeater" style="width: 50%;" 
+                            attrs="{'invisible': [('is_repeater', '=', False)]}"/>
+
+                        <!-- Always display the is_repeater checkbox -->
+                        <field name="is_repeater" string="Repeater" style="width: 50%;" />
+
+                        <!-- Optionally, hide the name field when is_repeater is True (if needed) -->
+                       
                     </group>
                     <group>
                         <group>
@@ -217,9 +228,14 @@
             <field name="arch" type="xml">
                 <tree>
                     <header>
-                        <button type="object" class="oe_highlight" name="assign_rollno"  string="Assign Rollno" />
+                        <button type="object" class="oe_highlight" name="assign_rollno" string="Assign Rollno"/>
                     </header>
-                    <field name="name"/>
+
+                
+                    <!-- <field name="name"/> -->
+                    <field name="is_repeater" string="Repeater" invisible="1"/>
+                    <field name="name" string="Name"/>
+                    <!-- <field name="candidate_repeater" string="Repeater Candidate" attrs="{'invisible': [('is_repeater', '=', True)]}"/> -->
                     <field name="application_no"/>
                     <field name="roll_no"/>
                     <field name="grade"/>

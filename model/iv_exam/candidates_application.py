@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class CandidatesApplication(models.Model):
     _name = "candidates.application"
-    _rec_name = "application_no"
+    # _rec_name = "application_no"
     # _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Candidates Application'
 
@@ -123,7 +123,29 @@ class CandidatesApplication(models.Model):
     # applicant_signature = fields.Binary(string="Signature of the Applicant")
 
     # 9 For Assessing Officer's Use
+    is_repeater = fields.Boolean(string="Repeater")
+    candidate_repeater = fields.Many2one('candidates.application',string="Repeater Candidate")
 
+    @api.onchange('candidate_repeater')
+    def _onchange_candidate_repeater(self):
+        if self.candidate_repeater:
+            # Fetch the indos_no and dob from the selected candidate record
+            self.indos_no = self.candidate_repeater.indos_no
+            self.dob = self.candidate_repeater.dob
+        else:
+            # Clear the fields if no candidate is selected
+            self.indos_no = False
+            self.dob = False
+
+    @api.onchange('is_repeater', 'candidate_repeater')
+    def _onchange_is_repeater(self):
+        if self.is_repeater and self.candidate_repeater:
+            self.name = self.candidate_repeater.name  # Set name to the selected candidate's name
+        elif not self.is_repeater:
+            self.name = False 
+
+
+    
     application_eligible = fields.Selection([
         ('eligible', 'Eligible'),
         ('hold', 'Hold'),
@@ -249,11 +271,11 @@ class CandidatesApplication(models.Model):
     #         if not record.indos_no:
     #             raise ValidationError("The indos no must be filled.")
             
-    @api.constrains('name')
-    def _check_name(self):
-        for record in self:
-            if not record.name:
-                raise ValidationError("The name must be filled.")
+    # @api.constrains('name')
+    # def _check_name(self):
+    #     for record in self:
+    #         if not record.name:
+    #             raise ValidationError("The name must be filled.")
     
     
     # signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
