@@ -13,8 +13,8 @@ class CourseMaster(models.Model):
     exam_fees = fields.Many2one("product.product","Exam Fees Product",tracking=True)
     subjects = fields.One2many("course.master.subject","course_id",string="Subjects",tracking=True)
     
-    def unlink(self):
-        raise UserError('You cannot delete this record')
+    # def unlink(self):
+    #     raise UserError('You cannot delete this record')
 
 
 
