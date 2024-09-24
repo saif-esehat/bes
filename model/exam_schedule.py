@@ -52,6 +52,9 @@ class BesBatches(models.Model):
                     sublist_index = i % len(subjects)
                     sublists[sublist_index].append(num)
                 
+
+                
+
                 
                 for i,subjects in enumerate(subjects):
                     subjects.write({'candidates':sublists[i],'state':'2-confirm'})
@@ -1232,222 +1235,242 @@ class ExamOralPractical(models.Model):
             institute_ids.add(examiner.institute_id.id)
         return list(institute_ids)
     
-    
     def generate_expense_sheet(self):
-        print(self)
-        for assignment in self.examiners:
-            assignment_id = assignment.id
-            examiner_id = assignment.examiner.id
-            subject_name = assignment.subject.name
-            institute_id = assignment.institute_id.id
-            user_id = assignment.examiner.user_id.id
-            quantity = len(assignment.marksheets)
-            employee = self.env['hr.employee'].search([('user_id','=',user_id)])
+        for examiner in self.examiners.examiner:
+            expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',examiner.id),('dgs_batch','=',self.dgs_batch.id)])
             
-            designation = assignment.examiner
-            exam_date = assignment.exam_date
-            # import wdb; wdb.set_trace(); 
-            
-            if subject_name == 'GSK' and assignment.exam_type == 'practical_oral': 
-            
-                product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
-                                    ])
-                
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
-                
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                        'institutes_id':institute_id,
-                                                                        'examiner':examiner_id,
-                                                                        'expense_sheet':expense_sheet.id,
-                                                                        'exam_date':exam_date
+            if not expense:
+                expense = self.env["examiner.expenses"].sudo().create({
+                    "examiner_id":examiner.id,
+                    "dgs_batch": self.dgs_batch.id
                 })
-                expense_sheet.write({'time_sheet': time_sheet.id})
             
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+            assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id)
+            for assignment in assignments:
+                self.env["exam.assignment.expense"].sudo().create({
+                    "examiner_expenses_id":expense.id,
+                    "assignment": assignment.id
+                 })
+            self.expense_sheet_status = "generated"
+                
+                
+            print("working")
+    
+    
+    # def generate_expense_sheet(self):
+        # for assignment in self.examiners:
+        #     assignment_id = assignment.id
+        #     examiner_id = assignment.examiner.id
+        #     subject_name = assignment.subject.name
+        #     institute_id = assignment.institute_id.id
+        #     user_id = assignment.examiner.user_id.id
+        #     quantity = len(assignment.marksheets)
+        #     employee = self.env['hr.employee'].search([('user_id','=',user_id)])
             
-            elif subject_name == 'MEK' and assignment.exam_type == 'practical_oral': 
+        #     designation = assignment.examiner
+        #     exam_date = assignment.exam_date
+        #     # import wdb; wdb.set_trace(); 
+            
+        #     if subject_name == 'GSK' and assignment.exam_type == 'practical_oral': 
+            
+        #         product =  self.env['product.product'].search([('default_code','=','gsk_exam')])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+        #                             ])
                 
-                product =  self.env['product.product'].search([('default_code','=','mek_exam')])
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
-                                    ])
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
                 
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                        'institutes_id':institute_id,
-                                                                        'examiner':examiner_id,
-                                                                        'expense_sheet':expense_sheet.id,
-                                                                        'exam_date':exam_date
-                })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                 'institutes_id':institute_id,
+        #                                                                 'examiner':examiner_id,
+        #                                                                 'expense_sheet':expense_sheet.id,
+        #                                                                 'exam_date':exam_date
+        #         })
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+            
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+            
+        #     elif subject_name == 'MEK' and assignment.exam_type == 'practical_oral': 
+                
+        #         product =  self.env['product.product'].search([('default_code','=','mek_exam')])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+        #                             ])
+                
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                 'institutes_id':institute_id,
+        #                                                                 'examiner':examiner_id,
+        #                                                                 'expense_sheet':expense_sheet.id,
+        #                                                                 'exam_date':exam_date
+        #         })
 
-                expense_sheet.write({'time_sheet': time_sheet.id})
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
-            elif subject_name == 'GSK' and assignment.exam_type == 'online': 
+        #     elif subject_name == 'GSK' and assignment.exam_type == 'online': 
                 
                 
         
                     
                     
                 
-                product =  self.env['product.product'].search([('default_code','=','gsk_online_exam')])
+        #         product =  self.env['product.product'].search([('default_code','=','gsk_online_exam')])
                 
-                if designation == 'non-mariner':
-                    price = 2000
-                else:
-                    price = product.standard_price
+        #         if designation == 'non-mariner':
+        #             price = 2000
+        #         else:
+        #             price = product.standard_price
                 
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
-                                    ])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
+        #                             ])
                 
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                        'institutes_id':institute_id,
-                                                                        'examiner':examiner_id,
-                                                                        'expense_sheet':expense_sheet.id,
-                                                                        'exam_date':exam_date
-                })
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                 'institutes_id':institute_id,
+        #                                                                 'examiner':examiner_id,
+        #                                                                 'expense_sheet':expense_sheet.id,
+        #                                                                 'exam_date':exam_date
+        #         })
 
-                expense_sheet.write({'time_sheet': time_sheet.id})
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
-            elif subject_name == 'MEK' and assignment.exam_type == 'online': 
+        #     elif subject_name == 'MEK' and assignment.exam_type == 'online': 
                 
-                product =  self.env['product.product'].search([('default_code','=','mek_online_exam')])
+        #         product =  self.env['product.product'].search([('default_code','=','mek_online_exam')])
                 
-                if designation == 'non-mariner':
-                    price = 2000
-                else:
-                    price = product.standard_price
+        #         if designation == 'non-mariner':
+        #             price = 2000
+        #         else:
+        #             price = product.standard_price
                 
                 
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
-                                    ])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
+        #                             ])
                 
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                            'institutes_id':institute_id,
-                                                                            'examiner':examiner_id,
-                                                                            'expense_sheet':expense_sheet.id,
-                                                                            'exam_date':exam_date
-                    })
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                     'institutes_id':institute_id,
+        #                                                                     'examiner':examiner_id,
+        #                                                                     'expense_sheet':expense_sheet.id,
+        #                                                                     'exam_date':exam_date
+        #             })
 
-                expense_sheet.write({'time_sheet': time_sheet.id})
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
-            elif subject_name == 'CCMC' and assignment.exam_type == 'practical_oral': 
+        #     elif subject_name == 'CCMC' and assignment.exam_type == 'practical_oral': 
                 
-                product =  self.env['product.product'].search([('default_code','=','ccmc_exam')])
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
-                                    ])
+        #         product =  self.env['product.product'].search([('default_code','=','ccmc_exam')])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': product.standard_price ,'quantity': quantity }
+        #                             ])
                 
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
             
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                        'institutes_id':institute_id,
-                                                                        'examiner':examiner_id,
-                                                                        'expense_sheet':expense_sheet.id,
-                                                                        'exam_date':exam_date
-                })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                 'institutes_id':institute_id,
+        #                                                                 'examiner':examiner_id,
+        #                                                                 'expense_sheet':expense_sheet.id,
+        #                                                                 'exam_date':exam_date
+        #         })
 
-                expense_sheet.write({'time_sheet': time_sheet.id})
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
                 
-            elif subject_name == 'CCMC' and assignment.exam_type == 'online': 
+        #     elif subject_name == 'CCMC' and assignment.exam_type == 'online': 
                 
-                product =  self.env['product.product'].search([('default_code','=','ccmc_online_exam')])
+        #         product =  self.env['product.product'].search([('default_code','=','ccmc_online_exam')])
                 
-                if designation == 'non-mariner':
-                    price = 2000
-                else:
-                    price = product.standard_price
+        #         if designation == 'non-mariner':
+        #             price = 2000
+        #         else:
+        #             price = product.standard_price
                 
                 
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
-                                    ])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
+        #                             ])
                 
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
             
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                        'institutes_id':institute_id,
-                                                                        'examiner':examiner_id,
-                                                                        'expense_sheet':expense_sheet.id,
-                                                                        'exam_date':exam_date
-                })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                 'institutes_id':institute_id,
+        #                                                                 'examiner':examiner_id,
+        #                                                                 'expense_sheet':expense_sheet.id,
+        #                                                                 'exam_date':exam_date
+        #         })
 
-                expense_sheet.write({'time_sheet': time_sheet.id})
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
-            elif subject_name == 'CCMC GSK Oral' and assignment.exam_type == 'practical_oral': 
+        #     elif subject_name == 'CCMC GSK Oral' and assignment.exam_type == 'practical_oral': 
                 
-                product =  self.env['product.product'].search([('default_code','=','ccmc_gsk_exam')])
+        #         product =  self.env['product.product'].search([('default_code','=','ccmc_gsk_exam')])
                 
                 
-                child_records = self.env['hr.expense'].sudo().create([
-                                        {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
-                                    ])
+        #         child_records = self.env['hr.expense'].sudo().create([
+        #                                 {'product_id': product.id, 'employee_id': employee.id,'name': subject_name+' Exam','unit_amount': price ,'quantity': 1 }
+        #                             ])
                 
-                expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
-                                                                    'dgs_exam':True,
-                                                                    'dgs_batch': self.dgs_batch.id,
-                                                                    'institute_id':institute_id,
-                                                                    'employee_id':employee.id,
-                                                                    'expense_line_ids': [(6, 0, child_records.ids)]
-                                                                    })
+        #         expense_sheet = self.env['hr.expense.sheet'].sudo().create({'name': subject_name+' Exam',
+        #                                                             'dgs_exam':True,
+        #                                                             'dgs_batch': self.dgs_batch.id,
+        #                                                             'institute_id':institute_id,
+        #                                                             'employee_id':employee.id,
+        #                                                             'expense_line_ids': [(6, 0, child_records.ids)]
+        #                                                             })
             
-                time_sheet = self.env['time.sheet.report'].sudo().create({
-                                                                        'institutes_id':institute_id,
-                                                                        'examiner':examiner_id,
-                                                                        'expense_sheet':expense_sheet.id,
-                                                                        'exam_date':exam_date
-                })
+        #         time_sheet = self.env['time.sheet.report'].sudo().create({
+        #                                                                 'institutes_id':institute_id,
+        #                                                                 'examiner':examiner_id,
+        #                                                                 'expense_sheet':expense_sheet.id,
+        #                                                                 'exam_date':exam_date
+        #         })
 
-                expense_sheet.write({'time_sheet': time_sheet.id})
-                assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
+        #         expense_sheet.write({'time_sheet': time_sheet.id})
+        #         assignment.write({'expense_sheet':expense_sheet,'time_sheet':time_sheet})
             
-        self.write({'expense_sheet_status':'generated'})
+        # self.write({'expense_sheet_status':'generated'})
             
     
     
