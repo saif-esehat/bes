@@ -46,9 +46,9 @@
         <field name="model">iv.oral.attendance.sheet</field>
         <field name="arch" type="xml">
             <tree>
-              <!-- <header>
-                <button name="action_print_bulk_attendance" type="object" string="Written Attendance " class="btn-primary"/>
-            </header>     -->
+              <header>
+                <button name="action_create_oral_exam" type="object" string="Create Oral Exam " class="btn-primary"/>
+            </header>    
                 <field name="indos_no" />
                 <field name="roll_no"/>
                 <field name="candidate_name" />
