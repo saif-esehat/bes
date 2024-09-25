@@ -22,7 +22,7 @@
     <t t-call="web.basic_layout">
         <div class="page">
         <t t-foreach="docs" t-as="o">`
-            <table align="center" style="width:500pt; height:100pt; border: 1pt solid black; border-collapse: separate; border-radius:8pt; margin: auto; padding: 10pt;">
+            <table align="center" style="width:600pt; height:100pt; border: 1pt solid black; border-collapse: separate; border-radius:8pt; margin: auto; padding: 10pt;">
                 <!-- <t t-foreach="docs" t-as="o"> -->
                     <tr>
                         <td colspan="2" style="text-align: center; font-size: 15px; padding-bottom: 2px;">
@@ -31,12 +31,12 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
-                            <strong>ADMIT CARD – IV Examination MMB for FRESH Candidate</strong>
+                            <strong>ADMIT CARD - IV Examination MMB for FRESH Candidate</strong>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="position: relative; text-align: left; padding: 5pt;">
-                            <img t-attf-src="data:image/png;base64,{{o.photo}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px; position: absolute; top: 0px; right: 0px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px; position: absolute; top: 0px; right: 0px;" />
                         </td>
                     </tr>
                     <tr>
@@ -63,6 +63,21 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
+                            Appearing for: <strong>
+                                                <t t-if="o.candidate_applications[-1].application_id.written and not o.candidate_applications[-1].application_id.oral">
+                                                    Written
+                                                </t>
+                                                <t t-if="o.candidate_applications[-1].application_id.oral and not o.candidate_applications[-1].application_id.written">
+                                                    Oral
+                                                </t>
+                                                <t t-if="o.candidate_applications[-1].application_id.oral and o.candidate_applications[-1].application_id.written">
+                                                    Written and Oral
+                                                </t>
+                                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 30px;">
                             <strong style="text-decoration: underline;">Examination Date:- </strong><strong>
                             <t t-if="o.examination_date">
@@ -73,7 +88,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left; padding-bottom: 10px;">
-                            <img t-attf-src="data:image/png;base64,{{o.candidate_signature}}" style="width: 250px; height: 50px; margin-bottom: 10px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="width: 250px; height: 50px; margin-bottom: 10px;" />
                         </td>
                     </tr>
                     <tr>
