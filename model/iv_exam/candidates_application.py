@@ -83,7 +83,7 @@ class CandidatesApplication(models.Model):
 
    
 
-    language_preference = fields.Char(string='Language Preference')
+    # language_preference = fields.Char(string='Language Preference')
 
 
 
