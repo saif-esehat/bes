@@ -296,10 +296,7 @@
                             <t t-set="ccmc_exam_schedule" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_online','=',registered_exam.id)])" />
 
                              <td class="text-center">
-<<<<<<< HEAD
-=======
                                     
->>>>>>> e810d3abefb83f07e1bd6cd59a1f6db9d9102f74
                                     <t t-if="ccmc_exam_schedule.token">
                                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
 
