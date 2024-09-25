@@ -86,7 +86,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left; padding-bottom: 10px;">
-                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="height: 40px; margin-bottom: 10px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="height: 50px; margin-bottom: 10px;" />
                         </td>
                     </tr>
                     <tr>
