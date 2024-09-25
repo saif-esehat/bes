@@ -61,8 +61,6 @@
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
                             Indos No: <strong><t t-esc="o.indos_no"/></strong>
                         </td>
-                    </tr>
-                    <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
                             Appearing for: <strong>
                                                 <t t-if="o.candidate_applications[-1].application_id.written and not o.candidate_applications[-1].application_id.oral">
@@ -88,7 +86,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: left; padding-bottom: 10px;">
-                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="width: 250px; height: 50px; margin-bottom: 10px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="height: 40px; margin-bottom: 10px;" />
                         </td>
                     </tr>
                     <tr>
