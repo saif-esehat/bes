@@ -179,7 +179,7 @@ class CandidatesApplication(models.Model):
         for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
-                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{candidate.batch.start_date.year}/{count}"
+                roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
                 candidate.sudo().write({'roll_no': roll_no})
                 
                 # Check if the candidate with the same indos_no already exists
