@@ -146,14 +146,14 @@ bes.access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,base.group_us
 bes.access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,base.group_user,1,1,1,1
 
 
-bes.iv_access_iv_batches,access_iv_batches,bes.model_iv_batches,base.group_iv_admin,1,1,1,1
-bes.iv_access_iv_candidates,access_iv_candidates,bes.model_iv_candidates,base.group_iv_admin,1,1,1,1
-bes.iv_access_candidates_application,access_candidates_application,bes.model_candidates_application,base.group_iv_admin,1,1,1,1
-bes.iv_access_candidates_remark,access_candidates_remark,bes.model_candidates_remark,base.group_iv_admin,1,1,1,1
-bes.iv_access_application_hold_reason,access_application_hold_reason,bes.model_application_hold_reason,base.group_iv_admin,1,1,1,1
+bes.iv_access_iv_batches,access_iv_batches,bes.model_iv_batches,bes.group_iv_admin,1,1,1,1
+bes.iv_access_iv_candidates,access_iv_candidates,bes.model_iv_candidates,bes.group_iv_admin,1,1,1,1
+bes.iv_access_candidates_application,access_candidates_application,bes.model_candidates_application,bes.group_iv_admin,1,1,1,1
+bes.iv_access_candidates_remark,access_candidates_remark,bes.model_candidates_remark,bes.group_iv_admin,1,1,1,1
+bes.iv_access_application_hold_reason,access_application_hold_reason,bes.model_application_hold_reason,bes.group_iv_admin,1,1,1,1
 
-bes.iv_access_iv_attendance_sheet,access_iv_attendance_sheet,bes.model_iv_attendance_sheet,base.group_iv_admin,1,1,1,1
-bes.iv_access_iv_oral_attendance_sheet,access_iv_oral_attendance_sheet,bes.model_iv_oral_attendance_sheet,base.group_iv_admin,1,1,1,1
-bes.iv_access_iv_written_exam,access_iv_written_exam,bes.model_iv_written_exam,base.group_iv_admin,1,1,1,1
-bes.iv_access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,base.group_iv_admin,1,1,1,1
-bes.iv_access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,base.group_iv_admin,1,1,1,1
+bes.iv_access_iv_attendance_sheet,access_iv_attendance_sheet,bes.model_iv_attendance_sheet,bes.group_iv_admin,1,1,1,1
+bes.iv_access_iv_oral_attendance_sheet,access_iv_oral_attendance_sheet,bes.model_iv_oral_attendance_sheet,bes.group_iv_admin,1,1,1,1
+bes.iv_access_iv_written_exam,access_iv_written_exam,bes.model_iv_written_exam,bes.group_iv_admin,1,1,1,1
+bes.iv_access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,bes.group_iv_admin,1,1,1,1
+bes.iv_access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,bes.group_iv_admin,1,1,1,1
