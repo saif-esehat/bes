@@ -71,6 +71,7 @@ class IVCandidates(models.Model):
                         'dob': candidate.dob,
                         'indos_no': candidate.indos_no,
                     })
+                    
                 
                 elif application.oral and not application.written:
                     # Create record in IVOralAttendanceSheet when only 'oral' is True

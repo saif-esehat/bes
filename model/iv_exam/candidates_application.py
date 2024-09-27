@@ -83,7 +83,7 @@ class CandidatesApplication(models.Model):
 
    
 
-    # language_preference = fields.Char(string='Language Preference')
+    language_preference = fields.Char(string='Language Preference')
 
 
 
@@ -201,7 +201,7 @@ class CandidatesApplication(models.Model):
         for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
-                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{candidate.batch.start_date.year}/{count}"
+                roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
                 candidate.sudo().write({'roll_no': roll_no})
                 
                 # Check if the candidate with the same indos_no already exists
@@ -416,6 +416,8 @@ class CandidatesApplication(models.Model):
 
     date_of_pst = fields.Date(string="Date OF PST")
     date_of_validity_pst = fields.Date(string="Date Of Validity Of PST",compute="_compute_date_of_validity_pst")
+    application_entered_by = fields.Char("Application Entered By")
+
 
     @api.depends('date_of_pst')
     def _compute_date_of_validity_pst(self):

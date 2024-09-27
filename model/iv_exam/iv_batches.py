@@ -24,6 +24,7 @@ class IVBatches(models.Model):
     start_date = fields.Date(string="Start Date")
     end_date = fields.Date(string="End Date")
     issue_date = fields.Date(string="Issue Date")
+    written_exam_date = fields.Date(string="Written Examination Date")
 
     grade_preference = fields.Selection([
         ('1CM', 'First Class Master'),
