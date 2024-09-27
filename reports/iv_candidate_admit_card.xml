@@ -31,14 +31,23 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
-                            <strong>ADMIT CARD - IV Examination MMB for FRESH Candidate</strong>
+                            <strong>ADMIT CARD - IV Examination MMB for <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'"> FRESH </t><t t-else=""> Repeater </t>Candidate</strong>
+                        </td>
+                    </tr>
+                      <tr>
+                        <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
+                            <strong>Examination -  <span t-field="docs.batch_id.name"/></strong>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="position: relative; text-align: left; padding: 5pt;">
                             <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px; position: absolute; top: 0px; right: 0px;" />
+                         
+                           
                         </td>
+                        
                     </tr>
+                    
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 5mm;">
                             Name of the Candidate: <strong><t t-esc="o.name"/></strong>
@@ -48,21 +57,28 @@
                         <td style="font-size: 14px; padding-bottom: 5mm;">
                             Roll No: <strong><t t-esc="o.roll_no"/></strong>
                         </td>
-                        <td style="font-size: 14px; padding-bottom: 5mm;">
+                        <td style="font-size: 14px; padding-bottom: 5mm; padding-left: 80px; " >
                             DOB: <strong><t t-esc="o.dob.strftime('%d-%m-%Y')"/></strong>
                         </td>
+                      
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
                             Grade Applied for: <strong><span t-field="o.grade_applied" /></strong>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
+                  <tr>
+    <!-- Left side: Indos No -->
+                        <td style="font-size: 14px; padding-bottom: 14px; text-align: left;">
                             Indos No: <strong><t t-esc="o.indos_no"/></strong>
                         </td>
-                        
+
+                        <!-- Right side: Signature -->
+                        <td style="font-size: 14px; text-align: right;">
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="width: 200px; height: 50px; margin-bottom: 10px;" />
+                        </td>
                     </tr>
+                   
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
                             Appearing for: <strong>
@@ -81,21 +97,30 @@
                     
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 30px;">
-                            <strong style="text-decoration: underline;">Examination Date:- </strong><strong>
-                            <t t-if="o.examination_date">
-                                <t t-esc="o.examination_date.strftime('%d %B %Y')"/>
+                            <t t-if="o.candidate_applications[-1].application_id.written">
+                                <div>
+                                    <strong style="text-decoration: underline;">Date of Written Examination:- </strong><strong>
+                                        <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                    </strong>
+                                </div>
                             </t>
-                            </strong>
+                            <t t-if="o.candidate_applications[-1].application_id.oral">
+                                <div>
+                                    <strong style="text-decoration: underline;">Date of Oral Examination:- </strong><strong>
+                                        As per the schedule on BES website
+                                    </strong>
+                                </div>
+                            </t>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: left; padding-bottom: 5px;">
-                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="height: 46px; margin-bottom: 5px;" />
+                    <!-- <tr>
+                        <td colspan="2" style="text-align: left; padding-bottom: 10px;">
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_signature}}" style="width: 250px; height: 50px; margin-bottom: 10px;" />
                         </td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td style="font-size: 14px; text-align: left;">
-                            Signature of the Candidate
+                            <!-- Signature of the Candidate -->
                         </td>
                         <td style="font-size: 14px; text-align: right;">
                             In-Charge, IV- Examination, BES
