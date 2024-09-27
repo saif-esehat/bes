@@ -75,7 +75,7 @@
 
                         <!-- Right side: Signature -->
                         <td style="font-size: 14px; text-align: right;">
-                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="width: 200px; height: 50px; margin-bottom: 10px;" />
+                            <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_signature}}" style="width: 200px; height: 50px; margin-bottom: 10px;border: dashed 2px #000;" />
                         </td>
                     </tr>
                    
