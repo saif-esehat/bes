@@ -75,6 +75,7 @@
             <tree>
             <header>
                 <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
+                
             </header>                
                 <field name="certificate_no" />
                 <field name="roll_no" />
