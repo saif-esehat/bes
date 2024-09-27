@@ -507,7 +507,7 @@
                         <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
                     </header>
                     <field name="gp_candidate"/>
-                    <field name="gp_marksheet" groups="bes.group_bes_admin"/>
+                    <field name="gp_marksheet" />
                     <field name="using_of_tools" groups="bes.group_bes_admin"/>
                     <field name="welding_lathe_drill_grinder" groups="bes.group_bes_admin"/>
                     <field name="electrical" groups="bes.group_bes_admin"/>
