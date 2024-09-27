@@ -47,6 +47,22 @@ class IVWrittenExam(models.Model):
             if record.attendance == False:
                 record.status = 'absent'
 
+
+    def create_oral_exam_records(self):
+        # Filter candidates who passed the written exam
+        passed_candidates = self.filtered(lambda rec: rec.status == 'passed')
+        
+        if passed_candidates:
+            for rec in passed_candidates:
+                self.env['iv.oral.exam'].create({
+                    'candidate': rec.candidate.id,
+                    'batch_id': rec.batch_id.id,
+                    'grade': rec.grade,
+                })
+        else:
+            raise UserError("No candidates have passed the written exam.")           
+
+
     
 
 class IVOralExam(models.Model):
@@ -84,6 +100,7 @@ class IVOralExam(models.Model):
             if record.attendance == False:
                 record.status = 'absent'
 
+    
 
 class IVWrittenExamReportA(models.AbstractModel):
     _name = 'report.bes.reports_iv_written_exam_a_list'
