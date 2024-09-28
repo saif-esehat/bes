@@ -214,7 +214,11 @@ class CustomPaymentRegister(models.TransientModel):
                         applied.append(line.product_id.default_code)
 
                     if line.product_id.default_code == 'gsk_online_repeater':
+<<<<<<< HEAD
                         gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION SEP-2024')])
+=======
+                        gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_Final')])
+>>>>>>> 259ea3f1 (data)
                         gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
                         token = gsk_survey_qb_input.generate_unique_string()
                         gsk_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id , 'dgs_batch':dgs_exam})
@@ -226,7 +230,11 @@ class CustomPaymentRegister(models.TransientModel):
                         applied.append(line.product_id.default_code)
                     
                     if line.product_id.default_code == 'mek_online_repeater':
+<<<<<<< HEAD
                         mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION SEP-2024')])
+=======
+                        mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_Final')])
+>>>>>>> 259ea3f1 (data)
                         mek_survey_qb_input = mek_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
                         token = mek_survey_qb_input.generate_unique_string()
                         mek_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id ,'dgs_batch':dgs_exam  })
@@ -363,7 +371,11 @@ class CustomPaymentRegister(models.TransientModel):
                     if line.product_id.default_code == 'ccmc_online_repeater':
                         cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
                         cookery_bakery_qb_input = cookery_bakery_qb_input._create_answer(user=invoice.ccmc_candidate.user_id)
+<<<<<<< HEAD
                         cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id , 'dgs_batch': dgs_batch})
+=======
+                        cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id})
+>>>>>>> 259ea3f1 (data)
                         ccmc_online_status = 'pending'
                         cookery_gsk_online_carry_forward = False
                         applied.append(line.product_id.default_code)
