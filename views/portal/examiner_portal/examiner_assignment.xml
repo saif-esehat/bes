@@ -1116,11 +1116,10 @@
                             
                             
                             <td  t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral_cookery_bakery'" class="text-center">
-                                <select t-attf-id="attendance_{{marksheet.id}}" name="attendance" t-att-disabled="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'">
-                                    <option value="" t-att-selected="marksheet.ccmc_marksheet.ccmc_oral_attendance == ''"></option>
-                                    <option value="present" t-att-selected="marksheet.ccmc_marksheet.ccmc_oral_attendance == 'present'">Present</option>
-                                    <option value="absent" t-att-selected="marksheet.ccmc_marksheet.ccmc_oral_attendance == 'absent'">Absent</option>
-                                   
+                                <select t-attf-id="attendance_{{marksheet.id}}" name="attendance" t-att-disabled="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm'">
+                                    <option value="" t-att-selected="marksheet.ccmc_marksheet.cookery_prac_attendance == ''"></option>
+                                    <option value="present" t-att-selected="marksheet.ccmc_marksheet.cookery_prac_attendance == 'present'">Present</option>
+                                    <option value="absent" t-att-selected="marksheet.ccmc_marksheet.cookery_prac_attendance == 'absent'">Absent</option>
                                 </select>
                             </td>
                             <td  t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-center">
@@ -1467,7 +1466,7 @@
                             </td>
 
                             <td t-attf-id="marksheet_cccm_status_{{marksheet.id}}" t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral_cookery_bakery'" class="text-left">
-                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                                <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm'" >
                                     Confirmed
                                 </span>
                                 <span t-else="" >
@@ -1478,10 +1477,10 @@
                             
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral_cookery_bakery'" class="text-left">
                                 <t t-if="date_valid">
-                                    <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm'" >
+                                    <span t-if="marksheet.cookery_bakery.cookery_draft_confirm == 'confirm'" >
                                     </span>
                                     <span t-else="" >
-                                        <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_ccmc_oral_marksheet_class">Confirm</button>                            
+                                        <button t-attf-id="confirm_marksheet_{{marksheet.id}}" type="button" class="btn btn-secondary confirm_ccmc_prac_marksheet_class">Confirm</button>                            
                                     </span>   
                                     
                                 </t>
