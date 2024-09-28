@@ -2928,7 +2928,7 @@ class GPExam(models.Model):
         ('pending','Pending'),
         ('failed','Failed'),
         ('passed','Passed'),
-    ],string='Result',tracking=True,compute='_compute_result_status')
+    ],string='Result',compute='_compute_result_status')
     
     result = fields.Selection([
         ('failed','Failed'),
