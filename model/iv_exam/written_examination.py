@@ -228,5 +228,40 @@ class IVOralExamResultB(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,
             'candidates': candidates
-          
+        }
+
+
+class IVOralAssessmentSheet(models.AbstractModel):
+    _name = 'report.bes.reports_iv_oral_assement_shhet_list'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['iv.oral.exam'].sudo().browse(docids)
+
+        grade_order = ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']
+        
+        # Sort the records based on the grade_applied field
+        sorted_docs = docs.sorted(
+            key=lambda r: grade_order.index(r.grade) if r.grade in grade_order else len(grade_order)
+        )
+
+        candidates = []
+        for doc in sorted_docs:
+            # Fetch candidate-related data
+            candidate = doc.candidate
+            if candidate:
+                candidates.append({
+                    'indos_no': candidate.indos_no,
+                    'roll_no': candidate.roll_no,
+                    'dob':candidate.dob,
+                 
+                })
+
+        return {
+            'docids': docids,
+            'doc_model': 'iv.oral.exam',
+            'data': data,
+            'docs': sorted_docs,
+            'candidates': candidates
         }
