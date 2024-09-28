@@ -294,7 +294,6 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
-        # import wdb; wdb.set_trace();
         
         
         user_id = request.env.user.id
@@ -306,6 +305,7 @@ class InstitutePortal(CustomerPortal):
         
       
 
+        # import wdb; wdb.set_trace();
         
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id

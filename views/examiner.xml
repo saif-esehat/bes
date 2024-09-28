@@ -373,7 +373,7 @@
                                 <field name="team_lead" invisible="1"/>
                                 <field name="exam_date"/>
                                 <field name="extended"/>
-                                <button attrs="{'invisible': [('exam_type', '!=', 'practical_oral')]}" name="download_marksheet"
+                                <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
                                     string="Download Marksheet"
                                     type="object"
                                     class="btn-primary"
@@ -679,7 +679,7 @@
                     <field name="total_mrks" groups="bes.group_bes_admin"/>
                     <field name="cookery_practical_remarks" groups="bes.group_bes_admin"/>
                     <field name="cookery_draft_confirm"/>
-                    <field name="house_keeping"  groups="bes.group_bes_admin"/>
+                    <!-- <field name="house_keeping"  groups="bes.group_bes_admin"/>
                     <field name="f_b" groups="bes.group_bes_admin"/>
                     <field name="orals_house_keeping" groups="bes.group_bes_admin"/>
                     <field name="attitude_proffessionalism" groups="bes.group_bes_admin"/>
@@ -687,7 +687,7 @@
                     <field name="gsk_ccmc" groups="bes.group_bes_admin"/>
                     <field name="toal_ccmc_rating" groups="bes.group_bes_admin"/>
                     <field name="ccmc_oral_remarks" groups="bes.group_bes_admin"/>
-                    <field name="ccmc_oral_draft_confirm"/>
+                    <field name="ccmc_oral_draft_confirm"/> -->
                 </tree>
             </field>
         </record>
@@ -702,6 +702,44 @@
                             <field name="ccmc_candidate"/>
                             <field name="ccmc_marksheet"/>
                             <field name="cookery_bakery"/>
+                            <!-- <field name="ccmc_oral"/> -->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_marksheet_ccmc_tree_oral_no_prac" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
+                    <field name="house_keeping"  groups="bes.group_bes_admin"/>
+                    <field name="f_b" groups="bes.group_bes_admin"/>
+                    <field name="orals_house_keeping" groups="bes.group_bes_admin"/>
+                    <field name="attitude_proffessionalism" groups="bes.group_bes_admin"/>
+                    <field name="equipment_identification" groups="bes.group_bes_admin"/>
+                    <field name="gsk_ccmc" groups="bes.group_bes_admin"/>
+                    <field name="toal_ccmc_rating" groups="bes.group_bes_admin"/>
+                    <field name="ccmc_oral_remarks" groups="bes.group_bes_admin"/>
+                    <field name="ccmc_oral_draft_confirm"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_marksheet_ccmc_form_oral_no_prac" model="ir.ui.view">
+            <field name="name">exam.type.oral.practical.examiners.marksheet.tree</field>
+            <field name="model">exam.type.oral.practical.examiners.marksheet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="ccmc_candidate"/>
+                            <field name="ccmc_marksheet"/>
                             <field name="ccmc_oral"/>
                         </group>
                     </sheet>
