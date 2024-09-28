@@ -316,6 +316,21 @@ class ExaminerPortal(CustomerPortal):
         return json.dumps({"status":"success"})
     
     
+    @http.route(['/confirm/ccmc_oral/marksheet'],method=["POST"],type="json", auth="user")
+    def ConfirmCCMCOralMarksheet(self, **kw):
+        data = request.jsonrequest
+        marksheet_id = data["id"]
+        last_part = marksheet_id.split('_')[-1]
+        marksheet_id = int(last_part)
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
+        marksheet.ccmc_oral.write({"ccmc_oral_draft_confirm": 'confirm' })
+        marksheet.ccmc_marksheet.write({"ccmc_oral_attendance": data['attendance_id']})
+        marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
+        return json.dumps({"status":"success"})
+        
+        
+    
     @http.route(['/confirm/ccmc_prac/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmCCMCPracMarksheet(self, **kw):
         
