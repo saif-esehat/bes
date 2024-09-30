@@ -250,7 +250,6 @@ class GPCandidatePortal(CustomerPortal):
         survey_input_id = kw.get("survey_input_id")
         examiner_token = kw.get("examiner_token")
         
-        # import wdb; wdb.set_trace(); 
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
      
         # if registered_exam.ccmc_candidate:
