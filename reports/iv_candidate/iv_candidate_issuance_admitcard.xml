@@ -55,6 +55,7 @@
                                         </td>
                                         <td style="border: 1px solid black; padding: 6px; text-align: center;">
                                             <!-- Application Form Number -->
+                                            <span t-field="doc.candidate_applications[-1].application_id.application_no" />
                                         </td>
                                         <td style="border: 1px solid black; padding: 6px; text-align: center;">
                                             <span t-field="doc.indos_no" />
