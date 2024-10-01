@@ -33,28 +33,6 @@ class IVAttendanceSheet(models.Model):
     candidate_signature = fields.Binary(string="Candidate Signature")
     class_no = fields.Char(string="Class Room: No.")
 
-    batch_id = fields.Many2one('iv.batches', string="IV Batch", store=True)
-
-    def action_create_oral_exam(self):
-        """Create a record in IVWrittenExam"""
-        for record in self:
-            # Find the candidate by name and batch_id
-            candidate = self.env['iv.candidates'].search([
-                ('name', '=', record.candidate_name),
-                # ('batch_id', '=', record.batch_id.id)
-            ], limit=1)
-
-            if not candidate:
-                raise ValidationError(f"Candidate not found for {record.candidate_name} in batch {record.batch_id.name}.")
-
-            # Create the written exam record in the iv.written.exam model
-            oral_exam = self.env['iv.oral.exam'].create({
-                'candidate': candidate.id,  # Pass the candidate's ID, not the name
-                'grade': record.grade_applied,
-                'batch_id': candidate.batch_id.id,  # Ensure batch_id is correctly set
-            })
-
-
 
 
 class IVWrittenAttendance(models.AbstractModel):

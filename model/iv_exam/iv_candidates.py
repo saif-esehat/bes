@@ -170,9 +170,9 @@ class IVCandidates(models.Model):
             raise ValidationError("No Records Found")
     
     
-    # def action_print_bulk_allotment(self):
-    #     # Logic to handle the printing of bulk allotment data
-    #     return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
+    def action_print_bulk_allotment(self):
+        # Logic to handle the printing of bulk allotment data
+        return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
 
 

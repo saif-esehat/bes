@@ -166,6 +166,16 @@ class SurveyUserInputInherited(models.Model):
 
         return ''.join(random.choices('0123456789', k=6))
     
+    # ,compute="compute_institute_name",store=True
+    # def compute_institute_name(self):
+    #     for record in self:
+    #         if record.gp_candidate:
+    #             institute_id = record.gp_candidate.institute_id
+    #         elif record.ccmc_candidate:
+    #             institute_id = record.ccmc_candidate.institute_id
+    #         else:
+    #             institute_id = False
+    
     def generate_token(self):
         self.examiner_token = self.generate_unique_string()
         

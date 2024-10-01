@@ -18,34 +18,24 @@
             file="bes.reports_iv_oral_exam_b_list"/>
 
 
-    <report
-        id="reports_iv_oral_assement_shhet"
-        string="Oral Assement Sheet"
-        model="iv.oral.exam"
-        report_type="qweb-pdf"
-        name="bes.reports_iv_oral_assement_shhet_list"
-        file="bes.reports_iv_oral_assement_shhet_list"/>
-
-
-
 
 
 <template id="reports_iv_oral_exam_a_list">
     <t t-call="web.basic_layout">
             <div class="page">
-               <div class="header">
-                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                        <h5 style="text-align: center; font-weight: bold;">
-                        Board of Examinations for Seafarers Trust (BES), Navi Mumbai
-                    </h5>
-                    
-                    <!-- Second Line -->
-                    <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                    Final Result of MMB Inland Vessel Oral Examination Held on -<span t-field="docs.batch_id.name" />
-                    </h6>
-                    
+            <div class="header">
+                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                     <h5 style="text-align: center; font-weight: bold;">
+                       Board of Examinations for Seafarers Trust (BES), Navi Mumbai
+                </h5>
                 
-                    </table>
+                <!-- Second Line -->
+                <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                  Final Result of MMB Inland Vessel Oral Examination Held on -<span t-field="docs.batch_id.name" />
+                </h6>
+                   
+               
+                </table>
                 </div>
 
               
@@ -175,166 +165,5 @@
             </div>
         </t>
 </template>
-
-
-<template id="reports_iv_oral_assement_shhet_list">
-    <t t-call="web.basic_layout">
-                <!-- Table for Header Information -->
-                <div class="header">
-                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                    <tr>
-                        <th colspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
-                            <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg"
-                                 style="max-width: 100px; max-height: 80px;padding:2px;" />
-                        </th>
-                     
-                        <th colspan="6" style="border: 1px solid black; padding:5px; text-align:center; vertical-align: middle;">
-                            <strong>Board of Examinations for Seafarers Trust</strong>
-                             <div style="border-top: 1px solid black;1px solid black; width: 100%; padding: 10px; margin-top: 5px;">
-                                 <strong>Maharashtra Maritime Board (MMB) - IV Oral Examination </strong>
-                            </div>
-                             <div style="border-top: 1px solid black;1px solid black; width: 100%; padding: 5px; margin-top: 5px;">
-                                 <strong>Assessment Sheet - Serang </strong>
-                            </div>
-                        </th>
-                       
-                    
-                        <th colspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
-                            <div style="text-align: left;">
-                                <span style="display:block; font-size:10px;">FORMAT- IV- 04</span>
-                                <span style="display:block; font-size:10px;">DATE: </span>
-                                <span style="display:block; font-size:10px;">REV No.: 0</span>
-                            </div>
-                        </th>
-                    </tr>
-                     <tr>
-                        <th colspan="10" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
-                           <div style="display: flex; justify-content: space-between; width: 100%; padding: 0 20px;">
-                            <span style="text-align: left;margin-right: 250px;"><strong>Name of the Examiner:</strong></span>
-                            <span style="text-align: right; margin-left: 150px;"><strong>Date of the Examination:</strong></span>
-                        </div>
-                        </th>
-                    </tr>
-               
-                </table>
-                </div>
-
-
-                <table >
-       
-                <thead>
-							
-                    <tr style="width: 100%;">
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold ; width: 5%; ">Sr no</td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; ">Roll No.</td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 10%; ">Indos No</td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 20%; ">Name of the Candidate </td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px; ">Subject Area 1  </td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px; ">Subject Area 2  </td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px; ">Subject Area 3  </td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px; ">Subject Area 4  </td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px; ">Subject Area 5  </td>
-                                <td colspan="1" style="border: 1px solid black;border-bottom:none; text-align: center; font-weight: bold;  width: 10%;font-size: 10px;  ">Total marks obtained out of 50 </td>
-                                <td colspan="1" style="border: 1px solid black;border-bottom:none; text-align: center; font-weight: bold; font-size: 10px; width: 20%; ">  <span style="color: green;">Passed</span> / <span style="color: red;">Fail</span> (To pass a candidate must obtain at least 25)</td>
-                                <td colspan="1" style="border: 1px solid black;border-bottom:none; text-align: center; font-weight: bold; width: 15%; ">Remarks</td>
-                               
-                            </tr>
-                            <tr >
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px;">Minimum 2 Questions</td>
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px;">Minimum 2 Questions</td>
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px;">Minimum 2 Questions</td>
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px;">Minimum 2 Questions</td>
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold;  width: 7%; font-size: 10px;">Minimum 2 Questions</td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                                <td colspan="1"  style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-bottom:none;border-top:none;"></td>
-                            </tr>
-                            
-                            <tr >
-                                <td colspan="1"  style="border: 1px solid black; border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
-                                <td colspan="1"   style="border: 1px solid black;  text-align: center; font-weight: bold;  width: 7%; font-size: 10px;background-color: yellow;">Out of 10 Marks </td>
-                                <td colspan="1"   style="border: 1px solid black;  text-align: center; font-weight: bold;  width: 7%; font-size: 10px;background-color: yellow;">Out of 10 Marks </td>
-                                <td colspan="1"   style="border: 1px solid black;  text-align: center; font-weight: bold;  width: 7%; font-size: 10px;background-color: yellow;">Out of 10 Marks </td>
-                                <td colspan="1"   style="border: 1px solid black;  text-align: center; font-weight: bold;  width: 7%; font-size: 10px;background-color: yellow;">Out of 10 Marks </td>
-                                <td colspan="1"   style="border: 1px solid black;  text-align: center; font-weight: bold;  width: 5%; font-size: 10px;background-color: yellow;">Out of 10 Marks </td>
-                                <td colspan="1"  style="border: 1px solid black; border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
-                                <td colspan="1" style="border: 1px solid black; border-top:none;"></td>
-                            </tr>
-                           
-							
-						</thead>
-                        <tbody>
-                         <t t-set="index" t-value="0" />
-                        <t t-foreach="docs" t-as="oral">
-                            <t t-set="index" t-value="index + 1" />
-                            <tr>
-                                <td  style="border: 1px solid black; padding:6px; text-align: center;height: 15mm;">
-                                    <span t-esc="index" />
-                                </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                    <span t-field="oral.candidate.roll_no" />
-                                </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                   <span t-field="oral.candidate.indos_no" />
-                                </td>
-                                
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                    <span t-field="oral.candidate.name" />
-                                </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                </td>
-                                <td  style="border: 1px solid black; padding:6px;text-align: center; height: 15mm;">
-                                </td>
-                                  <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                </td>
-                                  <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                </td>
-                                  <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                </td>
-                                  <td  style="border: 1px solid black; padding:6px;text-align: center;height: 15mm;">
-                                </td>
-                                  <td  style="border: 1px solid black; padding:6px;text-align: centerheight: 15mm;">
-                                </td>
-                               
-                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center;height: 15mm; ">
-                             
-                                </td>
-                            </tr>
-                           
-                        </t>
-                 
-                    </tbody>
-            </table>
-
-              <div style="page-break-inside: avoid; margin-top: 20px;">
-                <div class="footer" style="width: 100%; font-size: 12px;">
-                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                        <tr style="height: 50px;">
-                            <td style="font-size: 18px; text-align: left; vertical-align: bottom; padding-right: 50px;">
-                                <b>Signature of IV/Port Incharge:</b>
-                            </td>
-                            <td style="font-size: 18px; text-align: right; vertical-align: bottom;">
-                                <b>Signature of Examiner</b>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            
-
-
-    </t>
-
-</template>
-
 
 </odoo>

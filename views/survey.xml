@@ -179,9 +179,6 @@
                     <label for="q_no" />
                     <field name="q_no" />
                 </xpath>
-                <xpath expr="//field[@name='value_image']" position="replace">
-                    <field name="value_image" widget="image" options="{'accepted_file_extensions': 'image/*'}" attrs="{'column_invisible': ['|', ('parent.allow_value_image', '=', False), ('parent.question_type', '=', 'matrix')]}"/>
-                </xpath>
             </field>
         </record>
 

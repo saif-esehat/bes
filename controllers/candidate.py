@@ -8,6 +8,7 @@ from datetime import datetime
 from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
 import json
+import requests
 
 from functools import wraps
 from odoo.exceptions import AccessError
@@ -121,13 +122,18 @@ class GPCandidatePortal(CustomerPortal):
     
     
     
-    @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
+    @http.route(['/my/gpexam/startexam'],type="json",auth="user",website=True)
     def VerifyToken(self,**kw):
         partner_id = request.env.user.partner_id.id
+    
         
-        survey_input_id = kw.get("survey_input_id")
-        examiner_token = kw.get("examiner_token")
-        online_subject = kw.get("online_subject")
+        survey_input_id = request.jsonrequest["survey_input_id"]
+        examiner_token = request.jsonrequest["examiner_token"]
+        online_subject = request.jsonrequest["online_subject"]
+        ip = request.jsonrequest["ip"]
+        
+        import wdb; wdb.set_trace()
+
         
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
@@ -202,7 +208,35 @@ class GPCandidatePortal(CustomerPortal):
                     gp_exam.write({"attempted_gsk_online":True,'gsk_online_token_used':True})
                     exam_url = registered_exam.survey_id.survey_start_url
                     identification_token = registered_exam.access_token
+                    # Assume exam_url and identification_token are set correctly
+                    # full_exam_url = exam_url + "?answer_token=" + identification_token  # Example URL
                     return request.redirect(exam_url+"?answer_token="+identification_token)
+                    # print("Full Exam URL:", full_exam_url)  # Debugging line
+
+                    # try:
+                    #     import wdb; wdb.set_trace()
+                    #     html_content = """
+                    #                     <html>
+                    #                         <head>
+                    #                             <title>Test Page</title>
+                    #                         </head>
+                    #                         <body>
+                    #                             <p>Redirecting...</p>
+                    #                             <script type="text/javascript">
+                    #                                 setTimeout(function() {
+                    #                                     window.open("${full_exam_url}", "_blank");
+                    #                                 }, 3000);
+                    #                             </script>
+                    #                         </body>
+                    #                     </html>
+                    #                     """.format(full_exam_url=full_exam_url)
+
+                    #     print("About to send response...")  # Debugging line
+                    #     return request.make_response(html_content, headers={'Content-Type': 'text/html'})
+
+                    # except Exception as e:
+                    #     print("Error occurred:", str(e))
+                    #     return request.redirect('/error_page')  # Redirect to an error page or handle accordingly
 
             
         else:
@@ -220,12 +254,16 @@ class GPCandidatePortal(CustomerPortal):
         survey_input_id = kw.get("survey_input_id")
         examiner_token = kw.get("examiner_token")
         
-        # import wdb; wdb.set_trace(); 
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
+     
+        # if registered_exam.ccmc_candidate:
         
-        if registered_exam.ccmc_candidate:
-            ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('id','=',survey_input_id)])
-            survey_examiner_token = ccmc_exam.token
+        ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',registered_exam.ccmc_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
+        print("ccmc_exam")
+        print(ccmc_exam)
+        print("ccmc_exam.token")
+        print(ccmc_exam.token)
+        survey_examiner_token = ccmc_exam.token
         
         
         if survey_examiner_token == examiner_token:

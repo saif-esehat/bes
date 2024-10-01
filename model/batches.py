@@ -81,7 +81,7 @@ class InstituteGPBatches(models.Model):
             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id)])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '=', '')])
+                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
@@ -628,7 +628,7 @@ class InstituteCcmcBatches(models.Model):
             candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id)])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '=', '')])
+                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
