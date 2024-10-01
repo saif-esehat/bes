@@ -774,6 +774,22 @@
             <field name="target">new</field>
         </record>
 
+        <record id="view_online_exam_wizard_form" model="ir.ui.view">
+        <field name="name">online.exam.wizard.form</field>
+        <field name="model">online.exam.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Online Exam Wizard">
+                <group>
+                    <field name="ip_address" string="IP Address"/>
+                </group>
+                <footer>
+                    <button string="Save IP Address" type="object" name="save_ip_address" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
         <!-- END Exam Schedule -->
     </data>
 </odoo>

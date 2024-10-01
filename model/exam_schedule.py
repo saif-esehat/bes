@@ -1995,6 +1995,16 @@ class ExamOralPracticalExaminers(models.Model):
     
     def commence_online_exam(self):
         self.commence_exam = True
+        return {
+            'name': 'Commence Online Exam',
+            'type': 'ir.actions.act_window',
+            'res_model': 'online.exam.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_examiners_id': self.id  # Pass the current record ID to the wizard
+            },
+        }
     
     def end_online_exam(self):
         self.commence_exam = False
@@ -5097,6 +5107,27 @@ class ReallocateCandidatesWizard(models.TransientModel):
             raise ValidationError("Candidates Already Confirmed: {}".format(", ".join(confirmed_candidates)))
 
         return {'type': 'ir.actions.act_window_close'}  # Close the wizard after reallocation
+
+
+class OnlineExamWizard(models.TransientModel):
+    _name = 'online.exam.wizard'
+    _description = 'Online Exam Wizard'
+
+    ip_address = fields.Char(string='IP Address')     
+    examiners_id = fields.Many2one('exam.type.oral.practical.examiners', string='Examiners')  # Link to the main model
+
+    def save_ip_address(self):
+        """Save the IP address to both examiner's record and institute's record."""
+        # Fetch the related examiner and set the IP address
+        if self.examiners_id:
+            # Set the IP address to the examiner
+            self.examiners_id.ipaddr = self.ip_address
+
+            # Fetch the related institute and update its IP address
+            if self.examiners_id.institute_id:
+                self.examiners_id.institute_id.ip_address = self.ip_address
+
+        return {'type': 'ir.actions.act_window_close'}
 
         
         

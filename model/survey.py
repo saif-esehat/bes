@@ -4,6 +4,7 @@ import werkzeug
 import secrets
 import random
 import string
+from datetime import datetime
 
 
 class SurveySectionQuestionWizard(models.TransientModel):
@@ -155,6 +156,51 @@ class SurveyUserInputInherited(models.Model):
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
+
+
+    total_time = fields.Char(string="Total Time", compute="_compute_total_time", store=True)
+    ip_address = fields.Char(string="IP Address")
+
+    user_input_line_ids = fields.One2many(
+        'survey.user_input.line', 'user_input_id', string='Answers', copy=True
+    )
+
+    @api.depends('user_input_line_ids.create_date')
+    def _compute_total_time(self):
+        for record in self:
+            if record.user_input_line_ids:
+                # Sort user_input_line_ids by create_date
+                sorted_lines = record.user_input_line_ids.sorted(key=lambda line: line.create_date)
+                first_date = sorted_lines[0].create_date
+                last_date = sorted_lines[-1].create_date
+                if first_date and last_date:
+                    # Extract time from datetime (HH:MM:SS)
+                    first_time = first_date.time()
+                    last_time = last_date.time()
+                    # Convert times to datetime objects for easy subtraction
+                    FMT = "%H:%M:%S"
+                    first_time_str = first_time.strftime(FMT)
+                    last_time_str = last_time.strftime(FMT)
+                    time_diff = datetime.strptime(last_time_str, FMT) - datetime.strptime(first_time_str, FMT)
+                    
+                    # Calculate total seconds difference
+                    total_seconds = time_diff.total_seconds()
+                    hours, remainder = divmod(total_seconds, 3600)
+                    minutes, seconds = divmod(remainder, 60)
+                    # Format the time difference as HH:MM:SS
+                    record.total_time = f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
+                else:
+                    record.total_time = "00:00:00"
+            else:
+                record.total_time = "00:00:00"
+
+    @api.onchange('institute_id')
+    def _onchange_institute_id(self):
+        """Fetch the IP address from the selected institute."""
+        if self.institute_id:
+            self.ip_address = self.institute_id.ip_address
+        else:
+            self.ip_address = False
     
     
     def generate_unique_string(self):
