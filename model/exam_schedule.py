@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
@@ -4994,6 +4995,8 @@ class ReallocateCandidatesWizard(models.TransientModel):
         
         
 =======
+=======
+>>>>>>> 40dbe29b (save)
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
@@ -5031,7 +5034,11 @@ class BesBatches(models.Model):
     examiners = fields.Many2many('bes.examiner', string="Examiners",tracking=True)
     # exam_online = fields.One2many("exam.type.online","exam_schedule_id",string="Exam Online")
     # exam_oral_practical = fields.One2many("exam.type.oral.practical","exam_schedule_id",string="Exam Oral Practical")
+<<<<<<< HEAD
     candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count",tracking=True)
+=======
+    candidate_count = fields.Integer(string="Candidate Count", compute="compute_candidate_count")
+>>>>>>> 40dbe29b (save)
     
     
 
@@ -5183,8 +5190,13 @@ class ExamCandidate(models.Model):
     gsk_oral_id = fields.Many2one("oral.gsk","GSK Oral",tracking=True)
     
     
+<<<<<<< HEAD
     mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity",tracking=True)
     gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity",tracking=True)
+=======
+    mek_visiblity = fields.Boolean("MEK Visiblity",compute="compute_mek_gsk_visiblity")
+    gsk_visiblity = fields.Boolean("GSK Visiblity",compute="compute_mek_gsk_visiblity")
+>>>>>>> 40dbe29b (save)
     
     
     def compute_mek_gsk_visiblity(self):
@@ -5367,7 +5379,11 @@ class ExamOnline(models.Model):
     subject = fields.Many2one("course.master.subject","Subject",tracking=True)
     start_time_online = fields.Datetime("Start Time",tracking=True)
     end_time_online = fields.Datetime("End Time",tracking=True)
+<<<<<<< HEAD
     candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count",tracking=True)
+=======
+    candidate_count = fields.Integer(string="Candidate Count",compute="compute_candidate_count")
+>>>>>>> 40dbe29b (save)
     candidates = fields.Many2many("exam.schedule.bes.candidate","exam_type_online_candidate_rel","exam_type_online_id","exam_candidate_id",string="Candidate",tracking=True)
     
     @api.onchange('exam_schedule_id')
@@ -5390,6 +5406,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     course = fields.Many2one("course.master",related='exam_duty.course',string="Course",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',tracking=True)
     
+<<<<<<< HEAD
     ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Cookery Bakery', compute="_compute_ccmc_prac_oral_candidates",tracking=True)
     ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral / GSK Oral', compute="_compute_ccmc_gsk_oral_candidates",tracking=True)
     ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates",tracking=True)
@@ -5398,6 +5415,16 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
     examiner_required_ccmc_prac_oral = fields.Integer("Examiner Required For CCMC Prac/Oral Per Day",compute="_compute_examiners_ccmc_prac_oral",tracking=True)
     examiner_required_ccmc_gsk_oral = fields.Integer("Examiner Required For CCMC GSK Oral Per Day",compute="_compute_examiners_ccmc_gsk_prac_oral",tracking=True)
+=======
+    ccmc_prac_oral_candidates = fields.Integer('No. of Candidates In CCMC Oral/Practical', compute="_compute_ccmc_prac_oral_candidates")
+    ccmc_gsk_oral_candidates = fields.Integer('No. of Candidates In CCMC GSK Oral', compute="_compute_ccmc_gsk_oral_candidates")
+    ccmc_online_candidates = fields.Integer('No. of Candidates In CCMC GSK Online', compute="_compute_ccmc_online_candidates")
+    
+    
+    no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
+    examiner_required_ccmc_prac_oral = fields.Integer("Examiner Required For CCMC Prac/Oral Per Day",compute="_compute_examiners_ccmc_prac_oral")
+    examiner_required_ccmc_gsk_oral = fields.Integer("Examiner Required For CCMC GSK Oral Per Day",compute="_compute_examiners_ccmc_gsk_prac_oral")
+>>>>>>> 40dbe29b (save)
     
     examiner_lines_ids = fields.One2many('ccmc.examiner.assignment.wizard.line', 'parent_id', string='Examiners',tracking=True)
     
@@ -5410,11 +5437,16 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
 
         
+<<<<<<< HEAD
             examiners_ccmc_prac_oral = records.filtered(lambda r: r.subject.name == 'CCMC' and r.exam_type == 'practical_oral_cookery_bakery').ids
+=======
+            examiners_ccmc_prac_oral = records.filtered(lambda r: r.subject.name == 'CCMC' and r.exam_type == 'practical_oral').ids
+>>>>>>> 40dbe29b (save)
             ccmc_prac_oral_assignments = {examiner: [] for examiner in examiners_ccmc_prac_oral}
             num_examiners_ccmc_prac_oral = len(examiners_ccmc_prac_oral)
             
             
+<<<<<<< HEAD
             ###  CCMC Oral 80 Marks
             
             examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' or r.subject.name == 'CCMC'  and r.exam_type == 'ccmc_oral').ids
@@ -5422,10 +5454,14 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                 if len(records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' or r.subject.name == 'CCMC'  and r.exam_type == 'gsk_oral').ids) == 0:
                     raise ValidationError("CCMC GSK Oral Assignment Must Be Defined In Table")
                     
+=======
+            examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' and r.exam_type == 'practical_oral').ids
+>>>>>>> 40dbe29b (save)
             ccmc_gsk_oral_assignments = {examiner: [] for examiner in examiners_ccmc_gsk_oral}
             num_examiners_ccmc_gsk_oral = len(examiners_ccmc_gsk_oral)
             
             
+<<<<<<< HEAD
             ###  CCMC Oral 20 Marks
             
             examiners_ccmc_gsk_oral_new = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' or r.subject.name == 'CCMC'  and r.exam_type == 'gsk_oral').ids
@@ -5437,6 +5473,8 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             
             
             
+=======
+>>>>>>> 40dbe29b (save)
             examiners_ccmc_online = records.filtered(lambda r: r.subject.name == 'CCMC' and r.exam_type == 'online').ids
             ccmc_online_assignments = {examiner: [] for examiner in examiners_ccmc_online}
             num_examiners_ccmc_online = len(examiners_ccmc_online)
@@ -5444,7 +5482,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             
             #Distribute candidates with both CCMC Oral Prac
             for idx, candidate in enumerate(candidate_with_ccmc_oral_prac):
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 40dbe29b (save)
                 try:
                     ccmc_prac_oral_examiner_index = idx % num_examiners_ccmc_prac_oral
                     examiner_ccmc_prac_oral = examiners_ccmc_prac_oral[ccmc_prac_oral_examiner_index]
@@ -5456,6 +5497,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                         raise ValidationError("Please Add Atleast One CCMC Prac/Oral Examiner")
             
             
+<<<<<<< HEAD
             #Distribute candidates with both CCMC  Oral
             for idx, candidate in enumerate(candidate_with_ccmc_gsk_oral):
                 
@@ -5478,6 +5520,20 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                         else:
                             raise ValidationError("Please Add Atleast One CCMC GSK Oral Examiner")
   
+=======
+            #Distribute candidates with both CCMC GSK Oral
+            for idx, candidate in enumerate(candidate_with_ccmc_gsk_oral):
+                try:
+                    ccmc_gsk_oral_examiner_index = idx % num_examiners_ccmc_gsk_oral
+                    examiner_ccmc_gsk_oral = examiners_ccmc_gsk_oral[ccmc_gsk_oral_examiner_index]
+                    ccmc_gsk_oral_assignments[examiner_ccmc_gsk_oral].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One CCMC GSK Oral Examiner")
+            
+>>>>>>> 40dbe29b (save)
             
             #Distribute candidates with both CCMC Online
             for idx, candidate in enumerate(candidate_with_ccmc_online):
@@ -5500,6 +5556,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                 assignment.ccmc_marksheet_ids = assigned_candidates
                 
                 
+<<<<<<< HEAD
             ### CCMC Oral ASSIGNMENTS    
             for examiner, assigned_candidates in ccmc_gsk_oral_assignments.items():
                 examiner_id = examiner
@@ -5508,6 +5565,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                 
             ### CCMC GSK Oral ASSIGNMENTS    
             for examiner, assigned_candidates in ccmc_gsk_oral_new_assignments.items():
+=======
+            ### CCMC GSK Oral ASSIGNMENTS    
+            for examiner, assigned_candidates in ccmc_gsk_oral_assignments.items():
+>>>>>>> 40dbe29b (save)
                 examiner_id = examiner
                 assignment = records.filtered(lambda r: r.id == examiner_id)
                 assignment.ccmc_marksheet_ids = assigned_candidates
@@ -5537,7 +5598,11 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         
         for record in records:
             if record.subject.name == 'CCMC':
+<<<<<<< HEAD
                 if record.exam_type == 'practical_oral_cookery_bakery': #Means Cookery Bakery
+=======
+                if record.exam_type == 'practical_oral':
+>>>>>>> 40dbe29b (save)
                     
                     if record.no_candidates > 25:
                         raise ValidationError("Number of candidates cannot exceed 25 for this assignment.")
@@ -5565,13 +5630,21 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                         marksheet.write({ 'ccmc_oral_prac_assignment': True })
                         ccmc_marksheet = marksheet
                         cookery_bakery = marksheet.cookery_bakery
+<<<<<<< HEAD
                         # ccmc_oral = marksheet.ccmc_oral
+=======
+                        ccmc_oral = marksheet.ccmc_oral
+>>>>>>> 40dbe29b (save)
                         candidate = marksheet.ccmc_candidate.id
                         self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
                                                                                                     'ccmc_marksheet':ccmc_marksheet.id ,
                                                                                                     'ccmc_candidate':candidate , 
                                                                                                     'cookery_bakery':cookery_bakery.id , 
+<<<<<<< HEAD
                                                                                                     # 'ccmc_oral':ccmc_oral.id 
+=======
+                                                                                                    'ccmc_oral':ccmc_oral.id 
+>>>>>>> 40dbe29b (save)
                                                                                                     })
             
             
@@ -5602,6 +5675,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                         self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
                                                                                                     'ccmc_marksheet':ccmc_marksheet.id ,
                                                                                                     'ccmc_candidate':candidate , 
+<<<<<<< HEAD
                                                                                                     'ccmc_online': ccmc_online.id})
                         
                         
@@ -5678,6 +5752,44 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                                                                                                         'ccmc_candidate':candidate , 
                                                                                                         'ccmc_gsk_oral': ccmc_gsk_oral.id
                                                                                                         }) 
+=======
+                                                                                                    'ccmc_online': ccmc_online.id
+                                                                                                    })    
+
+            if record.subject.name == 'CCMC GSK Oral':
+                if record.no_candidates > 40:
+                        raise ValidationError("Number of candidates cannot exceed 40 for this assignment.")
+                elif record.no_candidates == 0:
+                        raise ValidationError("Please Assigned Candidate By Clicking On Update Button")
+                
+                prac_oral_id = self.exam_duty.id
+                institute_id = self.institute_id.id
+                subject = record.subject.id
+                examiner = record.examiner.id
+                exam_date = record.exam_date
+                exam_type = record.exam_type
+                
+                assignment = self.env["exam.type.oral.practical.examiners"].create({
+                                                                                        'prac_oral_id':prac_oral_id,
+                                                                                        'institute_id':institute_id,
+                                                                                        'subject':subject,
+                                                                                        'examiner':examiner,
+                                                                                        'exam_date':exam_date,
+                                                                                        'exam_type':exam_type      
+                                                                                        })
+                    
+                for marksheet in record.ccmc_marksheet_ids:
+                        marksheet.write({'ccmc_gsk_oral_assignment':True})
+                        ccmc_marksheet = marksheet
+                        candidate = marksheet.ccmc_candidate.id
+                        ccmc_gsk_oral = marksheet.ccmc_gsk_oral
+                        
+                        self.env['exam.type.oral.practical.examiners.marksheet'].sudo().create({ 'examiners_id':assignment.id ,
+                                                                                                    'ccmc_marksheet':ccmc_marksheet.id ,
+                                                                                                    'ccmc_candidate':candidate , 
+                                                                                                    'ccmc_gsk_oral': ccmc_gsk_oral.id
+                                                                                                    }) 
+>>>>>>> 40dbe29b (save)
 
     
     def calculate_examiners(self,num_candidates, max_candidates_per_examiner, num_days):
@@ -5732,12 +5844,16 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     _inherit = ['mail.thread','mail.activity.mixin']
     
     parent_id = fields.Many2one("ccmc.examiner.assignment.wizard",string="Parent",tracking=True)
+<<<<<<< HEAD
     
+=======
+>>>>>>> 40dbe29b (save)
     exam_date = fields.Date('Exam Date',tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
+<<<<<<< HEAD
         ('practical_oral_cookery_bakery', 'Practical (Cookery Bakery)'),
         ('ccmc_oral', 'CCMC Oral'),
         ('gsk_oral', 'CCMC(GSK Oral)'),
@@ -5745,6 +5861,14 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     ], string='Exam Type', default='practical_oral',tracking=True)
     
     no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
+=======
+        ('practical_oral', 'Practical/Oral'),
+        ('online', 'Online')     
+    ], string='Exam Type', default='practical_oral',tracking=True)
+    
+    # no_candidates = fields.Integer('No. Of Candidates')
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
+>>>>>>> 40dbe29b (save)
     
     
     @api.depends('ccmc_marksheet_ids')
@@ -5763,6 +5887,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
 
     
     #GP Course
+<<<<<<< HEAD
     gsk_prac_oral_candidates = fields.Integer('No. of Candidates In GSK Oral/Practical', compute="_compute_gsk_prac_oral_candidates",tracking=True)
     mek_prac_oral_candidates = fields.Integer('No. of Candidates In MEK Oral/Practical', compute="_compute_mek_prac_oral_candidates",tracking=True)
     gsk_online_candidates = fields.Integer('No. of Candidates In GSK Online',compute="_compute_gsk_online_candidates",tracking=True)
@@ -5770,6 +5895,15 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
     examiner_required_mek = fields.Integer("Examiner Required For MEK Prac/Oral Per Day",compute="_compute_examiners_mek",tracking=True)
     examiner_required_gsk = fields.Integer("Examiner Required For GSK Prac/Oral Per Day",compute="_compute_examiners_gsk",tracking=True)
+=======
+    gsk_prac_oral_candidates = fields.Integer('No. of Candidates In GSK Oral/Practical', compute="_compute_gsk_prac_oral_candidates")
+    mek_prac_oral_candidates = fields.Integer('No. of Candidates In MEK Oral/Practical', compute="_compute_mek_prac_oral_candidates")
+    gsk_online_candidates = fields.Integer('No. of Candidates In GSK Online',compute="_compute_gsk_online_candidates")
+    mek_online_candidates = fields.Integer('No. of Candidates In MEK Online',compute="_compute_mek_online_candidates")
+    no_of_days =  fields.Integer('No. of Days For Exam ',tracking=True)
+    examiner_required_mek = fields.Integer("Examiner Required For MEK Prac/Oral Per Day",compute="_compute_examiners_mek")
+    examiner_required_gsk = fields.Integer("Examiner Required For GSK Prac/Oral Per Day",compute="_compute_examiners_gsk")
+>>>>>>> 40dbe29b (save)
 
     
     
@@ -6195,7 +6329,11 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
         ('online', 'Online')     
     ], string='Exam Type', default='practical_oral',tracking=True)
     
+<<<<<<< HEAD
     no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no',tracking=True)
+=======
+    no_candidates = fields.Integer('No. Of Candidates',compute='_compute_candidate_no')
+>>>>>>> 40dbe29b (save)
     
     
     @api.depends('gp_marksheet_ids')
@@ -6970,10 +7108,14 @@ class ExamOralPracticalExaminers(models.Model):
     candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
+<<<<<<< HEAD
         ('online', 'Online'),
         ('practical_oral_cookery_bakery', 'Practical (Cookery Bakery)'),
         ('ccmc_oral', 'CCMC Oral'),
         ('gsk_oral', 'CCMC(GSK Oral)'),    
+=======
+        ('online', 'Online')     
+>>>>>>> 40dbe29b (save)
     ], string='Exam Type', default='practical_oral',tracking=True)
     
     
@@ -7038,8 +7180,13 @@ class ExamOralPracticalExaminers(models.Model):
     attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
     attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
 
+<<<<<<< HEAD
     absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
     candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
+=======
+    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True)
+    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True)
+>>>>>>> 40dbe29b (save)
     # Add One2many field
     assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
     
@@ -7263,12 +7410,17 @@ class ExamOralPracticalExaminers(models.Model):
                       (self.env.ref("bes.view_marksheet_gp_form_mek_online").id, 'form')]
         
         elif self.subject.name == 'CCMC':
+<<<<<<< HEAD
             if self.exam_type == 'practical_oral_cookery_bakery':
+=======
+            if self.exam_type == 'practical_oral':
+>>>>>>> 40dbe29b (save)
                 views = [(self.env.ref("bes.view_marksheet_ccmc_tree_oral").id, 'tree'),  # Define tree view
                         (self.env.ref("bes.view_marksheet_ccmc_form_oral").id, 'form')]
             elif self.exam_type == 'online':
                 views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_online").id, 'tree'),  # Define tree view
                         (self.env.ref("bes.view_marksheet_ccmc_form_gsk_online").id, 'form')]
+<<<<<<< HEAD
             elif self.exam_type == 'gsk_oral':
 
                  views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
@@ -7285,6 +7437,15 @@ class ExamOralPracticalExaminers(models.Model):
 
         #          views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
         #                 (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
+=======
+
+        
+        elif self.subject.name == 'CCMC GSK Oral':
+            if self.exam_type == 'practical_oral':
+
+                 views = [(self.env.ref("bes.view_marksheet_ccmc_tree_gsk_oral_new").id, 'tree'),  # Define tree view
+                        (self.env.ref("bes.view_marksheet_ccmc_form_gsk_oral_new").id, 'form')]
+>>>>>>> 40dbe29b (save)
             
         
         return {
@@ -7894,9 +8055,15 @@ class GPExam(models.Model):
     reissued = fields.Boolean("Reissued",tracking=True)
     reissued_date = fields.Date("Reissued Date",tracking=True)
 
+<<<<<<< HEAD
     url = fields.Char("URL",compute="_compute_url",store=True,tracking=True)
     qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True,tracking=True)
     certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url",tracking=True)
+=======
+    url = fields.Char("URL",compute="_compute_url",store=True)
+    qr_code = fields.Binary(string="Admit Card QR Code", compute="_compute_url", store=True)
+    certificate_qr_code = fields.Binary(string=" Certificate QR Code", compute="_compute_certificate_url")
+>>>>>>> 40dbe29b (save)
     
     dgs_visible = fields.Boolean("DGS Visible",compute="compute_dgs_visible",tracking=True)
     
@@ -9229,7 +9396,11 @@ class CCMCExam(models.Model):
         ('pending','Pending'),
         ('failed','Failed'),
         ('passed','Passed'),
+<<<<<<< HEAD
     ],string='Result',compute='_compute_result_status')
+=======
+    ],string='Result',tracking=True,compute='_compute_result_status')
+>>>>>>> 40dbe29b (save)
     
     result = fields.Selection([
         ('failed','Failed'),
@@ -9301,6 +9472,7 @@ class CCMCExam(models.Model):
     absent_status = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
+<<<<<<< HEAD
     ],compute="_compute_absent_status",string="Absent Status",store=True)
     
     @api.depends('cookery_prac_attendance','ccmc_gsk_oral_attendance','ccmc_online_attendance')
@@ -9312,6 +9484,9 @@ class CCMCExam(models.Model):
                 record.absent_status = "present"
             else:
                 record.absent_status = "present"
+=======
+    ],string="Absent Status")
+>>>>>>> 40dbe29b (save)
     
     cookery_prac_attendance = fields.Selection([
         ('present', 'Present'),
@@ -10096,5 +10271,8 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
         
         
+<<<<<<< HEAD
 >>>>>>> origin/development
+=======
+>>>>>>> 40dbe29b (save)
         

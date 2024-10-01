@@ -245,6 +245,7 @@ class IVOralExamResultB(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,
             'candidates': candidates
+<<<<<<< HEAD
         }
 
 
@@ -281,4 +282,7 @@ class IVOralAssessmentSheet(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,
             'candidates': candidates
+=======
+          
+>>>>>>> 40dbe29b (save)
         }

@@ -8,7 +8,10 @@ from datetime import datetime
 from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
 import json
+<<<<<<< HEAD
 import requests
+=======
+>>>>>>> 40dbe29b (save)
 
 from functools import wraps
 from odoo.exceptions import AccessError
@@ -122,6 +125,7 @@ class GPCandidatePortal(CustomerPortal):
     
     
     
+<<<<<<< HEAD
     @http.route(['/my/gpexam/startexam'],type="json",auth="user",website=True)
     def VerifyToken(self,**kw):
         partner_id = request.env.user.partner_id.id
@@ -134,6 +138,15 @@ class GPCandidatePortal(CustomerPortal):
         
         import wdb; wdb.set_trace()
 
+=======
+    @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
+    def VerifyToken(self,**kw):
+        partner_id = request.env.user.partner_id.id
+        
+        survey_input_id = kw.get("survey_input_id")
+        examiner_token = kw.get("examiner_token")
+        online_subject = kw.get("online_subject")
+>>>>>>> 40dbe29b (save)
         
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
@@ -208,6 +221,7 @@ class GPCandidatePortal(CustomerPortal):
                     gp_exam.write({"attempted_gsk_online":True,'gsk_online_token_used':True})
                     exam_url = registered_exam.survey_id.survey_start_url
                     identification_token = registered_exam.access_token
+<<<<<<< HEAD
                     # Assume exam_url and identification_token are set correctly
                     # full_exam_url = exam_url + "?answer_token=" + identification_token  # Example URL
                     return request.redirect(exam_url+"?answer_token="+identification_token)
@@ -237,6 +251,9 @@ class GPCandidatePortal(CustomerPortal):
                     # except Exception as e:
                     #     print("Error occurred:", str(e))
                     #     return request.redirect('/error_page')  # Redirect to an error page or handle accordingly
+=======
+                    return request.redirect(exam_url+"?answer_token="+identification_token)
+>>>>>>> 40dbe29b (save)
 
             
         else:
@@ -254,6 +271,10 @@ class GPCandidatePortal(CustomerPortal):
         survey_input_id = kw.get("survey_input_id")
         examiner_token = kw.get("examiner_token")
         
+<<<<<<< HEAD
+=======
+        # import wdb; wdb.set_trace(); 
+>>>>>>> 40dbe29b (save)
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
      
         # if registered_exam.ccmc_candidate:

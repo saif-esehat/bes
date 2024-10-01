@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 40dbe29b (save)
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -18,7 +21,11 @@ _logger = logging.getLogger(__name__)
 
 class CandidatesApplication(models.Model):
     _name = "candidates.application"
+<<<<<<< HEAD
     # _rec_name = "application_no"
+=======
+    _rec_name = "application_no"
+>>>>>>> 40dbe29b (save)
     # _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'Candidates Application'
 
@@ -124,6 +131,7 @@ class CandidatesApplication(models.Model):
     # applicant_signature = fields.Binary(string="Signature of the Applicant")
 
     # 9 For Assessing Officer's Use
+<<<<<<< HEAD
     is_repeater = fields.Boolean(string="Repeater")
     candidate_repeater = fields.Many2one('candidates.application',string="Repeater Candidate")
 
@@ -147,6 +155,9 @@ class CandidatesApplication(models.Model):
 
 
     
+=======
+
+>>>>>>> 40dbe29b (save)
     application_eligible = fields.Selection([
         ('eligible', 'Eligible'),
         ('hold', 'Hold'),
@@ -180,6 +191,7 @@ class CandidatesApplication(models.Model):
 
 
 
+<<<<<<< HEAD
     # def assign_rollno(self):
     #     count = 1
     #     candidates_by_grade = {
@@ -238,6 +250,8 @@ class CandidatesApplication(models.Model):
 
     #     return
 
+=======
+>>>>>>> 40dbe29b (save)
     def assign_rollno(self):
         count = 1
         candidates_by_grade = {
@@ -248,6 +262,10 @@ class CandidatesApplication(models.Model):
             '1ED': [],
             '2ED': []
         }
+<<<<<<< HEAD
+=======
+        # import wdb; wdb.set_trace(); 
+>>>>>>> 40dbe29b (save)
 
         # Group candidates by their grade
         for candidate in self:
@@ -259,6 +277,7 @@ class CandidatesApplication(models.Model):
         for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
+<<<<<<< HEAD
                 # Check if roll_no already exists
                 if not candidate.roll_no:
                     roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
@@ -270,6 +289,14 @@ class CandidatesApplication(models.Model):
                 # Check if the candidate with the same indos_no already exists
                 existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
 
+=======
+                roll_no = f"{candidate.grade}/{candidate.batch.port}/{candidate.batch.phase_no}/{candidate.batch.start_date.year}/{count}"
+                candidate.sudo().write({'roll_no': roll_no})
+                
+                # Check if the candidate with the same indos_no already exists
+                existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
+                
+>>>>>>> 40dbe29b (save)
                 if existing_record:
                     # Update the existing record
                     existing_record.sudo().write({
@@ -280,9 +307,14 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
+<<<<<<< HEAD
                         'photo': candidate.candidate_image,
                         'candidate_signature': candidate.candidate_signature,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+=======
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+
+>>>>>>> 40dbe29b (save)
                     })
                 else:
                     # Create a new record
@@ -295,10 +327,16 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
+<<<<<<< HEAD
                         'photo': candidate.candidate_image,
                         'candidate_signature': candidate.candidate_signature,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
                     })
+=======
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+                    })
+                count += 1
+>>>>>>> 40dbe29b (save)
 
         return
     
@@ -336,11 +374,19 @@ class CandidatesApplication(models.Model):
     #         if not record.indos_no:
     #             raise ValidationError("The indos no must be filled.")
             
+<<<<<<< HEAD
     # @api.constrains('name')
     # def _check_name(self):
     #     for record in self:
     #         if not record.name:
     #             raise ValidationError("The name must be filled.")
+=======
+    @api.constrains('name')
+    def _check_name(self):
+        for record in self:
+            if not record.name:
+                raise ValidationError("The name must be filled.")
+>>>>>>> 40dbe29b (save)
     
     
     # signature_bes = fields.Binary(string="Signature Of Assessed Officer BES")
@@ -481,8 +527,11 @@ class CandidatesApplication(models.Model):
 
     date_of_pst = fields.Date(string="Date OF PST")
     date_of_validity_pst = fields.Date(string="Date Of Validity Of PST",compute="_compute_date_of_validity_pst")
+<<<<<<< HEAD
     application_entered_by = fields.Char("Application Entered By")
 
+=======
+>>>>>>> 40dbe29b (save)
 
     @api.depends('date_of_pst')
     def _compute_date_of_validity_pst(self):
@@ -646,7 +695,11 @@ class HoldReason(models.Model):
 
 
 class IVCanditateApplicationHold(models.AbstractModel):
+<<<<<<< HEAD
     _name = 'report.bes.reports_iv_hold_candidate_list1'
+=======
+    _name = 'report.bes.reports_iv_hold_candidate_list'
+>>>>>>> 40dbe29b (save)
     _inherit = ['mail.thread', 'mail.activity.mixin']
     
     @api.model
@@ -693,6 +746,7 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'data': data,
             'docs': docs,
         }
+<<<<<<< HEAD
 =======
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
@@ -1305,4 +1359,6 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'docs': docs,
         }
 >>>>>>> origin/development
+=======
+>>>>>>> 40dbe29b (save)
     
