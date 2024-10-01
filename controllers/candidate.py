@@ -122,15 +122,16 @@ class GPCandidatePortal(CustomerPortal):
     
     
     
-    @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
+    @http.route(['/my/gpexam/startexam'],type="json",auth="user",website=True)
     def VerifyToken(self,**kw):
         partner_id = request.env.user.partner_id.id
     
-        # import wdb; wdb.set_trace()
+        import wdb; wdb.set_trace()
         
-        survey_input_id = kw.get("survey_input_id")
-        examiner_token = kw.get("examiner_token")
-        online_subject = kw.get("online_subject")
+        survey_input_id = request.jsonrequest["survey_input_id"]
+        examiner_token = request.jsonrequest["examiner_token"]
+        online_subject = request.jsonrequest["online_subject"]
+        ip = request.jsonrequest["ip"]
         
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         
@@ -206,33 +207,34 @@ class GPCandidatePortal(CustomerPortal):
                     exam_url = registered_exam.survey_id.survey_start_url
                     identification_token = registered_exam.access_token
                     # Assume exam_url and identification_token are set correctly
-                    full_exam_url = exam_url + "?answer_token=" + identification_token  # Example URL
-                    print("Full Exam URL:", full_exam_url)  # Debugging line
+                    # full_exam_url = exam_url + "?answer_token=" + identification_token  # Example URL
+                    return request.redirect(exam_url+"?answer_token="+identification_token)
+                    # print("Full Exam URL:", full_exam_url)  # Debugging line
 
-                    try:
-                        html_content = """
-                                        <html>
-                                            <head>
-                                                <title>Test Page</title>
-                                            </head>
-                                            <body>
-                                                <p>{url}</p>
-                                                <script type="text/javascript">
-                                                    setTimeout(function() {
-                                                        window.open("${url}", "_blank");
-                                                    }, 3000);
-                                                </script>
-                                            </body>
-                                        </html>
-                                        """.format(url=full_exam_url)
+                    # try:
+                    #     import wdb; wdb.set_trace()
+                    #     html_content = """
+                    #                     <html>
+                    #                         <head>
+                    #                             <title>Test Page</title>
+                    #                         </head>
+                    #                         <body>
+                    #                             <p>Redirecting...</p>
+                    #                             <script type="text/javascript">
+                    #                                 setTimeout(function() {
+                    #                                     window.open("${full_exam_url}", "_blank");
+                    #                                 }, 3000);
+                    #                             </script>
+                    #                         </body>
+                    #                     </html>
+                    #                     """.format(full_exam_url=full_exam_url)
 
-                        print("About to send response...")  # Debugging line
-                        return request.make_response(html_content, headers={'Content-Type': 'text/html'})
+                    #     print("About to send response...")  # Debugging line
+                    #     return request.make_response(html_content, headers={'Content-Type': 'text/html'})
 
-                    except Exception as e:
-                        print("Error occurred:", str(e))
-                        return request.redirect('/error_page')  # Redirect to an error page or handle accordingly
-                        # return request.redirect(exam_url+"?answer_token="+identification_token)
+                    # except Exception as e:
+                    #     print("Error occurred:", str(e))
+                    #     return request.redirect('/error_page')  # Redirect to an error page or handle accordingly
 
             
         else:
