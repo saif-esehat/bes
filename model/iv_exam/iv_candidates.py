@@ -92,6 +92,9 @@ class IVCandidates(models.Model):
                         'dob': candidate.dob,
                         'indos_no': candidate.indos_no,
                     })
+
+   
+
                    
 
 
