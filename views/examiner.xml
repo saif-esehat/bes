@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae09cde4 (Dagta)
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2023,6 +2024,8 @@
 >>>>>>> 63b4f02f (Data)
 =======
 =======
+=======
+>>>>>>> 01dd8fad (Data)
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -3034,6 +3037,9 @@
         
 
     </data>
+<<<<<<< HEAD
 >>>>>>> 7c8a09ac (Data)
 >>>>>>> c4cf21d0 (DatA)
+=======
+>>>>>>> 01dd8fad (Data)
 </odoo>

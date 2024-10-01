@@ -1,10 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 40dbe29b (save)
 =======
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> 01dd8fad (Data)
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -94,7 +97,7 @@ class CandidatesApplication(models.Model):
 
    
 
-    language_preference = fields.Char(string='Language Preference')
+    # language_preference = fields.Char(string='Language Preference')
 
 
 
@@ -699,10 +702,14 @@ class HoldReason(models.Model):
 
 class IVCanditateApplicationHold(models.AbstractModel):
 <<<<<<< HEAD
+<<<<<<< HEAD
     _name = 'report.bes.reports_iv_hold_candidate_list1'
 =======
     _name = 'report.bes.reports_iv_hold_candidate_list'
 >>>>>>> 40dbe29b (save)
+=======
+    _name = 'report.bes.reports_iv_hold_candidate_list'
+>>>>>>> 01dd8fad (Data)
     _inherit = ['mail.thread', 'mail.activity.mixin']
     
     @api.model
@@ -749,6 +756,7 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'data': data,
             'docs': docs,
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1436,4 +1444,6 @@ class IVCanditateApplicationEligible(models.AbstractModel):
 =======
 >>>>>>> 11654fd5 (save)
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> 01dd8fad (Data)
     

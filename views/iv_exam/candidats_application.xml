@@ -427,10 +427,14 @@
                      <h4> 5. Tick mark (✓) &amp; write Perferred Language for Appearing Examination </h4>
                      <group>
 <<<<<<< HEAD
+<<<<<<< HEAD
                       <!-- <field name="language_preference" style="width: 50%;"/> -->
 =======
                       <field name="language_preference" style="width: 50%;"/>
 >>>>>>> 63b4f02f (Data)
+=======
+                      <!-- <field name="language_preference" style="width: 50%;"/> -->
+>>>>>>> 01dd8fad (Data)
                      </group>
                     
                       <h4>6. Details of Fees Payments</h4>

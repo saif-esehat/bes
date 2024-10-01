@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -246,6 +245,7 @@ class IVOralExamResultB(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,
             'candidates': candidates
+<<<<<<< HEAD
 <<<<<<< HEAD
         }
 
@@ -522,4 +522,7 @@ class IVOralExamResultB(models.AbstractModel):
           
 >>>>>>> 11654fd5 (save)
 >>>>>>> 63b4f02f (Data)
+=======
+          
+>>>>>>> 01dd8fad (Data)
         }
