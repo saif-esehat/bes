@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ae09cde4 (Dagta)
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -507,8 +510,13 @@
                     <header>
                         <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
                     </header>
+<<<<<<< HEAD
                     <field name="gp_candidate"/>
                     <field name="gp_marksheet" />
+=======
+                    <field name="gp_candidate" groups="bes.group_bes_admin"/>
+                    <field name="gp_marksheet" groups="bes.group_bes_admin"/>
+>>>>>>> ae09cde4 (Dagta)
                     <field name="using_of_tools" groups="bes.group_bes_admin"/>
                     <field name="welding_lathe_drill_grinder" groups="bes.group_bes_admin"/>
                     <field name="electrical" groups="bes.group_bes_admin"/>
@@ -972,6 +980,7 @@
         
 
     </data>
+<<<<<<< HEAD
 =======
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
@@ -1985,4 +1994,6 @@
 
     </data>
 >>>>>>> origin/development
+=======
+>>>>>>> ae09cde4 (Dagta)
 </odoo>
