@@ -1452,10 +1452,10 @@
                                                                 </td>
                                                                 <!--   -->
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_start_date" />
+                                                                    <t t-out="stcw_certificate.course_start_date.strftime('%d-%m-%Y')" />
                                                                 </td>
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_end_date" />
+                                                                    <t t-out="stcw_certificate.course_end_date.strftime('%d-%m-%Y')" />
                                                                 </td>
                                                             </tr>
                                                         </t>
@@ -2671,8 +2671,8 @@
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>                    
                         
                         <t t-if="ins_batch.all_candidates_have_indos">
-                            <!-- <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a> -->
-                            <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a> -->
+                            <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
+                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
                         </t>
                     </div>
                     <div class="">
@@ -3714,8 +3714,8 @@
                         <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="onOpenAddCandidateModal(this)" data-target="#addCandidateModal" class="btn btn-primary btn_cta">Add Candidate</a>
                     
                         <t t-if="ins_batch.all_candidates_have_indos">
-                            <!-- <a t-attf-href="/my/ccmcbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a> -->
-                            <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openSTCWModal(this)" data-target="#uploadCCMCSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a> -->
+                            <a t-attf-href="/my/ccmcbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
+                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" onclick="openCCMCSTCWModal(this)" data-target="#uploadCCMCSTCWModal" class="btn btn-primary btn_cta">Upload Bulk STCW Deatils</a>
                         </t>
                     </div>
                     <div class="">
@@ -5797,7 +5797,7 @@
                                                             <th>MTI Number</th>
                                                             <th>INDOS No.</th>
                                                             <th>Candidate Certificate Number</th>
-                                                            <th>Certificate Docs</th>
+                                                            <!-- <th>Certificate Docs</th> -->
                                                             <th>Start Date</th>
                                                             <th>End Date</th>
                                                         </tr>
@@ -5839,10 +5839,10 @@
                                                                         Download
                                                                 </td> -->
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_start_date" />
+                                                                    <t t-out="stcw_certificate.course_start_date.strftime('%d-%m-%Y')" />
                                                                 </td>
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_end_date" />
+                                                                    <t t-out="stcw_certificate.course_end_date.strftime('%d-%m-%Y')" />
                                                                 </td>
                                                             </tr>
                                                         </t>
