@@ -60,11 +60,15 @@
     </record>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 931debf1 (Data)
     <record id="group_iv_admin" model="res.groups">
         <field name="name">IV Admin</field>
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     <record id="group_iv_admin" model="res.groups">
         <field name="name">IV Admin</field>
@@ -75,6 +79,8 @@
 >>>>>>> 4ce2fa54 (Data)
 =======
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> 931debf1 (Data)
     <record id="group_bes_report" model="res.groups">
         <field name="name">BES Report</field>
         <field name="category_id" ref="bes_access_category"/>

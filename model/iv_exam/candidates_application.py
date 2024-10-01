@@ -796,9 +796,12 @@ class CandidatesApplication(models.Model):
         ('1ED', 'First Class Engine Driver'),
         ('2ED', 'Second Class Engine Driver'),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> 931debf1 (Data)
         ], string='Grade')
     
     # 2. Details of the Candidate
@@ -845,6 +848,7 @@ class CandidatesApplication(models.Model):
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     # language_preference = fields.Char(string='Language Preference')
 =======
     language_preference = fields.Char(string='Language Preference')
@@ -856,6 +860,9 @@ class CandidatesApplication(models.Model):
         ('english', 'English')
         ], string='Language Preference', default='english')
 >>>>>>> 63b4f02f (Data)
+=======
+    language_preference = fields.Char(string='Language Preference')
+>>>>>>> 931debf1 (Data)
 
 
 
@@ -968,9 +975,13 @@ class CandidatesApplication(models.Model):
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
 <<<<<<< HEAD
+<<<<<<< HEAD
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 =======
 >>>>>>> 63b4f02f (Data)
+=======
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+>>>>>>> 931debf1 (Data)
 
                     })
                 else:
@@ -984,11 +995,16 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
 <<<<<<< HEAD
+<<<<<<< HEAD
                         'grade_applied': candidate.grade,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 =======
                         'grade_applied': candidate.grade
 >>>>>>> 63b4f02f (Data)
+=======
+                        'grade_applied': candidate.grade,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+>>>>>>> 931debf1 (Data)
                     })
                 count += 1
 
@@ -1023,11 +1039,15 @@ class CandidatesApplication(models.Model):
                 raise ValidationError("The grade must be filled.")
             
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 931debf1 (Data)
     # @api.constrains('indos_no')
     # def _check_indos_no(self):
     #     for record in self:
     #         if not record.indos_no:
     #             raise ValidationError("The indos no must be filled.")
+<<<<<<< HEAD
 =======
     @api.constrains('indos_no')
     def _check_indos_no(self):
@@ -1035,6 +1055,8 @@ class CandidatesApplication(models.Model):
             if not record.indos_no:
                 raise ValidationError("The indos no must be filled.")
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> 931debf1 (Data)
             
     @api.constrains('name')
     def _check_name(self):
@@ -1305,20 +1327,28 @@ class CandidatesApplication(models.Model):
     def _check_mobile(self):
         for record in self:
 <<<<<<< HEAD
+<<<<<<< HEAD
             if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
 =======
             if record.mobile and (len(record.mobile) != 10 or not record.mobile.isdigit()):
 >>>>>>> 63b4f02f (Data)
+=======
+            if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
+>>>>>>> 931debf1 (Data)
                 raise ValidationError("Mobile number must contain exactly 10 digits.")
 
     @api.constrains('zip')
     def _check_zip(self):
         for record in self:
 <<<<<<< HEAD
+<<<<<<< HEAD
             if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
 =======
             if record.zip and (len(record.zip) != 6 or not record.zip.isdigit()):
 >>>>>>> 63b4f02f (Data)
+=======
+            if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
+>>>>>>> 931debf1 (Data)
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
 
