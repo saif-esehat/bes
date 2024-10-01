@@ -2401,7 +2401,7 @@
                                 <field name="team_lead" invisible="1"/>
                                 <field name="exam_date"/>
                                 <field name="extended"/>
-                                <button attrs="{'invisible': [('exam_type', '!=', 'practical_oral')]}" name="download_marksheet"
+                                <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
                                     string="Download Marksheet"
                                     type="object"
                                     class="btn-primary"
