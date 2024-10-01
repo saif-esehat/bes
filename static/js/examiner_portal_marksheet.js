@@ -351,6 +351,7 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
     publicWidget.registry.ExaminerPortalCCMCOral = publicWidget.Widget.extend(
         {
             selector : ".confirm_ccmc_prac_marksheet_class",
+<<<<<<< HEAD
             events:{
                 'click':"_onConfirmCCMCPrac"
             },
@@ -439,14 +440,20 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
     publicWidget.registry.ExaminerPortalCCMCOral = publicWidget.Widget.extend(
         {
             selector : ".confirm_ccmc_oral_marksheet_class",
+=======
+>>>>>>> ed470e78 (Data)
             events:{
-                'click':"_onConfirmCCMCOral"
+                'click':"_onConfirmCCMCPrac"
             },
-            _onConfirmCCMCOral: function(evt){
+            _onConfirmCCMCPrac: function(evt){
                 
                 
                 // debugger
+<<<<<<< HEAD
                 var ccmc_oral_marksheet_id = evt.target.id
+=======
+                var ccmc_prac_marksheet_id = evt.target.id
+>>>>>>> ed470e78 (Data)
 
                 var str = evt.target.id;
                 var parts = str.split('_');
@@ -458,8 +465,13 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                 var marksheet_ccmc_status =   document.getElementById('marksheet_cccm_status_'+lastId)
 
 
+<<<<<<< HEAD
                 var ccmc_oral_total_marks = document.getElementById('ccmc_oral_total_'+lastId).innerText.trim();
                 // var ccmc_prac_total_marks = document.getElementById('ccmc_prac_total_'+lastId).innerText.trim();
+=======
+                // var ccmc_oral_total_marks = document.getElementById('ccmc_oral_total_'+lastId).innerText.trim();
+                var ccmc_prac_total_marks = document.getElementById('ccmc_prac_total_'+lastId).innerText.trim();
+>>>>>>> ed470e78 (Data)
 
                 // debugger
 
@@ -471,7 +483,11 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     return ;
                 }
 
+<<<<<<< HEAD
                 if (attendance_element.value === 'absent' && (parseInt(ccmc_oral_total_marks) !== 0)) {
+=======
+                if (attendance_element.value === 'absent' && (parseInt(ccmc_prac_total_marks) !== 0)) {
+>>>>>>> ed470e78 (Data)
                     alert("Candidates marks should be 0 in order to marks them absent");
 
                         return; // If the user cancels, stop further processin
@@ -479,7 +495,7 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
 
                 
                 var postData = {
-                    id: ccmc_oral_marksheet_id, // Assuming you want to pass the ID in the request body
+                    id: ccmc_prac_marksheet_id, // Assuming you want to pass the ID in the request body
                     attendance_element: attendance_element,
                     attendance_id:attendance_id,
                     marksheet_ccmc_status :marksheet_ccmc_status
@@ -491,9 +507,9 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
     
                 $.ajax({
                     type: "POST",
-                    url: '/confirm/ccmc_oral/marksheet',
+                    url: '/confirm/ccmc_prac/marksheet',
                     indexValue: {
-                        id: ccmc_oral_marksheet_id, // Assuming you want to pass the ID in the request body
+                        id: ccmc_prac_marksheet_id, // Assuming you want to pass the ID in the request body
                         attendance_element: attendance_element,
                         marksheet_ccmc_status :marksheet_ccmc_status
                     },
