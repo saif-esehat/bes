@@ -121,6 +121,12 @@
                 }, 1000); 
 
                 }
+
+                function validateToken(input) {
+                    // Remove all spaces from the input value
+                    input.value = input.value.replace(/\s/g, '');
+                }
+
         
        </script>
 
@@ -130,10 +136,10 @@
        <t t-call="portal.portal_layout">
             
             <t t-call="portal.portal_table">
-                <div class="modal fade" id="examiner_token" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal" id="examiner_token" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/gpexam/startexam" enctype="multipart/form-data">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <!-- <form> -->
+                            <!-- <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" /> -->
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Enter Examiner Token</h5>
@@ -148,7 +154,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="examiner_token">Token</label>
-                                                <input type="text" class="form-control" id="examiner_token" name="examiner_token" />
+                                                <input required="1" class="form-control" id="examiner_token_input" name="examiner_token_input" oninput="validateToken(this)" />
                                             </div>
                                         </div>
 
@@ -157,11 +163,11 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary start_gp_exam">Start Exam</button>
+                                    <button class="btn btn-primary start_gp_exam">Start Exam</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                 </div>
                 <t t-if="error">

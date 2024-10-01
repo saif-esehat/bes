@@ -126,12 +126,14 @@ class GPCandidatePortal(CustomerPortal):
     def VerifyToken(self,**kw):
         partner_id = request.env.user.partner_id.id
     
-        import wdb; wdb.set_trace()
         
         survey_input_id = request.jsonrequest["survey_input_id"]
         examiner_token = request.jsonrequest["examiner_token"]
         online_subject = request.jsonrequest["online_subject"]
         ip = request.jsonrequest["ip"]
+        
+        import wdb; wdb.set_trace()
+
         
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
         

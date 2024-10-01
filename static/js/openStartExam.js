@@ -13,16 +13,24 @@ odoo.define('bes.OpenStartExam', function (require) {
             },
 
             start_gp_exam: function (e) {
+                // e.preventDefault();
+                // e.stopPropagation(); 
                 console.log("inside start gp exam");                
-                debugger;
-                survey_input_id = document.getElementById("survey_input_id").value;
-                examiner_token = document.getElementById('examiner_token').value;
-                online_subject = document.getElementById('online_subject').value;
+                ;
+                var survey_input_id = document.getElementById("survey_input_id").value;
+                var examiner_token = document.getElementById('examiner_token_input').value;
+                var online_subject = document.getElementById('online_subject').value;
+
+                if (!examiner_token) {
+                    alert('Examiner token is empty. Please provide a valid token.');
+                    return; // Stop further process
+                }
+
                 
                 fetch('https://api.ipify.org?format=json')
                     .then(response => response.json())
                     .then(data => {
-                        console.log("Your IP address is: " + data.ip);
+
 
                         var postData = {
                             survey_input_id: survey_input_id,
@@ -30,17 +38,19 @@ odoo.define('bes.OpenStartExam', function (require) {
                             online_subject: online_subject,
                             ip: data.ip
                         }
-                        $.ajax({
-                            type: "POST",
-                            url: "/my/gpexam/startexam",
-                            data: JSON.stringify(postData),
-                            contentType: 'application/json',
-                            success: function (response) {
-                                console.log("POST request successful:", response);                                
-                            },
-                        })
+                        debugger
+                        // $.ajax({
+                        //     type: "POST",
+                        //     url: "/my/gpexam/startexam",
+                        //     data: JSON.stringify(postData),
+                        //     contentType: 'application/json',
+                        //     success: function (response) {
+                        //         console.log("POST request successful:", response);                                
+                        //     },
+                        // })
                     })
                     .catch(error => {
+
                         console.error('Error fetching IP:', error);
                     });
 
