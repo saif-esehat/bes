@@ -185,6 +185,9 @@
     </record>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f56dd32c (save)
     <!-- <data noupdate="1"> -->
         <!-- Rule to restrict delete access for all users except specific groups -->
         <record id="course_master_no_delete" model="ir.rule">
@@ -198,9 +201,12 @@
             <field name="perm_unlink" eval="False"/> <!-- Disable delete -->
         </record>
     <!-- </data> -->
+<<<<<<< HEAD
 =======
     
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> f56dd32c (save)
 
    
 
