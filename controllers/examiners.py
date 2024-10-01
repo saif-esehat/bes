@@ -1729,8 +1729,10 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
+        ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         ccmc_cookery_bakery_sheet.write("E1:F1",examiner.name,merge_format)
         ccmc_cookery_bakery_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
+        ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
         ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
 
 

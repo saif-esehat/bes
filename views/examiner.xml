@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae09cde4 (Dagta)
 <?xml version="1.0" encoding="UTF-8"?>
@@ -982,6 +983,8 @@
     </data>
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 63b4f02f (Data)
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -1357,7 +1360,11 @@
                                 <field name="team_lead" invisible="1"/>
                                 <field name="exam_date"/>
                                 <field name="extended"/>
+<<<<<<< HEAD
                                 <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
+=======
+                                <button attrs="{'invisible': [('exam_type', '!=', 'practical_oral')]}" name="download_marksheet"
+>>>>>>> 63b4f02f (Data)
                                     string="Download Marksheet"
                                     type="object"
                                     class="btn-primary"
@@ -1663,7 +1670,11 @@
                     <field name="total_mrks" groups="bes.group_bes_admin"/>
                     <field name="cookery_practical_remarks" groups="bes.group_bes_admin"/>
                     <field name="cookery_draft_confirm"/>
+<<<<<<< HEAD
                     <!-- <field name="house_keeping"  groups="bes.group_bes_admin"/>
+=======
+                    <field name="house_keeping"  groups="bes.group_bes_admin"/>
+>>>>>>> 63b4f02f (Data)
                     <field name="f_b" groups="bes.group_bes_admin"/>
                     <field name="orals_house_keeping" groups="bes.group_bes_admin"/>
                     <field name="attitude_proffessionalism" groups="bes.group_bes_admin"/>
@@ -1671,7 +1682,11 @@
                     <field name="gsk_ccmc" groups="bes.group_bes_admin"/>
                     <field name="toal_ccmc_rating" groups="bes.group_bes_admin"/>
                     <field name="ccmc_oral_remarks" groups="bes.group_bes_admin"/>
+<<<<<<< HEAD
                     <field name="ccmc_oral_draft_confirm"/> -->
+=======
+                    <field name="ccmc_oral_draft_confirm"/>
+>>>>>>> 63b4f02f (Data)
                 </tree>
             </field>
         </record>
@@ -1686,6 +1701,7 @@
                             <field name="ccmc_candidate"/>
                             <field name="ccmc_marksheet"/>
                             <field name="cookery_bakery"/>
+<<<<<<< HEAD
                             <!-- <field name="ccmc_oral"/> -->
                         </group>
                     </sheet>
@@ -1724,6 +1740,8 @@
                         <group>
                             <field name="ccmc_candidate"/>
                             <field name="ccmc_marksheet"/>
+=======
+>>>>>>> 63b4f02f (Data)
                             <field name="ccmc_oral"/>
                         </group>
                     </sheet>
@@ -1993,7 +2011,10 @@
         
 
     </data>
+<<<<<<< HEAD
 >>>>>>> origin/development
 =======
 >>>>>>> ae09cde4 (Dagta)
+=======
+>>>>>>> 63b4f02f (Data)
 </odoo>

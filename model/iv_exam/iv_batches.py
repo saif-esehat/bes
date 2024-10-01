@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -85,6 +86,8 @@ class IVBatches(models.Model):
 
 
 =======
+=======
+>>>>>>> 63b4f02f (Data)
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -169,4 +172,7 @@ class IVBatches(models.Model):
                 application.application_eligible = 'not_eligible'
 
 
+<<<<<<< HEAD
 >>>>>>> origin/development
+=======
+>>>>>>> 63b4f02f (Data)

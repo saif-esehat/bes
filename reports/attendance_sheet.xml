@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="attendance_sheet_online_ccmc">
@@ -223,6 +224,8 @@
         </t>
     </template>
 =======
+=======
+>>>>>>> 63b4f02f (Data)
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="attendance_sheet_online_ccmc">
@@ -408,6 +411,7 @@
                             </td>
                             <td
                                 style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman'; background-color: grey; color: white; text-align: center; vertical-align: center;"
+<<<<<<< HEAD
                                 t-if="not candidate.gp_marksheet.attempting_gsk_online">
                                 NA
                             </td>
@@ -416,12 +420,25 @@
                             </td>
                             <td
                                 style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman'; background-color: grey; color: white; text-align: center; vertical-align: center;"
+=======
+>>>>>>> 63b4f02f (Data)
                                 t-if="not candidate.gp_marksheet.attempting_mek_online">
                                 NA
                             </td>
                             <td style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman';"
                                 t-if="candidate.gp_marksheet.attempting_mek_online">
                             </td>
+<<<<<<< HEAD
+=======
+                            <td
+                                style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman'; background-color: grey; color: white; text-align: center; vertical-align: center;"
+                                t-if="not candidate.gp_marksheet.attempting_gsk_online">
+                                NA
+                            </td>
+                            <td style="border: 1px solid black; padding: 6px; font-family: 'TimesNewRoman';"
+                                t-if="candidate.gp_marksheet.attempting_gsk_online">
+                            </td>
+>>>>>>> 63b4f02f (Data)
                         </tr>
                     </t>
                 </table>
@@ -445,5 +462,8 @@
             </t>
         </t>
     </template>
+<<<<<<< HEAD
 >>>>>>> origin/development
+=======
+>>>>>>> 63b4f02f (Data)
 </odoo>

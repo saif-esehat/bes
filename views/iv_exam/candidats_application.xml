@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -281,6 +282,8 @@
 
 </data>
 =======
+=======
+>>>>>>> 63b4f02f (Data)
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -423,7 +426,11 @@
                     </group>
                      <h4> 5. Tick mark (✓) &amp; write Perferred Language for Appearing Examination </h4>
                      <group>
+<<<<<<< HEAD
                       <!-- <field name="language_preference" style="width: 50%;"/> -->
+=======
+                      <field name="language_preference" style="width: 50%;"/>
+>>>>>>> 63b4f02f (Data)
                      </group>
                     
                       <h4>6. Details of Fees Payments</h4>
@@ -543,5 +550,8 @@
 
 
 </data>
+<<<<<<< HEAD
 >>>>>>> origin/development
+=======
+>>>>>>> 63b4f02f (Data)
 </odoo>

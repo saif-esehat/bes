@@ -3619,6 +3619,9 @@ class InstitutePortal(CustomerPortal):
         instruction_worksheet.set_column('F:F', 20, date_format)
         instruction_worksheet.set_column('G:G', 20, date_format)
 
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
         mandatory_format = workbook.add_format({
             'bold': True,
             'align': 'center',

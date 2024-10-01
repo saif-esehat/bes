@@ -1,7 +1,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 40dbe29b (save)
+=======
+>>>>>>> 63b4f02f (Data)
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -747,6 +750,9 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'docs': docs,
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 63b4f02f (Data)
 =======
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
@@ -789,6 +795,10 @@ class CandidatesApplication(models.Model):
         ('ME', 'Motor Engineer'),
         ('1ED', 'First Class Engine Driver'),
         ('2ED', 'Second Class Engine Driver'),
+<<<<<<< HEAD
+=======
+
+>>>>>>> 63b4f02f (Data)
         ], string='Grade')
     
     # 2. Details of the Candidate
@@ -834,10 +844,18 @@ class CandidatesApplication(models.Model):
    
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     # language_preference = fields.Char(string='Language Preference')
 =======
     language_preference = fields.Char(string='Language Preference')
 >>>>>>> 4ce2fa54 (Data)
+=======
+    language_preference = fields.Selection([
+        ('marathi', 'Marathi'),
+        ('hindi', 'Hindi'),
+        ('english', 'English')
+        ], string='Language Preference', default='english')
+>>>>>>> 63b4f02f (Data)
 
 
 
@@ -949,7 +967,10 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
+<<<<<<< HEAD
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+=======
+>>>>>>> 63b4f02f (Data)
 
                     })
                 else:
@@ -962,8 +983,12 @@ class CandidatesApplication(models.Model):
                         'dob': candidate.dob,
                         'email': candidate.email,
                         'phone': candidate.mobile,
+<<<<<<< HEAD
                         'grade_applied': candidate.grade,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+=======
+                        'grade_applied': candidate.grade
+>>>>>>> 63b4f02f (Data)
                     })
                 count += 1
 
@@ -997,11 +1022,19 @@ class CandidatesApplication(models.Model):
             if not record.grade:
                 raise ValidationError("The grade must be filled.")
             
+<<<<<<< HEAD
     # @api.constrains('indos_no')
     # def _check_indos_no(self):
     #     for record in self:
     #         if not record.indos_no:
     #             raise ValidationError("The indos no must be filled.")
+=======
+    @api.constrains('indos_no')
+    def _check_indos_no(self):
+        for record in self:
+            if not record.indos_no:
+                raise ValidationError("The indos no must be filled.")
+>>>>>>> 63b4f02f (Data)
             
     @api.constrains('name')
     def _check_name(self):
@@ -1271,13 +1304,21 @@ class CandidatesApplication(models.Model):
     @api.constrains('mobile')
     def _check_mobile(self):
         for record in self:
+<<<<<<< HEAD
             if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
+=======
+            if record.mobile and (len(record.mobile) != 10 or not record.mobile.isdigit()):
+>>>>>>> 63b4f02f (Data)
                 raise ValidationError("Mobile number must contain exactly 10 digits.")
 
     @api.constrains('zip')
     def _check_zip(self):
         for record in self:
+<<<<<<< HEAD
             if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
+=======
+            if record.zip and (len(record.zip) != 6 or not record.zip.isdigit()):
+>>>>>>> 63b4f02f (Data)
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
 
@@ -1358,7 +1399,11 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'data': data,
             'docs': docs,
         }
+<<<<<<< HEAD
 >>>>>>> origin/development
 =======
 >>>>>>> 40dbe29b (save)
+=======
+>>>>>>> 11654fd5 (save)
+>>>>>>> 63b4f02f (Data)
     
