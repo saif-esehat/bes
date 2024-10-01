@@ -317,6 +317,9 @@ class ExaminerPortal(CustomerPortal):
     
     
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 29583355 (Data)
     @http.route(['/confirm/ccmc_oral/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmCCMCOralMarksheet(self, **kw):
         data = request.jsonrequest
@@ -332,8 +335,11 @@ class ExaminerPortal(CustomerPortal):
         
         
     
+<<<<<<< HEAD
 =======
 >>>>>>> ed470e78 (Data)
+=======
+>>>>>>> 29583355 (Data)
     @http.route(['/confirm/ccmc_prac/marksheet'],method=["POST"],type="json", auth="user")
     def ConfirmCCMCPracMarksheet(self, **kw):
         
