@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae09cde4 (Dagta)
 <?xml version="1.0" encoding="UTF-8"?>
@@ -989,6 +990,8 @@
 >>>>>>> 63b4f02f (Data)
 =======
 >>>>>>> c4cf21d0 (DatA)
+=======
+>>>>>>> 4c5965f5 (save)
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
@@ -1365,10 +1368,14 @@
                                 <field name="exam_date"/>
                                 <field name="extended"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
 =======
                                 <button attrs="{'invisible': [('exam_type', '!=', 'practical_oral')]}" name="download_marksheet"
 >>>>>>> 63b4f02f (Data)
+=======
+                                <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
+>>>>>>> 4c5965f5 (save)
                                     string="Download Marksheet"
                                     type="object"
                                     class="btn-primary"
@@ -1675,10 +1682,14 @@
                     <field name="cookery_practical_remarks" groups="bes.group_bes_admin"/>
                     <field name="cookery_draft_confirm"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <!-- <field name="house_keeping"  groups="bes.group_bes_admin"/>
 =======
                     <field name="house_keeping"  groups="bes.group_bes_admin"/>
 >>>>>>> 63b4f02f (Data)
+=======
+                    <!-- <field name="house_keeping"  groups="bes.group_bes_admin"/>
+>>>>>>> 4c5965f5 (save)
                     <field name="f_b" groups="bes.group_bes_admin"/>
                     <field name="orals_house_keeping" groups="bes.group_bes_admin"/>
                     <field name="attitude_proffessionalism" groups="bes.group_bes_admin"/>
@@ -1687,10 +1698,14 @@
                     <field name="toal_ccmc_rating" groups="bes.group_bes_admin"/>
                     <field name="ccmc_oral_remarks" groups="bes.group_bes_admin"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <field name="ccmc_oral_draft_confirm"/> -->
 =======
                     <field name="ccmc_oral_draft_confirm"/>
 >>>>>>> 63b4f02f (Data)
+=======
+                    <field name="ccmc_oral_draft_confirm"/> -->
+>>>>>>> 4c5965f5 (save)
                 </tree>
             </field>
         </record>
@@ -1706,6 +1721,9 @@
                             <field name="ccmc_marksheet"/>
                             <field name="cookery_bakery"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4c5965f5 (save)
                             <!-- <field name="ccmc_oral"/> -->
                         </group>
                     </sheet>
@@ -1744,8 +1762,11 @@
                         <group>
                             <field name="ccmc_candidate"/>
                             <field name="ccmc_marksheet"/>
+<<<<<<< HEAD
 =======
 >>>>>>> 63b4f02f (Data)
+=======
+>>>>>>> 4c5965f5 (save)
                             <field name="ccmc_oral"/>
                         </group>
                     </sheet>
@@ -2015,6 +2036,7 @@
         
 
     </data>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> origin/development
@@ -3042,4 +3064,6 @@
 >>>>>>> c4cf21d0 (DatA)
 =======
 >>>>>>> 01dd8fad (Data)
+=======
+>>>>>>> 4c5965f5 (save)
 </odoo>

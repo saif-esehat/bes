@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 40dbe29b (save)
 =======
@@ -762,6 +763,8 @@ class IVCanditateApplicationEligible(models.AbstractModel):
 =======
 >>>>>>> 63b4f02f (Data)
 =======
+=======
+>>>>>>> 4c5965f5 (save)
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -805,11 +808,14 @@ class CandidatesApplication(models.Model):
         ('2ED', 'Second Class Engine Driver'),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 63b4f02f (Data)
 =======
 >>>>>>> 931debf1 (Data)
+=======
+>>>>>>> 4c5965f5 (save)
         ], string='Grade')
     
     # 2. Details of the Candidate
@@ -857,6 +863,7 @@ class CandidatesApplication(models.Model):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     # language_preference = fields.Char(string='Language Preference')
 =======
     language_preference = fields.Char(string='Language Preference')
@@ -871,6 +878,9 @@ class CandidatesApplication(models.Model):
 =======
     language_preference = fields.Char(string='Language Preference')
 >>>>>>> 931debf1 (Data)
+=======
+    # language_preference = fields.Char(string='Language Preference')
+>>>>>>> 4c5965f5 (save)
 
 
 
@@ -984,12 +994,16 @@ class CandidatesApplication(models.Model):
                         'grade_applied': candidate.grade,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 =======
 >>>>>>> 63b4f02f (Data)
 =======
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 >>>>>>> 931debf1 (Data)
+=======
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+>>>>>>> 4c5965f5 (save)
 
                     })
                 else:
@@ -1004,6 +1018,7 @@ class CandidatesApplication(models.Model):
                         'phone': candidate.mobile,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         'grade_applied': candidate.grade,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 =======
@@ -1013,6 +1028,10 @@ class CandidatesApplication(models.Model):
                         'grade_applied': candidate.grade,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
 >>>>>>> 931debf1 (Data)
+=======
+                        'grade_applied': candidate.grade,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+>>>>>>> 4c5965f5 (save)
                     })
                 count += 1
 
@@ -1048,13 +1067,17 @@ class CandidatesApplication(models.Model):
             
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 931debf1 (Data)
+=======
+>>>>>>> 4c5965f5 (save)
     # @api.constrains('indos_no')
     # def _check_indos_no(self):
     #     for record in self:
     #         if not record.indos_no:
     #             raise ValidationError("The indos no must be filled.")
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     @api.constrains('indos_no')
@@ -1065,6 +1088,8 @@ class CandidatesApplication(models.Model):
 >>>>>>> 63b4f02f (Data)
 =======
 >>>>>>> 931debf1 (Data)
+=======
+>>>>>>> 4c5965f5 (save)
             
     @api.constrains('name')
     def _check_name(self):
@@ -1336,6 +1361,7 @@ class CandidatesApplication(models.Model):
         for record in self:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
 =======
             if record.mobile and (len(record.mobile) != 10 or not record.mobile.isdigit()):
@@ -1343,11 +1369,15 @@ class CandidatesApplication(models.Model):
 =======
             if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
 >>>>>>> 931debf1 (Data)
+=======
+            if record.mobile and (len(record.mobile) > 10 or not record.mobile.isdigit()):
+>>>>>>> 4c5965f5 (save)
                 raise ValidationError("Mobile number must contain exactly 10 digits.")
 
     @api.constrains('zip')
     def _check_zip(self):
         for record in self:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
@@ -1357,6 +1387,9 @@ class CandidatesApplication(models.Model):
 =======
             if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
 >>>>>>> 931debf1 (Data)
+=======
+            if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
+>>>>>>> 4c5965f5 (save)
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
 
@@ -1438,6 +1471,7 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'docs': docs,
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> origin/development
 =======
 >>>>>>> 40dbe29b (save)
@@ -1446,4 +1480,6 @@ class IVCanditateApplicationEligible(models.AbstractModel):
 >>>>>>> 63b4f02f (Data)
 =======
 >>>>>>> 01dd8fad (Data)
+=======
+>>>>>>> 4c5965f5 (save)
     

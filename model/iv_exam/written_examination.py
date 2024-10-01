@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -289,6 +290,8 @@ class IVOralAssessmentSheet(models.AbstractModel):
 >>>>>>> 40dbe29b (save)
 =======
 =======
+=======
+>>>>>>> 4c5965f5 (save)
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 import base64
@@ -520,9 +523,12 @@ class IVOralExamResultB(models.AbstractModel):
             'docs': sorted_docs,
             'candidates': candidates
           
+<<<<<<< HEAD
 >>>>>>> 11654fd5 (save)
 >>>>>>> 63b4f02f (Data)
 =======
           
 >>>>>>> 01dd8fad (Data)
+=======
+>>>>>>> 4c5965f5 (save)
         }
