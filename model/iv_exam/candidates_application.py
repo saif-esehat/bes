@@ -779,7 +779,11 @@ class CandidatesApplication(models.Model):
 
    
 
+<<<<<<< HEAD
     # language_preference = fields.Char(string='Language Preference')
+=======
+    language_preference = fields.Char(string='Language Preference')
+>>>>>>> 4ce2fa54 (Data)
 
 
 

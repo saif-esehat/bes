@@ -64,11 +64,14 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+<<<<<<< HEAD
     <record id="group_iv_admin" model="res.groups">
         <field name="name">IV Admin</field>
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+=======
+>>>>>>> 4ce2fa54 (Data)
     <record id="group_bes_report" model="res.groups">
         <field name="name">BES Report</field>
         <field name="category_id" ref="bes_access_category"/>
