@@ -9,9 +9,13 @@ from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
 import json
 <<<<<<< HEAD
+<<<<<<< HEAD
 import requests
 =======
 >>>>>>> 40dbe29b (save)
+=======
+import requests
+>>>>>>> 2b1a3b04 (save)
 
 from functools import wraps
 from odoo.exceptions import AccessError
@@ -142,6 +146,8 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/startexam'],type="http",auth="user",website=True)
     def VerifyToken(self,**kw):
         partner_id = request.env.user.partner_id.id
+    
+        # import wdb; wdb.set_trace()
         
         survey_input_id = kw.get("survey_input_id")
         examiner_token = kw.get("examiner_token")
@@ -222,6 +228,7 @@ class GPCandidatePortal(CustomerPortal):
                     exam_url = registered_exam.survey_id.survey_start_url
                     identification_token = registered_exam.access_token
 <<<<<<< HEAD
+<<<<<<< HEAD
                     # Assume exam_url and identification_token are set correctly
                     # full_exam_url = exam_url + "?answer_token=" + identification_token  # Example URL
                     return request.redirect(exam_url+"?answer_token="+identification_token)
@@ -254,6 +261,36 @@ class GPCandidatePortal(CustomerPortal):
 =======
                     return request.redirect(exam_url+"?answer_token="+identification_token)
 >>>>>>> 40dbe29b (save)
+=======
+                    # Assume exam_url and identification_token are set correctly
+                    full_exam_url = exam_url + "?answer_token=" + identification_token  # Example URL
+                    print("Full Exam URL:", full_exam_url)  # Debugging line
+
+                    try:
+                        html_content = """
+                                        <html>
+                                            <head>
+                                                <title>Test Page</title>
+                                            </head>
+                                            <body>
+                                                <p>{url}</p>
+                                                <script type="text/javascript">
+                                                    setTimeout(function() {
+                                                        window.open("${url}", "_blank");
+                                                    }, 3000);
+                                                </script>
+                                            </body>
+                                        </html>
+                                        """.format(url=full_exam_url)
+
+                        print("About to send response...")  # Debugging line
+                        return request.make_response(html_content, headers={'Content-Type': 'text/html'})
+
+                    except Exception as e:
+                        print("Error occurred:", str(e))
+                        return request.redirect('/error_page')  # Redirect to an error page or handle accordingly
+                        # return request.redirect(exam_url+"?answer_token="+identification_token)
+>>>>>>> 2b1a3b04 (save)
 
             
         else:
