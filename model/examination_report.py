@@ -235,6 +235,9 @@ class ExaminationReport(models.Model):
                         row.append(ccmc_online_status)
                     
                     allowed_values = {'AP', 'A'}
+                    
+                    unique_values = set(row)
+                    
                     if unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values):
                         absent = absent + 1    
                 
@@ -545,6 +548,9 @@ class ExaminationReport(models.Model):
                         row.append(ccmc_online_status)
                     
                     allowed_values = {'AP', 'A'}
+                    
+                    unique_values = set(row)
+                    
                     if unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values):
                         absent = absent + 1    
                 
