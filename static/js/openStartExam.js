@@ -16,7 +16,6 @@ odoo.define('bes.OpenStartExam', function (require) {
                 // e.preventDefault();
                 // e.stopPropagation(); 
                 console.log("inside start gp exam");                
-                ;
                 var survey_input_id = document.getElementById("survey_input_id").value;
                 var examiner_token = document.getElementById('examiner_token_input').value;
                 var online_subject = document.getElementById('online_subject').value;
