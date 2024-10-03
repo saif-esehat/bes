@@ -38,16 +38,33 @@ odoo.define('bes.OpenStartExam', function (require) {
                             online_subject: online_subject,
                             ip: data.ip
                         }
-                        debugger
-                        // $.ajax({
-                        //     type: "POST",
-                        //     url: "/my/gpexam/startexam",
-                        //     data: JSON.stringify(postData),
-                        //     contentType: 'application/json',
-                        //     success: function (response) {
-                        //         console.log("POST request successful:", response);                                
-                        //     },
-                        // })
+                        // debugger
+                        $.ajax({
+                            type: "POST",
+                            url: "/my/gpexam/startexam",
+                            data: JSON.stringify(postData),
+                            contentType: 'application/json',
+                            success: function (response) {
+                                // debugger
+                                var data = JSON.parse(response.result)
+                                if (data.error) {
+                                    alert(data.error)
+                                }
+                                if (data.success) {
+                                    window.open(data.success, '_blank');
+                        
+                                }
+                                // response.resul
+                                console.log("POST request successful:", response);                                
+                            },
+                            error: function (xhr, status, error) {
+
+                                // debugger
+                                console.error("POST request failed:", error);
+                                
+                                // Handle error
+                            }
+                        })
                     })
                     .catch(error => {
 

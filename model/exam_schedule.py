@@ -2733,6 +2733,10 @@ class GPExam(models.Model):
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
+    
+    
+    ip_address = fields.Char("IP Address")
+    
     exam_region = fields.Many2one('exam.center',string='Exam Region',store=True)
     exam_violation_state = fields.Selection([
         ('na', 'N/A'),
@@ -4103,6 +4107,7 @@ class CCMCExam(models.Model):
     candidate_code = fields.Char(string="Candidate Code", related='ccmc_candidate.candidate_code',store=True,tracking=True)
     institute_id = fields.Many2one("bes.institute",related='ccmc_candidate.institute_id',string="Institute",store=True,tracking=True)
 
+    ip_address = fields.Char(string='IP Address')    
 
     cookery_bakery = fields.Many2one("ccmc.cookery.bakery.line","Cookery And Bakery",tracking=True)
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
@@ -5122,10 +5127,29 @@ class OnlineExamWizard(models.TransientModel):
         if self.examiners_id:
             # Set the IP address to the examiner
             self.examiners_id.ipaddr = self.ip_address
+            # import wdb;wdb.set_trace();  
+            if self.examiners_id.course.course_code == 'GP':
+                # import wdb;wdb.set_trace(); 
 
-            # Fetch the related institute and update its IP address
-            if self.examiners_id.institute_id:
-                self.examiners_id.institute_id.ip_address = self.ip_address
+                if self.examiners_id.subject.name == "GSK":
+                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address})
+                    self.examiners_id.marksheets.gsk_online.write({'ip_address':self.ip_address})
+                if self.examiners_id.subject.name == "MEK":
+                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address})
+                    self.examiners_id.marksheets.mek_online.write({'ip_address':self.ip_address})
+                
+            elif self.examiners_id.course.course_code == 'CCMC':
+                self.examiners_id.marksheets.ccmc_marksheet.write({'ip_address':self.ip_address})
+                self.examiners_id.marksheets.ccmc_online.write({'ip_address':self.ip_address})
+
+                
+                
+            
+            
+            
+                
+
+            
 
         return {'type': 'ir.actions.act_window_close'}
 
