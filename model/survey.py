@@ -216,13 +216,13 @@ class SurveyUserInputInherited(models.Model):
                 record.start_time = False
                 record.end_time = False
 
-    @api.onchange('institute_id')
-    def _onchange_institute_id(self):
-        """Fetch the IP address from the selected institute."""
-        if self.institute_id:
-            self.ip_address = self.institute_id.ip_address
-        else:
-            self.ip_address = False
+    # @api.onchange('institute_id')
+    # def _onchange_institute_id(self):
+    #     """Fetch the IP address from the selected institute."""
+    #     if self.institute_id:
+    #         self.ip_address = self.institute_id.ip_address
+    #     else:
+    #         self.ip_address = False
     
     
     def generate_unique_string(self):
