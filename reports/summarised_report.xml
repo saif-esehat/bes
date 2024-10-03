@@ -740,6 +740,7 @@
                             <t t-set="index" t-value="0"/>
                             
                             <t t-foreach="regions" t-as="center">
+                    
                                     <t t-set="region_index" t-value="region_index + 1"/>
                                     <t t-set="institutes" t-value="env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docids),('exam_region','=',center)]).sorted(key=lambda r: r.institute_code)" />
                                         
