@@ -1186,6 +1186,8 @@ class SummarisedCCMCReport(models.AbstractModel):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
         data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
+        print(docs1)
+        print(data)
         exam_region = data.exam_region.ids
         print(exam_region)
         # report_type = data['report_type']
@@ -1201,7 +1203,7 @@ class SummarisedCCMCReport(models.AbstractModel):
 
         return {
             'docids': docids,
-            'doc_model': 'ccmc.exam.schedule',
+            'doc_model': 'summarised.ccmc.report',
             'docs': docids,
             'exam_regions': exam_region,
             'examination_report':docs1
