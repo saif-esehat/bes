@@ -245,7 +245,6 @@ class IVOralExamResultB(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,
             'candidates': candidates
-          
         }
 
 
@@ -281,6 +280,4 @@ class IVOralAssessmentSheet(models.AbstractModel):
             'doc_model': 'iv.oral.exam',
             'data': data,
             'docs': sorted_docs,
-            'candidates': candidates
-          
-        }
+            'candidates': candidates       }

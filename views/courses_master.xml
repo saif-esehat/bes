@@ -17,7 +17,7 @@
             <field name="name">course.master.form</field>
             <field name="model">course.master</field>
             <field name="arch" type="xml">
-                <form>
+                <form create="false">
                     <sheet>
                         <group>
                             <h1>
@@ -49,7 +49,7 @@
             <field name="name">course.master.tree</field>
             <field name="model">course.master</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="false">
                     <field name="name" />
                      <field name="course_code"/>
                      <field name="exam_fees"/>

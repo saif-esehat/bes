@@ -79,9 +79,6 @@
         <field name="model">iv.written.exam</field>
         <field name="arch" type="xml">
             <tree>
-            <header>
-                <button name="create_oral_exam_records" type="object" string="Create Oral Exam Passed Candidates" class="btn-primary"/>
-            </header>
                 <field name="candidate" />
                 <field name="batch_id" />
                 <field name="grade" />

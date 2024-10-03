@@ -64,7 +64,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
-                            Grade Applied for: <strong><span t-field="o.grade_applied" /></strong>
+                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
                         </td>
                     </tr>
                   <tr>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
@@ -101,4 +102,108 @@
 </template>
 
 
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+ <report
+        id="reports_iv_candidate_issuance_admit_card1"
+        string="IV  Acnowledgment of Issuance of Admit Card"
+        model="iv.candidates"
+        report_type="qweb-pdf"
+        name="bes.reports_iv_candidate_issuance_admit_card_list"
+        file="bes.reports_iv_candidate_issuance_admit_card_list"/>
+
+
+
+<template id="reports_iv_candidate_issuance_admit_card_list">
+    <t t-call="web.basic_layout">
+
+                <div class="header">
+                    <table style="width:100%; border: 1px solid black; font-family: 'TimesNewRoman';">
+                          <h5 style="text-align: center; font-weight: bold;">
+                            Board of Examinations for Seafarers Trust (BEST)
+                        </h5>
+
+                        <!-- Second Line -->
+
+                            <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                                Acknowledgment of Issuance of Admit Card for Examination of IV
+                                 <span t-field="docs[0].batch_id.name"/>
+                            </h6>
+                   
+                    </table>
+                </div>
+                
+                <div class="page">
+                 
+                    <div class="page-content">
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                            <thead>
+                                <tr style="background-color: #d3d3d3; color: black;">
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Application Form Number</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Indos No</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 22%;">Grade Applied</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">D.O.B</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Signature of Candidate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="index" t-value="0" />
+                                <t t-foreach="docs" t-as="doc">
+                                    <t t-set="index" t-value="index + 1" />
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                            <span t-esc="index" />
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                            <!-- Application Form Number -->
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                            <span t-field="doc.indos_no" />
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                            <span t-field="doc.grade_applied" />
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                            <span t-field="doc.name" />
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                            <span t-esc="doc.dob.strftime('%d-%m-%Y')" />
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px;">
+                                            <!-- Signature -->
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+              
+
+                   <div class="footer" style="width: 100%; margin-top: 20px; font-size: 12px;">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                        <tr style="height: 50px;">
+                            <td style="font-size: 18px; text-align: left; vertical-align: bottom; padding-right: 50px;">
+                                <b>Name of Incharge:</b>
+                            </td>
+                            <td style="font-size: 18px; text-align: right; vertical-align: bottom;">
+                                <b>Signature of Incharge:</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Repeating Content on Every Page -->
+           
+                
+    </t>
+</template>
+
+
+>>>>>>> a5b4c0e707ed7aeaaea2f0cb7a9fd83a4960b727
 </odoo>

@@ -76,6 +76,7 @@
         <field name="arch" type="xml">
             <tree>
             <header>
+                <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
                 <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
                 <!-- <button name="assign_status" string="Assign Status" type="object" class="btn-primary"/> -->
                 
@@ -122,9 +123,6 @@
                   action="iv_candidates_action"
                   sequence="10" />
 
-
-
-     
       
 </data>
 </odoo>

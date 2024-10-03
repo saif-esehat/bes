@@ -15,22 +15,16 @@
     <t t-call="web.basic_layout">
             <div class="page">
 
-               
-                <div class="header">
-                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                          <h5 style="text-align: center; font-weight: bold;">
-                                    Board of Examinations for Seafarers Trust (BES), Navi Mumbai.
-                            </h5>
-                            
-                            <!-- Second Line -->
-                            <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                                Final List of Eligible Candidates 
-                            </h6>
+                <h5 style="text-align: center; font-weight: bold;">
+                        Board of Examinations for Seafarers Trust (BES), Navi Mumbai.
+                </h5>
                 
-                    </table>
-                </div>
+                <!-- Second Line -->
+                <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                     Final List of Eligible Candidates 
+                </h6>
 
-                <table  style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+                <table >
        
                 <thead>
 							
@@ -61,25 +55,25 @@
                         <t t-foreach="docs" t-as="eligible">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
-                                <td colspan="1" style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px; text-align: center;">
                                     <span t-esc="index" />
                                 </td>
-                                <td  colspan="1" style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.indos_no" />
                                 </td>
-                                <td  colspan="1" style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.application_no" />
                                 </td>
-                                <td colspan="1"  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.grade" />
                                 </td>
-                                <td  colspan="1" style="border: 1px solid black; padding: 6px;  vertical-align: middle;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="eligible.name" />
                                 </td>
-                                <td colspan="1"  style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-esc="eligible.dob.strftime('%d-%m-%Y')" />
                                 </td>
-                                <td colspan="1" style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
                                     <t t-if="eligible.reporting_date">
                                     <span t-esc="eligible.reporting_date.strftime('%d-%m-%Y')" />
                                     </t>
@@ -87,7 +81,7 @@
                                             <!-- Empty cell if reporting_time is not available -->
                                         </t>
                                 </td>
-                                <td colspan="1" style="border: 1px solid black; padding: 6px; text-align: center; vertical-align: middle;">
+                                <td colspan="1" style="border: 1px solid black; padding: 6px; text-align: center;">
                                         <t t-if="eligible.reporting_time">
                                             <span t-esc="str(eligible.reporting_time) + ' hrs.'"/>
                                         </t>

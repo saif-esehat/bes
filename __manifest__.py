@@ -86,7 +86,8 @@
                         'bes/views/portal/static/src/js/candidate_oral_practical.js',
                         'bes/views/portal/static/src/js/examiner_marksheet.js',
                         'bes/static/js/examiner_portal_marksheet.js',
-                        'bes/static/js/repeater_portal_gp_form.js'
+                        'bes/static/js/repeater_portal_gp_form.js',
+                        'bes/static/js/openStartExam.js'
 		],
                 'web.assets_qweb': [
                         'bes/static/src/xml/gp_exam_tree_button.xml',
@@ -94,6 +95,7 @@
                 'web.assets_backend': [
                         'bes/static/src/js/gp_exam_tree_button.js',
                         'bes/static/src/css/customs_color.css',
+                        'bes/static/src/js/lost_connection_handler_override.js',
                 ],
                 
 	},

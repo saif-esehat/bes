@@ -64,6 +64,11 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <record id="group_iv_admin" model="res.groups">
+        <field name="name">IV Admin</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <record id="group_bes_report" model="res.groups">
         <field name="name">BES Report</field>
         <field name="category_id" ref="bes_access_category"/>
@@ -173,7 +178,19 @@
         <field name="groups_id" eval="[(3,ref('group_examiners'))]"/>
     </record>
 
-    
+    <!-- <data noupdate="1"> -->
+        <!-- Rule to restrict delete access for all users except specific groups -->
+        <record id="course_master_no_delete" model="ir.rule">
+            <field name="name">Course Master: No Delete</field>
+            <field name="model_id" ref="model_course_master"/>
+            <field name="groups" eval="[(4, ref('group_bes_admin'))]"/> <!-- Adjust the group as needed -->
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/> <!-- Disable delete -->
+        </record>
+    <!-- </data> -->
 
    
 
