@@ -12,8 +12,7 @@ acess_bes_admin_course_master_subject,acess_bes_admin_course_master_subject,mode
 access_report_sep_certificate,access.report.sep.certificate,model_report_bes_sep_certificate,base.group_user,1,1,1,1
 
 
-
-
+bes.admin_online_exam_wizard,access_admin_online_exam_wizard,bes.model_online_exam_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_access_examiner_assignment,access_examiner_assignment,bes.model_examiner_assignment,bes.group_bes_admin,1,1,1,1
 bes.admin_access_gp_candidate,access_gp_candidate,bes.model_gp_candidate,bes.group_bes_admin,1,1,1,1
 bes.admin_access_gp_candidate_stcw_certificate,access_gp_candidate_stcw_certificate,bes.model_gp_candidate_stcw_certificate,bes.group_bes_admin,1,1,1,1

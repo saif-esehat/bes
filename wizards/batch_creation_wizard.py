@@ -5,120 +5,98 @@ class BatchWizard(models.TransientModel):
     _name = 'create.institute.batches.wizard'
     _description = 'Create Batches Wizard'
     
-    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch")
+    dgs_batch = fields.Many2one("dgs.batches", string="Exam Batch")
     batch_name = fields.Char("Batch Name")
     exam_batch_name = fields.Selection([
-        ('jan','Jan - June'),
-        ('july','July - Dec'),
-        ],string="Batch Name")
+        ('jan', 'Jan - June'),
+        ('july', 'July - Dec'),
+    ], string="Batch Name")
     from_date = fields.Date("From Date")
     to_date = fields.Date("To Date")
-    
-    
     
     def create_batches(self):
         institutes = self.env['bes.institute'].search([('id', '=', self.env.context.get('active_ids'))])
         created_batches = []
-        # New code
-        # Counters for GP and CCMC
-        gp_institute_count = 0
-        ccmc_institute_count = 0
-
-        # Track unique institutes
         unique_gp_institutes = set()
         unique_ccmc_institutes = set()
 
+        duplicate_institutes = []  # Initialize list for duplicate institute names
+
         for institute in institutes:
             for course in institute.courses:
+                batch_model = None
+                # Determine the appropriate batch model based on course code
                 if course.course.course_code == 'GP':
-                    if course.batcher_per_year == 1:
-                        if self.exam_batch_name == 'jan':
-                            self.batch_name = 'Jan - June'
-                            self.env['institute.gp.batches'].create({
-                                "dgs_batch": self.dgs_batch.id,
-                                "institute_id": institute.id,
-                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
-                                "from_date": self.from_date,
-                                "to_date": self.to_date,
-                                "course": course.course.id
-                            })
-                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
-                            gp_institute_count += 1  # Increment GP counter
-                            unique_gp_institutes.add(institute.id)  # Track unique GP institutes
-                    elif course.batcher_per_year > 1:
-                        # New Code
-                        if self.exam_batch_name == 'jan':
-                            self.batch_name = 'Jan - June'
-                            self.env['institute.gp.batches'].create({
-                                "dgs_batch": self.dgs_batch.id,
-                                "institute_id": institute.id,
-                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
-                                "from_date": self.from_date,
-                                "to_date": self.to_date,
-                                "course": course.course.id
-                            })
-                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
-                            gp_institute_count += 1  # Increment GP counter
-                            unique_gp_institutes.add(institute.id)  # Track unique GP institutes
-
-                        if self.exam_batch_name == 'july':
-                            self.batch_name = 'July - Dec'
-                            self.env['institute.gp.batches'].create({
-                                "dgs_batch": self.dgs_batch.id,
-                                "institute_id": institute.id,
-                                "batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
-                                "from_date": self.from_date,
-                                "to_date": self.to_date,
-                                "course": course.course.id
-                            })
-                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
-                            gp_institute_count += 1  # Increment GP counter
-                            unique_gp_institutes.add(institute.id)  # Track unique GP institutes
+                    batch_model = 'institute.gp.batches'
                 elif course.course.course_code == 'CCMC':
-                    if course.batcher_per_year == 1:
-                        if self.exam_batch_name == 'jan':
-                            self.batch_name = 'Jan - June'
-                            self.env['institute.ccmc.batches'].create({
-                                "dgs_batch": self.dgs_batch.id,
-                                "institute_id": institute.id,
-                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
-                                "ccmc_from_date": self.from_date,
-                                "ccmc_to_date": self.to_date,
-                                "ccmc_course": course.course.id
-                            })
-                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
-                            ccmc_institute_count += 1  # Increment CCMC counter
-                            unique_ccmc_institutes.add(institute.id)  # Track unique CCMC institutes
-                    elif course.batcher_per_year > 1:
-                        # New code
-                        if self.exam_batch_name == 'jan':
-                            self.batch_name = 'Jan - June'
-                            self.env['institute.ccmc.batches'].create({
-                                "dgs_batch": self.dgs_batch.id,
-                                "institute_id": institute.id,
-                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
-                                "ccmc_from_date": self.from_date,
-                                "ccmc_to_date": self.to_date,
-                                "ccmc_course": course.course.id
-                            })
-                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
-                            ccmc_institute_count += 1  # Increment CCMC counter
-                            unique_ccmc_institutes.add(institute.id)  # Track unique CCMC institutes
+                    batch_model = 'institute.ccmc.batches'
 
-                        if self.exam_batch_name == 'july':
-                            self.batch_name = 'July - Dec'
-                            self.env['institute.ccmc.batches'].create({
-                                "dgs_batch": self.dgs_batch.id,
-                                "institute_id": institute.id,
-                                "ccmc_batch_name": str(course.course.course_code) + "/" + self.batch_name + ' ' + self.from_date.strftime('%Y'),
-                                "ccmc_from_date": self.from_date,
-                                "ccmc_to_date": self.to_date,
-                                "ccmc_course": course.course.id
-                            })
-                            created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
-                            ccmc_institute_count += 1  # Increment CCMC counter
-                            unique_ccmc_institutes.add(institute.id)  # Track unique CCMC institutes
-        
+                # Define batch name based on selection
+                if self.exam_batch_name == 'jan':
+                    self.batch_name = 'Jan - June'
+                elif self.exam_batch_name == 'july':
+                    self.batch_name = 'July - Dec'
+
+                # Build the full batch name (e.g., GP/Jan - June 2024)
+                full_batch_name = f"{course.course.course_code}/{self.batch_name} {self.from_date.strftime('%Y')}"
+
+                # Validation: Check if batch with the same name, start date, and end date exists
+                if batch_model == 'institute.ccmc.batches':
+                    existing_batch = self.env[batch_model].search([
+                        # ('ccmc_batch_name', '=', full_batch_name),
+                        ('institute_id', '=', institute.id),
+                        # ('ccmc_from_date', '=', self.from_date),
+                        # ('ccmc_to_date', '=', self.to_date),
+                        ('dgs_batch', '=', self.dgs_batch.id)  # Check uniqueness of dgs_batch.id
+                    ])
+                else:
+                    existing_batch = self.env[batch_model].search([
+                        # ('batch_name', '=', full_batch_name),
+                        ('institute_id', '=', institute.id),
+                        # ('from_date', '=', self.from_date),
+                        # ('to_date', '=', self.to_date),
+                        ('dgs_batch', '=', self.dgs_batch.id)  # Check uniqueness of dgs_batch.id
+                    ])
+                
+                # Check for existing batch and add to duplicates
+                if existing_batch:
+                    duplicate_institutes.append(institute.name + ' - ' + course.course.course_code)  # Add institute name to list
+                else:
+                    # Create batch if no duplicates found
+                    if batch_model == 'institute.ccmc.batches':
+                        batch_data = {
+                            "dgs_batch": self.dgs_batch.id,
+                            "institute_id": institute.id,
+                            "ccmc_batch_name": full_batch_name,
+                            "ccmc_from_date": self.from_date,
+                            "ccmc_to_date": self.to_date,
+                            "ccmc_course": course.course.id
+                        }
+                    else:
+                        batch_data = {
+                            "dgs_batch": self.dgs_batch.id,
+                            "institute_id": institute.id,
+                            "batch_name": full_batch_name,
+                            "from_date": self.from_date,
+                            "to_date": self.to_date,
+                            "course": course.course.id
+                        }
+
+                    # Create the batch
+                    self.env[batch_model].create(batch_data)
+                    created_batches.append(f"{institute.name} - {course.course.course_code} - {self.batch_name} - {self.from_date.strftime('%Y')}")
+
+                    # Track unique institutes for reporting
+                    if course.course.course_code == 'GP':
+                        unique_gp_institutes.add(institute.id)
+                    elif course.course.course_code == 'CCMC':
+                        unique_ccmc_institutes.add(institute.id)
+
+        # If there are any duplicate batches, raise a validation error
+        if duplicate_institutes:
+            duplicate_list_str = ', '.join(duplicate_institutes)
+            raise ValidationError(f"The batch '{full_batch_name}' already exists for the following institute(s) with the same dates: {duplicate_list_str}")
+
         # Count the number of unique institutes
         total_unique_gp_institutes = len(unique_gp_institutes)
         total_unique_ccmc_institutes = len(unique_ccmc_institutes)
@@ -140,6 +118,7 @@ class BatchWizard(models.TransientModel):
             'target': 'new',
             'context': {'default_message': message},
         }
+
 class hr_wizard(models.TransientModel):
 
     _name = 'batch.pop.up.wizard'

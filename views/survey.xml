@@ -154,9 +154,45 @@
                     <field name="institute_id" />
                     <!-- <field name="examiner" /> -->
                     <field name="examiner_token" />
+                    <field name="total_time" />
+                    <field name="ip_address" />
 
                 </xpath>
+                  <xpath expr="//field[@name='deadline']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='partner_id']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='test_entry']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='scoring_success']" position="replace">
+            <field name="scoring_success" string="Exam Pass" />
+        </xpath>
+
+        <!-- Make answer_type invisible in user_input_line_ids -->
+        <xpath expr="//field[@name='user_input_line_ids']/tree/field[@name='answer_type']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
             </field>
+        </record>
+        <record id="survey_user_input_view_form_inherited" model="ir.ui.view">
+            <field name="name">survey.user_input.view.form.inherited</field>
+            <field name="model">survey.user_input.line</field>
+            <field name="inherit_id" ref="survey.survey_user_input_line_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='answer_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                  <xpath expr="//field[@name='suggested_answer_id']" position="replace">
+                        <field name="suggested_answer_id" string="Answer" />
+                </xpath>
+            </field>
+
         </record>
 
         <record id="survey_form_inherited_tree" model="ir.ui.view">
