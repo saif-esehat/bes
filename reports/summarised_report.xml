@@ -737,10 +737,23 @@
                             </tr>
                         </thead>
                         <tbody style="font-family: 'TimesNewRomanBold';">
+                            <!-- sa
+                            <span t-esc="regions"/> -->
+                            <t t-set="nation_applied" t-value="0" />
+                            <t t-set="region_index" t-value="0"/>
+                            <t t-set="nation_candidate_appeared" t-value="0" />
+                            <t t-set="nation_practical_pass_appeared" t-value="0" />
+                            <t t-set="nation_practical_pass" t-value="0" />
+                            <t t-set="nation_oral_pass_appeared" t-value="0" />
+                            <t t-set="nation_oral_pass" t-value="0" />
+                            <t t-set="nation_online_pass_appeared" t-value="0" />
+                            <t t-set="nation_online_passs" t-value="0" />
+                            <t t-set="nation_overall_pass" t-value="0" />
+
+
                             <t t-set="index" t-value="0"/>
-                            
-                            <t t-foreach="regions" t-as="center">
-                    
+                            <t t-foreach="exam_regions" t-as="center">
+
                                     <t t-set="region_index" t-value="region_index + 1"/>
                                     <t t-set="institutes" t-value="env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docids),('exam_region','=',center)]).sorted(key=lambda r: r.institute_code)" />
                                         
@@ -903,7 +916,7 @@
                                         
                                     </t>
 
-                                     <t t-if="region_index == region_length">
+                                    <t t-if="region_index == region_length">
                                             <tr style="background-color: #f2f2f2; font-family: 'TimesNewRomanBold';">
                                                 <!-- <td colspan="15" style="text-align: center;"><strong>All India Exit</strong></td> -->
 
@@ -960,7 +973,8 @@
                                                 <td><span t-esc="nation_overall_pass"/></td>
                                                 <td><span t-esc="round((nation_overall_pass/nation_candidate_appeared)*100,2)"/>%</td> -->
                                             </tr>
-                                        </t>
+                                    </t>
+                            
                             </t>
                         </tbody>
                     </table>
