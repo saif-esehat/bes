@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+ <template id="report_survey_user_input">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <div class="page">
+                <!-- Header -->
+                <h2 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Report Summary</h2>
+                <p><strong>Result:</strong> 
+                    <t t-if="doc.result_status == 'failed'">
+                        <strong class="text-danger">Fail</strong>
+                    </t>
+                    <t t-if="doc.result_status == 'passed'">
+                        <strong class="text-success">Pass</strong>
+                    </t>
+                </p>
+                <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 75 (<t t-esc="doc.scoring_percentage"/>%)</p>
+                <p><strong>Answered Correctly:</strong> <t t-esc="doc.correct_answers"/> Questions</p>
+                <p><strong>Answered Incorrectly:</strong> <t t-esc="doc.wrong_answers"/> Questions</p>
+                <p><strong>Required Passing Grade:</strong> 60%</p>
+                <p><strong>IP Address:</strong> <t t-esc="doc.ip_address"/></p>
+                <p><strong>Date:</strong> <t t-esc="doc.create_date.strftime('%b %d, %Y')"/></p>
+                <p><strong>Time Taken:</strong> <t t-esc="doc.total_time"/></p>
+                
+                <p><strong>Name of Candidate:</strong> <t t-esc="doc.gp_candidate.name or doc.ccmc_candidate.name"/></p>
+                <p><strong>Name of Training Institute:</strong> <t t-esc="doc.institute_id.name"/></p>
+                <p><strong>Indos No:</strong> <t t-esc="doc.gp_candidate.indos_no or doc.ccmc_candidate.indos_no"/></p>
+
+                <!-- List of Questions -->
+                <h3>Questions</h3>
+                <table class="table table-bordered" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead style="background-color: #f2f2f2;">
+                        <tr>
+                            <th style="padding: 8px; text-align: center;">Sr No.</th>
+                            <th style="padding: 8px; text-align: center;">Question</th>
+                            <th style="padding: 8px; text-align: center;">Answer</th>
+                            <th style="padding: 8px; text-align: center;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="index" t-value="1" />
+                        <t t-foreach="doc.user_input_line_ids" t-as="line">
+                            <tr>
+                                <td style="text-align: center;"><span t-esc="index" /></td>
+                                <td style="padding: 8px;"><t t-esc="line.question_id.title"/></td>
+                                <td style="padding: 8px;"><t t-esc="line.suggested_answer_id.value"/></td>
+                                <td style="text-align: center;">
+                                    <t t-if="line.answer_is_correct">
+                                        <span style="color: green; font-weight: bold;">Correct</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span style="color: red; font-weight: bold;">Incorrect</span>
+                                    </t>
+                                </td>
+                            </tr>
+                            <t t-set="index" t-value="index + 1" />
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+
+</odoo>

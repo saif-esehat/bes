@@ -1025,7 +1025,7 @@ class BatchesRegisterExamWizard(models.TransientModel):
         for candidate in candidates:
             
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id})
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'hold_admit_card':True,'registered_institute':batch.institute_id.id})
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': batch.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             
@@ -1080,7 +1080,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         for candidate in candidates:
             exam_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
             
-            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id })
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id ,'hold_admit_card':True , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id })
             print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': batch.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})

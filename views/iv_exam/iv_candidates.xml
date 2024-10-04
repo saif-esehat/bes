@@ -42,6 +42,8 @@
                             <field name="dob" placeholder="DD/MM/YY"/>
                             <field name="email" placeholder="Enter email address"/>
                             <field name="candidate_type" />
+                            <field name="candidate_eligible" />
+
 
                             <!-- <field name="first_day_signature" />
                             <field name="second_day_signature" /> -->
@@ -54,6 +56,7 @@
                             <field name="remark" />
                             <field name="examination_date" />
                             <field name="certificate_valid_date" />
+
                         </group>
                       
                           

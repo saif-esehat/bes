@@ -221,10 +221,10 @@ class SurveyUserInputInherited(models.Model):
                 record.indos = record.gp_candidate.indos_no
     
 
-    @api.depends('user_input_line_ids')
+    @api.depends('user_input_line_ids','state')
     def _compute_total_time(self):
         for record in self:
-            if record.user_input_line_ids:
+            if record.state == 'done' and record.user_input_line_ids:
                 # print(record.user_input_line_ids,"gellllllllllloooooooooooooooooooooooo")
                 start_time = record.user_input_line_ids[0].create_date
                 end_time = record.user_input_line_ids[-1].create_date
@@ -243,32 +243,29 @@ class SurveyUserInputInherited(models.Model):
                 record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
             else:
                 record.total_time = "00:00:00"
+                record.start_time = "00:00:00"
+                record.end_time = "00:00:00"
 
-    # def calculate_time(self):
-    #     for record in self:
-    #         print("Processing record:", record)
-    #         if record.user_input_line_ids:
-    #             # import wdb;wdb.set_trace()
-    #             start_time = record.user_input_line_ids[0].create_date
-    #             end_time = record.user_input_line_ids[-1].create_date
-    #             total_time = end_time - start_time
+    def calculate_time(self):
+        for record in self:
+            if record.user_input_line_ids:
+                # import wdb;wdb.set_trace()
+                start_time = record.user_input_line_ids[0].create_date
+                end_time = record.user_input_line_ids[-1].create_date
+                total_time = end_time - start_time
                 
-    #             # Logging the calculated times
-    #             print(f"Start Time: {start_time}, End Time: {end_time}, Total Time: {total_time}")
-                
-    #             record.start_time = start_time.strftime('%H:%M:%S')
-    #             record.end_time = end_time.strftime('%H:%M:%S')
+                record.start_time = start_time.strftime('%H:%M:%S')
+                record.end_time = end_time.strftime('%H:%M:%S')
 
-    #             # Convert the total_time (timedelta) to hours, minutes, and seconds
-    #             total_seconds = int(total_time.total_seconds())
-    #             hours, remainder = divmod(total_seconds, 3600)
-    #             minutes, seconds = divmod(remainder, 60)
+                # Convert the total_time (timedelta) to hours, minutes, and seconds
+                total_seconds = int(total_time.total_seconds())
+                hours, remainder = divmod(total_seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
                 
-    #             # Format total_time as HH:MM:SS
-    #             record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
-    #         else:
-    #             record.total_time = "00:00:00"
-    #             print("No user input lines, setting total time to 00:00:00")
+                # Format total_time as HH:MM:SS
+                record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+            else:
+                record.total_time = "00:00:00"
 
 
     # @api.onchange('institute_id')

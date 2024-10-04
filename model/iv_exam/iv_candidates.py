@@ -52,8 +52,13 @@ class IVCandidates(models.Model):
     candidate_type = fields.Selection([
         ('fresher', 'Fresher'),
         ('repeater', 'Repeater'),  
-        ], string='Candidate Type', default='fresher')
-
+        ], string='Application Type', default='fresher')
+    
+    candidate_eligible = fields.Selection([
+        ('eligible', 'Eligible'),
+        ('updated_eligible', 'Updated Eligible'),
+        ], string='Candidate Eligible', default='eligible')
+    
     candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
 
     def create_attendance_record(self):
@@ -100,6 +105,8 @@ class IVCandidates(models.Model):
         for record in self:
             if record.candidate_applications.application_id[-1].application_type == 'repeater':
                 record.candidate_type = 'repeater'
+            
+
    
 
                    
