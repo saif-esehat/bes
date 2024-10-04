@@ -56,6 +56,7 @@
         'reports/summarised_report.xml',
         'views/sep_batches.xml',
         'views/sep_candidate.xml',
+        'views/expense_report.xml',
         'reports/sep_candidate_certificate.xml',
         'views/iv_exam/iv_batches.xml',
         'views/iv_exam/iv_candidates.xml',

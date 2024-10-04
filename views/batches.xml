@@ -487,6 +487,8 @@
                             </button>
                             <button name="open_reports" string="Reports" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
+                            <button name="open_expense_sheet" string="Expense Sheet" type="object" class="oe_stat_button" icon="fa-align-justify" >
+                            </button>
                         </div>
                         <group>
                             <field name="batch_name"/>
