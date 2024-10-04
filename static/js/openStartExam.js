@@ -5,7 +5,7 @@ odoo.define('bes.OpenStartExam', function (require) {
     var ajax = require('web.ajax');
 
 
-    publicWidget.registry.OpenStartExam = publicWidget.Widget.extend(
+    publicWidget.registry.OpenStartGPExam = publicWidget.Widget.extend(
         {
             selector: ".start_gp_exam",
             events: {
@@ -69,6 +69,23 @@ odoo.define('bes.OpenStartExam', function (require) {
 
                         console.error('Error fetching IP:', error);
                     });
+
+
+            }
+        }
+    );
+
+    publicWidget.registry.OpenStartCCMCExam = publicWidget.Widget.extend(
+        {
+            selector: ".start_ccmc_exam",
+            events: {
+                'click': "start_ccmc_exam"
+            },
+
+            start_ccmc_exam: function (e) {
+                // e.preventDefault();
+                // e.stopPropagation(); 
+               debugger
 
 
             }
