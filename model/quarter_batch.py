@@ -259,7 +259,20 @@ class DGSBatch(models.Model):
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
         'context': {}
-        }       
+        }
+
+    def open_expense_sheet(self):
+        
+        return {
+        'name': 'Expense Reports',
+        'domain': [('batch', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'examiner.expense.report',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {}
+        }        
     
     def generate_report(self):
         self.get_pass_percentage()
