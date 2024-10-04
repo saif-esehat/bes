@@ -17,6 +17,8 @@ class InstituteGPBatches(models.Model):
     
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+
+    candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
     
     
     
@@ -454,6 +456,33 @@ class InstituteGPBatches(models.Model):
             }
         } 
 
+    def open_gp_ship_visit(self):
+        """
+        This method opens the GP Ship Visit form, filtered by selected candidates.
+        """
+        domain = []
+        default_candidate_ids = []
+
+        # Check if candidate_ids are available for filtering
+        if self.candidate_ids:
+            domain = [('candidate_ids', 'in', self.candidate_ids.ids)]
+            default_candidate_ids = [(6, 0, self.candidate_ids.ids)]
+        
+        # Return the action to open the tree and form views
+        return {
+            'name': _('GP Ship Visit'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'gp.batches.ship.visit',
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'domain': domain,
+            'context': {
+                'default_candidate_ids': default_candidate_ids,
+            },
+            'target': 'current',
+        }
+     
+
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.batches_gp_register_exam_wizard').id
         
@@ -621,6 +650,7 @@ class InstituteCcmcBatches(models.Model):
     admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
 
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
+    candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
 
     def _compute_all_candidates_have_indos(self):
         for record in self:
@@ -975,6 +1005,32 @@ class InstituteCcmcBatches(models.Model):
             'default_gp_or_ccmc_batch': 'ccmc'     
             }
         } 
+
+    def open_ccmc_ship_visit(self):
+        """
+        This method opens the CCMC Ship Visit form, filtered by selected candidates.
+        """
+        domain = []
+        default_candidate_ids = []
+
+        # Check if candidate_ids are available for filtering
+        if self.candidate_ids:
+            domain = [('candidate_ids', 'in', self.candidate_ids.ids)]
+            default_candidate_ids = [(6, 0, self.candidate_ids.ids)]
+        
+        # Return the action to open the tree and form views
+        return {
+            'name': _('CCMC Ship Visit'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ccmc.batches.ship.visit',
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'domain': domain,
+            'context': {
+                'default_candidate_ids': default_candidate_ids,
+            },
+            'target': 'current',
+        }
 
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.batches_ccmc_register_exam_wizard').id

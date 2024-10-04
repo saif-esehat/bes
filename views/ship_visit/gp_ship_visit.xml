@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_gp1_batches_ship_visit_form" model="ir.ui.view">
+        <field name="name">gp.batches.ship.visit.form</field>
+        <field name="model">gp.batches.ship.visit</field>
+        <field name="arch" type="xml">
+            <form string="GP SHIP VISIT">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ship_name1"/>
+                            <field name="port_name"/>
+                            <field name="imo_no"/>
+                        </group>
+                        <group>
+                            <field name="date_of_visit"/>
+                            <field name="time_spent"/>
+                        </group>
+                         <group>
+                        <field name="course_gp"/>
+                        <field name="no_of_candidate"/>
+                    </group>
+                    </group>
+
+                    <group>
+                        <field name="candidate_ids" widget="many2many_tags"/>
+                    </group>
+
+                       <notebook>
+                          <page string="Image">
+                            <!-- Image Field -->
+                            <group>
+                                <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
+                            </group>
+                        </page>
+
+                        
+
+                </notebook>
+                </sheet>
+             
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for GP Ship Visit -->
+    <record id="view_gp1_batches_ship_visit_tree" model="ir.ui.view">
+        <field name="name">gp.batches.ship.visit.tree</field>
+        <field name="model">gp.batches.ship.visit</field>
+        <field name="arch" type="xml">
+            <tree string="GP SHIP VISIT">
+                <field name="ship_name1"/>
+                <field name="port_name"/>
+                <field name="imo_no"/>
+                <field name="date_of_visit"/>
+                <field name="time_spent"/>
+                <field name="no_of_candidate"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for GP Ship Visit -->
+    <record id="action_gp1_batches_ship_visit1" model="ir.actions.act_window">
+        <field name="name">GP SHIP VISIT</field>
+        <field name="res_model">gp.batches.ship.visit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first GP Ship Visit
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu for GP Ship Visit -->
+    <!-- <menuitem id="ship_visit_menu1"
+            parent="bes_menu"
+            name="Ship Visits 2" />
+
+        <menuitem id="gp_ship_visit_menu1"
+            parent="ship_visit_menu1"
+            name="GP Ship Visits"
+            action="action_gp_batches_ship_visit1" /> -->
+
+    </data>
+
+</odoo>
