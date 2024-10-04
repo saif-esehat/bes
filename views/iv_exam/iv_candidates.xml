@@ -80,7 +80,7 @@
             <tree>
             <header>
                 <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
-                <button name="assign_status" string="Assign Status" type="object" class="btn-primary"/>
+                <!-- <button name="assign_status" string="Assign Status" type="object" class="btn-primary"/> -->
                 
             </header>                
                 <field name="certificate_no" />
