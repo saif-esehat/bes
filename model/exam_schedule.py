@@ -2587,8 +2587,14 @@ class ResetOnlineExamWizard(models.TransientModel):
                 
                 gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
+                                           'gp_exam':gp_exam.id,
+                                           'institute_id': gp_exam.gp_candidate.institute_id.id,
                                             "dgs_batch":gp_exam.dgs_batch.id,
-                                            "ip_address":gp_exam.ip_address})
+                                            "ip_address":gp_exam.ip_address,
+                                            'token_regenrated': True,
+                                            'is_gp': True,
+                                            'is_ccmc': False
+                                            })
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
                     "gsk_online_token_used": False,
@@ -2604,8 +2610,13 @@ class ResetOnlineExamWizard(models.TransientModel):
                 mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
+                                           'gp_exam':gp_exam.id,
+                                            'institute_id': gp_exam.gp_candidate.institute_id.id,
                                             "dgs_batch":gp_exam.dgs_batch.id,
-                                            "ip_address":gp_exam.ip_address})
+                                            "ip_address":gp_exam.ip_address,
+                                            'token_regenrated': True,
+                                            'is_gp': True,
+                                            'is_ccmc': False})
 
                 gp_exam.write({
                     "mek_online": mek_survey_qb_input,
@@ -2626,8 +2637,13 @@ class ResetOnlineExamWizard(models.TransientModel):
                 ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
                 ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
-                                        "dgs_batch":ccmc_exam.dgs_batch.id,
-                                        "ip_address":ccmc_exam.ip_address})
+                                     'ccmc_exam':ccmc_exam.id,
+                                    'institute_id': ccmc_exam.ccmc_candidate.institute_id.id,
+                                    "dgs_batch":ccmc_exam.dgs_batch.id,
+                                    "ip_address":ccmc_exam.ip_address,
+                                    'token_regenrated': True,
+                                    'is_gp': False,
+                                    'is_ccmc': True})
 
                 ccmc_exam.write({
                     "ccmc_online": ccmc_qb_input,

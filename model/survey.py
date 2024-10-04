@@ -164,15 +164,55 @@ class SurveyUserInputInherited(models.Model):
 
     indos = fields.Char(string="Indos No", compute="compute_details", store=True)
 
-    start_time = fields.Datetime(string="Start Time", readonly=True)
-    end_time = fields.Datetime(string="End Time", readonly=True)    
+    start_time = fields.Char(string="Start Time", readonly=True, compute="_compute_total_time", store=True)
+    end_time = fields.Char(string="End Time", readonly=True, compute="_compute_total_time", store=True)    
     total_time = fields.Char(string="Total Time", compute="_compute_total_time", store=True)
     ip_address = fields.Char(string="IP Address")
+
+    correct_answers = fields.Integer(string="Correct Answers", compute="_compute_correct_answers", store=True)
+    wrong_answers = fields.Integer(string="Wrong Answers", compute="_compute_wrong_answers", store=True)
+    skipped_questions = fields.Integer(string="Unanswered Questions", compute="_compute_skipped_questions", store=True)
+    result_status = fields.Selection([
+        ('', ''),
+        ('passed', 'Passed'),
+        ('failed', 'Failed')
+    ], string='Result', compute="_compute_result_status", store=True)
 
     user_input_line_ids = fields.One2many(
         'survey.user_input.line', 'user_input_id', string='Answers', copy=True
     )
 
+    token_regenrated = fields.Boolean("Token Regenerated", default=False)
+
+
+    @api.depends('user_input_line_ids')
+    def _compute_correct_answers(self):
+        for record in self:
+            record.correct_answers = len(record.user_input_line_ids.filtered(lambda line: line.answer_is_correct))
+
+    @api.depends('user_input_line_ids')
+    def _compute_wrong_answers(self):
+        for record in self:
+            record.wrong_answers = len(record.user_input_line_ids.filtered(lambda line: not line.answer_is_correct))
+
+    @api.depends('user_input_line_ids')
+    def _compute_skipped_questions(self):
+        for record in self:
+            record.skipped_questions = len(record.user_input_line_ids.filtered(lambda line: line.skipped))
+
+    @api.depends('scoring_success','state')
+    def _compute_result_status(self):
+        for record in self:
+            if record.state == 'done':
+                if record.scoring_success:
+                    record.result_status = 'passed'
+                else:
+                    record.result_status = 'failed'
+            else:
+                record.result_status = ''
+
+
+    @api.depends('gp_candidate', 'ccmc_candidate')
     def compute_details(self):
         for record in self:
             if record.is_ccmc:
@@ -181,41 +221,55 @@ class SurveyUserInputInherited(models.Model):
                 record.indos = record.gp_candidate.indos_no
     
 
-    @api.depends('user_input_line_ids.create_date')
+    @api.depends('user_input_line_ids')
     def _compute_total_time(self):
         for record in self:
-            record.total_time = "00:00:00"
-            # if record.user_input_line_ids:
-            #     # Sort user_input_line_ids by create_date
-            #     sorted_lines = record.user_input_line_ids.sorted(key=lambda line: line.create_date)
-            #     first_date = sorted_lines[0].create_date
-            #     last_date = sorted_lines[-1].create_date
-            #     if first_date and last_date:
-            #         # Extract time from datetime (HH:MM:SS)
-            #         first_time = first_date.time()
-            #         last_time = last_date.time()
-            #         # Convert times to datetime objects for easy subtraction
-            #         FMT = "%H:%M:%S"
-            #         first_time_str = first_time.strftime(FMT)
-            #         last_time_str = last_time.strftime(FMT)
-            #         time_diff = datetime.strptime(last_time_str, FMT) - datetime.strptime(first_time_str, FMT)
-                    
-            #         # Calculate total seconds difference
-            #         total_seconds = time_diff.total_seconds()
-            #         hours, remainder = divmod(total_seconds, 3600)
-            #         minutes, seconds = divmod(remainder, 60)
-            #         # Format the time difference as HH:MM:SS
-            #         record.total_time = f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
-            #         record.start_time = first_time_str
-            #         record.end_time = last_time_str
-            #     else:
-            #         record.total_time = "00:00:00"
-            #         record.start_time = False
-            #         record.end_time = False
-            # else:
-            #     record.total_time = "00:00:00"
-            #     record.start_time = False
-            #     record.end_time = False
+            if record.user_input_line_ids:
+                # print(record.user_input_line_ids,"gellllllllllloooooooooooooooooooooooo")
+                start_time = record.user_input_line_ids[0].create_date
+                end_time = record.user_input_line_ids[-1].create_date
+
+                total_time = end_time - start_time
+                # Format the times as hours:minutes:seconds
+                record.start_time = start_time.strftime('%H:%M:%S')
+                record.end_time = end_time.strftime('%H:%M:%S')
+                
+                # Convert the total_time (timedelta) to hours, minutes, and seconds
+                total_seconds = int(total_time.total_seconds())
+                hours, remainder = divmod(total_seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                
+                # Format total_time as HH:MM:SS
+                record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+            else:
+                record.total_time = "00:00:00"
+
+    # def calculate_time(self):
+    #     for record in self:
+    #         print("Processing record:", record)
+    #         if record.user_input_line_ids:
+    #             # import wdb;wdb.set_trace()
+    #             start_time = record.user_input_line_ids[0].create_date
+    #             end_time = record.user_input_line_ids[-1].create_date
+    #             total_time = end_time - start_time
+                
+    #             # Logging the calculated times
+    #             print(f"Start Time: {start_time}, End Time: {end_time}, Total Time: {total_time}")
+                
+    #             record.start_time = start_time.strftime('%H:%M:%S')
+    #             record.end_time = end_time.strftime('%H:%M:%S')
+
+    #             # Convert the total_time (timedelta) to hours, minutes, and seconds
+    #             total_seconds = int(total_time.total_seconds())
+    #             hours, remainder = divmod(total_seconds, 3600)
+    #             minutes, seconds = divmod(remainder, 60)
+                
+    #             # Format total_time as HH:MM:SS
+    #             record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+    #         else:
+    #             record.total_time = "00:00:00"
+    #             print("No user input lines, setting total time to 00:00:00")
+
 
     # @api.onchange('institute_id')
     # def _onchange_institute_id(self):
