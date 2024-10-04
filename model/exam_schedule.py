@@ -4811,7 +4811,7 @@ class CCMCExam(models.Model):
                     ccmc_oral_marks = self.cookery_oral
                     self.cookery_oral = ccmc_oral_marks
                     self.cookery_practical = cookery_bakery_marks
-                    cookery_gsk_online = self.ccmc_online.scoring_total
+                    cookery_gsk_online = self.cookery_gsk_online
                     self.cookery_gsk_online = cookery_gsk_online
                     self.overall_marks = ccmc_oral_marks + cookery_bakery_marks + cookery_gsk_online
                     

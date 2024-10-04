@@ -137,7 +137,7 @@
                 <div class="row">
                     <div class="col-12" style="text-align:center;">
                         <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2a</span>
-                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> 72nd All India Exit Examination Result for</h2>
+                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> <span t-esc="exam_sequence"/> All India Exit Examination Result for</h2>
                         <h1 style="font-family: 'TimesNewRomanBold'; font-weight: 900;">
                             GP RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/>
                         </h1>
@@ -339,7 +339,7 @@
                 <div class="row">
                     <div class="col-12" style="text-align:center;">
                         <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2a</span>
-                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> 72nd All India Exit Examination Result for</h2>
+                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> <span t-esc="exam_sequence"/> - All India Exit Examination Result for</h2>
                         <h1 style="font-family: 'TimesNewRomanBold'; font-weight: 900;">
                             GP RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/>
                         </h1>
