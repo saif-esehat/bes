@@ -97,6 +97,7 @@
                 'web.assets_backend': [
                         'bes/static/src/js/gp_exam_tree_button.js',
                         'bes/static/src/css/customs_color.css',
+                        'bes/static/src/js/lost_connection_handler_override.js',
                 ],
                 
 	},

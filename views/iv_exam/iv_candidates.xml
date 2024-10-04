@@ -41,6 +41,8 @@
                             <field name="grade_applied" />
                             <field name="dob" placeholder="DD/MM/YY"/>
                             <field name="email" placeholder="Enter email address"/>
+                            <field name="candidate_type" />
+
                             <!-- <field name="first_day_signature" />
                             <field name="second_day_signature" /> -->
                         </group>
@@ -76,6 +78,7 @@
             <header>
                 <button name="action_print_bulk_allotment" type="object" string="Admit Card Print" class="btn-primary"/>
                 <button name="create_attendance_record" string="Create Attendance" type="object" class="btn-primary"/>
+                <!-- <button name="assign_status" string="Assign Status" type="object" class="btn-primary"/> -->
                 
             </header>                
                 <field name="certificate_no" />

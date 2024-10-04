@@ -22,13 +22,13 @@
                     <group>
                         <field name="dgs_batch" readonly="1"/>
                         <field name="batch_name" invisible='1'/>
-                        <field name="exam_batch_name"/>
+                        <field name="exam_batch_name" required="1"/>
                     </group>
                     <group style="width:50%;">
-                        <field name="from_date"/>
+                        <field name="from_date" required="1"/>
                     </group>
                     <group style="width:50%;">
-                        <field name="to_date"/>
+                        <field name="to_date" required="1"/>
                     </group>
                     
 

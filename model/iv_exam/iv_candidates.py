@@ -49,6 +49,10 @@ class IVCandidates(models.Model):
     remark = fields.Text(string="Remark")
     examination_date = fields.Date(string="Examination Date")
     certificate_valid_date = fields.Date(string="Certificate Valid Date")
+    candidate_type = fields.Selection([
+        ('fresher', 'Fresher'),
+        ('repeater', 'Repeater'),  
+        ], string='Candidate Type', default='fresher')
 
     candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
 
@@ -92,7 +96,10 @@ class IVCandidates(models.Model):
                         'dob': candidate.dob,
                         'indos_no': candidate.indos_no,
                     })
-
+    def assign_status(self):
+        for record in self:
+            if record.candidate_applications.application_id[-1].application_type == 'repeater':
+                record.candidate_type = 'repeater'
    
 
                    

@@ -2580,13 +2580,15 @@ class ResetOnlineExamWizard(models.TransientModel):
                     
                     
                 gp_exam.gsk_online.unlink()
-                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION SEP-2024')])
+                gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
                 
                 gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
-                gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id, "dgs_batch":gp_exam.dgs_batch.id})
+                gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
+                                            "dgs_batch":gp_exam.dgs_batch.id,
+                                            "ip_address":gp_exam.ip_address})
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
                     "gsk_online_token_used": False,
@@ -2599,14 +2601,17 @@ class ResetOnlineExamWizard(models.TransientModel):
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
                 gp_exam.mek_online.unlink()
-                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION SEP-2024')])
+                mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
-                mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,"dgs_batch":gp_exam.dgs_batch.id})
+                mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
+                                            "dgs_batch":gp_exam.dgs_batch.id,
+                                            "ip_address":gp_exam.ip_address})
 
                 gp_exam.write({
                     "mek_online": mek_survey_qb_input,
                     "mek_online_token_used": False,
-                    "attempted_mek_online": False
+                    "attempted_mek_online": False,
+                    "ip_address":gp_exam.ip_address
                 })
                 
 
@@ -2618,14 +2623,17 @@ class ResetOnlineExamWizard(models.TransientModel):
                     raise ValidationError("Candidate is Not Appearing for CCMC online")
                 
                 ccmc_exam.ccmc_online.unlink()
-                ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION SEP-2024')])
+                ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
-                ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,"dgs_batch":ccmc_exam.dgs_batch.id})
+                ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
+                                        "dgs_batch":ccmc_exam.dgs_batch.id,
+                                        "ip_address":ccmc_exam.ip_address})
 
                 ccmc_exam.write({
                     "ccmc_online": ccmc_qb_input,
                     "ccmc_online_token_used": False,
-                    "attempted_ccmc_online": False
+                    "attempted_ccmc_online": False,
+                    "ip_address":ccmc_exam.ip_address
                 })
                 
 
@@ -4693,19 +4701,38 @@ class CCMCExam(models.Model):
             self.ccmc_oral._compute_ccmc_rating_total()
             self.ccmc_gsk_oral._compute_ccmc_rating_total()
             
-            if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
-                
-                if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
-                    
-                    if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
-                        cookery_bakery_marks = self.cookery_bakery.total_mrks
-                        ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
+            # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
+            if not (len(self.cookery_bakery)==0) or not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
 
-                        self.cookery_oral = ccmc_oral_marks
+                
+                # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
+                    
+                if not (len(self.cookery_bakery)==0):
+                    if cookery_draft_confirm:
+                        cookery_bakery_marks = self.cookery_bakery.total_mrks
                         self.cookery_practical = cookery_bakery_marks
                     else:
-                        error_msg = _("CCMC Oral Or Practical Not Confirmed for'%s'") % (self.ccmc_candidate.name)
+                        error_msg = _("Cookery/Bakery Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                         raise ValidationError(error_msg)
+                    
+                if not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0):
+                    if ccmc_oral_state:
+                        ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
+                        self.cookery_oral = ccmc_oral_marks
+                    else:
+                        error_msg = _("CCMC Oral  Not Confirmed for'%s'") % (self.ccmc_candidate.name)
+                        raise ValidationError(error_msg)
+
+                    
+                    # if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
+                    #     cookery_bakery_marks = self.cookery_bakery.total_mrks
+                    #     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
+
+                    #     self.cookery_oral = ccmc_oral_marks
+                    #     self.cookery_practical = cookery_bakery_marks
+                    # else:
+                    #     error_msg = _("CCMC Oral Or Practical Not Confirmed for'%s'") % (self.ccmc_candidate.name)
+                    #     raise ValidationError(error_msg)
                     
                 if not (len(self.ccmc_online)==0):
                     if ccmc_online_state:
@@ -4760,12 +4787,13 @@ class CCMCExam(models.Model):
             else:
             
                 # import wdb; wdb.set_trace(); 
-                if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state and ccmc_online_state:
+                # if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state and ccmc_online_state:
+                if True:
                     
                     # All CCMC Marks
-                    cookery_bakery_marks = self.cookery_bakery.total_mrks
-                    ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
-                    self.ccmc_oral_total = ccmc_oral_marks
+                    cookery_bakery_marks = self.cookery_practical
+                    ccmc_oral_marks = self.cookery_oral
+                    self.cookery_oral = ccmc_oral_marks
                     self.cookery_practical = cookery_bakery_marks
                     cookery_gsk_online = self.ccmc_online.scoring_total
                     self.cookery_gsk_online = cookery_gsk_online
@@ -4828,23 +4856,45 @@ class CCMCExam(models.Model):
             self.ccmc_oral._compute_ccmc_rating_total()
             self.ccmc_gsk_oral._compute_ccmc_rating_total()
             
-            if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
-                
-                if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
-                    
-                    if cookery_draft_confirm and ccmc_oral_state: ## THis is CHange for repeater case
-                    #  if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
+            # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
+            if not (len(self.cookery_bakery)==0) or not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
+
+                            
+                if not (len(self.cookery_bakery)==0):
+                    if cookery_draft_confirm:
                         cookery_bakery_marks = self.cookery_bakery.total_mrks
-                        ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
-                        ccmc_oral_gsk_marks = self.ccmc_gsk_oral.toal_ccmc_oral_rating
-                        
-                        self.cookery_oral = ccmc_oral_marks
                         self.cookery_practical = cookery_bakery_marks
-                        self.ccmc_gsk_oral_marks = ccmc_oral_gsk_marks
-                        
                     else:
-                        error_msg = _("CCMC Oral Or Practical Not Confirmed for Roll No: '%s'") % (self.exam_id)
+                        error_msg = _("Cookery/Bakery Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                         raise ValidationError(error_msg)
+                    
+                if not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0):
+                    if ccmc_oral_state:
+                        ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
+                        self.cookery_oral = ccmc_oral_marks
+                    else:
+                        error_msg = _("CCMC Oral  Not Confirmed for'%s'") % (self.ccmc_candidate.name)
+                        raise ValidationError(error_msg)
+                
+                # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
+                    
+                    
+                    
+                    
+                    
+                    # if cookery_draft_confirm and ccmc_oral_state: ## THis is CHange for repeater case
+                    # #  if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
+                    #     cookery_bakery_marks = self.cookery_bakery.total_mrks
+                    #     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+                    #     ccmc_oral_gsk_marks = self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                        
+                    #     self.cookery_oral = ccmc_oral_marks
+                    #     self.cookery_practical = cookery_bakery_marks
+                    #     self.ccmc_gsk_oral_marks = ccmc_oral_gsk_marks
+                        
+                    # else:
+                    #     error_msg = _("CCMC Oral Or Practical Not Confirmed for Roll No: '%s'") % (self.exam_id)
+                    #     raise ValidationError(error_msg)
                     
                 if not (len(self.ccmc_online)==0):
                     if ccmc_online_state:
