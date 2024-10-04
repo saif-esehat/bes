@@ -57,7 +57,7 @@
                 <div class="col-12 " style="font-family: 'TimesNewRomanBold';">
                     <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';"><t t-if="course == 'GP'">ENCL.2a</t><t t-if="course == 'CCMC'">ENCL.2b</t></span>
                     <span style="display:block; text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
-                        65th All India Exit Examination Result for
+                        <span t-esc="exam_sequence"/> All India Exit Examination Result for
                         <br></br>
                         <t t-if="course == 'GP'">
                             <strong style="font-family: 'Times New Roman', Times, serif; font-weight:900; text-align:center;">

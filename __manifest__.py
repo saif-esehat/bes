@@ -73,6 +73,7 @@
         'reports/iv_candidate/iv_candidate_issuance_admitcard.xml',
         'reports/iv_exam_report/iv_written_exam_a.xml',
         'reports/iv_exam_report/iv_oral_exam_result.xml',
+        'reports/candidates_exam_report.xml',
  
        
         # 'views/sep_batches.xml',
