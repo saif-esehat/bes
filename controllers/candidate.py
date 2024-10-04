@@ -263,12 +263,14 @@ class GPCandidatePortal(CustomerPortal):
         return json.dumps({"error":"Invalid IP Address"})
             
 
-    @http.route(['/my/ccmcexam/startexam'],type="http",auth="user",website=True)
+    @http.route(['/my/ccmcexam/startexam'],type="json",auth="user",website=True)
     def VerifyTokenCcmc(self,**kw):
         partner_id = request.env.user.partner_id.id
         
-        survey_input_id = kw.get("survey_input_id")
-        examiner_token = kw.get("examiner_token")
+        survey_input_id = request.jsonrequest["survey_input_id"]
+        examiner_token = request.jsonrequest["examiner_token"]
+        online_subject = request.jsonrequest["online_subject"]
+        ip = request.jsonrequest["ip"]
         
         registered_exam = request.env["survey.user_input"].sudo().search([('id','=',survey_input_id)])
      
@@ -280,27 +282,35 @@ class GPCandidatePortal(CustomerPortal):
         print("ccmc_exam.token")
         print(ccmc_exam.token)
         survey_examiner_token = ccmc_exam.token
+        # import wdb; wdb.set_trace()
+        if ip == ccmc_exam.ip_address:
         
-        
-        if survey_examiner_token == examiner_token:
-            if ccmc_exam.ccmc_online_token_used:
+            if survey_examiner_token == examiner_token:
+                if ccmc_exam.ccmc_online_token_used:
+                    registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+                    # import wdb; wdb.set_trace(); 
+                    vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                
+                    # return request.render("bes.ccmc_exam_list_view", vals)
+                    return json.dumps({"error":"Token Already Used"})
+                
+                else:
+                    ccmc_exam.write({'ccmc_online_token_used':True})
+                    exam_url = registered_exam.survey_id.survey_start_url
+                    identification_token = registered_exam.access_token
+                    url = exam_url+"?answer_token="+identification_token
+                    return json.dumps({"success":url})
+                    # return request.redirect(exam_url+"?answer_token="+identification_token)
+            else:
+                
                 registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
                 # import wdb; wdb.set_trace(); 
-                vals = {"registered_exams":registered_exams, "error":"Token Already Used"}                
-                return request.render("bes.ccmc_exam_list_view", vals)
-            
-            else:
-                ccmc_exam.write({'ccmc_online_token_used':True})
-                exam_url = registered_exam.survey_id.survey_start_url
-                identification_token = registered_exam.access_token
-                return request.redirect(exam_url+"?answer_token="+identification_token)
-        else:
-            
-            registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
-            # import wdb; wdb.set_trace(); 
-            vals = {"registered_exams":registered_exams, "error":"Invalid Examiner Token"}
-            
-            return request.render("bes.ccmc_exam_list_view", vals)
+                vals = {"registered_exams":registered_exams, "error":"Invalid Examiner Token"}
+                
+                # return request.render("bes.ccmc_exam_list_view", vals)
+                return json.dumps({"error":"Token Already Used"})
+        
+        else :
+            return json.dumps({"error":"Invalid IP Address"})
             
 
     @http.route(['/my/gpexam/list/download_admit_card/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)

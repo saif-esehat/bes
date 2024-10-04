@@ -31,7 +31,3 @@ from .iv_exam import iv_oral_attendance_sheet
 from .iv_exam import written_examination
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e4daf6a542725b5053eda2f0e870375067d36d88

@@ -26,5 +26,6 @@ class CourseMaster(models.Model):
     
     course_id = fields.Many2one("course.master","Course ID",tracking=True)
     name = fields.Char("Course Subject",tracking=True)
+    qb_online = fields.Many2one("survey.survey","Online QB",tracking=True)
     
     

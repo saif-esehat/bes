@@ -214,7 +214,8 @@ class CustomPaymentRegister(models.TransientModel):
                         applied.append(line.product_id.default_code)
 
                     if line.product_id.default_code == 'gsk_online_repeater':
-                        gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_Final')])
+                        # gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK_Final')])
+                        gsk_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','GSK')]).qb_online
                         gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
                         token = gsk_survey_qb_input.generate_unique_string()
                         gsk_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id , 'dgs_batch':dgs_exam})
@@ -226,7 +227,9 @@ class CustomPaymentRegister(models.TransientModel):
                         applied.append(line.product_id.default_code)
                     
                     if line.product_id.default_code == 'mek_online_repeater':
-                        mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_Final')])
+                        # mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK_Final')])
+                        mek_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
+
                         mek_survey_qb_input = mek_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
                         token = mek_survey_qb_input.generate_unique_string()
                         mek_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id ,'dgs_batch':dgs_exam  })
@@ -361,7 +364,8 @@ class CustomPaymentRegister(models.TransientModel):
                 applied = []
                 for line in invoice.invoice_line_ids:
                     if line.product_id.default_code == 'ccmc_online_repeater':
-                        cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
+                        # cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
+                        cookery_bakery_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                         cookery_bakery_qb_input = cookery_bakery_qb_input._create_answer(user=invoice.ccmc_candidate.user_id)
                         cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id})
                         ccmc_online_status = 'pending'
