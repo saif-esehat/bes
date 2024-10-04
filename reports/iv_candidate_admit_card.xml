@@ -64,7 +64,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
-                            Grade Applied for: <strong><span t-field="o.grade_applied" /></strong>
+                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
                         </td>
                     </tr>
                   <tr>
@@ -104,8 +104,8 @@
                                     </strong>
                                 </div>
                             
-                                <div>
-                                    <strong style="text-decoration: underline;margin-top:3px;">Date of Oral Examination:- </strong><strong>
+                                <div style="margin-top:12px;">
+                                    <strong style="text-decoration: underline;">Date of Oral Examination:- </strong><strong>
                                         As per notice will be upload on BES website
                                     </strong>
                                 </div>
@@ -118,8 +118,8 @@
                                     </strong>
                                 </div>
                             
-                                <div>
-                                    <strong style="text-decoration: underline;color:#fff;margin-top:3px;">Date of Oral Examination:- </strong><strong style="text-decoration: underline;color:#fff;">
+                                <div style="margin-top:12px;">
+                                    <strong style="text-decoration: underline;color:#fff;">Date of Oral Examination:- </strong><strong style="text-decoration: underline;color:#fff;">
                                         As per notice will be upload on BES website
                                     </strong>
                                 </div>
@@ -132,8 +132,8 @@
                                         As per notice will be upload on BES website
                                     </strong>
                                 </div>
-                                <div>
-                                    <strong style="text-decoration: underline;color:#fff;margin-top:3px;">Date of Written Examination:- </strong><strong style="text-decoration: underline;color:#fff;">
+                                <div style="margin-top:12px;">
+                                    <strong style="text-decoration: underline;color:#fff;">Date of Written Examination:- </strong><strong style="text-decoration: underline;color:#fff;">
                                         <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
                                     </strong>
                                 </div>

@@ -340,6 +340,7 @@ class CandidatesApplication(models.Model):
             '1ED': [],
             '2ED': []
         }
+        # import wdb; wdb.set_trace(); 
 
         # Group candidates by their grade
         for candidate in self:
@@ -351,17 +352,12 @@ class CandidatesApplication(models.Model):
         for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
-                # Check if roll_no already exists
-                if not candidate.roll_no:
-                    roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
-                    candidate.sudo().write({'roll_no': roll_no})
-                    count += 1
-                else:
-                    roll_no = candidate.roll_no
-
+                roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
+                candidate.sudo().write({'roll_no': roll_no})
+                
                 # Check if the candidate with the same indos_no already exists
                 existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
-
+                
                 if existing_record:
                     # Update the existing record
                     existing_record.sudo().write({
@@ -372,9 +368,8 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
-                        'photo': candidate.candidate_image,
-                        'candidate_signature': candidate.candidate_signature,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+
                     })
                 else:
                     # Create a new record
@@ -387,10 +382,9 @@ class CandidatesApplication(models.Model):
                         'email': candidate.email,
                         'phone': candidate.mobile,
                         'grade_applied': candidate.grade,
-                        'photo': candidate.candidate_image,
-                        'candidate_signature': candidate.candidate_signature,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
                     })
+                count += 1
 
         return
     

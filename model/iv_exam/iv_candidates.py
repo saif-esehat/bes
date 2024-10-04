@@ -58,7 +58,7 @@ class IVCandidates(models.Model):
         ('eligible', 'Eligible'),
         ('updated_eligible', 'Updated Eligible'),
         ], string='Candidate Eligible', default='eligible')
-
+    
     candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
 
     def create_attendance_record(self):
@@ -101,7 +101,6 @@ class IVCandidates(models.Model):
                         'dob': candidate.dob,
                         'indos_no': candidate.indos_no,
                     })
-
     def assign_status(self):
         for record in self:
             if record.candidate_applications.application_id[-1].application_type == 'repeater':
@@ -188,9 +187,9 @@ class IVCandidates(models.Model):
             raise ValidationError("No Records Found")
     
     
-    # def action_print_bulk_allotment(self):
-    #     # Logic to handle the printing of bulk allotment data
-    #     return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
+    def action_print_bulk_allotment(self):
+        # Logic to handle the printing of bulk allotment data
+        return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
 
 

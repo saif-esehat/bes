@@ -81,7 +81,7 @@ class InstituteGPBatches(models.Model):
             candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id)])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '=', '')])
+                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
@@ -628,7 +628,7 @@ class InstituteCcmcBatches(models.Model):
             candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id)])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '=', '')])
+                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
@@ -1017,15 +1017,15 @@ class BatchesRegisterExamWizard(models.TransientModel):
         # candidates = self.env["gp.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
         candidates = self.env["gp.candidate"].sudo().browse(candidates_ids)
 
-        mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK MasterQ')])
-        gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK MasterQ')])
+        mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
+        gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
         batch = self.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         # batch =   
 
         for candidate in candidates:
             
             exam_id = self.env['ir.sequence'].next_by_code("gp.exam.sequence")
-            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id})
+            gp_exam_schedule = self.env["gp.exam.schedule"].create({'gp_candidate':candidate.id ,'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'hold_admit_card':True,'registered_institute':batch.institute_id.id})
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': batch.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             
@@ -1035,21 +1035,21 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gp_exam_schedule.write({"mek_oral":mek_oral.id,"mek_prac":mek_practical.id,"gsk_oral":gsk_oral.id,"gsk_prac":gsk_practical.id})
             
             candidate.write({'batch_exam_registered':True})
-            # mek_predefined_questions = mek_survey_qb._prepare_user_input_predefined_questions()
-            # gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
+            mek_predefined_questions = mek_survey_qb._prepare_user_input_predefined_questions()
+            gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
             
-            # mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
-            # mek_survey_qb_input.generate_token()
-            # mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
+            mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
+            mek_survey_qb_input.generate_token()
+            mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
             
-            # gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
-            # gsk_survey_qb_input.generate_token()
-            # gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
+            gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
+            gsk_survey_qb_input.generate_token()
+            gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
             
-            # mek_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
-            # gsk_survey_qb_input.write({'gp_candidate':candidate.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id})
-            # candidate.write({'batch_exam_registered':True})
-            # gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
+            mek_survey_qb_input.write({'gp_candidate':candidate.id,'gp_exam':gp_exam_schedule.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id,'is_gp':True})
+            gsk_survey_qb_input.write({'gp_candidate':candidate.id,'gp_exam':gp_exam_schedule.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id,'is_gp':True})
+            candidate.write({'batch_exam_registered':True})
+            gp_exam_schedule.write({"gsk_online":gsk_survey_qb_input.id,"mek_online":mek_survey_qb_input.id})
         
         self.batch_id.write({"state":'5-exam_scheduled',"mek_survey_qb":mek_survey_qb.id,"gsk_survey_qb":gsk_survey_qb.id})
 
@@ -1069,7 +1069,7 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         
 
         # print(candidates)
-        cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC MasterQ')])
+        cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
         batch = self.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
 
 
@@ -1080,18 +1080,18 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         for candidate in candidates:
             exam_id = self.env['ir.sequence'].next_by_code("ccmc.exam.schedule")
             
-            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id })
+            ccmc_exam_schedule = self.env["ccmc.exam.schedule"].create({'ccmc_candidate':candidate.id, 'exam_id':exam_id, 'dgs_batch': batch.dgs_batch.id ,'hold_admit_card':True , 'institute_name':batch.institute_id.id ,'registered_institute':batch.institute_id.id })
             print(ccmc_exam_schedule,"ccmccccccccccccccccccccccccccccccccccccccc")
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': batch.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             ccmc_gsk_oral = self.env["ccmc.gsk.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             ccmc_exam_schedule.write({'cookery_bakery':cookery_bakery.id ,'ccmc_gsk_oral':ccmc_gsk_oral.id, 'ccmc_oral':ccmc_oral.id})
-            # cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
+            cookery_bakery_qb_input = cookery_bakery_qb._create_answer(user=candidate.user_id)
             
-            # cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id})
+            cookery_bakery_qb_input.write({'ccmc_candidate':candidate.id,'ccmc_exam':ccmc_exam_schedule.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id,'is_ccmc':True})
 
             
-            # ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
+            ccmc_exam_schedule.write({"ccmc_online":cookery_bakery_qb_input.id})
             candidate.write({'batch_exam_registered':True})
 
             

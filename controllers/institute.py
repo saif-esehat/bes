@@ -17,6 +17,7 @@ import xlrd
 
 
 class InstitutePortal(CustomerPortal):
+    
 
     @http.route(['/my/gpbatch'], type="http", auth="user", website=True)
     def GPBatchList(self, **kw):
@@ -293,7 +294,6 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
-        # import wdb; wdb.set_trace();
         
         
         user_id = request.env.user.id
@@ -305,6 +305,7 @@ class InstitutePortal(CustomerPortal):
         
       
 
+        # import wdb; wdb.set_trace();
         
         partner_id = institute_id.user_id.partner_id.id
         product_id = batch.course.exam_fees.id
@@ -943,7 +944,7 @@ class InstitutePortal(CustomerPortal):
                 'searchbar_inputs':search_list
                 }
         # import wdb; wdb.set_trace()
-        
+        batches._compute_all_candidates_have_indos()
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
 
@@ -991,6 +992,7 @@ class InstitutePortal(CustomerPortal):
                 'searchbar_inputs':search_list
                 }
         print("Batch id4",batch_id)
+        batches._compute_all_candidates_have_indos()
         # import wdb; wdb.set_trace()
         return request.render("bes.ccmc_candidate_portal_list", vals)
 
@@ -3541,7 +3543,7 @@ class InstitutePortal(CustomerPortal):
         candidate_stcw_worksheet.set_column('C:C',35,unlocked) #insitute_name
         candidate_stcw_worksheet.set_column('D:D',15,unlocked) #mti_no
        # Set the column format for certificate_no to number
-        number_format = workbook.add_format({'num_format': '0', 'locked': False})
+        number_format = workbook.add_format({'num_format': '@', 'locked': False})
 
         # Set the column width and format for certificate_no
         candidate_stcw_worksheet.set_column('E:E', 35, number_format)  # certificate_no
@@ -3609,7 +3611,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        header = ['Sr No.','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -3637,6 +3639,67 @@ class InstitutePortal(CustomerPortal):
                                         'font_size': 15,
                                         'font_color': 'black',
                                     })
+
+        # Define a format for instructions
+        instruction_format = workbook.add_format({
+            'bold': True,
+            'align': 'left',
+            'valign': 'top',
+            'text_wrap': True,
+            'font_size': 12
+        })
+
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
+        # Header section with sample data
+        instruction_worksheet.write('A3', '1) Description')
+        instruction_worksheet.write('A4', '2) Format')
+        instruction_worksheet.write('A5', '3) Mandatory')
+
+        # Populate instruction details for the STCW table
+        # Example of INDOS NO
+        instruction_worksheet.write('B2', '23GM1234')
+        instruction_worksheet.write('B3', "This field contains the student's INDOS number, which is required for identification in the STCW system", cell_format)
+        instruction_worksheet.write('B4', "INDOS number must follow the correct format. Avoid duplicates or incorrect INDOS numbers", cell_format)
+        instruction_worksheet.write('B5', "Mandatory Field", mandatory_format)
+
+        # Example of Course Name
+        instruction_worksheet.write('C2', 'BST')
+        instruction_worksheet.write('C3', "This is the name of the STCW course completed by the candidate", cell_format)
+        instruction_worksheet.write('C4', "Ensure the course name follows the STCW standard abbreviations (e.g., BST, STSDSD)", cell_format)
+        instruction_worksheet.write('C5', 'Mandatory Field', mandatory_format)
+
+        # Example of Institute Name
+        instruction_worksheet.write('D2', 'Oceanic Maritime')
+        instruction_worksheet.write('D3', "Name of the maritime training institute where the course was completed", cell_format)
+        instruction_worksheet.write('D4', "Ensure correct and complete institute name", cell_format)
+        instruction_worksheet.write('D5', "Mandatory Field", mandatory_format)
+
+        # Example of MTI NO
+        instruction_worksheet.write('E2', '410210')
+        instruction_worksheet.write('E3', "Maritime Training Institute (MTI) number of the training center", cell_format)
+        instruction_worksheet.write('E4', "MTI number should be correctly entered", cell_format)
+        instruction_worksheet.write('E5', "Mandatory Field", mandatory_format)
+
+        # Example of Certificate Number
+        instruction_worksheet.write('F2', '20704561012400415')
+        instruction_worksheet.write('F3', "Unique certificate number issued for the course", cell_format)
+        instruction_worksheet.write('F4', "Certificate number should be correctly entered", cell_format)
+        instruction_worksheet.write('F5', "Mandatory Field", mandatory_format)
+
+        # Example of Course Start Date
+        instruction_worksheet.write('G2', '14-Apr-2002')
+        instruction_worksheet.write('G3', "Date when the course started", cell_format)
+        instruction_worksheet.write('G4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        instruction_worksheet.write('G5', "Mandatory Field", mandatory_format)
+
+        # Example of Course End Date
+        instruction_worksheet.write('H2', '14-Apr-2002')
+        instruction_worksheet.write('H3', "Date when the course ended", cell_format)
+        instruction_worksheet.write('H4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        instruction_worksheet.write('H5', "Mandatory Field", mandatory_format)
+
         instruction_worksheet.protect()
         
         workbook.close()
@@ -3747,7 +3810,7 @@ class InstitutePortal(CustomerPortal):
         candidate_stcw_worksheet.set_column('C:C',35,unlocked) #insitute_name
         candidate_stcw_worksheet.set_column('D:D',15,unlocked) #mti_no
        # Set the column format for certificate_no to number
-        number_format = workbook.add_format({'num_format': '0', 'locked': False})
+        number_format = workbook.add_format({'num_format': '@', 'locked': False})
 
         # Set the column width and format for certificate_no
         candidate_stcw_worksheet.set_column('E:E', 35, number_format)  # certificate_no
@@ -3815,7 +3878,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        header = ['Sr No.','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -3843,6 +3906,56 @@ class InstitutePortal(CustomerPortal):
                                         'font_size': 15,
                                         'font_color': 'black',
                                     })
+        cell_format = workbook.add_format()
+        cell_format.set_text_wrap()
+
+        # Header section with sample data
+        instruction_worksheet.write('A3', '1) Description')
+        instruction_worksheet.write('A4', '2) Format')
+        instruction_worksheet.write('A5', '3) Mandatory')
+
+        # Populate instruction details for the STCW table
+        # Example of INDOS NO
+        instruction_worksheet.write('B2', '23GM1234')
+        instruction_worksheet.write('B3', "This field contains the student's INDOS number, which is required for identification in the STCW system", cell_format)
+        instruction_worksheet.write('B4', "INDOS number must follow the correct format. Avoid duplicates or incorrect INDOS numbers", cell_format)
+        instruction_worksheet.write('B5', "Mandatory Field", mandatory_format)
+
+        # Example of Course Name
+        instruction_worksheet.write('C2', 'BST')
+        instruction_worksheet.write('C3', "This is the name of the STCW course completed by the candidate", cell_format)
+        instruction_worksheet.write('C4', "Ensure the course name follows the STCW standard abbreviations (e.g., BST, STSDSD)", cell_format)
+        instruction_worksheet.write('C5', 'Mandatory Field', mandatory_format)
+
+        # Example of Institute Name
+        instruction_worksheet.write('D2', 'Oceanic Maritime')
+        instruction_worksheet.write('D3', "Name of the maritime training institute where the course was completed", cell_format)
+        instruction_worksheet.write('D4', "Ensure correct and complete institute name", cell_format)
+        instruction_worksheet.write('D5', "Mandatory Field", mandatory_format)
+
+        # Example of MTI NO
+        instruction_worksheet.write('E2', '410210')
+        instruction_worksheet.write('E3', "Maritime Training Institute (MTI) number of the training center", cell_format)
+        instruction_worksheet.write('E4', "MTI number should be correctly entered", cell_format)
+        instruction_worksheet.write('E5', "Mandatory Field", mandatory_format)
+
+        # Example of Certificate Number
+        instruction_worksheet.write('F2', '20704561012400415')
+        instruction_worksheet.write('F3', "Unique certificate number issued for the course", cell_format)
+        instruction_worksheet.write('F4', "Certificate number should be correctly entered", cell_format)
+        instruction_worksheet.write('F5', "Mandatory Field", mandatory_format)
+
+        # Example of Course Start Date
+        instruction_worksheet.write('G2', '14-Apr-2002')
+        instruction_worksheet.write('G3', "Date when the course started", cell_format)
+        instruction_worksheet.write('G4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        instruction_worksheet.write('G5', "Mandatory Field", mandatory_format)
+
+        # Example of Course End Date
+        instruction_worksheet.write('H2', '14-Apr-2002')
+        instruction_worksheet.write('H3', "Date when the course ended", cell_format)
+        instruction_worksheet.write('H4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        instruction_worksheet.write('H5', "Mandatory Field", mandatory_format)
         instruction_worksheet.protect()
         
         workbook.close()
@@ -3868,11 +3981,12 @@ class InstitutePortal(CustomerPortal):
 
     @http.route(['/my/uploadccmccandidatestcwdata'], type="http", auth="user", website=True)
     def UploadCCMCCandidateSTCWData(self, **kw):
+        # import wdb; wdb.set_trace()
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
         
-        batch_id = int(kw.get("batch_id"))
+        batch_id = int(kw.get("ccmc_batch_id"))
         
         file_content = kw.get("fileUpload").read()
         filename = kw.get('fileUpload').filename

@@ -104,6 +104,8 @@
                         <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', True)]}"/>
 
+                        
+
                         <button name="open_reset_online_exam_wizard" string="Open Reset Exam" type="object" class="btn-primary"
                         attrs="{'invisible': [('state', '!=', '1-in_process')]}"/>
                         
@@ -445,6 +447,9 @@
                         <button name="HoldAdmitCard" string="Hold Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', True)]}"/>
 
+                        <button name="open_reset_online_exam_wizard" string="Open Reset Exam" type="object" class="btn-primary"
+                        attrs="{'invisible': [('state', '!=', '1-in_process')]}"/>
+
                         <!-- "Release Admit Card" Button -->
                         <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', False)]}"/>
@@ -662,8 +667,8 @@
                     <group>
                         <field name="model" invisible="1" />
 
-                        <field name="gp_subject"/>
-                        <!-- <field name="ccmc_subject"/> -->
+                        <field name="gp_subject" attrs="{'invisible': [('model', '!=', 'gp.exam.schedule')]}" />
+                        <field name="ccmc_subject" attrs="{'invisible': [('model', '!=', 'ccmc.exam.schedule')]}"/>
 
 
                     </group>
@@ -768,6 +773,22 @@
             <field name="view_id" ref="assign_examiner_wizard_form"/>
             <field name="target">new</field>
         </record>
+
+        <record id="view_online_exam_wizard_form" model="ir.ui.view">
+        <field name="name">online.exam.wizard.form</field>
+        <field name="model">online.exam.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Online Exam Wizard">
+                <group>
+                    <field name="ip_address" string="IP Address"/>
+                </group>
+                <footer>
+                    <button string="Save IP Address" type="object" name="save_ip_address" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
         <!-- END Exam Schedule -->
     </data>
