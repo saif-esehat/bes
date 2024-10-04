@@ -39,8 +39,8 @@
                                     <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No</th>
                                     <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Application Form Number</th>
                                     <th style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Indos No</th>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 22%;">Grade Applied</th>
-                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name</th>
+                                    <th style="border: 1px solid black; text-align: center; width: 18%;">Grade Applied</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width: 19%;">Name</th>
                                     <th style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">D.O.B</th>
                                     <th style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Signature of Candidate</th>
                                 </tr>
@@ -50,26 +50,26 @@
                                 <t t-foreach="docs" t-as="doc">
                                     <t t-set="index" t-value="index + 1" />
                                     <tr>
-                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;vertical-align: middle;">
                                             <span t-esc="index" />
                                         </td>
-                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;vertical-align: middle;">
                                             <!-- Application Form Number -->
                                             <span t-field="doc.candidate_applications[-1].application_id.application_no" />
                                         </td>
-                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;vertical-align: middle;">
                                             <span t-field="doc.indos_no" />
                                         </td>
-                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <td style="border: 1px solid black;text-align: center;vertical-align: middle;">
                                             <span t-field="doc.grade_applied" />
                                         </td>
-                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;vertical-align: middle;">
                                             <span t-field="doc.name" />
                                         </td>
-                                        <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                        <td style="border: 1px solid black; padding: 6px; text-align: center;vertical-align: middle;">
                                             <span t-esc="doc.dob.strftime('%d-%m-%Y')" />
                                         </td>
-                                        <td style="border: 1px solid black; padding: 6px;">
+                                        <td style="border: 1px solid black; padding: 6px;vertical-align: middle;">
                                             <!-- Signature -->
                                         </td>
                                     </tr>
