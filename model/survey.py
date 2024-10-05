@@ -158,7 +158,7 @@ class SurveyUserInputInherited(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
     gp_exam = fields.Many2one('gp.exam.schedule', string='GP Exam', readonly=True)
     ccmc_exam = fields.Many2one('ccmc.exam.schedule', string='CCMC Exam', readonly=True)
-
+    exam_date = fields.Date(string="Exam Date", readonly=True)
     is_gp = fields.Boolean('Is GP')
     is_ccmc = fields.Boolean('Is CCMC')
 

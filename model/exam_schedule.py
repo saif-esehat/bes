@@ -1994,6 +1994,7 @@ class ExamOralPracticalExaminers(models.Model):
     
     
     def commence_online_exam(self):
+        # import wdb; wdb.set_trace()
         self.commence_exam = True
         return {
             'name': 'Commence Online Exam',
@@ -2002,7 +2003,8 @@ class ExamOralPracticalExaminers(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {
-                'default_examiners_id': self.id  # Pass the current record ID to the wizard
+                'default_examiners_id': self.id ,# Pass the current record ID to the wizard
+                'default_exam_date':self.exam_date
             },
         }
     
@@ -2569,7 +2571,7 @@ class ResetOnlineExamWizard(models.TransientModel):
     
     def confirm_reset(self):
         self.ensure_one()
-        
+        # import wdb;wdb.set_trace()
         if self.model == "gp.exam.schedule":
             if self.gp_subject == "gsk":
                 
@@ -2594,7 +2596,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             "ip_address":gp_exam.ip_address,
                                             'token_regenrated': True,
                                             'is_gp': True,
-                                            'is_ccmc': False
+                                            'is_ccmc': False,
+                                            'exam_date': gp_exam.exam_date
                                             })
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
@@ -2618,7 +2621,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             "ip_address":gp_exam.ip_address,
                                             'token_regenrated': True,
                                             'is_gp': True,
-                                            'is_ccmc': False})
+                                            'is_ccmc': False,
+                                            'exam_date': gp_exam.exam_date
+                                            })
 
                 gp_exam.write({
                     "mek_online": mek_survey_qb_input,
@@ -2646,7 +2651,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                     "ip_address":ccmc_exam.ip_address,
                                     'token_regenrated': True,
                                     'is_gp': False,
-                                    'is_ccmc': True})
+                                    'is_ccmc': True,
+                                    'exam_date': ccmc_exam.exam_date
+                                    })
 
                 ccmc_exam.write({
                     "ccmc_online": ccmc_qb_input,
@@ -3035,6 +3042,7 @@ class GPExam(models.Model):
     hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
     hold_certificate = fields.Boolean("Hold Certificate", default=False)
 
+    exam_date = fields.Date(string="Exam Date",tracking=True)
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
@@ -4282,6 +4290,7 @@ class CCMCExam(models.Model):
         ('passed','Passed'),
     ],string='Result Status',store=True,compute='_compute_result_status_2')
     
+    exam_date = fields.Date(string="Exam Date",tracking=True)
     @api.depends('certificate_criteria')
     def _compute_result_status_2(self):
         for record in self:
@@ -5189,10 +5198,11 @@ class OnlineExamWizard(models.TransientModel):
 
     ip_address = fields.Char(string='IP Address')     
     examiners_id = fields.Many2one('exam.type.oral.practical.examiners', string='Examiners')  # Link to the main model
-
+    exam_date = fields.Date(string='Exam Date')
     def save_ip_address(self):
         """Save the IP address to both examiner's record and institute's record."""
         # Fetch the related examiner and set the IP address
+        # import wdb;wdb.set_trace();
         if self.examiners_id:
             # Set the IP address to the examiner
             self.examiners_id.ipaddr = self.ip_address
@@ -5201,15 +5211,15 @@ class OnlineExamWizard(models.TransientModel):
                 # import wdb;wdb.set_trace(); 
 
                 if self.examiners_id.subject.name == "GSK":
-                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address})
-                    self.examiners_id.marksheets.gsk_online.write({'ip_address':self.ip_address})
+                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+                    self.examiners_id.marksheets.gsk_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
                 if self.examiners_id.subject.name == "MEK":
-                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address})
-                    self.examiners_id.marksheets.mek_online.write({'ip_address':self.ip_address})
+                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+                    self.examiners_id.marksheets.mek_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
                 
             elif self.examiners_id.course.course_code == 'CCMC':
-                self.examiners_id.marksheets.ccmc_marksheet.write({'ip_address':self.ip_address})
-                self.examiners_id.marksheets.ccmc_online.write({'ip_address':self.ip_address})
+                self.examiners_id.marksheets.ccmc_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+                self.examiners_id.marksheets.ccmc_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
 
                 
                 
