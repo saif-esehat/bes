@@ -151,7 +151,7 @@ class SurveyUserInputInherited(models.Model):
     _inherit = "survey.user_input"
     survey_id = fields.Many2one('survey.survey', string='Exam', required=True, readonly=True, ondelete='cascade')
     exam_center = fields.Many2one("exam.center","Exam Region",required=True)
-    examiner_token = fields.Char(string="Examiner Token")
+    examiner_token = fields.Char(string="Examiner Token",compute="compute_details", store=True)
     institute_id = fields.Many2one("bes.institute",string="Institute")
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
@@ -217,8 +217,10 @@ class SurveyUserInputInherited(models.Model):
         for record in self:
             if record.is_ccmc:
                 record.indos = record.ccmc_candidate.indos_no
+                record.examiner_token = record.ccmc_exam.token
             elif record.is_gp:
                 record.indos = record.gp_candidate.indos_no
+                record.examiner_token = record.gp_exam.token
     
 
     @api.depends('user_input_line_ids','state')
