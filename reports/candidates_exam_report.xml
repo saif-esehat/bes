@@ -16,7 +16,12 @@
                         </t>
                     </p>
 
-                    <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 75 (<t t-esc="doc.scoring_percentage"/>%)</p>
+                    <t t-if="is_gp">
+                        <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 75 (<t t-esc="doc.scoring_percentage"/>%)</p>
+                    </t>
+                    <t t-else="is_ccmc">
+                        <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 100 (<t t-esc="doc.scoring_percentage"/>%)</p>
+                    </t>
                     <p><strong>Answered Correctly:</strong> <t t-esc="doc.correct_answers"/> Questions</p>
                     <p><strong>Answered Incorrectly:</strong> <t t-esc="doc.wrong_answers"/> Questions</p>
                     <p><strong>Unanswered Incorrectly:</strong> <t t-esc="doc.skipped_questions"/> Questions</p>
