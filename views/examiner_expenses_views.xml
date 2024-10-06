@@ -1,23 +1,51 @@
 <odoo>
 
+
+    <record id="open_batch_expenses" model="ir.actions.act_window">
+        <field name="name">Batch Expenses</field>
+        <field name="res_model">exam.batch.expenses</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     <record id="open_examiner_expenses" model="ir.actions.act_window">
         <field name="name">Examiner Expenses</field>
         <field name="res_model">examiner.expenses</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+
+    <record id="view_batch_expenses_form" model="ir.ui.view">
+        <field name="name">exam.batch.expenses.form</field>
+        <field name="model">exam.batch.expenses</field>
+        <field name="arch" type="xml">
+            <form string="Batch Expenses">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                            <button name="open_expense_record" string="Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
+                    <group>
+                        <field name="dgs_batch" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
     
     <record id="view_examiner_expenses_form" model="ir.ui.view">
         <field name="name">examiner.expenses.form</field>
         <field name="model">examiner.expenses</field>
         <field name="arch" type="xml">
             <form string="Examiner Expenses">
-                <header>
+                <!-- <header>
                     <button name="action_set_ec_approval" string="EC Approval" type="object" class="btn-primary" states="draft"/>
                     <button name="action_set_ceo_approval" string="CEO Approval" type="object" class="btn-primary" states="ec_approval"/>
                     <button name="action_set_approved" string="Approved" type="object" class="btn-primary" states="ceo_approval"/>
                     <button name="cancel" string="Cancel" type="object" class="btn-secondary"/>
                     <field name="state" widget="statusbar"/>
-                </header>
+                </header> -->
                 <sheet>
                     <group>
                         <field name="dgs_batch"/>
@@ -25,14 +53,34 @@
                         <field name="team_lead"/>
                     </group>
                     <notebook>
-                        <page string="Assignment Expenses">
+                        <page string="Practical/Oral Expenses">
                             <field name="assignment_expense_ids">
                                 <tree editable="bottom">
                                     <field name="examiner_id"/>
                                     <field name="assignment"/>
                                     <field name="no_of_candidates"/>
                                     <field name="price_per_unit"/>
-                                    <field name="total" readonly="1"/>
+                                    <field name="total" sum="Total" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Online Expenses">
+                            <field name="online_assignment_expense">
+                                <tree editable="bottom">
+                                    <field name="exam_date"/>
+                                    <field name="assignments_onlines"/>
+                                    <field name="candidate_count"/>
+                                    <field name="price" sum="Total" readonly="1"/>
+                                    <!-- <field name="total"  readonly="1"/> -->
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Team Lead Expenses">
+                            <field name="team_lead_expense">
+                                <tree editable="bottom">
+                                    <field name="examiner_duty"/>
+                                    <field name="price" sum="Total" readonly="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -46,18 +94,27 @@
                             </field>
                         </page>
                     </notebook>
+                    <group col="12" class="oe_invoice_lines_tab">
+                        <group colspan="8">
+                            <!-- <field name="narration" placeholder="Terms and Conditions" class="oe_inline text-break" nolabel="1"/> -->
+                        </group>
+                        <group colspan="4">
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total" class="oe_subtotal_footer_separator" />
+                            </group>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
     </record>
     
-    <record id="view_examiner_expenses_tree" model="ir.ui.view">
-        <field name="name">examiner.expenses.tree</field>
-        <field name="model">examiner.expenses</field>
+    <record id="view_batch_expenses_tree" model="ir.ui.view">
+        <field name="name">exam.batch.expenses.tree</field>
+        <field name="model">exam.batch.expenses</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="examiner_id"/>
-                <field name="team_lead"/>
+                <field name="dgs_batch"/>
             </tree>
         </field>
     </record>
