@@ -19,7 +19,7 @@
                     <t t-if="is_gp">
                         <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 75 (<t t-esc="doc.scoring_percentage"/>%)</p>
                     </t>
-                    <t t-else="is_ccmc">
+                    <t t-elif="is_ccmc">
                         <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 100 (<t t-esc="doc.scoring_percentage"/>%)</p>
                     </t>
                     <p><strong>Answered Correctly:</strong> <t t-esc="doc.correct_answers"/> Questions</p>
@@ -42,11 +42,11 @@
                     <thead style="background-color: #f2f2f2; border: 1px solid black;">
                         <tr>
                             <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Sr No.</th>
-                            <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid black;">Question</th>
-                            <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Your Answer</th>
+                            <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid black;">Questions</th>
+                            <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Candidate Answer</th>
                             <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Correct Answer</th>
                             <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Answer Score</th>
-                            <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Status</th>
+                            <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Result</th>
                         </tr>
                     </thead>
                     <tbody>
