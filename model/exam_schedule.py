@@ -1340,6 +1340,12 @@ class ExamOralPractical(models.Model):
             institute_ids.add(examiner.institute_id.id)
         return list(institute_ids)
     
+    # def generate_overall_expense(self):
+        
+        
+        
+        
+    
     def generate_expense_sheet(self):
         
         
@@ -1359,13 +1365,11 @@ class ExamOralPractical(models.Model):
                     "examiner_id":examiner.id,
                     "dgs_batch": self.dgs_batch.id
                 })
-                
-            
-            
+                        
             
             practical_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type != 'online')
             for assignment in practical_assignments:
-                self.env["exam.assignment.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                # self.env["exam.assignment.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
                 
                 if examiner.designation in ['non-mariner','catering']:
                     price =  self.env['product.product'].search([('default_code','=','practical_oral_non_mariner')]).standard_price
@@ -1382,7 +1386,7 @@ class ExamOralPractical(models.Model):
             
             
             if online_assignments:
-                self.env["exam.assignment.online.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                # self.env["exam.assignment.online.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
                 # GET Unique Exam Date
                 exam_dates = sorted(set(online_assignments.mapped('exam_date')))
                 
@@ -1418,9 +1422,67 @@ class ExamOralPractical(models.Model):
                             "examiner_duty":self.id,
                             "price": price,
                         })
-                        
+            
+            
+            # if expense.assignment_expense_ids:
+            # Check if a record with the same expenses_type already exists
+            practical_oral_found = self.env["examiner.overall.expenses"].sudo().search([
+                ("examiner_expenses_id", "=", expense.id),
+                ("expenses_type", "=", "practical_oral")
+            ])
+
+            # If no existing record is found, create a new one
+            if not practical_oral_found:
+                self.env["examiner.overall.expenses"].sudo().create({
+                    "examiner_expenses_id": expense.id,
+                    "expenses_type": "practical_oral"
+                })
+            
+
+            # Check for 'online' expenses_type
+            existing_online_record = self.env["examiner.overall.expenses"].sudo().search([
+                ("examiner_expenses_id", "=", expense.id),
+                ("expenses_type", "=", "online")
+            ])
+
+            if not existing_online_record:
+                self.env["examiner.overall.expenses"].sudo().create({
+                    "examiner_expenses_id": expense.id,
+                    "expenses_type": "online"
+                })
+
+            # Check for 'team_lead' expenses_type
+            existing_team_lead_record = self.env["examiner.overall.expenses"].sudo().search([
+                ("examiner_expenses_id", "=", expense.id),
+                ("expenses_type", "=", "team_lead")
+            ])
+
+            if not existing_team_lead_record:
+                self.env["examiner.overall.expenses"].sudo().create({
+                    "examiner_expenses_id": expense.id,
+                    "expenses_type": "team_lead"
+                })
+
+            # Check for 'misc' expenses_type
+            existing_misc_record = self.env["examiner.overall.expenses"].sudo().search([
+                ("examiner_expenses_id", "=", expense.id),
+                ("expenses_type", "=", "misc")
+            ])
+
+            if not existing_misc_record:
+                self.env["examiner.overall.expenses"].sudo().create({
+                    "examiner_expenses_id": expense.id,
+                    "expenses_type": "misc"
+                })
+
+                # total_online = sum(expense.online_assignment_expense.mapped('price'))
+
+            # if expense.team_lead_expense:
+            #     total_team_lead = sum(expense.team_lead_expense.mapped('price'))
+            # total_misc = sum(expense.misc_expense_ids.mapped('price'))        
 
             
+            # import wdb; wdb.set_trace(); 
             
             
                 
