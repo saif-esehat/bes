@@ -55,8 +55,8 @@
             <form string="Batch Expenses">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                            <button name="open_raw_expense" string="Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
-                            </button>
+                            <!-- <button name="open_raw_expense" string="Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button> -->
                             <button name="open_expense_record" string="Examiner Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
