@@ -360,6 +360,7 @@
                         </group> -->
                         
                         <button name="open_assignment_wizard" string="Add Examiner Assignment" type="object" class="btn-primary" />
+                        <button name="open_online_attendance" string="Online Attendance Sheet" type="object" class="btn-primary" />
 
                        
                         <field name="examiners" >
@@ -1008,6 +1009,33 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_examiner_attendance_wizard_form" model="ir.ui.view">
+            <field name="name">examiner.attendance.wizard.form</field>
+            <field name="model">examiner.attendance.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Online Attendance Sheet">
+                    <group>
+                        <field name="examiner_assignment" invisible='1'/>
+                        <field name="examiner"  domain="[('id', '=', examiners)]" options="{'no_create':True}"/>
+                        <field name="examiners" invisible='1'/>
+                    </group>
+                    <footer>
+                        <button name="generate_attendance_sheet" type="object" string="Download Attendance Sheet" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_examiner_attendance_wizard" model="ir.actions.act_window">
+            <field name="name">Online Attendance Sheet</field>
+            <field name="res_model">examiner.attendance.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         
 
     </data>

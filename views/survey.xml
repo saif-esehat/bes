@@ -234,13 +234,13 @@
             <field name="inherit_id" ref="survey.survey_user_input_view_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='survey_id']" position="after"> 
-                    <field name="gp_candidate" attrs="{'invisible': [('is_gp', '=', False)]}"/>
-                    <field name="gp_exam" attrs="{'invisible': [('is_gp', '=', False)]}"/>
-                    <field name="ccmc_candidate" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
-                    <field name="ccmc_exam" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
+                    <field name="gp_candidate" optional="show" attrs="{'invisible': [('is_gp', '=', False)]}"/>
+                    <field name="gp_exam" optional="show" attrs="{'invisible': [('is_gp', '=', False)]}"/>
+                    <field name="ccmc_candidate" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
+                    <field name="ccmc_exam" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="institute_id"/>
                     <field name="indos"/>
-                    <!-- <field name="examiner_token"/> -->
+                    <field name="examiner_token"/>
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
                     <field name="ip_address"/>
                     <field name="start_time"/>

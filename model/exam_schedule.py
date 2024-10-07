@@ -778,7 +778,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     
     
     
-    
+
     def update_marksheet(self):
         
         records = self.examiner_lines_ids
@@ -1231,7 +1231,29 @@ class ExamOralPractical(models.Model):
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
 
-   
+    def open_online_attendance(self):
+        # Search for examiners who are assigned to the specific course, batch, and exam type
+        examiners = self.env['exam.type.oral.practical.examiners'].search([
+            ('institute_id', '=', self.institute_id.id),
+            ('dgs_batch', '=', self.dgs_batch.id),
+            ('exam_type', '=', 'online'),
+            ('course', '=', self.course.id)
+        ])
+
+        # Create a list of examiner IDs to be used in the context
+        examiner_ids = examiners.ids  # Get the IDs of the filtered examiners
+        # import wdb;wdb.set_trace()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Online Attendance Sheet',
+            'view_mode': 'form',
+            'res_model': 'examiner.attendance.wizard',
+            'target': 'new',
+            'context': {
+                # 'default_examiner_id': False,  # Allow the user to select an examiner
+                'default_examiner_assignment': examiner_ids  # Pass the filtered examiner IDs to the context
+            }
+        }
     
     def open_assignment_wizard(self):
         
@@ -2316,6 +2338,7 @@ class ExamOralPracticalExaminers(models.Model):
 
     
     def download_attendance_sheet(self):
+        # import wdb;wdb.set_trace()
         if self.subject.name == "CCMC" and self.exam_type == "online":
             return self.env.ref('bes.action_attendance_sheet_online_ccmc').report_action(self)
         elif self.subject.name == "GSK" and self.exam_type == "online":
@@ -5311,5 +5334,53 @@ class OnlineExamWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
         
-        
-        
+    # Online Attendance Sheet
+class ExaminerAttendanceWizard(models.TransientModel):
+    _name = 'examiner.attendance.wizard'
+    _description = 'Examiner Attendance Wizard'
+    _table = "examiner"
+    _rec_name = "examiner"
+
+    examiner_assignment = fields.Many2many('exam.type.oral.practical.examiners', string='Examiner')
+    examiner = fields.Many2one('bes.examiner', string='Examiner')
+    examiners = fields.Many2many('bes.examiner', string='Examiners',compute='_compute_examiners')
+
+    @api.depends('examiner_assignment')
+    def _compute_examiners(self):
+        # import wdb;wdb.set_trace()
+        for rec in self:
+            rec.examiners = rec.examiner_assignment.examiner.ids
+
+    def generate_attendance_sheet(self):
+        examiners = self.env['exam.type.oral.practical.examiners'].browse(self.examiner_assignment.ids)
+        # Initialize arrays to store filtered candidates
+        gsk_candidates = []  
+        mek_candidates = [] 
+        gsk_mek_candidates = [] 
+
+        for examiner in examiners:
+            for marksheet in examiner.marksheets.gp_marksheet:
+
+                # Check if the candidate is attempting both GSK and MEK Online
+                if marksheet.attempting_gsk_online and marksheet.attempting_mek_online:
+                    gsk_mek_candidates.append(marksheet)
+
+                # Check if the candidate is attempting only GSK Online (and not MEK)
+                elif marksheet.attempting_gsk_online and not marksheet.attempting_mek_online:
+                    gsk_candidates.append(marksheet)
+
+                # Check if the candidate is attempting only MEK Online (and not GSK)
+                elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
+                    mek_candidates.append(marksheet)
+
+        # import wdb; wdb.set_trace()
+
+        # Render the report
+        return self.env.ref('bes.action_attendance_sheet_online_gp_new').report_action(self,data={
+            'docs': [self],  # Pass the current recordset to `docs`
+            'gsk_candidates': gsk_candidates,
+            'mek_candidates': mek_candidates,
+            'gsk_mek_candidates': gsk_mek_candidates,
+            })
+
+
