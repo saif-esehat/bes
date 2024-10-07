@@ -1226,13 +1226,12 @@ class ExamOralPractical(models.Model):
     # subject = fields.Many2one("course.master.subject","Subject")
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Batch",required=True,tracking=True)
+    team_lead = fields.Many2one("bes.examiner",string="Team Lead")
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
 
    
-
-    
     
     def open_assignment_wizard(self):
         
@@ -1283,7 +1282,15 @@ class ExamOralPractical(models.Model):
     # start_time = fields.Datetime("Start Time")
     # end_time = fields.Datetime("End Time")
     examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Assign Examiners",tracking=True)
-   
+    
+    unique_examiners = fields.Many2many("bes.examiner",compute='compute_examiners') 
+    
+    @api.depends('examiners')
+    def compute_examiners(self):
+        for record in self:
+            record.unique_examiners = self.examiners.examiner
+    
+    
     
     course = fields.Many2one("course.master",string="Course",tracking=True)
     
@@ -1312,21 +1319,92 @@ class ExamOralPractical(models.Model):
         return list(institute_ids)
     
     def generate_expense_sheet(self):
+        
+        
         for examiner in self.examiners.examiner:
             expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',examiner.id),('dgs_batch','=',self.dgs_batch.id)])
             
+            expense_batch = self.env["exam.batch.expenses"].sudo().search([('dgs_batch','=',self.dgs_batch.id)])
+            
+            if not expense_batch:
+                expense_batch = self.env["exam.batch.expenses"].sudo().create({
+                    "dgs_batch": self.dgs_batch.id
+                })
+                
             if not expense:
                 expense = self.env["examiner.expenses"].sudo().create({
+                    "expense_batch":expense_batch.id,
                     "examiner_id":examiner.id,
                     "dgs_batch": self.dgs_batch.id
                 })
+                
             
-            assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id)
-            for assignment in assignments:
+            
+            
+            practical_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type != 'online')
+            for assignment in practical_assignments:
+                self.env["exam.assignment.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                
+                if examiner.designation in ['non-mariner','catering']:
+                    price =  self.env['product.product'].search([('default_code','=','practical_oral_non_mariner')]).standard_price
+                elif examiner.designation in ['master','chief']:
+                    price =  self.env['product.product'].search([('default_code','=','practical_oral_mariner')]).standard_price
+                
                 self.env["exam.assignment.expense"].sudo().create({
                     "examiner_expenses_id":expense.id,
+                    "price_per_unit":price,
                     "assignment": assignment.id
                  })
+                
+            online_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type == 'online')
+            
+            
+            if online_assignments:
+                self.env["exam.assignment.online.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                # GET Unique Exam Date
+                exam_dates = sorted(set(online_assignments.mapped('exam_date')))
+                
+                if examiner.designation in ['non-mariner','catering']:
+                    price =  self.env['product.product'].search([('default_code','=','online_non_mariner')]).standard_price
+                elif examiner.designation in ['master','chief']:
+                    price =  self.env['product.product'].search([('default_code','=','online_mariner')]).standard_price
+                
+                
+                
+                for date in exam_dates:
+                    online_exams = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type == 'online' and e.exam_date == date)
+                    online_candidate_count = sum(online_exams.mapped('candidates_count'))
+                    self.env["exam.assignment.online.expense"].sudo().create({
+                            "examiner_expenses_id":expense.id,
+                            "exam_date":date,
+                            "assignments_onlines": online_exams.ids,
+                            "candidate_count":online_candidate_count,
+                            "price" : price
+                        })
+                            
+            
+                examiners_team_lead = self.examiners.mapped('examiner')
+                
+                for team_lead in examiners_team_lead:
+                    
+                    if team_lead.id == self.team_lead.id:
+                        self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                        price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
+                        
+                        self.env["institute.team.lead"].sudo().create({
+                            "examiner_expenses_id":expense.id,
+                            "examiner_duty":self.id,
+                            "price": price,
+                        })
+                        
+
+            
+            
+            
+                
+
+            
+            
             self.expense_sheet_status = "generated"
                 
                 
