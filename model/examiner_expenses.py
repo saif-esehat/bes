@@ -13,6 +13,19 @@ class BatchExpenses(models.Model):
     ]
     
     
+    def open_raw_expense(self):
+        
+        return {
+        'name': 'Expenses Record',
+        'domain': [('expense_batch', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'raw.exam.expenses',
+        # 'res_model': 'batches.faculty',
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        } 
+
+    
     def open_expense_record(self):
         
         
@@ -25,6 +38,30 @@ class BatchExpenses(models.Model):
         'view_mode': 'tree,form',
         'type': 'ir.actions.act_window',
         } 
+
+class RawExpensesReport(models.Model):
+    _name = 'raw.exam.expenses'
+    _description = 'Expenses'
+    _rec_name = 'dgs_batch'
+    
+    
+    expense_batch = fields.Many2one("exam.batch.expenses",string="Exam Batch")
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",tracking=True)
+    assignments = fields.Many2one('exam.type.oral.practical.examiners', string="Assignments")
+    # exam_type = fields.Selection([
+    #     ('practical_oral', 'Practical/Oral'),
+    #     ('online', 'Online'),
+    #     ('practical_oral_cookery_bakery', 'Practical (Cookery Bakery)'),
+    #     ('ccmc_oral', 'CCMC Oral'),
+    #     ('gsk_oral', 'CCMC(GSK Oral)'),    
+    # ], string='Exam Type',related='assignments.exam_type')
+
+    # institute = fields.Many2one("bes.institute",string="Institute",related='assignments.institute_id')
+    # candidates_count = fields.Integer("Candidates Count",related='assignments.candidates_count')
+    
+
+
+    
     
     
 
@@ -44,6 +81,9 @@ class ExaminerExpenses(models.Model):
         ('ceo_approval', 'CEO Approval'),
         ('approved', 'Approved')
     ], string='State', default='draft')
+    
+    
+    overall_expense_ids = fields.One2many('examiner.overall.expenses', 'examiner_expenses_id', string="Overall Expenses")
 
     assignment_expense_ids = fields.One2many('exam.assignment.expense', 'examiner_expenses_id', string="Practical Oral Expenses")
     
@@ -54,6 +94,38 @@ class ExaminerExpenses(models.Model):
     misc_expense_ids = fields.One2many('exam.misc.expense', 'examiner_expenses_id', string="Miscellaneous Expenses")
 
     total = fields.Integer("Total Expense",compute='_compute_total_expense',store=True)
+    
+    practical_oral_total = fields.Integer("Practical/Oral Expense",compute="_compute_total")
+    
+    online_total = fields.Integer("Online Expense",compute="_compute_total")
+    
+    team_lead_total = fields.Integer("Team Lead Expense",compute="_compute_total")
+    
+    misc_total = fields.Integer("Misc. Expense",compute="_compute_total")
+    
+    @api.depends('assignment_expense_ids.total','online_assignment_expense.price','team_lead_expense.price','misc_expense_ids.price')
+    def _compute_total(self):
+        for record in self:
+            if record.assignment_expense_ids:
+                record.practical_oral_total = sum(record.assignment_expense_ids.mapped('total'))
+            else:
+                record.practical_oral_total = 0
+            
+            if record.online_assignment_expense:
+                record.online_total = sum(record.online_assignment_expense.mapped('price'))
+            else:
+                record.online_total = 0
+                
+            if record.team_lead_expense:
+                record.team_lead_total = sum(record.team_lead_expense.mapped('price'))
+            else:
+                record.team_lead_total = 0
+                
+            if record.misc_expense_ids:
+                record.misc_total = sum(record.misc_expense_ids.mapped('price'))
+            else:
+                record.misc_total = 0
+     
     
     @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price')
     def _compute_total_expense(self):
@@ -82,6 +154,50 @@ class ExaminerExpenses(models.Model):
             record.state = 'draft'
 
 
+class ExaminerOverAllExpenses(models.Model):
+    _name = 'examiner.overall.expenses'
+    _description = 'Examiner Expenses'
+    
+    examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    
+    expenses_type = fields.Selection([
+        ('practical_oral', 'Practical/Oral'),
+        ('online', 'Online'),
+        ('team_lead', 'Team Lead'),
+        ('misc', 'Miscellaneous')
+    ], string='Expense Type')
+    
+    price = fields.Integer("Price",compute="_compute_total")
+    
+    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.misc_expense_ids')
+    def _compute_total(self):
+        for record in self:
+            if record.expenses_type == 'practical_oral':
+                if record.examiner_expenses_id.assignment_expense_ids:
+                    record.price = sum(record.examiner_expenses_id.assignment_expense_ids.mapped('total'))
+                else:
+                    record.price = 0
+            elif record.expenses_type == 'online':
+                if record.examiner_expenses_id.online_assignment_expense:
+                    record.price = sum(record.examiner_expenses_id.online_assignment_expense.mapped('price'))
+                else:
+                    record.price = 0
+            elif record.expenses_type == 'team_lead':
+                if record.examiner_expenses_id.team_lead_expense:
+                    record.price = sum(record.examiner_expenses_id.team_lead_expense.mapped('price'))
+                else:
+                    record.price = 0
+            
+            elif record.expenses_type == 'misc':
+                if record.examiner_expenses_id.misc_expense_ids:
+                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.mapped('price'))
+                else:
+                    record.price = 0
+
+    
+    
+    
+    
 class InstituteTeamLead(models.Model):
     _name = 'institute.team.lead'
     _description = 'Institute Team Lead'
@@ -90,6 +206,8 @@ class InstituteTeamLead(models.Model):
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
     examiner_duty = fields.Many2one('exam.type.oral.practical', string="Examiner Duty")
     price = fields.Integer("Price")
+    
+    
             
 
             

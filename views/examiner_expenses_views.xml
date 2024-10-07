@@ -13,6 +13,40 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="view_raw_exam_expenses_form" model="ir.ui.view">
+        <field name="name">raw.exam.expenses.form</field>
+        <field name="model">raw.exam.expenses</field>
+        <field name="arch" type="xml">
+            <form string="Batch Expenses">
+                <sheet>
+                    <group>
+                        <field name="expense_batch"/>
+                        <field name="dgs_batch"/>
+                        <field name="assignments"/>
+                        <!-- <field name="exam_type"/>
+                        <field name="institute"/>
+                        <field name="candidates_count"/> -->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_raw_exam_expenses_tree" model="ir.ui.view">
+        <field name="name">raw.exam.expenses.tree</field>
+        <field name="model">raw.exam.expenses</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="expense_batch"/>
+                <field name="dgs_batch"/>
+                <field name="assignments"/>
+                <!-- <field name="exam_type"/>
+                <field name="institute"/>
+                <field name="candidates_count"/> -->
+            </tree>
+        </field>
+    </record>
+
 
     <record id="view_batch_expenses_form" model="ir.ui.view">
         <field name="name">exam.batch.expenses.form</field>
@@ -21,7 +55,9 @@
             <form string="Batch Expenses">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                            <button name="open_expense_record" string="Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            <button name="open_raw_expense" string="Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="open_expense_record" string="Examiner Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
                     <group>
@@ -53,6 +89,16 @@
                         <field name="team_lead"/>
                     </group>
                     <notebook>
+
+                        <page string="Overall Expenses">
+                            <field name="overall_expense_ids" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="expenses_type"/>
+                                    <field name="price"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
                         <page string="Practical/Oral Expenses">
                             <field name="assignment_expense_ids">
                                 <tree editable="bottom">
@@ -108,6 +154,22 @@
             </form>
         </field>
     </record>
+
+     <record id="view_examiner_expenses_tree" model="ir.ui.view">
+        <field name="name">examiner.expenses.tree</field>
+        <field name="model">examiner.expenses</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="examiner_id"/>
+                <field name="practical_oral_total"/>
+                <field name="online_total"/>
+                <field name="team_lead_total"/>
+                <field name="misc_total"/>
+                <field name="total" sum="Total"/>
+                
+            </tree>
+        </field>
+    </record>
     
     <record id="view_batch_expenses_tree" model="ir.ui.view">
         <field name="name">exam.batch.expenses.tree</field>
@@ -115,6 +177,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="dgs_batch"/>
+                
             </tree>
         </field>
     </record>
