@@ -218,7 +218,12 @@ class CustomPaymentRegister(models.TransientModel):
                         gsk_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','GSK')]).qb_online
                         gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
                         token = gsk_survey_qb_input.generate_unique_string()
-                        gsk_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id , 'dgs_batch':dgs_exam})
+                        gsk_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id , 'dgs_batch':dgs_exam,
+                                            'gp_exam':gp_exam_schedule.id,
+                                            'institute_id': gp_exam_schedule.gp_candidate.institute_id.id,
+                                            "ip_address":gp_exam_schedule.ip_address,
+                                            'is_gp': True,
+                                            'is_ccmc': False})
                         gsk_online_carry_forward = False
                         gsk_online_marks = last_exam.gsk_online_marks
                         gsk_online_percentage = last_exam.gsk_online_percentage
@@ -232,7 +237,12 @@ class CustomPaymentRegister(models.TransientModel):
 
                         mek_survey_qb_input = mek_survey_qb_input._create_answer(user=invoice.gp_candidate.user_id)
                         token = mek_survey_qb_input.generate_unique_string()
-                        mek_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id ,'dgs_batch':dgs_exam  })
+                        mek_survey_qb_input.write({'gp_candidate':invoice.gp_candidate.id ,'dgs_batch':dgs_exam,  
+                                            'gp_exam':gp_exam_schedule.id,
+                                            'institute_id': gp_exam_schedule.gp_candidate.institute_id.id,
+                                            "ip_address":gp_exam_schedule.ip_address,
+                                            'is_gp': True,
+                                            'is_ccmc': False})
                         mek_online_carry_forward = False
                         mek_online_marks = last_exam.mek_online_marks
                         mek_online_status = "pending"
@@ -367,7 +377,13 @@ class CustomPaymentRegister(models.TransientModel):
                         # cookery_bakery_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC_NEW_2')])
                         cookery_bakery_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                         cookery_bakery_qb_input = cookery_bakery_qb_input._create_answer(user=invoice.ccmc_candidate.user_id)
-                        cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id})
+                        cookery_bakery_qb_input.write({'ccmc_candidate':invoice.ccmc_candidate.id,
+                                                        'ccmc_exam':ccmc_exam_schedule.id,
+                                                        "dgs_batch":ccmc_exam_schedule.dgs_batch.id,
+                                                        'institute_id': ccmc_exam_schedule.ccmc_candidate.institute_id.id,
+                                                        "ip_address":ccmc_exam_schedule.ip_address,
+                                                        'is_gp': False,
+                                                        'is_ccmc': True})
                         ccmc_online_status = 'pending'
                         cookery_gsk_online_carry_forward = False
                         applied.append(line.product_id.default_code)

@@ -2808,7 +2808,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                 ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
                 ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
-                                     'ccmc_exam':ccmc_exam.id,
+                                    'ccmc_exam':ccmc_exam.id,
                                     'institute_id': ccmc_exam.ccmc_candidate.institute_id.id,
                                     "dgs_batch":ccmc_exam.dgs_batch.id,
                                     "ip_address":ccmc_exam.ip_address,
