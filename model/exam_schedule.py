@@ -1489,11 +1489,21 @@ class ExamOralPractical(models.Model):
 
             
             
-            self.expense_sheet_status = "generated"
-                
-                
+            self.expense_sheet_status = "generated"    
             print("working")
-    
+            
+        # import wdb;wdb.set_trace();
+        institute_expense = self.env["institute.exam.expenses"].search([('dgs_batch','=',self.dgs_batch.id),('institute','=',self.institute_id.id)])
+
+
+        if not institute_expense:
+            self.env["institute.exam.expenses"].sudo().create({
+                'expense_batch': expense_batch.id,
+                'dgs_batch':self.dgs_batch.id,
+                'institute':self.institute_id.id    
+                })
+                
+                
     
     # def generate_expense_sheet(self):
         # for assignment in self.examiners:

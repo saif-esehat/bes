@@ -48,8 +48,39 @@ class InstituteExpenseReport(models.Model):
     expense_batch = fields.Many2one("exam.batch.expenses",string="Exam Batch")
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",tracking=True)
     institute = fields.Many2one("bes.institute",string="Institute")
-    practical_oral_expenses = fields.Integer("Practical/Oral Expenses")
-    online_expenses = fields.Integer("Online Expenses")
+    
+    practical_oral_expenses = fields.Integer("Practical/Oral Expenses",compute="_compute_practical_expense")
+    online_expenses = fields.Integer("Online Expenses",compute="_compute_online_expense")
+    team_lead_expense = fields.Integer("Team Lead Expense",compute="_compute_tl_expense")
+    total = fields.Integer("Team Lead Expense",compute="_compute_total")
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_total(self):
+        for record in self:
+            record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense
+            
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_practical_expense(self):
+        for record in self:
+            # import wdb;wdb.set_trace()
+            data = self.env["exam.assignment.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
+            record.practical_oral_expenses= sum(data.mapped('total'))
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_online_expense(self):
+        for record in self:
+            # import wdb;wdb.set_trace()
+            data = self.env["exam.assignment.online.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
+            record.online_expenses = sum(data.mapped('price'))
+            # record.
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_tl_expense(self):
+        for record in self:
+            # import wdb;wdb.set_trace()
+            data = self.env["institute.team.lead"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
+            record.team_lead_expense = sum(data.mapped('price'))
     
     # assignments = fields.Many2one('exam.type.oral.practical.examiners', string="Assignments")
     # exam_type = fields.Selection([
@@ -208,6 +239,7 @@ class InstituteTeamLead(models.Model):
     
 
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    dgs_batch = fields.Many2one('dgs.batches',related="examiner_expenses_id.dgs_batch",store=True)
     examiner_duty = fields.Many2one('exam.type.oral.practical', string="Examiner Duty")
     institute = fields.Many2one('bes.institute',related="examiner_duty.institute_id", string="Institute",store=True)
     price = fields.Integer("Price")
@@ -221,6 +253,7 @@ class ExamAssignmentOnlineExpense(models.Model):
     _description = 'Exam Assignment Online Expense'
     
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    dgs_batch = fields.Many2one('dgs.batches',related="examiner_expenses_id.dgs_batch",store=True)
     exam_date = fields.Date("Exam Date")
     assignments_onlines = fields.Many2many('exam.type.oral.practical.examiners',relation="examiner_online_assignment", string="Online Assignments")
     institute = fields.Many2one('bes.institute',string="Institute",compute="_compute_institute",store=True)
@@ -248,6 +281,7 @@ class ExamAssignmentExpense(models.Model):
     _description = 'Exam Assignment Expense'
 
     examiner_id = fields.Many2one('bes.examiner', string="Examiners", related="examiner_expenses_id.examiner_id")
+    dgs_batch = fields.Many2one('dgs.batches',related="examiner_expenses_id.dgs_batch",store=True)
     assignment = fields.Many2one('exam.type.oral.practical.examiners', string="Assignment", domain="[('examiner', '=', examiner_id)]")
     institute = fields.Many2one('bes.institute',related="assignment.institute_id", string="Institute",store=True)
     no_of_candidates = fields.Integer(string="No. of Candidates", compute='_compute_no_of_candidates', store=True)

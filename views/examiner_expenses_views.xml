@@ -20,8 +20,13 @@
             <form string="Batch Expenses">
                 <sheet>
                     <group>
-                        <field name="expense_batch"/>
+                        <!-- <field name="expense_batch"/> -->
                         <field name="dgs_batch"/>
+                        <field name="institute"/>
+                        <field name="practical_oral_expenses"/>
+                        <field name="online_expenses"/>
+                        <field name="team_lead_expense"/>
+                        <field name="total"/>
                         <!-- <field name="assignments"/> -->
                         <!-- <field name="exam_type"/>
                         <field name="institute"/>
@@ -40,6 +45,10 @@
                 <field name="expense_batch"/>
                 <field name="dgs_batch"/>
                 <field name="institute"/>
+                <field name="practical_oral_expenses"/>
+                <field name="online_expenses"/>
+                <field name="team_lead_expense"/>
+                <field name="total"/>
                 <!-- <field name="assignments"/> -->
                 <!-- <field name="exam_type"/>
                 <field name="institute"/>
@@ -56,8 +65,8 @@
             <form string="Batch Expenses">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                            <!-- <button name="open_institute_expense" string="Institute Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
-                            </button> -->
+                            <button name="open_institute_expense" string="Institute Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                             <button name="open_expense_record" string="Examiner Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
                         </div>
@@ -104,6 +113,7 @@
                             <field name="assignment_expense_ids">
                                 <tree editable="bottom">
                                     <field name="examiner_id"/>
+                                    <field name="dgs_batch"/>
                                     <field name="assignment"/>
                                     <field name="institute"/>
                                     <field name="no_of_candidates"/>
@@ -117,6 +127,7 @@
                             <field name="online_assignment_expense">
                                 <tree editable="bottom">
                                     <field name="exam_date"/>
+                                    <field name="dgs_batch"/>
                                     <field name="assignments_onlines"/>
                                     <field name="institute"/>
                                     <field name="candidate_count"/>
@@ -129,6 +140,7 @@
                             <field name="team_lead_expense">
                                 <tree editable="bottom">
                                     <field name="examiner_duty"/>
+                                    <field name="dgs_batch"/>
                                     <field name="institute" invisible="1"/>
                                     <field name="price" sum="Total" readonly="1"/>
                                 </tree>
