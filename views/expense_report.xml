@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="examiner_expense_report" model="ir.ui.view">
+            <field name="name">examiner.expense.report.form</field>
+            <field name="model">examiner.expense.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="batch" />
+                                <field name="institute_id" />
+                                <field name="exam_fee" />
+                                <field name="gp_candidate_count" />
+                                
+                                <field name="exam_type" widget="many2many_tags"/>
+                                <!-- <tree editable="bottom">
+                                        <field name="exam_type_name" />
+
+                                    </tree>
+                                </field> -->
+
+                            </group>
+                            <group>
+                                <field name="examiner" />
+                                <field name="rate_per_unit" />
+                                <field name="total_candidate_count" />
+                                <field name="ccmc_candidate_count" />
+                                <field name="repeater_candidate_count" />
+
+                            </group>
+                        </group>
+                            
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="examiner_expense_report_tree" model="ir.ui.view">
+            <field name="name">examiner.expense.report.tree</field>
+            <field name="model">examiner.expense.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="examiner" />
+                    <field name="batch" />
+                    <field name="institute_id" />
+                    <field name="exam_type" widget="many2many_tags"/>
+                    <field name="gp_candidate_count" />
+                    <field name="ccmc_candidate_count" />
+                    <field name="repeater_candidate_count" />
+                    <field name="rate_per_unit" />
+                    <field name="exam_fee" />
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

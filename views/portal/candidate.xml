@@ -207,7 +207,7 @@
                              <td class="text-center">
                                 <!-- <t t-if="registered_exam.survey_id.exam_state == 'in_progress'"> -->
                                     <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
-                                <t t-if="gp_exam_schedule   .token">
+                                <t t-if="gp_exam_schedule.token">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
 
                                     <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
@@ -234,6 +234,9 @@
                 // Update the content of the modal with the retrieved data
                 document.getElementById('survey_input_id').value = dataId;
 
+                var subject = document.getElementById('online_subject_'+dataId).innerText;
+                document.getElementById('online_subject').value = subject;
+
                 }
         
        </script>
@@ -244,7 +247,7 @@
             <t t-call="portal.portal_table">
                 <div class="modal fade" id="examiner_token" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
-                        <form method="post" action="/my/ccmcexam/startexam" enctype="multipart/form-data">
+                        <!-- <form method="post" action="/my/ccmcexam/startexam" enctype="multipart/form-data"> -->
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -255,11 +258,13 @@
                                     <div class="container mt-5">
 
                                         <input type="hidden" id="survey_input_id" name="survey_input_id"/>
+                                        <input type="hidden" id="online_subject" name="online_subject"/>
+
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="examiner_token">Token</label>
-                                                <input type="text" class="form-control" id="examiner_token" name="examiner_token" />
+                                                <label for="examiner_token_input">Token</label>
+                                                <input type="text" class="form-control" id="examiner_token_input" name="examiner_token_input" />
                                             </div>
                                         </div>
 
@@ -268,11 +273,11 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Start Exam</button>
+                                    <button type="button" class="btn btn-primary start_ccmc_exam">Start Exam</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                 </div>
                 <t t-if="error">
@@ -296,7 +301,7 @@
                             <td class="text-center">
                                 <t t-out="registered_exam.survey_id.course.name" />
                             </td>
-                            <td class="text-center">
+                            <td class="text-center" t-attf-id="online_subject_{{registered_exam.id}}">
                                 <t t-out="registered_exam.survey_id.subject.name" />
                             </td>
                             <t t-set="ccmc_exam_schedule" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_online','=',registered_exam.id)])" />

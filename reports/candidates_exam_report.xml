@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+ <template id="report_survey_user_input">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <div class="page">
+                <!-- Header -->
+                <h2 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Report Summary</h2>
+                <!-- <div class="container" style="font-size: 18px; border-bottom: 2px solid gray"> -->
+                    <p><strong>Result:</strong> 
+                        <t t-if="doc.result_status == 'failed'">
+                            <span style="color: red; font-weight: bold;">Fail</span>
+                        </t>
+                        <t t-if="doc.result_status == 'passed'">
+                            <span style="color: green; font-weight: bold;">Pass</span>
+                        </t>
+                    </p>
+
+                    <t t-if="is_gp">
+                        <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 75 (<t t-esc="doc.scoring_percentage"/>%)</p>
+                    </t>
+                    <t t-elif="is_ccmc">
+                        <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 100 (<t t-esc="doc.scoring_percentage"/>%)</p>
+                    </t>
+                    <p><strong>Answered Correctly:</strong> <t t-esc="doc.correct_answers"/> Questions</p>
+                    <p><strong>Answered Incorrectly:</strong> <t t-esc="doc.wrong_answers"/> Questions</p>
+                    <p><strong>Unanswered Incorrectly:</strong> <t t-esc="doc.skipped_questions"/> Questions</p>
+                    <p><strong>Required Passing Grade:</strong> 60%</p>
+                    <p><strong>IP Address:</strong> <t t-esc="doc.ip_address"/></p>
+                    <p><strong>Examiner Token:</strong> <t t-esc="doc.examiner_token"/></p>
+                    <p><strong>Online Exam Date:</strong> <t t-esc="doc.exam_date.strftime('%d-%b-%Y') or False"/></p>
+                    <p><strong>Time Taken:</strong> <t t-esc="doc.total_time"/></p>
+                    
+                    <p><strong>Name of Candidate:</strong> <t t-esc="doc.gp_candidate.name or doc.ccmc_candidate.name"/></p>
+                    <p><strong>Indos No:</strong> <t t-esc="doc.gp_candidate.indos_no or doc.ccmc_candidate.indos_no"/></p>
+                    <p><strong>Name of Training Institute:</strong> <t t-esc="doc.institute_id.name"/></p>
+                <!-- </div> -->
+
+                <!-- List of Questions -->
+                <h3>Questions</h3>
+                <table class="table table-bordered" style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+                    <thead style="background-color: #f2f2f2; border: 1px solid black;">
+                        <tr>
+                            <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Sr No.</th>
+                            <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid black;">Questions</th>
+                            <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Candidate Answer</th>
+                            <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Correct Answer</th>
+                            <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Answer Score</th>
+                            <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="index" t-value="1" />
+                        <t t-foreach="doc.user_input_line_ids" t-as="line">
+                            <tr>
+                                <td style="text-align: center; padding: 8px; border: 1px solid black;"><t t-esc="index"/></td>
+                                <td style="padding: 8px; border: 1px solid black; font-size: 18px;">
+                                    <!-- Display Question Text -->
+                                    <t t-esc="line.question_id.title"/>
+
+                                    <!-- Display Image/Description if Question has one -->
+                                    <t t-if="line.question_id.description">
+                                        <!-- Checking if description contains an image -->
+                                        <p style="margin-top: 5px; font-style: italic;">
+                                            <t t-raw="line.question_id.description"/>
+                                        </p>
+
+                                        <!-- Apply fixed size to images in the description -->
+                                        <t t-if="'&lt;img' in line.question_id.description">
+                                            <style>
+                                                img {
+                                                    width: 350px !important;
+                                                    height: 250px !important;
+                                                    object-fit: contain;
+                                                }
+                                            </style>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td style="padding: 8px; border: 1px solid black;">
+                                    <t t-esc="line.suggested_answer_id.value or 'No Answer Given'"/>
+                                </td>
+                                <td style="padding: 8px; border: 1px solid black;">
+                                    <!-- Correct Answer -->
+                                    <t t-foreach="line.question_id.suggested_answer_ids" t-as="answer">
+                                        <t t-if="answer.is_correct">
+                                            <t t-esc="answer.value"/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td style="padding: 8px; text-align: center; border: 1px solid black;">
+                                    <!-- Display the score of the answer -->
+                                    <t t-esc="line.answer_score or '0'"/>
+                                </td>
+                                <td style="padding: 8px; text-align: center; border: 1px solid black;">
+                                    <!-- Status Correct/Incorrect -->
+                                    <t t-if="line.answer_is_correct">
+                                        <span style="color: green; font-weight: bold;">Correct</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span style="color: red; font-weight: bold;">Incorrect</span>
+                                    </t>
+                                </td>
+                            </tr>
+                            <t t-set="index" t-value="index + 1" />
+                        </t>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </t>
+    </t>
+</template>
+
+</odoo>

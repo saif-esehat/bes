@@ -146,6 +146,10 @@
             <field name="model">survey.user_input</field>
             <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
             <field name="arch" type="xml">
+                <!-- Inherit the header and add a button -->
+                <!-- <xpath expr="//header" position="inside">
+                    <button name="calculate_time" class="oe_highlight" string="Calculate Time" type="object" />
+                </xpath> -->
                 <xpath expr="//field[@name='survey_id']" position="after">
                     
                     <field name="gp_candidate"  attrs="{'invisible': [('is_gp', '=', False)]}"/>
@@ -156,8 +160,15 @@
                     <field name="institute_id" />
                     <!-- <field name="examiner" /> -->
                     <field name="examiner_token" />
+                    <field name="token_regenrated" />
+                    <field name="start_time"/>
+                    <field name="end_time"/>
                     <field name="total_time" />
                     <field name="ip_address" />
+                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
+                    <field name="correct_answers"/>
+                    <field name="wrong_answers"/>
+                    <field name="skipped_questions"/>
                     <field name="is_gp" invisible="1"/>
                     <field name="is_ccmc" invisible="1"/>
 
@@ -186,9 +197,13 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='scoring_success']" position="replace">
+                <!-- <xpath expr="//field[@name='scoring_success']" position="replace">
                     <field name="scoring_success" string="Exam Pass" />
+                </xpath> -->
+                <xpath expr="//field[@name='scoring_success']" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
+
 
                 <!-- Make answer_type invisible in user_input_line_ids -->
                 <xpath expr="//field[@name='user_input_line_ids']/tree/field[@name='answer_type']" position="attributes">
@@ -196,6 +211,7 @@
                 </xpath>
             </field>
         </record>
+
         <record id="survey_user_input_view_form_inherited" model="ir.ui.view">
             <field name="name">survey.user_input.view.form.inherited</field>
             <field name="model">survey.user_input.line</field>
@@ -218,19 +234,24 @@
             <field name="inherit_id" ref="survey.survey_user_input_view_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='survey_id']" position="after"> 
-                    <field name="gp_candidate" attrs="{'invisible': [('is_gp', '=', False)]}"/>
-                    <field name="gp_exam" attrs="{'invisible': [('is_gp', '=', False)]}"/>
-                    <field name="ccmc_candidate" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
-                    <field name="ccmc_exam" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
+                    <field name="gp_candidate" optional="show" attrs="{'invisible': [('is_gp', '=', False)]}"/>
+                    <field name="gp_exam" optional="show" attrs="{'invisible': [('is_gp', '=', False)]}"/>
+                    <field name="ccmc_candidate" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
+                    <field name="ccmc_exam" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="institute_id"/>
                     <field name="indos"/>
                     <field name="examiner_token"/>
+                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
+                    <field name="ip_address"/>
                     <field name="start_time"/>
                     <field name="end_time"/>
                     <field name="total_time"/>
-                    <field name="ip_address"/>
-                    <field name="is_gp" invisible="0"/>
-                    <field name="is_ccmc" invisible="0"/>
+                    <field name="token_regenrated" optional="hide"/>
+                    <field name="correct_answers" optional="hide"/>
+                    <field name="wrong_answers" optional="hide"/>
+                    <field name="skipped_questions" optional="hide"/>
+                    <field name="is_gp" invisible="1"/>
+                    <field name="is_ccmc" invisible="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='scoring_percentage']" position="after">
@@ -238,6 +259,10 @@
                 </xpath>
 
                 <xpath expr="//field[@name='deadline']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='scoring_success']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
@@ -265,9 +290,9 @@
                     <attribute name="optional">hide</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='scoring_success']" position="replace">
+                <!-- <xpath expr="//field[@name='scoring_success']" position="replace">
                     <field name="scoring_success" string="Exam Pass" />
-                </xpath>
+                </xpath> -->
             </field>
         </record>
 

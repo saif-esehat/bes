@@ -33,6 +33,8 @@ class ExaminationReport(models.Model):
         ('repeater', 'Repeater')
     ],string='Type')
     
+    sequence_report = fields.Char("Exam Sequence No.")
+    
     visible_gp_report_button = fields.Boolean(string='Visible GP Report Button',compute="show_repeater_report_button",tracking=True)
     visible_ccmc_report_button = fields.Boolean(string='Visible CCMC Report Button',compute="show_repeater_report_button",tracking=True)
     visible_gp_repeater_report_button = fields.Boolean(string='Visible GP Repeater Report Button',compute="show_repeater_report_button",tracking=True)
@@ -932,18 +934,30 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
     
+    def get_ordinal(self,n):
+        n = int(n)
+        if 10 <= n % 100 <= 20:
+            suffix = 'th'
+        else:
+            suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+        return f"{n}{suffix}"
+
+    
+
     def print_summarised_gp_repeater_report(self):
-        
+        exam_sequence = self.get_ordinal(self.sequence_report) 
         datas = {
             'doc_ids': self.id,
             'course': 'GP',
-            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
-        }
-        
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+            'exam_sequence': exam_sequence
+        } 
         if self.exam_type == 'repeater':
             datas['report_type'] = 'Repeater'
+            datas['exam_sequence'] = exam_sequence
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
+            datas['exam_sequence'] = exam_sequence
             
         return self.env.ref('bes.summarised_gp_repeater_report_action').report_action(self ,data=datas)
     
@@ -963,17 +977,20 @@ class ExaminationReport(models.Model):
         return self.env.ref('bes.bar_graph_report_action').report_action(self ,data=datas)  
    
     def print_summarised_ccmc_report(self):
-        
+        exam_sequence = self.get_ordinal(self.sequence_report) 
         datas = {
             'doc_ids': self.id,
             'course': 'CCMC',
-            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+            'exam_sequence': exam_sequence
         }
         
         if self.exam_type == 'repeater':
             datas['report_type'] = 'Repeater'
+            datas['exam_sequence'] = exam_sequence
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
+            datas['exam_sequence'] = exam_sequence
             
         return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
            
@@ -1097,19 +1114,35 @@ class SummarisedGPRepeaterReport(models.AbstractModel):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = "Summarised GP Repeater Report"
     
+    
+    def get_ordinal(self,n):
+        n = int(n)
+        if 10 <= n % 100 <= 20:
+            suffix = 'th'
+        else:
+            suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+        return f"{n}{suffix}"
+    
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
-        
+        print('sasad')
+        # print(docids)
+        exam_sequence = data['exam_sequence']
+        # print(data['exam_sequence'])
+        # print(data)
         data = self.env['summarised.gp.repeater.report'].sudo().search(
                     [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
         exam_region = data.exam_region.ids
-        
+
+
         data = self.env['summarised.gp.repeater.report'].sudo().search([('examination_report_batch','=',docs1.id)])
 
-        
-        print(exam_region)
+        # print(self.env.context)
+        # exam_sequence = self.env.context.get("exam_sequence")       
+        print('exam_sequence')
+
         # report_type = data['report_type']
         # course = data['course']
 
@@ -1126,7 +1159,8 @@ class SummarisedGPRepeaterReport(models.AbstractModel):
             'doc_model': 'summarised.gp.repeater.report',
             'docs': data,
             'exam_regions': exam_region,
-            'examination_report':docs1
+            'examination_report':docs1,
+            'exam_sequence':exam_sequence
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
@@ -1184,6 +1218,8 @@ class SummarisedCCMCReport(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
+        exam_sequence = data['exam_sequence']
+        print(data)
         docs1 = self.env['examination.report'].sudo().browse(docids)
         data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
         print(docs1)
@@ -1206,7 +1242,8 @@ class SummarisedCCMCReport(models.AbstractModel):
             'doc_model': 'summarised.ccmc.report',
             'docs': docids,
             'exam_regions': exam_region,
-            'examination_report':docs1
+            'examination_report':docs1,
+            'exam_sequence':exam_sequence
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,

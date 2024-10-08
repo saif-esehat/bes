@@ -150,6 +150,7 @@ class CandidatesApplication(models.Model):
         ('eligible', 'Eligible'),
         ('hold', 'Hold'),
         ('not_eligible', 'Not Eligible'),
+        ('updated_eligible', 'Updated Eligible'),
         ], string='Application Eligible / Not Eligible', default='eligible')
 
     # hold = fields.Char(string="Hold")
@@ -178,6 +179,140 @@ class CandidatesApplication(models.Model):
 
 
 
+
+    # def assign_rollno(self):
+    #     count = 1
+    #     candidates_by_grade = {
+    #         '1CM': [],
+    #         '2CM': [],
+    #         'SER': [],
+    #         'ME': [],
+    #         '1ED': [],
+    #         '2ED': []
+    #     }
+    #     # import wdb; wdb.set_trace(); 
+
+    #     # Group candidates by their grade
+    #     for candidate in self:
+    #         if candidate.application_eligible == 'eligible':
+    #             if candidate.grade in candidates_by_grade:
+    #                 candidates_by_grade[candidate.grade].append(candidate)
+
+    #     # Assign roll numbers and create/update iv.candidates records
+    #     for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
+    #         candidates = candidates_by_grade[grade]
+    #         for candidate in candidates:
+    #             roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
+    #             candidate.sudo().write({'roll_no': roll_no})
+                
+    #             # Check if the candidate with the same indos_no already exists
+    #             existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
+                
+    #             if existing_record:
+    #                 # Update the existing record
+    #                 existing_record.sudo().write({
+    #                     'roll_no': roll_no,
+    #                     'name': candidate.name,
+    #                     'batch_id': candidate.batch.id,
+    #                     'dob': candidate.dob,
+    #                     'email': candidate.email,
+    #                     'phone': candidate.mobile,
+    #                     'grade_applied': candidate.grade,
+    #                     'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+
+    #                 })
+    #             else:
+    #                 # Create a new record
+    #                 self.env['iv.candidates'].sudo().create({
+    #                     'roll_no': roll_no,
+    #                     'indos_no': candidate.indos_no,
+    #                     'name': candidate.name,
+    #                     'batch_id': candidate.batch.id,
+    #                     'dob': candidate.dob,
+    #                     'email': candidate.email,
+    #                     'phone': candidate.mobile,
+    #                     'grade_applied': candidate.grade,
+    #                     'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+    #                 })
+    #             count += 1
+
+    #     return
+
+    def assign_hold_candidates_rollno(self):
+        count = self.env['candidates.application'].sudo().search_count([('application_type','=','fresher'),('application_eligible','=','eligible')]) + 1
+
+        candidates_by_grade = {
+            '1CM': [],
+            '2CM': [],
+            'SER': [],
+            'ME': [],
+            '1ED': [],
+            '2ED': []
+        }
+        
+        # Prepare a set of indos_no from self (all candidates)
+        candidate_indos_nos = [candidate.indos_no for candidate in self]
+        
+        # Fetch all relevant records from iv.candidates in one query
+        existing_records = self.env['iv.candidates'].sudo().search([('indos_no', 'in', candidate_indos_nos)])
+        
+        # Store fetched records in a dictionary for fast lookup by indos_no
+        existing_record_map = {record.indos_no: record for record in existing_records}
+        
+        # Categorize candidates by grade
+        for candidate in self:
+            if candidate.application_eligible == 'updated_eligible':
+                if candidate.grade in candidates_by_grade:
+                    candidates_by_grade[candidate.grade].append(candidate)
+
+        for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
+            candidates = candidates_by_grade[grade]
+            for candidate in candidates:
+                # Check if roll_no already exists
+                if not candidate.roll_no:
+                    roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
+                    candidate.sudo().write({'roll_no': roll_no})
+                    count = count + 1
+                else:
+                    roll_no = candidate.roll_no
+
+                # Lookup in the pre-fetched existing_record_map
+                existing_record = existing_record_map.get(candidate.indos_no)
+
+                if existing_record:
+                    # Update the existing record
+                    existing_record.sudo().write({
+                        'roll_no': roll_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile,
+                        'grade_applied': candidate.grade,
+                        'photo': candidate.candidate_image,
+                        'candidate_signature': candidate.candidate_signature,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+                        'candidate_eligible': 'updated_eligible'
+                    })
+                else:
+                    # Create a new record
+                    self.env['iv.candidates'].sudo().create({
+                        'roll_no': roll_no,
+                        'indos_no': candidate.indos_no,
+                        'name': candidate.name,
+                        'batch_id': candidate.batch.id,
+                        'dob': candidate.dob,
+                        'email': candidate.email,
+                        'phone': candidate.mobile,
+                        'grade_applied': candidate.grade,
+                        'photo': candidate.candidate_image,
+                        'candidate_signature': candidate.candidate_signature,
+                        'candidate_applications': [(0, 0, {'application_id': candidate.id})],
+                        'candidate_eligible': 'updated_eligible'
+                    })
+
+        return
+        
 
     def assign_rollno(self):
         count = 1
@@ -322,91 +457,91 @@ class CandidatesApplication(models.Model):
     # Cheak Box List
    
 
-    application_from = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="1) Application form duly filled-in and signed by the applicant appearing for examination, with pasted recent photograph (Yes/No)",
-       default='yes')
+    # application_from = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="1) Application form duly filled-in and signed by the applicant appearing for examination, with pasted recent photograph (Yes/No)",
+    #    default='yes')
 
-    attached_photo = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="2) Self-attested Photo Copy of Previous COC if any (Yes/No)",
-       default='yes')
+    # attached_photo = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="2) Self-attested Photo Copy of Previous COC if any (Yes/No)",
+    #    default='yes')
 
-    origanal_se_certificate = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="3) Original SEA SERVICE CERTIFICATE, verified from the employer’s office record Number of Sea Service Certificate attached (Yes/No)",
-       default='yes')
+    # origanal_se_certificate = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="3) Original SEA SERVICE CERTIFICATE, verified from the employer’s office record Number of Sea Service Certificate attached (Yes/No)",
+    #    default='yes')
 
-    apply_grade = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="4) Candidate apply for the grade of 2nd Class Master/ having CoC issued from other state to attached certificate that the candidate has worked under duly qualified IV master of vessel plying within the coast of Maharashtra state (Yes/No)",
-       default='yes')
+    # apply_grade = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="4) Candidate apply for the grade of 2nd Class Master/ having CoC issued from other state to attached certificate that the candidate has worked under duly qualified IV master of vessel plying within the coast of Maharashtra state (Yes/No)",
+    #    default='yes')
 
-    notarize_affi = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="5) Notarized Affidavit for Sea Service (in Original) (Yes/No)",
-       default='yes')
+    # notarize_affi = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="5) Notarized Affidavit for Sea Service (in Original) (Yes/No)",
+    #    default='yes')
 
-    attched_document = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="6) Attached one from the following & write the name of document attached (Yes/No)",
-       default='yes')
+    # attched_document = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="6) Attached one from the following & write the name of document attached (Yes/No)",
+    #    default='yes')
 
-    attched_photo_ed = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="7) Self-attested photo copy of Educational Qualification (Minimum 8th Pass) (Yes/No)",
-       default='yes')
+    # attched_photo_ed = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="7) Self-attested photo copy of Educational Qualification (Minimum 8th Pass) (Yes/No)",
+    #    default='yes')
 
-    attched_photo_dob = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="8) Self-attested photo copy of Proof of Date of Birth (D.O.B) School Leaving Certificate (SLC) OR Birth Certificate Write the name of document attached (Yes/No)",
-       default='yes')
+    # attched_photo_dob = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="8) Self-attested photo copy of Proof of Date of Birth (D.O.B) School Leaving Certificate (SLC) OR Birth Certificate Write the name of document attached (Yes/No)",
+    #    default='yes')
 
-    attched_photo_residential = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="9) Self-attested photo copy of Residential Address Proof (Must match with column “F” under serial number. 2 as mentioned in the Application) (Yes/No)",
-       default='yes')
+    # attched_photo_residential = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="9) Self-attested photo copy of Residential Address Proof (Must match with column “F” under serial number. 2 as mentioned in the Application) (Yes/No)",
+    #    default='yes')
 
-    attched_photo_security = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="10) Self-attested photo copies of basic safety & Security courses STCW, 2010 DG approved as per the grade (Yes/No)",
-       default='yes')
+    # attched_photo_security = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="10) Self-attested photo copies of basic safety & Security courses STCW, 2010 DG approved as per the grade (Yes/No)",
+    #    default='yes')
 
-    attched_photo_medical = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="11) Self-attested photocopy of Medical Fitness Certificate from a DG approved Medical Examiner (Yes/No)",
-       default='yes')
+    # attched_photo_medical = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="11) Self-attested photocopy of Medical Fitness Certificate from a DG approved Medical Examiner (Yes/No)",
+    #    default='yes')
 
-    attched_photo_idproof = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ], string="12) Self-attested photo copy of the ID Proof (Issued by Government) (Yes/No)",
-       default='yes')
+    # attched_photo_idproof = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string="12) Self-attested photo copy of the ID Proof (Issued by Government) (Yes/No)",
+    #    default='yes')
 
 
-    remark_id_1 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_2 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_3 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_4 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_5 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_6 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_7 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_8 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_9 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_10 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_11 = fields.Many2one('candidates.remark', string="Select Remarks")
-    remark_id_12 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_1 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_2 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_3 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_4 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_5 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_6 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_7 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_8 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_9 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_10 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_11 = fields.Many2one('candidates.remark', string="Select Remarks")
+    # remark_id_12 = fields.Many2one('candidates.remark', string="Select Remarks")
 
 
     hold_reason = fields.One2many('application.hold.reason','application_id',string="Hold Reason")
@@ -620,8 +755,8 @@ class IVCanditateApplicationEligible(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         # Fetch the candidates with 'hold' status
-        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'eligible')
-
+        # docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'eligible')
+        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible in ('eligible', 'updated_eligible'))
         return {
             'docids': docids,
             'doc_model': 'candidates.application',

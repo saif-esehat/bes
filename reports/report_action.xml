@@ -53,6 +53,16 @@
         name="bes.attendance_sheet_online_gp"
         file="bes.attendance_sheet_online_gp"/>
 
+    <report
+        id="action_attendance_sheet_online_gp_new"
+        model="examiner.attendance.wizard"
+        string="GP Attendance Sheet"
+        report_type="qweb-pdf"
+        name="bes.attendance_sheet_online_gp_new"
+        file="bes.attendance_sheet_online_gp_new"
+        print_report_name="'GP Attendance Sheet - %s' % (object.id)"
+    />
+
 
     <!-- <report
         id="report_dgs_action"
@@ -167,12 +177,6 @@
         <field name="report_file">bes.bar_graph_report</field>
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
-  
-
-
-
-
-    
 
      <record id="ship_visit_report_action" model="ir.actions.report">
         <field name="name">Ship Visit Report</field>
@@ -183,4 +187,44 @@
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
+
+    <record id="bes.survey_report_fomat" model="report.paperformat">
+        <field name="name">Landscape Format for Survey Report</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">5</field> <!-- Adjust margin as needed -->
+        <field name="margin_bottom">5</field> <!-- Adjust margin as needed -->
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">120</field> <!-- DPI for print quality -->
+    </record>
+
+    <record id="action_report_survey_user_input" model="ir.actions.report">
+        <field name="name">Candidate Report</field>
+        <field name="model">survey.user_input</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.report_survey_user_input</field>
+        <field name="report_file">bes.report_survey_user_input</field>
+        <field name="print_report_name">'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)</field>
+        <field name="paperformat_id" ref="bes.survey_report_fomat"/>
+    </record>
+
+
+
+    <!-- survey_user_input_report_action.xml -->
+    <!-- <report
+        id="action_report_survey_user_input"
+        model="survey.user_input"
+        string="Candidate Report"
+        report_type="qweb-pdf"
+        name="bes.report_survey_user_input"
+        file="bes.report_survey_user_input"
+        print_report_name="'Exam Report - %s' % (object.gp_candidate or object.ccmc_candidate)"
+    /> -->
+
 </odoo>

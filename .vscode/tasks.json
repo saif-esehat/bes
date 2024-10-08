@@ -6,7 +6,7 @@
         {
             "label": "Restart LERM CESC",
             "type": "shell",
-            "command": "docker restart 0e29e34002ea72b8d8111731fd4eaede210012be71d97926bfd3cb0b9359b8de"
+            "command": "docker restart 1a7a29a6d8f18838694482a621a12c77276a5777a069ac5bed8d5637dd1a9cc8"
         }
     ]
 }
