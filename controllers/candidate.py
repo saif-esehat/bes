@@ -140,7 +140,7 @@ class GPCandidatePortal(CustomerPortal):
         # if registered_exam.gp_candidate:
         gp_exam = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         
-        import wdb; wdb.set_trace()
+        # import wdb; wdb.set_trace()
         gp_ip = gp_exam.ip_address.split(",")
         print(gp_exam)
         survey_examiner_token = gp_exam.token
