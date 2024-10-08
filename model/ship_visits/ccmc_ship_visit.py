@@ -23,6 +23,10 @@ class CCMCShipVisit(models.Model):
     candidate_ids = fields.Many2many('ccmc.candidate', string="CCMC Candidates")
     course_gp = fields.Char(string="Course")
     no_of_candidate = fields.Char(string="Number Of Candidate")
+
+    institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
+    ccmc_ship_batch_ids = fields.Many2one('institute.ccmc.batches', string="Batch")
+    ccmc_batch = fields.Selection([('gp','GP'),('ccmc','CCMC')],string="GP / CCMC",tracking=True)
     # institute_batch_id = fields.Many2one('institute.batch', string="Institute Batch")
 
 

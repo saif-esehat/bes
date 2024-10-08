@@ -75,6 +75,8 @@
         'reports/iv_exam_report/iv_oral_exam_result.xml',
         'views/ship_visit/gp_ship_visit.xml',
         'views/ship_visit/ccmc_ship_visit.xml',
+        'views/portal/ship_visit/ship_visit.xml',
+        'views/portal/ship_visit/ccmc_ship_visi.xml',
  
        
         # 'views/sep_batches.xml',

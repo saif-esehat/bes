@@ -19,6 +19,7 @@ class InstituteGPBatches(models.Model):
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
 
     candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
+    ship_visit_id = fields.Many2one('gp.batches.ship.visit', string='Ship Visit')
     
     
     
@@ -456,31 +457,50 @@ class InstituteGPBatches(models.Model):
             }
         } 
 
-    def open_gp_ship_visit(self):
-        """
-        This method opens the GP Ship Visit form, filtered by selected candidates.
-        """
-        domain = []
-        default_candidate_ids = []
+    # def open_gp_ship_visit(self):
+        # """
+        # This method opens the GP Ship Visit form, filtered by selected candidates.
+        # """
+        # domain = []
+        # default_candidate_ids = []
 
-        # Check if candidate_ids are available for filtering
-        if self.candidate_ids:
-            domain = [('candidate_ids', 'in', self.candidate_ids.ids)]
-            default_candidate_ids = [(6, 0, self.candidate_ids.ids)]
+        # # Check if candidate_ids are available for filtering
+        # if self.candidate_ids:
+        #     domain = [('candidate_ids', 'in', self.candidate_ids.ids)]
+        #     default_candidate_ids = [(6, 0, self.candidate_ids.ids)]
         
         # Return the action to open the tree and form views
+        # return {
+        #     'name': _('GP Ship Visit'),
+        #     'type': 'ir.actions.act_window',
+        #     'res_model': 'gp.batches.ship.visit',
+        #     'view_mode': 'tree,form',
+        #     'view_type': 'form',
+        #     'domain': domain,
+        #     'context': {
+        #         'default_candidate_ids': default_candidate_ids,
+        #     },
+        #     'target': 'current',
+        # }
+
+
+    def open_gp_ship_visit(self):
+        
         return {
-            'name': _('GP Ship Visit'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'gp.batches.ship.visit',
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'domain': domain,
-            'context': {
-                'default_candidate_ids': default_candidate_ids,
-            },
-            'target': 'current',
-        }
+        'name': 'GP Ship Visit',
+        'domain': [('gp_ship_batch_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'gp.batches.ship.visit',
+        # 'res_model': 'batches.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            # 'default_batches_id': self.id
+            'default_gp_ship_batch_id': self.id,
+            'default_gp_or_ccmc_batch': 'gp'   
+            }
+        } 
      
 
     def open_register_for_exam_wizard(self):
@@ -1007,29 +1027,19 @@ class InstituteCcmcBatches(models.Model):
         } 
 
     def open_ccmc_ship_visit(self):
-        """
-        This method opens the CCMC Ship Visit form, filtered by selected candidates.
-        """
-        domain = []
-        default_candidate_ids = []
 
-        # Check if candidate_ids are available for filtering
-        if self.candidate_ids:
-            domain = [('candidate_ids', 'in', self.candidate_ids.ids)]
-            default_candidate_ids = [(6, 0, self.candidate_ids.ids)]
-        
-        # Return the action to open the tree and form views
         return {
-            'name': _('CCMC Ship Visit'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'ccmc.batches.ship.visit',
-            'view_mode': 'tree,form',
+            'name': 'CCMC Ship Visit',
+            'domain': [('ccmc_ship_batch_ids', '=', self.id)],
             'view_type': 'form',
-            'domain': domain,
+            'res_model': 'ccmc.batches.ship.visit',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
             'context': {
-                'default_candidate_ids': default_candidate_ids,
-            },
-            'target': 'current',
+                'default_ccmc_ship_batch_ids': self.id,
+                'default_ccmc_batch': 'ccmc',  # Ensure this is correctly passed as default
+            }
         }
 
     def open_register_for_exam_wizard(self):

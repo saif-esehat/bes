@@ -1,0 +1,284 @@
+<odoo>
+   
+<template id="portal_breadcrumbs" inherit_id="portal.portal_breadcrumbs">
+
+
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
+
+            <!-- <li t-if="page_name == 'ship_visits'" class="breadcrumb-item ">
+             GP Batches
+                
+            </li> -->
+
+            <t t-if="page_name == 'gp_ccmcship_list'">
+               
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+
+                  <li class="breadcrumb-item">
+                    Ship Visit
+                </li>
+            </t>
+
+            <t t-if="page_name == 'ccmcship_create'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+                <li class="breadcrumb-item">
+                  Create New CCMC Ship Visit
+                </li>
+            </t>
+
+              <t t-if="page_name == 'ccmc_ship_from'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+                <li class="breadcrumb-item">
+                   CCMC Ship Visit Form
+                </li>
+            </t>
+          
+           
+
+        </xpath>
+</template>
+
+
+
+   
+
+<template id="portal_ccmc_ship_visits_po">
+    <t t-call="portal.portal_layout">
+        <div class="container">
+       
+         <t t-call="portal.portal_table">
+                <thead>
+              
+                      <tr>
+                        <th>Ship Name</th>
+                        <th>Port Name</th>
+                        <th>IMO No.</th>
+                        <th>Date of Visit</th>
+                        <th>Time Spent</th>
+                        <th>Course</th>
+                        <th>No. of Candidates</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="ship_visits" t-as="visit">
+                        <tr>
+                            <td>
+                           <a t-attf-href="/my/ccmc_ship_visits/view?id={{ visit.id }}" t-if="page_name == 'gp_ccmcship_list'" class="fa">
+                                <t t-esc="visit.ship_name2"/>
+                            </a>
+                            </td>
+                            <td><t t-esc="visit.port_name"/></td>
+                            <td><t t-esc="visit.imo_no"/></td>
+                            <td><t t-esc="visit.date_of_visit.strftime('%Y-%m-%d %H:%M') if visit.date_of_visit else ''"/></td>
+                          <td><t t-esc="visit.time_spent"/></td>
+                            <td><t t-esc="visit.course_gp"/></td> 
+                            <td><t t-esc="visit.no_of_candidate"/></td> 
+                            <td>
+                           <!-- <a t-attf-href="/my/ccmc_ship_visits/view" class="btn btn-primary" >
+                            </a> -->
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <a style="margin-top: 20px; margin-bottom: 20px;"  class="btn btn-primary" t-att-href="'/my/ccmc_ship_visits/create'">Create New Ship Visit</a>
+        </div>
+    </t>
+</template>
+
+
+
+
+ <template id="portal_ccmc_ship_visit_create" name="Create GP Ship Visit">
+    <t t-call="portal.portal_layout">
+        <div class="container">
+           
+            <form action="/my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <!-- <input type="hidden" name="batch_id" value="gp_ship_batch_id" /> -->
+                
+                <div class="form-group">
+                    <label for="ship_name2">Ship Name</label>
+                    <input type="text" name="ship_name2" class="form-control" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="port_name">Port Name</label>
+                    <input type="text" name="port_name" class="form-control" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="imo_no">IMO No.</label>
+                    <input type="text" name="imo_no" class="form-control" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="date_of_visit">Date of Visit</label>
+                    <input type="datetime-local" name="date_of_visit" class="form-control" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="time_spent">Time Spent (in hours)</label>
+                    <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="gp_image">Ship Image</label>
+                     <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+               
+
+                </div>
+                <div class="form-group">
+                    <label for="course_gp">Course</label>
+                    <input type="text" name="course_gp" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="no_of_candidate">Number of Candidates</label>
+                    <input type="number" name="no_of_candidate" class="form-control" min="0"/>
+                </div>
+              
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </t>
+</template>
+
+    <template id="my_ccmc_ship_visits" name="My Ship Visits">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <h1>My Ship Visits</h1>
+
+                <!-- Display success or error message -->
+                <t t-if="request.session.get('success_message')">
+                    <div class="alert alert-success">
+                        <t t-esc="request.session.pop('success_message')"/>
+                    </div>
+                </t>
+                <t t-if="request.session.get('error_message')">
+                    <div class="alert alert-danger">
+                        <t t-esc="request.session.pop('error_message')"/>
+                    </div>
+                </t>
+
+                <!-- Existing content for displaying ship visits -->
+                <table class="table">
+                    <!-- Your table structure goes here -->
+                </table>
+            </div>
+        </t>
+    </template>
+
+
+
+    <template id="portal_ccmc_ship_visit_edit" name="Edit Ship Visit">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <h3>Edit Ship Visit</h3>
+                        <form method="POST" action="/my/ccmc_ship_visits/update">
+                            <!-- CSRF token -->
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="id" t-att-value="visit.id"/>
+
+                            <!-- Ship Name -->
+                            <div class="form-group">
+                                <label for="ship_name2">Ship Name:</label>
+                                <input type="text" id="ship_name2" name="ship_name2" class="form-control" t-att-value="visit.ship_name2"/>
+                            </div>
+
+                            <!-- Port Name -->
+                            <div class="form-group">
+                                <label for="port_name">Port Name:</label>
+                                <input type="text" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
+                            </div>
+
+                            <!-- IMO Number -->
+                            <div class="form-group">
+                                <label for="imo_no">IMO No.:</label>
+                                <input type="text" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                            </div>
+
+                            <!-- Date of Visit -->
+                            <div class="form-group">
+                                <label for="date_of_visit">Date of Visit:</label>
+                                <input type="datetime-local" id="date_of_visit" name="date_of_visit" class="form-control"
+                                    t-att-value="visit.date_of_visit.strftime('%Y-%m-%dT%H:%M') if visit.date_of_visit else ''"/>
+                            </div>
+
+                            <!-- Time Spent -->
+                            <div class="form-group">
+                                <label for="time_spent">Time Spent:</label>
+                                <input type="text" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                            </div>
+
+                            <!-- Course GP -->
+                            <div class="form-group">
+                                <label for="course_gp">Course:</label>
+                                <input type="text" id="course_gp" name="course_gp" class="form-control" t-att-value="visit.course_gp"/>
+                            </div>
+
+                            <!-- No. of Candidates -->
+                            <div class="form-group">
+                                <label for="no_of_candidate">No. of Candidates:</label>
+                                <input type="number" id="no_of_candidate" name="no_of_candidate" class="form-control" t-att-value="visit.no_of_candidate"/>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-secondary" href="/my/ship_visits">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_ccmc_ship_visit_form" name="GP Ship Visit Form">
+    <t t-call="portal.portal_layout">
+        <div class="container">
+          
+            <table class="table table-bordered">
+                <tr>
+                    <th>Ship Name</th>
+                    <td><t t-esc="ship_visit.ship_name2"/></td>
+                </tr>
+                <tr>
+                    <th>Port Name</th>
+                    <td><t t-esc="ship_visit.port_name"/></td>
+                </tr>
+                <tr>
+                    <th>IMO No.</th>
+                    <td><t t-esc="ship_visit.imo_no"/></td>
+                </tr>
+                <tr>
+                    <th>Date of Visit</th>
+                    <td><t t-esc="ship_visit.date_of_visit.strftime('%Y-%m-%d %H:%M:%S') if ship_visit.date_of_visit else ''"/></td>
+                </tr>
+                <tr>
+                    <th>Time Spent (in hours)</th>
+                    <td><t t-esc="ship_visit.time_spent"/></td>
+                </tr>
+                <tr>
+                    <th>Course</th>
+                    <td><t t-esc="ship_visit.course_gp"/></td>
+                </tr>
+                <tr>
+                    <th>No. of Candidates</th>
+                    <td><t t-esc="ship_visit.no_of_candidate"/></td>
+                </tr>
+            </table>
+            <a class="btn btn-warning" t-att-href="'/my/ccmc_ship_visits/edit?id=' + str(ship_visit.id)">Edit</a>
+             <a class="btn btn-danger" t-att-href="'/my/ccmc_ship_visits/delete?id=' + str(ship_visit.id)">Delete</a>
+            <a class="btn btn-secondary" href="javascript:history.back()">Back</a>
+        </div>
+    </t>
+</template>
+
+
+
+
+
+</odoo>
