@@ -75,7 +75,7 @@
                                 </td>
                                 <td colspan="1" style="border: 1px solid black; padding: 6px; text-align: center;vertical-align: middle;">
                                         <t t-if="eligible.reporting_time">
-                                            <span t-esc="str(eligible.reporting_time) + ' hrs.'"/>
+                                            <span t-esc="str(eligible.reporting_time)"/>
                                         </t>
                                         <t t-if="not eligible.reporting_time">
                                             <!-- Empty cell if reporting_time is not available -->

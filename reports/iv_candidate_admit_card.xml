@@ -64,7 +64,27 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
-                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
+                            Grade Applied for: <strong>
+                                <t t-if="o.grade_applied == '1CM'">
+                                    First Class Master
+                                </t>
+                                <t t-if="o.grade_applied == '2CM'">
+                                    Second Class Master
+                                </t>
+                                <t t-if="o.grade_applied == 'SER'">
+                                    Serang
+                                </t>
+                                <t t-if="o.grade_applied == 'ME'">
+                                    Motor Engineer
+                                </t>
+                                <t t-if="o.grade_applied == '1ED'">
+                                    First Class Engine Driver
+                                </t>
+                                <t t-if="o.grade_applied == '2ED'">
+                                    Second Class Engine Driver
+                                </t>
+                                
+                            </strong>
                         </td>
                     </tr>
                   <tr>

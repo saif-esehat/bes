@@ -21,7 +21,12 @@
                 
                 <!-- Second Line -->
                 <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                    <t t-if="docs[0].application_type == 'fresher'">
                         List of Hold (Fresh) Candidates
+                    </t>
+                    <t t-else="">
+                        List of Hold (Repeater) Candidates
+                    </t>
                 </h6>
 
                 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
