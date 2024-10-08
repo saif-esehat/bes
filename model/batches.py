@@ -1017,8 +1017,14 @@ class BatchesRegisterExamWizard(models.TransientModel):
         # candidates = self.env["gp.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
         candidates = self.env["gp.candidate"].sudo().browse(candidates_ids)
 
-        mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
-        gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
+        # mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
+        # gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
+        
+        gsk_survey_qb = self.env["course.master.subject"].sudo().search([('name','=','GSK')]).qb_online
+        mek_survey_qb = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
+
+        
+        
         batch = self.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         # batch =   
 
@@ -1069,7 +1075,11 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         
 
         # print(candidates)
-        cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
+        # cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
+        
+        cookery_bakery_qb = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
+
+        
         batch = self.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
 
 

@@ -532,10 +532,20 @@
             <field name="groups_id" eval="[(6, 0, [ref('bes.group_examiners')])]"/>
         </record> -->
 
-        <menuitem id="menu_examiner_expenses" parent="bes_batch_examiner_duty_menus_group_examiner"
-            name="Expenses" action="open_examiner_expenses"
-            groups="bes.group_bes_admin,bes.group_exam_coordinator"
+        <menuitem id="menu_expenses" parent="bes_batch_examiner_duty_menus_group_examiner"
+            name="Expenses"
             sequence="12"
+             />
+        
+        
+        <menuitem id="menu_batch_expenses" parent="menu_expenses"
+            name="Batch Expenses" action="open_batch_expenses"
+            sequence="1"
+             />
+
+        <menuitem id="menu_examiner_expenses" parent="menu_expenses"
+            name="Expenses" action="open_examiner_expenses"
+            sequence="2"
              />
 
 
