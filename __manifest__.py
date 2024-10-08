@@ -73,7 +73,10 @@
         'reports/iv_candidate/iv_candidate_issuance_admitcard.xml',
         'reports/iv_exam_report/iv_written_exam_a.xml',
         'reports/iv_exam_report/iv_oral_exam_result.xml',
-        'reports/candidates_exam_report.xml',
+        'views/ship_visit/gp_ship_visit.xml',
+        'views/ship_visit/ccmc_ship_visit.xml',
+        'views/portal/ship_visit/ship_visit.xml',
+        'views/portal/ship_visit/ccmc_ship_visi.xml',
  
        
         # 'views/sep_batches.xml',

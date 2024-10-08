@@ -30,6 +30,8 @@
                             </button>
                             <button name="open_batch_faculty" string="Faculties" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
+                             <button name="open_gp_ship_visit" string="GP Ship Visit" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                         </div>
                         <group style="width:100%;">
                             <h1>
@@ -298,6 +300,8 @@
                             </button>
                             <button name="open_ccmc_batch_faculty" string="Faculties" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
+                             <button name="open_ccmc_ship_visit" string="CCMC Ship Visit" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                         </div>
                         <group style="width:100%;">
                             <h1>
@@ -471,12 +475,12 @@
                     <header>                        
                         <button name="print_gp_fresh" string="GP Report" type="object" class="btn-primary" />
                         <button name="print_ccmc_fresh" string="CCMC Report" type="object" class="btn-primary" />
-                        <!-- <button name="get_pass_percentage" string="Generate Graph" type="object" class="btn-primary" />
-                        <button name="ccmc_get_pass_percentage" string="Generate Graph CCMC" type="object" class="btn-primary" /> -->
+                        <button name="get_pass_percentage" string="Generate Graph" type="object" class="btn-primary" />
+                        <button name="ccmc_get_pass_percentage" string="Generate Graph CCMC" type="object" class="btn-primary" />
                         <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
                         <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
                         <button name="generate_report" string="Generate Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_generate_report', '=', False)]}"  />
-                        <!-- <button name="open_release_admit_card_wizard" string="Release Admit Card" type="object" class="btn-primary" /> -->
+                        <button name="open_release_admit_card_wizard" string="Release Admit Card" type="object" class="btn-primary" />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -486,8 +490,6 @@
                             <button name="open_gp_exams" string="GP Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
                             <button name="open_reports" string="Reports" type="object" class="oe_stat_button" icon="fa-align-justify" >
-                            </button>
-                            <button name="open_expense_sheet" string="Expense Sheet" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
                         </div>
                         <group>

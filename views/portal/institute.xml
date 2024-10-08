@@ -194,6 +194,7 @@
     </template>
 
 
+
     <template id="institute_gp_batches" name="GP Batches">
         <script>
                 function openTokenModal(button) {
@@ -311,6 +312,7 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
+                         <th>GP Ship Visits</th>
                         <th>No. of Candidate</th>
                         <th>Batch Capacity</th>
                         <!-- <th>DGS Document</th> -->
@@ -337,11 +339,21 @@
                                 Faculty
                                 </a>
                             </td>
+
                             <td class="text-left">
                                 <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
                                 Download Report
                                 </a>
                             </td>
+                         
+                        <td class="text-left">
+                            <a t-attf-href="/my/ship_visits/{{batch.id}}" class="fa">
+                                GP Ship Visit
+                            </a>
+                        </td>
+                            
+                           
+
                             <td class="text-center">
                                 <t t-out="batch.candidate_count" />
                             </td>
@@ -475,6 +487,7 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
+                         <th>CCMC Ship Visits</th>
                         <th>Candidate Count</th>
                         <th>DGS Capacity</th>
                         <!-- <th>DGS Document</th> -->
@@ -505,6 +518,11 @@
                                 Download Report
                                 </a>
                             </td>
+                                <td class="text-left">
+                            <a t-attf-href="/my/ccmc_ship_visits/{{batch.id}}" class="fa">
+                                CCMC Ship Visit
+                            </a>
+                        </td>
                             <td class="text-center">
                                 <t t-out="batch.candidate_count" />
                             </td>
@@ -4455,6 +4473,8 @@
             </t>
         </t>
     </template>
+
+  
 
     <template id="ccmc_faculty_portal_list" name="Faculty">
         <script>
