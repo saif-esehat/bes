@@ -140,13 +140,15 @@ class GPCandidatePortal(CustomerPortal):
         # if registered_exam.gp_candidate:
         gp_exam = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         
+        import wdb; wdb.set_trace()
+        gp_ip = gp_exam.ip_address.split(",")
         print(gp_exam)
         survey_examiner_token = gp_exam.token
         # elif registered_exam.ccmc_candidate:
         #     ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         #     survey_examiner_token = ccmc_exam.token
             
-        if ip == gp_exam.ip_address:
+        if ip in gp_ip:
         
             if survey_examiner_token == examiner_token:
                 
@@ -282,8 +284,10 @@ class GPCandidatePortal(CustomerPortal):
         print("ccmc_exam.token")
         print(ccmc_exam.token)
         survey_examiner_token = ccmc_exam.token
+
+        ccmc_ip = ccmc_exam.ip_address.split(",")
         # import wdb; wdb.set_trace()
-        if ip == ccmc_exam.ip_address:
+        if ip in ccmc_ip:
         
             if survey_examiner_token == examiner_token:
                 if ccmc_exam.ccmc_online_token_used:
