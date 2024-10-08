@@ -742,6 +742,7 @@
                             <t t-set="nation_applied" t-value="0" />
                             <t t-set="region_index" t-value="0"/>
                             <t t-set="nation_candidate_appeared" t-value="0" />
+                            <t t-set="region_length" t-value="len(exam_regions)"/>
                             <t t-set="nation_practical_pass_appeared" t-value="0" />
                             <t t-set="nation_practical_pass" t-value="0" />
                             <t t-set="nation_oral_pass_appeared" t-value="0" />

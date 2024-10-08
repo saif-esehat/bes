@@ -3205,6 +3205,7 @@ class GPExam(models.Model):
     @api.depends('gsk_oral_prac_attendance','gsk_online_attendance','mek_oral_prac_attendance','mek_online_attendance')
     def _compute_absent_status(self):
         for record in self:
+            
             if record.gsk_oral_prac_attendance == 'absent' and record.gsk_online_attendance == 'absent' and record.mek_oral_prac_attendance == 'absent' and record.mek_online_attendance == 'absent':
                 record.absent_status = "absent"
             elif record.gsk_oral_prac_attendance == 'absent' or record.gsk_online_attendance == 'absent' or record.mek_oral_prac_attendance == 'absent' or record.mek_online_attendance == 'absent':
@@ -4531,15 +4532,74 @@ class CCMCExam(models.Model):
         ('absent', 'Absent'),
     ],compute="_compute_absent_status",string="Absent Status",store=True)
     
-    @api.depends('cookery_prac_attendance','ccmc_gsk_oral_attendance','ccmc_online_attendance')
+    @api.depends('cookery_prac_attendance','cookery_prac_carry_forward','cookery_gsk_online_carry_forward','cookery_oral_carry_forward','ccmc_gsk_oral_attendance','ccmc_online_attendance','cookery_bakery_prac_status','ccmc_oral_prac_status','ccmc_online_status')
     def _compute_absent_status(self):
         for record in self:
-            if record.cookery_prac_attendance == 'absent' and record.ccmc_gsk_oral_attendance == 'absent' and record.ccmc_online_attendance == 'absent':
-                record.absent_status = "absent"
-            elif record.cookery_prac_attendance == 'absent' or record.ccmc_gsk_oral_attendance == 'absent' or record.ccmc_online_attendance == 'absent':
-                record.absent_status = "present"
+            row = []
+            if record.cookery_prac_carry_forward and record.cookery_bakery_prac_status == 'passed':
+                cookery_prac_status = "AP"
+                row.append(cookery_prac_status)
+            elif record.cookery_bakery_prac_status == "passed":
+                cookery_prac_status = "P"
+                row.append(cookery_prac_status)
+            elif record.cookery_prac_attendance == 'absent':
+                cookery_prac_status = "A"
+                row.append(cookery_prac_status)
             else:
-                record.absent_status = "present"
+                cookery_prac_status = "F"
+                row.append(cookery_prac_status)
+            
+            if record.cookery_oral_carry_forward and record.ccmc_oral_prac_status == 'passed':
+                ccmc_oral_prac_status = "AP"
+                row.append(ccmc_oral_prac_status)
+            elif record.ccmc_oral_prac_status == "passed":
+                ccmc_oral_prac_status = "P"
+                row.append(ccmc_oral_prac_status)
+            elif record.ccmc_gsk_oral_attendance == "absent":
+                ccmc_oral_prac_status = "A"
+                row.append(ccmc_oral_prac_status)
+            else:
+                ccmc_oral_prac_status = "F"
+                row.append(ccmc_oral_prac_status)
+                
+            if record.cookery_gsk_online_carry_forward and record.ccmc_online_status == 'passed':
+                ccmc_online_status = "AP"
+                row.append(ccmc_online_status)
+            elif record.ccmc_online_status == "passed":
+                ccmc_online_status = "P"
+                row.append(ccmc_online_status)
+            elif record.ccmc_online_attendance == 'absent':
+                ccmc_online_status = "A"
+                row.append(ccmc_online_status)
+            else:
+                ccmc_online_status = "F"
+                row.append(ccmc_online_status)
+            
+            allowed_values = {'AP', 'A'}
+            
+            print(row)      
+            
+            unique_values = set(row)
+            # if record.exam_id == '17002':
+            #     print("unique Values")
+            #     print("17002")       
+            # print(record.exam_id)      
+            # print(unique_values)
+            # print(unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values))                    
+            if unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values):
+                # absent = absent + 1
+                record.absent_status = 'absent'
+            else:
+                record.absent_status = 'present'
+            
+            
+            
+            # if record.cookery_prac_attendance == 'absent' and record.ccmc_gsk_oral_attendance == 'absent' and record.ccmc_online_attendance == 'absent':
+            #     record.absent_status = "absent"
+            # elif record.cookery_prac_attendance == 'absent' or record.ccmc_gsk_oral_attendance == 'absent' or record.ccmc_online_attendance == 'absent':
+            #     record.absent_status = "present"
+            # else:
+            #     record.absent_status = "present"
     
     cookery_prac_attendance = fields.Selection([
         ('present', 'Present'),
