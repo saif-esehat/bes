@@ -1489,11 +1489,21 @@ class ExamOralPractical(models.Model):
 
             
             
-            self.expense_sheet_status = "generated"
-                
-                
+            self.expense_sheet_status = "generated"    
             print("working")
-    
+            
+        # import wdb;wdb.set_trace();
+        institute_expense = self.env["institute.exam.expenses"].search([('dgs_batch','=',self.dgs_batch.id),('institute','=',self.institute_id.id)])
+
+
+        if not institute_expense:
+            self.env["institute.exam.expenses"].sudo().create({
+                'expense_batch': expense_batch.id,
+                'dgs_batch':self.dgs_batch.id,
+                'institute':self.institute_id.id    
+                })
+                
+                
     
     # def generate_expense_sheet(self):
         # for assignment in self.examiners:
@@ -2808,7 +2818,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                 ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
                 ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
-                                    'ccmc_exam':ccmc_exam.id,
+                                     'ccmc_exam':ccmc_exam.id,
                                     'institute_id': ccmc_exam.ccmc_candidate.institute_id.id,
                                     "dgs_batch":ccmc_exam.dgs_batch.id,
                                     "ip_address":ccmc_exam.ip_address,
