@@ -52,15 +52,13 @@ class InstituteExpenseReport(models.Model):
     practical_oral_expenses = fields.Integer("Practical/Oral Expenses",compute="_compute_practical_expense")
     online_expenses = fields.Integer("Online Expenses",compute="_compute_online_expense")
     team_lead_expense = fields.Integer("Team Lead Expense",compute="_compute_tl_expense")
-    total = fields.Integer("Total",compute="_compute_total")
+    total = fields.Integer("Team Lead Expense",compute="_compute_total")
     
     @api.depends('dgs_batch','institute')
     def _compute_total(self):
         for record in self:
             record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense
             
-    
-    
     
     @api.depends('dgs_batch','institute')
     def _compute_practical_expense(self):
