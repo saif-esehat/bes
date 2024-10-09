@@ -13,7 +13,7 @@ class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
     _rec_name = "batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Batches'
+    _description= 'GP Batches'
     
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
@@ -81,10 +81,10 @@ class InstituteGPBatches(models.Model):
     def _compute_all_candidates_have_indos(self):
         for record in self:
             # import wdb; wdb.set_trace()
-            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id)])
+            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id),('withdrawn_state','!=','yes')])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
+                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', ''),('withdrawn_state','!=','yes')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
@@ -614,7 +614,7 @@ class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"
     _rec_name = "ccmc_batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Batches'
+    _description= 'CCMC Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
@@ -675,10 +675,10 @@ class InstituteCcmcBatches(models.Model):
     def _compute_all_candidates_have_indos(self):
         for record in self:
             # import wdb; wdb.set_trace()
-            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id)])
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id),('withdrawn_state','!=','yes')])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
+                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', ''),('withdrawn_state','!=','yes')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:

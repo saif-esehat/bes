@@ -623,6 +623,9 @@
     
                     }
 
+
+
+
                 
             </script>
             <style>
@@ -1000,6 +1003,65 @@
                                         </div>
                                     </div>
                                 </t>
+
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="fees_paid">Mention if candidate is withdrawn</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+
+                                            <t t-if="candidate.withdrawn_state == 'yes'">
+                                            Yes
+                                            </t>
+                                            <t t-else="">
+                                            No
+                                            </t>
+                                        </p>
+
+                                        <t t-if="batches.state == '6-done'">
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted mb-0">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateWithdrawnStatusGP" class="btn btn-primary btn_cta">Update</a>
+                                            </p>
+                                        </t>
+                                        <!-- Modal for Withdraw Reason -->
+                                        <div class="modal fade" id="updateWithdrawnStatusGP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <form method="post" action="/my/gpcandidate/updatewithdrawnstatus" enctype="multipart/form-data">
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Update Withdraw Status</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
+                                                            <label for="withdrawn_state">Withdraw Status</label>
+
+                                                            <select id="withdrawn_state" name="withdrawn_state">
+                                                                <option value="yes">Yes</option>
+                                                                <option value="no" t-att-selected="1">No</option>
+                                                            </select>
+                                                            <br/>
+                                                            <label for="withdrawn_reason"></label>
+                                                            <input type="textbox" class="form-control mb-3" id="withdrawn_reason" name="withdrawn_reason" t-att-value ="candidate.withdrawn_reason"/>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
 
 
                             </div>
@@ -5400,6 +5462,62 @@
                                     </div>
                                 </t>
 
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="fees_paid">Mention if candidate is withdrawn</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">
+
+                                            <t t-if="candidate.withdrawn_state == 'yes'">
+                                            Yes
+                                            </t>
+                                            <t t-else="">
+                                            No
+                                            </t>
+                                        </p>
+
+                                        <t t-if="batches.ccmc_state == '6-done'">
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted mb-0">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#updateWithdrawnStatusCCMC" class="btn btn-primary btn_cta">Update</a>
+                                            </p>
+                                        </t>
+                                        <!-- Modal for Withdraw Reason -->
+                                        <div class="modal fade" id="updateWithdrawnStatusCCMC" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <form method="post" action="/my/ccmccandidate/updatewithdrawnstatus" enctype="multipart/form-data">
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Update Withdraw Status</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
+                                                            <label for="withdrawn_state">Withdraw Status</label>
+
+                                                            <select id="withdrawn_state" name="withdrawn_state">
+                                                                <option value="yes">Yes</option>
+                                                                <option value="no" t-att-selected="1">No</option>
+                                                            </select>
+                                                            <br/>
+                                                            <label for="withdrawn_reason"></label>
+                                                            <input type="textbox" class="form-control mb-3" id="withdrawn_reason" name="withdrawn_reason" t-att-value ="candidate.withdrawn_reason"/>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                             </div>
                         </div>
@@ -5859,10 +5977,20 @@
                                                                         Download
                                                                 </td> -->
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_start_date.strftime('%d-%m-%Y')" />
+                                                                    <t t-if="stcw_certificate.course_start_date">
+                                                                        <t t-out="stcw_certificate.course_start_date.strftime('%d-%m-%Y')" />
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <t t-out="stcw_certificate.course_start_date" />
+                                                                    </t>
                                                                 </td>
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_end_date.strftime('%d-%m-%Y')" />
+                                                                    <t t-if="stcw_certificate.course_start_date">
+                                                                        <t t-out="stcw_certificate.course_end_date.strftime('%d-%m-%Y')" />
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <t t-out="stcw_certificate.course_end_date" />
+                                                                    </t>
                                                                 </td>
                                                             </tr>
                                                         </t>
