@@ -58,7 +58,7 @@ class InstituteExpenseReport(models.Model):
     @api.depends('dgs_batch','institute')
     def _compute_total(self):
         for record in self:
-            record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense
+            record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense + record.non_mariner_expense
     
     @api.depends('dgs_batch','institute')
     def _compute_nm_expense(self):
