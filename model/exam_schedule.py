@@ -2945,11 +2945,13 @@ class GPExam(models.Model):
     ip_address = fields.Char("IP Address")
     
     exam_region = fields.Many2one('exam.center',string='Exam Region',store=True)
+    
     exam_violation_state = fields.Selection([
         ('na', 'N/A'),
         ('pending_approval', 'Pending Approval'),
         ('approved', 'Approved'),
     ], string='Exam Violation', default='na',tracking=True)
+    
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
@@ -3302,10 +3304,19 @@ class GPExam(models.Model):
         
         self.exam_violation_state = 'approved'
         self.gp_candidate.user_id.sudo().write({'active':False})
-        self.mek_oral_prac_status = 'failed'
-        self.gsk_oral_prac_status = 'failed'
-        self.gsk_online_status = 'failed'
-        self.mek_online_status = 'failed'
+        
+        if self.attempting_gsk_oral_prac:
+            self.gsk_oral_prac_status = 'failed'
+
+        if self.attempting_mek_oral_prac:
+            self.mek_oral_prac_status = 'failed'
+        
+        if self.attempting_gsk_online:
+            self.gsk_online_status = 'failed'
+        
+        if self.attempting_mek_online:
+            self.mek_online_status = 'failed'
+        
         self.state = '4-pending'
         
     
@@ -4709,9 +4720,16 @@ class CCMCExam(models.Model):
         
         self.exam_violation_state = 'approved'
         self.ccmc_candidate.user_id.sudo().write({'active':False})
-        self.cookery_bakery_prac_status = 'failed'
-        self.ccmc_oral_prac_status = 'failed'
-        self.ccmc_online_status = 'failed'
+        
+        if self.attempting_cookery:
+            self.cookery_bakery_prac_status = 'failed'
+        
+        if self.attempting_oral:
+            self.ccmc_oral_prac_status = 'failed'
+        
+        if self.attempting_oral:
+            self.attempting_online = 'failed'
+        
         self.state = '4-pending'
     
     def format_name(self,name):
