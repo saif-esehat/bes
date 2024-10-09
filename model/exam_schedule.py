@@ -1209,8 +1209,16 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
     
     
     
+class ExamOralPracticalNonMariner(models.Model):
+    _name = 'exam.type.non.mariner'
+    _inherit = ['mail.thread','mail.activity.mixin']
 
-
+    
+    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
+    institute = fields.Many2one("bes.institute",string="Institute",related='prac_oral_id.institute_id',store=True)
+    non_mariner = fields.Many2one("bes.examiner",string="Non Mariner")
+    account_details = fields.Char("Account Details")
+    date = fields.Date("Exam Date")    
 
     
 
@@ -1231,6 +1239,7 @@ class ExamOralPractical(models.Model):
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
 
+    
     def open_online_attendance(self):
         # Search for examiners who are assigned to the specific course, batch, and exam type
         examiners = self.env['exam.type.oral.practical.examiners'].search([
@@ -1304,6 +1313,8 @@ class ExamOralPractical(models.Model):
     # start_time = fields.Datetime("Start Time")
     # end_time = fields.Datetime("End Time")
     examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Assign Examiners",tracking=True)
+
+    non_mariners = fields.One2many("exam.type.non.mariner","prac_oral_id",string="Non Mariners",tracking=True)
     
     unique_examiners = fields.Many2many("bes.examiner",compute='compute_examiners') 
     
@@ -1491,10 +1502,42 @@ class ExamOralPractical(models.Model):
             
             self.expense_sheet_status = "generated"    
             print("working")
+        
+        
+        for nm in self.non_mariners:
+            
+            expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',nm.non_mariner.id),('dgs_batch','=',self.dgs_batch.id)])
+            
+            expense_batch = self.env["exam.batch.expenses"].sudo().search([('dgs_batch','=',self.dgs_batch.id)])
+            
+            if not expense_batch:
+                expense_batch = self.env["exam.batch.expenses"].sudo().create({
+                    "dgs_batch": self.dgs_batch.id
+                })
+                
+
+            if not expense:
+                expense = self.env["examiner.expenses"].sudo().create({
+                    "expense_batch":expense_batch.id,
+                    "examiner_id":nm.non_mariner.id,
+                    "dgs_batch": self.dgs_batch.id
+                })
+            
+            price =  self.env['product.product'].search([('default_code','=','online_non_mariner')]).standard_price
+            
+            self.env["examiner.expense.non.mariner"].sudo().create({
+                    "examiner_expenses_id":expense.id,
+                    "non_mariner_assignment":nm.id,
+                    "exam_date":nm.date,
+                    "dgs_batch": self.dgs_batch.id,
+                    "price":price
+                })
+            
             
         # import wdb;wdb.set_trace();
         institute_expense = self.env["institute.exam.expenses"].search([('dgs_batch','=',self.dgs_batch.id),('institute','=',self.institute_id.id)])
 
+        
 
         if not institute_expense:
             self.env["institute.exam.expenses"].sudo().create({
@@ -1503,6 +1546,9 @@ class ExamOralPractical(models.Model):
                 'institute':self.institute_id.id    
                 })
                 
+        
+        
+        
                 
     
     # def generate_expense_sheet(self):

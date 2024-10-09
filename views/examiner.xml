@@ -362,49 +362,63 @@
                         <button name="open_assignment_wizard" string="Add Examiner Assignment" type="object" class="btn-primary" />
                         <button name="open_online_attendance" string="Online Attendance Sheet" type="object" class="btn-primary" />
 
-                       
-                        <field name="examiners" >
-                            <tree editable="bottom"  >
-                                <field name="prac_oral_id" invisible="1"  />
-                                <field name="dgs_batch" required="1" invisible="1"   />
-                                <field name="subject" invisible="0" />
-                                <field name="course" required="1" invisible="1"  />
-                                <field name="exam_type" invisible="0"  />
-                                <field name="exam_region" invisible="1"/>
-                                <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]" attrs="{'readonly': [('all_marksheet_confirmed', '=', 'done')]}" />
-                                <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
-                                <field name="team_lead" invisible="1"/>
-                                <field name="exam_date"/>
-                                <field name="extended"/>
-                                <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
-                                    string="Download Marksheet"
-                                    type="object"
-                                    class="btn-primary"
-                                    />
-                                <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
-                                    string="Attendance Sheet"
-                                    type="object"
-                                    class="btn-info"
-                                    icon="fa-download"/>
-                                    
-                                <!-- <field name="attendance_sheet_file" widget="binary" filename="attendance_sheet_name"/> -->
-                                <field name="attendance_sheet_files" widget="many2many_tags"/>
-                                <field name="attendance_sheet_uploaded"/>
-                                <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
-                                <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
-                                <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
-                                <field name="expense_sheet" />
-                                <field name="time_sheet" />
-                                <field name="status" invisible="1" />
-                                <field name="candidates_count" string="Candidates Assigned" style="text-align: {center};"/>
-                                <field name="candidate_done" style="text-align: {center};"/>
-                                <!-- <field name="marksheets"  /> -->
-                                <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
-                                <field name="marksheet_image" widget="binary" filename="marksheet_image_name" />
-                                <field name="marksheet_uploaded"/>
-                                <field name="all_marksheet_confirmed" invisible="1"/>
-                            </tree>
-                        </field>
+                        <notebook>
+                        <page string="Mariner">
+                            <field name="examiners" >
+                                <tree editable="bottom"  >
+                                    <field name="prac_oral_id" invisible="1"  />
+                                    <field name="dgs_batch" required="1" invisible="1"   />
+                                    <field name="subject" invisible="0" />
+                                    <field name="course" required="1" invisible="1"  />
+                                    <field name="exam_type" invisible="0"  />
+                                    <field name="exam_region" invisible="1"/>
+                                    <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]" attrs="{'readonly': [('all_marksheet_confirmed', '=', 'done')]}" />
+                                    <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
+                                    <field name="team_lead" invisible="1"/>
+                                    <field name="exam_date"/>
+                                    <field name="extended"/>
+                                    <button attrs="{'invisible': [('exam_type', 'not in',['practical_oral','practical_oral_cookery_bakery','ccmc_oral','gsk_oral'])]}" name="download_marksheet"
+                                        string="Download Marksheet"
+                                        type="object"
+                                        class="btn-primary"
+                                        />
+                                    <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
+                                        string="Attendance Sheet"
+                                        type="object"
+                                        class="btn-info"
+                                        icon="fa-download"/>
+                                        
+                                    <!-- <field name="attendance_sheet_file" widget="binary" filename="attendance_sheet_name"/> -->
+                                    <field name="attendance_sheet_files" widget="many2many_tags"/>
+                                    <field name="attendance_sheet_uploaded"/>
+                                    <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
+                                    <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
+                                    <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
+                                    <field name="expense_sheet" />
+                                    <field name="time_sheet" />
+                                    <field name="status" invisible="1" />
+                                    <field name="candidates_count" string="Candidates Assigned" style="text-align: {center};"/>
+                                    <field name="candidate_done" style="text-align: {center};"/>
+                                    <!-- <field name="marksheets"  /> -->
+                                    <button string="Open" type="object" class="oe_highlight" name="open_marksheet_list"/>
+                                    <field name="marksheet_image" widget="binary" filename="marksheet_image_name" />
+                                    <field name="marksheet_uploaded"/>
+                                    <field name="all_marksheet_confirmed" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Non Mariner">
+                            <field name="non_mariners" >
+                                <tree editable="bottom">
+                                    <field name="non_mariner" domain="[('designation','=','non-mariner'),('invigilator','=',True)]"/>
+                                    <field name="account_details"/>
+                                    <field name="date"/>
+                                </tree>
+                            </field>
+                        </page>
+                        </notebook>
+
+                        
 
 
 
@@ -847,8 +861,6 @@
             <field name="arch" type="xml">
                
                 <tree>
-               
-                
                     <field name="dgs_batch"/>
                     <field name="exam_type"/>
                     <field name="course"/>

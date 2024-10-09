@@ -52,13 +52,19 @@ class InstituteExpenseReport(models.Model):
     practical_oral_expenses = fields.Integer("Practical/Oral Expenses",compute="_compute_practical_expense")
     online_expenses = fields.Integer("Online Expenses",compute="_compute_online_expense")
     team_lead_expense = fields.Integer("Team Lead Expense",compute="_compute_tl_expense")
-    total = fields.Integer("Team Lead Expense",compute="_compute_total")
+    non_mariner_expense = fields.Integer("Non Mariner Expense",compute="_compute_nm_expense")
+    total = fields.Integer("Total Expense",compute="_compute_total")
     
     @api.depends('dgs_batch','institute')
     def _compute_total(self):
         for record in self:
             record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense
-            
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_nm_expense(self):
+        for record in self:
+            data = self.env["examiner.expense.non.mariner"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
+            record.non_mariner_expense= sum(data.mapped('price'))        
     
     @api.depends('dgs_batch','institute')
     def _compute_practical_expense(self):
@@ -96,7 +102,16 @@ class InstituteExpenseReport(models.Model):
     
 
 
-    
+class ExamNonMariner(models.Model):
+    _name = 'examiner.expense.non.mariner'
+    _description = 'Expense Non Mariner'
+
+    examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",tracking=True)
+    exam_date = fields.Date("Exam Date")
+    non_mariner_assignment = fields.Many2one("exam.type.non.mariner",string="Non Mariner Assignment",tracking=True)
+    institute = fields.Many2one("bes.institute",string="Institute",related='non_mariner_assignment.institute',store=True)
+    price = fields.Integer("Price")
     
     
 
@@ -108,6 +123,12 @@ class ExaminerExpenses(models.Model):
     expense_batch = fields.Many2one("exam.batch.expenses",string="Exam Batch",tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",tracking=True)
     examiner_id = fields.Many2one('bes.examiner', string="Examiners")
+    designation = fields.Selection([
+        ('non-mariner', 'Non Mariner'),
+        ('master', 'Master Mariner'),
+        ('chief', 'Chief Engineer'),
+        ('catering','Catering Officer')
+    ], string='Designation',related='examiner_id.designation',store=True,tracking=True)
     team_lead = fields.Boolean(string="Team Lead")
 
     state = fields.Selection([
@@ -127,6 +148,8 @@ class ExaminerExpenses(models.Model):
     team_lead_expense = fields.One2many('institute.team.lead', 'examiner_expenses_id', string="Online Expenses")
     
     misc_expense_ids = fields.One2many('exam.misc.expense', 'examiner_expenses_id', string="Miscellaneous Expenses")
+    
+    non_mariner_expense = fields.One2many('examiner.expense.non.mariner', 'examiner_expenses_id', string="Non Mariner Expenses")
 
     total = fields.Integer("Total Expense",compute='_compute_total_expense',store=True)
     
@@ -162,14 +185,15 @@ class ExaminerExpenses(models.Model):
                 record.misc_total = 0
      
     
-    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price')
+    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price','non_mariner_expense.price')
     def _compute_total_expense(self):
         for record in self:
             total_assignment = sum(record.assignment_expense_ids.mapped('total'))
             total_online = sum(record.online_assignment_expense.mapped('price'))
             total_team_lead = sum(record.team_lead_expense.mapped('price'))
+            total_non_mariner = sum(record.non_mariner_expense.mapped('price'))
             total_misc = sum(record.misc_expense_ids.mapped('price'))
-            record.total = total_assignment + total_online + total_team_lead + total_misc
+            record.total = total_assignment + total_online + total_team_lead + total_misc + total_non_mariner
     
     
     def action_set_ec_approval(self):
@@ -230,7 +254,9 @@ class ExaminerOverAllExpenses(models.Model):
                     record.price = 0
 
     
-    
+
+# class InstituteNo(models.Model):
+#     _name = 'institute.team.lead'    
     
     
 class InstituteTeamLead(models.Model):

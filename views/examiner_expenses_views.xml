@@ -26,6 +26,7 @@
                         <field name="practical_oral_expenses"/>
                         <field name="online_expenses"/>
                         <field name="team_lead_expense"/>
+                        <field name="non_mariner_expense"/>
                         <field name="total"/>
                         <!-- <field name="assignments"/> -->
                         <!-- <field name="exam_type"/>
@@ -48,6 +49,7 @@
                 <field name="practical_oral_expenses"/>
                 <field name="online_expenses"/>
                 <field name="team_lead_expense"/>
+                <field name="non_mariner_expense"/>
                 <field name="total"/>
                 <!-- <field name="assignments"/> -->
                 <!-- <field name="exam_type"/>
@@ -96,11 +98,12 @@
                     <group>
                         <field name="dgs_batch"/>
                         <field name="examiner_id"/>
+                        <field name="designation"/>
                         <!-- <field name="team_lead"/> -->
                     </group>
                     <notebook>
 
-                        <page string="Overall Expenses">
+                        <page string="Overall Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="overall_expense_ids" readonly="1">
                                 <tree editable="bottom">
                                     <field name="expenses_type"/>
@@ -109,7 +112,7 @@
                             </field>
                         </page>
                         
-                        <page string="Practical/Oral Expenses">
+                        <page string="Practical/Oral Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="assignment_expense_ids">
                                 <tree editable="bottom">
                                     <field name="examiner_id"/>
@@ -123,7 +126,7 @@
                             </field>
                         </page>
                         
-                        <page string="Online Expenses">
+                        <page string="Online Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="online_assignment_expense">
                                 <tree editable="bottom">
                                     <field name="exam_date"/>
@@ -136,7 +139,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Team Lead Expenses">
+                        <page string="Team Lead Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="team_lead_expense">
                                 <tree editable="bottom">
                                     <field name="examiner_duty"/>
@@ -146,12 +149,22 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Miscellaneous Expenses">
+                        <page string="Miscellaneous Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="misc_expense_ids">
                                 <tree editable="bottom">
                                     <field name="description"/>
                                     <field name="price"/>
                                     <field name="docs"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Non Mariner Expenses" attrs="{'invisible': [('designation', '!=', 'non-mariner')]}" >
+                            <field name="non_mariner_expense">
+                                <tree editable="bottom">
+                                   <field name="non_mariner_assignment"/>
+                                   <field name="institute"/>
+                                   <field name="exam_date"/>
+                                   <field name="price" sum="Total"/>
                                 </tree>
                             </field>
                         </page>
