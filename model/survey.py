@@ -76,6 +76,7 @@ class InheritedSurvey(models.Model):
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
     
+    
     def action_open_add_section(self):
         self.ensure_one()
         return {

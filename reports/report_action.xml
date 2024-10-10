@@ -216,15 +216,4 @@
 
 
 
-    <!-- survey_user_input_report_action.xml -->
-    <!-- <report
-        id="action_report_survey_user_input"
-        model="survey.user_input"
-        string="Candidate Report"
-        report_type="qweb-pdf"
-        name="bes.report_survey_user_input"
-        file="bes.report_survey_user_input"
-        print_report_name="'Exam Report - %s' % (object.gp_candidate or object.ccmc_candidate)"
-    /> -->
-
 </odoo>

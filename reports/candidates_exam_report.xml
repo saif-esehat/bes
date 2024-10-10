@@ -16,10 +16,10 @@
                         </t>
                     </p>
 
-                    <t t-if="is_gp">
+                    <t t-if="doc.is_gp">
                         <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 75 (<t t-esc="doc.scoring_percentage"/>%)</p>
                     </t>
-                    <t t-elif="is_ccmc">
+                    <t t-elif="doc.is_ccmc">
                         <p><strong>Score:</strong> <t t-esc="doc.scoring_total"/> out of 100 (<t t-esc="doc.scoring_percentage"/>%)</p>
                     </t>
                     <p><strong>Answered Correctly:</strong> <t t-esc="doc.correct_answers"/> Questions</p>
