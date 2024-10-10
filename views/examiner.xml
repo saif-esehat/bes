@@ -1030,6 +1030,8 @@
                     <group>
                         <field name="examiner_assignment" invisible='1'/>
                         <field name="examiner"  domain="[('id', '=', examiners)]" options="{'no_create':True}"/>
+                        <field name="online_exam_date" />
+                        
                         <field name="examiners" invisible='1'/>
                     </group>
                     <footer>

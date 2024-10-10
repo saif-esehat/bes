@@ -5539,6 +5539,7 @@ class ExaminerAttendanceWizard(models.TransientModel):
 
     examiner_assignment = fields.Many2many('exam.type.oral.practical.examiners', string='Examiner')
     examiner = fields.Many2one('bes.examiner', string='Examiner')
+    online_exam_date = fields.Date("Exam Date")
     examiners = fields.Many2many('bes.examiner', string='Examiners',compute='_compute_examiners')
 
     @api.depends('examiner_assignment')
@@ -5548,7 +5549,22 @@ class ExaminerAttendanceWizard(models.TransientModel):
             rec.examiners = rec.examiner_assignment.examiner.ids
 
     def generate_attendance_sheet(self):
-        examiners = self.env['exam.type.oral.practical.examiners'].browse(self.examiner_assignment.ids)
+        
+        examiner_duty_id  = self.env.context['params']['id']
+        
+        online_assignments = self.env['exam.type.oral.practical.examiners'].sudo().search([('prac_oral_id','=',examiner_duty_id),('exam_type','=','online'),('examiner','=',self.examiner.id),('exam_date','=',self.online_exam_date)])
+        # dgs_batch self.env['exam.type.oral.practical'].browse(self.env.context['params']['id']).dgs_batch
+        # import wdb;wdb.set_trace()
+
+        if not online_assignments:
+            # Handle the case where no records were found due to exam_date
+            raise UserError("No online assignments found for the given exam date.")
+
+        
+        # examiners = self.env['exam.type.oral.practical.examiners'].browse(self.examiner_assignment.ids)
+        examiners = online_assignments
+
+
         # Initialize arrays to store filtered candidates
         gsk_candidates = []  
         mek_candidates = [] 
@@ -5559,15 +5575,15 @@ class ExaminerAttendanceWizard(models.TransientModel):
 
                 # Check if the candidate is attempting both GSK and MEK Online
                 if marksheet.attempting_gsk_online and marksheet.attempting_mek_online:
-                    gsk_mek_candidates.append(marksheet)
+                    gsk_mek_candidates.append(marksheet.id)
 
                 # Check if the candidate is attempting only GSK Online (and not MEK)
                 elif marksheet.attempting_gsk_online and not marksheet.attempting_mek_online:
-                    gsk_candidates.append(marksheet)
+                    gsk_candidates.append(marksheet.id)
 
                 # Check if the candidate is attempting only MEK Online (and not GSK)
                 elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
-                    mek_candidates.append(marksheet)
+                    mek_candidates.append(marksheet.id)
 
         # import wdb; wdb.set_trace()
 
@@ -5580,3 +5596,28 @@ class ExaminerAttendanceWizard(models.TransientModel):
             })
 
 
+class AttendanceSheetReport(models.AbstractModel):
+    _name = 'report.bes.attendance_sheet_online_gp_new'
+    _description = 'Candidate Admit Card'
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        
+        # data['context']['active_id']
+
+        
+        # import wdb;wdb.set_trace()
+        gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
+        mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
+        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
+
+
+
+        return {
+                'doc_ids': "",
+                'doc_model': 'gp.exam.schedule',
+                'docs': data,
+                "gsk_candidates":gsk_candidates,
+                "mek_candidates":mek_candidates,
+                "gsk_mek_candidates":gsk_mek_candidates
+                }
