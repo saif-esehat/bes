@@ -83,14 +83,19 @@ class ExpenseController(http.Controller):
                 }
         return request.render("bes.timesheet_list", vals)
 
-    @http.route(['/my/assignments/batches/timesheet/add'], type="http", auth="user", website=True)
-    def TimeSheetAdd(self,timesheet_id, **kw):
-        # import wdb;wdb.set_trace();
-        
+    @http.route(['/my/assignments/batches/timesheet/add'], methods=['POST','GET'],type="http", auth="user", website=True)
+    def TimeSheetAdd(self, **kw):
 
-        vals = {
-            }
-        return request.render("bes.timesheet_display", vals)
+        import wdb;wdb.set_trace();
+        institute_id = request.env['bes.institute'].sudo().search([('id','=',kw.get('institute_id'))])
+        dgs_batch = request.env['dgs.batches'].sudo().search([('id','=',kw.get('dgs_batch'))])
+        timesheet = request.env['time.sheet.report'].sudo().create({
+            'institutes_id': institute_id.id,
+            'dgs_batch': dgs_batch.id,
+        })
+
+        return request.redirect('/my/assignments/timesheet/list/'+str(timesheet.id))
+
     
     @http.route(['/my/assignments/timesheet/list/<int:timesheet_id>'], type="http", auth="user", website=True)
     def TimeSheetLists(self,timesheet_id, **kw):
