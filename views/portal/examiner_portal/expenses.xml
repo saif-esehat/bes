@@ -328,7 +328,7 @@
     <template id="timesheet_list" name="Timesheet Lists">
         <t t-call="portal.portal_layout">
             <div class="modal fade" id="createTimeSheet" tabindex="-1" role="dialog" aria-labelledby="createTimeSheetLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog" role="document">
                     <form action="/my/assignments/batches/timesheet/add" method="POST">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -337,14 +337,21 @@
                             <div class="modal-body">
                                 <div class="row mb-3 mx-2">
                                     <label for="dgs_batch">Batch Name</label>
-                                    <input type="text" class="form-control mb-3" id="dgs_batch" name="dgs_batch"/>
+                                    <input type="text" t-att-disabled="1" class="form-control mb-3" id="dgs_batch" name="dgs_batch" t-att-value="assignments.dgs_batch.batch_name"/>
+
                                     <label for="institute_id">Institute Name</label>
-                                    <input type="text" class="form-control mb-3" id="institute_id" name="institute_id"/>                                            
+                                    <select class="form-control" id="institute_id" name="institute_id">
+                                        <t t-foreach="assignments.institute_id" t-as="institute_id">
+                                            <option t-attf-value="{{institute_id.id}}">
+                                                <t t-esc="institute_id.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Create</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Create</button>
                             </div>
                         </div>
                     </form>
@@ -438,7 +445,7 @@
     </template>
     <template id="timesheet_display" name="Timesheet Display">
         <t t-call="portal.portal_layout">
-
+            <h1>HELOOO</h1>
         </t>
     </template>
 

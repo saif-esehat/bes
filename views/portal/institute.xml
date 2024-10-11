@@ -1490,6 +1490,7 @@
                                                             <th>Action</th>
                                                             <th>Course</th>
                                                             <th>Institute Name</th>
+                                                            <th>Institute Name</th>
                                                             <th>MTI Number</th>
                                                             <th>INDOS No.</th>
                                                             <th>Candidate Certificate Number</th>
@@ -1520,6 +1521,9 @@
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.institute_name.name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.other_institute" />
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.marine_training_inst_number" />
@@ -5932,6 +5936,7 @@
                                                             <th>Action</th>
                                                             <th>Course</th>
                                                             <th>Institute Name</th>
+                                                            <th>Institute Name</th>
                                                             <th>MTI Number</th>
                                                             <th>INDOS No.</th>
                                                             <th>Candidate Certificate Number</th>
@@ -5963,6 +5968,9 @@
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.institute_name.name" />
+                                                                </td>
+                                                                <td>
+                                                                    <t t-out="stcw_certificate.other_institute" />
                                                                 </td>
                                                                 <td>
                                                                     <t t-out="stcw_certificate.marine_training_inst_number" />
