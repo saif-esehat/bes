@@ -1209,8 +1209,16 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
     
     
     
+class ExamOralPracticalNonMariner(models.Model):
+    _name = 'exam.type.non.mariner'
+    _inherit = ['mail.thread','mail.activity.mixin']
 
-
+    
+    prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
+    institute = fields.Many2one("bes.institute",string="Institute",related='prac_oral_id.institute_id',store=True)
+    non_mariner = fields.Many2one("bes.examiner",string="Non Mariner")
+    account_details = fields.Char("Account Details")
+    date = fields.Date("Exam Date")    
 
     
 
@@ -1231,6 +1239,7 @@ class ExamOralPractical(models.Model):
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
 
+    
     def open_online_attendance(self):
         # Search for examiners who are assigned to the specific course, batch, and exam type
         examiners = self.env['exam.type.oral.practical.examiners'].search([
@@ -1304,6 +1313,8 @@ class ExamOralPractical(models.Model):
     # start_time = fields.Datetime("Start Time")
     # end_time = fields.Datetime("End Time")
     examiners = fields.One2many("exam.type.oral.practical.examiners","prac_oral_id",string="Assign Examiners",tracking=True)
+
+    non_mariners = fields.One2many("exam.type.non.mariner","prac_oral_id",string="Non Mariners",tracking=True)
     
     unique_examiners = fields.Many2many("bes.examiner",compute='compute_examiners') 
     
@@ -1347,12 +1358,18 @@ class ExamOralPractical(models.Model):
         
     
     def generate_expense_sheet(self):
-        
+        # import wdb;wdb.set_trace()
         
         for examiner in self.examiners.examiner:
             expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',examiner.id),('dgs_batch','=',self.dgs_batch.id)])
             
             expense_batch = self.env["exam.batch.expenses"].sudo().search([('dgs_batch','=',self.dgs_batch.id)])
+            
+            # timesheet = self.env["time.sheet.report"].sudo().create({
+            #     "dgs_batch": self.dgs_batch.id,
+            #     "examiner":examiner.id,
+            #     "institutes_id":self.institute_id.id
+            # })
             
             if not expense_batch:
                 expense_batch = self.env["exam.batch.expenses"].sudo().create({
@@ -1491,10 +1508,42 @@ class ExamOralPractical(models.Model):
             
             self.expense_sheet_status = "generated"    
             print("working")
+        
+        
+        for nm in self.non_mariners:
+            
+            expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',nm.non_mariner.id),('dgs_batch','=',self.dgs_batch.id)])
+            
+            expense_batch = self.env["exam.batch.expenses"].sudo().search([('dgs_batch','=',self.dgs_batch.id)])
+            
+            if not expense_batch:
+                expense_batch = self.env["exam.batch.expenses"].sudo().create({
+                    "dgs_batch": self.dgs_batch.id
+                })
+                
+
+            if not expense:
+                expense = self.env["examiner.expenses"].sudo().create({
+                    "expense_batch":expense_batch.id,
+                    "examiner_id":nm.non_mariner.id,
+                    "dgs_batch": self.dgs_batch.id
+                })
+            
+            price =  self.env['product.product'].search([('default_code','=','online_non_mariner')]).standard_price
+            
+            self.env["examiner.expense.non.mariner"].sudo().create({
+                    "examiner_expenses_id":expense.id,
+                    "non_mariner_assignment":nm.id,
+                    "exam_date":nm.date,
+                    "dgs_batch": self.dgs_batch.id,
+                    "price":price
+                })
+            
             
         # import wdb;wdb.set_trace();
         institute_expense = self.env["institute.exam.expenses"].search([('dgs_batch','=',self.dgs_batch.id),('institute','=',self.institute_id.id)])
 
+        
 
         if not institute_expense:
             self.env["institute.exam.expenses"].sudo().create({
@@ -1503,6 +1552,9 @@ class ExamOralPractical(models.Model):
                 'institute':self.institute_id.id    
                 })
                 
+        
+        
+        
                 
     
     # def generate_expense_sheet(self):
@@ -5493,6 +5545,7 @@ class ExaminerAttendanceWizard(models.TransientModel):
 
     examiner_assignment = fields.Many2many('exam.type.oral.practical.examiners', string='Examiner')
     examiner = fields.Many2one('bes.examiner', string='Examiner')
+    online_exam_date = fields.Date("Exam Date")
     examiners = fields.Many2many('bes.examiner', string='Examiners',compute='_compute_examiners')
 
     @api.depends('examiner_assignment')
@@ -5502,7 +5555,22 @@ class ExaminerAttendanceWizard(models.TransientModel):
             rec.examiners = rec.examiner_assignment.examiner.ids
 
     def generate_attendance_sheet(self):
-        examiners = self.env['exam.type.oral.practical.examiners'].browse(self.examiner_assignment.ids)
+        
+        examiner_duty_id  = self.env.context['params']['id']
+        
+        online_assignments = self.env['exam.type.oral.practical.examiners'].sudo().search([('prac_oral_id','=',examiner_duty_id),('exam_type','=','online'),('examiner','=',self.examiner.id),('exam_date','=',self.online_exam_date)])
+        # dgs_batch self.env['exam.type.oral.practical'].browse(self.env.context['params']['id']).dgs_batch
+        # import wdb;wdb.set_trace()
+
+        if not online_assignments:
+            # Handle the case where no records were found due to exam_date
+            raise UserError("No online assignments found for the given exam date.")
+
+        
+        # examiners = self.env['exam.type.oral.practical.examiners'].browse(self.examiner_assignment.ids)
+        examiners = online_assignments
+
+
         # Initialize arrays to store filtered candidates
         gsk_candidates = []  
         mek_candidates = [] 
@@ -5513,15 +5581,15 @@ class ExaminerAttendanceWizard(models.TransientModel):
 
                 # Check if the candidate is attempting both GSK and MEK Online
                 if marksheet.attempting_gsk_online and marksheet.attempting_mek_online:
-                    gsk_mek_candidates.append(marksheet)
+                    gsk_mek_candidates.append(marksheet.id)
 
                 # Check if the candidate is attempting only GSK Online (and not MEK)
                 elif marksheet.attempting_gsk_online and not marksheet.attempting_mek_online:
-                    gsk_candidates.append(marksheet)
+                    gsk_candidates.append(marksheet.id)
 
                 # Check if the candidate is attempting only MEK Online (and not GSK)
                 elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
-                    mek_candidates.append(marksheet)
+                    mek_candidates.append(marksheet.id)
 
         # import wdb; wdb.set_trace()
 
@@ -5534,3 +5602,28 @@ class ExaminerAttendanceWizard(models.TransientModel):
             })
 
 
+class AttendanceSheetReport(models.AbstractModel):
+    _name = 'report.bes.attendance_sheet_online_gp_new'
+    _description = 'Candidate Admit Card'
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        
+        # data['context']['active_id']
+
+        
+        # import wdb;wdb.set_trace()
+        gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
+        mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
+        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
+
+
+
+        return {
+                'doc_ids': "",
+                'doc_model': 'gp.exam.schedule',
+                'docs': data,
+                "gsk_candidates":gsk_candidates,
+                "mek_candidates":mek_candidates,
+                "gsk_mek_candidates":gsk_mek_candidates
+                }

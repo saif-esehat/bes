@@ -131,8 +131,8 @@
                 <thead>
                     <tr>
                         <th class="text-left">Batch</th>
-                        <th class="text-left">Action</th>
-                        <th class="text-left">View Expense</th>
+                        <th class="text-left">Assignments</th>
+                        <th class="text-left">Time Sheet</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -146,7 +146,7 @@
                                <a t-attf-href="/my/assignments/batches/{{batch.id}}">View</a>
                             </td>
                             <td class="text-left">
-                               <a t-attf-href="/my/assignments/expense/{{batch.id}}">View</a>
+                                <a t-attf-href="/my/assignments/timesheet/{{batch.id}}/{{examiner.id}}">Time Sheet List</a>
                             </td>
                         </tr>
                     </t>
@@ -198,9 +198,9 @@
                         <th class="text-left">Exam Type</th>
                         <th class="text-left">Exam Date</th>
                         <th class="text-left">No of Candidates</th>
-                        <th class="text-left">View candidates</th>
-                        <th class="text-left">Renumeration</th>
-                        <th class="text-left">Time Sheet</th>
+                        <th class="text-left">Candidates</th>
+                        <th class="text-left">Expenses</th>
+                        <!-- <th class="text-left">Time Sheet</th> -->
 
                     </tr>
                 </thead>
@@ -253,10 +253,7 @@
                                 <a t-attf-href="/my/assignments/batches/candidates/{{batch}}/{{assignment.id}}">View</a>
                             </td>
                             <td class="text-left">
-                                <a t-attf-href="/my/assignments/batches/expenses/{{assignment.id}}">Payments Details</a>
-                            </td>
-                            <td class="text-left">
-                                <a t-attf-href="/my/assignments/batches/timesheet/{{assignment.id}}">Update Time Sheet</a>
+                                <a t-attf-href="/my/assignments/batches/expenses/{{assignment.id}}">Expense Form</a>
                             </td>
                         </tr>
                     </t>

@@ -4,13 +4,17 @@ class TimeSheetReport(models.Model):
     _name = 'time.sheet.report'
     _description = 'Time Sheet Report'
 
+    # examiner_assignment = fields.Many2one('exam.type.oral.practical.examiners',"Examiner Assignment")
+    examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
+    # assignment_id = fields.Many2one('exam.type.oral.practical',related='examiner_assignment.prac_oral_id', string="Assignment ID")
     institutes_id = fields.Many2one('bes.institute',string='Name of Institute', default=False, tracking=True)
+    dgs_batch = fields.Many2one('dgs.batches',string='DGS Batch', default=False, tracking=True)
+    # exam_date = fields.Date("Exam Date",tracking=True,related='examiner_assignment.exam_date')
+
     place = fields.Char(string='Place')
-    exam_date = fields.Char(string='Date of Examination')
     timesheet_examinations = fields.One2many('timesheet.lines', 'parent_id', string="Timesheet for Examinations")
     travel_details = fields.One2many('travel.details', 'parent_id', string="Travel Details")
     custom_form = fields.One2many('custom.form', 'parent_id', string="Custom Form")
-    examiner = fields.Many2one('bes.examiner',"Examiner")
     expense_sheet = fields.Many2one('hr.expense.sheet','Expense')
 
 class TimesheetLines(models.Model):

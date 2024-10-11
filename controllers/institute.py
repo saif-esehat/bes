@@ -3794,7 +3794,7 @@ class InstitutePortal(CustomerPortal):
             request.env['gp.candidate.stcw.certificate'].sudo().create({
                 'candidate_id': candidate.id,
                 'course_name': course_name,
-                'institute_name': institute_id,
+                'institute_name': institute_name,
                 'marine_training_inst_number': mti_no,
                 'mti_indos_no': indos_no,
                 'candidate_cert_no': certificate_no,
@@ -4065,7 +4065,7 @@ class InstitutePortal(CustomerPortal):
             request.env['ccmc.candidate.stcw.certificate'].sudo().create({
                 'candidate_id': candidate.id,
                 'course_name': course_name,
-                'institute_name': institute_id,
+                'institute_name': institute_name,
                 'marine_training_inst_number': mti_no,
                 'mti_indos_no': indos_no,
                 'candidate_cert_no': certificate_no,

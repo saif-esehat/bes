@@ -54,6 +54,7 @@
         'reports/dgs_report.xml',
         'reports/attendance_sheet.xml',
         'reports/summarised_report.xml',
+        'reports/candidates_exam_report.xml',
         'views/sep_batches.xml',
         'views/sep_candidate.xml',
         'reports/sep_candidate_certificate.xml',
