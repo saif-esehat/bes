@@ -1358,12 +1358,18 @@ class ExamOralPractical(models.Model):
         
     
     def generate_expense_sheet(self):
-        
+        # import wdb;wdb.set_trace()
         
         for examiner in self.examiners.examiner:
             expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',examiner.id),('dgs_batch','=',self.dgs_batch.id)])
             
             expense_batch = self.env["exam.batch.expenses"].sudo().search([('dgs_batch','=',self.dgs_batch.id)])
+            
+            # timesheet = self.env["time.sheet.report"].sudo().create({
+            #     "dgs_batch": self.dgs_batch.id,
+            #     "examiner":examiner.id,
+            #     "institutes_id":self.institute_id.id
+            # })
             
             if not expense_batch:
                 expense_batch = self.env["exam.batch.expenses"].sudo().create({

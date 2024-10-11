@@ -71,18 +71,35 @@ class ExpenseController(http.Controller):
         
         return request.redirect('my/assignments/batches/expenses/'+str(assignment_id))
     
-    @http.route(['/my/assignments/batches/timesheet/<int:assignment_id>'], type="http", auth="user", website=True)
-    def TimeSheet(self,assignment_id, **kw):
-        # Fetch the timesheet data for the given assignment_id
-        timesheets = request.env['time.sheet.report'].sudo().search([('id', '=', assignment_id)])
-        assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
-        exam_date = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_date
-
+    @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:examiner_id>'], type="http", auth="user", website=True)
+    def TimeSheet(self,batch_id,examiner_id, **kw):
+        # import wdb;wdb.set_trace();
+        assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
+        timesheets = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
+         
         vals = {
             'timesheets': timesheets,
-            'exam_date':exam_date,
-            'assignment':assignment
+            'assignments':assignments,
                 }
+        return request.render("bes.timesheet_list", vals)
+
+    @http.route(['/my/assignments/batches/timesheet/add'], type="http", auth="user", website=True)
+    def TimeSheetAdd(self,timesheet_id, **kw):
+        # import wdb;wdb.set_trace();
+        
+
+        vals = {
+            }
+        return request.render("bes.timesheet_display", vals)
+    
+    @http.route(['/my/assignments/timesheet/list/<int:timesheet_id>'], type="http", auth="user", website=True)
+    def TimeSheetLists(self,timesheet_id, **kw):
+        # import wdb;wdb.set_trace();
+        timesheets = request.env['time.sheet.report'].sudo().search([('id','=',timesheet_id)])
+
+        vals = {
+            'timesheets': timesheets
+            }
         return request.render("bes.timesheet_display", vals)
     
     @http.route(['/my/assignments/batches/timesheet/submit'], type="http", auth="user", methods=['POST'], website=True)
