@@ -91,6 +91,11 @@
                                 <b>Signature of Incharge:</b>
                             </td>
                         </tr>
+                         <tr>
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-top: 10px;">
+                                page <span class="page"></span>
+                            </td>
+                        </tr>
                     </table>
                 </div>
 

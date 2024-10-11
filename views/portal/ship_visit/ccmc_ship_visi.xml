@@ -111,7 +111,7 @@
 
 
 
- <template id="portal_ccmc_ship_visit_create" name="Create GP Ship Visit">
+ <template id="portal_ccmc_ship_visit_create" name="Create CCMC Ship Visit">
     <t t-call="portal.portal_layout">
       
 
@@ -299,70 +299,7 @@
     </div>
 </div>
 
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const addButton = document.querySelector(".modal-footer .btn-secondary");
-        const selectedCandidatesList = document.getElementById("selected-candidates");
 
-        addButton.addEventListener("click", function () {
-            // Clear the table body first
-            selectedCandidatesList.innerHTML = '';
-
-            // Get all checked checkboxes in the modal
-            const checkboxes = document.querySelectorAll("#candidateModal .form-check-input:checked");
-            checkboxes.forEach(checkbox => {
-                const candidateIndosNo = checkbox.getAttribute("data-indos-no"); // Get the indos_no from data attribute
-                const candidateName = checkbox.nextElementSibling.textContent;  // Get the label text
-                const candidateId = checkbox.getAttribute("id").split('_')[2];  // Extract candidate ID from the checkbox's id attribute
-
-                if (candidateId) {
-                    // Create a new table row
-                    const newRow = document.createElement("tr");
-                    newRow.setAttribute("id", "candidate_row_" + candidateId); // Set an ID for the row
-                    newRow.innerHTML = `
-                        <td>${candidateIndosNo}</td>
-                        <td>${candidateName}</td>
-                        <td>
-                            <button type="button" class="btn btn-danger" data-id="${candidateId}" onclick="deleteCandidate(this)">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-
-                    // Append the new row to the table body
-                    selectedCandidatesList.appendChild(newRow);
-                } else {
-                    console.error("Candidate ID not found for checkbox:", checkbox);
-                }
-            });
-        });
-        
-    });
-
-     // Function to show the delete confirmation modal
-    function showDeleteModal(candidateId) {
-        const deleteModal = document.getElementById("deleteModal");
-        deleteModal.querySelector(".confirm-delete-btn").setAttribute("data-id", candidateId);
-        deleteModal.style.display = "block";  // Show the modal
-    }
-
-    // Function to delete a candidate row
-    function deleteCandidate(button) {
-        const candidateId = button.getAttribute('data-id');  // Get candidate ID from data attribute
-        const row = document.getElementById('candidate_row_' + candidateId);  // Find the row element by ID
-        if (row) {
-            row.remove();  // Remove the row from the table
-        }
-        closeDeleteModal();  // Close the modal after deleting
-    }
-
-    // Function to close the delete confirmation modal
-    function closeDeleteModal() {
-        const deleteModal = document.getElementById("deleteModal");
-        deleteModal.style.display = "none";  // Hide the modal
-    }
-    
-</script> -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const addButton = document.querySelector(".modal-footer .btn-secondary");
