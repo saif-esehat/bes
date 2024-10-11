@@ -21,7 +21,12 @@
                 
                 <!-- Second Line -->
                 <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                     Final List of Eligible Candidates 
+                    <t t-if="docs[0].application_type == 'fresher'">
+                        Final List of Eligible (Fresher) Candidates
+                    </t>
+                    <t t-else="">
+                        Final List of Eligible (Repeater) Candidates
+                    </t> 
                 </h6>
 
                 <table >
@@ -29,17 +34,17 @@
                 <thead>
 							
                     <tr style="background-color: #d3d3d3; color: black;">
-                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 5%; vertical-align: middle;">Sr no</td>
-                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 5%; vertical-align: middle;">Indos No</td>
-                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Application form Number</td>
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 4%; vertical-align: middle;">Sr no</td>
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 4%; vertical-align: middle;">Indos No</td>
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 9%; vertical-align: middle;">Application form Number</td>
                         <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Grade Applied</td>
-                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Name</td>
-                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">D.O.B</td>
-                        <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; width: 20%; vertical-align: middle;">Reporting at BES office for Documents Verification</td>
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 17%; vertical-align: middle;">Name</td>
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">D.O.B</td>
+                        <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; width: 22%; vertical-align: middle;">Reporting at BES office for Documents Verification</td>
                     </tr>
                     <tr style="background-color: #d3d3d3; color: black;">
-                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Date</td>
-                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Time</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Date</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Time</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,10 +61,10 @@
                                 <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;vertical-align: middle;">
                                     <span t-field="eligible.application_no" />
                                 </td>
-                                <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: center;vertical-align: middle;">
+                                <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: left;vertical-align: middle;">
                                     <span t-field="eligible.grade" />
                                 </td>
-                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: center;vertical-align: middle;">
+                                <td  colspan="1" style="border: 1px solid black; padding:6px;text-align: left;vertical-align: middle;">
                                     <span t-field="eligible.name" />
                                 </td>
                                 <td colspan="1"  style="border: 1px solid black; padding:6px;text-align: center;vertical-align: middle;">

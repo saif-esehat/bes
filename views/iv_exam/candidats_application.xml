@@ -59,8 +59,7 @@
                     
                     <group>
                         <!-- <field name="name" string="a) Name"  style="width: 50%;"/> -->
-                         <field name="name" string="a) Name" style="width: 50%;" 
-                            attrs="{'invisible': [('is_repeater', '=', True)]}"/>
+                         <field name="name" string="a) Name" style="width: 50%;"/>
 
                           <field name="candidate_repeater" string="a) Candidate Repeater" style="width: 50%;" 
                             attrs="{'invisible': [('is_repeater', '=', False)]}"/>
