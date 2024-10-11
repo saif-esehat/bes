@@ -21,7 +21,12 @@
                 
                 <!-- Second Line -->
                 <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
-                     Final List of Not Eligible (Fresh) Candidates. 
+                     <t t-if="docs[0].application_type == 'fresher'">
+                        Final List of Not Eligible (Fresher) Candidates
+                    </t>
+                    <t t-else="">
+                        Final List of Not Eligible (Repeater) Candidates
+                    </t> 
                 </h6>
 
                 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">

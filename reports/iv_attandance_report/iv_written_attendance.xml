@@ -60,13 +60,13 @@
                 <table class="table table-condensed" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No.</th>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">INDoS No.</th>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Roll No.</th>
-                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 25%;">Grade Applied</th>
-                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name of Candidate</th>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">DOB</th>
-                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Sign</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 4%;vertical-align: middle;">Sr No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 4%;vertical-align: middle;">Indos No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;vertical-align: middle;">Roll No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 17%;vertical-align: middle;">Grade Applied</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 25%;vertical-align: middle;">Name of Candidate</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;vertical-align: middle;">DOB</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;vertical-align: middle;">Sign</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,16 +83,16 @@
                                 <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="attendance.roll_no" />
                                 </td>
-                                <td colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="attendance.grade_applied" />
                                 </td>
-                                <td colspan="2" style="border: 1px solid black; padding:6px;text-align: center;">
+                                <td colspan="1" style="border: 1px solid black; padding:6px;text-align: left;">
                                     <span t-field="attendance.candidate_name" />
                                 </td>
                                 <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-esc="attendance.dob.strftime('%d-%m-%Y')" />
                                 </td>
-                                <td colspan="2" style="border: 1px solid black; padding:6px;"></td>
+                                <td colspan="1" style="border: 1px solid black; padding:6px;"></td>
                             </tr>
                             <t t-set="record_index" t-value="record_index + 1" />
                         </t>
