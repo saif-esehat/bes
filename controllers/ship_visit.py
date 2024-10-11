@@ -13,9 +13,13 @@ import json
 from io import BytesIO
 import xlrd
 import logging
+from odoo.exceptions import ValidationError
 
-_logger = logging.getLogger(__name__)
+name_ = 'bes.ship_visit'  # Example name for your logger
+logger = logging.getLogger(name_)
 
+# Now you can use logger to log messages
+logger.info("Logger initialized successfully.")
 class GPShipVisitPortalController(http.Controller):
     
     # @http.route('/gp/ship/visit', auth='public', type='http', website=True)
@@ -82,14 +86,34 @@ class GPShipVisitPortalController(http.Controller):
  
 
  #   ccmc  ship visit
+    # @http.route(['/my/ccmc_ship_visits/<int:batch_id>'], type='http', auth='user', website=True)
+    # def portal_my_sccmchip_visit(self, batch_id, **kw):
+    #     user_id = request.env.user.id
+
+    #     ccmc_ship_batch_ids = request.env["bes.institute"].sudo().search(
+    #         [('user_id', '=', user_id)]).id
+    #     ship_visit = request.env['ccmc.batches.ship.visit'].sudo().search([('ccmc_ship_batch_ids', '=', batch_id)])
+    #     vals = {'ship_visit': ship_visit, 'page_name': 'gp_ccmcship_list','batch_id':batch_id}
+    #     return request.render('bes.portal_ccmc_ship_visits_po', vals)
+
     @http.route(['/my/ccmc_ship_visits/<int:batch_id>'], type='http', auth='user', website=True)
     def portal_my_sccmchip_visit(self, batch_id, **kw):
         user_id = request.env.user.id
 
+        # Fetch institute based on the logged-in user
         ccmc_ship_batch_ids = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
-        ship_visit = request.env['ccmc.batches.ship.visit'].sudo().search([('ccmc_ship_batch_ids', '=', batch_id)])
-        vals = {'ship_visit': ship_visit, 'page_name': 'gp_ccmcship_list','batch_id':batch_id}
+
+        # Fetch the ship visit records for the provided batch_id
+        ship_visits = request.env['ccmc.batches.ship.visit'].sudo().search([('ccmc_ship_batch_ids', '=', batch_id)])
+
+        vals = {
+            'ship_visits': ship_visits,  # Pass the records to the template
+            'page_name': 'gp_ccmcship_list',
+            'batch_id': batch_id
+        }
+
+        # Render the template with the data
         return request.render('bes.portal_ccmc_ship_visits_po', vals)
 
 
@@ -100,25 +124,25 @@ class GPShipVisitPortalController(http.Controller):
         # Render the template for creating a new ship visit
         return request.render('bes.portal_gp_ship_visit_create', {'page_name': 'gp_ship_create'})
 
- #   ccmc  ship visit
+#    ccmc  ship visit
     @http.route(['/my/ccmc_ship_visits/create'], type='http', auth='user', website=True)
     def portal_ccmc_ship_visit_create(self, **kw):
         # Render the template for creating a new ship visit
         return request.render('bes.portal_ccmc_ship_visit_create', {'page_name': 'ccmcship_create'})
 
+   
 
-
-    @http.route(['/my/ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
-    def portal_gp_ship_visit_submit(self, **post):
-        # Process POST data
+    @http.route(['/my/ship_visits/submit'], type='http', auth='user', website=True, method=["POST", "GET"], csrf=True)
+    def portal_gp_ship_visit_submit(self, **kw):
+        # Process kw data
         if request.httprequest.method == 'POST':
-            ship_name1 = post.get("ship_name1")
-            port_name = post.get("port_name")
-            course_gp = post.get("course_gp")
-            imo_no = post.get("imo_no")
-            date_of_visit = post.get("date_of_visit")
-            no_of_candidate = post.get("no_of_candidate")
-            gp_image = post.get("gp_image")
+            ship_name1 = kw.get("ship_name1")
+            port_name = kw.get("port_name")
+            course_gp = kw.get("course_gp")
+            imo_no = kw.get("imo_no")
+            date_of_visit = kw.get("date_of_visit")
+            no_of_candidate = kw.get("no_of_candidate")
+            gp_image = kw.get("gp_image")
 
             # Process image file
             if gp_image:
@@ -152,49 +176,104 @@ class GPShipVisitPortalController(http.Controller):
             return request.redirect('/my/ship_visits')
 
  #   ccmc  ship visit
+
     @http.route(['/my/ccmc_ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_ccmc_ship_visit_submit(self, **post):
-        # Process POST data
         if request.httprequest.method == 'POST':
             ship_name2 = post.get("ship_name2")
             port_name = post.get("port_name")
             course_gp = post.get("course_gp")
             imo_no = post.get("imo_no")
-            date_of_visit = post.get("date_of_visit")
+            date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
 
             # Process image file
+            image_base64 = None
             if gp_image:
                 file_content = gp_image.read()
-                filename = gp_image.filename
-                image_base64 = base64.b64encode(file_content).decode('utf-8')  # Encode the image and decode to string
+                image_base64 = base64.b64encode(file_content).decode('utf-8')
 
             try:
-                date_of_visit_str = post.get('date_of_visit')
                 date_of_visit = datetime.strptime(date_of_visit_str, '%Y-%m-%dT%H:%M') if date_of_visit_str else False
+
+                # Prepare the list of candidates for the Many2many field
+                candidate_ids_list = [(6, 0, [int(candidate_id) for candidate_id in candidate_ids])] if candidate_ids else False
 
                 # Data to create the ship visit record
                 ship_data = {
                     "ship_name2": ship_name2,
-                    'gp_image': image_base64 if gp_image else False,
-                    'gp_image': filename if gp_image else False,  # Correct field name for storing filename
                     "port_name": port_name,
                     "course_gp": course_gp,
-                    "imo_no": imo_no,  # Ensure you add imo_no to the dictionary
-                    "date_of_visit": date_of_visit,  # Add date_of_visit
+                    "imo_no": imo_no,
+                    "date_of_visit": date_of_visit,
                     "no_of_candidate": no_of_candidate,
+                    "gp_image": image_base64 if gp_image else False,
+                    "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
                 }
 
                 # Create the record in the model
-                ship_visit_record = request.env['ccmc.batches.ship.visit'].sudo().create(ship_data)
-            
+                request.env['ccmc.batches.ship.visit'].sudo().create(ship_data)
+
             except Exception as e:
                 _logger.error("Failed to create ship visit record: %s", e)
                 request.session['error_message'] = "Failed to create ship visit record."
 
             return request.redirect('/my/ccmc_ship_visits')
 
+    # @http.route(['/my/ccmc_ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    # def portal_ccmc_ship_visit_submit(self, **post):
+    #     if request.httprequest.method == 'POST':
+    #         ship_name2 = post.get("ship_name2")
+    #         port_name = post.get("port_name")
+    #         course_gp = post.get("course_gp")
+    #         imo_no = post.get("imo_no")
+    #         date_of_visit_str = post.get("date_of_visit")
+    #         no_of_candidate = post.get("no_of_candidate")
+    #         gp_image = post.get("gp_image")
+    #         candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
+
+    #         # Process image file
+    #         image_base64 = None
+    #         if gp_image:
+    #             file_content = gp_image.read()
+    #             image_base64 = base64.b64encode(file_content).decode('utf-8')
+
+    #         try:
+    #             date_of_visit = datetime.strptime(date_of_visit_str, '%Y-%m-%dT%H:%M') if date_of_visit_str else False
+
+    #             # Prepare the list of candidates for the Many2many field using indos_no
+    #             candidate_ids_list = [(6, 0, [indos_no for indos_no in candidate_ids])] if candidate_ids else False
+
+    #             # Data to create the ship visit record
+    #             ship_data = {
+    #                 "ship_name2": ship_name2,
+    #                 "port_name": port_name,
+    #                 "course_gp": course_gp,
+    #                 "imo_no": imo_no,
+    #                 "date_of_visit": date_of_visit,
+    #                 "no_of_candidate": no_of_candidate,
+    #                 "gp_image": image_base64 if gp_image else False,
+    #                 "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+    #             }
+
+    #             # Create the record in the model
+    #             request.env['ccmc.batches.ship.visit'].sudo().create(ship_data)
+
+    #             # Redirect to the appropriate page after submission
+    #             return request.redirect('/my/ccmc_ship_visits')
+
+    #         except Exception as e:
+    #             _logger.error("Failed to create ship visit record: %s", e)
+    #             request.session['error_message'] = "Failed to create ship visit record."
+
+    #     # Handle GET request or return an error
+    #     return request.redirect('/my/ccmc_ship_visits')
+
+
+    
+    
           
 
     @http.route(['/my/ship_visits/edit'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
@@ -208,9 +287,11 @@ class GPShipVisitPortalController(http.Controller):
     @http.route(['/my/ccmc_ship_visits/edit'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
     def portal_ccmc_ship_visit_edit(self, id, **kw):
         visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(id))
+
+        vals = {'visit': visit, 'page_name': 'ccmcship_edit'}
         if not visit.exists():
             return request.not_found()
-        return request.render('bes.portal_ccmc_ship_visit_edit', {'visit': visit})
+        return request.render('bes.portal_ccmc_ship_visit_edit', vals)
 
 
     @http.route(['/my/ship_visits/update'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
@@ -246,36 +327,70 @@ class GPShipVisitPortalController(http.Controller):
 
 
 # ccmc ship visit
+
     @http.route(['/my/ccmc_ship_visits/update'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_ccmc_ship_visit_update(self, **post):
         visit_id = post.get('id')
 
         if not visit_id:
             return request.not_found()
-        
+
         visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(visit_id))
         if not visit.exists():
             return request.not_found()
-        
+
         # Convert the date format to match Odoo's expected format
         date_of_visit = post.get('date_of_visit')
         if date_of_visit:
-            # Replace 'T' with a space to match the expected format
-            date_of_visit = date_of_visit.replace('T', ' ')
-        
-        # Update the record with the form data
+            date_of_visit = date_of_visit.replace('T', ' ')  # Adjust the date format
+
+        # Fetch candidate IDs from the POST request (new candidates being added)
+        candidate_ids = request.httprequest.form.getlist('candidate_ids')
+        new_candidate_ids = [int(candidate_id) for candidate_id in candidate_ids]
+
+        # Get existing candidate IDs linked to other visits with the same ship_name2 and date_of_visit
+        existing_visits = request.env['ccmc.batches.ship.visit'].sudo().search([
+            ('ship_name2', '=', post.get('ship_name2')),
+            ('date_of_visit', '=', date_of_visit),
+            ('id', '!=', visit_id)  # Exclude the current visit from the search
+        ])
+
+        # Collect candidate IDs from existing visits with the same ship_name2 and date_of_visit
+        existing_candidate_ids_in_same_visit = existing_visits.mapped('candidate_ids').ids
+
+        # Get currently linked candidate IDs to the visit
+        current_candidate_ids = visit.candidate_ids.ids
+
+        # Create a set of candidate IDs to exclude (those already selected)
+        excluded_candidate_ids = set(existing_candidate_ids_in_same_visit + current_candidate_ids)
+
+        # Filter out excluded candidate IDs from new candidate IDs
+        filtered_new_candidate_ids = [candidate_id for candidate_id in new_candidate_ids if candidate_id not in excluded_candidate_ids]
+
+        # Merge old and new candidate IDs to keep both
+        updated_candidate_ids = current_candidate_ids + filtered_new_candidate_ids
+
+        # Update the visit with the new candidate IDs
         visit.write({
             'ship_name2': post.get('ship_name2'),
             'port_name': post.get('port_name'),
             'imo_no': post.get('imo_no'),
-            'date_of_visit': date_of_visit,  # Use the formatted date
+            'date_of_visit': date_of_visit,
             'time_spent': post.get('time_spent'),
             'course_gp': post.get('course_gp'),
             'no_of_candidate': post.get('no_of_candidate'),
+            'candidate_ids': [(6, 0, updated_candidate_ids)],  # Keep old candidates and add only new ones
         })
 
         request.session['success_message'] = "Ship visit record updated successfully."
         return request.redirect('/my/ccmc_ship_visits')
+
+
+
+
+
+
+
 
     @http.route(['/my/ship_visits/view'], type='http', auth='user', website=True)
     def portal_gp_ship_visit_view(self, id):
@@ -291,6 +406,18 @@ class GPShipVisitPortalController(http.Controller):
         return request.render('bes.portal_gp_ship_visit_form', vals)
 
 # ccmc ship visit
+    # @http.route(['/my/ccmc_ship_visits/view'], type='http', auth='user', website=True)
+    # def portal_ccmc_ship_visit_view(self, id):
+    #     # Fetch the specific ship visit by ID
+    #     ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(id))
+        
+    #     # Ensure the record exists
+    #     if not ship_visit.exists():
+    #         return request.redirect('/my/ccmc_ship_visits')  # Redirect if record does not exist
+
+    #     # Render a form view or a detailed view of the record
+    #     vals = { 'ship_visit': ship_visit,'page_name': 'ccmc_ship_from'}
+    #     return request.render('bes.portal_ccmc_ship_visit_form', vals)
     @http.route(['/my/ccmc_ship_visits/view'], type='http', auth='user', website=True)
     def portal_ccmc_ship_visit_view(self, id):
         # Fetch the specific ship visit by ID
@@ -300,9 +427,17 @@ class GPShipVisitPortalController(http.Controller):
         if not ship_visit.exists():
             return request.redirect('/my/ccmc_ship_visits')  # Redirect if record does not exist
 
-        # Render a form view or a detailed view of the record
-        vals = { 'ship_visit': ship_visit,'page_name': 'ccmc_ship_from'}
+        # Fetch candidates related to the ship visit
+        candidates = ship_visit.candidate_ids  # Assuming candidate_ids is the field on the ship_visit model
+
+        # Render the form view with candidates
+        vals = {
+            'ship_visit': ship_visit,
+            'candidates': candidates,  # Pass candidates to the template
+            'page_name': 'ccmc_ship_from'
+        }
         return request.render('bes.portal_ccmc_ship_visit_form', vals)
+
 
     @http.route(['/my/ship_visits/delete'], type='http', auth='user', website=True)
     def portal_gp_ship_visit_delete(self, id):
@@ -318,5 +453,3 @@ class GPShipVisitPortalController(http.Controller):
         if ship_visit.exists():
             ship_visit.unlink()
         return request.redirect('/my/ccmc_ship_visits')
-
-  
