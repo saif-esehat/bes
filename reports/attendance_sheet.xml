@@ -305,18 +305,18 @@
     </template>
 
     <template id="attendance_sheet_online_gp_new">
-        <t t-call="web.basic_layout">
-            <t t-foreach="docs" t-as="o">
+     <t t-call="web.html_container">
+        <!-- <t t-call="web.basic_layout"> -->
+            <!-- <t t-foreach="docs" t-as="o"> -->
                 <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
-
                 <!-- Header Section -->
                 <div class="header">
-                    <table style="width:100%; border: 1px solid black;">
+                    <table style="width:100%; border: 1px solid black; ">
                         <tr>
                             <th style="border: 1px solid black; font-family: 'TimesNewRoman';" rowspan="2">
                                 <img class="img img-responsive img-top"
                                     src="/bes/static/src/img/logo_bes.jpg"
-                                    style="max-width: 100px; max-height: 100px;padding:2px;" />
+                                    style="max-width: 100px; max-height: 100px;padding:1px;" />
                             </th>
                             <th style="width:100%; border: 1px solid black;padding:10px; text-align:center; vertical-align: center; font-family: 'TimesNewRoman';">
                                 <strong style="white-space: nowrap; ">Board of Examinations for Seafarers Trust</strong>
@@ -329,7 +329,7 @@
                                 </span>
                             </th>
                         </tr>
-                        <tr style="width:100%; border: 1px solid black;padding:10px">
+                        <!-- <tr style="width:100%; border: 1px solid black;padding:10px">
                             <th colspan="2" style="white-space: nowrap; padding:5px; font-family: 'TimesNewRoman';">
                                 <span style="float:left;">Venue : <span style="text-align:left;">
                                         <t t-esc="o.institute_id.name" />
@@ -341,12 +341,12 @@
                                     <t t-esc="o.exam_date.strftime('%d-%b-%Y')" />
                                 </span>
                             </th>
-                        </tr>
+                        </tr> -->
                     </table>
                 </div>
 
                 <!-- GSK Candidates Table -->
-                <t t-if="o.gsk_candidates">
+                <t t-if="gsk_candidates">
                     <table class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                         <tr>
                             <th style="border: 1px solid black; padding:6px;">Sr No.</th>
@@ -356,13 +356,14 @@
                             <th style="border: 1px solid black; padding:6px;">INDoS No.</th>
                             <th style="border: 1px solid black; padding:6px;">DOB</th>
                             <th style="border: 1px solid black; padding:6px; width: 100px;">GSK Online <br/>Sign</th>
-                            <th style="border: 1px solid black; padding:6px; width: 100px;">MEK Online <br/>Sign</th>
+                            <!-- <th style="border: 1px solid black; padding:6px; width: 100px;">MEK Online <br/>Sign</th> -->
                         </tr>
                         <t t-set="index" t-value="0" />
-                        <t t-foreach="o.gsk_candidates" t-as="candidate">
+                        <t t-foreach="gsk_candidates" t-as="candidate">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
                                 <td><span t-esc="index" /></td>
+                                
                                 <td><span t-field="candidate.gp_candidate.candidate_code" /></td>
                                 <td><span t-field="candidate.exam_id" /></td>
                                 <td><span t-field="candidate.gp_candidate.name" /></td>
@@ -376,7 +377,7 @@
                 </t>
 
                 <!-- MEK Candidates Table -->
-                <t t-if="o.mek_candidates">
+                <!-- <t t-if="o.mek_candidates">
                     <table class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                         <tr>
                             <th style="border: 1px solid black; padding:6px;">Sr No.</th>
@@ -403,10 +404,10 @@
                             </tr>
                         </t>
                     </table>
-                </t>
+                </t> -->
 
                 <!-- GSK & MEK Candidates Table -->
-                <t t-if="o.gsk_mek_candidates">
+                <!-- <t t-if="o.gsk_mek_candidates">
                     <table class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                         <tr>
                             <th style="border: 1px solid black; padding:6px;">Sr No.</th>
@@ -433,7 +434,7 @@
                             </tr>
                         </t>
                     </table>
-                </t>
+                </t> -->
 
                 <!-- Footer Section -->
                 <div class="footer" style="width: 100%; margin-top: 20px; font-size: 12px;">
@@ -442,14 +443,14 @@
                             <td style="text-align: left; width: 200px; height: 50px; font-family: 'TimesNewRoman';">
                                 Invigilator Name &amp; Sign
                             </td>
-                            <td style="border: 1px solid black; width: 100px;">
+                            <!-- <td style="border: 1px solid black; width: 100px;">
                                 <span t-esc="o.staff_id.name" />
-                            </td>
+                            </td> -->
                         </tr>
                     </table>
                 </div>
             </t>
-        </t>
+        <!-- </t> -->
     </template>
 
 
