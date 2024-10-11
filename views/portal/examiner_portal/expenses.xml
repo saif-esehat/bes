@@ -335,7 +335,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="row mb-3 mx-2">
-                                    <form action="/my/assignments/batches/timesheet/add" method="POST">
+                                    <!-- <form action="/my/assignments/batches/timesheet/add" method="POST"> -->
                                         
                                         <label for="dgs_batch">Batch Name</label>
                                         <input type="text" class="form-control mb-3" id="dgs_batch" name="dgs_batch"/>
@@ -354,7 +354,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
             </div>
 
             <div class="container">
