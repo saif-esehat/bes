@@ -94,8 +94,8 @@ class GPShipVisitPortalController(http.Controller):
             'page_name': 'gp_ship_list',
             'batch_id': batch_id
         }
-        # return request.render('bes.portal_gp_ship_visits_po', vals)
-        return request.redirect('/my/ship_visits')
+        return request.render('bes.portal_gp_ship_visits_po', vals)
+        # return request.redirect('/my/ship_visits')
     
  
 
