@@ -693,6 +693,26 @@
                                 <button type="button" class="btn btn-info custom-btn" data-toggle="modal" t-attf-data-id="{{visit.id}}"  data-target="#candidateModal">
                                     Add Candidates
                                 </button>
+                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Candidate Name</th>
+                                            <th>Indos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <t t-foreach="visit.candidate_ids" t-as="candidate">
+                                            <tr>
+                                                <td>
+                                                     <t t-out="candidate.name" />
+                                                </td>
+                                                <td>
+                                                     <t t-out="candidate.indos_no" />
+                                                </td>
+                                            </tr>
+                                         </t>
+                                    </tbody>
+                                </table>
                             </div>
                             <style>
                                 .custom-btn {
