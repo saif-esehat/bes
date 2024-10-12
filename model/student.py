@@ -1248,6 +1248,7 @@ class CCMCCandidateShipVisits(models.Model):
 
     institute_batch_id = fields.Many2one("institute.gp.batches","Batch",related="candidate_id.institute_batch_id",tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="candidate_id.institute_batch_id.dgs_batch",store=True)
+    ship_visit_id = fields.Many2one("ccmc.batches.ship.visit",string="Ship Visit")
     institute = fields.Many2one("bes.institute",string="Name of Institute",related="candidate_id.institute_id",store=True,tracking=True)
     institute_code = fields.Char(string="Code No.",related="institute.code",store=True)
     candidate_count = fields.Integer("Number of Candidates",related="candidate_id.institute_batch_id.admit_card_alloted",tracking=True)

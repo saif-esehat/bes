@@ -98,26 +98,13 @@
    
 
 <template id="portal_gp_ship_visits_po">
-    <script>
-
+        <script>
                 function openShipVisitModal(button) {
                     debugger
                     var batch_id = button.getAttribute('data-id');
                     document.getElementById('batch_id').value = batch_id;
 
-                <!-- setTimeout(function() {
-                var batch_id = button.getAttribute('data-id');
-                document.getElementById('survey_input_id').value = dataId;
-                
-                    var subject = document.getElementById('online_subject_'+dataId).innerText;
-                    document.getElementById('online_subject').value = subject;
-                }, 1000);  -->
-
                 }
-
-     
-
-        
        </script>
     <t t-call="portal.portal_layout">
         <div class="container">
@@ -185,7 +172,7 @@
                         </div>
                         </div>
                     </div>
-                    </div>
+                </div>
                 <button type="button" class="btn btn-primary" data-toggle="modal" t-attf-data-id="{{batch_id}}" onclick="openShipVisitModal(this)"  data-target="#shipVisitModal">
                     Add Ship Visit
                 </button>

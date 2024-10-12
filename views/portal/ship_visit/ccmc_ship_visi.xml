@@ -58,10 +58,84 @@
    
 
 <template id="portal_ccmc_ship_visits_po">
+    <script>
+                function openShipVisitModal(button) {
+                    debugger
+                    var batch_id = button.getAttribute('data-id');
+                    document.getElementById('batch_id').value = batch_id;
+
+                }
+       </script>
     <t t-call="portal.portal_layout">
         <div class="container">
-       
+            <div class="modal fade" id="shipVisitModal" tabindex="-1" role="dialog" aria-labelledby="shipVisitModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="shipVisitModalLabel">Ship Visit Form</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="shipVisitForm" action="my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input  type="hidden" id="batch_id" name="batch_id" class="form-control"/>
+
+                            <div class="container mt-8">
+                                <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="ship_name1">Ship Name</label>
+                                    <input type="text" name="ship_name1" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="port_name">Port Name</label>
+                                    <input type="text" name="port_name" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="imo_no">IMO No.</label>
+                                    <input type="text" name="imo_no" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="date_of_visit">Date of Visit</label>
+                                    <input type="date" name="date_of_visit" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="time_spent">Time Spent (in hours)</label>
+                                    <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="gp_image">Ship Image</label>
+                                    <input type="file" name="gp_image" class="form-control" id="gp_image" />
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" form="shipVisitForm" class="btn btn-primary">Submit</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
          <t t-call="portal.portal_table">
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" t-attf-data-id="{{batch_id}}" onclick="openShipVisitModal(this)"  data-target="#shipVisitModal">
+                    Add Ship Visit
+                </button>
                 <thead>
               
                       <tr>
@@ -80,9 +154,9 @@
                     <t t-foreach="ship_visits" t-as="visit">
                         <tr>
                             <td>
-                           <a t-attf-href="/my/ccmc_ship_visits/view?id={{ visit.id }}" t-if="page_name == 'gp_ccmcship_list'" class="fa">
+                           <!-- <a t-attf-href="/my/ccmc_ship_visits/view?id={{ visit.id }}" t-if="page_name == 'gp_ccmcship_list'" class="fa"> -->
                                 <t t-esc="visit.ship_name2"/>
-                            </a>
+                            <!-- </a> -->
                             </td>
                             <td><t t-esc="visit.port_name"/></td>
                             <td><t t-esc="visit.imo_no"/></td>
@@ -103,7 +177,7 @@
                     </t>
                 </tbody>
             </t>
-            <a style="margin-top: 20px; margin-bottom: 20px;"  class="btn btn-primary" t-att-href="'/my/ccmc_ship_visits/create'">Create New Ship Visit</a>
+            <!-- <a style="margin-top: 20px; margin-bottom: 20px;"  class="btn btn-primary" t-att-href="'/my/ccmc_ship_visits/create'">Create New Ship Visit</a> -->
         </div>
     </t>
 </template>

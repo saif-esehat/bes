@@ -128,8 +128,7 @@ class GPShipVisitPortalController(http.Controller):
         }
 
         # Render the template with the data
-        # return request.render('bes.portal_ccmc_ship_visits_po', vals)
-        return request.redirect('/my/ccmc_ship_visits')
+        return request.render('bes.portal_ccmc_ship_visits_po', vals)
 
 
 
@@ -211,6 +210,7 @@ class GPShipVisitPortalController(http.Controller):
         [('user_id', '=', user_id)], limit=1).id  
 
         if request.httprequest.method == 'POST':
+            batch_id = int(post.get("batch_id"))
             ship_name2 = post.get("ship_name2")
             port_name = post.get("port_name")
             course_gp = post.get("course_gp")
@@ -228,13 +228,14 @@ class GPShipVisitPortalController(http.Controller):
                 image_base64 = base64.b64encode(file_content).decode('utf-8')
 
             try:
-                date_of_visit = datetime.strptime(date_of_visit_str, '%Y-%m-%dT%H:%M') if date_of_visit_str else False
-
+                # date_of_visit = datetime.strptime(date_of_visit_str, '%Y-%m-%dT%H:%M') if date_of_visit_str else False
+                date_of_visit = date_of_visit_str
                 # Prepare the list of candidates for the Many2many field
                 candidate_ids_list = [(6, 0, [int(candidate_id) for candidate_id in candidate_ids])] if candidate_ids else False
 
                 # Data to create the ship visit record
                 ship_data = {
+                    "ccmc_ship_batch_ids":batch_id,
                     "ship_name2": ship_name2,
                     "port_name": port_name,
                     "course_gp": course_gp,
