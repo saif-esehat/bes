@@ -56,14 +56,14 @@ class GPShipVisitPortalController(http.Controller):
     #     vals = {'ship_visits': ship_visits, 'page_name': 'gp_ship_list'}
     #     return request.render('bes.portal_gp_ship_visits_po', vals)
 
-    @http.route(['/my/ship_visits'], type='http', auth='user', website=True)
-    def portal_my_ship_visits(self, **kw):
+    # @http.route(['/my/ship_visits'], type='http', auth='user', website=True)
+    # def portal_my_ship_visits(self, **kw):
        
-        # Search for all ship visits associated with the user's batch ID
-        ship_visits = request.env['gp.batches.ship.visit'].sudo().search([])
+    #     # Search for all ship visits associated with the user's batch ID
+    #     ship_visits = request.env['gp.batches.ship.visit'].sudo().search([])
 
-        vals = {'ship_visits': ship_visits, 'page_name': 'gp_ship_list'}
-        return request.render('bes.portal_gp_ship_visits_po', vals)
+    #     vals = {'ship_visits': ship_visits, 'page_name': 'gp_ship_list'}
+    #     return request.render('bes.portal_gp_ship_visits_po', vals)
   
 #   ccmc  ship visit
     @http.route(['/my/ccmc_ship_visits'], type='http', auth='user', website=True)
@@ -83,7 +83,11 @@ class GPShipVisitPortalController(http.Controller):
 
         gp_ship_batch_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
+        
+        
+        
         ship_visit = request.env['gp.batches.ship.visit'].sudo().search([('gp_ship_batch_id', '=', batch_id)])
+        # import wdb;wdb.set_trace()
        
         vals = {
             'ship_visit': ship_visit,  # Pass the records to the template
@@ -147,6 +151,8 @@ class GPShipVisitPortalController(http.Controller):
     @http.route(['/my/ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_gp_ship_visit_submit(self, **post):
         if request.httprequest.method == 'POST':
+            # import wdb;wdb.set_trace()
+            batch_id = int(post.get("batch_id"))
             ship_name1 = post.get("ship_name1")
             port_name = post.get("port_name")
             course_gp = post.get("course_gp")
@@ -171,6 +177,7 @@ class GPShipVisitPortalController(http.Controller):
 
                 # Data to create the ship visit record
                 ship_data = {
+                    "gp_ship_batch_id":batch_id,
                     "ship_name1": ship_name1,
                     "port_name": port_name,
                     "course_gp": course_gp,
@@ -189,7 +196,7 @@ class GPShipVisitPortalController(http.Controller):
                 _logger.error("Failed to create ship visit record: %s", e)
                 request.session['error_message'] = "Failed to create ship visit record."
 
-            return request.redirect('/my/ship_visits')
+            return request.redirect('/my/ship_visits/'+str(batch_id))
 
  #   ccmc  ship visit
 
@@ -301,9 +308,9 @@ class GPShipVisitPortalController(http.Controller):
     
           
 
-    @http.route(['/my/ship_visits/edit'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
-    def portal_gp_ship_visit_edit(self, id, **kw):
-        visit = request.env['gp.batches.ship.visit'].sudo().browse(int(id))
+    @http.route(['/my/ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
+    def portal_gp_ship_visit_edit(self,ship_visit_id,**kw):
+        visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
         vals = {'visit': visit, 'page_name': 'gpship_edit'}
         if not visit.exists():
             return request.not_found()
@@ -319,6 +326,45 @@ class GPShipVisitPortalController(http.Controller):
             return request.not_found()
         return request.render('bes.portal_ccmc_ship_visit_edit', vals)
 
+    
+    @http.route(['/my/ship_visit/addcandidate'],type="json",auth='user', website=True, methods=['POST'])
+    def portal_ship_visit_add_candidate(self, **post):
+        
+        
+        ship_visit_id = int(request.jsonrequest["ship_vist_id"])
+        candidate_ids =  [int(element) for element in request.jsonrequest["candidate_ids"]]
+       
+        # request.jsonrequest
+        ship_visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
+        
+        # for candidate in candidate_ids:
+        #     import wdb;wdb.set_trace()
+        
+        for candidate in candidate_ids:
+            ship_visit.write({'candidate_ids': [(4,candidate)]})
+            request.env['gp.candidate.ship.visits'].sudo().create({
+                "candidate_id":candidate,
+                "ship_visit_id":ship_visit.id,
+                "name_of_ships":ship_visit.ship_name1,
+                "imo_no": ship_visit.imo_no,
+                "name_of_ports_visited":ship_visit.port_name, 
+                "date_of_visits":ship_visit.date_of_visit,
+                "time_spent_on_ship":ship_visit.time_spent
+            })
+            
+        
+
+            
+
+        # import wdb;wdb.set_trace()
+
+            
+            
+            
+        return {"status" : "success"}
+
+    
+    
 
     @http.route(['/my/ship_visits/update'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_gp_ship_visit_update(self, **post):
