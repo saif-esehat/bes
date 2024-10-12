@@ -170,8 +170,8 @@ class GPShipVisitPortalController(http.Controller):
                 image_base64 = base64.b64encode(file_content).decode('utf-8')
 
             try:
-                date_of_visit = datetime.strptime(date_of_visit_str, '%Y-%m-%dT%H:%M') if date_of_visit_str else False
-
+                # date_of_visit = datetime.strptime(date_of_visit_str, '%Y-%m-%dT%H:%M') if date_of_visit_str else False
+                date_of_visit = date_of_visit_str
                 # Prepare the list of candidates for the Many2many field
                 candidate_ids_list = [(6, 0, [int(candidate_id) for candidate_id in candidate_ids])] if candidate_ids else False
 
@@ -189,6 +189,7 @@ class GPShipVisitPortalController(http.Controller):
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
                 }
 
+               
                 # Create the record in the model
                 request.env['gp.batches.ship.visit'].sudo().create(ship_data)
 
