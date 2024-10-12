@@ -4152,6 +4152,10 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
 
+
+
+
+
     @http.route(['/my/ccmccandidate/updatewithdrawnstatus'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateWithdrawnStatusCCMC(self, **kw):
         # import wdb; wdb.set_trace();

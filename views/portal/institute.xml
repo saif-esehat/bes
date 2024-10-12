@@ -2502,17 +2502,7 @@
                                             method: "GET",
                                             dataType: "json",
                                             success: function(data) {
-                                            // Handle the successful response
-                                            var selectField = $("#state_id");
-
-                                            // Clear existing options
-                                            selectField.empty();
-
-                                            // Append new options based on the response
-                                            $.each(data, function(index, state) {
-                                                selectField.append(`<option value="${state.id}">${state.name}</option>`);
-                                            });
-
+                                            
                                             },
                                             error: function(xhr, status, error) {
                                             // Handle errors
