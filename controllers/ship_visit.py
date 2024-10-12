@@ -74,6 +74,8 @@ class GPShipVisitPortalController(http.Controller):
 
         vals = {'ship_visits': ship_visits, 'page_name': 'gp_ccmcship_list'}
         return request.render('bes.portal_ccmc_ship_visits_po', vals)
+    
+
 
     @http.route(['/my/ship_visits/<int:batch_id>'], type='http', auth='user', website=True)
     def portal_my_ship_visit(self, batch_id, **kw):
@@ -88,7 +90,9 @@ class GPShipVisitPortalController(http.Controller):
             'page_name': 'gp_ship_list',
             'batch_id': batch_id
         }
-        return request.render('bes.portal_gp_ship_visits_po', vals)
+        # return request.render('bes.portal_gp_ship_visits_po', vals)
+        return request.redirect('/my/ship_visits')
+    
  
 
  #   ccmc  ship visit
@@ -120,7 +124,8 @@ class GPShipVisitPortalController(http.Controller):
         }
 
         # Render the template with the data
-        return request.render('bes.portal_ccmc_ship_visits_po', vals)
+        # return request.render('bes.portal_ccmc_ship_visits_po', vals)
+        return request.redirect('/my/ccmc_ship_visits')
 
 
 
@@ -134,6 +139,7 @@ class GPShipVisitPortalController(http.Controller):
     @http.route(['/my/ccmc_ship_visits/create'], type='http', auth='user', website=True)
     def portal_ccmc_ship_visit_create(self, **kw):
         # Render the template for creating a new ship visit
+        
         return request.render('bes.portal_ccmc_ship_visit_create', {'page_name': 'ccmcship_create'})
 
    
@@ -189,6 +195,13 @@ class GPShipVisitPortalController(http.Controller):
 
     @http.route(['/my/ccmc_ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_ccmc_ship_visit_submit(self, **post):
+
+        user_id = request.env.user.id
+
+        # Fetch institute based on the logged-in user
+        ccmc_ship_batch_ids = request.env["bes.institute"].sudo().search(
+        [('user_id', '=', user_id)], limit=1).id  
+
         if request.httprequest.method == 'POST':
             ship_name2 = post.get("ship_name2")
             port_name = post.get("port_name")

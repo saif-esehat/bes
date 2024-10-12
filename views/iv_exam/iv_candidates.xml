@@ -120,6 +120,32 @@
             </field>
         </record>
 
+    <record id="view_iv_attendance_wizard_form" model="ir.ui.view">
+    <field name="name">iv.attendance.wizard.form</field>
+    <field name="model">iv.attendance.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Attendance Wizard">
+            <group>
+                <field name="class_capacity"/>
+                <!-- <field name="intake_number"/> -->
+            </group>
+            <footer>
+                <button string="Generate" type="object" name="generate_attendance_records" class="btn-primary"/>
+                <button string="Cancel" class="btn-secondary" special="cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="action_iv_attendance_wizard" model="ir.actions.act_window">
+    <field name="name">Attendance Wizard</field>
+    <field name="res_model">iv.attendance.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+
+
         <menuitem id="iv_candidate_menu" 
                   parent="iv_menu" 
                   name="IV Candidates"

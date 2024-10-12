@@ -351,8 +351,7 @@
                                 GP Ship Visit
                             </a>
                         </td>
-                            
-                           
+                       
 
                             <td class="text-center">
                                 <t t-out="batch.candidate_count" />
