@@ -78,7 +78,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="shipVisitForm" action="my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
+                            <form id="shipVisitForm" action="/my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input  type="hidden" id="batch_id" name="batch_id" class="form-control"/>
 
@@ -87,7 +87,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                     <label for="ship_name1">Ship Name</label>
-                                    <input type="text" name="ship_name1" class="form-control" required="required"/>
+                                    <input type="text" name="ship_name2" class="form-control" required="required"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -160,8 +160,9 @@
                             </td>
                             <td><t t-esc="visit.port_name"/></td>
                             <td><t t-esc="visit.imo_no"/></td>
-                            <td><t t-esc="visit.date_of_visit.strftime('%Y-%m-%d %H:%M') if visit.date_of_visit else ''"/></td>
-                          <td><t t-esc="visit.time_spent"/></td>
+                            <td><t t-esc="visit.date_of_visit"/></td>
+                            <td><t t-esc="visit.time_spent"/></td>
+                          
                             <!-- <td><t t-esc="visit.course_gp"/></td>  -->
                             <!-- <td><t t-esc="visit.no_of_candidate"/></td>  -->
 
@@ -170,9 +171,15 @@
                                     <span><t t-esc="candidate.name"/> </span><br/>
                                 </t>
                             </td> -->
-                             <td style="max-width: 250px; white-space: normal;">
+                            <td style="max-width: 250px; white-space: normal;">
                                 <span><t t-esc="len(visit.candidate_ids)"/> </span>
                             </td>
+                           
+                            <td>
+                                <a  t-attf-href="/my/ccmc_ship_visits/edit/{{visit.id}}">
+                                    View
+                                </a>
+                            </td>    
                         </tr>
                     </t>
                 </tbody>
@@ -458,6 +465,52 @@
 
     <template id="portal_ccmc_ship_visit_edit" name="Edit Ship Visit">
         <t t-call="portal.portal_layout">
+            <script>
+                function addCandidates(button) {
+
+                        var ship_visit_id = document.getElementById("ship_visit_id").value
+                    
+                        const checkboxes = document.querySelectorAll('input[name="candidate_ids"]');
+                        const selectedValues = [];
+
+                        checkboxes.forEach(function(checkbox) {
+                            if(checkbox.checked){
+                                selectedValues.push(checkbox.value);
+                            }
+                        });
+
+                        var data ={
+                            "ship_vist_id" : ship_visit_id,
+                            "candidate_ids" : selectedValues
+                        }
+                        
+                        
+                        
+                        $.ajax({
+                                type: "POST",
+                                url: '/my/ccmc_ship_visit/addcandidate',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+                                    window.location.reload();
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+
+                        
+                    
+                }
+
+            </script>
             <div class="container mt-4">
                 <div class="row">
                     <div class="col-12">
@@ -470,40 +523,43 @@
                             <div class="modal-body">
                                     <div class="container mt-5">
                                         <div class="row">
-                                
+
+                                        <input type="hidden" t-att-value="visit.id" name="ship_visit_id"  id="ship_visit_id"  />
+
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                <label for="ship_name2">Ship Name:</label>
-                                               <input type="text" id="ship_name2" name="ship_name2" class="form-control" t-att-value="visit.ship_name2"/>
+                                               <input type="text" id="ship_name2" name="ship_name2" readonly="1" class="form-control" t-att-value="visit.ship_name2"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                <label for="port_name">Port Name:</label>
-                                               <input type="text" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
+                                               <input type="text" id="port_name" name="port_name" readonly="1" class="form-control" t-att-value="visit.port_name"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                  <label for="imo_no">IMO No.:</label>
-                                                 <input type="text" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                                                 <input type="text" id="imo_no" name="imo_no" readonly="1" class="form-control" t-att-value="visit.imo_no"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                            <label for="date_of_visit">Date of Visit:</label>
-                                            <input type="datetime-local" id="date_of_visit" name="date_of_visit" class="form-control"
-                                                t-att-value="visit.date_of_visit.strftime('%Y-%m-%dT%H:%M') if visit.date_of_visit else ''"/>
+                                            <input type="date" id="date_of_visit" readonly="1" name="date_of_visit" class="form-control"
+                                                t-att-value="visit.date_of_visit"/>
                                         </div>
                                         </div>
 
                                         <div class="col-md-6">
                                         <div class="form-group">
                                            <label for="time_spent">Time Spent:</label>
-                                          <input type="text" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                                          <input type="text" readonly="1" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
                                             </div>
                                         </div>
 
@@ -569,6 +625,28 @@
                                     Add Candidates
                                 </button>
                             </div>
+
+                            <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Candidate Name</th>
+                                            <th>Indos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <t t-foreach="visit.candidate_ids" t-as="candidate">
+                                            <tr>
+                                                <td>
+                                                     <t t-out="candidate.name" />
+                                                </td>
+                                                <td>
+                                                     <t t-out="candidate.indos_no" />
+                                                </td>
+                                            </tr>
+                                         </t>
+                                    </tbody>
+                                </table>
+
                             <style>
                                 .custom-btn {
                                     margin-left: 30px; /* Adjust for gap */
@@ -587,9 +665,11 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
+                                                    <input type="hidden" t-att-value="visit.id" name="ship_visit_id"  id="ship_visit_id"  />
+
                                                     <div class="checkboxes">
                                                         <t t-set="excluded_candidate_ids" t-value="visit.candidate_ids.ids"/> <!-- Set excluded candidates -->
-                                                        <t t-foreach="request.env['ccmc.candidate'].sudo().search([])" t-as="candidate">
+                                                        <t t-foreach="request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',visit.ccmc_ship_batch_ids.id)])" t-as="candidate">
                                                             <t t-if="candidate.id not in excluded_candidate_ids"> <!-- Only show candidates not already selected -->
                                                                 <div class="form-check">
                                                                     <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
@@ -602,7 +682,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" onclick="addCandidates(this)" data-dismiss="modal">Add</button>
+                                                    <button type="button" class="btn btn-secondary" onclick="addCandidates(this)"  data-dismiss="modal">Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -610,8 +690,8 @@
 
 
                             <!-- Submit Button -->
-                            <button type="submit" class="btn btn-primary">Update</button>
-                            <a class="btn btn-secondary" href="/my/ccmc_ship_visits">Cancel</a>
+                            <!-- <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-secondary" href="/my/ccmc_ship_visits">Cancel</a> -->
                         </form>
                     </div>
                 </div>
@@ -638,7 +718,7 @@
                 </tr>
                 <tr>
                     <th>Date of Visit</th>
-                    <td><t t-esc="ship_visit.date_of_visit.strftime('%Y-%m-%d %H:%M:%S') if ship_visit.date_of_visit else ''"/></td>
+                    <td><t t-esc="ship_visit.date_of_visit"/></td>
                 </tr>
                 <tr>
                     <th>Time Spent (in hours)</th>

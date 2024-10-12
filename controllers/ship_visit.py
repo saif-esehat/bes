@@ -254,7 +254,7 @@ class GPShipVisitPortalController(http.Controller):
                 _logger.error("Failed to create ship visit record: %s", e)
                 request.session['error_message'] = "Failed to create ship visit record."
 
-            return request.redirect('/my/ccmc_ship_visits')
+            return request.redirect('/my/ccmc_ship_visits/'+str(batch_id))
 
     # @http.route(['/my/ccmc_ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     # def portal_ccmc_ship_visit_submit(self, **post):
@@ -319,14 +319,49 @@ class GPShipVisitPortalController(http.Controller):
         return request.render('bes.portal_gp_ship_visit_edit', vals)
  
   #   ccmc  ship visit
-    @http.route(['/my/ccmc_ship_visits/edit'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
-    def portal_ccmc_ship_visit_edit(self, id, **kw):
-        visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(id))
+    @http.route(['/my/ccmc_ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
+    def portal_ccmc_ship_visit_edit(self, ship_visit_id, **kw):
+        visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(ship_visit_id))
 
         vals = {'visit': visit, 'page_name': 'ccmcship_edit'}
         if not visit.exists():
             return request.not_found()
         return request.render('bes.portal_ccmc_ship_visit_edit', vals)
+
+
+    @http.route(['/my/ccmc_ship_visit/addcandidate'],type="json",auth='user', website=True, methods=['POST'])
+    def portal_ccmc_ship_visit_add_candidate(self, **post):
+        ship_visit_id = int(request.jsonrequest["ship_vist_id"])
+        candidate_ids =  [int(element) for element in request.jsonrequest["candidate_ids"]]
+       
+        # request.jsonrequest
+        ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(ship_visit_id))
+        
+        # for candidate in candidate_ids:
+        #     import wdb;wdb.set_trace()
+        
+        for candidate in candidate_ids:
+            ship_visit.write({'candidate_ids': [(4,candidate)]})
+            request.env['ccmc.candidate.ship.visits'].sudo().create({
+                "candidate_id":candidate,
+                "ship_visit_id":ship_visit.id,
+                "name_of_ships":ship_visit.ship_name2,
+                "imo_no": ship_visit.imo_no,
+                "name_of_ports_visited":ship_visit.port_name, 
+                "date_of_visits":ship_visit.date_of_visit,
+                "time_spent_on_ship":ship_visit.time_spent
+            })
+            
+        
+
+            
+
+        # import wdb;wdb.set_trace()
+
+            
+            
+            
+        return {"status" : "success"}
 
     
     @http.route(['/my/ship_visit/addcandidate'],type="json",auth='user', website=True, methods=['POST'])

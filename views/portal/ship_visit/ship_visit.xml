@@ -206,7 +206,7 @@
                              <td style="max-width: 250px; white-space: normal;">
                                 <a  t-attf-href="/my/ship_visits/edit/{{visit.id}}">
                                     View
-                                    </a>
+                                </a>
                             </td>
                         </tr>
                     </t>
