@@ -305,18 +305,17 @@
     </template>
 
     <template id="attendance_sheet_online_gp_new">
-        <t t-call="web.basic_layout">
-            <t t-foreach="docs" t-as="o">
+        <t t-call="web.html_container">
+        <!-- <t t-call="web.basic_layout"> -->
                 <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
-
                 <!-- Header Section -->
                 <div class="header">
-                    <table style="width:100%; border: 1px solid black;">
+                    <table style="width:100%; border: 1px solid black; ">
                         <tr>
                             <th style="border: 1px solid black; font-family: 'TimesNewRoman';" rowspan="2">
                                 <img class="img img-responsive img-top"
                                     src="/bes/static/src/img/logo_bes.jpg"
-                                    style="max-width: 100px; max-height: 100px;padding:2px;" />
+                                    style="max-width: 100px; max-height: 100px;padding:1px;" />
                             </th>
                             <th style="width:100%; border: 1px solid black;padding:10px; text-align:center; vertical-align: center; font-family: 'TimesNewRoman';">
                                 <strong style="white-space: nowrap; ">Board of Examinations for Seafarers Trust</strong>
@@ -332,13 +331,14 @@
                         <tr style="width:100%; border: 1px solid black;padding:10px">
                             <th colspan="2" style="white-space: nowrap; padding:5px; font-family: 'TimesNewRoman';">
                                 <span style="float:left;">Venue : <span style="text-align:left;">
-                                        <t t-esc="o.institute_id.name" />
+                                        <t t-esc="institute_name" />
                                     </span></span>
                                 <span style="margin-left:150px;">Subjects : 
                                     <span style="text-align:center;">GSK&amp;MEK</span>
                                 </span>
                                 <span style="float:right;">Date : 
-                                    <t t-esc="o.exam_date.strftime('%d-%b-%Y')" />
+                                        <t t-esc="exam_date.strftime('%d-%b-%Y')" />
+                                        <!-- <t t-esc="exam_date" /> -->
                                 </span>
                             </th>
                         </tr>
@@ -346,90 +346,92 @@
                 </div>
 
                 <!-- GSK Candidates Table -->
-                <t t-if="o.gsk_candidates">
+                <t t-if="gsk_candidates">
                     <table class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                         <tr>
-                            <th style="border: 1px solid black; padding:6px;">Sr No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Candidate Code No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Roll No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Name of Candidate</th>
-                            <th style="border: 1px solid black; padding:6px;">INDoS No.</th>
-                            <th style="border: 1px solid black; padding:6px;">DOB</th>
-                            <th style="border: 1px solid black; padding:6px; width: 100px;">GSK Online <br/>Sign</th>
-                            <th style="border: 1px solid black; padding:6px; width: 100px;">MEK Online <br/>Sign</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Sr No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Candidate Code No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Roll No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Name of Candidate</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">INDoS No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;">DOB</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;">GSK Online <br/>Sign</th>
                         </tr>
                         <t t-set="index" t-value="0" />
-                        <t t-foreach="o.gsk_candidates" t-as="candidate">
+                        <t t-foreach="gsk_candidates" t-as="candidate">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
-                                <td><span t-esc="index" /></td>
-                                <td><span t-field="candidate.gp_candidate.candidate_code" /></td>
-                                <td><span t-field="candidate.exam_id" /></td>
-                                <td><span t-field="candidate.gp_candidate.name" /></td>
-                                <td><span t-field="candidate.gp_candidate.indos_no" /></td>
-                                <td><span t-field="candidate.gp_candidate.dob" /></td>
-                                <td t-if="candidate.attempting_gsk_online"></td>
-                                <td t-if="candidate.attempting_mek_online"></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-esc="index" /></td> 
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.candidate_code" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.exam_id" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.name" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.indos_no" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';  width: 100px;"><span t-field="candidate.gp_candidate.dob" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"></td>
                             </tr>
                         </t>
                     </table>
                 </t>
 
+                <!-- Page break for the next page -->
+                <div style="page-break-before: always;"></div>
+                
                 <!-- MEK Candidates Table -->
-                <t t-if="o.mek_candidates">
+                <t t-if="mek_candidates">
                     <table class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                         <tr>
-                            <th style="border: 1px solid black; padding:6px;">Sr No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Candidate Code No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Roll No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Name of Candidate</th>
-                            <th style="border: 1px solid black; padding:6px;">INDoS No.</th>
-                            <th style="border: 1px solid black; padding:6px;">DOB</th>
-                            <th style="border: 1px solid black; padding:6px; width: 100px;">GSK Online <br/>Sign</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Sr No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Candidate Code No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Roll No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Name of Candidate</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">INDoS No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;">DOB</th>
                             <th style="border: 1px solid black; padding:6px; width: 100px;">MEK Online <br/>Sign</th>
                         </tr>
                         <t t-set="index" t-value="0" />
-                        <t t-foreach="o.mek_candidates" t-as="candidate">
+                        <t t-foreach="mek_candidates" t-as="candidate">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
-                                <td><span t-esc="index" /></td>
-                                <td><span t-field="candidate.gp_candidate.candidate_code" /></td>
-                                <td><span t-field="candidate.exam_id" /></td>
-                                <td><span t-field="candidate.gp_candidate.name" /></td>
-                                <td><span t-field="candidate.gp_candidate.indos_no" /></td>
-                                <td><span t-field="candidate.gp_candidate.dob" /></td>
-                                <td t-if="candidate.attempting_gsk_online"></td>
-                                <td t-if="candidate.attempting_mek_online"></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-esc="index" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.candidate_code" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.exam_id" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.name" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.indos_no" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;"><span t-field="candidate.gp_candidate.dob" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"></td>
                             </tr>
                         </t>
                     </table>
                 </t>
 
+                <!-- Page break for the next page -->
+                <div style="page-break-before: always;"></div>
+                
                 <!-- GSK & MEK Candidates Table -->
-                <t t-if="o.gsk_mek_candidates">
+                <t t-if="gsk_mek_candidates">
                     <table class="table table-condensed" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
                         <tr>
-                            <th style="border: 1px solid black; padding:6px;">Sr No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Candidate Code No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Roll No.</th>
-                            <th style="border: 1px solid black; padding:6px;">Name of Candidate</th>
-                            <th style="border: 1px solid black; padding:6px;">INDoS No.</th>
-                            <th style="border: 1px solid black; padding:6px;">DOB</th>
-                            <th style="border: 1px solid black; padding:6px; width: 100px;">GSK Online <br/>Sign</th>
-                            <th style="border: 1px solid black; padding:6px; width: 100px;">MEK Online <br/>Sign</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Sr No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Candidate Code No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Roll No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">Name of Candidate</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';">INDoS No.</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;">DOB</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;">GSK Online <br/>Sign</th>
+                            <th style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;">MEK Online <br/>Sign</th>
                         </tr>
                         <t t-set="index" t-value="0" />
-                        <t t-foreach="o.gsk_mek_candidates" t-as="candidate">
+                        <t t-foreach="gsk_mek_candidates" t-as="candidate">
                             <t t-set="index" t-value="index + 1" />
                             <tr>
-                                <td><span t-esc="index" /></td>
-                                <td><span t-field="candidate.gp_candidate.candidate_code" /></td>
-                                <td><span t-field="candidate.exam_id" /></td>
-                                <td><span t-field="candidate.gp_candidate.name" /></td>
-                                <td><span t-field="candidate.gp_candidate.indos_no" /></td>
-                                <td><span t-field="candidate.gp_candidate.dob" /></td>
-                                <td t-if="candidate.attempting_gsk_online"></td>
-                                <td t-if="candidate.attempting_mek_online"></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-esc="index" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.candidate_code" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.exam_id" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.name" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"><span t-field="candidate.gp_candidate.indos_no" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman'; width: 100px;"><span t-field="candidate.gp_candidate.dob" /></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"></td>
+                                <td style="border: 1px solid black; padding:6px; font-family: 'TimesNewRoman';"></td>
                             </tr>
                         </t>
                     </table>
@@ -437,19 +439,21 @@
 
                 <!-- Footer Section -->
                 <div class="footer" style="width: 100%; margin-top: 20px; font-size: 12px;">
-                    <table style="width: 40%; padding-top: 5px;">
-                        <tr style="border: 1px solid black;">
-                            <td style="text-align: left; width: 200px; height: 50px; font-family: 'TimesNewRoman';">
-                                Invigilator Name &amp; Sign
+                    <table style="width: 40%; padding-top: 5px; font-family: 'TimesNewRoman';">
+                        <tr style="border: 1px solid black; font-family: 'TimesNewRoman';">
+                            <td style="text-align: left; width: 200px; height: 50px; padding: 10px;">
                             </td>
-                            <td style="border: 1px solid black; width: 100px;">
-                                <span t-esc="o.staff_id.name" />
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-size: 16px; padding-left: 10px;">
+                                <span style="display: block; font-family: 'TimesNewRoman';">Examiner Signature</span>
+                                <strong>Examiner Name: </strong>
+                                <t t-esc="examiner_name" />
                             </td>
                         </tr>
                     </table>
                 </div>
             </t>
-        </t>
     </template>
 
 

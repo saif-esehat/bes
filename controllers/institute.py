@@ -3794,7 +3794,7 @@ class InstitutePortal(CustomerPortal):
             request.env['gp.candidate.stcw.certificate'].sudo().create({
                 'candidate_id': candidate.id,
                 'course_name': course_name,
-                'institute_name': institute_id,
+                'other_institute': institute_name,
                 'marine_training_inst_number': mti_no,
                 'mti_indos_no': indos_no,
                 'candidate_cert_no': certificate_no,
@@ -4065,7 +4065,7 @@ class InstitutePortal(CustomerPortal):
             request.env['ccmc.candidate.stcw.certificate'].sudo().create({
                 'candidate_id': candidate.id,
                 'course_name': course_name,
-                'institute_name': institute_id,
+                'other_institute': institute_name,
                 'marine_training_inst_number': mti_no,
                 'mti_indos_no': indos_no,
                 'candidate_cert_no': certificate_no,
@@ -4151,6 +4151,10 @@ class InstitutePortal(CustomerPortal):
         candidate.write({'withdrawn_state':withdrawn_state, 'withdrawn_reason':withdrawn_reason})
         
         return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+
+
+
+
 
     @http.route(['/my/ccmccandidate/updatewithdrawnstatus'], method=["POST", "GET"], type="http", auth="user", website=True)
     def UpdateWithdrawnStatusCCMC(self, **kw):
