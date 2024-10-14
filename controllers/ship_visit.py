@@ -305,6 +305,29 @@ class GPShipVisitPortalController(http.Controller):
     #     # Handle GET request or return an error
     #     return request.redirect('/my/ccmc_ship_visits')
 
+    @http.route(['/my/ccmc_ship_visits/delete'], type='http', auth='user', website=True, methods=['POST'], csrf=False)
+    def portal_ccmc_ship_visit_delete_visist(self,**kw):
+        # import wdb;wdb.set_trace()
+        ship_visit_id = int(kw.get('ship_visit_id'))
+        batch_id = int(kw.get('batch_id'))
+        # candidate_id = int(kw.get('candidate_id'))
+        ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(ship_visit_id))
+        # ship_visit.write({'candidate_ids': [(3,candidate_id)]})
+        
+        for candidate in ship_visit.candidate_ids:
+            request.env['ccmc.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
+        
+        ship_visit.candidate_ids.unlink()
+        ship_visit.unlink()
+        # import wdb;wdb.set_trace()
+
+        # gp_ship_visit = request.env['gp.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
+        # gp_ship_visit.unlink()
+        # vals = {'visit': visit, 'page_name': 'gpship_edit'}
+        # if not visit.exists():
+        #     return request.not_found()
+        return request.redirect('/my/ccmc_ship_visits/'+str(batch_id))
+
     @http.route(['/my/gp_ship_visits/delete'], type='http', auth='user', website=True, methods=['POST'], csrf=False)
     def portal_gp_ship_visit_delete_visist(self,**kw):
         
@@ -328,6 +351,21 @@ class GPShipVisitPortalController(http.Controller):
         #     return request.not_found()
         return request.redirect('/my/ship_visits/'+str(batch_id))
 
+    @http.route(['/my/ccmc_ship_visits/deletecandidate'], type='http', auth='user', website=True, methods=['POST'], csrf=False)
+    def portal_ccmc_ship_visit_delete_candidate(self,**kw):
+        ship_visit_id = int(kw.get('ship_visit_id'))
+        candidate_id = int(kw.get('candidate_id'))
+        ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(ship_visit_id))
+        ship_visit.write({'candidate_ids': [(3,candidate_id)]})
+        # import wdb;wdb.set_trace()
+
+        ccmc_ship_visit = request.env['ccmc.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
+        ccmc_ship_visit.unlink()
+        # vals = {'visit': visit, 'page_name': 'gpship_edit'}
+        # if not visit.exists():
+        #     return request.not_found()
+        return request.redirect('/my/ccmc_ship_visits/edit/'+str(ship_visit_id))
+    
     
     @http.route(['/my/gp_ship_visits/deletecandidate'], type='http', auth='user', website=True, methods=['POST'], csrf=False)
     def portal_gp_ship_visit_delete_candidate(self,**kw):
@@ -626,9 +664,9 @@ class GPShipVisitPortalController(http.Controller):
         return request.redirect('/my/ship_visits')
 
 # ccmc ship visit
-    @http.route(['/my/ccmc_ship_visits/delete'], type='http', auth='user', website=True)
-    def portal_ccmc_ship_visit_delete(self, id):
-        ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(id))
-        if ship_visit.exists():
-            ship_visit.unlink()
-        return request.redirect('/my/ccmc_ship_visits')
+    # @http.route(['/my/ccmc_ship_visits/delete'], type='http', auth='user', website=True)
+    # def portal_ccmc_ship_visit_delete(self, id):
+    #     ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(id))
+    #     if ship_visit.exists():
+    #         ship_visit.unlink()
+    #     return request.redirect('/my/ccmc_ship_visits')
