@@ -69,7 +69,10 @@
                 function openDeleteShipVisitModal(button){
                     debugger
                     var ship_visit_id = button.getAttribute('ship_visit-id');
+                    var batch_id = button.getAttribute('batch-id');
                     document.getElementById("ship_visit_id").value = ship_visit_id
+                    document.getElementById("batch_id_delete").value = batch_id
+
 
                 }
        </script>
@@ -87,7 +90,7 @@
                         <div class="modal-body">
                             <form id="shipVisitForm" action="/my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <input  type="hidden" id="batch_id" name="batch_id" class="form-control"/>
+                            <input  type="hidden" id="batch_id" name="batch_id" t-att-value="batch_id" class="form-control"/>
 
                             <div class="container mt-8">
                                 <div class="row">
@@ -151,7 +154,7 @@
                                     </div>
                                     <form action="/my/ccmc_ship_visits/delete" method="POST">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                        <input type="hidden" id="batch_id" name="batch_id" t-att-value="batch_id" />
+                                        <input type="hidden" id="batch_id_delete" name="batch_id" />
                                         <input type="hidden" id="ship_visit_id" name="ship_visit_id" />
                                         <div class="modal-body">
 
@@ -214,7 +217,7 @@
                                 </a>
                             </td>
                             <td style="max-width: 250px; white-space: normal;">
-                                <button type="button" class="btn btn-danger" t-attf-ship_visit-id="{{visit.id}}"  onclick="openDeleteShipVisitModal(this)" data-toggle="modal" data-target="#deleteModal" >
+                                <button type="button" class="btn btn-danger" t-attf-ship_visit-id="{{visit.id}}" t-attf-batch-id="{{batch_id}}"  onclick="openDeleteShipVisitModal(this)" data-toggle="modal" data-target="#deleteModal" >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
