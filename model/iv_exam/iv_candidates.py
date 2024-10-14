@@ -62,45 +62,57 @@ class IVCandidates(models.Model):
     candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
 
     def create_attendance_record(self):
-        for candidate in self:
-            # Get the last candidate application
-            last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
-            
-            if last_application_line:
-                # Access the candidate's application
-                application = last_application_line.application_id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Attendance Wizard',
+            'view_mode': 'form',
+            'res_model': 'iv.attendance.wizard',
+            'target': 'new',
+            'context': {'default_candidate_ids': self.ids},  # Passing the current candidates to the wizard
+        }
 
-                # Check the boolean fields 'written' and 'oral'
-                if application.written and not application.oral:
-                    # Create record in IVAttendanceSheet when only 'written' is True
-                    self.env['iv.attendance.sheet'].create({
-                        'candidate_name': candidate.name,
-                        'roll_no': candidate.roll_no,
-                        'grade_applied': candidate.grade_applied,
-                        'dob': candidate.dob,
-                        'indos_no': candidate.indos_no,
-                    })
+    # def create_attendance_record(self):
+    #     for candidate in self:
+    #         # Get the last candidate application
+    #         last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
+            
+    #         if last_application_line:
+    #             # Access the candidate's application
+    #             application = last_application_line.application_id
+
+    #             # Check the boolean fields 'written' and 'oral'
+    #             if application.written and not application.oral:
+    #                 # Create record in IVAttendanceSheet when only 'written' is True
+    #                 self.env['iv.attendance.sheet'].create({
+    #                     'candidate_name': candidate.name,
+    #                     'roll_no': candidate.roll_no,
+    #                     'grade_applied': candidate.grade_applied,
+    #                     'dob': candidate.dob,
+    #                     'indos_no': candidate.indos_no,
+    #                 })
                     
                 
-                elif application.oral and not application.written:
-                    # Create record in IVOralAttendanceSheet when only 'oral' is True
-                    self.env['iv.oral.attendance.sheet'].create({
-                        'candidate_name': candidate.name,
-                        'roll_no': candidate.roll_no,
-                        'grade_applied': candidate.grade_applied,
-                        'dob': candidate.dob,
-                        'indos_no': candidate.indos_no,
-                    })
+    #             elif application.oral and not application.written:
+    #                 # Create record in IVOralAttendanceSheet when only 'oral' is True
+    #                 self.env['iv.oral.attendance.sheet'].create({
+    #                     'candidate_name': candidate.name,
+    #                     'roll_no': candidate.roll_no,
+    #                     'grade_applied': candidate.grade_applied,
+    #                     'dob': candidate.dob,
+    #                     'indos_no': candidate.indos_no,
+    #                 })
                 
-                elif application.written and application.oral:
-                    # Create record in both IVAttendanceSheet and IVOralAttendanceSheet when both are True
-                    self.env['iv.attendance.sheet'].create({
-                        'candidate_name': candidate.name,
-                        'roll_no': candidate.roll_no,
-                        'grade_applied': candidate.grade_applied,
-                        'dob': candidate.dob,
-                        'indos_no': candidate.indos_no,
-                    })
+    #             elif application.written and application.oral:
+    #                 # Create record in both IVAttendanceSheet and IVOralAttendanceSheet when both are True
+    #                 self.env['iv.attendance.sheet'].create({
+    #                     'candidate_name': candidate.name,
+    #                     'roll_no': candidate.roll_no,
+    #                     'grade_applied': candidate.grade_applied,
+    #                     'dob': candidate.dob,
+    #                     'indos_no': candidate.indos_no,
+    #                 })
+
+
     def assign_status(self):
         for record in self:
             if record.candidate_applications.application_id[-1].application_type == 'repeater':
@@ -224,6 +236,61 @@ class CandidateApplicationLine(models.Model):
     candidate_id = fields.Many2one('iv.candidates',string="Candidate")
 
     application_id = fields.Many2one('candidates.application',string="Application")
+
+
+
+class IVAttendanceWizard(models.TransientModel):
+    _name = 'iv.attendance.wizard'
+    _description = 'Attendance Wizard'
+
+    class_capacity = fields.Integer(string='Class Capacity', required=True)
+    # intake_number = fields.Integer(string='Intake Number', required=True)
+
+    def generate_attendance_records(self):
+        context = self.env.context
+        class_capacity = self.class_capacity  # Get the class capacity from the wizard
+        classroom_no = 1  # Start with the first classroom
+        candidate_count = 0  # Counter to track candidates for each classroom
+
+        if 'active_ids' in context:
+            candidates = self.env['iv.candidates'].browse(context['active_ids'])
+            for candidate in candidates:
+                # Get the last candidate application
+                last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
+
+                if last_application_line:
+                    application = last_application_line.application_id
+
+                    # Check the boolean fields 'written' and 'oral'
+                    if application.written:
+                        # Increment the candidate count for attendance sheet logic
+                        candidate_count += 1
+
+                        # Recalculate the classroom number based on the class capacity
+                        if candidate_count > class_capacity:
+                            classroom_no += 1
+                            candidate_count = 1  # Reset the counter for the next classroom
+
+                        # Create record in IVAttendanceSheet when 'written' is True
+                        self.env['iv.attendance.sheet'].create({
+                            'candidate_name': candidate.name,
+                            'roll_no': candidate.roll_no,
+                            'grade_applied': candidate.grade_applied,
+                            'dob': candidate.dob,
+                            'indos_no': candidate.indos_no,
+                            'classroom_no': classroom_no,  # Add classroom number
+                        })
+                    
+                    if application.oral:
+                        # Create record in IVOralAttendanceSheet when 'oral' is True (no classroom logic)
+                        self.env['iv.oral.attendance.sheet'].create({
+                            'candidate_name': candidate.name,
+                            'roll_no': candidate.roll_no,
+                            'grade_applied': candidate.grade_applied,
+                            'dob': candidate.dob,
+                            'indos_no': candidate.indos_no,
+                        })
+
 
 
 

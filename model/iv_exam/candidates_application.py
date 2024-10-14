@@ -755,8 +755,8 @@ class IVCanditateApplicationEligible(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         # Fetch the candidates with 'hold' status
-        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'eligible')
-
+        # docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible == 'eligible')
+        docs = self.env['candidates.application'].sudo().browse(docids).filtered(lambda c: c.application_eligible in ('eligible', 'updated_eligible'))
         return {
             'docids': docids,
             'doc_model': 'candidates.application',

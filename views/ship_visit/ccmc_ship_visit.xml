@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_ccmc_batches_ship_visit_form" model="ir.ui.view">
+        <field name="name">ccmc.batches.ship.visit.form</field>
+        <field name="model">ccmc.batches.ship.visit</field>
+        <field name="arch" type="xml">
+            <form string="CCMC  SHIP VISIT" create="true" edit="true">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ship_name2"/>
+                            <field name="port_name"/>
+                            <field name="imo_no"/>
+                        </group>
+                        <group>
+                            <field name="date_of_visit"/>
+                            <field name="time_spent"/>
+                        </group>
+                         <group>
+                        <field name="course_gp"/>
+                        <field name="no_of_candidate"/>
+                    </group>
+                    </group>
+
+                    <group>
+                        <field name="candidate_ids" widget="many2many_tags"/>
+                        <field name="ccmc_batch" invisible="1"/>
+
+                        <field name="ccmc_ship_batch_ids" attrs="{'invisible': [('ccmc_batch', '!=', 'ccmc')]}"/>
+                    </group>
+
+                       <notebook>
+                          <page string="Ship Image">
+                            <group>
+                                <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
+                            </group>
+                        </page>
+
+                        
+
+                </notebook>
+                </sheet>
+             
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ccmc_batches_ship_visit_tree" model="ir.ui.view">
+        <field name="name">ccmc.batches.ship.visit.tree</field>
+        <field name="model">ccmc.batches.ship.visit</field>
+        <field name="arch" type="xml">
+            <tree string="CCMC  SHIP VISIT">
+                <field name="ship_name2"/>
+                <field name="port_name"/>
+                <field name="imo_no"/>
+                <field name="date_of_visit"/>
+                <field name="time_spent"/>
+                <field name="no_of_candidate"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ccmc_batches_ship_visit1" model="ir.actions.act_window">
+        <field name="name">CCMC Ship Visits</field>
+        <field name="res_model">ccmc.batches.ship.visit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first CCMC  SHIP VISIT
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu for CCMC  SHIP VISIT -->
+    <!-- <menuitem id="ship_visit_menu1"
+            parent="bes_menu"
+            name="Ship Visits 2" />
+
+        <menuitem id="gp_ship_visit_menu2"
+            parent="ship_visit_menu1"
+            name="CCMC  SHIP VISIT"
+            action="action_ccmc_batches_ship_visit1" /> -->
+
+    </data>
+
+</odoo>

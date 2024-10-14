@@ -1,42 +1,155 @@
 <odoo>
 
+
+    <record id="open_batch_expenses" model="ir.actions.act_window">
+        <field name="name">Batch Expenses</field>
+        <field name="res_model">exam.batch.expenses</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     <record id="open_examiner_expenses" model="ir.actions.act_window">
         <field name="name">Examiner Expenses</field>
         <field name="res_model">examiner.expenses</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="view_institute_exam_expenses_form" model="ir.ui.view">
+        <field name="name">institute.exam.expenses.form</field>
+        <field name="model">institute.exam.expenses</field>
+        <field name="arch" type="xml">
+            <form string="Batch Expenses">
+                <sheet>
+                    <group>
+                        <!-- <field name="expense_batch"/> -->
+                        <field name="dgs_batch"/>
+                        <field name="institute"/>
+                        <field name="practical_oral_expenses"/>
+                        <field name="online_expenses"/>
+                        <field name="team_lead_expense"/>
+                        <field name="non_mariner_expense"/>
+                        <field name="total"/>
+                        <!-- <field name="assignments"/> -->
+                        <!-- <field name="exam_type"/>
+                        <field name="institute"/>
+                        <field name="candidates_count"/> -->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_institute_exam_expenses_tree" model="ir.ui.view">
+        <field name="name">institute.exam.expenses.tree</field>
+        <field name="model">institute.exam.expenses</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="expense_batch"/>
+                <field name="dgs_batch"/>
+                <field name="institute"/>
+                <field name="practical_oral_expenses"/>
+                <field name="online_expenses"/>
+                <field name="team_lead_expense"/>
+                <field name="non_mariner_expense"/>
+                <field name="total"/>
+                <!-- <field name="assignments"/> -->
+                <!-- <field name="exam_type"/>
+                <field name="institute"/>
+                <field name="candidates_count"/> -->
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_batch_expenses_form" model="ir.ui.view">
+        <field name="name">exam.batch.expenses.form</field>
+        <field name="model">exam.batch.expenses</field>
+        <field name="arch" type="xml">
+            <form string="Batch Expenses">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                            <button name="open_institute_expense" string="Institute Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                            <button name="open_expense_record" string="Examiner Expenses" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
+                        </div>
+                    <group>
+                        <field name="dgs_batch" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
     
     <record id="view_examiner_expenses_form" model="ir.ui.view">
         <field name="name">examiner.expenses.form</field>
         <field name="model">examiner.expenses</field>
         <field name="arch" type="xml">
             <form string="Examiner Expenses">
-                <header>
+                <!-- <header>
                     <button name="action_set_ec_approval" string="EC Approval" type="object" class="btn-primary" states="draft"/>
                     <button name="action_set_ceo_approval" string="CEO Approval" type="object" class="btn-primary" states="ec_approval"/>
                     <button name="action_set_approved" string="Approved" type="object" class="btn-primary" states="ceo_approval"/>
                     <button name="cancel" string="Cancel" type="object" class="btn-secondary"/>
                     <field name="state" widget="statusbar"/>
-                </header>
+                </header> -->
                 <sheet>
                     <group>
                         <field name="dgs_batch"/>
                         <field name="examiner_id"/>
-                        <field name="team_lead"/>
+                        <field name="designation"/>
+                        <!-- <field name="team_lead"/> -->
                     </group>
                     <notebook>
-                        <page string="Assignment Expenses">
-                            <field name="assignment_expense_ids">
+
+                        <page string="Overall Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
+                            <field name="overall_expense_ids" readonly="1">
                                 <tree editable="bottom">
-                                    <field name="examiner_id"/>
-                                    <field name="assignment"/>
-                                    <field name="no_of_candidates"/>
-                                    <field name="price_per_unit"/>
-                                    <field name="total" readonly="1"/>
+                                    <field name="expenses_type"/>
+                                    <field name="price"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="Miscellaneous Expenses">
+                        
+                        <page string="Practical/Oral Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
+                            <field name="assignment_expense_ids">
+                                <tree editable="bottom">
+                                    <field name="examiner_id"/>
+                                    <field name="dgs_batch"/>
+                                    <field name="assignment"/>
+                                    <field name="institute"/>
+                                    <field name="no_of_candidates"/>
+                                    <field name="price_per_unit"/>
+                                    <field name="total" sum="Total" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Online Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
+                            <field name="online_assignment_expense">
+                                <tree editable="bottom">
+                                    <field name="exam_date"/>
+                                    <field name="dgs_batch"/>
+                                    <field name="assignments_onlines"/>
+                                    <field name="institute"/>
+                                    <field name="candidate_count"/>
+                                    <field name="price" sum="Total" readonly="1"/>
+                                    <!-- <field name="total"  readonly="1"/> -->
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Team Lead Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
+                            <field name="team_lead_expense">
+                                <tree editable="bottom">
+                                    <field name="examiner_duty"/>
+                                    <field name="dgs_batch"/>
+                                    <field name="institute" invisible="1"/>
+                                    <field name="price" sum="Total" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Miscellaneous Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="misc_expense_ids">
                                 <tree editable="bottom">
                                     <field name="description"/>
@@ -45,19 +158,55 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Non Mariner Expenses" attrs="{'invisible': [('designation', '!=', 'non-mariner')]}" >
+                            <field name="non_mariner_expense">
+                                <tree editable="bottom">
+                                   <field name="non_mariner_assignment"/>
+                                   <field name="institute"/>
+                                   <field name="exam_date"/>
+                                   <field name="price" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
+                    <group col="12" class="oe_invoice_lines_tab">
+                        <group colspan="8">
+                            <!-- <field name="narration" placeholder="Terms and Conditions" class="oe_inline text-break" nolabel="1"/> -->
+                        </group>
+                        <group colspan="4">
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total" class="oe_subtotal_footer_separator" />
+                            </group>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
     </record>
-    
-    <record id="view_examiner_expenses_tree" model="ir.ui.view">
+
+     <record id="view_examiner_expenses_tree" model="ir.ui.view">
         <field name="name">examiner.expenses.tree</field>
         <field name="model">examiner.expenses</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="examiner_id"/>
-                <field name="team_lead"/>
+                <field name="practical_oral_total"/>
+                <field name="online_total"/>
+                <field name="team_lead_total"/>
+                <field name="misc_total"/>
+                <field name="total" sum="Total"/>
+                
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_batch_expenses_tree" model="ir.ui.view">
+        <field name="name">exam.batch.expenses.tree</field>
+        <field name="model">exam.batch.expenses</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="dgs_batch"/>
+                
             </tree>
         </field>
     </record>

@@ -14,15 +14,23 @@
 <template id="reports_iv_hold_candidate_list">
     <t t-call="web.basic_layout">
             <div class="page">
-
+             <div class="header">
+                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
                 <h5 style="text-align: center; font-weight: bold;">
                         Board of Examinations for Seafarers Trust (BES), Navi Mumbai
                 </h5>
                 
                 <!-- Second Line -->
                 <h6 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                    <t t-if="docs[0].application_type == 'fresher'">
                         List of Hold (Fresh) Candidates
+                    </t>
+                    <t t-else="">
+                        List of Hold (Repeater) Candidates
+                    </t>
                 </h6>
+                 </table>
+                </div>
 
                 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                 <thead>
@@ -76,6 +84,18 @@
                     </tbody>
             </table>
            
+            </div>
+            <div style="page-break-inside: avoid; margin-top: 20px;">
+                <div class="footer" style="width: 100%; font-size: 12px;">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                     
+                         <tr>
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-top: 10px;">
+                                page <span class="page"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </t>
 </template>

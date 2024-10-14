@@ -30,6 +30,8 @@
                             </button>
                             <button name="open_batch_faculty" string="Faculties" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
+                             <button name="open_gp_ship_visit" string="GP Ship Visit" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                         </div>
                         <group style="width:100%;">
                             <h1>
@@ -298,6 +300,8 @@
                             </button>
                             <button name="open_ccmc_batch_faculty" string="Faculties" type="object" class="oe_stat_button" icon="fa-align-justify">
                             </button>
+                             <button name="open_ccmc_ship_visit" string="CCMC Ship Visit" type="object" class="oe_stat_button" icon="fa-align-justify">
+                            </button>
                         </div>
                         <group style="width:100%;">
                             <h1>
@@ -486,8 +490,6 @@
                             <button name="open_gp_exams" string="GP Exams" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
                             <button name="open_reports" string="Reports" type="object" class="oe_stat_button" icon="fa-align-justify" >
-                            </button>
-                            <button name="open_expense_sheet" string="Expense Sheet" type="object" class="oe_stat_button" icon="fa-align-justify" >
                             </button>
                         </div>
                         <group>

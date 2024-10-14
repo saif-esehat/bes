@@ -105,25 +105,18 @@
                                 <b>Signature of Examiner::</b>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-top: 10px;">
+                                page <span class="page"></span>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
 
 
 
-            <!-- Bottom Row for Invigilator Information -->
-            <!-- <div class="footer" style="width: 100%; margin-top: 20px; font-size: 12px;">
-            <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                <tr style="height: 50px;">
-                    <td style="font-size: 18px; text-align: left; vertical-align: bottom; padding-right: 50px;">
-                        <b>Name of Examiner:</b>
-                    </td>
-                    <td style="font-size: 18px; text-align: right; vertical-align: bottom;">
-                        <b>Signature of Examiner:</b>
-                    </td>
-                </tr>
-            </table>
-            </div> -->
+          
     </t>
 
 </template>

@@ -1,0 +1,832 @@
+<odoo>
+   
+<template id="portal_breadcrumbs" inherit_id="portal.portal_breadcrumbs">
+
+
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
+
+            <!-- <li t-if="page_name == 'ship_visits'" class="breadcrumb-item ">
+             GP Batches
+                
+            </li> -->
+
+            <t t-if="page_name == 'gp_ccmcship_list'">
+               
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+
+                  <li class="breadcrumb-item">
+                    Ship Visit
+                </li>
+            </t>
+
+            <t t-if="page_name == 'ccmcship_create'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+                <li class="breadcrumb-item">
+                  Create New CCMC Ship Visit
+                </li>
+            </t>
+
+            <t t-if="page_name == 'ccmc_ship_from'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+                <li class="breadcrumb-item">
+                   CCMC Ship Visit Form
+                </li>
+            </t>
+
+             <t t-if="page_name == 'ccmcship_edit'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                </li>
+                <li class="breadcrumb-item">
+                   CCMC Ship Visit Edit
+                </li>
+            </t>
+          
+           
+
+        </xpath>
+</template>
+
+
+
+   
+
+<template id="portal_ccmc_ship_visits_po">
+    <script>
+                function openShipVisitModal(button) {
+                    debugger
+                    var batch_id = button.getAttribute('data-id');
+                    document.getElementById('batch_id').value = batch_id;
+
+                }
+       </script>
+    <t t-call="portal.portal_layout">
+        <div class="container">
+            <div class="modal fade" id="shipVisitModal" tabindex="-1" role="dialog" aria-labelledby="shipVisitModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="shipVisitModalLabel">Ship Visit Form</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="shipVisitForm" action="/my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input  type="hidden" id="batch_id" name="batch_id" class="form-control"/>
+
+                            <div class="container mt-8">
+                                <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="ship_name1">Ship Name</label>
+                                    <input type="text" name="ship_name2" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="port_name">Port Name</label>
+                                    <input type="text" name="port_name" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="imo_no">IMO No.</label>
+                                    <input type="text" name="imo_no" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="date_of_visit">Date of Visit</label>
+                                    <input type="date" name="date_of_visit" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="time_spent">Time Spent (in hours)</label>
+                                    <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="gp_image">Ship Image</label>
+                                    <input type="file" name="gp_image" class="form-control" id="gp_image" />
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" form="shipVisitForm" class="btn btn-primary">Submit</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+         <t t-call="portal.portal_table">
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" t-attf-data-id="{{batch_id}}" onclick="openShipVisitModal(this)"  data-target="#shipVisitModal">
+                    Add Ship Visit
+                </button>
+                <thead>
+              
+                      <tr>
+                        <th>Ship Name</th>
+                        <th>Port Name</th>
+                        <th>IMO No.</th>
+                        <th>Date of Visit</th>
+                        <th>Time Spent</th>
+                        <!-- <th>Course</th> -->
+                        <!-- <th>No. of Candidates</th> -->
+                        <th>No. of Candidates</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="ship_visits" t-as="visit">
+                        <tr>
+                            <td>
+                           <!-- <a t-attf-href="/my/ccmc_ship_visits/view?id={{ visit.id }}" t-if="page_name == 'gp_ccmcship_list'" class="fa"> -->
+                                <t t-esc="visit.ship_name2"/>
+                            <!-- </a> -->
+                            </td>
+                            <td><t t-esc="visit.port_name"/></td>
+                            <td><t t-esc="visit.imo_no"/></td>
+                            <td><t t-esc="visit.date_of_visit"/></td>
+                            <td><t t-esc="visit.time_spent"/></td>
+                          
+                            <!-- <td><t t-esc="visit.course_gp"/></td>  -->
+                            <!-- <td><t t-esc="visit.no_of_candidate"/></td>  -->
+
+                            <!-- <td style="max-width: 250px; white-space: normal;">
+                                <t t-foreach="visit.candidate_ids" t-as="candidate">
+                                    <span><t t-esc="candidate.name"/> </span><br/>
+                                </t>
+                            </td> -->
+                            <td style="max-width: 250px; white-space: normal;">
+                                <span><t t-esc="len(visit.candidate_ids)"/> </span>
+                            </td>
+                           
+                            <td>
+                                <a  t-attf-href="/my/ccmc_ship_visits/edit/{{visit.id}}">
+                                    View
+                                </a>
+                            </td>    
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <!-- <a style="margin-top: 20px; margin-bottom: 20px;"  class="btn btn-primary" t-att-href="'/my/ccmc_ship_visits/create'">Create New Ship Visit</a> -->
+        </div>
+    </t>
+</template>
+
+
+
+
+ <template id="portal_ccmc_ship_visit_create" name="Create CCMC Ship Visit">
+    <t t-call="portal.portal_layout">
+      
+
+        <div class="container">
+
+             <form action="/my/ccmc_ship_visits/submit" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                  <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row">
+                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ship_name2">Ship Name</label>
+                                <input type="text" name="ship_name2" class="form-control" required="required"/>
+                            </div>
+                        </div>
+
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                <label for="port_name">Port Name</label>
+                                <input type="text" name="port_name" class="form-control" required="required"/>
+                            </div>
+                        </div>
+
+                         <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="imo_no">IMO No.</label>
+                                <input type="text" name="imo_no" class="form-control" required="required"/>
+                            </div>
+                        </div>
+
+                         <div class="col-md-6">
+                            <div class="form-group">
+                            <label for="date_of_visit">Date of Visit</label>
+                            <input type="datetime-local" name="date_of_visit" class="form-control" required="required"/>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                           <div class="form-group">
+                                <label for="time_spent">Time Spent (in hours)</label>
+                                <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                           <div class="form-group">
+                                <label for="gp_image">Ship Image</label>
+                                <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+                            </div>
+                        </div>
+
+                         <!-- <div class="col-md-6">
+                         <div class="form-group">
+                                <label for="course_gp">Course</label>
+                                <input type="text" name="course_gp" class="form-control"/>
+                            </div>
+                        </div> -->
+
+
+                        </div>
+                    </div>
+                </div>
+          
+                <div class="form-group">
+                    <label for="candidate_ids">CCMC Candidates</label>
+                    <button type="button" class="btn btn-info custom-btn" data-toggle="modal" data-target="#candidateModal">
+                        Add Candidates
+                    </button>
+                </div>
+                <style>
+                    .custom-btn {
+                        margin-left: 30px; /* Adjust for gap */
+                        width: 200px;      /* Smaller width */
+                    }
+                </style>
+
+            <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog" aria-labelledby="candidateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="candidateModalLabel">CCMC Candidates</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="checkboxes">
+                                    <!-- <t t-foreach="request.env['ccmc.candidate'].sudo().search([])" t-as="candidate">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
+                                            <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
+                                                <t t-esc="candidate.name"/>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
+                                            <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
+                                                <t t-esc="candidate.indos_no"/>
+                                            </label>
+                                        </div>
+                                    </t> -->
+                                  
+                                    <t t-foreach="request.env['ccmc.candidate'].sudo().search([])" t-as="candidate">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" 
+                                                t-att-value="candidate.id" 
+                                                name="candidate_ids" 
+                                                id="candidate_id_{{ candidate.id }}" 
+                                                t-att-data-indos-no="candidate.indos_no" /> 
+                                            <label class="form-check-label" 
+                                                t-att-for="'candidate_id_' + str(candidate.id)">
+                                                <t t-esc="candidate.name"/>
+                                            </label>
+                                        </div>
+                                    </t>
+
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+  
+    </div>
+
+      
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="container">
+                <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                            <i class="fas fa-chart-pie fa-fw me-2"></i>CCMC Ship Visits Candidates
+                        </a>
+                    </li>
+                </ul>
+                <!-- <t t-call="portal.portal_table">
+                        <thead>
+                            <tr>
+                                <th>INDOS No</th>
+                                <th>Candidate Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="selected-candidates">
+                        </tbody>
+                </t> -->
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>INDOS No</th>
+                            <th>Candidate Name</th>
+                            <th>Action</th>  <!-- New column for the delete button -->
+                        </tr>
+                    </thead>
+                    <tbody id="selected-candidates">
+                        <!-- Selected candidates will be appended here -->
+                        <t t-foreach="candidates" t-as="candidate">
+                            <tr id="candidate_row_{{ candidate.id }}">
+                                <td><t t-esc="candidate.indos_no"/></td>
+                                <td><t t-esc="candidate.name"/></td>
+                                <td>
+                                    <!-- Delete button with trash icon -->
+                                    <button type="button" class="btn btn-danger" t-att-data-id="candidate.id" onclick="deleteCandidate(this)">
+                                        <i class="fa fa-trash"></i> <!-- Font Awesome trash icon -->
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+              
+           
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addButton = document.querySelector(".modal-footer .btn-secondary");
+        const selectedCandidatesList = document.getElementById("selected-candidates");
+
+        addButton.addEventListener("click", function () {
+            // Clear the table body first
+            selectedCandidatesList.innerHTML = '';
+
+            // Get all checked checkboxes in the modal
+            const checkboxes = document.querySelectorAll("#candidateModal .form-check-input:checked");
+            checkboxes.forEach(checkbox => {
+                const candidateIndosNo = checkbox.getAttribute("data-indos-no"); // Get the indos_no from data attribute
+                const candidateName = checkbox.nextElementSibling.textContent;  // Get the label text
+                const candidateId = checkbox.getAttribute("id").split('_')[2];  // Extract candidate ID from the checkbox's id attribute
+
+                if (candidateId) {
+                    // Create a new table row
+                    const newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "candidate_row_" + candidateId); // Set an ID for the row
+                    newRow.innerHTML = `
+                        <td>${candidateIndosNo}</td>
+                        <td>${candidateName}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" data-id="${candidateId}" onclick="deleteCandidate(this)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+
+                    // Append the new row to the table body
+                    selectedCandidatesList.appendChild(newRow);
+                } else {
+                    console.error("Candidate ID not found for checkbox:", checkbox);
+                }
+            });
+        });
+    });
+
+    // Function to delete a candidate row
+    function deleteCandidate(button) {
+        const candidateId = button.getAttribute('data-id');  // Get candidate ID from data attribute
+        const row = document.getElementById('candidate_row_' + candidateId);  // Find the row element by ID
+        if (row) {
+            row.remove();  // Remove the row from the table
+        }
+    }
+</script>
+
+
+
+    </t>
+      
+</template>
+
+    <template id="my_ccmc_ship_visits" name="My Ship Visits">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <h1>My Ship Visits</h1>
+
+                <!-- Display success or error message -->
+                <t t-if="request.session.get('success_message')">
+                    <div class="alert alert-success">
+                        <t t-esc="request.session.pop('success_message')"/>
+                    </div>
+                </t>
+                <t t-if="request.session.get('error_message')">
+                    <div class="alert alert-danger">
+                        <t t-esc="request.session.pop('error_message')"/>
+                    </div>
+                </t>
+
+                <!-- Existing content for displaying ship visits -->
+                <table class="table">
+                    <!-- Your table structure goes here -->
+                </table>
+            </div>
+        </t>
+    </template>
+
+
+
+    <template id="portal_ccmc_ship_visit_edit" name="Edit Ship Visit">
+        <t t-call="portal.portal_layout">
+            <script>
+                function addCandidates(button) {
+
+                        var ship_visit_id = document.getElementById("ship_visit_id").value
+                    
+                        const checkboxes = document.querySelectorAll('input[name="candidate_ids"]');
+                        const selectedValues = [];
+
+                        checkboxes.forEach(function(checkbox) {
+                            if(checkbox.checked){
+                                selectedValues.push(checkbox.value);
+                            }
+                        });
+
+                        var data ={
+                            "ship_vist_id" : ship_visit_id,
+                            "candidate_ids" : selectedValues
+                        }
+                        
+                        
+                        
+                        $.ajax({
+                                type: "POST",
+                                url: '/my/ccmc_ship_visit/addcandidate',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+                                    window.location.reload();
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+
+                        
+                    
+                }
+
+            </script>
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- <h3>Edit Ship Visit</h3> -->
+                        <form method="POST" action="/my/ccmc_ship_visits/update">
+                            <!-- CSRF token -->
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="id" t-att-value="visit.id"/>
+
+                            <div class="modal-body">
+                                    <div class="container mt-5">
+                                        <div class="row">
+
+                                        <input type="hidden" t-att-value="visit.id" name="ship_visit_id"  id="ship_visit_id"  />
+
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                               <label for="ship_name2">Ship Name:</label>
+                                               <input type="text" id="ship_name2" name="ship_name2" readonly="1" class="form-control" t-att-value="visit.ship_name2"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                               <label for="port_name">Port Name:</label>
+                                               <input type="text" id="port_name" name="port_name" readonly="1" class="form-control" t-att-value="visit.port_name"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                 <label for="imo_no">IMO No.:</label>
+                                                 <input type="text" id="imo_no" name="imo_no" readonly="1" class="form-control" t-att-value="visit.imo_no"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                           <label for="date_of_visit">Date of Visit:</label>
+                                            <input type="date" id="date_of_visit" readonly="1" name="date_of_visit" class="form-control"
+                                                t-att-value="visit.date_of_visit"/>
+                                        </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                        <div class="form-group">
+                                           <label for="time_spent">Time Spent:</label>
+                                          <input type="text" readonly="1" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-md-6">
+                                        <div class="form-group">
+                                                <label for="gp_image">Ship Image</label>
+                                                <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+                                            </div>
+                                        </div> -->
+
+                                        <!-- <div class="col-md-6">
+                                        <div class="form-group">
+                                              <label for="course_gp">Course:</label>
+                                               <input type="text" id="course_gp" name="course_gp" class="form-control" t-att-value="visit.course_gp"/>
+                                            </div>
+                                        </div> -->
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <!-- <div class="form-group">
+                                <label for="ship_name2">Ship Name:</label>
+                                <input type="text" id="ship_name2" name="ship_name2" class="form-control" t-att-value="visit.ship_name2"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="port_name">Port Name:</label>
+                                <input type="text" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="imo_no">IMO No.:</label>
+                                <input type="text" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date_of_visit">Date of Visit:</label>
+                                <input type="datetime-local" id="date_of_visit" name="date_of_visit" class="form-control"
+                                    t-att-value="visit.date_of_visit.strftime('%Y-%m-%dT%H:%M') if visit.date_of_visit else ''"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="time_spent">Time Spent:</label>
+                                <input type="text" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="course_gp">Course:</label>
+                                <input type="text" id="course_gp" name="course_gp" class="form-control" t-att-value="visit.course_gp"/>
+                            </div> -->
+
+                            <!-- No. of Candidates -->
+                            <!-- <div class="form-group">
+                                <label for="no_of_candidate">No. of Candidates:</label>
+                                <input type="number" id="no_of_candidate" name="no_of_candidate" class="form-control" t-att-value="visit.no_of_candidate"/>
+                            </div> -->
+
+                             <div class="form-group">
+                                <label for="candidate_ids">CCMC Candidates</label>
+                                <button type="button" class="btn btn-info custom-btn" data-toggle="modal" data-target="#candidateModal">
+                                    Add Candidates
+                                </button>
+                            </div>
+
+                            <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Candidate Name</th>
+                                            <th>Indos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <t t-foreach="visit.candidate_ids" t-as="candidate">
+                                            <tr>
+                                                <td>
+                                                     <t t-out="candidate.name" />
+                                                </td>
+                                                <td>
+                                                     <t t-out="candidate.indos_no" />
+                                                </td>
+                                            </tr>
+                                         </t>
+                                    </tbody>
+                                </table>
+
+                            <style>
+                                .custom-btn {
+                                    margin-left: 30px; /* Adjust for gap */
+                                    width: 200px;      /* Smaller width */
+                                }
+                            </style>
+
+                         
+                           <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog" aria-labelledby="candidateModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="candidateModalLabel">CCMC Candidates</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="hidden" t-att-value="visit.id" name="ship_visit_id"  id="ship_visit_id"  />
+
+                                                    <div class="checkboxes">
+                                                        <t t-set="excluded_candidate_ids" t-value="visit.candidate_ids.ids"/> <!-- Set excluded candidates -->
+                                                        <t t-foreach="request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',visit.ccmc_ship_batch_ids.id)])" t-as="candidate">
+                                                            <t t-if="candidate.id not in excluded_candidate_ids"> <!-- Only show candidates not already selected -->
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
+                                                                    <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
+                                                                        <t t-esc="candidate.name"/>
+                                                                    </label>
+                                                                </div>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" onclick="addCandidates(this)"  data-dismiss="modal">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                            <!-- Submit Button -->
+                            <!-- <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-secondary" href="/my/ccmc_ship_visits">Cancel</a> -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_ccmc_ship_visit_form" name="GP Ship Visit Form">
+    <t t-call="portal.portal_layout">
+        <div class="container">
+          
+            <table class="table table-bordered">
+                <tr>
+                    <th>Ship Name</th>
+                    <td><t t-esc="ship_visit.ship_name2"/></td>
+                </tr>
+                <tr>
+                    <th>Port Name</th>
+                    <td><t t-esc="ship_visit.port_name"/></td>
+                </tr>
+                <tr>
+                    <th>IMO No.</th>
+                    <td><t t-esc="ship_visit.imo_no"/></td>
+                </tr>
+                <tr>
+                    <th>Date of Visit</th>
+                    <td><t t-esc="ship_visit.date_of_visit"/></td>
+                </tr>
+                <tr>
+                    <th>Time Spent (in hours)</th>
+                    <td><t t-esc="ship_visit.time_spent"/></td>
+                </tr>
+                <!-- <tr>
+                    <th>Course</th>
+                    <td><t t-esc="ship_visit.course_gp"/></td>
+                </tr> -->
+                <!-- <tr>
+                    <th>No. of Candidates</th>
+                    <td><t t-esc="ship_visit.no_of_candidate"/></td>
+                </tr> -->
+                <!-- <tr>
+                 <th>CCMC Candidates</th>
+                     <td style="max-width: 250px; white-space: normal;">
+                                <t t-foreach="ship_visit.candidate_ids" t-as="candidate">
+                                    <span><t t-esc="candidate.name"/> </span><br/>
+                                </t>
+                    </td>
+                    
+                </tr> -->
+            </table>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="container">
+                            <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                                        <i class="fas fa-chart-pie fa-fw me-2"></i>CCMC Ship Visits Candidates
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <t t-call="portal.portal_table">
+                                <thead>
+                                    <tr>
+                                        <th>INDOS No</th>
+                                        <th>Candidate Name</th>
+                                   
+                                    </tr>
+                                </thead>
+                                <tbody id="selected-candidates">
+                                    <!-- Selected candidates will be appended here -->
+                                    <t t-foreach="candidates" t-as="candidate">
+                                        <tr id="candidate_row_{{ candidate.id }}">
+                                            <td><t t-esc="candidate.indos_no"/></td>
+                                            <td><t t-esc="candidate.name"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </t>
+                                                    
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="btn btn-warning" t-att-href="'/my/ccmc_ship_visits/edit?id=' + str(ship_visit.id)">Edit</a>
+             <a class="btn btn-danger" t-att-href="'/my/ccmc_ship_visits/delete?id=' + str(ship_visit.id)">Delete</a>
+            <a class="btn btn-secondary" href="javascript:history.back()">Back</a>
+        </div>
+
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+    const addButton = document.querySelector(".modal-footer .btn-secondary");
+    const selectedCandidatesList = document.getElementById("selected-candidates");
+
+    addButton.addEventListener("click", function () {
+        // Clear the table body first
+        selectedCandidatesList.innerHTML = '';
+
+        // Get all checked checkboxes in the modal
+        const checkboxes = document.querySelectorAll("#candidateModal .form-check-input:checked");
+        checkboxes.forEach(checkbox => {
+            const candidateIndosNo = checkbox.getAttribute("data-indos-no"); // Get indos_no from data attribute
+            const candidateName = checkbox.nextElementSibling.textContent;  // Get the label text
+            const candidateId = checkbox.getAttribute("id").split('_')[2];  // Extract candidate ID from checkbox ID
+
+            if (candidateId) {
+                // Create a new table row
+                const newRow = document.createElement("tr");
+                newRow.setAttribute("id", "candidate_row_" + candidateId); // Set an ID for the row
+                newRow.innerHTML = `
+                    <td>${candidateIndosNo}</td>
+                    <td>${candidateName}</td>
+                   
+                `;
+
+                // Append the new row to the table body
+                selectedCandidatesList.appendChild(newRow);
+            } else {
+                console.error("Candidate ID not found for checkbox:", checkbox);
+            }
+        });
+    });
+});
+
+
+</script>
+
+    </t>
+</template>
+
+
+
+
+
+</odoo>

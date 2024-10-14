@@ -23,10 +23,11 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="examiner"/>
-                    <field name="expense_sheet"/>
+                    <field name="dgs_batch"/>
                     <field name="institutes_id"/>
-                    <field name="place"/>
-                    <field name="exam_date"/>
+                    <!-- <field name="expense_sheet"/> -->
+                    <!-- <field name="place"/> -->
+                    <!-- <field name="exam_date"/> -->
                 </tree>
             </field>
         </record>
@@ -40,11 +41,14 @@
                     <sheet>
                         <group string="Time Sheet Report">
 
+                            <!-- <field name="assignment_id"/> -->
+                            <!-- <field name="examiner_assignment"/> -->
                             <field name="examiner"/>
-                            <field name="expense_sheet"/>
+                            <field name="dgs_batch"/>
                             <field name="institutes_id"/>
-                            <field name="place"/>
-                            <field name="exam_date"/>
+                            <!-- <field name="expense_sheet"/> -->
+                            <!-- <field name="place"/> -->
+                            <!-- <field name="exam_date"/> -->
                         </group>
                         <notebook>
                             <page string="Timesheet Examinations">
@@ -63,10 +67,13 @@
                                 <field name="travel_details">
                                     <tree editable="bottom">
                                         <field name="left_residence"/>
+                                        <field name="left_residence_mode_of_travel"/>
                                         <field name="arrival_institute_hotel"/>
+                                        <field name="arrival_institute_hotel_mode_of_travel"/>
                                         <field name="left_institute_hotel"/>
+                                        <field name="left_institute_mode_of_travel"/>
                                         <field name="arrival_residence"/>
-                                        <field name="mode_of_travel"/>
+                                        <field name="arrival_residence_mode_of_travel"/>
                                         <field name="expenses"/>
                                     </tree>
                                 </field>

@@ -13,10 +13,13 @@ class InstituteGPBatches(models.Model):
     _name = "institute.gp.batches"
     _rec_name = "batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Batches'
+    _description= 'GP Batches'
     
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
+
+    candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
+    ship_visit_id = fields.Many2one('gp.batches.ship.visit', string='Ship Visit')
     
     
     
@@ -78,10 +81,10 @@ class InstituteGPBatches(models.Model):
     def _compute_all_candidates_have_indos(self):
         for record in self:
             # import wdb; wdb.set_trace()
-            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id)])
+            candidate_count = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id),('withdrawn_state','!=','yes')])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
+                candidates_with_indos = self.env["gp.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', ''),('withdrawn_state','!=','yes')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
@@ -454,6 +457,52 @@ class InstituteGPBatches(models.Model):
             }
         } 
 
+    # def open_gp_ship_visit(self):
+        # """
+        # This method opens the GP Ship Visit form, filtered by selected candidates.
+        # """
+        # domain = []
+        # default_candidate_ids = []
+
+        # # Check if candidate_ids are available for filtering
+        # if self.candidate_ids:
+        #     domain = [('candidate_ids', 'in', self.candidate_ids.ids)]
+        #     default_candidate_ids = [(6, 0, self.candidate_ids.ids)]
+        
+        # Return the action to open the tree and form views
+        # return {
+        #     'name': _('GP Ship Visit'),
+        #     'type': 'ir.actions.act_window',
+        #     'res_model': 'gp.batches.ship.visit',
+        #     'view_mode': 'tree,form',
+        #     'view_type': 'form',
+        #     'domain': domain,
+        #     'context': {
+        #         'default_candidate_ids': default_candidate_ids,
+        #     },
+        #     'target': 'current',
+        # }
+
+
+    def open_gp_ship_visit(self):
+        
+        return {
+        'name': 'GP Ship Visit',
+        'domain': [('gp_ship_batch_id', '=', self.id)],
+        'view_type': 'form',
+        'res_model': 'gp.batches.ship.visit',
+        # 'res_model': 'batches.faculty',
+        'view_id': False,
+        'view_mode': 'tree,form',
+        'type': 'ir.actions.act_window',
+        'context': {
+            # 'default_batches_id': self.id
+            'default_gp_ship_batch_id': self.id,
+            'default_gp_or_ccmc_batch': 'gp'   
+            }
+        } 
+     
+
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.batches_gp_register_exam_wizard').id
         
@@ -565,7 +614,7 @@ class InstituteCcmcBatches(models.Model):
     _name = "institute.ccmc.batches"
     _rec_name = "ccmc_batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
-    _description= 'Batches'
+    _description= 'CCMC Batches'
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True)
     code = fields.Char(string="Code",related='institute_id.code', store=True ,tracking=True)
@@ -621,14 +670,15 @@ class InstituteCcmcBatches(models.Model):
     admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
 
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
+    candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
 
     def _compute_all_candidates_have_indos(self):
         for record in self:
             # import wdb; wdb.set_trace()
-            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id)])
+            candidate_count = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id),('withdrawn_state','!=','yes')])
 
             if candidate_count > 0:
-                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', '')])
+                candidates_with_indos = self.env["ccmc.candidate"].search_count([('institute_batch_id', '=', record.id), ('indos_no', '!=', ''),('withdrawn_state','!=','yes')])
                 if candidate_count == candidates_with_indos:
                     record.all_candidates_have_indos = True
                 else:
@@ -976,6 +1026,22 @@ class InstituteCcmcBatches(models.Model):
             }
         } 
 
+    def open_ccmc_ship_visit(self):
+
+        return {
+            'name': 'CCMC Ship Visit',
+            'domain': [('ccmc_ship_batch_ids', '=', self.id)],
+            'view_type': 'form',
+            'res_model': 'ccmc.batches.ship.visit',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
+            'context': {
+                'default_ccmc_ship_batch_ids': self.id,
+                'default_ccmc_batch': 'ccmc',  # Ensure this is correctly passed as default
+            }
+        }
+
     def open_register_for_exam_wizard(self):
         view_id = self.env.ref('bes.batches_ccmc_register_exam_wizard').id
         
@@ -1017,8 +1083,14 @@ class BatchesRegisterExamWizard(models.TransientModel):
         # candidates = self.env["gp.candidate"].search([('institute_batch_id','=',batch_id),('fees_paid','=','yes'),('invoice_generated','=',True),('batch_exam_registered','=',False)])
         candidates = self.env["gp.candidate"].sudo().browse(candidates_ids)
 
-        mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
-        gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
+        # mek_survey_qb = self.env['survey.survey'].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
+        # gsk_survey_qb = self.env['survey.survey'].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
+        
+        gsk_survey_qb = self.env["course.master.subject"].sudo().search([('name','=','GSK')]).qb_online
+        mek_survey_qb = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
+
+        
+        
         batch = self.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         # batch =   
 
@@ -1069,7 +1141,11 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
         
 
         # print(candidates)
-        cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
+        # cookery_bakery_qb = self.env['survey.survey'].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
+        
+        cookery_bakery_qb = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
+
+        
         batch = self.env['institute.ccmc.batches'].sudo().search([('id','=',batch_id)])
 
 

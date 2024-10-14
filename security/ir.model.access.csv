@@ -144,8 +144,6 @@ bes.access_iv_written_exam,access_iv_written_exam,bes.model_iv_written_exam,base
 bes.access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,base.group_user,1,1,1,1
 bes.access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,base.group_user,1,1,1,1
 
-bes.access_examiner_expense_report,access_examiner_expense_report,bes.model_examiner_expense_report,base.group_user,1,1,1,1
-bes.access_expense_report_exam_type,access_expense_report_exam_type,bes.model_expense_report_exam_type,base.group_user,1,1,1,1
 
 
 bes.iv_access_iv_batches,access_iv_batches,bes.model_iv_batches,bes.group_iv_admin,1,1,1,1
@@ -159,3 +157,6 @@ bes.iv_access_iv_oral_attendance_sheet,access_iv_oral_attendance_sheet,bes.model
 bes.iv_access_iv_written_exam,access_iv_written_exam,bes.model_iv_written_exam,bes.group_iv_admin,1,1,1,1
 bes.iv_access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,bes.group_iv_admin,1,1,1,1
 bes.iv_access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,bes.group_iv_admin,1,1,1,1
+bes.access_gp_batches_ship_visit,access_gp_batches_ship_visit,bes.model_gp_batches_ship_visit,base.group_user,1,1,1,1
+bes.access_ccmc_batches_ship_visit,access_ccmc_batches_ship_visit,bes.model_ccmc_batches_ship_visit,base.group_user,1,1,1,1
+bes.iv_access_iv_attendance_wizard,access_iv_attendance_wizard,bes.model_iv_attendance_wizard,base.group_user,1,1,1,1

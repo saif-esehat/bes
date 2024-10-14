@@ -76,6 +76,7 @@ class InheritedSurvey(models.Model):
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
     
+    
     def action_open_add_section(self):
         self.ensure_one()
         return {
@@ -151,71 +152,124 @@ class SurveyUserInputInherited(models.Model):
     _inherit = "survey.user_input"
     survey_id = fields.Many2one('survey.survey', string='Exam', required=True, readonly=True, ondelete='cascade')
     exam_center = fields.Many2one("exam.center","Exam Region",required=True)
-    examiner_token = fields.Char(string="Examiner Token")
+    examiner_token = fields.Char(string="Examiner Token",compute="compute_details", store=True)
     institute_id = fields.Many2one("bes.institute",string="Institute")
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
     gp_exam = fields.Many2one('gp.exam.schedule', string='GP Exam', readonly=True)
     ccmc_exam = fields.Many2one('ccmc.exam.schedule', string='CCMC Exam', readonly=True)
-
+    exam_date = fields.Date(string="Exam Date", readonly=True)
     is_gp = fields.Boolean('Is GP')
     is_ccmc = fields.Boolean('Is CCMC')
 
     indos = fields.Char(string="Indos No", compute="compute_details", store=True)
 
-    start_time = fields.Datetime(string="Start Time", readonly=True)
-    end_time = fields.Datetime(string="End Time", readonly=True)    
+    start_time = fields.Char(string="Start Time", readonly=True, compute="_compute_total_time", store=True)
+    end_time = fields.Char(string="End Time", readonly=True, compute="_compute_total_time", store=True)    
     total_time = fields.Char(string="Total Time", compute="_compute_total_time", store=True)
     ip_address = fields.Char(string="IP Address")
+
+    correct_answers = fields.Integer(string="Correct Answers", compute="_compute_correct_answers", store=True)
+    wrong_answers = fields.Integer(string="Wrong Answers", compute="_compute_wrong_answers", store=True)
+    skipped_questions = fields.Integer(string="Unanswered Questions", compute="_compute_skipped_questions", store=True)
+    result_status = fields.Selection([
+        ('', ''),
+        ('passed', 'Passed'),
+        ('failed', 'Failed')
+    ], string='Result', compute="_compute_result_status", store=True)
 
     user_input_line_ids = fields.One2many(
         'survey.user_input.line', 'user_input_id', string='Answers', copy=True
     )
 
+    token_regenrated = fields.Boolean("Token Regenerated", default=False)
+
+
+    @api.depends('user_input_line_ids')
+    def _compute_correct_answers(self):
+        for record in self:
+            record.correct_answers = len(record.user_input_line_ids.filtered(lambda line: line.answer_is_correct))
+
+    @api.depends('user_input_line_ids')
+    def _compute_wrong_answers(self):
+        for record in self:
+            record.wrong_answers = len(record.user_input_line_ids.filtered(lambda line: not line.answer_is_correct))
+
+    @api.depends('user_input_line_ids')
+    def _compute_skipped_questions(self):
+        for record in self:
+            record.skipped_questions = len(record.user_input_line_ids.filtered(lambda line: line.skipped))
+
+    @api.depends('scoring_success','state')
+    def _compute_result_status(self):
+        for record in self:
+            if record.state == 'done':
+                if record.scoring_success:
+                    record.result_status = 'passed'
+                else:
+                    record.result_status = 'failed'
+            else:
+                record.result_status = ''
+
+
+    @api.depends('gp_candidate', 'ccmc_candidate')
     def compute_details(self):
         for record in self:
             if record.is_ccmc:
                 record.indos = record.ccmc_candidate.indos_no
+                record.examiner_token = record.ccmc_exam.token
             elif record.is_gp:
                 record.indos = record.gp_candidate.indos_no
+                record.examiner_token = record.gp_exam.token
     
 
-    @api.depends('user_input_line_ids.create_date')
+    @api.depends('user_input_line_ids','state')
     def _compute_total_time(self):
         for record in self:
-            record.total_time = "00:00:00"
-            # if record.user_input_line_ids:
-            #     # Sort user_input_line_ids by create_date
-            #     sorted_lines = record.user_input_line_ids.sorted(key=lambda line: line.create_date)
-            #     first_date = sorted_lines[0].create_date
-            #     last_date = sorted_lines[-1].create_date
-            #     if first_date and last_date:
-            #         # Extract time from datetime (HH:MM:SS)
-            #         first_time = first_date.time()
-            #         last_time = last_date.time()
-            #         # Convert times to datetime objects for easy subtraction
-            #         FMT = "%H:%M:%S"
-            #         first_time_str = first_time.strftime(FMT)
-            #         last_time_str = last_time.strftime(FMT)
-            #         time_diff = datetime.strptime(last_time_str, FMT) - datetime.strptime(first_time_str, FMT)
-                    
-            #         # Calculate total seconds difference
-            #         total_seconds = time_diff.total_seconds()
-            #         hours, remainder = divmod(total_seconds, 3600)
-            #         minutes, seconds = divmod(remainder, 60)
-            #         # Format the time difference as HH:MM:SS
-            #         record.total_time = f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
-            #         record.start_time = first_time_str
-            #         record.end_time = last_time_str
-            #     else:
-            #         record.total_time = "00:00:00"
-            #         record.start_time = False
-            #         record.end_time = False
-            # else:
-            #     record.total_time = "00:00:00"
-            #     record.start_time = False
-            #     record.end_time = False
+            if record.state == 'done' and record.user_input_line_ids:
+                # print(record.user_input_line_ids,"gellllllllllloooooooooooooooooooooooo")
+                start_time = record.user_input_line_ids[0].create_date
+                end_time = record.user_input_line_ids[-1].create_date
+
+                total_time = end_time - start_time
+                # Format the times as hours:minutes:seconds
+                record.start_time = start_time.strftime('%H:%M:%S')
+                record.end_time = end_time.strftime('%H:%M:%S')
+                
+                # Convert the total_time (timedelta) to hours, minutes, and seconds
+                total_seconds = int(total_time.total_seconds())
+                hours, remainder = divmod(total_seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                
+                # Format total_time as HH:MM:SS
+                record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+            else:
+                record.total_time = "00:00:00"
+                record.start_time = "00:00:00"
+                record.end_time = "00:00:00"
+
+    def calculate_time(self):
+        for record in self:
+            if record.user_input_line_ids:
+                # import wdb;wdb.set_trace()
+                start_time = record.user_input_line_ids[0].create_date
+                end_time = record.user_input_line_ids[-1].create_date
+                total_time = end_time - start_time
+                
+                record.start_time = start_time.strftime('%H:%M:%S')
+                record.end_time = end_time.strftime('%H:%M:%S')
+
+                # Convert the total_time (timedelta) to hours, minutes, and seconds
+                total_seconds = int(total_time.total_seconds())
+                hours, remainder = divmod(total_seconds, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                
+                # Format total_time as HH:MM:SS
+                record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+            else:
+                record.total_time = "00:00:00"
+
 
     # @api.onchange('institute_id')
     # def _onchange_institute_id(self):

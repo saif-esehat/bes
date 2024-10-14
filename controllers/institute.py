@@ -931,6 +931,7 @@ class InstitutePortal(CustomerPortal):
             search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.gp.batches"].sudo().search(
             [('id', '=', batch_id)])
+        batches._compute_all_candidates_have_indos()
         
         
         
@@ -944,7 +945,6 @@ class InstitutePortal(CustomerPortal):
                 'searchbar_inputs':search_list
                 }
         # import wdb; wdb.set_trace()
-        batches._compute_all_candidates_have_indos()
         # self.env["gp.candidate"].sudo().search([('')])
         return request.render("bes.gp_candidate_portal_list", vals)
 
@@ -2940,7 +2940,9 @@ class InstitutePortal(CustomerPortal):
             #     raise ValidationError(f"Incorrect Excel format please check {row_num + 1}")
 
             # workbook.close()
-
+        batches = request.env["institute.gp.batches"].sudo().search(
+            [('id', '=', batch_id)])
+        batches._compute_all_candidates_have_indos()
         return request.redirect("/my/gpbatch/candidates/"+str(batch_id))
 
     def convert_to_dd_mmm_yy(self,date_str):
@@ -3193,7 +3195,9 @@ class InstitutePortal(CustomerPortal):
                 
             
         # workbook.close()
-
+        batches = request.env["institute.ccmc.batches"].sudo().search(
+            [('id', '=', batch_id)])
+        batches._compute_all_candidates_have_indos()
         return request.redirect("/my/ccmcbatch/candidates/"+str(batch_id))
 
 
@@ -3538,18 +3542,19 @@ class InstitutePortal(CustomerPortal):
         unlocked = workbook.add_format({'locked':False})
         candidate_stcw_worksheet.set_column('A:XDF', None, unlocked)
         
-        candidate_stcw_worksheet.set_column('A:A',15,unlocked) #indos
-        candidate_stcw_worksheet.set_column('B:B',10,unlocked) #cousre
-        candidate_stcw_worksheet.set_column('C:C',35,unlocked) #insitute_name
-        candidate_stcw_worksheet.set_column('D:D',15,unlocked) #mti_no
+        candidate_stcw_worksheet.set_column('A:A',35,locked) #Name
+        candidate_stcw_worksheet.set_column('B:B',15,locked) #indos
+        candidate_stcw_worksheet.set_column('C:C',10,unlocked) #cousre
+        candidate_stcw_worksheet.set_column('D:D',35,unlocked) #insitute_name
+        candidate_stcw_worksheet.set_column('E:E',15,unlocked) #mti_no
        # Set the column format for certificate_no to number
         number_format = workbook.add_format({'num_format': '@', 'locked': False})
 
         # Set the column width and format for certificate_no
-        candidate_stcw_worksheet.set_column('E:E', 35, number_format)  # certificate_no
+        candidate_stcw_worksheet.set_column('F:F', 35, number_format)  # certificate_no
         
-        candidate_stcw_worksheet.set_column('F:F',20,unlocked) #cousre_start_date
-        candidate_stcw_worksheet.set_column('G:G',20,unlocked) #cousre_end_date
+        candidate_stcw_worksheet.set_column('G:G',20,unlocked) #cousre_start_date
+        candidate_stcw_worksheet.set_column('H:H',20,unlocked) #cousre_end_date
         
         candidate_stcw_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
@@ -3563,45 +3568,47 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        header = ['Name of Candidate','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
         for col, value in enumerate(header):
             candidate_stcw_worksheet.write(0, col, value, header_format)
 
         # Auto fill indos no
         batch = request.env['institute.gp.batches'].sudo().search([('id', '=', batch_id)])
         # import wdb; wdb.set_trace()
-        candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id)])
-        # Extract indos numbers from candidates, ensuring they are valid
+        candidates = request.env['gp.candidate'].sudo().search([('institute_batch_id','=',batch.id),('withdrawn_state','!=','yes')])
+
+        # Extract valid indos numbers and names from candidates
         indos = [candidate.indos_no for candidate in candidates if candidate.indos_no]  # Only include non-empty indos_no
+        names = [candidate.name for candidate in candidates if candidate.name]  # Only include non-empty Name strs
 
-        # Write the indos numbers to the worksheet
-        for i, candidate in enumerate(indos):
+        # Write the names and indos numbers to the worksheet
+        for i, (name, indos_no) in enumerate(zip(names, indos)):
             # Calculate the starting row for the current candidate
-            start_row = i * 2 + 2  # Each indos occupies two rows
+            start_row = i * 2 + 2  # Each candidate occupies two rows
 
-            # Write the indos number twice in consecutive rows
-            candidate_stcw_worksheet.write(f'A{start_row}', candidate, locked)
-            candidate_stcw_worksheet.write(f'A{start_row + 1}', candidate, locked)
+            # Write the name in column A, indos number in column B (both rows)
+            candidate_stcw_worksheet.write(f'A{start_row}', name, locked)
+            candidate_stcw_worksheet.write(f'A{start_row + 1}', name, locked)
+
+            candidate_stcw_worksheet.write(f'B{start_row}', indos_no, locked)
+            candidate_stcw_worksheet.write(f'B{start_row + 1}', indos_no, locked)
         
         
         # Set date format for DOB column
-        candidate_stcw_worksheet.set_column('F:F', 20, date_format)
         candidate_stcw_worksheet.set_column('G:G', 20, date_format)
+        candidate_stcw_worksheet.set_column('H:H', 20, date_format)
 
         cousre_values = ["BST","STSDSD"]
 
-        candidate_stcw_worksheet.data_validation('B2:B1048576', {'validate': 'list', 'source': cousre_values})
+        candidate_stcw_worksheet.data_validation('C2:C1048576', {'validate': 'list', 'source': cousre_values})
         
         instruction_worksheet = workbook.add_worksheet("Instructions")
 
-        instruction_worksheet.set_column('A:P',20,unlocked)
+        instruction_worksheet.set_column('A:P',20,locked)
 
         
         # instruction_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
-
-        # instruction_worksheet.write_comment('M2', 'In the columns Xth, XIIth, ITI , Please enter only number or grade (a,"a+,b,b+,c,c+,d,d+)')
-
         header_format = workbook.add_format({
             'bold': True,
             'align': 'center',
@@ -3611,7 +3618,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['Sr No.','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        header = ['Sr No.','Name of Candidate','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -3658,47 +3665,53 @@ class InstitutePortal(CustomerPortal):
         instruction_worksheet.write('A5', '3) Mandatory')
 
         # Populate instruction details for the STCW table
-        # Example of INDOS NO
-        instruction_worksheet.write('B2', '23GM1234')
+        # Example of Name
+        instruction_worksheet.write('B2', 'Candidate Name')
         instruction_worksheet.write('B3', "This field contains the student's INDOS number, which is required for identification in the STCW system", cell_format)
         instruction_worksheet.write('B4', "INDOS number must follow the correct format. Avoid duplicates or incorrect INDOS numbers", cell_format)
         instruction_worksheet.write('B5', "Mandatory Field", mandatory_format)
+        
+        # Example of INDOS NO
+        instruction_worksheet.write('C2', '23GM1234')
+        instruction_worksheet.write('C3', "This field contains the student's INDOS number, which is required for identification in the STCW system", cell_format)
+        instruction_worksheet.write('C4', "INDOS number must follow the correct format. Avoid duplicates or incorrect INDOS numbers", cell_format)
+        instruction_worksheet.write('C5', "Mandatory Field", mandatory_format)
 
         # Example of Course Name
-        instruction_worksheet.write('C2', 'BST')
-        instruction_worksheet.write('C3', "This is the name of the STCW course completed by the candidate", cell_format)
-        instruction_worksheet.write('C4', "Ensure the course name follows the STCW standard abbreviations (e.g., BST, STSDSD)", cell_format)
-        instruction_worksheet.write('C5', 'Mandatory Field', mandatory_format)
+        instruction_worksheet.write('D2', 'BST')
+        instruction_worksheet.write('D3', "This is the name of the STCW course completed by the candidate", cell_format)
+        instruction_worksheet.write('D4', "Ensure the course name follows the STCW standard abbreviations (e.g., BST, STSDSD)", cell_format)
+        instruction_worksheet.write('D5', 'Mandatory Field', mandatory_format)
 
         # Example of Institute Name
-        instruction_worksheet.write('D2', 'Oceanic Maritime')
-        instruction_worksheet.write('D3', "Name of the maritime training institute where the course was completed", cell_format)
-        instruction_worksheet.write('D4', "Ensure correct and complete institute name", cell_format)
-        instruction_worksheet.write('D5', "Mandatory Field", mandatory_format)
-
-        # Example of MTI NO
-        instruction_worksheet.write('E2', '410210')
-        instruction_worksheet.write('E3', "Maritime Training Institute (MTI) number of the training center", cell_format)
-        instruction_worksheet.write('E4', "MTI number should be correctly entered", cell_format)
+        instruction_worksheet.write('E2', 'Oceanic Maritime')
+        instruction_worksheet.write('E3', "Name of the maritime training institute where the course was completed", cell_format)
+        instruction_worksheet.write('E4', "Ensure correct and complete institute name", cell_format)
         instruction_worksheet.write('E5', "Mandatory Field", mandatory_format)
 
-        # Example of Certificate Number
-        instruction_worksheet.write('F2', '20704561012400415')
-        instruction_worksheet.write('F3', "Unique certificate number issued for the course", cell_format)
-        instruction_worksheet.write('F4', "Certificate number should be correctly entered", cell_format)
+        # Example of MTI NO
+        instruction_worksheet.write('F2', '410210')
+        instruction_worksheet.write('F3', "Maritime Training Institute (MTI) number of the training center", cell_format)
+        instruction_worksheet.write('F4', "MTI number should be correctly entered", cell_format)
         instruction_worksheet.write('F5', "Mandatory Field", mandatory_format)
 
-        # Example of Course Start Date
-        instruction_worksheet.write('G2', '14-Apr-2002')
-        instruction_worksheet.write('G3', "Date when the course started", cell_format)
-        instruction_worksheet.write('G4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        # Example of Certificate Number
+        instruction_worksheet.write('G2', '20704561012400415')
+        instruction_worksheet.write('G3', "Unique certificate number issued for the course", cell_format)
+        instruction_worksheet.write('G4', "Certificate number should be correctly entered", cell_format)
         instruction_worksheet.write('G5', "Mandatory Field", mandatory_format)
 
-        # Example of Course End Date
+        # Example of Course Start Date
         instruction_worksheet.write('H2', '14-Apr-2002')
-        instruction_worksheet.write('H3', "Date when the course ended", cell_format)
+        instruction_worksheet.write('H3', "Date when the course started", cell_format)
         instruction_worksheet.write('H4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
         instruction_worksheet.write('H5', "Mandatory Field", mandatory_format)
+
+        # Example of Course End Date
+        instruction_worksheet.write('I2', '14-Apr-2002')
+        instruction_worksheet.write('I3', "Date when the course ended", cell_format)
+        instruction_worksheet.write('I4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        instruction_worksheet.write('I5', "Mandatory Field", mandatory_format)
 
         instruction_worksheet.protect()
         
@@ -3743,9 +3756,9 @@ class InstitutePortal(CustomerPortal):
             row = worksheet.row_values(row_num)
 
             # Extracting data from the row
-            indos_no = row[0]  # Assuming INDOS NO is in the first column
-            course_name = row[1].lower()  # Assuming COURSE is in the second column
-            institute_name = row[2]  # Assuming INSTITUTE NAME is in the third column
+            indos_no = row[1]  # Assuming INDOS NO is in the second column
+            course_name = row[2].lower()  # Assuming COURSE is in the third column
+            institute_name = row[3]  # Assuming INSTITUTE NAME is in the fourth column
 
             # Initialize variables
             mti_no = None
@@ -3754,26 +3767,26 @@ class InstitutePortal(CustomerPortal):
             course_end_date = None
 
             # Check if MTI NO is present and convert to int
-            if row[3]:  # If there's a value in the fourth column
+            if row[4]:  # If there's a value in the fifth column
                 try:
-                    mti_no = int(row[3])  # Assuming MTI NO is in the fourth column
+                    mti_no = int(row[4])  # Assuming MTI NO is in the fifth column
                 except ValueError:
                     continue  # Skip this row if conversion fails
 
             # Check if CERTIFICATE NO is present and convert to int
-            if row[4]:  # If there's a value in the fifth column
+            if row[5]:  # If there's a value in the sixth column
                 try:
-                    certificate_no = int(row[4])  # Assuming CERTIFICATE NO is in the fifth column
+                    certificate_no = int(row[5])  # Assuming CERTIFICATE NO is in the sixth column
                 except ValueError:
                     continue  # Skip this row if conversion fails
 
             # Check if COURSE START DATE is present
-            if row[5]:  # If there's a value in the sixth column
-                course_start_date = xlrd.xldate.xldate_as_datetime(row[5], workbook.datemode).date()
+            if row[6]:  # If there's a value in the seventh column
+                course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
 
             # Check if COURSE END DATE is present
-            if row[6]:  # If there's a value in the seventh column
-                course_end_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+            if row[7]:  # If there's a value in the eighth column
+                course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
 
             # Find the candidate based on INDOS NO
             candidate = request.env["gp.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
@@ -3781,7 +3794,7 @@ class InstitutePortal(CustomerPortal):
             request.env['gp.candidate.stcw.certificate'].sudo().create({
                 'candidate_id': candidate.id,
                 'course_name': course_name,
-                'institute_name': institute_id,
+                'other_institute': institute_name,
                 'marine_training_inst_number': mti_no,
                 'mti_indos_no': indos_no,
                 'candidate_cert_no': certificate_no,
@@ -3805,18 +3818,19 @@ class InstitutePortal(CustomerPortal):
         unlocked = workbook.add_format({'locked':False})
         candidate_stcw_worksheet.set_column('A:XDF', None, unlocked)
         
-        candidate_stcw_worksheet.set_column('A:A',15,unlocked) #indos
-        candidate_stcw_worksheet.set_column('B:B',10,unlocked) #cousre
-        candidate_stcw_worksheet.set_column('C:C',35,unlocked) #insitute_name
-        candidate_stcw_worksheet.set_column('D:D',15,unlocked) #mti_no
+        candidate_stcw_worksheet.set_column('A:A',35,locked) #Name
+        candidate_stcw_worksheet.set_column('B:B',15,locked) #indos
+        candidate_stcw_worksheet.set_column('C:C',10,unlocked) #cousre
+        candidate_stcw_worksheet.set_column('D:D',35,unlocked) #insitute_name
+        candidate_stcw_worksheet.set_column('E:E',15,unlocked) #mti_no
        # Set the column format for certificate_no to number
         number_format = workbook.add_format({'num_format': '@', 'locked': False})
 
         # Set the column width and format for certificate_no
-        candidate_stcw_worksheet.set_column('E:E', 35, number_format)  # certificate_no
+        candidate_stcw_worksheet.set_column('F:F', 35, number_format)  # certificate_no
         
-        candidate_stcw_worksheet.set_column('F:F',20,unlocked) #cousre_start_date
-        candidate_stcw_worksheet.set_column('G:G',20,unlocked) #cousre_end_date
+        candidate_stcw_worksheet.set_column('G:G',20,unlocked) #cousre_start_date
+        candidate_stcw_worksheet.set_column('H:H',20,unlocked) #cousre_end_date
         
         candidate_stcw_worksheet.protect()
         date_format = workbook.add_format({'num_format': 'dd-mmm-yyyy','locked':False})
@@ -3830,38 +3844,43 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        header = ['Name of Candidate','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
         for col, value in enumerate(header):
             candidate_stcw_worksheet.write(0, col, value, header_format)
 
         # Auto fill indos no
         batch = request.env['institute.ccmc.batches'].sudo().search([('id', '=', batch_id)])
         # import wdb; wdb.set_trace()
-        candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id)])
-        # Extract indos numbers from candidates, ensuring they are valid
+        candidates = request.env['ccmc.candidate'].sudo().search([('institute_batch_id','=',batch.id),('withdrawn_state','!=','yes')])
+ 
+        # Extract valid indos numbers and names from candidates
         indos = [candidate.indos_no for candidate in candidates if candidate.indos_no]  # Only include non-empty indos_no
+        names = [candidate.name for candidate in candidates if candidate.name]  # Only include non-empty Name strs
 
-        # Write the indos numbers to the worksheet
-        for i, candidate in enumerate(indos):
+        # Write the names and indos numbers to the worksheet
+        for i, (name, indos_no) in enumerate(zip(names, indos)):
             # Calculate the starting row for the current candidate
-            start_row = i * 2 + 2  # Each indos occupies two rows
+            start_row = i * 2 + 2  # Each candidate occupies two rows
 
-            # Write the indos number twice in consecutive rows
-            candidate_stcw_worksheet.write(f'A{start_row}', candidate, locked)
-            candidate_stcw_worksheet.write(f'A{start_row + 1}', candidate, locked)
+            # Write the name in column A, indos number in column B (both rows)
+            candidate_stcw_worksheet.write(f'A{start_row}', name, locked)
+            candidate_stcw_worksheet.write(f'A{start_row + 1}', name, locked)
+
+            candidate_stcw_worksheet.write(f'B{start_row}', indos_no, locked)
+            candidate_stcw_worksheet.write(f'B{start_row + 1}', indos_no, locked)
         
         
         # Set date format for DOB column
-        candidate_stcw_worksheet.set_column('F:F', 20, date_format)
         candidate_stcw_worksheet.set_column('G:G', 20, date_format)
+        candidate_stcw_worksheet.set_column('H:H', 20, date_format)
 
         cousre_values = ["BST","STSDSD"]
 
-        candidate_stcw_worksheet.data_validation('B2:B1048576', {'validate': 'list', 'source': cousre_values})
+        candidate_stcw_worksheet.data_validation('C2:C1048576', {'validate': 'list', 'source': cousre_values})
         
         instruction_worksheet = workbook.add_worksheet("Instructions")
 
-        instruction_worksheet.set_column('A:P',20,unlocked)
+        instruction_worksheet.set_column('A:P',20,locked)
 
         
         # instruction_worksheet.protect()
@@ -3878,7 +3897,7 @@ class InstitutePortal(CustomerPortal):
             'locked':True
         })
         
-        header = ['Sr No.','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
+        header = ['Sr No.','Name of Candidate','INDOS NO', 'COURSE', 'INSTITUTE NAME', 'MTI NO', 'CERTIFICATE NO', 'COURSE START DATE', 'COURSE END DATE']
         for col, value in enumerate(header):
             instruction_worksheet.write(0, col, value, header_format)
 
@@ -3915,47 +3934,55 @@ class InstitutePortal(CustomerPortal):
         instruction_worksheet.write('A5', '3) Mandatory')
 
         # Populate instruction details for the STCW table
-        # Example of INDOS NO
-        instruction_worksheet.write('B2', '23GM1234')
+        # Example of Name
+        instruction_worksheet.write('B2', 'Candidate Name')
         instruction_worksheet.write('B3', "This field contains the student's INDOS number, which is required for identification in the STCW system", cell_format)
         instruction_worksheet.write('B4', "INDOS number must follow the correct format. Avoid duplicates or incorrect INDOS numbers", cell_format)
         instruction_worksheet.write('B5', "Mandatory Field", mandatory_format)
+        
+        # Example of INDOS NO
+        instruction_worksheet.write('C2', '23GM1234')
+        instruction_worksheet.write('C3', "This field contains the student's INDOS number, which is required for identification in the STCW system", cell_format)
+        instruction_worksheet.write('C4', "INDOS number must follow the correct format. Avoid duplicates or incorrect INDOS numbers", cell_format)
+        instruction_worksheet.write('C5', "Mandatory Field", mandatory_format)
 
         # Example of Course Name
-        instruction_worksheet.write('C2', 'BST')
-        instruction_worksheet.write('C3', "This is the name of the STCW course completed by the candidate", cell_format)
-        instruction_worksheet.write('C4', "Ensure the course name follows the STCW standard abbreviations (e.g., BST, STSDSD)", cell_format)
-        instruction_worksheet.write('C5', 'Mandatory Field', mandatory_format)
+        instruction_worksheet.write('D2', 'BST')
+        instruction_worksheet.write('D3', "This is the name of the STCW course completed by the candidate", cell_format)
+        instruction_worksheet.write('D4', "Ensure the course name follows the STCW standard abbreviations (e.g., BST, STSDSD)", cell_format)
+        instruction_worksheet.write('D5', 'Mandatory Field', mandatory_format)
 
         # Example of Institute Name
-        instruction_worksheet.write('D2', 'Oceanic Maritime')
-        instruction_worksheet.write('D3', "Name of the maritime training institute where the course was completed", cell_format)
-        instruction_worksheet.write('D4', "Ensure correct and complete institute name", cell_format)
-        instruction_worksheet.write('D5', "Mandatory Field", mandatory_format)
-
-        # Example of MTI NO
-        instruction_worksheet.write('E2', '410210')
-        instruction_worksheet.write('E3', "Maritime Training Institute (MTI) number of the training center", cell_format)
-        instruction_worksheet.write('E4', "MTI number should be correctly entered", cell_format)
+        instruction_worksheet.write('E2', 'Oceanic Maritime')
+        instruction_worksheet.write('E3', "Name of the maritime training institute where the course was completed", cell_format)
+        instruction_worksheet.write('E4', "Ensure correct and complete institute name", cell_format)
         instruction_worksheet.write('E5', "Mandatory Field", mandatory_format)
 
-        # Example of Certificate Number
-        instruction_worksheet.write('F2', '20704561012400415')
-        instruction_worksheet.write('F3', "Unique certificate number issued for the course", cell_format)
-        instruction_worksheet.write('F4', "Certificate number should be correctly entered", cell_format)
+        # Example of MTI NO
+        instruction_worksheet.write('F2', '410210')
+        instruction_worksheet.write('F3', "Maritime Training Institute (MTI) number of the training center", cell_format)
+        instruction_worksheet.write('F4', "MTI number should be correctly entered", cell_format)
         instruction_worksheet.write('F5', "Mandatory Field", mandatory_format)
 
-        # Example of Course Start Date
-        instruction_worksheet.write('G2', '14-Apr-2002')
-        instruction_worksheet.write('G3', "Date when the course started", cell_format)
-        instruction_worksheet.write('G4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        # Example of Certificate Number
+        instruction_worksheet.write('G2', '20704561012400415')
+        instruction_worksheet.write('G3', "Unique certificate number issued for the course", cell_format)
+        instruction_worksheet.write('G4', "Certificate number should be correctly entered", cell_format)
         instruction_worksheet.write('G5', "Mandatory Field", mandatory_format)
 
-        # Example of Course End Date
+        # Example of Course Start Date
         instruction_worksheet.write('H2', '14-Apr-2002')
-        instruction_worksheet.write('H3', "Date when the course ended", cell_format)
+        instruction_worksheet.write('H3', "Date when the course started", cell_format)
         instruction_worksheet.write('H4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
         instruction_worksheet.write('H5', "Mandatory Field", mandatory_format)
+
+        # Example of Course End Date
+        instruction_worksheet.write('I2', '14-Apr-2002')
+        instruction_worksheet.write('I3', "Date when the course ended", cell_format)
+        instruction_worksheet.write('I4', "Date format: DD-MMM-YYYY (e.g., 14-Apr-2002)", cell_format)
+        instruction_worksheet.write('I5', "Mandatory Field", mandatory_format)
+
+
         instruction_worksheet.protect()
         
         workbook.close()
@@ -4000,9 +4027,9 @@ class InstitutePortal(CustomerPortal):
             row = worksheet.row_values(row_num)
 
             # Extracting data from the row
-            indos_no = row[0]  # Assuming INDOS NO is in the first column
-            course_name = row[1].lower()  # Assuming COURSE is in the second column
-            institute_name = row[2]  # Assuming INSTITUTE NAME is in the third column
+            indos_no = row[1]  # Assuming INDOS NO is in the second column
+            course_name = row[2].lower()  # Assuming COURSE is in the third column
+            institute_name = row[3]  # Assuming INSTITUTE NAME is in the fourth column
 
             # Initialize variables
             mti_no = None
@@ -4011,26 +4038,26 @@ class InstitutePortal(CustomerPortal):
             course_end_date = None
 
             # Check if MTI NO is present and convert to int
-            if row[3]:  # If there's a value in the fourth column
+            if row[4]:  # If there's a value in the fifth column
                 try:
-                    mti_no = int(row[3])  # Assuming MTI NO is in the fourth column
+                    mti_no = int(row[4])  # Assuming MTI NO is in the fifth column
                 except ValueError:
                     continue  # Skip this row if conversion fails
 
             # Check if CERTIFICATE NO is present and convert to int
-            if row[4]:  # If there's a value in the fifth column
+            if row[5]:  # If there's a value in the sixth column
                 try:
-                    certificate_no = int(row[4])  # Assuming CERTIFICATE NO is in the fifth column
+                    certificate_no = int(row[5])  # Assuming CERTIFICATE NO is in the sixth column
                 except ValueError:
                     continue  # Skip this row if conversion fails
 
             # Check if COURSE START DATE is present
-            if row[5]:  # If there's a value in the sixth column
-                course_start_date = xlrd.xldate.xldate_as_datetime(row[5], workbook.datemode).date()
+            if row[6]:  # If there's a value in the seventh column
+                course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
 
             # Check if COURSE END DATE is present
-            if row[6]:  # If there's a value in the seventh column
-                course_end_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+            if row[7]:  # If there's a value in the eighth column
+                course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
 
             # Find the candidate based on INDOS NO
             candidate = request.env["ccmc.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
@@ -4038,7 +4065,7 @@ class InstitutePortal(CustomerPortal):
             request.env['ccmc.candidate.stcw.certificate'].sudo().create({
                 'candidate_id': candidate.id,
                 'course_name': course_name,
-                'institute_name': institute_id,
+                'other_institute': institute_name,
                 'marine_training_inst_number': mti_no,
                 'mti_indos_no': indos_no,
                 'candidate_cert_no': certificate_no,
@@ -4109,3 +4136,37 @@ class InstitutePortal(CustomerPortal):
 
         
         return request.redirect('/my/ccmcbatch/candidates/' + str(kw.get("ccmc_batch_id")))
+    
+    @http.route(['/my/gpcandidate/updatewithdrawnstatus'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateWithdrawnStatusGP(self, **kw):
+        # import wdb; wdb.set_trace();
+        candidate_id = kw.get('candidate_id')
+        withdrawn_state = kw.get('withdrawn_state')
+        withdrawn_reason = kw.get('withdrawn_reason')
+        
+        
+        candidate = request.env["gp.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'withdrawn_state':withdrawn_state, 'withdrawn_reason':withdrawn_reason})
+        
+        return request.redirect('/my/gpcandidateprofile/'+str(kw.get("candidate_id")))
+
+
+
+
+
+    @http.route(['/my/ccmccandidate/updatewithdrawnstatus'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def UpdateWithdrawnStatusCCMC(self, **kw):
+        # import wdb; wdb.set_trace();
+        candidate_id = kw.get('candidate_id')
+        withdrawn_state = kw.get('withdrawn_state')
+        withdrawn_reason = kw.get('withdrawn_reason')
+        
+        
+        candidate = request.env["ccmc.candidate"].sudo().search(
+            [('id', '=', int(candidate_id))])
+        
+        candidate.write({'withdrawn_state':withdrawn_state, 'withdrawn_reason':withdrawn_reason})
+        
+        return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))

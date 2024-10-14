@@ -33,6 +33,8 @@ class ExaminationReport(models.Model):
         ('repeater', 'Repeater')
     ],string='Type')
     
+    sequence_report = fields.Char("Exam Sequence No.")
+    
     visible_gp_report_button = fields.Boolean(string='Visible GP Report Button',compute="show_repeater_report_button",tracking=True)
     visible_ccmc_report_button = fields.Boolean(string='Visible CCMC Report Button',compute="show_repeater_report_button",tracking=True)
     visible_gp_repeater_report_button = fields.Boolean(string='Visible GP Repeater Report Button',compute="show_repeater_report_button",tracking=True)
@@ -227,7 +229,7 @@ class ExaminationReport(models.Model):
                     elif record.ccmc_oral_prac_status == "passed":
                         ccmc_online_status = "P"
                         row.append(ccmc_online_status)
-                    elif record.ccmc_gsk_oral_attendance:
+                    elif record.ccmc_online_attendance == 'absent':
                         ccmc_online_status = "A"
                         row.append(ccmc_online_status)
                     else:
@@ -326,8 +328,12 @@ class ExaminationReport(models.Model):
                 applied = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
+                # practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True)])
+                # practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
+                # practical_percentage = (practical_pass/practical_appeared) * 100
                 practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed')])
                 practical_percentage = (practical/appeared) * 100
+
                 
                 oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed')])
                 oral_percentage = (oral/appeared) * 100
@@ -342,8 +348,8 @@ class ExaminationReport(models.Model):
                         'institute': institute_id,  # Assuming 2 is the ID of the institute
                         'applied': applied,
                         'candidate_appeared': appeared,
-                        'practical_pass_appeared': appeared,
-                        'practical_pass': practical,
+                        'practical_pass_appeared': practical_appeared,
+                        'practical_pass': practical_pass,
                         'practical_pass_per': practical_percentage,
                         'oral_pass_appeared': appeared,
                         'oral_pass': oral,
@@ -559,23 +565,30 @@ class ExaminationReport(models.Model):
                 appeared = applied - absent                        
                 # appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
-                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_prac_carry_forward','=',False),('cookery_prac_attendance','=','present')])
-                practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed'),('cookery_prac_carry_forward','=',False),('cookery_prac_attendance','=','present')])
+                # practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_prac_carry_forward','=',False),('cookery_prac_attendance','=','present')])
+                # practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed'),('cookery_prac_carry_forward','=',False),('cookery_prac_attendance','=','present')])
+
+                practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_prac_attendance','=','present')])
+                practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed'),('cookery_prac_attendance','=','present')])
                 try :
                     practical_percentage = (practical/practical_appeared) * 100
                 except ZeroDivisionError:
                     practical_percentage = 0
                     
-                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_oral_carry_forward','=',False),('ccmc_gsk_oral_attendance','=','present')])                
-                oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False),('ccmc_gsk_oral_attendance','=','present')])
+                # oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_oral_carry_forward','=',False),('ccmc_gsk_oral_attendance','=','present')])                
+                # oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_oral_prac_status','=','passed'),('cookery_oral_carry_forward','=',False),('ccmc_gsk_oral_attendance','=','present')])
+                
+                oral_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_oral','=',True),('ccmc_gsk_oral_attendance','=','present')])
+                oral = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_oral','=',True),('ccmc_oral_prac_status','=','passed'),('ccmc_gsk_oral_attendance','=','present')])
+
                 
                 try:
                     oral_percentage = (oral/oral_appeared) * 100
                 except ZeroDivisionError:
                     oral_percentage = 0
 
-                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_gsk_online_carry_forward','=',False),('ccmc_online_attendance','=','present')])                
-                online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('ccmc_online_status','=','passed'),('cookery_gsk_online_carry_forward','=',False),('ccmc_online_attendance','=','present')])
+                online_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_online','=',True),('ccmc_online_attendance','=','present')])                
+                online = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_online','=',True),('ccmc_online_status','=','passed'),('ccmc_online_attendance','=','present')])
                 
                 try:
                     online_percentage = (online/online_appeared) * 100
@@ -932,18 +945,30 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
     
+    def get_ordinal(self,n):
+        n = int(n)
+        if 10 <= n % 100 <= 20:
+            suffix = 'th'
+        else:
+            suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+        return f"{n}{suffix}"
+
+    
+
     def print_summarised_gp_repeater_report(self):
-        
+        exam_sequence = self.get_ordinal(self.sequence_report) 
         datas = {
             'doc_ids': self.id,
             'course': 'GP',
-            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
-        }
-        
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+            'exam_sequence': exam_sequence
+        } 
         if self.exam_type == 'repeater':
             datas['report_type'] = 'Repeater'
+            datas['exam_sequence'] = exam_sequence
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
+            datas['exam_sequence'] = exam_sequence
             
         return self.env.ref('bes.summarised_gp_repeater_report_action').report_action(self ,data=datas)
     
@@ -963,17 +988,20 @@ class ExaminationReport(models.Model):
         return self.env.ref('bes.bar_graph_report_action').report_action(self ,data=datas)  
    
     def print_summarised_ccmc_report(self):
-        
+        exam_sequence = self.get_ordinal(self.sequence_report) 
         datas = {
             'doc_ids': self.id,
             'course': 'CCMC',
-            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+            'exam_sequence': exam_sequence
         }
         
         if self.exam_type == 'repeater':
             datas['report_type'] = 'Repeater'
+            datas['exam_sequence'] = exam_sequence
         elif self.exam_type == 'fresh':
             datas['report_type'] = 'Fresh'
+            datas['exam_sequence'] = exam_sequence
             
         return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
            
@@ -1097,19 +1125,35 @@ class SummarisedGPRepeaterReport(models.AbstractModel):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = "Summarised GP Repeater Report"
     
+    
+    def get_ordinal(self,n):
+        n = int(n)
+        if 10 <= n % 100 <= 20:
+            suffix = 'th'
+        else:
+            suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+        return f"{n}{suffix}"
+    
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
-        
+        print('sasad')
+        # print(docids)
+        exam_sequence = data['exam_sequence']
+        # print(data['exam_sequence'])
+        # print(data)
         data = self.env['summarised.gp.repeater.report'].sudo().search(
                     [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
         exam_region = data.exam_region.ids
-        
+
+
         data = self.env['summarised.gp.repeater.report'].sudo().search([('examination_report_batch','=',docs1.id)])
 
-        
-        print(exam_region)
+        # print(self.env.context)
+        # exam_sequence = self.env.context.get("exam_sequence")       
+        print('exam_sequence')
+
         # report_type = data['report_type']
         # course = data['course']
 
@@ -1126,7 +1170,8 @@ class SummarisedGPRepeaterReport(models.AbstractModel):
             'doc_model': 'summarised.gp.repeater.report',
             'docs': data,
             'exam_regions': exam_region,
-            'examination_report':docs1
+            'examination_report':docs1,
+            'exam_sequence':exam_sequence
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,
@@ -1184,6 +1229,8 @@ class SummarisedCCMCReport(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
+        exam_sequence = data['exam_sequence']
+        print(data)
         docs1 = self.env['examination.report'].sudo().browse(docids)
         data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
         print(docs1)
@@ -1206,7 +1253,8 @@ class SummarisedCCMCReport(models.AbstractModel):
             'doc_model': 'summarised.ccmc.report',
             'docs': docids,
             'exam_regions': exam_region,
-            'examination_report':docs1
+            'examination_report':docs1,
+            'exam_sequence':exam_sequence
             # 'exams': exams,
             # 'institutes': institutes,
             # 'exam_centers': exam_centers,

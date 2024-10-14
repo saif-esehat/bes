@@ -367,6 +367,7 @@
                                 <field name="ship_visits"  nolabel="1">
                                     <tree editable="bottom">
                                         <field name="name_of_ships"/>
+                                        <field name="ship_visit_id"/>
                                         <field name="imo_no"/>
                                         <field name="name_of_ports_visited"/>
                                         <field name="date_of_visits"/>
@@ -830,6 +831,8 @@
                             <field name="candidate_attendance_record"/>
                             <field name="fees_paid" />
                             <field name="invoice_no"/>
+                            <field name="withdrawn_state"/>
+                            <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
                             
                         </group>
 
@@ -838,6 +841,7 @@
                                 <field name="ship_visits"  nolabel="1">
                                     <tree editable="bottom">
                                         <field name="name_of_ships"/>
+                                        <field name="ship_visit_id"/>
                                         <field name="imo_no"/>
                                         <field name="name_of_ports_visited"/>
                                         <field name="date_of_visits"/>

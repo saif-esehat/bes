@@ -30,9 +30,27 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
-                            <strong>ADMIT CARD - IV Examination MMB for <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'"> FRESH </t><t t-else=""> Repeater </t>Candidate</strong>
-                        </td>
+                        <t t-if="o.candidate_applications[-1].application_id.application_type == 'repeater'">
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;color:red;">
+                                <t t-if="o.candidate_eligible == 'updated_eligible'">
+                                    <strong style="color:navy;">ADMIT CARD - IV Examination MMB for Hold to Eligible <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'"> FRESH </t><t t-else=""> Repeater </t>Candidate</strong>
+                                </t>
+                                <t t-if="o.candidate_eligible == 'eligible'">
+                                    <strong>ADMIT CARD - IV Examination MMB for <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'"> FRESH </t><t t-else=""> Repeater </t>Candidate</strong>
+                                </t>
+                            </td>
+                        </t>
+                        <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'">
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
+                                <t t-if="o.candidate_eligible == 'updated_eligible'">
+                                    <strong style="color:navy;">ADMIT CARD - IV Examination MMB for Hold to Eligible <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'"> FRESH </t><t t-else=""> Repeater </t>Candidate</strong>
+                                </t>
+                                <t t-if="o.candidate_eligible == 'eligible'">
+                                    <strong>ADMIT CARD - IV Examination MMB for <t t-if="o.candidate_applications[-1].application_id.application_type == 'fresher'"> FRESH </t><t t-else=""> Repeater </t>Candidate</strong>
+                                </t>
+                            </td>
+                        </t>
+                        
                     </tr>
                       <tr>
                         <td colspan="2" style="text-align: center; font-size: 14px; padding-bottom: 2px;">
@@ -42,8 +60,6 @@
                     <tr>
                         <td colspan="2" style="position: relative; text-align: left; padding: 5pt;">
                             <img t-attf-src="data:image/png;base64,{{o.candidate_applications[-1].application_id.candidate_image}}" alt="Image" id="photo" class="img img-responsive" style="width: 100px; height: 100px; position: absolute; top: 0px; right: 0px;" />
-                         
-                           
                         </td>
                         
                     </tr>
@@ -64,7 +80,27 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="font-size: 14px; padding-bottom: 14px;">
-                            Grade Applied for: <strong><t t-esc="o.grade_applied"/></strong>
+                            Grade Applied for: <strong>
+                                <t t-if="o.grade_applied == '1CM'">
+                                    First Class Master
+                                </t>
+                                <t t-if="o.grade_applied == '2CM'">
+                                    Second Class Master
+                                </t>
+                                <t t-if="o.grade_applied == 'SER'">
+                                    Serang
+                                </t>
+                                <t t-if="o.grade_applied == 'ME'">
+                                    Motor Engineer
+                                </t>
+                                <t t-if="o.grade_applied == '1ED'">
+                                    First Class Engine Driver
+                                </t>
+                                <t t-if="o.grade_applied == '2ED'">
+                                    Second Class Engine Driver
+                                </t>
+                                
+                            </strong>
                         </td>
                     </tr>
                   <tr>

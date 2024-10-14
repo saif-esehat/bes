@@ -1,10 +1,14 @@
+*.pyc
+__pycache__/*.pyc
 __pycache__/__init__.cpython-38.pyc
 __pycache__/__init__.cpython-39.pyc
+controllers/__pycache__/*.pyc
 controllers/__pycache__/__init__.cpython-39.pyc
 controllers/__pycache__/candidate.cpython-39.pyc
 controllers/__pycache__/examiners.cpython-39.pyc
 controllers/__pycache__/institute.cpython-39.pyc
 controllers/__pycache__/main.cpython-39.pyc
+model/__pycache__/*.pyc
 model/__pycache__/__init__.cpython-39.pyc
 model/__pycache__/admit_card.cpython-39.pyc
 model/__pycache__/batches_report.cpython-39.pyc
@@ -17,8 +21,10 @@ model/__pycache__/institute.cpython-39.pyc
 model/__pycache__/invoice.cpython-39.pyc
 model/__pycache__/student.cpython-39.pyc
 model/__pycache__/survey.cpython-39.pyc
+model/marksheets/__pycache__/*.pyc
 model/marksheets/__pycache__/gsk.cpython-39.pyc
 model/marksheets/__pycache__/mek.cpython-39.pyc
+wizards/__pycache__/*.pyc
 wizards/__pycache__/__init__.cpython-38.pyc
 wizards/__pycache__/__init__.cpython-39.pyc
 wizards/__pycache__/batch_creation_wizard.cpython-38.pyc

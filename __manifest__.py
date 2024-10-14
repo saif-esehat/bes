@@ -54,9 +54,9 @@
         'reports/dgs_report.xml',
         'reports/attendance_sheet.xml',
         'reports/summarised_report.xml',
+        'reports/candidates_exam_report.xml',
         'views/sep_batches.xml',
         'views/sep_candidate.xml',
-        'views/expense_report.xml',
         'reports/sep_candidate_certificate.xml',
         'views/iv_exam/iv_batches.xml',
         'views/iv_exam/iv_candidates.xml',
@@ -74,6 +74,10 @@
         'reports/iv_candidate/iv_candidate_issuance_admitcard.xml',
         'reports/iv_exam_report/iv_written_exam_a.xml',
         'reports/iv_exam_report/iv_oral_exam_result.xml',
+        'views/ship_visit/gp_ship_visit.xml',
+        'views/ship_visit/ccmc_ship_visit.xml',
+        'views/portal/ship_visit/ship_visit.xml',
+        'views/portal/ship_visit/ccmc_ship_visi.xml',
  
        
         # 'views/sep_batches.xml',
@@ -87,7 +91,8 @@
                         'bes/views/portal/static/src/js/candidate_oral_practical.js',
                         'bes/views/portal/static/src/js/examiner_marksheet.js',
                         'bes/static/js/examiner_portal_marksheet.js',
-                        'bes/static/js/repeater_portal_gp_form.js'
+                        'bes/static/js/repeater_portal_gp_form.js',
+                        'bes/static/js/openStartExam.js'
 		],
                 'web.assets_qweb': [
                         'bes/static/src/xml/gp_exam_tree_button.xml',
@@ -95,6 +100,7 @@
                 'web.assets_backend': [
                         'bes/static/src/js/gp_exam_tree_button.js',
                         'bes/static/src/css/customs_color.css',
+                        'bes/static/src/js/lost_connection_handler_override.js',
                 ],
                 
 	},
