@@ -13,7 +13,7 @@
             <t t-if="page_name == 'gp_ccmcship_list'">
                
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batch</a>
                 </li>
 
                   <li class="breadcrumb-item">
