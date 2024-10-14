@@ -134,7 +134,7 @@
          <t t-call="portal.portal_table">
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" t-attf-data-id="{{batch_id}}" onclick="openShipVisitModal(this)"  data-target="#shipVisitModal">
-                    Add Ship Visit
+                    Add Ship Details
                 </button>
                 <thead>
               
@@ -638,6 +638,9 @@
                                             <tr>
                                                 <td>
                                                      <t t-out="candidate.name" />
+                                                </td>
+                                                <td>
+                                                     <t t-out="candidate.indos_no" />
                                                 </td>
                                                 <td>
                                                      <t t-out="candidate.indos_no" />

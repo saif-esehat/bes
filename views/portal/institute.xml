@@ -312,7 +312,7 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
-                         <th>GP Ship Visits</th>
+                        <th>Ship Visits</th>
                         <th>No. of Candidate</th>
                         <th>Batch Capacity</th>
                         <!-- <th>DGS Document</th> -->
@@ -348,7 +348,7 @@
                          
                         <td class="text-left">
                             <a t-attf-href="/my/ship_visits/{{batch.id}}" class="fa">
-                                GP Ship Visit
+                                Ship Visit
                             </a>
                         </td>
                        
