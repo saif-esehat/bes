@@ -402,7 +402,6 @@ class GPShipVisitPortalController(http.Controller):
     
     @http.route(['/my/ship_visit/addcandidate'],type="json",auth='user', website=True, methods=['POST'])
     def portal_ship_visit_add_candidate(self, **post):
-        import wdb;wdb.set_trace()
 
         
         ship_visit_id = int(request.jsonrequest["ship_vist_id"])
