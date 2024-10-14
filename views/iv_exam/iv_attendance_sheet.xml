@@ -49,7 +49,7 @@
             <tree>
 
               <header>
-                <button name="print_report" type="object" string="Roll NoPrint" class="btn-primary"/>
+                <button name="print_report" type="object" string="Roll No Print" class="btn-primary"/>
             </header>
           
                 <field name="indos_no" />
