@@ -592,7 +592,7 @@
                             "candidate_ids" : selectedValues
                         }
                         
-                        
+                        debugger
                         $.ajax({
                                 type: "POST",
                                 url: '/my/ship_visit/addcandidate',
@@ -741,7 +741,7 @@
                                     <form action="/my/gp_ship_visits/deletecandidate" method="POST">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <input type="hidden" id="candidate_id" name="candidate_id" />
-                                        <input type="hidden" id="ship_visit_id" name="ship_visit_id" />
+                                        <input type="hidden" id="ship_visit_id" name="ship_visit_id" t-att-value="visit.id" />
                                         <div class="modal-body">
 
                                             Are you sure you want to delete this item? This action cannot be undone.

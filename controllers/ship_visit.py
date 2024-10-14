@@ -402,11 +402,12 @@ class GPShipVisitPortalController(http.Controller):
     
     @http.route(['/my/ship_visit/addcandidate'],type="json",auth='user', website=True, methods=['POST'])
     def portal_ship_visit_add_candidate(self, **post):
-        
+        import wdb;wdb.set_trace()
+
         
         ship_visit_id = int(request.jsonrequest["ship_vist_id"])
         candidate_ids =  [int(element) for element in request.jsonrequest["candidate_ids"]]
-       
+    
         # request.jsonrequest
         ship_visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
         
