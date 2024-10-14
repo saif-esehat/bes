@@ -47,6 +47,10 @@
         <field name="model">iv.attendance.sheet</field>
         <field name="arch" type="xml">
             <tree>
+
+              <header>
+                <button name="print_report" type="object" string="Roll NoPrint" class="btn-primary"/>
+            </header>
           
                 <field name="indos_no" />
                 <field name="roll_no"/>

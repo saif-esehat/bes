@@ -10,6 +10,15 @@
         file="bes.reports_iv_written_attendance_sheet1"
     />
 
+    <report
+    id="action_report_iv_attendance_sheet"
+    model="iv.attendance.sheet"
+    string="IV Written Roll No Sheet"
+    report_type="qweb-pdf"
+    name="bes.report_iv_attendance_sheet"
+    file="bes.report_iv_attendance_sheet"
+    print_report_name="IV Attendance Sheet"/>
+
     <template id="reports_iv_written_attendance_sheet1">
     <t t-call="web.basic_layout">
             <!-- <div class="page"> -->
@@ -133,6 +142,41 @@
     </t>
    
 
+</template>
+
+<template id="report_iv_attendance_sheet">
+    <t t-call="web.basic_layout">  <!-- This ensures the base structure is used -->
+        <t t-set="doc_ids" t-value="doc_ids"/>
+        <t t-set="docs" t-value="docs"/>
+        
+        <table class="table" style="width: 100%; border-collapse: collapse; border: none; font-size: 20px;"> <!-- Increased font size -->
+            <tbody>
+                <t t-set="counter" t-value="0"/>
+                <tr>
+                    <t t-foreach="docs" t-as="doc">
+                        <!-- Print the roll_no in red and without borders -->
+                        <td style="color: red; border: none; padding: 10px;"> <!-- Padding for spacing -->
+                            <t t-esc="doc.roll_no"/>
+                        </td>
+                        
+                        <!-- Increment counter and check if 3 records have been printed -->
+                        <t t-set="counter" t-value="counter + 1"/>
+                        
+                        <!-- If counter is divisible by 3, close the row and start a new one -->
+                        <t t-if="counter % 3 == 0">
+                            <tr>
+                            <t t-if="counter % 3 == 0">
+                                <!-- Insert a page break after every 8 rows -->
+                                <tr><td colspan="3" style="height: 30px; border: none;"></td></tr> <!-- Increased height -->
+                                <tr><td colspan="3" style="border: none; page-break-after: always;"></td></tr> <!-- Page break -->
+                            </t>
+                            </tr>
+                        </t>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </t>
 </template>
 
 
