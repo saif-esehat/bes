@@ -239,13 +239,8 @@ class CandidatesApplication(models.Model):
     #     return
 
     def assign_hold_candidates_rollno(self):
-        count_1cm = self.env['candidates.application'].sudo().search_count([('grade','=','1CM'),('application_type','=','fresher'),('application_eligible','=','eligible')]) +1
-        count_2cm = self.env['candidates.application'].sudo().search_count([('grade','=','2CM'),('application_type','=','fresher'),('application_eligible','=','eligible')]) +1 
-        count_ser = self.env['candidates.application'].sudo().search_count([('grade','=','SER'),('application_type','=','fresher'),('application_eligible','=','eligible')]) +1
-        count_me = self.env['candidates.application'].sudo().search_count([('grade','=','ME'),('application_type','=','fresher'),('application_eligible','=','eligible')])   +1
-        count_1ed = self.env['candidates.application'].sudo().search_count([('grade','=','1ED'),('application_type','=','fresher'),('application_eligible','=','eligible')]) +1
-        count_2ed = self.env['candidates.application'].sudo().search_count([('grade','=','2ED'),('application_type','=','fresher'),('application_eligible','=','eligible')]) +1
-        
+        count = self.env['candidates.application'].sudo().search_count([('application_type','=','fresher'),('application_eligible','=','eligible')]) + 1
+
         candidates_by_grade = {
             '1CM': [],
             '2CM': [],
@@ -254,45 +249,35 @@ class CandidatesApplication(models.Model):
             '1ED': [],
             '2ED': []
         }
+        
+        # Prepare a set of indos_no from self (all candidates)
+        candidate_indos_nos = [candidate.indos_no for candidate in self]
+        
+        # Fetch all relevant records from iv.candidates in one query
+        existing_records = self.env['iv.candidates'].sudo().search([('indos_no', 'in', candidate_indos_nos)])
+        
+        # Store fetched records in a dictionary for fast lookup by indos_no
+        existing_record_map = {record.indos_no: record for record in existing_records}
+        
+        # Categorize candidates by grade
         for candidate in self:
             if candidate.application_eligible == 'updated_eligible':
                 if candidate.grade in candidates_by_grade:
                     candidates_by_grade[candidate.grade].append(candidate)
-        # import wdb; wdb.set_trace(); 
+
         for grade in ['1CM', '2CM', 'SER', 'ME', '1ED', '2ED']:
             candidates = candidates_by_grade[grade]
             for candidate in candidates:
                 # Check if roll_no already exists
                 if not candidate.roll_no:
-                    if candidate.grade == '1CM':
-                        roll_no = f"{candidate.grade}-{count_1cm}/{candidate.batch.name}"
-                        candidate.sudo().write({'roll_no': roll_no})
-                        count_1cm += 1
-                    if candidate.grade == '2CM':
-                        roll_no = f"{candidate.grade}-{count_2cm}/{candidate.batch.name}"
-                        candidate.sudo().write({'roll_no': roll_no})
-                        count_2cm += 1
-                    if candidate.grade == 'SER':
-                        roll_no = f"{candidate.grade}-{count_ser}/{candidate.batch.name}"
-                        candidate.sudo().write({'roll_no': roll_no})
-                        count_ser += 1
-                    if candidate.grade == 'ME':
-                        roll_no = f"{candidate.grade}-{count_me}/{candidate.batch.name}"
-                        candidate.sudo().write({'roll_no': roll_no})
-                        count_me += 1
-                    if candidate.grade == '1ED':
-                        roll_no = f"{candidate.grade}-{count_1ed}/{candidate.batch.name}"
-                        candidate.sudo().write({'roll_no': roll_no})
-                        count_1ed += 1
-                    if candidate.grade == '2ED':
-                        roll_no = f"{candidate.grade}-{count_2ed}/{candidate.batch.name}"
-                        candidate.sudo().write({'roll_no': roll_no})
-                        count_2ed += 1
+                    roll_no = f"{candidate.grade}-{count}/{candidate.batch.name}"
+                    candidate.sudo().write({'roll_no': roll_no})
+                    count = count + 1
                 else:
                     roll_no = candidate.roll_no
 
-                # Check if the candidate with the same indos_no already exists
-                existing_record = self.env['iv.candidates'].sudo().search([('indos_no', '=', candidate.indos_no)], limit=1)
+                # Lookup in the pre-fetched existing_record_map
+                existing_record = existing_record_map.get(candidate.indos_no)
 
                 if existing_record:
                     # Update the existing record
@@ -324,7 +309,6 @@ class CandidatesApplication(models.Model):
                         'candidate_signature': candidate.candidate_signature,
                         'candidate_applications': [(0, 0, {'application_id': candidate.id})],
                         'candidate_eligible': 'updated_eligible'
-
                     })
 
         return

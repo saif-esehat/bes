@@ -60,11 +60,11 @@
                 <table class="table table-condensed" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 5%;">Sr No.</th>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">INDoS No.</th>
-                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 10%;">Roll No.</th>
-                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 25%;">Grade Applied</th>
-                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Name of Candidate</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 4%;">Sr No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 4%;">Indos No.</th>
+                            <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 8%;">Roll No.</th>
+                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Grade Applied</th>
+                            <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 30%;">Name of Candidate</th>
                             <th colspan="1" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">DOB</th>
                             <th colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; width: 15%;">Sign</th>
                         </tr>
