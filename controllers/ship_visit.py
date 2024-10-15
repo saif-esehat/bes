@@ -329,7 +329,7 @@ class GPShipVisitPortalController(http.Controller):
         for candidate in ship_visit.candidate_ids:
             request.env['ccmc.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
         
-        ship_visit.candidate_ids.unlink()
+        # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
 
@@ -352,7 +352,7 @@ class GPShipVisitPortalController(http.Controller):
         for candidate in ship_visit.candidate_ids:
             request.env['gp.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
         
-        ship_visit.candidate_ids.unlink()
+        # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
 
@@ -399,7 +399,7 @@ class GPShipVisitPortalController(http.Controller):
     @http.route(['/my/ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
     def portal_gp_ship_visit_edit(self,ship_visit_id,**kw):
         visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
-        vals = {'visit': visit, 'page_name': 'gpship_edit'}
+        vals = {'visit': visit,'batch_id':visit.gp_ship_batch_id.id, 'page_name': 'gpship_edit'}
         if not visit.exists():
             return request.not_found()
         return request.render('bes.portal_gp_ship_visit_edit', vals)

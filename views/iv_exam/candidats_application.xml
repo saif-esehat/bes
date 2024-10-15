@@ -256,6 +256,8 @@
                 <search>
                     <field name="name"/>
                     <field name="batch"/>
+                    <field name="roll_no"/>
+
                     
 
                     <searchpanel>

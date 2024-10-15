@@ -13,7 +13,7 @@
             <t t-if="page_name == 'gp_ccmcship_list'">
                
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/ccmcbatch">CCMC Batch</a>
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
 
                   <li class="breadcrumb-item">
@@ -39,14 +39,17 @@
                 </li>
             </t>
 
-             <!-- <t t-if="page_name == 'ccmcship_edit'">
+             <t t-if="page_name == 'ccmcship_edit'">
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/ccmc_ship_visits">CCMC Ship Visits</a>
+                    <a t-attf-href="/my/ccmcbatch">CCMC Batches</a>
                 </li>
                 <li class="breadcrumb-item">
-                   CCMC Ship Visit Edit
+                    <a t-attf-href="/my/ccmc_ship_visits">Ship Visit</a>
                 </li>
-            </t> -->
+                <li class="breadcrumb-item">
+                     Edit
+                </li>
+            </t>
           
            
 

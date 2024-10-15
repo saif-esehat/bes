@@ -52,7 +52,7 @@
                             <strong>Venue : Public Education Society Central School</strong>
                         </th>
                         <th colspan="2" style="border: 1px solid black; padding:10px; text-align:left; vertical-align: middle;">
-                            <strong>Class No :  </strong>
+                            <strong>Class No :  <t t-esc="docs[0].classroom_no"/></strong>
                         </th>
                     </tr>
                  
@@ -83,7 +83,7 @@
                             <t t-set="index" t-value="index + 1" />
                             <tr>
                                 <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
-                                    <t t-esc="record_index" />
+                                    <span t-esc="index" />
                                 </td>
                                 <td colspan="1" style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-field="attendance.indos_no" />
