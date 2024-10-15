@@ -317,7 +317,7 @@ class GPShipVisitPortalController(http.Controller):
         for candidate in ship_visit.candidate_ids:
             request.env['ccmc.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
         
-        ship_visit.candidate_ids.unlink()
+        # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
 
@@ -340,7 +340,7 @@ class GPShipVisitPortalController(http.Controller):
         for candidate in ship_visit.candidate_ids:
             request.env['gp.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
         
-        ship_visit.candidate_ids.unlink()
+        # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
 
