@@ -136,7 +136,9 @@
                             <t t-if="o.candidate_applications[-1].application_id.written and o.candidate_applications[-1].application_id.oral">
                                 <div>
                                     <strong style="text-decoration: underline;">Date of Written Examination:- </strong><strong>
-                                        <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                        <t t-if="o.batch_id.written_exam_date">
+                                            <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                        </t>
                                     </strong>
                                 </div>
                             
@@ -150,7 +152,9 @@
                             <t t-if="o.candidate_applications[-1].application_id.written and not o.candidate_applications[-1].application_id.oral">
                                 <div>
                                     <strong style="text-decoration: underline;">Date of Written Examination:- </strong><strong>
-                                        <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                        <t t-if="o.batch_id.written_exam_date">
+                                            <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                        </t>
                                     </strong>
                                 </div>
                             
@@ -170,7 +174,9 @@
                                 </div>
                                 <div style="margin-top:12px;">
                                     <strong style="text-decoration: underline;color:#fff;">Date of Written Examination:- </strong><strong style="text-decoration: underline;color:#fff;">
-                                        <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                        <t t-if="o.batch_id.written_exam_date">
+                                            <t t-esc="o.batch_id.written_exam_date.strftime('%d %B %Y')"/>
+                                        </t>
                                     </strong>
                                 </div>
                             </t>
