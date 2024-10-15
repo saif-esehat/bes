@@ -11,7 +11,7 @@
         {
             "label": "Delete PYC",
             "type": "shell",
-            "command": "find . -name '*.pyc' | xargs -n 1 git rm --cached"
+            "command": "find . -name '*.pyc' -delete"
         }
     ]
 }
