@@ -111,6 +111,7 @@
                 <search>
                     <field name="name"/>
                     <field name="batch_id"/>
+                    <field name="roll_no"/>
                     
 
                     <searchpanel>

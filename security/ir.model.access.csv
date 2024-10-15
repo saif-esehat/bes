@@ -159,3 +159,4 @@ bes.iv_access_iv_oral_exam,access_iv_oral_exam,bes.model_iv_oral_exam,bes.group_
 bes.iv_access_candidate_applications_line,access_candidate_applications_line,bes.model_candidate_applications_line,bes.group_iv_admin,1,1,1,1
 bes.access_gp_batches_ship_visit,access_gp_batches_ship_visit,bes.model_gp_batches_ship_visit,base.group_user,1,1,1,1
 bes.access_ccmc_batches_ship_visit,access_ccmc_batches_ship_visit,bes.model_ccmc_batches_ship_visit,base.group_user,1,1,1,1
+bes.iv_access_iv_attendance_wizard,access_iv_attendance_wizard,bes.model_iv_attendance_wizard,base.group_user,1,1,1,1

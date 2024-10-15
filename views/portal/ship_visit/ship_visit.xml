@@ -5,6 +5,41 @@
 
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
 
+            <t t-if="page_name == 'gp_ship_list'">
+               
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+
+                  <li class="breadcrumb-item">
+                    Ship Visit
+                </li>
+            </t>
+
+            <!-- <t t-if="page_name == 'gp_ship_list'">
+               
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ship_visits">GP Ship Visits</a>
+                </li>
+
+                  <li class="breadcrumb-item">
+                    Ship Visit
+                </li>
+            </t> -->
+
+            <t t-if="page_name == 'gpship_edit'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ship_visits/{{batch_id}}">Ship Visit</a>
+                </li>
+                <li class="breadcrumb-item">
+                  Edit
+                </li>
+            </t>
+
+
             <!-- <li t-if="page_name == 'ship_visits'" class="breadcrumb-item ">
              GP Batches
                 
