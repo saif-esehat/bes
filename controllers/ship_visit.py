@@ -387,7 +387,7 @@ class GPShipVisitPortalController(http.Controller):
     @http.route(['/my/ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
     def portal_gp_ship_visit_edit(self,ship_visit_id,**kw):
         visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
-        vals = {'visit': visit, 'page_name': 'gpship_edit'}
+        vals = {'visit': visit,'batch_id':visit.gp_ship_batch_id.id, 'page_name': 'gpship_edit'}
         if not visit.exists():
             return request.not_found()
         return request.render('bes.portal_gp_ship_visit_edit', vals)
