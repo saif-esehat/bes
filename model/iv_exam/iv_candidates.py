@@ -254,6 +254,8 @@ class IVAttendanceWizard(models.TransientModel):
 
         if 'active_ids' in context:
             candidates = self.env['iv.candidates'].browse(context['active_ids'])
+            # import wdb; wdb.set_trace(); 
+
             for candidate in candidates:
                 # Get the last candidate application
                 last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
@@ -273,22 +275,24 @@ class IVAttendanceWizard(models.TransientModel):
 
                         # Create record in IVAttendanceSheet when 'written' is True
                         self.env['iv.attendance.sheet'].create({
-                            'candidate_name': candidate.name,
+                            'candidate_name': candidate.id,
                             'roll_no': candidate.roll_no,
                             'grade_applied': candidate.grade_applied,
                             'dob': candidate.dob,
                             'indos_no': candidate.indos_no,
                             'classroom_no': classroom_no,  # Add classroom number
+                            'batch_id':candidate.batch_id.id
                         })
                     
-                    if application.oral:
+                    if application.oral and not application.written:
                         # Create record in IVOralAttendanceSheet when 'oral' is True (no classroom logic)
                         self.env['iv.oral.attendance.sheet'].create({
-                            'candidate_name': candidate.name,
+                            'candidate_name': candidate.id,
                             'roll_no': candidate.roll_no,
                             'grade_applied': candidate.grade_applied,
                             'dob': candidate.dob,
                             'indos_no': candidate.indos_no,
+                            'batch_id':candidate.batch_id.id
                         })
 
 

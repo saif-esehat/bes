@@ -28,6 +28,7 @@
                             <field name="candidate_name" />
                             <field name="dob"/>
                             <field name="classroom_no"/>
+                            <field name="batch_id"/>
 
                             
                         </group>
@@ -50,9 +51,12 @@
           
                 <field name="indos_no" />
                 <field name="roll_no"/>
+                <field name="batch_id"/>
                 <field name="candidate_name" />
                 <field name="dob" />
                 <field name="grade_applied"/>
+                <field name="classroom_no"/>
+
                 
             </tree>
         </field>

@@ -14,7 +14,7 @@ class IVAttendanceSheet(models.Model):
 
     _rec_name = "candidate_name"
     
-    candidate_name = fields.Char(string="Candidate Name", store=True)
+    candidate_name = fields.Many2one('iv.candidates',string="Candidate Name", store=True)
     
     roll_no = fields.Char(string="Roll No.")
     grade_applied = fields.Selection([
@@ -27,6 +27,11 @@ class IVAttendanceSheet(models.Model):
         ], string='Grade')
 
     dob = fields.Date(string="Date of Birth")
+    batch_id = fields.Many2one(
+        'iv.batches', 
+        string="IV Batch", 
+       
+    )
     
     indos_no = fields.Char(string="INDOs No")
 
