@@ -564,6 +564,17 @@
                     var batch_id = button.getAttribute('data-id');
                 }
 
+                function selectAll(button){
+                    <!-- debugger -->
+                    const checkboxes = document.querySelectorAll('input[name="candidate_ids"]');
+                    const checkboxArray = Array.from(checkboxes);
+                    checkboxArray.forEach(function(checkbox){
+                            checkbox.checked = true;
+                        });
+
+
+                }
+
                  function openDeleteCandidateModal(button){
                     debugger
                     var ship_visit_id = button.getAttribute('ship_visit-id');
@@ -790,10 +801,43 @@
                                     width: 200px;      /* Smaller width */
                                 }
                             </style>
+                            <style>
+                                    .chip {
+                                        display: inline-block;
+                                        padding: 0 12px;
+                                        height: 32px;
+                                        font-size: 14px;
+                                        line-height: 32px;
+                                        border-radius: 16px;
+                                        background-color: #f1f1f1;
+                                        margin: 4px;
+                                    }
+
+                                    .chip img {
+                                        float: left;
+                                        margin: 0 8px 0 -12px;
+                                        height: 32px;
+                                        width: 32px;
+                                        border-radius: 50%;
+                                    }
+
+                                    .chip .closebtn {
+                                        padding-left: 8px;
+                                        color: #888;
+                                        font-weight: bold;
+                                        float: right;
+                                        font-size: 20px;
+                                        cursor: pointer;
+                                    }
+
+                                    .chip .closebtn:hover {
+                                        color: #000;
+                                    }
+                                </style>
 
                          
-                           <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog" aria-labelledby="candidateModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+                           <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog"  aria-labelledby="candidateModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" style="max-width: 800px;" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="candidateModalLabel">GP Candidates</h5>
@@ -813,12 +857,19 @@
                                                                     <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
                                                                         <t t-esc="candidate.name"/>
                                                                     </label>
+                                                                     <t t-foreach="candidate.ship_visits" t-as="visit">
+                                                                        <div class="chip">
+                                                                            <t t-esc="visit.ship_visit_id.ship_name1"/>-<t t-esc="visit.date_of_visits"/>
+                                                                            <!-- <span class="closebtn" onclick="this.parentElement.style.display='none'">&times;</span> -->
+                                                                        </div>
+                                                                    </t>
                                                                 </div>
                                                             </t>
                                                         </t>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
+                                                    <button type="button" class="btn" onclick="selectAll(this)"  >Select All</button>
                                                     <button type="button" class="btn btn-secondary" onclick="addCandidates(this)" data-dismiss="modal">Add</button>
                                                 </div>
                                             </div>
