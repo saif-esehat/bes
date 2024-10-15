@@ -7,6 +7,11 @@
             "label": "Restart LERM CESC",
             "type": "shell",
             "command": "docker restart 1a7a29a6d8f18838694482a621a12c77276a5777a069ac5bed8d5637dd1a9cc8"
+        },
+        {
+            "label": "Delete PYC",
+            "type": "shell",
+            "command": "find . -name '*.pyc' -delete"
         }
     ]
 }

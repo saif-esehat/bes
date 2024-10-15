@@ -90,6 +90,18 @@
             </table>
            
             </div>
+              <div style="page-break-inside: avoid; margin-top: 20px;">
+                <div class="footer" style="width: 100%; font-size: 12px;">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                     
+                         <tr>
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-top: 10px;">
+                                page <span class="page"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </t>
 </template>
 
@@ -162,6 +174,18 @@
                     </tbody>
             </table>
            
+            </div>
+              <div style="page-break-inside: avoid; margin-top: 20px;">
+                <div class="footer" style="width: 100%; font-size: 12px;">
+                    <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                     
+                         <tr>
+                            <td colspan="2" style="text-align: center; font-size: 14px; padding-top: 10px;">
+                                page <span class="page"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </t>
 </template>

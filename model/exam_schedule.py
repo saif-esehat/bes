@@ -5545,7 +5545,7 @@ class ExaminerAttendanceWizard(models.TransientModel):
 
     examiner_assignment = fields.Many2many('exam.type.oral.practical.examiners', string='Examiner')
     examiner = fields.Many2one('bes.examiner', string='Examiner')
-    online_exam_date = fields.Date("Exam Date")
+    online_exam_date = fields.Date("Exam Date",widget="date",date_format="%d-%b-%y")
     examiners = fields.Many2many('bes.examiner', string='Examiners',compute='_compute_examiners')
 
     @api.depends('examiner_assignment')
@@ -5555,7 +5555,6 @@ class ExaminerAttendanceWizard(models.TransientModel):
             rec.examiners = rec.examiner_assignment.examiner.ids
 
     def generate_attendance_sheet(self):
-        
         examiner_duty_id  = self.env.context['params']['id']
         
         online_assignments = self.env['exam.type.oral.practical.examiners'].sudo().search([('prac_oral_id','=',examiner_duty_id),('exam_type','=','online'),('examiner','=',self.examiner.id),('exam_date','=',self.online_exam_date)])
@@ -5569,7 +5568,9 @@ class ExaminerAttendanceWizard(models.TransientModel):
         
         # examiners = self.env['exam.type.oral.practical.examiners'].browse(self.examiner_assignment.ids)
         examiners = online_assignments
-
+        institute_name = examiners[0].institute_id.name
+        examiner_name = examiners[0].examiner.name
+        exam_date = self.online_exam_date
 
         # Initialize arrays to store filtered candidates
         gsk_candidates = []  
@@ -5596,15 +5597,18 @@ class ExaminerAttendanceWizard(models.TransientModel):
         # Render the report
         return self.env.ref('bes.action_attendance_sheet_online_gp_new').report_action(self,data={
             'docs': [self],  # Pass the current recordset to `docs`
+            'gsk_mek_candidates': gsk_mek_candidates,
             'gsk_candidates': gsk_candidates,
             'mek_candidates': mek_candidates,
-            'gsk_mek_candidates': gsk_mek_candidates,
+            'institute_name': institute_name,
+            'examiner_name': examiner_name,
+            'exam_date': exam_date,
             })
 
 
 class AttendanceSheetReport(models.AbstractModel):
     _name = 'report.bes.attendance_sheet_online_gp_new'
-    _description = 'Candidate Admit Card'
+    _description = 'GP Attendance Sheet'
     
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -5615,8 +5619,14 @@ class AttendanceSheetReport(models.AbstractModel):
         # import wdb;wdb.set_trace()
         gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
         mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
-        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
+        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_mek_candidates'])
+        
+        examiner_name = data['examiner_name']
+        # Example string date
+        exam_date_str = data['exam_date']
 
+        # Convert the string to a datetime object
+        exam_date = datetime.strptime(exam_date_str, '%Y-%m-%d')
 
 
         return {
@@ -5625,5 +5635,7 @@ class AttendanceSheetReport(models.AbstractModel):
                 'docs': data,
                 "gsk_candidates":gsk_candidates,
                 "mek_candidates":mek_candidates,
-                "gsk_mek_candidates":gsk_mek_candidates
+                "gsk_mek_candidates":gsk_mek_candidates,
+                "examiner_name":examiner_name,
+                "exam_date":exam_date,
                 }

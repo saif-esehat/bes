@@ -17,7 +17,7 @@ class GPShipVisit(models.Model):
     ship_name1 = fields.Char(string="Ship Name")
     port_name = fields.Char(string="Port Name")
     imo_no = fields.Char(string="IMO  No.")
-    date_of_visit = fields.Datetime(string="Date Of Visit")
+    date_of_visit = fields.Date(string="Date Of Visit")
     time_spent = fields.Float(string="Time Spent")
     gp_image = fields.Binary(string="Image", attachment=True)
     candidate_ids = fields.Many2many('gp.candidate', string="GP Candidates")

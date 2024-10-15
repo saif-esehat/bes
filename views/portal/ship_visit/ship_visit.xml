@@ -10,7 +10,7 @@
                 
             </li> -->
 
-            <t t-if="page_name == 'gp_ship_list'">
+            <!-- <t t-if="page_name == 'gp_ship_list'">
                
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/ship_visits">GP Ship Visits</a>
@@ -38,6 +38,15 @@
                    GP Ship Visit Form
                 </li>
             </t>
+
+             <t t-if="page_name == 'gpship_edit'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ship_visits">GP Ship Visits</a>
+                </li>
+                <li class="breadcrumb-item">
+                   GP Ship Visit Edit
+                </li>
+            </t> -->
           
            
 
@@ -89,10 +98,117 @@
    
 
 <template id="portal_gp_ship_visits_po">
+        <script>
+                function openShipVisitModal(button) {
+                    debugger
+                    var batch_id = button.getAttribute('data-id');
+                    document.getElementById('batch_id').value = batch_id;
+
+                }
+                function openDeleteShipVisitModal(button){
+                    debugger
+                    var ship_visit_id = button.getAttribute('ship_visit-id');
+                    document.getElementById("ship_visit_id").value = ship_visit_id
+
+                }
+       </script>
     <t t-call="portal.portal_layout">
         <div class="container">
-       
-         <t t-call="portal.portal_table">
+        <t t-call="portal.portal_table">
+
+                <div class="modal fade" id="shipVisitModal" tabindex="-1" role="dialog" aria-labelledby="shipVisitModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="shipVisitModalLabel">Ship Visit Form</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="shipVisitForm" action="/my/ship_visits/submit" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input  type="hidden" id="batch_id" name="batch_id" class="form-control"/>
+
+                            <div class="container mt-8">
+                                <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="ship_name1">Ship Name</label>
+                                    <input type="text" name="ship_name1" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="port_name">Port Name</label>
+                                    <input type="text" name="port_name" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="imo_no">IMO No.</label>
+                                    <input type="text" name="imo_no" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="date_of_visit">Date of Visit</label>
+                                    <input type="date" name="date_of_visit" class="form-control" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="time_spent">Time Spent (in hours)</label>
+                                    <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="gp_image">Ship Image</label>
+                                    <input type="file" name="gp_image" class="form-control" id="gp_image" />
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" form="shipVisitForm" class="btn btn-primary">Submit</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <form action="/my/gp_ship_visits/delete" method="POST">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="batch_id" name="batch_id" t-att-value="batch_id" />
+                                        <input type="hidden" id="ship_visit_id" name="ship_visit_id" />
+                                        <div class="modal-body">
+
+                                            Are you sure you want to delete this item? This action cannot be undone.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" t-attf-data-id="{{batch_id}}" onclick="openShipVisitModal(this)"  data-target="#shipVisitModal">
+                    Add Ship Details
+                </button>
                 <thead>
               
                       <tr>
@@ -101,29 +217,43 @@
                         <th>IMO No.</th>
                         <th>Date of Visit</th>
                         <th>Time Spent</th>
-                        <th>Course</th>
+                        <!-- <th>Course</th> -->
                         <th>No. of Candidates</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="ship_visits" t-as="visit">
+                    <t t-foreach="ship_visit" t-as="visit">
                         <tr>
                             <td>
-                           <a t-attf-href="/my/ship_visits/view?id={{ visit.id }}" t-if="page_name == 'gp_ship_list'" class="fa">
                                 <t t-esc="visit.ship_name1"/>
-                            </a>
                             </td>
                             <td><t t-esc="visit.port_name"/></td>
                             <td><t t-esc="visit.imo_no"/></td>
-                            <td><t t-esc="visit.date_of_visit.strftime('%Y-%m-%d %H:%M') if visit.date_of_visit else ''"/></td>
-                          <td><t t-esc="visit.time_spent"/></td>
-                            <td><t t-esc="visit.course_gp"/></td> 
-                            <td><t t-esc="visit.no_of_candidate"/></td> 
+                            <td><t t-esc="visit.date_of_visit"/></td>
+                            <td><t t-esc="visit.time_spent"/></td>
+                            <!-- <td><t t-esc="visit.course_gp"/></td> 
+                            <td><t t-esc="visit.no_of_candidate"/></td>  -->
+                             <td style="max-width: 250px; white-space: normal;">
+                                <span><t t-esc="len(visit.candidate_ids)"/> </span>
+                            </td>
+                             <td style="max-width: 250px; white-space: normal;">
+                                <a  t-attf-href="/my/ship_visits/edit/{{visit.id}}">
+                                    View
+                                </a>
+                            </td>
+                            <td style="max-width: 250px; white-space: normal;">
+                                <button type="button" class="btn btn-danger" t-attf-ship_visit-id="{{visit.id}}"  onclick="openDeleteShipVisitModal(this)" data-toggle="modal" data-target="#deleteModal" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                    </svg>
+                                </button>
+                            </td>
                         </tr>
                     </t>
                 </tbody>
             </t>
-            <a style="margin-top: 20px; margin-bottom: 20px;"  class="btn btn-primary" t-att-href="'/my/ship_visits/create'">Create New Ship Visit</a>
+            <!-- <a style="margin-top: 20px; margin-bottom: 20px;"  class="btn btn-primary" t-att-href="'/my/ship_visits/create'">Create New Ship Visit</a> -->
         </div>
     </t>
 </template>
@@ -132,6 +262,7 @@
 
 
  <template id="portal_gp_ship_visit_create" name="Create GP Ship Visit">
+    
     <t t-call="portal.portal_layout">
         <div class="container">
            
@@ -139,7 +270,7 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <!-- <input type="hidden" name="batch_id" value="gp_ship_batch_id" /> -->
                 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="ship_name1">Ship Name</label>
                     <input type="text" name="ship_name1" class="form-control" required="required"/>
                 </div>
@@ -172,11 +303,230 @@
                 <div class="form-group">
                     <label for="no_of_candidate">Number of Candidates</label>
                     <input type="number" name="no_of_candidate" class="form-control" min="0"/>
+                </div> -->
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="row">
+                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ship_name1">Ship Name</label>
+                                <input type="text" name="ship_name1" class="form-control" required="required"/>
+                            </div>
+                        </div>
+
+                         <div class="col-md-6">
+                             <div class="form-group">
+                                <label for="port_name">Port Name</label>
+                                <input type="text" name="port_name" class="form-control" required="required"/>
+                            </div>
+                        </div>
+
+                         <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="imo_no">IMO No.</label>
+                                <input type="text" name="imo_no" class="form-control" required="required"/>
+                            </div>
+                        </div>
+
+                         <div class="col-md-6">
+                            <div class="form-group">
+                            <label for="date_of_visit">Date of Visit</label>
+                            <input type="date" name="date_of_visit" class="form-control" required="required"/>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                           <div class="form-group">
+                                <label for="time_spent">Time Spent (in hours)</label>
+                                <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                           <div class="form-group">
+                                <label for="gp_image">Ship Image</label>
+                                <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+                            </div>
+                        </div>
+
+                         <!-- <div class="col-md-6">
+                         <div class="form-group">
+                                <label for="course_gp">Course</label>
+                                <input type="text" name="course_gp" class="form-control"/>
+                            </div>
+                        </div> -->
+
+
+                        </div>
+                    </div>
                 </div>
+                  <div class="form-group">
+                    <label for="candidate_ids">GP Candidates</label>
+                    <button type="button" class="btn btn-info custom-btn" data-toggle="modal" data-target="#candidateModal">
+                        Add Candidates
+                    </button>
+                </div>
+                <style>
+                    .custom-btn {
+                        margin-left: 30px; /* Adjust for gap */
+                        width: 200px;      /* Smaller width */
+                    }
+                </style>
+
+            <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog" aria-labelledby="candidateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="candidateModalLabel">GP Candidates</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="checkboxes">
+                                    <!-- <t t-foreach="request.env['ccmc.candidate'].sudo().search([])" t-as="candidate">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
+                                            <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
+                                                <t t-esc="candidate.name"/>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
+                                            <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
+                                                <t t-esc="candidate.indos_no"/>
+                                            </label>
+                                        </div>
+                                    </t> -->
+                                  
+                                    <t t-foreach="request.env['gp.candidate'].sudo().search([])" t-as="candidate">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" 
+                                                t-att-value="candidate.id" 
+                                                name="candidate_ids" 
+                                                id="candidate_id_{{ candidate.id }}" 
+                                                t-att-data-indos-no="candidate.indos_no" /> 
+                                            <label class="form-check-label" 
+                                                t-att-for="'candidate_id_' + str(candidate.id)">
+                                                <t t-esc="candidate.name"/>
+                                            </label>
+                                        </div>
+                                    </t>
+
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          
               
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
+        <div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="container">
+                <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                            <i class="fas fa-chart-pie fa-fw me-2"></i>GP Ship Visits Candidates
+                        </a>
+                    </li>
+                </ul>
+                <!-- <t t-call="portal.portal_table">
+                        <thead>
+                            <tr>
+                                <th>INDOS No</th>
+                                <th>Candidate Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="selected-candidates">
+                        </tbody>
+                </t> -->
+                <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>INDOS No</th>
+                            <th>Candidate Name</th>
+                            <th>Action</th>  <!-- New column for the delete button -->
+                        </tr>
+                    </thead>
+                    <tbody id="selected-candidates">
+                        <!-- Selected candidates will be appended here -->
+                        <t t-foreach="candidates" t-as="candidate">
+                            <tr id="candidate_row_{{ candidate.id }}">
+                                <td><t t-esc="candidate.indos_no"/></td>
+                                <td><t t-esc="candidate.name"/></td>
+                                <td>
+                                    <!-- Delete button with trash icon -->
+                                    <button type="button" class="btn btn-danger" t-att-data-id="candidate.id" onclick="deleteCandidate(this)">
+                                        <i class="fa fa-trash"></i> <!-- Font Awesome trash icon -->
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+              
+           
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addButton = document.querySelector(".modal-footer .btn-secondary");
+        const selectedCandidatesList = document.getElementById("selected-candidates");
+
+        addButton.addEventListener("click", function () {
+            // Clear the table body first
+            selectedCandidatesList.innerHTML = '';
+
+            // Get all checked checkboxes in the modal
+            const checkboxes = document.querySelectorAll("#candidateModal .form-check-input:checked");
+            checkboxes.forEach(checkbox => {
+                const candidateIndosNo = checkbox.getAttribute("data-indos-no"); // Get the indos_no from data attribute
+                const candidateName = checkbox.nextElementSibling.textContent;  // Get the label text
+                const candidateId = checkbox.getAttribute("id").split('_')[2];  // Extract candidate ID from the checkbox's id attribute
+
+                if (candidateId) {
+                    // Create a new table row
+                    const newRow = document.createElement("tr");
+                    newRow.setAttribute("id", "candidate_row_" + candidateId); // Set an ID for the row
+                    newRow.innerHTML = `
+                        <td>${candidateIndosNo}</td>
+                        <td>${candidateName}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" data-id="${candidateId}" onclick="deleteCandidate(this)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+
+                    // Append the new row to the table body
+                    selectedCandidatesList.appendChild(newRow);
+                } else {
+                    console.error("Candidate ID not found for checkbox:", checkbox);
+                }
+            });
+        });
+    });
+
+    // Function to delete a candidate row
+    function deleteCandidate(button) {
+        const candidateId = button.getAttribute('data-id');  // Get candidate ID from data attribute
+        const row = document.getElementById('candidate_row_' + candidateId);  // Find the row element by ID
+        if (row) {
+            row.remove();  // Remove the row from the table
+        }
+    }
+</script>
     </t>
 </template>
 
@@ -208,63 +558,327 @@
 
 
     <template id="portal_gp_ship_visit_edit" name="Edit Ship Visit">
+        <script>
+                function openAddCandidateModal(button){
+                    debugger
+                    var batch_id = button.getAttribute('data-id');
+                }
+
+                function selectAll(button){
+                    <!-- debugger -->
+                    const checkboxes = document.querySelectorAll('input[name="candidate_ids"]');
+                    const checkboxArray = Array.from(checkboxes);
+                    checkboxArray.forEach(function(checkbox){
+                            checkbox.checked = true;
+                        });
+
+
+                }
+
+                 function openDeleteCandidateModal(button){
+                    debugger
+                    var ship_visit_id = button.getAttribute('ship_visit-id');
+                    var candidate_id = button.getAttribute('candidate-id');
+                    document.getElementById("candidate_id").value = candidate_id
+                    document.getElementById("ship_visit_id").value = ship_visit_id
+
+                }
+
+
+                function addCandidates(button) {
+
+
+                        var ship_visit_id = document.getElementById("ship_visit_id").value
+                    
+                        const checkboxes = document.querySelectorAll('input[name="candidate_ids"]');
+                        const selectedValues = [];
+
+                        checkboxes.forEach(function(checkbox) {
+                            if(checkbox.checked){
+                                selectedValues.push(checkbox.value);
+                            }
+                        });
+
+                        var data ={
+                            "ship_vist_id" : ship_visit_id,
+                            "candidate_ids" : selectedValues
+                        }
+                        
+                        debugger
+                        $.ajax({
+                                type: "POST",
+                                url: '/my/ship_visit/addcandidate',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    <!-- debugger -->
+                                    console.log("POST request successful:", response);
+                                    window.location.reload();
+                                    // if response["status"]
+                                    // Handle success response
+                                },
+                                    error: function (xhr, status, error) {
+                                        debugger
+                                        console.error("POST request failed:", error);
+                                        
+                                        // Handle error
+                                    }
+                                });
+
+                        
+                    
+                }
+
+            
+        
+       </script>
         <t t-call="portal.portal_layout">
             <div class="container mt-4">
                 <div class="row">
                     <div class="col-12">
                         <h3>Edit Ship Visit</h3>
-                        <form method="POST" action="/my/ship_visits/update">
+                        <!-- <form method="POST" > -->
                             <!-- CSRF token -->
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="id" t-att-value="visit.id"/>
 
-                            <!-- Ship Name -->
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="ship_name1">Ship Name:</label>
                                 <input type="text" id="ship_name1" name="ship_name1" class="form-control" t-att-value="visit.ship_name1"/>
                             </div>
 
-                            <!-- Port Name -->
                             <div class="form-group">
                                 <label for="port_name">Port Name:</label>
                                 <input type="text" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
                             </div>
 
-                            <!-- IMO Number -->
                             <div class="form-group">
                                 <label for="imo_no">IMO No.:</label>
                                 <input type="text" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
                             </div>
 
-                            <!-- Date of Visit -->
                             <div class="form-group">
                                 <label for="date_of_visit">Date of Visit:</label>
                                 <input type="datetime-local" id="date_of_visit" name="date_of_visit" class="form-control"
                                     t-att-value="visit.date_of_visit.strftime('%Y-%m-%dT%H:%M') if visit.date_of_visit else ''"/>
                             </div>
 
-                            <!-- Time Spent -->
                             <div class="form-group">
                                 <label for="time_spent">Time Spent:</label>
                                 <input type="text" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
                             </div>
 
-                            <!-- Course GP -->
                             <div class="form-group">
                                 <label for="course_gp">Course:</label>
                                 <input type="text" id="course_gp" name="course_gp" class="form-control" t-att-value="visit.course_gp"/>
                             </div>
 
-                            <!-- No. of Candidates -->
                             <div class="form-group">
                                 <label for="no_of_candidate">No. of Candidates:</label>
                                 <input type="number" id="no_of_candidate" name="no_of_candidate" class="form-control" t-att-value="visit.no_of_candidate"/>
-                            </div>
+                            </div> -->
+                            <div class="modal-body">
+                                    <div class="container mt-5">
+                                        <div class="row">
+                                
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                               <label for="ship_name1">Ship Name:</label>
+                                               <input type="text" readonly="1" id="ship_name1" name="ship_name1" class="form-control" t-att-value="visit.ship_name1"/>
+                                            </div>
+                                        </div>
 
-                            <!-- Submit Button -->
-                            <button type="submit" class="btn btn-primary">Update</button>
-                            <a class="btn btn-secondary" href="/my/ship_visits">Cancel</a>
-                        </form>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                               <label for="port_name">Port Name:</label>
+                                               <input type="text" readonly="1" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                 <label for="imo_no">IMO No.:</label>
+                                                 <input type="text" readonly="1" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                           <label for="date_of_visit">Date of Visit:</label>
+                                            <input type="date" readonly="1" id="date_of_visit" name="date_of_visit" class="form-control"
+                                                t-att-value="visit.date_of_visit"/>
+                                        </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                        <div class="form-group">
+                                           <label for="time_spent">Time Spent:</label>
+                                          <input type="text"  readonly="1" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-md-6">
+                                        <div class="form-group">
+                                                <label for="gp_image">Ship Image</label>
+                                                <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+                                            </div>
+                                        </div> -->
+
+                                        <!-- <div class="col-md-6">
+                                        <div class="form-group">
+                                              <label for="course_gp">Course:</label>
+                                               <input type="text" id="course_gp" name="course_gp" class="form-control" t-att-value="visit.course_gp"/>
+                                            </div>
+                                        </div> -->
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                <label for="candidate_ids">GP Candidates</label>
+                                <button type="button" class="btn btn-info custom-btn" data-toggle="modal" t-attf-data-id="{{visit.id}}"  data-target="#candidateModal">
+                                    Add Candidates
+                                </button>
+
+                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <form action="/my/gp_ship_visits/deletecandidate" method="POST">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <input type="hidden" id="candidate_id" name="candidate_id" />
+                                        <input type="hidden" id="ship_visit_id" name="ship_visit_id" t-att-value="visit.id" />
+                                        <div class="modal-body">
+
+                                            Are you sure you want to delete this item? This action cannot be undone.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    </div>
+                                </div>
+                                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Candidate Name</th>
+                                            <th>Indos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <t t-foreach="visit.candidate_ids" t-as="candidate">
+                                            <tr>
+                                                <td>
+                                                     <t t-out="candidate.name" />
+                                                </td>
+                                                <td>
+                                                     <t t-out="candidate.indos_no" />
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" t-attf-ship_visit-id="{{visit.id}}" t-attf-candidate-id="{{candidate.id}}" onclick="openDeleteCandidateModal(this)" data-toggle="modal" data-target="#deleteModal" >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
+                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                         </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <style>
+                                .custom-btn {
+                                    margin-left: 30px; /* Adjust for gap */
+                                    width: 200px;      /* Smaller width */
+                                }
+                            </style>
+                            <style>
+                                    .chip {
+                                        display: inline-block;
+                                        padding: 0 12px;
+                                        height: 32px;
+                                        font-size: 14px;
+                                        line-height: 32px;
+                                        border-radius: 16px;
+                                        background-color: #f1f1f1;
+                                        margin: 4px;
+                                    }
+
+                                    .chip img {
+                                        float: left;
+                                        margin: 0 8px 0 -12px;
+                                        height: 32px;
+                                        width: 32px;
+                                        border-radius: 50%;
+                                    }
+
+                                    .chip .closebtn {
+                                        padding-left: 8px;
+                                        color: #888;
+                                        font-weight: bold;
+                                        float: right;
+                                        font-size: 20px;
+                                        cursor: pointer;
+                                    }
+
+                                    .chip .closebtn:hover {
+                                        color: #000;
+                                    }
+                                </style>
+
+                         
+                           <div class="modal fade" id="candidateModal" tabindex="-1" role="dialog"  aria-labelledby="candidateModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" style="max-width: 800px;" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="candidateModalLabel">GP Candidates</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="hidden" t-att-value="visit.id" name="ship_visit_id"  id="ship_visit_id"  />
+
+                                                    <div class="checkboxes">
+                                                        <t t-set="excluded_candidate_ids" t-value="visit.candidate_ids.ids"/> 
+                                                        <t t-foreach="request.env['gp.candidate'].sudo().search([('institute_batch_id','=',visit.gp_ship_batch_id.id)])" t-as="candidate">
+                                                            <t t-if="candidate.id not in excluded_candidate_ids"> 
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input" t-att-value="candidate.id" name="candidate_ids" id="candidate_id_{{ candidate.id }}" />
+                                                                    <label class="form-check-label" t-att-for="'candidate_id_' + str(candidate.id)">
+                                                                        <t t-esc="candidate.name"/>
+                                                                    </label>
+                                                                     <t t-foreach="candidate.ship_visits" t-as="visit">
+                                                                        <div class="chip">
+                                                                            <t t-esc="visit.ship_visit_id.ship_name1"/>-<t t-esc="visit.date_of_visits"/>
+                                                                            <!-- <span class="closebtn" onclick="this.parentElement.style.display='none'">&times;</span> -->
+                                                                        </div>
+                                                                    </t>
+                                                                </div>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn" onclick="selectAll(this)"  >Select All</button>
+                                                    <button type="button" class="btn btn-secondary" onclick="addCandidates(this)" data-dismiss="modal">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            <!-- <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-secondary" href="/my/ship_visits">Cancel</a> -->
+                        <!-- </form> -->
                     </div>
                 </div>
             </div>
@@ -296,19 +910,93 @@
                     <th>Time Spent (in hours)</th>
                     <td><t t-esc="ship_visit.time_spent"/></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <th>Course</th>
                     <td><t t-esc="ship_visit.course_gp"/></td>
                 </tr>
                 <tr>
                     <th>No. of Candidates</th>
                     <td><t t-esc="ship_visit.no_of_candidate"/></td>
-                </tr>
+                </tr> -->
             </table>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="container">
+                            <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="ex-with-icons-tab-1" data-toggle="tab" href="#ex-with-icons-tabs-1" role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true">
+                                        <i class="fas fa-chart-pie fa-fw me-2"></i>CCMC Ship Visits Candidates
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <t t-call="portal.portal_table">
+                                <thead>
+                                    <tr>
+                                        <th>INDOS No</th>
+                                        <th>Candidate Name</th>
+                                   
+                                    </tr>
+                                </thead>
+                                <tbody id="selected-candidates">
+                                    <!-- Selected candidates will be appended here -->
+                                    <t t-foreach="candidates" t-as="candidate">
+                                        <tr id="candidate_row_{{ candidate.id }}">
+                                            <td><t t-esc="candidate.indos_no"/></td>
+                                            <td><t t-esc="candidate.name"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </t>
+                                                    
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
             <a class="btn btn-warning" t-att-href="'/my/ship_visits/edit?id=' + str(ship_visit.id)">Edit</a>
              <a class="btn btn-danger" t-att-href="'/my/ship_visits/delete?id=' + str(ship_visit.id)">Delete</a>
             <a class="btn btn-secondary" href="javascript:history.back()">Back</a>
         </div>
+        <script>
+ document.addEventListener("DOMContentLoaded", function () {
+    const addButton = document.querySelector(".modal-footer .btn-secondary");
+    const selectedCandidatesList = document.getElementById("selected-candidates");
+
+    addButton.addEventListener("click", function () {
+        // Clear the table body first
+        selectedCandidatesList.innerHTML = '';
+
+        // Get all checked checkboxes in the modal
+        const checkboxes = document.querySelectorAll("#candidateModal .form-check-input:checked");
+        checkboxes.forEach(checkbox => {
+            const candidateIndosNo = checkbox.getAttribute("data-indos-no"); // Get indos_no from data attribute
+            const candidateName = checkbox.nextElementSibling.textContent;  // Get the label text
+            const candidateId = checkbox.getAttribute("id").split('_')[2];  // Extract candidate ID from checkbox ID
+
+            if (candidateId) {
+                // Create a new table row
+                const newRow = document.createElement("tr");
+                newRow.setAttribute("id", "candidate_row_" + candidateId); // Set an ID for the row
+                newRow.innerHTML = `
+                    <td>${candidateIndosNo}</td>
+                    <td>${candidateName}</td>
+                   
+                `;
+
+                // Append the new row to the table body
+                selectedCandidatesList.appendChild(newRow);
+            } else {
+                console.error("Candidate ID not found for checkbox:", checkbox);
+            }
+        });
+    });
+});
+
+
+</script>
+
     </t>
 </template>
 

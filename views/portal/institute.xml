@@ -312,7 +312,7 @@
                         <th>Batch Name</th>
                         <th>Faculties</th>
                         <th>Report</th>
-                         <th>GP Ship Visits</th>
+                        <th>Ship Visits</th>
                         <th>No. of Candidate</th>
                         <th>Batch Capacity</th>
                         <!-- <th>DGS Document</th> -->
@@ -348,11 +348,10 @@
                          
                         <td class="text-left">
                             <a t-attf-href="/my/ship_visits/{{batch.id}}" class="fa">
-                                GP Ship Visit
+                                Ship Visit
                             </a>
                         </td>
-                            
-                           
+                       
 
                             <td class="text-center">
                                 <t t-out="batch.candidate_count" />
@@ -2503,17 +2502,7 @@
                                             method: "GET",
                                             dataType: "json",
                                             success: function(data) {
-                                            // Handle the successful response
-                                            var selectField = $("#state_id");
-
-                                            // Clear existing options
-                                            selectField.empty();
-
-                                            // Append new options based on the response
-                                            $.each(data, function(index, state) {
-                                                selectField.append(`<option value="${state.id}">${state.name}</option>`);
-                                            });
-
+                                            
                                             },
                                             error: function(xhr, status, error) {
                                             // Handle errors
