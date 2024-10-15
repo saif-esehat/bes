@@ -48,7 +48,8 @@ class IVAttendanceSheet(models.Model):
         # Logic to handle the printing of bulk allotment data
         return self.env.ref('bes.reports_iv_written_attendance').report_action(self)
 
-    
+    def print_report(self):
+        return self.env.ref('bes.action_report_iv_attendance_sheet').report_action(self)
 
 
 
