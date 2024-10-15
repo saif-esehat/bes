@@ -78,15 +78,9 @@
                         </tr>
                     </thead>
                     <tbody>
-<<<<<<< HEAD
-                        <t t-set="record_index" t-value="1" />
-                        <!-- Display records for the current page based on start and end indices -->
-                        <t t-foreach="docs[start_index:end_index]" t-as="attendance">
-=======
                         <t t-set="index" t-value="0" />
                         <t t-foreach="docs" t-as="attendance">
                             <t t-set="index" t-value="index + 1" />
->>>>>>> 11a8a8c3eeb6049b06bc34a542983dca753f81d7
                             <tr>
                                 <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
                                     <t t-esc="record_index" />
