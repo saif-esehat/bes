@@ -160,6 +160,9 @@ class GPShipVisitPortalController(http.Controller):
             date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            bridge = post.get("bridge")
+            eng_room = post.get("eng_room")
+            cargo_area = post.get("cargo_area")
             candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
 
             # Process image file
@@ -186,6 +189,9 @@ class GPShipVisitPortalController(http.Controller):
                     "no_of_candidate": no_of_candidate,
                     "gp_image": image_base64 if gp_image else False,
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+                    "bridge": bridge,
+                    "eng_room": eng_room,
+                    "cargo_area": cargo_area,
                 }
 
                
@@ -219,6 +225,9 @@ class GPShipVisitPortalController(http.Controller):
             date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            bridge = post.get("bridge")
+            eng_room = post.get("eng_room")
+            cargo_area = post.get("cargo_area")
             candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
 
             # Process image file
@@ -245,6 +254,9 @@ class GPShipVisitPortalController(http.Controller):
                     "no_of_candidate": no_of_candidate,
                     "gp_image": image_base64 if gp_image else False,
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+                    "bridge": bridge,
+                    "eng_room": eng_room,
+                    "cargo_area": cargo_area,
                 }
 
                 # Create the record in the model

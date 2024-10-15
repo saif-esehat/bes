@@ -308,3 +308,10 @@ class InheritedSurveyQuestions(models.Model):
     _inherit = "survey.question"
     
     q_no = fields.Char("Q.No")
+    q_score = fields.Char("Q.Score",compute="_compute_score")
+
+    def _compute_score(self):
+        for record in self.suggested_answer_ids:
+            import wdb;wdb.set_trace()
+            if record.score > 0:
+                record.q_score = record.score

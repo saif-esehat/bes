@@ -252,15 +252,8 @@
                 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="ship_name2">Ship Name</label>
+                                <label for="ship_name2">Name of  the Ship Visited/ Ship in Campus</label>
                                 <input type="text" name="ship_name2" class="form-control" required="required"/>
-                            </div>
-                        </div>
-
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                <label for="port_name">Port Name</label>
-                                <input type="text" name="port_name" class="form-control" required="required"/>
                             </div>
                         </div>
 
@@ -272,16 +265,47 @@
                         </div>
 
                          <div class="col-md-6">
-                            <div class="form-group">
-                            <label for="date_of_visit">Date of Visit</label>
-                            <input type="datetime-local" name="date_of_visit" class="form-control" required="required"/>
+                             <div class="form-group">
+                                <label for="port_name">Name of the Port Visited/ Place of SIC</label>
+                                <input type="text" name="port_name" class="form-control" required="required"/>
+                            </div>
                         </div>
+
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="date_of_visit">Date of Visit</label>
+                                <input type="datetime-local" name="date_of_visit" class="form-control" required="required"/>
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                            <div class="form-group">
-                                <label for="time_spent">Time Spent (in hours)</label>
+                                <label for="time_spent">Time Spent on Ship/ SIC (in hours)</label>
                                 <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                        <h3>Places visited on Ships/ SIC(Put tick mark)</h3>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="bridge" name="bridge"/>
+                                    <label class="form-check-label" for="bridge">Bridge</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room"/>
+                                    <label class="form-check-label" for="eng_room">Eng. Room</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area"/>
+                                    <label class="form-check-label" for="cargo_area">Cargo Area</label>
+                                </div>
                             </div>
                         </div>
 
