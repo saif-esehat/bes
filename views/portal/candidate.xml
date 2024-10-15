@@ -353,7 +353,7 @@
                     <tr>
                         <th class="text-center">Exam ID</th>
                         <th class="text-center">Candidate Name</th>
-                        <th t-if="!hold_admit_card" class="text-center">Admit Card</th>
+                        <th t-if="not hold_admit_card" class="text-center">Admit Card</th>
                         <th t-if="show_certificate" class="text-center">Certificate</th>
 
                     </tr>
