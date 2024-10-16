@@ -361,6 +361,8 @@ class GPShipVisitPortalController(http.Controller):
 
         ccmc_ship_visit = request.env['ccmc.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
         ccmc_ship_visit.unlink()
+        request.env['ccmc.candidate'].sudo().browse(candidate_id)._check_ship_visit_criteria()
+
         # vals = {'visit': visit, 'page_name': 'gpship_edit'}
         # if not visit.exists():
         #     return request.not_found()
@@ -425,6 +427,8 @@ class GPShipVisitPortalController(http.Controller):
                 "date_of_visits":ship_visit.date_of_visit,
                 "time_spent_on_ship":ship_visit.time_spent
             })
+        
+        request.env['ccmc.candidate'].sudo().browse(candidate_ids)._check_ship_visit_criteria()
             
         
 
