@@ -328,6 +328,7 @@ class GPShipVisitPortalController(http.Controller):
         
         for candidate in ship_visit.candidate_ids:
             request.env['ccmc.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
+            request.env['ccmc.candidate'].sudo().search([('id','=',candidate.id)])._check_ship_visit_criteria()
         
         # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
@@ -351,7 +352,7 @@ class GPShipVisitPortalController(http.Controller):
         
         for candidate in ship_visit.candidate_ids:
             request.env['gp.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
-        
+            request.env['gp.candidate'].sudo().search([('id','=',candidate.id)])._check_ship_visit_criteria()
         # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
@@ -373,6 +374,8 @@ class GPShipVisitPortalController(http.Controller):
 
         ccmc_ship_visit = request.env['ccmc.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
         ccmc_ship_visit.unlink()
+        request.env['ccmc.candidate'].sudo().browse(candidate_id)._check_ship_visit_criteria()
+
         # vals = {'visit': visit, 'page_name': 'gpship_edit'}
         # if not visit.exists():
         #     return request.not_found()
@@ -390,6 +393,8 @@ class GPShipVisitPortalController(http.Controller):
 
         gp_ship_visit = request.env['gp.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
         gp_ship_visit.unlink()
+        request.env['gp.candidate'].sudo().browse(candidate_id)._check_ship_visit_criteria()
+
         # vals = {'visit': visit, 'page_name': 'gpship_edit'}
         # if not visit.exists():
         #     return request.not_found()
@@ -437,6 +442,8 @@ class GPShipVisitPortalController(http.Controller):
                 "date_of_visits":ship_visit.date_of_visit,
                 "time_spent_on_ship":ship_visit.time_spent
             })
+        
+        request.env['ccmc.candidate'].sudo().browse(candidate_ids)._check_ship_visit_criteria()
             
         
 
