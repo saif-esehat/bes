@@ -7,6 +7,9 @@
             <field name="model">examination.report</field>
             <field name="arch" type="xml">
                 <tree string="Examination Reports">
+                    <header>
+                        <!-- <button name="generate_comparative_report" type="object" string="Comparative Report" class="oe_highlight" /> -->
+                    </header>
                     <field name="examination_batch"/>
                     <field name="course" optional="show"/>                  
                     <field name="exam_type" optional="show"/>   

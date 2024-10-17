@@ -934,7 +934,7 @@ class CCMCCandidate(models.Model):
                 record.stcw_criteria = 'pending'
         
     
-    @api.constrains('ship_visits')
+    @api.depends('ship_visits')
     def _check_ship_visit_criteria(self):
         for record in self:
             if len(record.ship_visits) > 0:

@@ -248,8 +248,14 @@ class IVAttendanceWizard(models.TransientModel):
 
     def generate_attendance_records(self):
         context = self.env.context
+        class_capacity = self.class_capacity  # Get the class capacity from the wizard
+        classroom_no = 1  # Start with the first classroom
+        candidate_count = 0  # Counter to track candidates for each classroom
+
         if 'active_ids' in context:
             candidates = self.env['iv.candidates'].browse(context['active_ids'])
+            # import wdb; wdb.set_trace(); 
+
             for candidate in candidates:
                 # Get the last candidate application
                 last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
@@ -258,41 +264,35 @@ class IVAttendanceWizard(models.TransientModel):
                     application = last_application_line.application_id
 
                     # Check the boolean fields 'written' and 'oral'
-                    if application.written and not application.oral:
-                        # Create record in IVAttendanceSheet when only 'written' is True
+                    if application.written:
+                        # Increment the candidate count for attendance sheet logic
+                        candidate_count += 1
+
+                        # Recalculate the classroom number based on the class capacity
+                        if candidate_count > class_capacity:
+                            classroom_no += 1
+                            candidate_count = 1  # Reset the counter for the next classroom
+
+                        # Create record in IVAttendanceSheet when 'written' is True
                         self.env['iv.attendance.sheet'].create({
-                            'candidate_name': candidate.name,
+                            'candidate_name': candidate.id,
                             'roll_no': candidate.roll_no,
                             'grade_applied': candidate.grade_applied,
                             'dob': candidate.dob,
                             'indos_no': candidate.indos_no,
+                            'classroom_no': classroom_no,  # Add classroom number
+                            'batch_id':candidate.batch_id.id
                         })
                     
-                    elif application.oral and not application.written:
-                        # Create record in IVOralAttendanceSheet when only 'oral' is True
+                    if application.oral and not application.written:
+                        # Create record in IVOralAttendanceSheet when 'oral' is True (no classroom logic)
                         self.env['iv.oral.attendance.sheet'].create({
-                            'candidate_name': candidate.name,
+                            'candidate_name': candidate.id,
                             'roll_no': candidate.roll_no,
                             'grade_applied': candidate.grade_applied,
                             'dob': candidate.dob,
                             'indos_no': candidate.indos_no,
-                        })
-
-                    elif application.written and application.oral:
-                        # Create record in both IVAttendanceSheet and IVOralAttendanceSheet when both are True
-                        self.env['iv.attendance.sheet'].create({
-                            'candidate_name': candidate.name,
-                            'roll_no': candidate.roll_no,
-                            'grade_applied': candidate.grade_applied,
-                            'dob': candidate.dob,
-                            'indos_no': candidate.indos_no,
-                        })
-                        self.env['iv.oral.attendance.sheet'].create({
-                            'candidate_name': candidate.name,
-                            'roll_no': candidate.roll_no,
-                            'grade_applied': candidate.grade_applied,
-                            'dob': candidate.dob,
-                            'indos_no': candidate.indos_no,
+                            'batch_id':candidate.batch_id.id
                         })
 
 
