@@ -77,7 +77,55 @@ class ExaminationReport(models.Model):
         self.summarised_report()
         self.attempt_wise_report()
         
+    def generate_comparative_report(self):
+        exam_batches = self.env.context.get("active_ids")
+        report_data = []
+
+        for record in self:
+            exam_sequence_no = self.get_ordinal(record.sequence_report)
+            batch_id = record.dgs_batch
+            cousre = record.course
+            exam_type = record.exam_type
+            import wdb; wdb.set_trace()
+
+            if cousre == 'gp' and exam_type == 'fresh':
+                fresh_appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
+                fresh_pass = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
+                
+                fresh_pass_percentage = (fresh_pass/fresh_appeared) * 100
+                repeater_appeared = 'Nil'
+                repeater_pass_percentage = 'Nil'
+            elif cousre == 'gp' and exam_type == 'repeater':
+                repeater_appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
+                repeater_pass = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
+                repeater_pass_percentage = (repeater_pass/repeater_appeared) * 100
+            
+            elif cousre == 'ccmc' and exam_type == 'fresh':
+                fresh_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
+                fresh_pass_percentage = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
+                fresh_pass_percentage = (fresh_pass/fresh_appeared) * 100
+                repeater_appeared = 'Nil'
+                repeater_pass_percentage = 'Nil'
+
+            elif cousre == 'ccmc' and exam_type == 'repeater':
+                repeater_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
+                repeater_pass_percentage = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
+                repeater_pass_percentage = (repeater_pass/repeater_appeared) * 100
+
+            # Append data for this batch
+            report_data.append({
+                'exam_sequence_no': exam_sequence_no,
+                'fresh_appeared': fresh_appeared,
+                'fresh_pass_percentage': fresh_pass_percentage,
+                'repeater_appeared': repeater_appeared,
+                'repeater_pass_percentage': repeater_pass_percentage
+            })
+
+        # return report_data
+        return self.env.ref('bes.report_comparative_action').report_action(self ,data=report_data)
     
+
+
     def ordinal(self,n):
         if 10 <= n % 100 <= 20:
             suffix = 'th'
@@ -1480,3 +1528,38 @@ class BarGraphReport(models.AbstractModel):
             # 'report_type': report_type,
             # 'course': course
         }
+
+
+class ComparativeReport(models.AbstractModel):
+    _name = 'report.bes.report_comparative'
+    _description = 'Comparative Report'
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        
+        # data['context']['active_id']
+
+        
+        # import wdb;wdb.set_trace()
+        gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
+        mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
+        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_mek_candidates'])
+        
+        examiner_name = data['examiner_name']
+        # Example string date
+        exam_date_str = data['exam_date']
+
+        # Convert the string to a datetime object
+        exam_date = datetime.strptime(exam_date_str, '%Y-%m-%d')
+
+
+        return {
+                'doc_ids': "",
+                'doc_model': 'gp.exam.schedule',
+                'docs': data,
+                "gsk_candidates":gsk_candidates,
+                "mek_candidates":mek_candidates,
+                "gsk_mek_candidates":gsk_mek_candidates,
+                "examiner_name":examiner_name,
+                "exam_date":exam_date,
+                }

@@ -142,6 +142,12 @@
                     <button name="done_exam" string="Done" type="object"  />
 
                 </xpath>
+                
+                <!-- Locate the existing question list and add q_score -->
+                <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
+                    <!-- Add the q_score field after the existing fields (modify the position as needed) -->
+                    <field name="q_score" string="Score"/>
+                </xpath>
             </field>
         </record>
 

@@ -312,6 +312,6 @@ class InheritedSurveyQuestions(models.Model):
 
     def _compute_score(self):
         for record in self.suggested_answer_ids:
-            import wdb;wdb.set_trace()
-            if record.score > 0:
-                record.q_score = record.score
+            # import wdb;wdb.set_trace()
+            if record.answer_score > 0:
+                self.q_score = record.answer_score
