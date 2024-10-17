@@ -498,7 +498,9 @@ class InstituteGPBatches(models.Model):
         'context': {
             # 'default_batches_id': self.id
             'default_gp_ship_batch_id': self.id,
-            'default_gp_or_ccmc_batch': 'gp'   
+            'default_gp_or_ccmc_batch': 'gp',
+            'default_dgs_batch': self.dgs_batch.id,
+            'default_institute_id': self.institute_id.id,   
             }
         } 
      
@@ -1037,8 +1039,10 @@ class InstituteCcmcBatches(models.Model):
             'view_mode': 'tree,form',
             'type': 'ir.actions.act_window',
             'context': {
-                'default_ccmc_ship_batch_ids': self.id,
+                'default_ccmc_ship_batch_ids':self.id ,
                 'default_ccmc_batch': 'ccmc',  # Ensure this is correctly passed as default
+                'default_dgs_batch': self.dgs_batch.id,
+                'default_institute_id': self.institute_id.id,
             }
         }
 
