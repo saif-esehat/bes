@@ -127,6 +127,29 @@
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
+
+    
+    <record id="action_report_ccmc_batch_ship_visit" model="ir.actions.report">
+        <field name="name">CCMC Reports</field>
+        <field name="model">dgs.batches</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.ccmc_batch_ship_visit_report</field>
+        <field name="report_file">bes.ccmc_batch_ship_visit_report</field>
+        <field name="print_report_name">"Ship Report CCMC</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+    </record>
+
+    <record id="action_report_gp_batch_ship_visit" model="ir.actions.report">
+        <field name="name">GP Reports</field>
+        <field name="model">dgs.batches</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.gp_batch_ship_visit_report</field>
+        <field name="report_file">bes.gp_batch_ship_visit_report</field>
+        <field name="print_report_name">"Ship Report GP</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+    </record>
    
     <report
         id="report_ccmc_certificate"

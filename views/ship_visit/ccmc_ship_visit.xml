@@ -31,9 +31,12 @@
 
                     <group>
                         <field name="candidate_ids" widget="many2many_tags"/>
-                        <field name="ccmc_batch" invisible="1"/>
+                        <field name="ccmc_batch"    invisible="1"/>
+                     
 
                         <field name="ccmc_ship_batch_ids" attrs="{'invisible': [('ccmc_batch', '!=', 'ccmc')]}"/>
+                        <field name="dgs_batch" />
+                        <field name="institute_id"/>
                     </group>
 
                        <notebook>
