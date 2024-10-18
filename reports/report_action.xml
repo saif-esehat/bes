@@ -61,6 +61,7 @@
         name="bes.attendance_sheet_online_gp_new"
         file="bes.attendance_sheet_online_gp_new"
     />
+
         <!-- print_report_name="'GP Attendance Sheet - %s' % (object.id)" -->
 
 
@@ -123,6 +124,29 @@
         <field name="report_name">bes.ccmc_dgs_report</field>
         <field name="report_file">bes.ccmc_dgs_report</field>
         <field name="print_report_name">"DGS Report CCMC</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+    </record>
+
+    
+    <record id="action_report_ccmc_batch_ship_visit" model="ir.actions.report">
+        <field name="name">CCMC Reports</field>
+        <field name="model">dgs.batches</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.ccmc_batch_ship_visit_report</field>
+        <field name="report_file">bes.ccmc_batch_ship_visit_report</field>
+        <field name="print_report_name">"Ship Report CCMC</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+    </record>
+
+    <record id="action_report_gp_batch_ship_visit" model="ir.actions.report">
+        <field name="name">GP Reports</field>
+        <field name="model">dgs.batches</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.gp_batch_ship_visit_report</field>
+        <field name="report_file">bes.gp_batch_ship_visit_report</field>
+        <field name="print_report_name">"Ship Report GP</field>
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
@@ -212,8 +236,24 @@
         <field name="report_file">bes.report_survey_user_input</field>
         <field name="print_report_name">'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)</field>
         <field name="paperformat_id" ref="bes.survey_report_fomat"/>
+
+    </record>
+        <record id="report_comparative_action" model="ir.actions.report">
+        <field name="name">Comparative Report</field>
+        <field name="model">examination.report</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.report_comparative</field>
+        <field name="report_file">bes.report_comparative</field>
     </record>
 
+    <!-- <report
+        id="report_comparative_action"
+        model="examination.report"
+        string="Comparative Report"
+        report_type="qweb-pdf"
+        name="bes.report_comparative"
+        file="bes.report_comparative"
+    /> -->
 
 
 </odoo>

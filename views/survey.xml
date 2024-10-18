@@ -122,6 +122,10 @@
                 </div>
             </xpath>
 
+            <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="inside">
+                <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
+            </xpath> -->
+
 
         </template>
 
@@ -226,6 +230,20 @@
                     <button name="done_exam" string="Done" type="object"  />
 
                 </xpath>
+                <!-- Modify the question_and_page_ids tree view -->
+                <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
+                    <!-- Add the q_score field -->
+                    <field name="q_score" string="Score" style="text-align: center;"/>
+                </xpath>
+                <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
+                    <!-- <attribute name="invisible">1</attribute> -->
+                    <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
+                </xpath>
+
+
+                <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath> -->
             </field>
         </record>
 
