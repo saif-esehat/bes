@@ -142,12 +142,20 @@
                     <button name="done_exam" string="Done" type="object"  />
 
                 </xpath>
-                
-                <!-- Locate the existing question list and add q_score -->
+                <!-- Modify the question_and_page_ids tree view -->
                 <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
-                    <!-- Add the q_score field after the existing fields (modify the position as needed) -->
-                    <field name="q_score" string="Score"/>
+                    <!-- Add the q_score field -->
+                    <field name="q_score" string="Score" style="text-align: center;"/>
                 </xpath>
+                <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
+                    <!-- <attribute name="invisible">1</attribute> -->
+                    <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
+                </xpath>
+
+
+                <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath> -->
             </field>
         </record>
 

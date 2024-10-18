@@ -2866,8 +2866,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                     raise ValidationError("Candidate is Not Appearing for CCMC online")
                 
                 ccmc_exam.ccmc_online.unlink()
-                # ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
-                ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
+                ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
+                # ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
                 ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
                                      'ccmc_exam':ccmc_exam.id,
