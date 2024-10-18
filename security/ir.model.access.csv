@@ -127,6 +127,8 @@ bes.admin_acces_batch_pop_up,acces_batch_pop_up,bes.model_batch_pop_up_wizard,be
 bes.admin_gp_admit_card_release,acces_gp_admit_card_release,bes.model_gp_admit_card_release,bes.group_bes_admin,1,1,1,1
 bes.admin_access_reset_online_exam_wizard_manager,access_reset_online_exam_wizard_manager,model_reset_online_exam_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_access_exam_type_non_mariner,access_exam_type_non_mariner,model_exam_type_non_mariner,bes.group_bes_admin,1,1,1,1
+bes.ec_access_exam_type_non_mariner,access_exam_type_non_mariner,model_exam_type_non_mariner,bes.group_exam_coordinator,1,1,1,1
+bes.admin_access_comparative_report,access_comparative_report,model_comparative_report,bes.group_bes_admin,1,1,1,1
 
 
 
