@@ -2,6 +2,94 @@
 <odoo>
     <data>
 
+            <template id="report_survey_pdf">
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="survey">
+                        <div class="page">
+                            <h2><t t-esc="survey.title"/></h2>
+                            <p><t t-esc="survey.description"/></p>
+                            <!-- Add more fields as needed -->
+
+
+                            <h3>Questions</h3>
+                            <table class="table table-bordered" style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+                            <thead style="background-color: #f2f2f2; border: 1px solid black;">
+                                <tr>
+                                    <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Sr No.</th>
+                                    <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid black;">Questions/Chapter</th>
+                                    <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid black;">Choices</th>                                    
+                                    <th style="width: 50%; padding: 8px; text-align: left; border: 1px solid black;">No. of Question /Per Chapter</th>
+                                    <!-- <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Candidate Answer</th> -->
+                                    <!-- <th style="width: 10%; padding: 8px; text-align: left; border: 1px solid black;">Correct Answer</th>
+                                    <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Answer Score</th> -->
+                                    <!-- <th style="width: 10%; padding: 8px; text-align: center; border: 1px solid black;">Result</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- candidate.stcw_certificate.filtered(lambda cert: cert.institute_name.id == 114 ) -->
+                                <t t-set="chapters" t-value="survey.question_and_page_ids.filtered(lambda record: record.is_page == True )" />
+                                <t t-foreach="chapters" t-as="chapter" >
+                                    <tr style="background-color: gray;">
+                                        <td style="text-align: center; padding: 8px; border: 1px solid black;"></td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid black;"><t t-esc="chapter.title"/></td>
+                                         <td style="text-align: center; padding: 8px; border: 1px solid black;"></td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid black;"><t t-esc="chapter.random_questions_count"/></td>
+                                    </tr>
+                                    <t t-set="questions" t-value="env['survey.question'].sudo().search([('page_id','=',chapter.id)])" />
+                                    <t t-foreach="questions" t-as="question" >
+                                        <tr>
+                                            <td style="text-align: center; padding: 8px; border: 1px solid black;"><t t-esc="question.q_no"/></td>
+                                            <td style="text-align: center; padding: 8px; border: 1px solid black;">
+                                            <t t-esc="question.title"/>
+                                            <br/>
+                                            <t t-esc="question.description"/>
+                                          
+                                            </td>
+                                            <td style="text-align: center; padding: 8px; border: 1px solid black;">
+                                                <t t-if="question.allow_value_image">
+                                                    <t t-foreach="question.suggested_answer_ids" t-as="answer" >
+                                                        <t t-if="answer.is_correct">
+                                                            <div style="background-color: green;"><t  t-esc="answer.value"/></div><img t-attf-src="data:image/png;base64,{{answer.value_image}}"/><t t-esc="answer.answer_score"/>  Marks
+                                                            <br/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-esc="answer.value"/> <img t-attf-src="data:image/png;base64,{{answer.value_image}}"/>
+                                                            <br/>
+
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <ul style="list-style-type: disc;text-align: left;">
+                                                        <t t-foreach="question.suggested_answer_ids" t-as="answer" >
+                                                            <t t-if="answer.is_correct">
+                                                                <li  style="border: 1px solid #000;padding: 10px;background-color: green;"><t t-esc="answer.value"/></li> <t t-esc="answer.answer_score"/>  Marks
+                                                            </t>
+                                                             <t t-else="">
+                                                                <li  style="border: 1px solid #000;padding: 10px;"><t t-esc="answer.value"/></li>
+                                                            </t>
+
+                                                        </t>
+                                                    </ul>
+                                                 </t>
+
+                                                
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                
+                            </tbody>
+                        </table>
+
+
+
+                        </div>
+                    </t>
+                </t>
+            </template>
+
+
         <record model="ir.ui.view" id="custom_survey_form_view">
             <field name="name">survey.survey.view.form.inherited</field>
             <field name="model">survey.survey</field>
@@ -363,6 +451,15 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+
+        <report
+        id="action_report_survey_pdf"
+        model="survey.survey"
+        string="Survey Report"
+        report_type="qweb-pdf"
+        name="bes.report_survey_pdf"
+        file="bes.report_survey_pdf"
+       />
 
 
 
