@@ -10,6 +10,7 @@ import logging
 from dateutil.relativedelta import relativedelta
 
 
+
 _logger = logging.getLogger(__name__)
 
     
@@ -685,22 +686,9 @@ class CandidatesApplication(models.Model):
             if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
-
-    # def action_print_hold_candidate(self):
-    #     # Get only the candidates with 'hold' status
-    #     hold_candidates = self.env['candidates.application'].search([('application_eligible', '=', 'hold')])
-        
-    #     # Logic to handle the printing of bulk allotment data for hold candidates
-    #     return self.env.ref('bes.reports_iv_hold_candidate1').report_action(hold_candidates)
-
-    # def action_print_not_eligible_candidate(self):
-    #     # Get only the candidates with 'hold' status
-    #     not_eligible_candidates = self.env['candidates.application'].search([('application_eligible', '=', 'not_eligible')])
-        
-    #     # Logic to handle the printing of bulk allotment data for hold candidates
-    #     return self.env.ref('bes.reports_iv_hold_candidate1').report_action(not_eligible_candidates)
-
-
+ 
+ 
+    
                 
 class CandidatesRemark(models.Model):
     _name = "candidates.remark"
@@ -763,4 +751,5 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'data': data,
             'docs': docs,
         }
+
     
