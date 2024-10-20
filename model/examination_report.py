@@ -78,51 +78,21 @@ class ExaminationReport(models.Model):
         self.attempt_wise_report()
         
     def generate_comparative_report(self):
-        exam_batches = self.env.context.get("active_ids")
-        report_data = []
-
-        for record in self:
-            exam_sequence_no = self.get_ordinal(record.sequence_report)
-            batch_id = record.dgs_batch
-            cousre = record.course
-            exam_type = record.exam_type
-            import wdb; wdb.set_trace()
-
-            if cousre == 'gp' and exam_type == 'fresh':
-                fresh_appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
-                fresh_pass = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
-                
-                fresh_pass_percentage = (fresh_pass/fresh_appeared) * 100
-                repeater_appeared = 'Nil'
-                repeater_pass_percentage = 'Nil'
-            elif cousre == 'gp' and exam_type == 'repeater':
-                repeater_appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
-                repeater_pass = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
-                repeater_pass_percentage = (repeater_pass/repeater_appeared) * 100
-            
-            elif cousre == 'ccmc' and exam_type == 'fresh':
-                fresh_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
-                fresh_pass_percentage = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
-                fresh_pass_percentage = (fresh_pass/fresh_appeared) * 100
-                repeater_appeared = 'Nil'
-                repeater_pass_percentage = 'Nil'
-
-            elif cousre == 'ccmc' and exam_type == 'repeater':
-                repeater_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present')])
-                repeater_pass_percentage = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('absent_status','=','present'),('result','=','passed')])
-                repeater_pass_percentage = (repeater_pass/repeater_appeared) * 100
-
-            # Append data for this batch
-            report_data.append({
-                'exam_sequence_no': exam_sequence_no,
-                'fresh_appeared': fresh_appeared,
-                'fresh_pass_percentage': fresh_pass_percentage,
-                'repeater_appeared': repeater_appeared,
-                'repeater_pass_percentage': repeater_pass_percentage
-            })
-
-        # return report_data
-        return self.env.ref('bes.report_comparative_action').report_action(self ,data=report_data)
+        # import wdb;wdb.set_trace()
+        ids = self.env.context.get('active_ids')
+        view_id = self.env.ref('bes.comparative_report_wizard_form').id
+        return {
+            'name': 'Comparative Report',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'comparative.report',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_examination_batch': ids
+            }
+            }  
     
 
 
@@ -377,7 +347,7 @@ class ExaminationReport(models.Model):
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
                 # practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True)])
-                # practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
+                practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
                 # practical_percentage = (practical_pass/practical_appeared) * 100
                 practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed')])
                 practical_percentage = (practical/appeared) * 100
@@ -397,7 +367,7 @@ class ExaminationReport(models.Model):
                         'applied': applied,
                         'candidate_appeared': appeared,
                         'practical_pass_appeared': practical_appeared,
-                        'practical_pass': practical_pass,
+                        'practical_pass': practical_pass, 
                         'practical_pass_per': practical_percentage,
                         'oral_pass_appeared': appeared,
                         'oral_pass': oral,
@@ -1531,36 +1501,26 @@ class BarGraphReport(models.AbstractModel):
         }
 
 
-class ComparativeReport(models.AbstractModel):
-    _name = 'report.bes.report_comparative'
+class ComparativeReport(models.Model):
+    _name = 'comparative.report'
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Comparative Report'
+
+    course = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ],string="Course",default='gp',tracking=True)
     
-    @api.model
-    def _get_report_values(self, docids, data=None):
-        
-        # data['context']['active_id']
+    def print_comparative_report(self):
+        ids = self.env.context.get('active_ids')
+        reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
 
-        
-        # import wdb;wdb.set_trace()
-        gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
-        mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
-        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_mek_candidates'])
-        
-        examiner_name = data['examiner_name']
-        # Example string date
-        exam_date_str = data['exam_date']
+        import wdb;wdb.set_trace()
+        for report in reports:
+            if report.course == 'gp':
+                gp_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
 
-        # Convert the string to a datetime object
-        exam_date = datetime.strptime(exam_date_str, '%Y-%m-%d')
+            elif report.course == 'ccmc':
+                ccmc_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
 
-
-        return {
-                'doc_ids': "",
-                'doc_model': 'gp.exam.schedule',
-                'docs': data,
-                "gsk_candidates":gsk_candidates,
-                "mek_candidates":mek_candidates,
-                "gsk_mek_candidates":gsk_mek_candidates,
-                "examiner_name":examiner_name,
-                "exam_date":exam_date,
-                }
+        return {'type': 'ir.actions.act_window_close'}

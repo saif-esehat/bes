@@ -309,6 +309,12 @@ class InheritedSurveyQuestions(models.Model):
     
     q_no = fields.Char("Q.No")
     q_score = fields.Char("Q.Score",compute="_compute_score")
+    answers_count = fields.Integer("No. of Answers",compute="_answer_count")
+
+
+    def _answer_count(self):
+        for record in self:
+            record.answers_count = len(record.suggested_answer_ids)
 
     def _compute_score(self):
         for record in self.suggested_answer_ids:

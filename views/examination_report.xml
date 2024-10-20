@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Examination Reports">
                     <header>
-                        <!-- <button name="generate_comparative_report" type="object" string="Comparative Report" class="oe_highlight" /> -->
+                        <button name="generate_comparative_report" type="object" string="Comparative Report" class="oe_highlight" />
                     </header>
                     <field name="examination_batch"/>
                     <field name="course" optional="show"/>                  
@@ -401,6 +401,23 @@
         </field>
     </record>
 
+    <record id="comparative_report_wizard_form" model="ir.ui.view">
+        <field name="name">comparative.report.form</field>
+        <field name="model">comparative.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="course" string="Cousre"/>
+                    </group>
+                <footer>
+                    <button name="print_comparative_report" string="Print Report" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
 
 

@@ -36,6 +36,7 @@
 
                         <field name="ccmc_ship_batch_ids" attrs="{'invisible': [('ccmc_batch', '!=', 'ccmc')]}"/>
                         <field name="dgs_batch" />
+                        <field name="ccmc_ship_batch_ids" />
                         <field name="institute_id"/>
                     </group>
 
