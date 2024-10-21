@@ -16,6 +16,7 @@
             <field name="model">candidates.application</field>
             <field name="arch" type="xml">
                 <form>
+                
                    <sheet>
                    
                      
@@ -232,7 +233,7 @@
                     <header>
                         <button type="object" class="oe_highlight" name="assign_rollno" string="Assign Rollno"/>
                         <button type="object" class="oe_highlight" name="assign_hold_candidates_rollno" string="Assign Hold Candidates Rollno"/>
-
+                       
                     </header>
 
                 

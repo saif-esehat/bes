@@ -90,7 +90,7 @@ class ExaminationReport(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_examination_batch': ids
+                'default_examination_report_batch': ids,
             }
             }  
     
@@ -1075,6 +1075,7 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
+        
     
 
 
@@ -1505,16 +1506,17 @@ class ComparativeReport(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Comparative Report'
 
+    examination_report_batch = fields.Many2many("examination.report",string="Examination Report Batch")
     course = fields.Selection([
         ('gp', 'GP'),
         ('ccmc', 'CCMC')
     ],string="Course",default='gp',tracking=True)
     
     def print_comparative_report(self):
+        # import wdb;wdb.set_trace()
         ids = self.env.context.get('active_ids')
         reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
 
-        import wdb;wdb.set_trace()
         for report in reports:
             if report.course == 'gp':
                 gp_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
