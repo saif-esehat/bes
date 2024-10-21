@@ -237,10 +237,11 @@
                     <!-- Add the q_score field -->
                     <field name="q_score" string="Score" style="text-align: center;"/>
                 </xpath>
-                <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
-                    <!-- <attribute name="invisible">1</attribute> -->
+                <xpath expr="//field[@name='question_and_page_ids']/tree/field[@name='suggested_answer_ids']" position="replace">
                     <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
                 </xpath>
+                <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
+                </xpath> -->
 
 
                 <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="attributes">
