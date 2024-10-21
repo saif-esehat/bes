@@ -235,9 +235,14 @@
                 <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
                     <field name="q_score" string="Score" style="text-align: center;"/>
                 </xpath>
-
+                <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
+                    <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
+                </xpath> -->
                 <xpath expr="//field[@name='question_and_page_ids']/tree/field[@name='question_type']" position="before">
                     <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
+                </xpath>
+                <xpath expr="//field[@name='question_and_page_ids']/tree/field[@name='suggested_answer_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
 
               

@@ -1513,7 +1513,7 @@ class ComparativeReport(models.Model):
     ],string="Course",default='gp',tracking=True)
     
     def print_comparative_report(self):
-        import wdb;wdb.set_trace()
+        # import wdb;wdb.set_trace()
         ids = self.env.context.get('active_ids')
         reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
 
