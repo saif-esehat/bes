@@ -149,6 +149,13 @@ class GPShipVisitPortalController(http.Controller):
 
     @http.route(['/my/ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_gp_ship_visit_submit(self, **post):
+        
+        user_id = request.env.user.id
+
+        # Fetch institute based on the logged-in user
+        institute_id = request.env["bes.institute"].sudo().search(
+        [('user_id', '=', user_id)], limit=1).id  
+
         if request.httprequest.method == 'POST':
             # import wdb;wdb.set_trace()
             batch_id = int(post.get("batch_id"))
@@ -160,7 +167,13 @@ class GPShipVisitPortalController(http.Controller):
             date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            bridge = post.get("bridge")
+            eng_room = post.get("eng_room")
+            cargo_area = post.get("cargo_area")
             candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
+
+            # import wdb;wdb.set_trace()
+            dgs_batch_id = request.env['institute.gp.batches'].sudo().search([('institute_id', '=', institute_id),('id', '=', batch_id)], limit=1).dgs_batch.id
 
             # Process image file
             image_base64 = None
@@ -186,6 +199,11 @@ class GPShipVisitPortalController(http.Controller):
                     "no_of_candidate": no_of_candidate,
                     "gp_image": image_base64 if gp_image else False,
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+                    "bridge": bridge,
+                    "eng_room": eng_room,
+                    "cargo_area": cargo_area,
+                    "institute_id": institute_id,
+                    "dgs_batch": dgs_batch_id,
                 }
 
                
@@ -206,7 +224,7 @@ class GPShipVisitPortalController(http.Controller):
         user_id = request.env.user.id
 
         # Fetch institute based on the logged-in user
-        ccmc_ship_batch_ids = request.env["bes.institute"].sudo().search(
+        institute_id = request.env["bes.institute"].sudo().search(
         [('user_id', '=', user_id)], limit=1).id  
 
         if request.httprequest.method == 'POST':
@@ -219,7 +237,13 @@ class GPShipVisitPortalController(http.Controller):
             date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            bridge = post.get("bridge")
+            eng_room = post.get("eng_room")
+            cargo_area = post.get("cargo_area")
             candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
+
+            # import wdb;wdb.set_trace()
+            dgs_batch_id = request.env['institute.ccmc.batches'].sudo().search([('institute_id', '=', institute_id),('id', '=', batch_id)], limit=1).dgs_batch.id
 
             # Process image file
             image_base64 = None
@@ -245,6 +269,11 @@ class GPShipVisitPortalController(http.Controller):
                     "no_of_candidate": no_of_candidate,
                     "gp_image": image_base64 if gp_image else False,
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+                    "bridge": bridge,
+                    "eng_room": eng_room,
+                    "cargo_area": cargo_area,
+                    "institute_id": institute_id,
+                    "dgs_batch": dgs_batch_id,
                 }
 
                 # Create the record in the model

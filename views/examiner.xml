@@ -346,7 +346,7 @@
                         </group>
                         <group style="width:50%;">
                             <field name="exam_region" readonly="1" required="1"/>
-                            <field name="expense_sheet_status" readonly="1" required="1"/>
+                            <field name="expense_sheet_status" readonly="0" required="1"/>
 
                             
                         </group>

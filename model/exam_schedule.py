@@ -3033,10 +3033,10 @@ class GPExam(models.Model):
     overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)
     
     # Attempting Exams
-    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac')
-    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac')
-    attempting_mek_online = fields.Boolean('attempting_mek_online')
-    attempting_gsk_online = fields.Boolean('attempting_gsk_online')
+    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac',tracking=True)
+    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac',tracking=True)
+    attempting_mek_online = fields.Boolean('attempting_mek_online',tracking=True)
+    attempting_gsk_online = fields.Boolean('attempting_gsk_online',tracking=True)
     
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
@@ -3267,8 +3267,8 @@ class GPExam(models.Model):
             else:
                  record.absent_status = "present"
 
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
-    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_date = fields.Date(string="Exam Date",tracking=True)
     @api.depends('gp_candidate.candidate_image')
@@ -4367,8 +4367,8 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
-    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_region = fields.Many2one('exam.center',string='Exam Center',store=True)
 
@@ -4385,13 +4385,13 @@ class CCMCExam(models.Model):
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
     ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
     
-    ccmc_oral_prac_assignment = fields.Boolean('ccmc_oral_prac_assignment')
+    ccmc_oral_prac_assignment = fields.Boolean('ccmc_oral_prac_assignment',tracking=True)
 
-    ccmc_gsk_oral_assignment = fields.Boolean('ccmc_gsk_oral_assignment')
+    ccmc_gsk_oral_assignment = fields.Boolean('ccmc_gsk_oral_assignment',tracking=True)
     
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
     
-    ccmc_online_assignment = fields.Boolean('ccmc_online_assignment')
+    ccmc_online_assignment = fields.Boolean('ccmc_online_assignment',tracking=True)
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     
