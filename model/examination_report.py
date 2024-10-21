@@ -1075,6 +1075,7 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
+        
     
 
 

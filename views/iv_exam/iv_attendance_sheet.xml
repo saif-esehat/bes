@@ -17,6 +17,9 @@
         <field name="model">iv.attendance.sheet</field>
         <field name="arch" type="xml">
             <form string="IV Attendance Sheet">
+                 <header>
+                <button name="print_iv_invigilator_report" string="Invigilator Report" type="object" class="btn-primary" />
+               </header>
                 <sheet>
 
                            
