@@ -1483,6 +1483,7 @@ class InstitutePortal(CustomerPortal):
         candidate_id = kw.get('candidate_id')
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
+        other_institute = kw.get('other_institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
         # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
@@ -1499,6 +1500,7 @@ class InstitutePortal(CustomerPortal):
             'candidate_id' : candidate_id,
             'course_name': course_name,
             'institute_name': institute_name,
+            'other_institute': other_institute,
             'marine_training_inst_number': marine_training_inst_number,
             # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
@@ -1527,6 +1529,7 @@ class InstitutePortal(CustomerPortal):
         candidate_id = kw.get('candidate_id')
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
+        other_institute = kw.get('other_institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
         # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
@@ -1541,6 +1544,7 @@ class InstitutePortal(CustomerPortal):
             'candidate_id' : candidate_id,
             'course_name': course_name,
             'institute_name': institute_name,
+            'other_institute': other_institute,
             'marine_training_inst_number': marine_training_inst_number,
             # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
