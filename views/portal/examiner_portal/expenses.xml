@@ -1,4 +1,33 @@
 <odoo>
+ <template id="portal_breadcrumbs_expense" inherit_id="portal.portal_breadcrumbs">
+
+        <xpath expr="//ol[contains(@class, 'o_portal_submenu')]/li[1]" position="replace">
+            <li style="font-size:16px;">
+                <a href="/my/home">
+                    <i class="fa fa-solid fa-home fa" style='margin-right:8px;'> Home/</i>
+                </a>
+            </li>
+        </xpath>
+
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
+            <t t-if="page_name == 'timesheet'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Batches</a>
+                </li>
+                
+            </t>
+
+            <t t-if="page_name == 'institute_timesheets'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments">Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/assignments/timesheet/{{dgs_batch.id}}/{{examiner.id}}">Timesheets list</a>
+                </li>  
+            </t>
+
+        </xpath>
+    </template>
     <template id="examiner_expenses" name="Examiner Expenses" >
         
 
@@ -433,9 +462,9 @@
                             <tr>
                                 <td>Day <span t-esc="index"/></td>
                                 <!-- <td><span t-esc="timesheet.exam_date.strftime('%d-%m-%Y')"/></td> -->
-                                <td><span t-esc="timesheet.arrival_date_time"/></td>
-                                <td><span t-esc="timesheet.commence_exam"/></td>
-                                <td><span t-esc="timesheet.completion_time"/></td>
+                                <td><span t-esc="timesheet.arrival_date_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.commence_exam.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.candidate_examined"/></td>
                                 <td><span t-esc="timesheet.debriefing_inst"/></td>
                                 <td>
@@ -453,6 +482,7 @@
                             <th>Travelling Details:</th>
                             <th>Date &amp; Time</th>
                             <th>Mode of Travel</th>
+                            <th>Expenses</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -461,24 +491,10 @@
                         <tbody>
 
                             <tr>
-                                <td>Left Residence</td>
-                                <td><span t-esc="timesheet.left_residence"/></td>
-                                <td><span t-esc="timesheet.left_residence_mode_of_travel"/></td>
-                            </tr>
-                            <tr>
-                                <td>Arrival at the Institute/Hotel</td>
-                                <td><span t-esc="timesheet.arrival_institute_hotel"/></td>
-                                <td><span t-esc="timesheet.arrival_institute_hotel_mode_of_travel"/></td>
-                            </tr>
-                            <tr>
-                                <td>Left Institute/Hotel</td>
-                                <td><span t-esc="timesheet.left_institute_hotel"/></td>
-                                <td><span t-esc="timesheet.left_institute_mode_of_travel"/></td>
-                            </tr>
-                            <tr>
-                                <td>Arrival at Residence</td>
-                                <td><span t-esc="timesheet.arrival_residence"/></td>
-                                <td><span t-esc="timesheet.arrival_residence_mode_of_travel"/></td>
+                                <td><span t-esc="timesheet.travelling_details"/></td>
+                                <td><span t-esc="timesheet.date_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.mode_of_travel"/></td>
+                                <td><span t-esc="timesheet.expenses"/></td>
                             </tr>
                         </tbody>
                     </t>
@@ -525,6 +541,7 @@
                                                 <th>Travelling Details:</th>
                                                 <th>Date &amp; Time</th>
                                                 <th>Mode of Travel</th>
+                                                <th>Expense(if occured)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -539,6 +556,7 @@
                                                         <option value="airline">Airline</option>
                                                     </select>
                                                 </td>
+                                                <td><input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"/></td>
                                             </tr>
                                             <tr>
                                                 <td>Arrival at the Institute/Hotel</td>
@@ -551,6 +569,7 @@
                                                         <option value="airline">Airline</option>
                                                     </select>
                                                 </td>
+                                                <td><input type="number" class="form-control" name="arrival_institute_hotel_expenses" id="arrival_institute_hotel_expenses"/></td>
                                             </tr>
                                             <!-- Add more rows for other travel events if needed -->
                                             <tr>
@@ -564,6 +583,7 @@
                                                         <option value="airline">Airline</option>
                                                     </select>
                                                 </td>
+                                                <td><input type="number" class="form-control" name="left_institute_expenses" id="left_institute_expenses"/></td>
                                             </tr>
                                             <!-- Add more rows for other travel events if needed -->
                                             <tr>
@@ -577,6 +597,7 @@
                                                         <option value="airline">Airline</option>
                                                     </select>
                                                 </td>
+                                                <td><input type="number" class="form-control" name="arrival_residence_expenses" id="arrival_residence_expenses"/></td>
                                             </tr>
                                         </tbody>
                                     </table>

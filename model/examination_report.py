@@ -90,7 +90,7 @@ class ExaminationReport(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_examination_batch': ids
+                'default_examination_report_batch': ids,
             }
             }  
     
@@ -1536,6 +1536,7 @@ class ComparativeReport(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Comparative Report'
 
+    examination_report_batch = fields.Many2many("examination.report",string="Examination Report Batch")
     course = fields.Selection([
         ('gp', 'GP'),
         ('ccmc', 'CCMC')
@@ -1544,14 +1545,37 @@ class ComparativeReport(models.Model):
     def print_comparative_report(self):
         ids = self.env.context.get('active_ids')
         reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
-
         import wdb;wdb.set_trace()
+
+        report_data = []  # This will hold the data for the report
+
         for report in reports:
             if report.course == 'gp':
                 gp_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                data = self._calculate_exam_statistics(gp_exam, report)
+                report_data.append(data)
 
             elif report.course == 'ccmc':
-                ccmc_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                ccmc_exam = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                data = self._calculate_exam_statistics(ccmc_exam, report)
+                report_data.append(data)
+
+               # Prepare the final data structure for the report template
+        final_report = {
+            'report_data': report_data,
+        }
+
+        return self.env.ref('bes.report_comparative').report_action(self, data={'docs': final_report})
+
+    def _calculate_exam_statistics(self, exams, report):
+        """ Calculate statistics for fresh and repeater candidates """
+        report_info = {
+            'batch_name': report.sequence_report,  # Use the report's sequence number
+            'fresh_appeared': 0,
+            'fresh_pass_percentage': 'Nil',
+            'repeater_appeared': 0,
+            'repeater_pass_percentage': 'Nil',
+        }
 
         return {'type': 'ir.actions.act_window_close'}
 

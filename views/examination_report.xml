@@ -409,6 +409,7 @@
             <form>
                 <sheet>
                     <group>
+                        <field name="examination_report_batch" string="Report Batch" readonly='1'/>
                         <field name="course" string="Cousre"/>
                     </group>
                 <footer>

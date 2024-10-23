@@ -8,6 +8,22 @@ class BatchExpenses(models.Model):
   
     
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",tracking=True)
+    
+    
+    total_expense = fields.Integer("Total Batch Expense",compute="_compute_total_expense")
+    
+    @api.depends('dgs_batch')
+    def _compute_total_expense(self):
+        for record in self:
+            expenses = self.env["examiner.expenses"].sudo().search([('dgs_batch','=',record.dgs_batch.id)])
+            expense_total = 0
+            for expense in expenses:
+                expense_total = expense.total + expense_total
+            
+            record.total_expense = expense_total  
+            # record.total_expense = total
+    
+    
     _sql_constraints = [
         ('dgs_batch_unique', 'unique(dgs_batch)', 'The Exam Batch must be unique!')
     ]
@@ -51,6 +67,7 @@ class InstituteExpenseReport(models.Model):
     
     practical_oral_expenses = fields.Integer("Practical/Oral Expenses",compute="_compute_practical_expense")
     online_expenses = fields.Integer("Online Expenses",compute="_compute_online_expense")
+    outstation_expenses = fields.Integer("Outstation Expenses",compute="_compute_outstation_expense")
     team_lead_expense = fields.Integer("Team Lead Expense",compute="_compute_tl_expense")
     non_mariner_expense = fields.Integer("Non Mariner Expense",compute="_compute_nm_expense")
     total = fields.Integer("Total Expense",compute="_compute_total")
@@ -65,6 +82,14 @@ class InstituteExpenseReport(models.Model):
         for record in self:
             data = self.env["examiner.expense.non.mariner"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
             record.non_mariner_expense= sum(data.mapped('price'))        
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_outstation_expense(self):
+        for record in self:
+            data = self.env["examiner.outstation.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
+            record.outstation_expenses = sum(data.mapped('price'))
+    
+    
     
     @api.depends('dgs_batch','institute')
     def _compute_practical_expense(self):
@@ -151,6 +176,8 @@ class ExaminerExpenses(models.Model):
     
     non_mariner_expense = fields.One2many('examiner.expense.non.mariner', 'examiner_expenses_id', string="Non Mariner Expenses")
 
+    outstation_travel_expenses = fields.One2many('examiner.outstation.expense', 'examiner_expenses_id', string="Outstation Expenses")
+
     total = fields.Integer("Total Expense",compute='_compute_total_expense',store=True)
     
     practical_oral_total = fields.Integer("Practical/Oral Expense",compute="_compute_total")
@@ -158,6 +185,8 @@ class ExaminerExpenses(models.Model):
     online_total = fields.Integer("Online Expense",compute="_compute_total")
     
     team_lead_total = fields.Integer("Team Lead Expense",compute="_compute_total")
+    
+    outstation_total = fields.Integer("Outstation Expense",compute="_compute_total")
     
     misc_total = fields.Integer("Misc. Expense",compute="_compute_total")
     
@@ -178,6 +207,12 @@ class ExaminerExpenses(models.Model):
                 record.team_lead_total = sum(record.team_lead_expense.mapped('price'))
             else:
                 record.team_lead_total = 0
+            
+            
+            if record.outstation_travel_expenses:
+                record.outstation_total = sum(record.outstation_travel_expenses.mapped('price'))
+            else:
+                record.outstation_total = 0
                 
             if record.misc_expense_ids:
                 record.misc_total = sum(record.misc_expense_ids.mapped('price'))
@@ -185,15 +220,16 @@ class ExaminerExpenses(models.Model):
                 record.misc_total = 0
      
     
-    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price','non_mariner_expense.price')
+    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price','outstation_travel_expenses','non_mariner_expense.price')
     def _compute_total_expense(self):
         for record in self:
             total_assignment = sum(record.assignment_expense_ids.mapped('total'))
             total_online = sum(record.online_assignment_expense.mapped('price'))
             total_team_lead = sum(record.team_lead_expense.mapped('price'))
             total_non_mariner = sum(record.non_mariner_expense.mapped('price'))
+            total_outstation = sum(record.outstation_travel_expenses.mapped('price'))
             total_misc = sum(record.misc_expense_ids.mapped('price'))
-            record.total = total_assignment + total_online + total_team_lead + total_misc + total_non_mariner
+            record.total = total_assignment + total_online + total_team_lead + total_misc + total_non_mariner + total_outstation
     
     
     def action_set_ec_approval(self):
@@ -211,6 +247,20 @@ class ExaminerExpenses(models.Model):
     def cancel(self):
         for record in self:
             record.state = 'draft'
+
+
+class ExaminerOutstationExpense(models.Model):
+    _name = 'examiner.outstation.expense'
+    _description = 'Examiner Outstation Expenses'
+
+    examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    dgs_batch = fields.Many2one('dgs.batches',related="examiner_expenses_id.dgs_batch",store=True)
+    assignment = fields.Many2one('exam.type.oral.practical.examiners', string="Assignment")
+    institute = fields.Many2one('bes.institute',related="assignment.institute_id", string="Institute",store=True)
+    exam_date = fields.Date("Exam Date")
+    price = fields.Integer("Cost")
+    
+    
 
 
 class ExaminerOverAllExpenses(models.Model):
@@ -364,6 +414,86 @@ class ExamMiscExpense(models.Model):
     _description = 'Exam Miscellaneous Expense'
 
     description = fields.Char(string="Description")
-    price = fields.Float(string="Price")
+    price = fields.Float(string="Cost")
     docs = fields.Many2many('ir.attachment', string="Documents")
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
+
+
+class ECExpense(models.Model):
+    _name = 'ec.expenses'
+    _description = 'EC Expenses'
+
+    dgs_batch = fields.Many2one('dgs.batches',store=True)
+
+    exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
+    no_of_candidates = fields.Integer(string="No. of Candidates", compute='_compute_no_of_candidates', store=True)
+
+    coordination_fees = fields.Integer(string="Coordination Fees",compute='_compute_coordination_fees', store=True)
+    total_candidate_price = fields.Integer(string="Total Candidate Cost", compute='_compute_total_candidate_price', store=True)
+    misc_expense_ids = fields.One2many('exam.misc.expense', 'ex_expense', string="Miscellaneous expenses")
+
+    total_expense = fields.Integer(string="Total Expense", compute='_compute_total_expense', store=True)
+
+    practical_oral_total = fields.Integer("Practical/Oral Expense")
+
+    online_assignment_expense = fields.Integer("Online expenses")
+
+    def get_examiner_region(self):
+        user_id = self.env.user.id
+        region = self.env['exam.center'].sudo().search([('exam_co_ordinator','=',user_id)]).id
+        return region
+
+
+    # @api.depends('dgs_batch','exam_region')
+    # def _compute_total(self):
+    #     for record in self:
+    #         assignment = self.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
+
+
+
+    @api.depends('dgs_batch')
+    def _compute_coordination_fees(self):
+        for record in self:
+            
+            if record.dgs_batch.is_march_september:
+                product = self.env['product.template'].sudo().search([('default_code','=','repeater_batch_fees')])
+                record.coordination_fees = product.list_price
+            else:
+                product = self.env['product.template'].sudo().search([('default_code','=','fresh_batch_fees')])
+                record.coordination_fees = product.list_price
+
+    @api.depends('dgs_batch','exam_region')
+    def _compute_no_of_candidates(self):
+        for record in self:
+            if record.dgs_batch:
+                gp_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id),('absent_status','=','present')])
+                ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id),('absent_status','=','present')])
+                record.no_of_candidates = gp_candidates + ccmc_candidates
+
+
+    @api.depends('no_of_candidates')
+    def _compute_total_candidate_price(self):
+        product = self.env['product.template'].sudo().search([('default_code','=','ec_candidate_cost')])
+        for record in self:
+            record.total_candidate_price = record.no_of_candidates * product.list_price
+
+
+    @api.depends('total_candidate_price','misc_expense_ids','practical_oral_total','online_assignment_expense','coordination_fees')
+    def _compute_total_expense(self):
+        for record in self:
+            record.total_expense = record.total_candidate_price + sum(record.misc_expense_ids.mapped('price')) + record.practical_oral_total + record.online_assignment_expense + record.coordination_fees
+
+    @api.model
+    def create(self, vals):
+        # import wdb;wdb.set_trace()
+        dgs_batch = vals.get('dgs_batch')
+        exam_region = vals.get('exam_region')
+        batch = self.env['ec.expenses'].sudo().search([('dgs_batch', '=', dgs_batch),('exam_region', '=', exam_region)])
+        if batch:
+            raise ValidationError("Batch already exists.")
+        else:
+            record = super(ECExpense, self).create(vals)
+            return record
+        # record = super(ECExpense, self).create(vals)
+        pass

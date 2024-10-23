@@ -599,6 +599,16 @@
                     }
                 }
 
+                function toggleInstituteInput() {
+                    var instituteSelect = document.getElementById("institute_name");
+                    var otherInstituteContainer = document.getElementById("other_institute_name_container");
+            
+                    if (instituteSelect.value == "114") { // The ID for "Others"
+                        otherInstituteContainer.style.display = "block";
+                    } else {
+                        otherInstituteContainer.style.display = "none";
+                    }
+                }
 
 
                         function openDeleteModal(button) {
@@ -1423,7 +1433,7 @@
                                                                         <div class="form-group">
                                                                             <label for="institute_name">Institute Name</label>
                                                                             <!-- Assuming you have a list of institutes available -->
-                                                                            <select class="form-control" id="institute_name" name="institute_name" required="1">
+                                                                            <select class="form-control" id="institute_name" name="institute_name" required="1" onchange="toggleInstituteInput()">
                                                                                 <t t-foreach="institutes" t-as="institute">
                                                                                     <option t-attf-value="{{institute.id}}">
                                                                                         <t t-out="institute.name"/>
@@ -1431,6 +1441,12 @@
                                                                                 </t>
                                                                                 <!-- Add more options as needed -->
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6" id="other_institute_name_container" style="display: none;">
+                                                                        <div class="form-group">
+                                                                            <label for="other_institute_name">Other Institute Name</label>
+                                                                            <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"/>
                                                                         </div>
                                                                     </div>
 
@@ -5075,6 +5091,17 @@
                     }
                 }
 
+                function toggleInstituteInput() {
+                    var instituteSelect = document.getElementById("institute_name");
+                    var otherInstituteContainer = document.getElementById("other_institute_name_container");
+            
+                    if (instituteSelect.value == "114") { // The ID for "Others"
+                        otherInstituteContainer.style.display = "block";
+                    } else {
+                        otherInstituteContainer.style.display = "none";
+                    }
+                }
+
                 function openSTCWDeleteModal(button) {
                     <!-- debugger -->
                     // Retrieve the data-id attribute value from the clicked button
@@ -5830,7 +5857,7 @@
                                                                         <div class="form-group">
                                                                             <label for="institute_name">Institute Name</label>
                                                                             <!-- Assuming you have a list of institutes available -->
-                                                                            <select class="form-control" id="institute_name" name="institute_name">
+                                                                            <select class="form-control" id="institute_name" name="institute_name" required="1" onchange="toggleInstituteInput()">
                                                                                 <t t-foreach="institutes" t-as="institute">
                                                                                     <option t-attf-value="{{institute.id}}">
                                                                                         <t t-out="institute.name"/>
@@ -5838,6 +5865,13 @@
                                                                                 </t>
                                                                                 <!-- Add more options as needed -->
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6" id="other_institute_name_container" style="display: none;">
+                                                                        <div class="form-group">
+                                                                            <label for="other_institute_name">Other Institute Name</label>
+                                                                            <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"/>
                                                                         </div>
                                                                     </div>
 
