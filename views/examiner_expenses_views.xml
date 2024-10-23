@@ -243,18 +243,25 @@
         <field name="arch" type="xml">
             <form string="EC Expenses">
                 <sheet>
+                <group>
                     <field name="dgs_batch"/>
-                    <field name="exam_region"/>
-                    <field name="no_of_candidates"/>
-                    <field name="total_candidate_price"/>
-
+                    <field name="exam_region" readonly="0"/>
+                    <field name="no_of_candidates" readonly="1"/>
+                    <field name="total_candidate_price" readonly="1"/>
+                    <field name="coordination_fees" readonly="1"/>
+                    <field name="practical_oral_total" readonly="0"/>
+                    <field name="online_assignment_expense" readonly="0"/>
+                    <field name="total_expense" sum="Total"/>
+                    
+                </group>
                     <notebook>
                         <page string="Miscellaneous Expenses" >
                             <field name="misc_expense_ids">
                                 <tree editable="bottom">
                                     <field name="description"/>
                                     <field name="price"/>
-                                    <field name="docs"/>
+                                <!-- This will open a dialog for uploading multiple documents -->
+                                    <field name="docs" widget="many2many_binary"/>
                                 </tree>
                             </field>
                         </page>

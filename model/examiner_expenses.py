@@ -417,19 +417,27 @@ class ExamMiscExpense(models.Model):
     price = fields.Float(string="Cost")
     docs = fields.Many2many('ir.attachment', string="Documents")
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
-    ex_expense = fields.Many2one('ec.expense', string="EC Expense")
+    ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
 
 
 class ECExpense(models.Model):
-    _name = 'ec.expense'
+    _name = 'ec.expenses'
     _description = 'EC Expenses'
 
     dgs_batch = fields.Many2one('dgs.batches',store=True)
+
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     no_of_candidates = fields.Integer(string="No. of Candidates", compute='_compute_no_of_candidates', store=True)
 
+    coordination_fees = fields.Integer(string="Coordination Fees",compute='_compute_coordination_fees', store=True)
     total_candidate_price = fields.Integer(string="Total Candidate Cost", compute='_compute_total_candidate_price', store=True)
     misc_expense_ids = fields.One2many('exam.misc.expense', 'ex_expense', string="Miscellaneous expenses")
+
+    total_expense = fields.Integer(string="Total Expense", compute='_compute_total_expense', store=True)
+
+    practical_oral_total = fields.Integer("Practical/Oral Expense")
+
+    online_assignment_expense = fields.Integer("Online expenses")
 
     def get_examiner_region(self):
         user_id = self.env.user.id
@@ -437,16 +445,55 @@ class ECExpense(models.Model):
         return region
 
 
-    @api.depends('no_of_candidates')
+    # @api.depends('dgs_batch','exam_region')
+    # def _compute_total(self):
+    #     for record in self:
+    #         assignment = self.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
+
+
+
+    @api.depends('dgs_batch')
+    def _compute_coordination_fees(self):
+        for record in self:
+            
+            if record.dgs_batch.is_march_september:
+                product = self.env['product.template'].sudo().search([('default_code','=','repeater_batch_fees')])
+                record.coordination_fees = product.list_price
+            else:
+                product = self.env['product.template'].sudo().search([('default_code','=','fresh_batch_fees')])
+                record.coordination_fees = product.list_price
+
+    @api.depends('dgs_batch','exam_region')
     def _compute_no_of_candidates(self):
         for record in self:
             if record.dgs_batch:
-                gp_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
-                ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
+                gp_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id),('absent_status','=','present')])
+                ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id),('absent_status','=','present')])
                 record.no_of_candidates = gp_candidates + ccmc_candidates
 
 
-    @api.depends('no_of_candidates', 'total_candidate_price')
+    @api.depends('no_of_candidates')
     def _compute_total_candidate_price(self):
+        product = self.env['product.template'].sudo().search([('default_code','=','ec_candidate_cost')])
         for record in self:
-            record.total_candidate_price = record.no_of_candidates * 50
+            record.total_candidate_price = record.no_of_candidates * product.list_price
+
+
+    @api.depends('total_candidate_price','misc_expense_ids','practical_oral_total','online_assignment_expense','coordination_fees')
+    def _compute_total_expense(self):
+        for record in self:
+            record.total_expense = record.total_candidate_price + sum(record.misc_expense_ids.mapped('price')) + record.practical_oral_total + record.online_assignment_expense + record.coordination_fees
+
+    @api.model
+    def create(self, vals):
+        # import wdb;wdb.set_trace()
+        dgs_batch = vals.get('dgs_batch')
+        exam_region = vals.get('exam_region')
+        batch = self.env['ec.expenses'].sudo().search([('dgs_batch', '=', dgs_batch),('exam_region', '=', exam_region)])
+        if batch:
+            raise ValidationError("Batch already exists.")
+        else:
+            record = super(ECExpense, self).create(vals)
+            return record
+        # record = super(ECExpense, self).create(vals)
+        pass
