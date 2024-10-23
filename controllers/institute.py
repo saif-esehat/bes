@@ -237,6 +237,12 @@ class InstitutePortal(CustomerPortal):
                 [('country_id.code', '=', 'IN')])
         batches = candidate.institute_batch_id
         
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches, 'states':states}
         return request.render("bes.gp_candidate_profile_view", vals)
     
@@ -248,6 +254,13 @@ class InstitutePortal(CustomerPortal):
         states = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN')])
         batches = candidate.institute_batch_id
+        
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         vals = {'candidate': candidate, "page_name": "ccmc_candidate_form",'batches':batches, 'states':states}
         return request.render("bes.ccmc_candidate_profile_view", vals)
     

@@ -76,10 +76,13 @@ class ExpenseController(http.Controller):
         # import wdb;wdb.set_trace();
         assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
         timesheets = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
-         
+        
         vals = {
             'timesheets': timesheets,
             'assignments':assignments,
+            'batch_id':batch_id,
+            'examiner_id':examiner_id,
+            'page_name': 'timesheet'
                 }
         return request.render("bes.timesheet_list", vals)
 
@@ -92,7 +95,7 @@ class ExpenseController(http.Controller):
         institute_id = request.env['bes.institute'].sudo().search([('id','=',kw.get('institute_id'))])
         dgs_batch = request.env['dgs.batches'].sudo().search([('id','=',kw.get('dgs_batch'))])
 
-        import wdb;wdb.set_trace();
+        # import wdb;wdb.set_trace();
         timesheet = request.env['time.sheet.report'].sudo().create({
             'examiner': examiner.id,
             'dgs_batch': dgs_batch.id,
@@ -140,9 +143,11 @@ class ExpenseController(http.Controller):
             'timesheets': timesheets,
             'institute':institute_id,
             'dgs_batch':dgs_batch,
+            'examiner':examiner,
             'first_exam_date': first_exam_date,
             'last_exam_date': last_exam_date,
-            'exam_days': exam_days
+            'exam_days': exam_days,
+            'page_name': 'institute_timesheets'
             }
         return request.render("bes.timesheet_display", vals)
     
@@ -158,7 +163,7 @@ class ExpenseController(http.Controller):
         timesheet = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',dgs_batch.id),('examiner','=',examiner.id),('institutes_id','=',institute_id.id)])
 
         timesheet_line = request.env['timesheet.lines'].sudo().create({'time_sheet_id': timesheet.id})
-        travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
+        # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
 
         # import wdb;wdb.set_trace();
 
@@ -171,21 +176,8 @@ class ExpenseController(http.Controller):
             'debriefing_inst': kw.get('debriefing_time'),
         })
 
-        travel_details.write({
-            'left_residence': datetime.strptime(kw.get('left_residence_date_time'), '%Y-%m-%dT%H:%M'),
-            'left_residence_mode_of_travel': kw.get('left_residence_mode_of_travel'),
-            
-            'arrival_institute_hotel': datetime.strptime(kw.get('arrival_institute_hotel_date_time'), '%Y-%m-%dT%H:%M'),
-            'arrival_institute_hotel_mode_of_travel': kw.get('arrival_institute_hotel_mode_of_travel'),
-            
-            'left_institute_hotel': datetime.strptime(kw.get('left_institute_date_time'), '%Y-%m-%dT%H:%M'),
-            'left_institute_mode_of_travel': kw.get('left_institute_mode_of_travel'),
-            
-            'arrival_residence': datetime.strptime(kw.get('arrival_residence_date_time'), '%Y-%m-%dT%H:%M'),
-            'arrival_residence_mode_of_travel': kw.get('arrival_residence_mode_of_travel'),
-
-        })
-
+        # Dynamically create travel lines using predefined phases
+        request.env['travel.details'].sudo().create_travel_lines(timesheet.id, kw)
         # Redirect to the timesheet list or any other page after saving
         return request.redirect('/my/assignments/timesheet/list/'+str(timesheet.id))
     

@@ -56,7 +56,7 @@
                                     <tree editable="bottom">
                                         <field name="arrival_date_time"/>
                                         <field name="commence_exam"/>
-                                        <field name="lunch_break"/>
+                                        <!-- <field name="lunch_break"/> -->
                                         <field name="completion_time"/>
                                         <field name="candidate_examined"/>
                                         <field name="debriefing_inst"/>
@@ -66,14 +66,9 @@
                             <page string="Travel Details">
                                 <field name="travel_details">
                                     <tree editable="bottom">
-                                        <field name="left_residence"/>
-                                        <field name="left_residence_mode_of_travel"/>
-                                        <field name="arrival_institute_hotel"/>
-                                        <field name="arrival_institute_hotel_mode_of_travel"/>
-                                        <field name="left_institute_hotel"/>
-                                        <field name="left_institute_mode_of_travel"/>
-                                        <field name="arrival_residence"/>
-                                        <field name="arrival_residence_mode_of_travel"/>
+                                        <field name="travelling_details"/>
+                                        <field name="date_time"/>
+                                        <field name="mode_of_travel"/>
                                         <field name="expenses"/>
                                     </tree>
                                 </field>

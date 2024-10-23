@@ -1446,7 +1446,7 @@
                                                                     <div class="col-md-6" id="other_institute_name_container" style="display: none;">
                                                                         <div class="form-group">
                                                                             <label for="other_institute_name">Other Institute Name</label>
-                                                                            <input type="text" class="form-control" id="other_institute_name" name="other_institute_name" required="1"/>
+                                                                            <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"/>
                                                                         </div>
                                                                     </div>
 
@@ -5871,7 +5871,7 @@
                                                                     <div class="col-md-6" id="other_institute_name_container" style="display: none;">
                                                                         <div class="form-group">
                                                                             <label for="other_institute_name">Other Institute Name</label>
-                                                                            <input type="text" class="form-control" id="other_institute_name" name="other_institute_name" required="1"/>
+                                                                            <input type="text" class="form-control" id="other_institute_name" name="other_institute_name"/>
                                                                         </div>
                                                                     </div>
 
