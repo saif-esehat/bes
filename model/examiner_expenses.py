@@ -414,6 +414,39 @@ class ExamMiscExpense(models.Model):
     _description = 'Exam Miscellaneous Expense'
 
     description = fields.Char(string="Description")
-    price = fields.Float(string="Price")
+    price = fields.Float(string="Cost")
     docs = fields.Many2many('ir.attachment', string="Documents")
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
+    ex_expense = fields.Many2one('ec.expense', string="EC Expense")
+
+
+class ECExpense(models.Model):
+    _name = 'ec.expense'
+    _description = 'EC Expenses'
+
+    dgs_batch = fields.Many2one('dgs.batches',store=True)
+    exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
+    no_of_candidates = fields.Integer(string="No. of Candidates", compute='_compute_no_of_candidates', store=True)
+
+    total_candidate_price = fields.Integer(string="Total Candidate Cost", compute='_compute_total_candidate_price', store=True)
+    misc_expense_ids = fields.One2many('exam.misc.expense', 'ex_expense', string="Miscellaneous expenses")
+
+    def get_examiner_region(self):
+        user_id = self.env.user.id
+        region = self.env['exam.center'].sudo().search([('exam_co_ordinator','=',user_id)]).id
+        return region
+
+
+    @api.depends('no_of_candidates')
+    def _compute_no_of_candidates(self):
+        for record in self:
+            if record.dgs_batch:
+                gp_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
+                ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
+                record.no_of_candidates = gp_candidates + ccmc_candidates
+
+
+    @api.depends('no_of_candidates', 'total_candidate_price')
+    def _compute_total_candidate_price(self):
+        for record in self:
+            record.total_candidate_price = record.no_of_candidates * 50

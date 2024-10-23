@@ -738,11 +738,6 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     parent_id = fields.Many2one("ccmc.examiner.assignment.wizard",string="Parent",tracking=True)
     
     exam_date = fields.Date('Exam Date',tracking=True)
-    
-    outstation = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'no')     
-    ], string='Outstation', default='no')
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
@@ -1197,10 +1192,6 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
 
     exam_date = fields.Date('Exam Date',tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
-    outstation = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'no')     
-    ], string='Outstation', default='no')
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     gp_marksheet_ids = fields.Many2many('gp.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
@@ -1244,7 +1235,6 @@ class ExamOralPractical(models.Model):
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Batch",required=True,tracking=True)
     team_lead = fields.Many2one("bes.examiner",string="Team Lead")
-    
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
@@ -1408,45 +1398,8 @@ class ExamOralPractical(models.Model):
                     "price_per_unit":price,
                     "assignment": assignment.id
                  })
-            
-            outstation_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.outstation == 'yes')
-            
-            if outstation_assignments:
-                print("outstation_assignments")
-                print(outstation_assignments)
-                
-                unique_exam_dates = set(outstation_assignment.exam_date for outstation_assignment in outstation_assignments)
-
-                exam_dates = unique_exam_dates
-                
-                if examiner.designation in ['non-mariner','catering']:
-                    price =  self.env['product.product'].search([('default_code','=','outstation_non_mariner')]).standard_price
-                elif examiner.designation in ['master','chief']:
-                    price =  self.env['product.product'].search([('default_code','=','outstation_mariner')]).standard_price
-                
-                
-                for date in exam_dates:
-                    exam = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.outstation == 'yes' and e.exam_date == date)
-                    # online_candidate_count = sum(online_exams.mapped('candidates_count'))
-                    self.env["examiner.outstation.expense"].sudo().create({
-                            "examiner_expenses_id":expense.id,
-                            "exam_date":date,
-                            "assignment": exam.id,
-                            "price" : price
-                        })
-                               
-                # print("exam_dates")
-                # print(exam_dates)
-                # for outstation_assignment in outstation_assignments:
-                #     print("outstation_assignment")
-                #     print(outstation_assignment)
-                
-            
                 
             online_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type == 'online')
-            
-            
-            
             
             
             if online_assignments:
@@ -1473,19 +1426,19 @@ class ExamOralPractical(models.Model):
                         })
                             
             
-            examiners_team_lead = self.examiners.mapped('examiner')
-            
-            for team_lead in examiners_team_lead:
+                examiners_team_lead = self.examiners.mapped('examiner')
                 
-                if team_lead.id == self.team_lead.id:
-                    self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
-                    price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
+                for team_lead in examiners_team_lead:
                     
-                    self.env["institute.team.lead"].sudo().create({
-                        "examiner_expenses_id":expense.id,
-                        "examiner_duty":self.id,
-                        "price": price,
-                    })
+                    if team_lead.id == self.team_lead.id:
+                        self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                        price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
+                        
+                        self.env["institute.team.lead"].sudo().create({
+                            "examiner_expenses_id":expense.id,
+                            "examiner_duty":self.id,
+                            "price": price,
+                        })
             
             
             # if expense.assignment_expense_ids:
@@ -2241,11 +2194,7 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
-    ipaddr = fields.Char("IP Address")
-    outstation = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'no')     
-    ], string='Outstation', default='no')
+    ipaddr = fields.Char("IP Address")    
     candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
