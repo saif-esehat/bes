@@ -10,35 +10,10 @@
         </xpath>
 
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
-            <!-- <t t-if="page_name == 'timesheet'">
-               
-                <li class="breadcrumb-item">
-                    <a t-attf-href="/my/assignments">Batches</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <t t-out="batches.batch_name"/>
-                </li>
-            </t> -->
-            
             <t t-if="page_name == 'timesheet'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments">Batches</a>
                 </li>
-                <!-- <li class="breadcrumb-item">
-                    <t >
-                        <a t-attf-href="/my/assignments/batches/{{batch_id}}" t-out="assignments.dgs_batch.batch_name"/>
-                    </t>
-
-                </li> -->
-                <!-- <li class="breadcrumb-item">
-                    <a t-attf-href="/my/assignments/timesheet/{{batch.id}}/{{examiner.id}}">Timesheet</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
-                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
-                    </t>
-
-                </li> -->
                 
             </t>
 
@@ -48,17 +23,9 @@
                 </li>
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments/timesheet/{{dgs_batch.id}}/{{examiner.id}}">Timesheets list</a>
-                </li>
-                <!-- <li class="breadcrumb-item">
-                </li>
-                <li class="breadcrumb-item">
-                    <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
-                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
-                    </t>
-
-                </li> -->
-                
+                </li>  
             </t>
+
         </xpath>
     </template>
     <template id="examiner_expenses" name="Examiner Expenses" >
@@ -495,9 +462,9 @@
                             <tr>
                                 <td>Day <span t-esc="index"/></td>
                                 <!-- <td><span t-esc="timesheet.exam_date.strftime('%d-%m-%Y')"/></td> -->
-                                <td><span t-esc="timesheet.arrival_date_time"/></td>
-                                <td><span t-esc="timesheet.commence_exam"/></td>
-                                <td><span t-esc="timesheet.completion_time"/></td>
+                                <td><span t-esc="timesheet.arrival_date_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.commence_exam.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.candidate_examined"/></td>
                                 <td><span t-esc="timesheet.debriefing_inst"/></td>
                                 <td>

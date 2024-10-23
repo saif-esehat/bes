@@ -1513,15 +1513,62 @@ class ComparativeReport(models.Model):
     ],string="Course",default='gp',tracking=True)
     
     def print_comparative_report(self):
-        # import wdb;wdb.set_trace()
         ids = self.env.context.get('active_ids')
         reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
+        import wdb;wdb.set_trace()
+
+        report_data = []  # This will hold the data for the report
 
         for report in reports:
             if report.course == 'gp':
                 gp_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                data = self._calculate_exam_statistics(gp_exam, report)
+                report_data.append(data)
 
             elif report.course == 'ccmc':
-                ccmc_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                ccmc_exam = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                data = self._calculate_exam_statistics(ccmc_exam, report)
+                report_data.append(data)
 
-        return {'type': 'ir.actions.act_window_close'}
+               # Prepare the final data structure for the report template
+        final_report = {
+            'report_data': report_data,
+        }
+
+        return self.env.ref('bes.report_comparative').report_action(self, data={'docs': final_report})
+
+    def _calculate_exam_statistics(self, exams, report):
+        """ Calculate statistics for fresh and repeater candidates """
+        report_info = {
+            'batch_name': report.sequence_report,  # Use the report's sequence number
+            'fresh_appeared': 0,
+            'fresh_pass_percentage': 'Nil',
+            'repeater_appeared': 0,
+            'repeater_pass_percentage': 'Nil',
+        }
+
+        # Calculate Fresh Candidates Data
+        report_info['fresh_appeared'] = self.env['gp.exam.schedule'].sudo().search_count([
+            ('dgs_batch', '=', report.examination_batch.id),
+            ('absent_status', '=', 'present'),
+        ])
+        fresh_passed = self.env['gp.exam.schedule'].sudo().search_count([
+            ('dgs_batch', '=', report.examination_batch.id),
+            ('absent_status', '=', 'present'),
+            ('result', '=', 'passed')
+        ])
+        report_info['fresh_pass_percentage'] = (fresh_passed / report_info['fresh_appeared'] * 100) if report_info['fresh_appeared'] > 0 else 'Nil'
+
+        # Calculate Repeater Candidates Data
+        report_info['repeater_appeared'] = self.env['gp.exam.schedule'].sudo().search_count([
+            ('dgs_batch', '=', report.examination_batch.id),
+            ('absent_status', '=', 'present'),
+        ])
+        repeater_passed = self.env['gp.exam.schedule'].sudo().search_count([
+            ('dgs_batch', '=', report.examination_batch.id),
+            ('absent_status', '=', 'present'),
+            ('result', '=', 'passed')
+        ])
+        report_info['repeater_pass_percentage'] = (repeater_passed / report_info['repeater_appeared'] * 100) if report_info['repeater_appeared'] > 0 else 'Nil'
+
+        return report_info
