@@ -48,6 +48,7 @@
                 <field name="institute"/>
                 <field name="practical_oral_expenses"/>
                 <field name="online_expenses"/>
+                <field name="outstation_expenses"/>
                 <field name="team_lead_expense"/>
                 <field name="non_mariner_expense"/>
                 <field name="total"/>
@@ -74,6 +75,7 @@
                         </div>
                     <group>
                         <field name="dgs_batch" required="1"/>
+                        <field name="total_expense"/>
                     </group>
                 </sheet>
             </form>
@@ -87,13 +89,6 @@
         <field name="model">examiner.expenses</field>
         <field name="arch" type="xml">
             <form string="Examiner Expenses">
-                <!-- <header>
-                    <button name="action_set_ec_approval" string="EC Approval" type="object" class="btn-primary" states="draft"/>
-                    <button name="action_set_ceo_approval" string="CEO Approval" type="object" class="btn-primary" states="ec_approval"/>
-                    <button name="action_set_approved" string="Approved" type="object" class="btn-primary" states="ceo_approval"/>
-                    <button name="cancel" string="Cancel" type="object" class="btn-secondary"/>
-                    <field name="state" widget="statusbar"/>
-                </header> -->
                 <sheet>
                     <group>
                         <field name="dgs_batch"/>
@@ -149,6 +144,17 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Outstation Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
+                            <field name="outstation_travel_expenses">
+                                <tree editable="bottom">
+                                    <field name="dgs_batch"/>
+                                    <field name="assignment"/>
+                                    <field name="institute" invisible="0"/>
+                                    <field name="exam_date" invisible="0"/>
+                                    <field name="price" sum="Total" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Miscellaneous Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="misc_expense_ids">
                                 <tree editable="bottom">
@@ -193,6 +199,7 @@
                 <field name="practical_oral_total"/>
                 <field name="online_total"/>
                 <field name="team_lead_total"/>
+                <field name="outstation_total"/>
                 <field name="misc_total"/>
                 <field name="total" sum="Total"/>
                 
