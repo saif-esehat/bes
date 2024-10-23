@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import api, fields, models , _, exceptions
+from datetime import datetime, timedelta
 
 class TimeSheetReport(models.Model):
     _name = 'time.sheet.report'
@@ -34,40 +35,36 @@ class TravelDetails(models.Model):
     _description = 'Travel Details'
 
     time_sheet_id = fields.Many2one('time.sheet.report', string="Parent Id")
-
-    left_residence = fields.Datetime(string='Left Residence')
-    left_residence_mode_of_travel = fields.Selection([
-        ('bus',"Bus"),
-        ('cab',"Cab"),
-        ('railway',"Railways"),
-        ('airline',"Airline")
-    ],string='Mode of Travel Left Residence',default="bus")
-    
-    arrival_institute_hotel = fields.Datetime(string='Arrival at the Institute/Hotel')
-    arrival_institute_hotel_mode_of_travel = fields.Selection([
-        ('bus',"Bus"),
-        ('cab',"Cab"),
-        ('railway',"Railways"),
-        ('airline',"Airline")
-    ],string='Mode of Travel Arrival at the Institute/Hotel',default="bus")
-    
-    left_institute_hotel = fields.Datetime(string='Left the Institute/Hotel')
-    left_institute_mode_of_travel = fields.Selection([
-        ('bus',"Bus"),
-        ('cab',"Cab"),
-        ('railway',"Railways"),
-        ('airline',"Airline")
-    ],string='Mode of Travel Left the Institute/Hotel',default="bus")
-    
-    arrival_residence = fields.Datetime(string='Arrival at Residence')
-    arrival_residence_mode_of_travel = fields.Selection([
-        ('bus',"Bus"),
-        ('cab',"Cab"),
-        ('railway',"Railways"),
-        ('airline',"Airline")
-    ],string='Mode of Travel Arrival at Residence',default="bus")
+    travelling_details = fields.Char(string='Travelling Details')
+    date_time = fields.Datetime(string='Date & Time')
+    mode_of_travel = fields.Char(string='Mode of travel')
     expenses = fields.Float(string='Expenses (if incurred)')
 
+
+    @api.model
+    def create_travel_lines(self, timesheet_id, kw):
+        """
+        Create lines for each travel phase using direct creation for each predefined phase.
+        The `kw` parameter contains the form data.
+        """
+        # Predefined phases with dynamic data (DateTime, Mode of Travel, Expense)
+        travel_phases = [
+            ('Left Residence', datetime.strptime(kw.get('left_residence_date_time'), '%Y-%m-%dT%H:%M'), kw.get('left_residence_mode_of_travel'), kw.get('left_residence_expenses')),
+            ('Arrival at the Institute/Hotel', datetime.strptime(kw.get('arrival_institute_hotel_date_time'), '%Y-%m-%dT%H:%M'), kw.get('arrival_institute_hotel_mode_of_travel'), kw.get('arrival_institute_hotel_expenses')),
+            ('Left Institute/Hotel', datetime.strptime(kw.get('left_institute_date_time'), '%Y-%m-%dT%H:%M'), kw.get('left_institute_mode_of_travel'), kw.get('left_institute_expenses')),
+            ('Arrival at Residence', datetime.strptime(kw.get('arrival_residence_date_time'), '%Y-%m-%dT%H:%M'), kw.get('arrival_residence_mode_of_travel'), kw.get('arrival_residence_expenses'))
+        ]
+
+        # Loop through each travel phase and create a travel detail line
+        for detail, date_time, mode_of_travel, expenses in travel_phases:
+            self.env['travel.details'].sudo().create({
+                'time_sheet_id': timesheet_id,
+                'travelling_details': detail,
+                'date_time': date_time,
+                'mode_of_travel': mode_of_travel,
+                'expenses': expenses,
+            })
+    
 class CustomForm(models.Model):
     _name = 'custom.form'
     _description = 'Custom Form'

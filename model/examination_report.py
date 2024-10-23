@@ -77,7 +77,25 @@ class ExaminationReport(models.Model):
         self.summarised_report()
         self.attempt_wise_report()
         
+    def generate_comparative_report(self):
+        # import wdb;wdb.set_trace()
+        ids = self.env.context.get('active_ids')
+        view_id = self.env.ref('bes.comparative_report_wizard_form').id
+        return {
+            'name': 'Comparative Report',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'comparative.report',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_examination_report_batch': ids,
+            }
+            }  
     
+
+
     def ordinal(self,n):
         if 10 <= n % 100 <= 20:
             suffix = 'th'
@@ -329,7 +347,7 @@ class ExaminationReport(models.Model):
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
                 # practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True)])
-                # practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
+                practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
                 # practical_percentage = (practical_pass/practical_appeared) * 100
                 practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed')])
                 practical_percentage = (practical/appeared) * 100
@@ -349,7 +367,7 @@ class ExaminationReport(models.Model):
                         'applied': applied,
                         'candidate_appeared': appeared,
                         'practical_pass_appeared': practical_appeared,
-                        'practical_pass': practical_pass,
+                        'practical_pass': practical_pass, 
                         'practical_pass_per': practical_percentage,
                         'oral_pass_appeared': appeared,
                         'oral_pass': oral,
@@ -1057,6 +1075,7 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
+        
     
 
 
@@ -1480,3 +1499,29 @@ class BarGraphReport(models.AbstractModel):
             # 'report_type': report_type,
             # 'course': course
         }
+
+
+class ComparativeReport(models.Model):
+    _name = 'comparative.report'
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = 'Comparative Report'
+
+    examination_report_batch = fields.Many2many("examination.report",string="Examination Report Batch")
+    course = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ],string="Course",default='gp',tracking=True)
+    
+    def print_comparative_report(self):
+        # import wdb;wdb.set_trace()
+        ids = self.env.context.get('active_ids')
+        reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
+
+        for report in reports:
+            if report.course == 'gp':
+                gp_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+
+            elif report.course == 'ccmc':
+                ccmc_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+
+        return {'type': 'ir.actions.act_window_close'}

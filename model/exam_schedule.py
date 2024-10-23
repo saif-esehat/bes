@@ -738,6 +738,11 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     parent_id = fields.Many2one("ccmc.examiner.assignment.wizard",string="Parent",tracking=True)
     
     exam_date = fields.Date('Exam Date',tracking=True)
+    
+    outstation = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'no')     
+    ], string='Outstation', default='no')
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
@@ -1192,6 +1197,10 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
 
     exam_date = fields.Date('Exam Date',tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
+    outstation = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'no')     
+    ], string='Outstation', default='no')
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     gp_marksheet_ids = fields.Many2many('gp.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
@@ -1235,6 +1244,7 @@ class ExamOralPractical(models.Model):
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Batch",required=True,tracking=True)
     team_lead = fields.Many2one("bes.examiner",string="Team Lead")
+    
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
@@ -1398,8 +1408,45 @@ class ExamOralPractical(models.Model):
                     "price_per_unit":price,
                     "assignment": assignment.id
                  })
+            
+            outstation_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.outstation == 'yes')
+            
+            if outstation_assignments:
+                print("outstation_assignments")
+                print(outstation_assignments)
+                
+                unique_exam_dates = set(outstation_assignment.exam_date for outstation_assignment in outstation_assignments)
+
+                exam_dates = unique_exam_dates
+                
+                if examiner.designation in ['non-mariner','catering']:
+                    price =  self.env['product.product'].search([('default_code','=','outstation_non_mariner')]).standard_price
+                elif examiner.designation in ['master','chief']:
+                    price =  self.env['product.product'].search([('default_code','=','outstation_mariner')]).standard_price
+                
+                
+                for date in exam_dates:
+                    exam = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.outstation == 'yes' and e.exam_date == date)
+                    # online_candidate_count = sum(online_exams.mapped('candidates_count'))
+                    self.env["examiner.outstation.expense"].sudo().create({
+                            "examiner_expenses_id":expense.id,
+                            "exam_date":date,
+                            "assignment": exam.id,
+                            "price" : price
+                        })
+                               
+                # print("exam_dates")
+                # print(exam_dates)
+                # for outstation_assignment in outstation_assignments:
+                #     print("outstation_assignment")
+                #     print(outstation_assignment)
+                
+            
                 
             online_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type == 'online')
+            
+            
+            
             
             
             if online_assignments:
@@ -1426,19 +1473,19 @@ class ExamOralPractical(models.Model):
                         })
                             
             
-                examiners_team_lead = self.examiners.mapped('examiner')
+            examiners_team_lead = self.examiners.mapped('examiner')
+            
+            for team_lead in examiners_team_lead:
                 
-                for team_lead in examiners_team_lead:
+                if team_lead.id == self.team_lead.id:
+                    self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                    price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
                     
-                    if team_lead.id == self.team_lead.id:
-                        self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
-                        price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
-                        
-                        self.env["institute.team.lead"].sudo().create({
-                            "examiner_expenses_id":expense.id,
-                            "examiner_duty":self.id,
-                            "price": price,
-                        })
+                    self.env["institute.team.lead"].sudo().create({
+                        "examiner_expenses_id":expense.id,
+                        "examiner_duty":self.id,
+                        "price": price,
+                    })
             
             
             # if expense.assignment_expense_ids:
@@ -2194,7 +2241,11 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
-    ipaddr = fields.Char("IP Address")    
+    ipaddr = fields.Char("IP Address")
+    outstation = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'no')     
+    ], string='Outstation', default='no')
     candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
@@ -3033,10 +3084,10 @@ class GPExam(models.Model):
     overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)
     
     # Attempting Exams
-    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac')
-    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac')
-    attempting_mek_online = fields.Boolean('attempting_mek_online')
-    attempting_gsk_online = fields.Boolean('attempting_gsk_online')
+    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac',tracking=True)
+    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac',tracking=True)
+    attempting_mek_online = fields.Boolean('attempting_mek_online',tracking=True)
+    attempting_gsk_online = fields.Boolean('attempting_gsk_online',tracking=True)
     
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
@@ -3267,8 +3318,8 @@ class GPExam(models.Model):
             else:
                  record.absent_status = "present"
 
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
-    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_date = fields.Date(string="Exam Date",tracking=True)
     @api.depends('gp_candidate.candidate_image')
@@ -4367,8 +4418,8 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
-    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_region = fields.Many2one('exam.center',string='Exam Center',store=True)
 
@@ -4385,13 +4436,13 @@ class CCMCExam(models.Model):
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
     ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
     
-    ccmc_oral_prac_assignment = fields.Boolean('ccmc_oral_prac_assignment')
+    ccmc_oral_prac_assignment = fields.Boolean('ccmc_oral_prac_assignment',tracking=True)
 
-    ccmc_gsk_oral_assignment = fields.Boolean('ccmc_gsk_oral_assignment')
+    ccmc_gsk_oral_assignment = fields.Boolean('ccmc_gsk_oral_assignment',tracking=True)
     
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
     
-    ccmc_online_assignment = fields.Boolean('ccmc_online_assignment')
+    ccmc_online_assignment = fields.Boolean('ccmc_online_assignment',tracking=True)
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     

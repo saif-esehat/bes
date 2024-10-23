@@ -18,6 +18,9 @@
         file="bes.reports_iv_candidate_certificates"/>
 
 
+   
+
+
 <template id="reports_iv_candidate_admit_card">
     <t t-call="web.basic_layout">
         <div class="page">
@@ -464,6 +467,10 @@
         </div>
     </t>
 </template>
+
+
+
+
 
 
 

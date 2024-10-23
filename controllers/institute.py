@@ -237,6 +237,12 @@ class InstitutePortal(CustomerPortal):
                 [('country_id.code', '=', 'IN')])
         batches = candidate.institute_batch_id
         
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         vals = {'candidate': candidate, "page_name": "gp_candidate_form",'batches':batches, 'states':states}
         return request.render("bes.gp_candidate_profile_view", vals)
     
@@ -248,6 +254,13 @@ class InstitutePortal(CustomerPortal):
         states = request.env['res.country.state'].sudo().search(
                 [('country_id.code', '=', 'IN')])
         batches = candidate.institute_batch_id
+        
+        candidate._check_sign()
+        candidate._check_image()
+        candidate._check_ship_visit_criteria()
+        candidate._check_attendance_criteria()
+        candidate._check_stcw_certificate()
+        
         vals = {'candidate': candidate, "page_name": "ccmc_candidate_form",'batches':batches, 'states':states}
         return request.render("bes.ccmc_candidate_profile_view", vals)
     
@@ -1483,6 +1496,7 @@ class InstitutePortal(CustomerPortal):
         candidate_id = kw.get('candidate_id')
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
+        other_institute = kw.get('other_institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
         # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
@@ -1499,6 +1513,7 @@ class InstitutePortal(CustomerPortal):
             'candidate_id' : candidate_id,
             'course_name': course_name,
             'institute_name': institute_name,
+            'other_institute': other_institute,
             'marine_training_inst_number': marine_training_inst_number,
             # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,
@@ -1527,6 +1542,7 @@ class InstitutePortal(CustomerPortal):
         candidate_id = kw.get('candidate_id')
         course_name = kw.get('course_name')
         institute_name = kw.get('institute_name')
+        other_institute = kw.get('other_institute_name')
         marine_training_inst_number = kw.get('marine_training_inst_number')
         # mti_indos_no = kw.get('mti_indos_no')
         candidate_cert_no = kw.get('candidate_cert_no')
@@ -1541,6 +1557,7 @@ class InstitutePortal(CustomerPortal):
             'candidate_id' : candidate_id,
             'course_name': course_name,
             'institute_name': institute_name,
+            'other_institute': other_institute,
             'marine_training_inst_number': marine_training_inst_number,
             # 'mti_indos_no': mti_indos_no,
             'candidate_cert_no': candidate_cert_no,

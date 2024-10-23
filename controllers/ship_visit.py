@@ -149,6 +149,13 @@ class GPShipVisitPortalController(http.Controller):
 
     @http.route(['/my/ship_visits/submit'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
     def portal_gp_ship_visit_submit(self, **post):
+        
+        user_id = request.env.user.id
+
+        # Fetch institute based on the logged-in user
+        institute_id = request.env["bes.institute"].sudo().search(
+        [('user_id', '=', user_id)], limit=1).id  
+
         if request.httprequest.method == 'POST':
             # import wdb;wdb.set_trace()
             batch_id = int(post.get("batch_id"))
@@ -160,7 +167,13 @@ class GPShipVisitPortalController(http.Controller):
             date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            bridge = post.get("bridge")
+            eng_room = post.get("eng_room")
+            cargo_area = post.get("cargo_area")
             candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
+
+            # import wdb;wdb.set_trace()
+            dgs_batch_id = request.env['institute.gp.batches'].sudo().search([('institute_id', '=', institute_id),('id', '=', batch_id)], limit=1).dgs_batch.id
 
             # Process image file
             image_base64 = None
@@ -186,6 +199,11 @@ class GPShipVisitPortalController(http.Controller):
                     "no_of_candidate": no_of_candidate,
                     "gp_image": image_base64 if gp_image else False,
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+                    "bridge": bridge,
+                    "eng_room": eng_room,
+                    "cargo_area": cargo_area,
+                    "institute_id": institute_id,
+                    "dgs_batch": dgs_batch_id,
                 }
 
                
@@ -206,7 +224,7 @@ class GPShipVisitPortalController(http.Controller):
         user_id = request.env.user.id
 
         # Fetch institute based on the logged-in user
-        ccmc_ship_batch_ids = request.env["bes.institute"].sudo().search(
+        institute_id = request.env["bes.institute"].sudo().search(
         [('user_id', '=', user_id)], limit=1).id  
 
         if request.httprequest.method == 'POST':
@@ -219,7 +237,13 @@ class GPShipVisitPortalController(http.Controller):
             date_of_visit_str = post.get("date_of_visit")
             no_of_candidate = post.get("no_of_candidate")
             gp_image = post.get("gp_image")
+            bridge = post.get("bridge")
+            eng_room = post.get("eng_room")
+            cargo_area = post.get("cargo_area")
             candidate_ids = request.httprequest.form.getlist('candidate_ids')  # Fetch multiple candidate IDs
+
+            # import wdb;wdb.set_trace()
+            dgs_batch_id = request.env['institute.ccmc.batches'].sudo().search([('institute_id', '=', institute_id),('id', '=', batch_id)], limit=1).dgs_batch.id
 
             # Process image file
             image_base64 = None
@@ -245,6 +269,11 @@ class GPShipVisitPortalController(http.Controller):
                     "no_of_candidate": no_of_candidate,
                     "gp_image": image_base64 if gp_image else False,
                     "candidate_ids": candidate_ids_list,  # Assign the selected candidates to Many2many field
+                    "bridge": bridge,
+                    "eng_room": eng_room,
+                    "cargo_area": cargo_area,
+                    "institute_id": institute_id,
+                    "dgs_batch": dgs_batch_id,
                 }
 
                 # Create the record in the model
@@ -316,8 +345,9 @@ class GPShipVisitPortalController(http.Controller):
         
         for candidate in ship_visit.candidate_ids:
             request.env['ccmc.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
+            request.env['ccmc.candidate'].sudo().search([('id','=',candidate.id)])._check_ship_visit_criteria()
         
-        ship_visit.candidate_ids.unlink()
+        # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
 
@@ -339,8 +369,8 @@ class GPShipVisitPortalController(http.Controller):
         
         for candidate in ship_visit.candidate_ids:
             request.env['gp.candidate.ship.visits'].sudo().search([('candidate_id','=',candidate.id),('ship_visit_id','=',ship_visit_id)]).unlink()
-        
-        ship_visit.candidate_ids.unlink()
+            request.env['gp.candidate'].sudo().search([('id','=',candidate.id)])._check_ship_visit_criteria()
+        # ship_visit.candidate_ids.unlink()
         ship_visit.unlink()
         # import wdb;wdb.set_trace()
 
@@ -361,6 +391,8 @@ class GPShipVisitPortalController(http.Controller):
 
         ccmc_ship_visit = request.env['ccmc.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
         ccmc_ship_visit.unlink()
+        request.env['ccmc.candidate'].sudo().browse(candidate_id)._check_ship_visit_criteria()
+
         # vals = {'visit': visit, 'page_name': 'gpship_edit'}
         # if not visit.exists():
         #     return request.not_found()
@@ -378,6 +410,8 @@ class GPShipVisitPortalController(http.Controller):
 
         gp_ship_visit = request.env['gp.candidate.ship.visits'].sudo().search([('ship_visit_id','=',ship_visit_id),('candidate_id','=',candidate_id)])
         gp_ship_visit.unlink()
+        request.env['gp.candidate'].sudo().browse(candidate_id)._check_ship_visit_criteria()
+
         # vals = {'visit': visit, 'page_name': 'gpship_edit'}
         # if not visit.exists():
         #     return request.not_found()
@@ -387,7 +421,7 @@ class GPShipVisitPortalController(http.Controller):
     @http.route(['/my/ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
     def portal_gp_ship_visit_edit(self,ship_visit_id,**kw):
         visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
-        vals = {'visit': visit, 'page_name': 'gpship_edit'}
+        vals = {'visit': visit,'batch_id':visit.gp_ship_batch_id.id, 'page_name': 'gpship_edit'}
         if not visit.exists():
             return request.not_found()
         return request.render('bes.portal_gp_ship_visit_edit', vals)
@@ -425,6 +459,8 @@ class GPShipVisitPortalController(http.Controller):
                 "date_of_visits":ship_visit.date_of_visit,
                 "time_spent_on_ship":ship_visit.time_spent
             })
+        
+        request.env['ccmc.candidate'].sudo().browse(candidate_ids)._check_ship_visit_criteria()
             
         
 

@@ -219,7 +219,7 @@
     <template id="ccmc_dgs_report">
         <t t-call="web.html_container">
             <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
-            <t t-call="bes.dgs_report_custom_header_footer" >
+            <t t-call="bes." >
                 <t t-foreach="docs" t-as="doc">
                     <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
                     
@@ -348,5 +348,208 @@
             
         </t>
     </template>
+
+
+
+    <template id="ccmc_batch_ship_visit_report">
+    <t t-call="web.html_container">
+        <div class="page">
+        <div class="header">
+                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                <h5 style="text-align: center; font-weight: bold;">
+                        CCMC INSTITUTES
+
+                </h5>
+                
+    
+                  </table>
+                </div>
+
+        <table  class="black-bordered-table" style="" border="1">
+
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: bottom; width:8px; height:8px;">Sr. No.</th>
+                                <th style="vertical-align: bottom;">Code No.</th>
+                                <th style="vertical-align: bottom;">Name of the Institute</th>
+                                <th style="vertical-align: bottom;">No of Candidates</th>
+                                <th style="vertical-align: bottom;">Name of the Ship Visited / Ship In Campus</th>
+                                <th style="vertical-align: bottom;">IMO No.</th>
+                                <th style="vertical-align: bottom;">Name of the Port Visited / Place of SIC</th>
+                                <th style="vertical-align: bottom;">Date of Visit</th>
+                                <th style="vertical-align: bottom;">Time Spent on Ship (Hrs)</th>
+                                <th style="vertical-align: bottom;">Provided Evidence</th>
+                                <th style="vertical-align: bottom;">Remark</th>
+                                <th style="vertical-align: bottom;">CENTER</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Add rows with student data here -->
+                            <t t-set="index" t-value="0" />
+                            <t t-foreach="exams" t-as="exam">
+                                <tr>
+                                    <t t-set="index" t-value="index + 1"/>
+                                    <td><span t-esc="index"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.institute_id.code"/></td>
+                                    <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.institute_id.name"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.candidate_count"/></td>
+                                   
+                                   <td style="white-space: nowrap; overflow: hidden; max-width: 250px; text-align: center">
+                                        <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                            <span t-esc="visit.ship_name2" 
+                                                t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                        </t>
+                                    </td>
+                                                            
+                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.imo_no"   
+                                         t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.port_name" 
+                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.date_of_visit" 
+                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                <td style="text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.time_spent" 
+                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                <td style="text-align:center">
+                                 
+                                </td>
+                                  <td style="text-align:center">
+                                 
+                                </td>
+                                 <td style="text-align:center"><span t-esc="exam.exam_region"/></td>
+                                </tr>
+                               
+                            </t>
+                          
+                           
+                        </tbody>
+                    </table>
+           
+        </div>
+    </t>
+</template>
+
+
+ <template id="gp_batch_ship_visit_report">
+    <t t-call="web.html_container">
+        <div class="page">
+        <div class="header">
+                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+                <h5 style="text-align: center; font-weight: bold;">
+                        GP INSTITUTES
+
+                </h5>
+                
+    
+                  </table>
+                </div>
+
+        <table  class="black-bordered-table" style="" border="1">
+
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: bottom; width:8px; height:8px;">Sr. No.</th>
+                                <th style="vertical-align: bottom;">Code No.</th>
+                                <th style="vertical-align: bottom;">Name of the Institute</th>
+                                <th style="vertical-align: bottom;">No of Candidates</th>
+                                <th style="vertical-align: bottom;">Name of the Ship Visited / Ship In Campus</th>
+                                <th style="vertical-align: bottom;">IMO No.</th>
+                                <th style="vertical-align: bottom;">Name of the Port Visited / Place of SIC</th>
+                                <th style="vertical-align: bottom;">Date of Visit</th>
+                                <th style="vertical-align: bottom;">Time Spent on Ship (Hrs)</th>
+                                <th style="vertical-align: bottom;">Provided Evidence</th>
+                                <th style="vertical-align: bottom;">Remark</th>
+                                <th style="vertical-align: bottom;">CENTER</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Add rows with student data here -->
+                            <t t-set="index" t-value="0" />
+                            <t t-foreach="exams" t-as="exam">
+                                <tr>
+                                    <t t-set="index" t-value="index + 1"/>
+                                    <td><span t-esc="index"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.institute_id.code"/></td>
+                                    <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.institute_id.name"/></td>
+                                    <td style="text-align:center"><span t-esc="exam.candidate_count"/></td>
+                                   
+                                   <td style="white-space: nowrap; overflow: hidden; max-width: 250px; text-align: center">
+                                        <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                            <span t-esc="visit.ship_name1" 
+                                                t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                        </t>
+                                    </td>
+                                                            
+                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.imo_no"   
+                                         t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.port_name" 
+                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.date_of_visit" 
+                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                <td style="text-align:center">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.time_spent" 
+                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
+                                          
+                                    </t>
+                                </td>
+                                <td style="text-align:center">
+                                 
+                                </td>
+                                  <td style="text-align:center">
+                                 
+                                </td>
+                                 <td style="text-align:center"><span t-esc="exam.exam_region"/></td>
+                                </tr>
+                               
+                            </t>
+                          
+                           
+                        </tbody>
+                    </table>
+           
+        </div>
+    </t>
+</template>
+
+
+
+
     
 </odoo>

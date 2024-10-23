@@ -5,6 +5,41 @@
 
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
 
+            <t t-if="page_name == 'gp_ship_list'">
+               
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+
+                  <li class="breadcrumb-item">
+                    Ship Visit
+                </li>
+            </t>
+
+            <!-- <t t-if="page_name == 'gp_ship_list'">
+               
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ship_visits">GP Ship Visits</a>
+                </li>
+
+                  <li class="breadcrumb-item">
+                    Ship Visit
+                </li>
+            </t> -->
+
+            <t t-if="page_name == 'gpship_edit'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/gpbatch">GP Batches</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/ship_visits/{{batch_id}}">Ship Visit</a>
+                </li>
+                <li class="breadcrumb-item">
+                  Edit
+                </li>
+            </t>
+
+
             <!-- <li t-if="page_name == 'ship_visits'" class="breadcrumb-item ">
              GP Batches
                 
@@ -130,44 +165,76 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input  type="hidden" id="batch_id" name="batch_id" class="form-control"/>
 
-                            <div class="container mt-8">
+                            <div class="container mt-5">
                                 <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="ship_name1">Ship Name</label>
-                                    <input type="text" name="ship_name1" class="form-control" required="required"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="ship_name1">Name of  the Ship Visited/ Ship in Campus:</label>
+                                            <input type="text" name="ship_name1" class="form-control" required="required" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="port_name">Port Name</label>
-                                    <input type="text" name="port_name" class="form-control" required="required"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="imo_no">IMO No.:</label>
+                                            <input type="text" name="imo_no" class="form-control" required="required" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="imo_no">IMO No.</label>
-                                    <input type="text" name="imo_no" class="form-control" required="required"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="port_name">Name of the Port Visited/ Place of SIC:</label>
+                                            <input type="text" name="port_name" class="form-control" required="required" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="date_of_visit">Date of Visit</label>
-                                    <input type="date" name="date_of_visit" class="form-control" required="required"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="date_of_visit">Date of Visit:</label>
+                                            <input type="date" name="date_of_visit" class="form-control" required="required" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="time_spent">Time Spent (in hours)</label>
-                                    <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="time_spent">Time Spent on Ship/ SIC (in hours):</label>
+                                            <input type="number" name="time_spent" class="form-control" min="0" required="required" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="gp_image">Ship Image</label>
-                                    <input type="file" name="gp_image" class="form-control" id="gp_image" />
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="gp_image">Ship Image</label>
+                                            <input type="file" name="gp_image" class="form-control" id="gp_image" />
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <div class="card mx-2 border border-secondary-subtle">
+                                        <div class="card-body">
+                                            <div class="col-12">
+                                                <h5>Places visited on Ships/ SIC (Put tick mark)</h5>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="bridge" name="bridge" />
+                                                        <label class="form-check-label" for="bridge">Bridge</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room" />
+                                                        <label class="form-check-label" for="eng_room">Eng. Room</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area" />
+                                                        <label class="form-check-label" for="cargo_area">Cargo Area</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             </form>
@@ -212,11 +279,11 @@
                 <thead>
               
                       <tr>
-                        <th>Ship Name</th>
-                        <th>Port Name</th>
+                        <th>Name of the Ship:</th>
                         <th>IMO No.</th>
+                        <th>Name of the Port:</th>
                         <th>Date of Visit</th>
-                        <th>Time Spent</th>
+                        <th>Time Spent on Ship(in hours):</th>
                         <!-- <th>Course</th> -->
                         <th>No. of Candidates</th>
                     </tr>
@@ -227,8 +294,8 @@
                             <td>
                                 <t t-esc="visit.ship_name1"/>
                             </td>
-                            <td><t t-esc="visit.port_name"/></td>
                             <td><t t-esc="visit.imo_no"/></td>
+                            <td><t t-esc="visit.port_name"/></td>
                             <td><t t-esc="visit.date_of_visit"/></td>
                             <td><t t-esc="visit.time_spent"/></td>
                             <!-- <td><t t-esc="visit.course_gp"/></td> 
@@ -308,47 +375,71 @@
                     <div class="container mt-5">
                         <div class="row">
                 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="ship_name1">Ship Name</label>
-                                <input type="text" name="ship_name1" class="form-control" required="required"/>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="ship_name1">Name of  the Ship Visited/ Ship in Campus</label>
+                                    <input type="text" name="ship_name1" class="form-control" required="required"/>
+                                </div>
                             </div>
-                        </div>
 
-                         <div class="col-md-6">
-                             <div class="form-group">
-                                <label for="port_name">Port Name</label>
-                                <input type="text" name="port_name" class="form-control" required="required"/>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="imo_no">IMO No.</label>
+                                    <input type="text" name="imo_no" class="form-control" required="required"/>
+                                </div>
                             </div>
-                        </div>
 
-                         <div class="col-md-6">
-                              <div class="form-group">
-                                <label for="imo_no">IMO No.</label>
-                                <input type="text" name="imo_no" class="form-control" required="required"/>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="port_name">Name of the Port Visited/ Place of SIC</label>
+                                    <input type="text" name="port_name" class="form-control" required="required"/>
+                                </div>
                             </div>
-                        </div>
 
-                         <div class="col-md-6">
-                            <div class="form-group">
-                            <label for="date_of_visit">Date of Visit</label>
-                            <input type="date" name="date_of_visit" class="form-control" required="required"/>
-                        </div>
-                        </div>
-
-                        <div class="col-md-6">
-                           <div class="form-group">
-                                <label for="time_spent">Time Spent (in hours)</label>
-                                <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="date_of_visit">Date of Visit</label>
+                                    <input type="date" name="date_of_visit" class="form-control" required="required"/>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                           <div class="form-group">
-                                <label for="gp_image">Ship Image</label>
-                                <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="time_spent">Time Spent on Ship/ SIC (in hours)</label>
+                                    <input type="number" name="time_spent" class="form-control" min="0" required="required"/>
+                                </div>
                             </div>
-                        </div>
+                                
+                            <!-- <div class="row"> -->
+                            <h5>Places visited on Ships/ SIC(Put tick marks)</h5>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="checkbox" class="form-check-input" id="bridge" name="bridge"/>
+                                        <label class="form-check-label" for="bridge">Bridge</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room"/>
+                                        <label class="form-check-label" for="eng_room">Eng. Room</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area"/>
+                                        <label class="form-check-label" for="cargo_area">Cargo Area</label>
+                                    </div>
+                                </div>
+                            <!-- </div> -->
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="gp_image">Ship Image</label>
+                                    <input type="file" name="gp_image" class="form-control" id="gp_image" />  
+                                </div>
+                            </div>
 
                          <!-- <div class="col-md-6">
                          <div class="form-group">
@@ -564,6 +655,11 @@
 
                     debugger
                     document.getElementById("addGPCandidates").disabled = false
+                    var deletebuttons = document.querySelectorAll('button[id="deleteGPCandidate"')
+
+                    deletebuttons.forEach(function(deleteButton){
+                        deleteButton.disabled = false;
+                    })
 
 
                 })
@@ -692,37 +788,58 @@
                                 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                               <label for="ship_name1">Ship Name:</label>
+                                               <label for="ship_name1">Name of  the Ship Visited/ Ship in Campus:</label>
                                                <input type="text" readonly="1" id="ship_name1" name="ship_name1" class="form-control" t-att-value="visit.ship_name1"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                               <label for="port_name">Port Name:</label>
+                                                <label for="imo_no">IMO No.:</label>
+                                                <input type="text" readonly="1" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                               <label for="port_name">Name of the Port Visited/ Place of SIC:</label>
                                                <input type="text" readonly="1" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                 <label for="imo_no">IMO No.:</label>
-                                                 <input type="text" readonly="1" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                                                <label for="date_of_visit">Date of Visit:</label>
+                                                <input type="date" readonly="1" id="date_of_visit" name="date_of_visit" class="form-control"
+                                                    t-att-value="visit.date_of_visit"/>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                           <label for="date_of_visit">Date of Visit:</label>
-                                            <input type="date" readonly="1" id="date_of_visit" name="date_of_visit" class="form-control"
-                                                t-att-value="visit.date_of_visit"/>
-                                        </div>
+                                                <label for="time_spent">Time Spent on Ship/ SIC (in hours):</label>
+                                                <input type="text"  readonly="1" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                                            </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                        <div class="form-group">
-                                           <label for="time_spent">Time Spent:</label>
-                                          <input type="text"  readonly="1" id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                                        <!-- Adding Boolean Fields as Read-Only Checkboxes in a Single Line with Space -->
+                                        <div class="row m-4">
+                                        <h5>Places visited on Ships/ SIC : </h5>
+                                            <div class="d-flex gap-4">
+                                                <div class="form-check mx-2">
+                                                    <input type="checkbox" id="bridge" name="bridge" class="form-check-input" t-att-checked="visit.bridge" disabled="1" />
+                                                    <label for="bridge" class="form-check-label">Bridge</label>
+                                                </div>
+
+                                                <div class="form-check mx-2">
+                                                    <input type="checkbox" id="eng_room" name="eng_room" class="form-check-input" t-att-checked="visit.eng_room" disabled="1" />
+                                                    <label for="eng_room" class="form-check-label">Eng. Room</label>
+                                                </div>
+
+                                                <div class="form-check mx-2">
+                                                    <input type="checkbox" id="cargo_area" name="cargo_area" class="form-check-input" t-att-checked="visit.cargo_area" disabled="1" />
+                                                    <label for="cargo_area" class="form-check-label">Cargo Area</label>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -792,7 +909,7 @@
                                                      <t t-out="candidate.indos_no" />
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-danger" t-attf-ship_visit-id="{{visit.id}}" t-attf-candidate-id="{{candidate.id}}" onclick="openDeleteCandidateModal(this)" data-toggle="modal" data-target="#deleteModal" >
+                                                    <button type="button" class="btn btn-danger" t-att-disabled="1" id="deleteGPCandidate" t-attf-ship_visit-id="{{visit.id}}" t-attf-candidate-id="{{candidate.id}}" onclick="openDeleteCandidateModal(this)" data-toggle="modal" data-target="#deleteModal" >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"></path>
                                                             <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"></path>
