@@ -155,7 +155,7 @@
                 <tr>
                     <t t-foreach="docs" t-as="doc">
                         <!-- Print the roll_no in red and without borders -->
-                        <td style="color: red; border: none; padding: 10px;"> <!-- Padding for spacing -->
+                        <td style="color: red;border:none;vertical-align: middle; padding: 10px;text-align:center;"> <!-- Padding for spacing -->
                             <t t-esc="doc.roll_no"/>
                         </td>
                         
