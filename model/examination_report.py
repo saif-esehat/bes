@@ -1545,7 +1545,7 @@ class ComparativeReport(models.Model):
     def print_comparative_report(self):
         ids = self.env.context.get('active_ids')
         reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
-        import wdb;wdb.set_trace()
+        # import wdb;wdb.set_trace()
 
         report_data = []  # This will hold the data for the report
 
@@ -1568,7 +1568,6 @@ class ComparativeReport(models.Model):
         return self.env.ref('bes.report_comparative').report_action(self, data={'docs': final_report})
 
     def _calculate_exam_statistics(self, exams, report):
-        """ Calculate statistics for fresh and repeater candidates """
         report_info = {
             'batch_name': report.sequence_report,  # Use the report's sequence number
             'fresh_appeared': 0,
