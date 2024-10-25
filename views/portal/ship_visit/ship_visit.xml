@@ -175,6 +175,18 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="type_of_ship">Type of Ship:</label>
+                                            <input type="text" name="type_of_ship" class="form-control" required="required" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="master_name">Master Name:</label>
+                                            <input type="text" name="master_name" class="form-control" required="required" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="imo_no">IMO No.:</label>
                                             <input type="text" name="imo_no" class="form-control" required="required" />
                                         </div>
@@ -197,40 +209,40 @@
                                             <input type="number" name="time_spent" class="form-control" min="0" required="required" />
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6">
+                                    <!-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="gp_image">Ship Image</label>
                                             <input type="file" name="gp_image" class="form-control" id="gp_image" />
                                         </div>
-                                    </div>
+                                    </div> -->
 
-                                    <div class="card mx-2 border border-secondary-subtle">
-                                        <div class="card-body">
-                                            <div class="col-12">
-                                                <h5>Places visited on Ships/ SIC (Put tick mark)</h5>
+                                <div class="card mx-2 border border-secondary-subtle">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <h5>Places visited on Ships/ SIC (Put tick mark)</h5>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="bridge" name="bridge" />
+                                                    <label class="form-check-label" for="bridge">Bridge</label>
+                                                </div>
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="bridge" name="bridge" />
-                                                        <label class="form-check-label" for="bridge">Bridge</label>
-                                                    </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room" />
+                                                    <label class="form-check-label" for="eng_room">Eng. Room</label>
                                                 </div>
+                                            </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="eng_room" name="eng_room" />
-                                                        <label class="form-check-label" for="eng_room">Eng. Room</label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-4">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area" />
-                                                        <label class="form-check-label" for="cargo_area">Cargo Area</label>
-                                                    </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="cargo_area" name="cargo_area" />
+                                                    <label class="form-check-label" for="cargo_area">Cargo Area</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -742,6 +754,106 @@
                 <div class="row">
                     <div class="col-12">
                         <h3>Edit Ship Visit</h3>
+                        
+                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#editShipVistGP" class="btn btn-primary btn_cta">Edit Ship Visit Details</a>
+                        
+                        <div class="modal fade" id="editShipVistGP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <form method="post" action="/my/updateshipvisitgp" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" t-att-value="visit.id" name="ship_visit_id"  id="ship_visit_id"  />
+
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="container mt-5">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                        <label for="ship_name1">Name of  the Ship Visited/ Ship in Campus:</label>
+                                                        <input type="text" id="ship_name1" name="ship_name1" class="form-control" t-att-value="visit.ship_name1"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="type_of_ship">Type of Ship:</label>
+                                                            <input type="text" id="type_of_ship" name="type_of_ship" class="form-control" t-att-value="visit.type_of_ship"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="master_name">Master Name:</label>
+                                                            <input type="text" id="master_name" name="master_name" class="form-control" t-att-value="visit.master_name"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="imo_no">IMO No.:</label>
+                                                            <input type="text" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="port_name">Name of the Port Visited/ Place of SIC:</label>
+                                                            <input type="text" id="port_name" name="port_name" class="form-control" t-att-value="visit.port_name"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="date_of_visit">Date of Visit:</label>
+                                                            <input type="date" id="date_of_visit" name="date_of_visit" class="form-control"
+                                                                t-att-value="visit.date_of_visit"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="time_spent">Time Spent on Ship/ SIC (in hours):</label>
+                                                            <input type="text"  id="time_spent" name="time_spent" class="form-control" t-att-value="visit.time_spent"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Adding Boolean Fields as Read-Only Checkboxes in a Single Line with Space -->
+                                                    <div class="row m-4">
+                                                    <h5>Places visited on Ships/ SIC : </h5>
+                                                        <div class="d-flex gap-4">
+                                                            <div class="form-check mx-2">
+                                                                <input type="checkbox" id="bridge" name="bridge" class="form-check-input" t-att-checked="visit.bridge"/>
+                                                                <label for="bridge" class="form-check-label">Bridge</label>
+                                                            </div>
+
+                                                            <div class="form-check mx-2">
+                                                                <input type="checkbox" id="eng_room" name="eng_room" class="form-check-input" t-att-checked="visit.eng_room"/>
+                                                                <label for="eng_room" class="form-check-label">Eng. Room</label>
+                                                            </div>
+
+                                                            <div class="form-check mx-2">
+                                                                <input type="checkbox" id="cargo_area" name="cargo_area" class="form-check-input" t-att-checked="visit.cargo_area"/>
+                                                                <label for="cargo_area" class="form-check-label">Cargo Area</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <!-- <form method="POST" > -->
                             <!-- CSRF token -->
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -795,6 +907,20 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="type_of_ship">Type of Ship:</label>
+                                                <input type="text" readonly="1" id="type_of_ship" name="type_of_ship" class="form-control" t-att-value="visit.type_of_ship"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="master_name">Master Name:</label>
+                                                <input type="text" readonly="1" id="master_name" name="master_name" class="form-control" t-att-value="visit.master_name"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="imo_no">IMO No.:</label>
                                                 <input type="text" readonly="1" id="imo_no" name="imo_no" class="form-control" t-att-value="visit.imo_no"/>
                                             </div>
@@ -842,9 +968,9 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- <div class="col-md-6">
-                                        <div class="form-group">
+                                        
+                                    <!-- <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="gp_image">Ship Image</label>
                                                 <input type="file" name="gp_image" class="form-control" id="gp_image" />  
                                             </div>

@@ -11,6 +11,8 @@
                     <group>
                         <group>
                             <field name="ship_name2" readonly="1"/>
+                            <field name="type_of_ship" readonly="1"/>
+                            <field name="master_name" readonly="1"/>
                             <field name="port_name" readonly="1"/>
                             <field name="imo_no" readonly="1"/>
                         </group>
@@ -40,16 +42,13 @@
                         <field name="institute_id"/>
                     </group>
 
-                       <notebook>
-                          <page string="Ship Image">
-                            <group>
-                                <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
-                            </group>
-                        </page>
-
-                        
-
-                </notebook>
+                        <notebook>
+                            <page string="Ship Image">
+                                <group>
+                                    <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
+                                </group>
+                            </page>
+                        </notebook>
                 </sheet>
              
             </form>
