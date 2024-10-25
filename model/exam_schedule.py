@@ -2194,7 +2194,7 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
-    ipaddr = fields.Char("IP Address")    
+    ipaddr = fields.Char("IP Address",tracking=True)    
     candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
