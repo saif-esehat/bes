@@ -128,6 +128,22 @@
         <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
     </record>
 
+    <record id="bes.ship_visit_report_landscape" model="report.paperformat">
+        <field name="name">Landscape Format with Custom Margins</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">5</field> <!-- Adjust as needed -->
+        <field name="margin_bottom">5</field> <!-- Adjust as needed -->
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">15</field>
+        <field name="dpi">120</field> <!-- Example DPI, adjust as needed -->
+    </record>
+
     
     <record id="action_report_ccmc_batch_ship_visit" model="ir.actions.report">
         <field name="name">CCMC Reports</field>
@@ -137,7 +153,7 @@
         <field name="report_file">bes.ccmc_batch_ship_visit_report</field>
         <field name="print_report_name">"Ship Report CCMC</field>
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
-        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+        <field name="paperformat_id" ref="bes.ship_visit_report_landscape"/>
     </record>
 
     <record id="action_report_gp_batch_ship_visit" model="ir.actions.report">
@@ -148,7 +164,7 @@
         <field name="report_file">bes.gp_batch_ship_visit_report</field>
         <field name="print_report_name">"Ship Report GP</field>
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
-        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+        <field name="paperformat_id" ref="bes.ship_visit_report_landscape"/>
     </record>
    
     <report
