@@ -71,20 +71,24 @@ class ExpenseController(http.Controller):
         
         return request.redirect('my/assignments/batches/expenses/'+str(assignment_id))
     
-    @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:examiner_id>'], type="http", auth="user", website=True)
-    def TimeSheet(self,batch_id,examiner_id, **kw):
+    @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
+    def TimeSheet(self,batch_id,assignment_id, **kw):
         # import wdb;wdb.set_trace();
-        assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
-        timesheets = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
+
+        user_id = request.env.user.id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+
+        assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+        timesheets = request.env['time.sheet.report'].sudo().search([('examiner_assignment','=',assignment.id)])
         
         vals = {
             'timesheets': timesheets,
-            'assignments':assignments,
+            'assignment':assignment,
             'batch_id':batch_id,
-            'examiner_id':examiner_id,
+            'examiner_id':examiner.id,
             'page_name': 'timesheet'
                 }
-        return request.render("bes.timesheet_list", vals)
+        return request.render("bes.timesheet_form", vals)
 
     @http.route(['/my/assignments/batches/timesheet/add'], methods=['POST','GET'],type="http", auth="user", website=True)
     def TimeSheetAdd(self, **kw):
@@ -154,30 +158,31 @@ class ExpenseController(http.Controller):
     @http.route('/my/assignments/batches/timesheet/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_timesheet(self, **kw):
 
+        import wdb;wdb.set_trace();
         # Extract form data from the request
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        dgs_batch = request.env['dgs.batches'].sudo().search([('id', '=', int(kw.get('dgs_batch_id')))])
-        institute_id = request.env['bes.institute'].sudo().search([('id', '=', int(kw.get('institute_id')))])
 
-        timesheet = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',dgs_batch.id),('examiner','=',examiner.id),('institutes_id','=',institute_id.id)])
+        assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',kw.get('assign_id'))])
+
+        timesheet = request.env['time.sheet.report'].sudo().create({
+            'examiner_assignment': assignment.id,
+        })
 
         timesheet_line = request.env['timesheet.lines'].sudo().create({'time_sheet_id': timesheet.id})
         # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
 
-        # import wdb;wdb.set_trace();
 
         timesheet_line.write({
             'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
             'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
             'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
-
             'candidate_examined': kw.get('candidates_examined'),
             'debriefing_inst': kw.get('debriefing_time'),
         })
 
         # Dynamically create travel lines using predefined phases
-        request.env['travel.details'].sudo().create_travel_lines(timesheet.id, kw)
-        # Redirect to the timesheet list or any other page after saving
-        return request.redirect('/my/assignments/timesheet/list/'+str(timesheet.id))
+        # request.env['travel.details'].sudo().create_travel_lines(timesheet.id, kw)
+
+        return request.redirect('/my/assignments/timesheet/'+str(assignment.dgs_batch.id) +'/' +str(assignment.id))
     

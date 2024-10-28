@@ -1353,7 +1353,15 @@ class ExamOralPractical(models.Model):
     
     # def generate_overall_expense(self):
         
-        
+    def generate_timesheet(self):
+        for assignment in self.examiners:
+            self.assignment.time_sheet = timesheet.id 
+            for examiner in assignment.examiner:
+                timesheet = self.env["time.sheet.report"].sudo().create({
+                    "dgs_batch": self.dgs_batch.id,
+                    "examiner":examiner.id,
+                    "institutes_id":self.institute_id.id
+                })
         
         
     
