@@ -309,19 +309,19 @@
                 
                 <thead>
                     <tr>
-                        <th>Batch Name</th>
-                        <th>Faculties</th>
-                        <th>Report</th>
-                        <th>Ship Visits</th>
-                        <th>No. of Candidate</th>
-                        <th>Batch Capacity</th>
+                        <th class="text-center">Batch Name</th>
+                        <th class="text-center">Faculties</th>
+                        <th class="text-center">Batch Report</th>
+                        <th class="text-center">Ship Visits</th>
+                        <th class="text-center">No. of Candidate</th>
+                        <th class="text-center">Batch Capacity</th>
                         <!-- <th>DGS Document</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <t t-foreach="batches" t-as="batch">
                         <tr>
-                            <td class="text-left">
+                            <td class="text-center">
                                 <!-- <t t-if="batch.dgs_approval_state"> -->
                                     <a t-attf-href="/my/gpbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.batch_name"/>
@@ -334,19 +334,18 @@
                                 </t> -->
                             </td>
 
-                            <td class="text-left">
+                            <td class="text-center">
                                 <a t-attf-href="/my/gpbatch/faculties/{{batch.id}}" class="fa">
                                 Faculty
                                 </a>
                             </td>
 
-                            <td class="text-left">
-                                <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa">
-                                Download Report
+                            <td class="text-center">
+                                <a t-attf-href="/my/batches/download_report/{{batch.id}}" class="fa fa-download">
                                 </a>
                             </td>
                          
-                        <td class="text-left">
+                        <td class="text-center">
                             <a t-attf-href="/my/ship_visits/{{batch.id}}" class="fa">
                                 Ship Visit
                             </a>
@@ -379,7 +378,7 @@
                             </t> -->
 
                              <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
-                                <td class="text-left">
+                                <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t>
@@ -483,19 +482,18 @@
 
                 <thead>
                     <tr>
-                        <th>Batch Name</th>
-                        <th>Faculties</th>
-                        <th>Report</th>
-                         <th>CCMC Ship Visits</th>
-                        <th>Candidate Count</th>
-                        <th>DGS Capacity</th>
-                        <!-- <th>DGS Document</th> -->
+                        <th class="text-center">Batch Name</th>
+                        <th class="text-center">Faculties</th>
+                        <th class="text-center">Batch Report</th>
+                        <th class="text-center">Ship Visits</th>
+                        <th class="text-center">No. of Candidate</th>
+                        <th class="text-center">Batch Capacity</th>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-foreach="batches" t-as="batch">
                         <tr>
-                            <td class="text-left">
+                            <td class="text-center">
                                 <!-- <t t-if="batch.dgs_approval_state"> -->
                                     <a t-attf-href="/my/ccmcbatch/candidates/{{batch.id}}" class="fa">
                                         <t t-out="batch.ccmc_batch_name"/>
@@ -507,17 +505,16 @@
                                     </span>
                                 </t> -->
                             </td>
-                            <td class="text-left">
+                            <td class="text-center">
                                 <a t-attf-href="/my/ccmcbatch/faculties/{{batch.id}}" class="fa">
                                 Faculty
                                 </a>
                             </td>
-                            <td class="text-left">
-                                <a t-attf-href="/my/ccmc_batches/download_report/{{batch.id}}" class="fa">
-                                Download Report
+                            <td class="text-center">
+                                <a t-attf-href="/my/ccmc_batches/download_report/{{batch.id}}" class="fa fa-download">
                                 </a>
                             </td>
-                                <td class="text-left">
+                                <td class="text-center">
                             <a t-attf-href="/my/ccmc_ship_visits/{{batch.id}}" class="fa">
                                 CCMC Ship Visit
                             </a>
@@ -529,24 +526,24 @@
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
                             <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
-                                <td class="text-left">
+                                <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Upload Document</a>
                                 </td>
                             </t> -->
 
                             <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
-                                <td class="text-left">
+                                <td class="text-center">
                                     <a t-attf-href="/my/ccmccandidates/download_dgs_capacity/{{batch.id}}/{{institute_id}}" class="fa">Download Document</a>
                                 </td>
                             </t> -->
 
                             <!-- <t t-if="batch.ccmc_state == '2-indos_pending'">
-                                <td class="text-left">
+                                <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t> -->
                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
-                                <td class="text-left">
+                                <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t>
@@ -5014,7 +5011,7 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="approvaldocument">Upload Document</label>
+                                                <label for="approvaldocument">Upload DGS Approval Document</label>
                                                 <input required="0" type="file" class="form-control-file" accept=".xlsx, .csv, .pdf" name="approvaldocument" id="approvaldocument"/>
                                             </div>
 

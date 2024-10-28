@@ -507,7 +507,7 @@
                     <field name="marksheets" invisible="1" readonly="1" />
                     <field name="candidates_count" readonly="1"/>
                     <field name="commence_exam" readonly="1"/>
-                    <field name="ipaddr" readonly="0"/>
+                    <field name="ipaddr" readonly="1"/>
                     <button attrs="{'invisible': [('commence_exam', '!=', False)]}" string="Commence Exam" type="object" class="oe_highlight" name="commence_online_exam"/>
                     <button attrs="{'invisible': [('commence_exam', '!=', True)]}" string="End Exam" type="object" class="oe_highlight" name="end_online_exam"/> 
 

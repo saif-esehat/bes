@@ -38,18 +38,13 @@
                         <field name="gp_ship_batch_id" />
                         <field name="institute_id"/>
                     </group>
-
-                       <notebook>
-                          <page string="Image">
-                            <!-- Image Field -->
-                            <group>
-                                <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
-                            </group>
-                        </page>
-
-                        
-
-                </notebook>
+                        <notebook>
+                            <page string="Image">
+                                <group>
+                                    <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
+                                </group>
+                            </page>
+                        </notebook>
                 </sheet>
              
             </form>

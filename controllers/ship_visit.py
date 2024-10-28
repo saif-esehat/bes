@@ -160,6 +160,8 @@ class GPShipVisitPortalController(http.Controller):
             # import wdb;wdb.set_trace()
             batch_id = int(post.get("batch_id"))
             ship_name1 = post.get("ship_name1")
+            type_of_ship = post.get("type_of_ship")
+            master_name = post.get("master_name")
             port_name = post.get("port_name")
             course_gp = post.get("course_gp")
             imo_no = post.get("imo_no")
@@ -191,6 +193,8 @@ class GPShipVisitPortalController(http.Controller):
                 ship_data = {
                     "gp_ship_batch_id":batch_id,
                     "ship_name1": ship_name1,
+                    "type_of_ship": type_of_ship,
+                    "master_name": master_name,
                     "port_name": port_name,
                     "course_gp": course_gp,
                     "imo_no": imo_no,
@@ -230,6 +234,8 @@ class GPShipVisitPortalController(http.Controller):
         if request.httprequest.method == 'POST':
             batch_id = int(post.get("batch_id"))
             ship_name2 = post.get("ship_name2")
+            type_of_ship = post.get("type_of_ship")
+            master_name = post.get("master_name")
             port_name = post.get("port_name")
             course_gp = post.get("course_gp")
             imo_no = post.get("imo_no")
@@ -261,6 +267,8 @@ class GPShipVisitPortalController(http.Controller):
                 ship_data = {
                     "ccmc_ship_batch_ids":batch_id,
                     "ship_name2": ship_name2,
+                    "type_of_ship": type_of_ship,
+                    "master_name": master_name,
                     "port_name": port_name,
                     "course_gp": course_gp,
                     "imo_no": imo_no,
@@ -706,3 +714,144 @@ class GPShipVisitPortalController(http.Controller):
     #     if ship_visit.exists():
     #         ship_visit.unlink()
     #     return request.redirect('/my/ccmc_ship_visits')
+
+    
+    @http.route(['/my/updateshipvisitgp'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    def EditShipVisitGP(self, **kw):
+        user_id = request.env.user.id
+
+        # Fetch institute based on the logged-in user
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)], limit=1).id  
+
+        # Retrieve ship_visit_id if present
+        ship_visit_id = int(kw.get("ship_visit_id")) if kw.get("ship_visit_id") else None
+
+        # import wdb;wdb.set_trace()
+        # Collect data from the form
+        # batch_id = int(kw.get("batch_id"))
+        ship_name1 = kw.get("ship_name1")
+        type_of_ship = kw.get("type_of_ship")
+        master_name = kw.get("master_name")
+        port_name = kw.get("port_name")
+        course_gp = kw.get("course_gp")
+        imo_no = kw.get("imo_no")
+        time_spent = kw.get("time_spent")
+        date_of_visit_str = kw.get("date_of_visit")
+        no_of_candidate = kw.get("no_of_candidate")
+        gp_image = kw.get("gp_image")
+        bridge = kw.get("bridge")
+        eng_room = kw.get("eng_room")
+        cargo_area = kw.get("cargo_area")
+
+        # Convert image file to base64
+        image_base64 = None
+        if gp_image:
+            file_content = gp_image.read()
+            image_base64 = base64.b64encode(file_content).decode('utf-8')
+
+        # Prepare the list of candidates for the Many2many field
+
+        try:
+            # Prepare the ship visit data
+            ship_data = {
+                # "ccmc_ship_batch_ids": batch_id,
+                "ship_name1": ship_name1,
+                "type_of_ship": type_of_ship,
+                "master_name": master_name,
+                "port_name": port_name,
+                "course_gp": course_gp,
+                "imo_no": imo_no,
+                "time_spent": time_spent,
+                "date_of_visit": date_of_visit_str,
+                "no_of_candidate": no_of_candidate,
+                # "gp_image": image_base64 if gp_image else False,
+                "bridge": bridge,
+                "eng_room": eng_room,
+                "cargo_area": cargo_area,
+                "institute_id": institute_id,
+                # "dgs_batch": request.env['institute.gp.batches'].sudo().search(
+                #     [('institute_id', '=', institute_id), ('id', '=', batch_id)], limit=1).dgs_batch.id,
+            }
+
+            if ship_visit_id:
+                # Update existing record
+                ship_visit = request.env['gp.batches.ship.visit'].sudo().browse(ship_visit_id)
+                if ship_visit.exists():
+                    ship_visit.sudo().write(ship_data)
+
+        except Exception as e:
+            _logger.error("Failed to create or update ship visit record: %s", e)
+            request.session['error_message'] = "Failed to create or update ship visit record."
+
+        return request.redirect('/my/ship_visits/edit/' + str(ship_visit_id))
+
+    
+    @http.route(['/my/updateshipvisitccmc'], type='http', auth='user', website=True, methods=['POST'], csrf=True)
+    def EditShipVisitCCMC(self, **kw):
+        user_id = request.env.user.id
+
+        # Fetch institute based on the logged-in user
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)], limit=1).id  
+
+        # Retrieve ship_visit_id if present
+        ship_visit_id = int(kw.get("ship_visit_id")) if kw.get("ship_visit_id") else None
+
+        # import wdb;wdb.set_trace()
+        # Collect data from the form
+        ship_name2 = kw.get("ship_name2")
+        type_of_ship = kw.get("type_of_ship")
+        master_name = kw.get("master_name")
+        port_name = kw.get("port_name")
+        course_gp = kw.get("course_gp")
+        imo_no = kw.get("imo_no")
+        time_spent = kw.get("time_spent")
+        date_of_visit_str = kw.get("date_of_visit")
+        no_of_candidate = kw.get("no_of_candidate")
+        gp_image = kw.get("gp_image")
+        bridge = kw.get("bridge")
+        eng_room = kw.get("eng_room")
+        cargo_area = kw.get("cargo_area")
+
+        # Convert image file to base64
+        image_base64 = None
+        if gp_image:
+            file_content = gp_image.read()
+            image_base64 = base64.b64encode(file_content).decode('utf-8')
+
+        # Prepare the list of candidates for the Many2many field
+
+        try:
+            # Prepare the ship visit data
+            ship_data = {
+                # "ccmc_ship_batch_ids": batch_id,
+                "ship_name2": ship_name2,
+                "type_of_ship": type_of_ship,
+                "master_name": master_name,
+                "port_name": port_name,
+                "course_gp": course_gp,
+                "imo_no": imo_no,
+                "time_spent": time_spent,
+                "date_of_visit": date_of_visit_str,
+                "no_of_candidate": no_of_candidate,
+                # "gp_image": image_base64 if gp_image else False,
+                "bridge": bridge,
+                "eng_room": eng_room,
+                "cargo_area": cargo_area,
+                "institute_id": institute_id,
+                # "dgs_batch": request.env['institute.gp.batches'].sudo().search(
+                #     [('institute_id', '=', institute_id), ('id', '=', batch_id)], limit=1).dgs_batch.id,
+            }
+
+            if ship_visit_id:
+                # Update existing record
+                ship_visit = request.env['ccmc.batches.ship.visit'].sudo().browse(ship_visit_id)
+                if ship_visit.exists():
+                    ship_visit.sudo().write(ship_data)
+
+        except Exception as e:
+            _logger.error("Failed to create or update ship visit record: %s", e)
+            request.session['error_message'] = "Failed to create or update ship visit record."
+
+        return request.redirect('/my/ccmc_ship_visits/edit/'+str(ship_visit_id))

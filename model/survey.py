@@ -308,14 +308,15 @@ class InheritedSurveyQuestions(models.Model):
     _inherit = "survey.question"
     
     q_no = fields.Char("Q.No")
-    q_score = fields.Char("Q.Score",compute="_compute_score")
-    answers_count = fields.Integer("No. of Answers",compute="_answer_count")
+    q_score = fields.Char("Q.Score",compute="_compute_score",store=True)
+    answers_count = fields.Integer("No. of Answers",compute="_answer_count",store=True)
 
-
+    @api.depends('suggested_answer_ids')
     def _answer_count(self):
         for record in self:
             record.answers_count = len(record.suggested_answer_ids)
 
+    @api.depends('suggested_answer_ids')
     def _compute_score(self):
         for record in self.suggested_answer_ids:
             # import wdb;wdb.set_trace()

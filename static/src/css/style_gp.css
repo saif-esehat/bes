@@ -26,10 +26,10 @@
 }
 
 .font{
-    font-family:'timesNewRoman';font-weight:100;font-size: 13px;
+    font-family:'timesNewRoman';
+    font-weight:100;
 }
-    
-    
+
 @font-face {
     font-family: 'TimesNewRomanBold';
     src: url('/bes/static/src/fonts/Times New Roman Bold.ttf') format('truetype');
@@ -42,6 +42,11 @@
     src: url('/bes/static/src/fonts/times.ttf') format('truetype');  
     font-weight: normal;
     font-style: normal;
+}
+
+.font-bold {
+    font-family: 'TimesNewRomanBold';
+    font-weight: bold;
 }
 
 td{
