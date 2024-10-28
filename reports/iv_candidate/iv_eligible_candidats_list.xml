@@ -9,7 +9,8 @@
         name="bes.reports_iv_eligible_candidate_list"
         file="bes.reports_iv_eligible_candidate_list"/>
 
-
+    
+ 
 
 <template id="reports_iv_eligible_candidate_list">
     <t t-call="web.basic_layout">
@@ -114,4 +115,5 @@
 </template>
 
 
+ 
 </odoo>

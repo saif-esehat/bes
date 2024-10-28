@@ -129,6 +129,7 @@ class DGSBatch(models.Model):
     _description= 'Batches'
     
     batch_name = fields.Char("Batch Name",required=True,tracking=True)
+    ccmc_batches = fields.Many2one('institute.ccmc.batches', string="Batch")
     is_current_batch = fields.Boolean(string='Current Fresher Batch', default=False,tracking=True)
     to_date = fields.Date(string='To Date', 
                       widget="date", 
@@ -563,7 +564,26 @@ class DGSBatch(models.Model):
             }
         
         return self.env.ref('bes.report_dgs_ccmc_fresh_action').report_action(self ,data=datas)
+
+    def print_ccmc_batch_report(self):
+        datas = {
+            'doc_ids': self.id,
+        }
+
+        return self.env.ref('bes.action_report_ccmc_batch_ship_visit').report_action(self, data=datas)
+
+    def print_gp_batch_report(self):
+        datas = {
+            'doc_ids': self.id,
+        }
+
+        return self.env.ref('bes.action_report_gp_batch_ship_visit').report_action(self, data=datas)
+
+
+
+
     
+
     
     def open_gp_exams(self):
         
@@ -772,4 +792,90 @@ class ShipVisitReportModel(models.AbstractModel):
             # 'exam_centers': exam_centers,
             # 'report_type': report_type,
             # 'course': course
+        }
+
+
+
+
+
+
+class CCMCBatchShipVisitReport(models.AbstractModel):
+    _name = "report.bes.ccmc_batch_ship_visit_report"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = "DGS Batch CCMC Report"
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)
+        
+
+        # Fetch exams without filtering by report_type and course
+        exams = self.env['institute.ccmc.batches'].sudo().search([('dgs_batch', '=', docs1.id)]).sorted(key=lambda r: r.code)
+        institute_ids = exams.mapped('institute_id.id')
+
+        ship_visits = self.env['ccmc.batches.ship.visit'].sudo().search([('dgs_batch', '=', docs1.id), ('institute_id', 'in', institute_ids)])
+
+      
+
+        print("Ship Visits Found: ", ship_visits)
+
+        exams_with_ship_visits = exams.filtered(lambda exam: ship_visits.filtered(lambda visit: visit.institute_id == exam.institute_id))
+
+
+        institute = self.env['bes.institute'].sudo().search([])
+
+
+        
+
+        # Return the values for the report
+        return {
+            'docids': docids,
+            'doc_model': 'institute.ccmc.batches',
+            'docs': docs1,
+            'exams': exams_with_ship_visits,
+            'institutes': institute,
+            'ship_visits': ship_visits, 
+            'name': 'Report'
+        }
+
+
+class GPBatchShipVisitReport(models.AbstractModel):
+    _name = "report.bes.gp_batch_ship_visit_report"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = "DGS Batch Gp Report"
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        docs1 = self.env['dgs.batches'].sudo().browse(docids)
+        
+
+        # Fetch exams without filtering by report_type and course
+        exams = self.env['institute.gp.batches'].sudo().search([('dgs_batch', '=', docs1.id)]).sorted(key=lambda r: r.code)
+        institute_ids = exams.mapped('institute_id.id')
+
+        ship_visits = self.env['gp.batches.ship.visit'].sudo().search([('dgs_batch', '=', docs1.id), ('institute_id', 'in', institute_ids)])
+
+      
+
+        print("Ship Visits Found: ", ship_visits)
+
+        exams_with_ship_visits = exams.filtered(lambda exam: ship_visits.filtered(lambda visit: visit.institute_id == exam.institute_id))
+
+
+        institute = self.env['bes.institute'].sudo().search([])
+
+
+        
+
+        # Return the values for the report
+        return {
+            'docids': docids,
+            'doc_model': 'institute.gp.batches',
+            'docs': docs1,
+            'exams': exams_with_ship_visits,
+            'institutes': institute,
+            'ship_visits': ship_visits, 
+            'name': 'Report'
         }

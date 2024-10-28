@@ -77,7 +77,25 @@ class ExaminationReport(models.Model):
         self.summarised_report()
         self.attempt_wise_report()
         
+    def generate_comparative_report(self):
+        # import wdb;wdb.set_trace()
+        ids = self.env.context.get('active_ids')
+        view_id = self.env.ref('bes.comparative_report_wizard_form').id
+        return {
+            'name': 'Comparative Report',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'comparative.report',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_examination_report_batch': ids,
+            }
+            }  
     
+
+
     def ordinal(self,n):
         if 10 <= n % 100 <= 20:
             suffix = 'th'
@@ -329,7 +347,7 @@ class ExaminationReport(models.Model):
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
                 # practical_appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True)])
-                # practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
+                practical_pass = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('attempting_cookery','=',True),('cookery_bakery_prac_status','=','passed')])
                 # practical_percentage = (practical_pass/practical_appeared) * 100
                 practical = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('cookery_bakery_prac_status','=','passed')])
                 practical_percentage = (practical/appeared) * 100
@@ -349,7 +367,7 @@ class ExaminationReport(models.Model):
                         'applied': applied,
                         'candidate_appeared': appeared,
                         'practical_pass_appeared': practical_appeared,
-                        'practical_pass': practical_pass,
+                        'practical_pass': practical_pass, 
                         'practical_pass_per': practical_percentage,
                         'oral_pass_appeared': appeared,
                         'oral_pass': oral,
@@ -944,6 +962,33 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
+
+
+    def print_combined_reports(self):
+        # Prepare data for Summarised GP Report
+        datas_gp = {
+            'doc_ids': self.id,
+            'course': 'GP',
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+            'report_type': 'Repeater' if self.exam_type == 'repeater' else 'Fresh'  # Set report_type here
+        }
+
+        # # Prepare data for Ship Visit Report
+        # datas_ship_visit = {
+        #     'doc_ids': self.id,
+        #     'course': self.course,
+        #     'batch_id': self.examination_batch.id,  # Assuming examination_batch is a recordset and you want its ID
+        #     'report_type': 'Repeater' if self.exam_type == 'repeater' else 'Fresh'  # Set report_type here
+        # }
+
+        # Combine the data
+        combined_datas = {
+            'doc_ids': self.id,
+            'gp_data': datas_gp,  # Include the data for Summarised GP Report
+            # 'ship_visit_data': datas_ship_visit  # Include the data for Ship Visit Report
+        }
+
+        return self.env.ref('bes.combined_report_action').report_action(self, data=combined_datas)
     
     def get_ordinal(self,n):
         n = int(n)
@@ -1039,6 +1084,9 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
 
+    
+
+
         
     
     def print_gp_graph_report(self):
@@ -1057,6 +1105,7 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
+        
     
 
 
@@ -1479,4 +1528,144 @@ class BarGraphReport(models.AbstractModel):
             # 'exam_centers': exam_centers,
             # 'report_type': report_type,
             # 'course': course
+        }
+
+
+class ComparativeReport(models.Model):
+    _name = 'comparative.report'
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = 'Comparative Report'
+
+    examination_report_batch = fields.Many2many("examination.report",string="Examination Report Batch")
+    course = fields.Selection([
+        ('gp', 'GP'),
+        ('ccmc', 'CCMC')
+    ],string="Course",default='gp',tracking=True)
+    
+    def print_comparative_report(self):
+        ids = self.env.context.get('active_ids')
+        reports = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: int(r.sequence_report))
+        # import wdb;wdb.set_trace()
+
+        report_data = []  # This will hold the data for the report
+
+        for report in reports:
+            if report.course == 'gp':
+                gp_exam = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                data = self._calculate_exam_statistics(gp_exam, report)
+                report_data.append(data)
+
+            elif report.course == 'ccmc':
+                ccmc_exam = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', report.examination_batch.id)])
+                data = self._calculate_exam_statistics(ccmc_exam, report)
+                report_data.append(data)
+
+               # Prepare the final data structure for the report template
+        final_report = {
+            'report_data': report_data,
+        }
+
+        return self.env.ref('bes.report_comparative').report_action(self, data={'docs': final_report})
+
+    def _calculate_exam_statistics(self, exams, report):
+        report_info = {
+            'batch_name': report.sequence_report,  # Use the report's sequence number
+            'fresh_appeared': 0,
+            'fresh_pass_percentage': 'Nil',
+            'repeater_appeared': 0,
+            'repeater_pass_percentage': 'Nil',
+        }
+
+        return {'type': 'ir.actions.act_window_close'}
+
+
+
+class CombinedReport(models.AbstractModel):
+    _name = "report.bes.combined_report"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = "Combined Summarised GP and Ship Visit Reports"
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docids = data['doc_ids']
+        
+        # Fetching examination reports
+        docs1 = self.env['examination.report'].sudo().browse(docids)
+        # summarized_data = self.env['summarised.gp.report'].sudo().search(
+        #     [('examination_report_batch', '=', docs1.id)]
+        # ).sorted(key=lambda r: r.institute_code)
+
+        subject_pass_data = self.env['subject.pass.percentage'].sudo().search(
+            [('examination_report_batch', '=', docs1.id)]
+        )
+
+        # Fetching ship visit reports
+        # gp_ship_visits = self.env['gp.candidate.ship.visits'].sudo().search(
+        #     [('dgs_batch', '=', docs1.id)]
+        # )
+        
+        # Getting institute IDs from ship visits
+        # institutes_data = gp_ship_visits.sorted(key=lambda r: r.institute_code).institute.ids
+
+        # # Collecting examination region IDs
+        # exam_region = summarized_data.exam_region.ids
+
+
+        low_percentage_data = self.env['institute.pass.percentage'].sudo().search(
+            [('percentage', '<', 80), ('course', '=', 'gp'), ('examination_report_batch.exam_type', '=', 'fresh')]
+        )
+        # courses = {record.institute_id.id: record.course for record in low_percentage_data}
+
+        gp_repeater_data = self.env['attempt.wise.report'].sudo().search(
+            [('examination_report_batch.exam_type', '=', 'repeater'),
+             ('examination_report_batch.course', '=', 'gp'),
+           ]
+        )
+
+        total_passed = sum(repeater.passed for repeater in gp_repeater_data)
+        total_appeared = sum(repeater.appeared for repeater in gp_repeater_data)
+
+        ccmc_percentage_data = self.env['institute.pass.percentage'].sudo().search(
+            [('course', '=', 'ccmc'), ('examination_report_batch.exam_type', '=', 'fresh')]
+        )
+
+        total_applied = sum(record.applied for record in ccmc_percentage_data)
+        total_passed = sum(record.passed for record in ccmc_percentage_data)
+        total_appeared = sum(record.appeared for record in ccmc_percentage_data)
+        overall_percentage = (total_passed / total_appeared) * 100 if total_appeared else 0
+
+        ccmc_repeater_data = self.env['attempt.wise.report'].sudo().search(
+            [('examination_report_batch.exam_type', '=', 'repeater'),
+             ('examination_report_batch.course', '=', 'ccmc'),
+           ]
+        )
+
+        ccmc_r_total_passed = sum(record.passed for record in ccmc_repeater_data)
+        ccmc_r_total_appeared = sum(record.appeared for record in ccmc_repeater_data)
+        ccmc_r_overall_percentage = (ccmc_r_total_passed / ccmc_r_total_appeared) * 100 if ccmc_r_total_appeared else 0
+
+
+        return {
+            'docids': docids,
+            'doc_model': 'examination.report',
+            'docs': docs1,
+            # 'summarized_docs': summarized_data,
+            # 'exam_regions': exam_region,
+            # 'gp_ship_visits': gp_ship_visits,
+            # 'institutes_data': institutes_data,
+            'subject_pass_data': subject_pass_data,
+            'low_percentage_data': low_percentage_data,
+            'gp_repeater_data': gp_repeater_data,
+            'total_passed': total_passed,
+            'total_appeared': total_appeared,
+            'ccmc_percentage_data': ccmc_percentage_data,
+            'total_applied': total_applied,
+            'total_appeared': total_appeared,
+            'total_passed': total_passed,
+            'overall_percentage': overall_percentage,
+            'ccmc_repeater_data': ccmc_repeater_data,
+            'ccmc_r_total_passed': ccmc_r_total_passed,
+            'ccmc_r_total_appeared': ccmc_r_total_appeared,
+            'ccmc_r_overall_percentage': ccmc_r_overall_percentage,
+
         }

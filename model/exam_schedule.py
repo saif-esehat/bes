@@ -785,6 +785,9 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         unique_exam_dates = list(set(record.exam_date for record in records))
         
         candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+        
+        print("candidate_with_gsk_mek")
+        print(candidate_with_gsk_mek)
         candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',False),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         
@@ -794,6 +797,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',False),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',False),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
 
+        print("candidate_with_gsk_mek_online")
+        print(candidate_with_gsk_mek_online)
 
         examiners_gsk = records.filtered(lambda r: r.subject.name == 'GSK' and r.exam_type == 'practical_oral').ids
         gsk_assignments = {examiner: [] for examiner in examiners_gsk}
@@ -820,7 +825,9 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         
         #Distribute candidates with both GSK and MEK     
         for idx, candidate in enumerate(candidate_with_gsk_mek):
+            
             try:
+                
                 gsk_examiner_index = idx % num_examiners_gsk
                 examiner_gsk = examiners_gsk[gsk_examiner_index]
                 gsk_assignments[examiner_gsk].append(candidate)
@@ -839,6 +846,11 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     pass
                 else:
                     raise ValidationError("Please Add Atleast One MEK Examiner")
+        
+        print("gsk_assignments")
+        print(gsk_assignments)
+        print("mek_assignments")
+        print(gsk_assignments)
         
         # import wdb;wdb.set_trace();
 
@@ -930,28 +942,46 @@ class GPExaminerAssignmentWizard(models.TransientModel):
             
         ### GSK ASSIGNMENTS    
         for examiner, assigned_candidates in gsk_assignments.items():
+            print("examiner, gsk assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
             
         
          ### GSK Online ASSIGNMENTS    
         for examiner, assigned_candidates in online_gsk_assignments.items():
+            print("examiner, online_gsk_assignments assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
 
         
         ### MEK ASSIGNMENTS    
         for examiner, assigned_candidates in mek_assignments.items():
+            print("examiner, mek_assignments assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
+            # assignment.gp_marksheet_ids = [16787, 16788]
+            # assignment.write({'gp_marksheet_ids':[(4,16787)]})
         
         ### MeK Online ASSIGNMENTS    
         for examiner, assigned_candidates in online_mek_assignments.items():
+            print("examiner, online_mek_assignments assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
         
 
@@ -2194,7 +2224,7 @@ class ExamOralPracticalExaminers(models.Model):
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     exam_date = fields.Date("Exam Date",tracking=True)
     marksheets = fields.One2many('exam.type.oral.practical.examiners.marksheet','examiners_id',string="Candidates",tracking=True)
-    ipaddr = fields.Char("IP Address")    
+    ipaddr = fields.Char("IP Address",tracking=True)    
     candidates_count = fields.Integer("Candidates Assigned",compute='compute_candidates_count')
     exam_type = fields.Selection([
         ('practical_oral', 'Practical/Oral'),
@@ -3039,10 +3069,10 @@ class GPExam(models.Model):
     overall_percentage = fields.Float("Overall (%)",readonly=True,tracking=True)
     
     # Attempting Exams
-    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac')
-    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac')
-    attempting_mek_online = fields.Boolean('attempting_mek_online')
-    attempting_gsk_online = fields.Boolean('attempting_gsk_online')
+    attempting_gsk_oral_prac = fields.Boolean('attempting_gsk_oral_prac',tracking=True)
+    attempting_mek_oral_prac = fields.Boolean('attempting_mek_oral_prac',tracking=True)
+    attempting_mek_online = fields.Boolean('attempting_mek_online',tracking=True)
+    attempting_gsk_online = fields.Boolean('attempting_gsk_online',tracking=True)
     
     gsk_oral_prac_status = fields.Selection([
         ('pending', 'Pending'),
@@ -3273,8 +3303,8 @@ class GPExam(models.Model):
             else:
                  record.absent_status = "present"
 
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
-    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_date = fields.Date(string="Exam Date",tracking=True)
     @api.depends('gp_candidate.candidate_image')
@@ -4373,8 +4403,8 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate ID",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False)
-    hold_certificate = fields.Boolean("Hold Certificate", default=False)
+    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_region = fields.Many2one('exam.center',string='Exam Center',store=True)
 
@@ -4391,13 +4421,13 @@ class CCMCExam(models.Model):
     ccmc_oral = fields.Many2one("ccmc.oral.line","CCMC Oral",tracking=True)
     ccmc_gsk_oral = fields.Many2one("ccmc.gsk.oral.line","CCMC GSK Oral",tracking=True)
     
-    ccmc_oral_prac_assignment = fields.Boolean('ccmc_oral_prac_assignment')
+    ccmc_oral_prac_assignment = fields.Boolean('ccmc_oral_prac_assignment',tracking=True)
 
-    ccmc_gsk_oral_assignment = fields.Boolean('ccmc_gsk_oral_assignment')
+    ccmc_gsk_oral_assignment = fields.Boolean('ccmc_gsk_oral_assignment',tracking=True)
     
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
     
-    ccmc_online_assignment = fields.Boolean('ccmc_online_assignment')
+    ccmc_online_assignment = fields.Boolean('ccmc_online_assignment',tracking=True)
 
     attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
     

@@ -7,6 +7,9 @@
             <field name="model">examination.report</field>
             <field name="arch" type="xml">
                 <tree string="Examination Reports">
+                    <header>
+                        <button name="generate_comparative_report" type="object" string="Comparative Report" class="oe_highlight" />
+                    </header>
                     <field name="examination_batch"/>
                     <field name="course" optional="show"/>                  
                     <field name="exam_type" optional="show"/>   
@@ -41,6 +44,8 @@
                         <button name="print_bar_graph_report" string="Graph Report" type="object" class="btn-primary"/>
                         <!-- <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/> -->
                         <button name="print_ship_visit_report" string="Ship Visit Report" type="object" class="btn-primary"/>
+                        <button name="print_combined_reports" string="Combine  Report" type="object" class="btn-primary"/>
+                        
                         <!-- <button name="summarised_report" string="Summartise Rep" type="object" class="btn-primary"/> -->   
                     </header>
                     <sheet>
@@ -397,6 +402,24 @@
         </field>
     </record>
 
+    <record id="comparative_report_wizard_form" model="ir.ui.view">
+        <field name="name">comparative.report.form</field>
+        <field name="model">comparative.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="examination_report_batch" string="Report Batch" readonly='1'/>
+                        <field name="course" string="Cousre"/>
+                    </group>
+                <footer>
+                    <button name="print_comparative_report" string="Print Report" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
 
 

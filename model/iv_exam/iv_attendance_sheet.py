@@ -51,6 +51,13 @@ class IVAttendanceSheet(models.Model):
     def print_report(self):
         return self.env.ref('bes.action_report_iv_attendance_sheet').report_action(self)
 
+    def print_iv_invigilator_report(self):
+        datas = {
+            'doc_ids': self.id,
+        }
+
+        return self.env.ref('bes.action_report_iv_invigilator').report_action(self, data=datas)
+
 
 
 import logging

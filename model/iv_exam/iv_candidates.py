@@ -117,6 +117,10 @@ class IVCandidates(models.Model):
         for record in self:
             if record.candidate_applications.application_id[-1].application_type == 'repeater':
                 record.candidate_type = 'repeater'
+
+
+
+   
             
 
    

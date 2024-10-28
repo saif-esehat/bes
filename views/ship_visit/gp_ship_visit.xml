@@ -10,38 +10,41 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="ship_name1"/>
-                            <field name="port_name"/>
-                            <field name="imo_no"/>
+                            <field name="ship_name1" readonly="1"/>
+                            <field name="port_name" readonly="1"/>
+                            <field name="imo_no" readonly="1"/>
                         </group>
                         <group>
-                            <field name="date_of_visit"/>
-                            <field name="time_spent"/>
+                            <field name="date_of_visit" readonly="1"/>
+                            <field name="time_spent" readonly="1"/>
                         </group>
-                         <group>
-                        <field name="course_gp"/>
-                        <field name="no_of_candidate"/>
-                    </group>
+                        <group>
+                            <field name="bridge" readonly="1"/>
+                            <field name="eng_room" readonly="1"/>
+                            <field name="cargo_area" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="course_gp"/>
+                            <field name="no_of_candidate"/>
+                        </group>
                     </group>
 
                     <group>
                         <field name="candidate_ids" widget="many2many_tags"/>
                         <field name="gp_or_ccmc_batch" invisible="1"/>
 
-                        <field name="gp_ship_batch_id" attrs="{'invisible': [('gp_or_ccmc_batch', '!=', 'ccmc')]}"/>
+                        <field name="gp_ship_batch_id" attrs="{'invisible': [('gp_or_ccmc_batch', '!=', 'gp')]}"/>
+                        <field name="dgs_batch" />
+                        <field name="gp_ship_batch_id" />
+                        <field name="institute_id"/>
                     </group>
-
-                       <notebook>
-                          <page string="Image">
-                            <!-- Image Field -->
-                            <group>
-                                <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
-                            </group>
-                        </page>
-
-                        
-
-                </notebook>
+                        <notebook>
+                            <page string="Image">
+                                <group>
+                                    <field name="gp_image" widget="image" class="oe_avatar" options="{'size': [100, 100]}"/>
+                                </group>
+                            </page>
+                        </notebook>
                 </sheet>
              
             </form>

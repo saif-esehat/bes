@@ -15,17 +15,23 @@ class GPShipVisit(models.Model):
 
 
     ship_name1 = fields.Char(string="Ship Name")
+    type_of_ship = fields.Char(string="Type of Ship",tracking=True)
+    master_name = fields.Char(string="Master Name")
     port_name = fields.Char(string="Port Name")
     imo_no = fields.Char(string="IMO  No.")
     date_of_visit = fields.Date(string="Date Of Visit")
     time_spent = fields.Float(string="Time Spent")
+    bridge = fields.Boolean("Bridge",tracking=True)
+    eng_room = fields.Boolean("Eng. Room",tracking=True)
+    cargo_area = fields.Boolean("Cargo Area",tracking=True)
     gp_image = fields.Binary(string="Image", attachment=True)
     candidate_ids = fields.Many2many('gp.candidate', string="GP Candidates")
     course_gp = fields.Char(string="Course")
     no_of_candidate = fields.Char(string="Number Of Candidate")
-    institute_id = fields.Many2one("bes.institute","Institute ID",tracking=True)
-    gp_ship_batch_id = fields.Many2one('institute.gp.batches', string="Batch")
+    institute_id = fields.Many2one("bes.institute","Institute",tracking=True)
+    gp_ship_batch_id = fields.Many2one('institute.gp.batches', string="Institute Batch")
     gp_or_ccmc_batch = fields.Selection([('gp','GP'),('ccmc','CCMC')],string="GP / CCMC",tracking=True)
+    dgs_batch = fields.Many2one('dgs.batches', string="DGS Batch", required=True)
     # institute_batch_id = fields.Many2one('institute.batch', string="Institute Batch")
 
 
