@@ -158,7 +158,7 @@ class ExpenseController(http.Controller):
     @http.route('/my/assignments/batches/timesheet/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_timesheet(self, **kw):
 
-        import wdb;wdb.set_trace();
+        # import wdb;wdb.set_trace();
         # Extract form data from the request
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
