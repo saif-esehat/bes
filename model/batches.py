@@ -1115,11 +1115,11 @@ class BatchesRegisterExamWizard(models.TransientModel):
             gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
             
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
-            mek_survey_qb_input.generate_token()
+            # mek_survey_qb_input.generate_token()
             mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
             
             gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
-            gsk_survey_qb_input.generate_token()
+            # gsk_survey_qb_input.generate_token()
             gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
             
             mek_survey_qb_input.write({'gp_candidate':candidate.id,'gp_exam':gp_exam_schedule.id,'dgs_batch':batch.dgs_batch.id,'institute_id':batch.institute_id.id,'is_gp':True})

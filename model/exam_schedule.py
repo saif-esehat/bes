@@ -785,6 +785,9 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         unique_exam_dates = list(set(record.exam_date for record in records))
         
         candidate_with_gsk_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+        
+        print("candidate_with_gsk_mek")
+        print(candidate_with_gsk_mek)
         candidate_with_gsk  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         candidate_with_mek = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_oral_prac','=',False),('hold_admit_card','=',False),('attempting_mek_oral_prac','=',True),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         
@@ -794,6 +797,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',False),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
         candidate_with_mek_online = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',False),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
 
+        print("candidate_with_gsk_mek_online")
+        print(candidate_with_gsk_mek_online)
 
         examiners_gsk = records.filtered(lambda r: r.subject.name == 'GSK' and r.exam_type == 'practical_oral').ids
         gsk_assignments = {examiner: [] for examiner in examiners_gsk}
@@ -820,7 +825,9 @@ class GPExaminerAssignmentWizard(models.TransientModel):
         
         #Distribute candidates with both GSK and MEK     
         for idx, candidate in enumerate(candidate_with_gsk_mek):
+            
             try:
+                
                 gsk_examiner_index = idx % num_examiners_gsk
                 examiner_gsk = examiners_gsk[gsk_examiner_index]
                 gsk_assignments[examiner_gsk].append(candidate)
@@ -839,6 +846,11 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     pass
                 else:
                     raise ValidationError("Please Add Atleast One MEK Examiner")
+        
+        print("gsk_assignments")
+        print(gsk_assignments)
+        print("mek_assignments")
+        print(gsk_assignments)
         
         # import wdb;wdb.set_trace();
 
@@ -930,28 +942,46 @@ class GPExaminerAssignmentWizard(models.TransientModel):
             
         ### GSK ASSIGNMENTS    
         for examiner, assigned_candidates in gsk_assignments.items():
+            print("examiner, gsk assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
             
         
          ### GSK Online ASSIGNMENTS    
         for examiner, assigned_candidates in online_gsk_assignments.items():
+            print("examiner, online_gsk_assignments assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
 
         
         ### MEK ASSIGNMENTS    
         for examiner, assigned_candidates in mek_assignments.items():
+            print("examiner, mek_assignments assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
+            # assignment.gp_marksheet_ids = [16787, 16788]
+            # assignment.write({'gp_marksheet_ids':[(4,16787)]})
         
         ### MeK Online ASSIGNMENTS    
         for examiner, assigned_candidates in online_mek_assignments.items():
+            print("examiner, online_mek_assignments assigned_candidates")
+            print(examiner, assigned_candidates)
             examiner_id = examiner
             assignment = records.filtered(lambda r: r.id == examiner_id)
+            print("assignment")
+            print(assignment)
             assignment.gp_marksheet_ids = assigned_candidates
         
 
