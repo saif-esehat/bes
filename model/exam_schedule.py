@@ -2827,7 +2827,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
                     "gsk_online_token_used": False,
-                    "attempted_gsk_online": False
+                    "attempted_gsk_online": False,
+                    "gsk_online_attendance":'',
+                    "token":False
                     
                 })
             elif self.gp_subject == "mek":
@@ -2854,7 +2856,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                     "mek_online": mek_survey_qb_input,
                     "mek_online_token_used": False,
                     "attempted_mek_online": False,
-                    "ip_address":gp_exam.ip_address
+                    "ip_address":gp_exam.ip_address,
+                    "mek_online_attendance":'',
+                    "token":False
                 })
                 
 
@@ -2884,7 +2888,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                     "ccmc_online": ccmc_qb_input,
                     "ccmc_online_token_used": False,
                     "attempted_ccmc_online": False,
-                    "ip_address":ccmc_exam.ip_address
+                    "ip_address":ccmc_exam.ip_address,
+                    "ccmc_online_attendance":'',
+                    "token":False
                 })
                 
 
