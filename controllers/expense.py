@@ -73,7 +73,6 @@ class ExpenseController(http.Controller):
     
     @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
     def TimeSheet(self,batch_id,assignment_id, **kw):
-        # import wdb;wdb.set_trace();
 
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
@@ -81,7 +80,19 @@ class ExpenseController(http.Controller):
         assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
         timesheets = request.env['time.sheet.report'].sudo().search([('examiner_assignment','=',assignment.id)])
         
-        exam_dates = assignment.mapped('exam_date')
+        # Get associated institute and duty records
+        exam_duty = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id', '=', batch_id), ('institute_id', '=', assignment.institute_id.id)])
+
+        # Collect all exam dates for the examiner's assignments
+        exam_dates = []
+        for exam in exam_duty:
+            assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+                ('prac_oral_id', '=', exam.id),
+                ('examiner', '=', examiner.id)
+            ])
+            exam_dates.extend(assignments.mapped('exam_date'))
+
+        # Determine the first and last dates
         first_date = min(exam_dates) if exam_dates else None
         last_date = max(exam_dates) if exam_dates else None
         
@@ -90,7 +101,7 @@ class ExpenseController(http.Controller):
             'assignment':assignment,
             'batch_id':batch_id,
             'examiner_id':examiner.id,
-            'exam_date':assignment.exam_date,
+            'exam_date':kw.get('exam_date'),
             'first_date':first_date,
             'last_date':last_date,
             'page_name': 'timesheet'

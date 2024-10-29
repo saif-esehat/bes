@@ -372,7 +372,7 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateDayModal" onclick="openDayUpdateModal(this)"
                 t-attf-assign-id="{{assignment.id}}">Fill Timesheet Form</button>
             </t>
-
+                <t t-set="today_date" t-value="datetime.date.today()"/>
                 <!-- Modal for Updating Details -->
                 <div class="modal fade" id="updateDayModal" tabindex="-1" role="dialog" aria-labelledby="updateDayModalLabel" aria-hidden="true">
                     <form action="/my/assignments/batches/timesheet/submit" method="POST">
@@ -407,7 +407,7 @@
                                     </div>
                                 </div>
 
-                                <t t-if="exam_date == first_date or exam_date == last_date">
+                                <t t-if="today_date == first_date or today_date == last_date">
                                     <div class="row mx-2">
                                         <table class="table table-bordered">
                                             <thead>
