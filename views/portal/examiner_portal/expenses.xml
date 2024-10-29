@@ -367,9 +367,12 @@
             }
     </script>
         <t t-call="portal.portal_layout">
+
+            <t t-if="not assignment.time_sheet">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateDayModal" onclick="openDayUpdateModal(this)"
                 t-attf-assign-id="{{assignment.id}}">Fill Timesheet Form</button>
-                
+            </t>
+
                 <!-- Modal for Updating Details -->
                 <div class="modal fade" id="updateDayModal" tabindex="-1" role="dialog" aria-labelledby="updateDayModalLabel" aria-hidden="true">
                     <form action="/my/assignments/batches/timesheet/submit" method="POST">
@@ -381,6 +384,7 @@
                                 <div class="modal-body">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <input type="hidden" id="assign_id" name="assign_id"/>
+                                    <input type="hidden" id="exam_date" name="exam_date" t-att-value='assignment.exam_date'/>
                                     <div class="form-group">
                                         <label for="arrival_time">Arrival Time</label>
                                         <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" required='1'/>
@@ -402,86 +406,86 @@
                                         <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" required='1'/>
                                     </div>
                                 </div>
-                                
-                                
+
+                                <t t-if="exam_date == first_date or exam_date == last_date">
+                                    <div class="row mx-2">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Travelling Details:</th>
+                                                    <th>Date &amp; Time</th>
+                                                    <th>Mode of Travel</th>
+                                                    <th>Expense(if occured)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Left Residence</td>
+                                                    <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Arrival at the Institute/Hotel</td>
+                                                    <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="arrival_institute_hotel_expenses" id="arrival_institute_hotel_expenses"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Left Institute/Hotel</td>
+                                                    <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="left_institute_expenses" id="left_institute_expenses"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Arrival at Residence</td>
+                                                    <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="arrival_residence_expenses" id="arrival_residence_expenses"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
                         </div>
-
-
                     </form>
                 </div>
 
-                <!-- <div class="row mx-2">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Travelling Details:</th>
-                                <th>Date &amp; Time</th>
-                                <th>Mode of Travel</th>
-                                <th>Expense(if occured)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Left Residence</td>
-                                <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"/></td>
-                                <td>
-                                    <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
-                                        <option value="bus">Bus</option>
-                                        <option value="cab">Cab</option>
-                                        <option value="railway">Railways</option>
-                                        <option value="airline">Airline</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"/></td>
-                            </tr>
-                            <tr>
-                                <td>Arrival at the Institute/Hotel</td>
-                                <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"/></td>
-                                <td>
-                                    <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
-                                        <option value="bus">Bus</option>
-                                        <option value="cab">Cab</option>
-                                        <option value="railway">Railways</option>
-                                        <option value="airline">Airline</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control" name="arrival_institute_hotel_expenses" id="arrival_institute_hotel_expenses"/></td>
-                            </tr>
-                            <tr>
-                                <td>Left Institute/Hotel</td>
-                                <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"/></td>
-                                <td>
-                                    <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
-                                        <option value="bus">Bus</option>
-                                        <option value="cab">Cab</option>
-                                        <option value="railway">Railways</option>
-                                        <option value="airline">Airline</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control" name="left_institute_expenses" id="left_institute_expenses"/></td>
-                            </tr>
-                            <tr>
-                                <td>Arrival at Residence</td>
-                                <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"/></td>
-                                <td>
-                                    <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
-                                        <option value="bus">Bus</option>
-                                        <option value="cab">Cab</option>
-                                        <option value="railway">Railways</option>
-                                        <option value="airline">Airline</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control" name="arrival_residence_expenses" id="arrival_residence_expenses"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
-
+                
+            <div class="row my-2">
                 <table class="table table-bordered">
                     <!-- <t t-set="index" t-value="0" /> -->
                     <thead>
@@ -514,6 +518,39 @@
                         </tbody>
                     </t>
                 </table>
+            </div> 
+
+            <div class="row my-2">
+                <table class="table table-bordered">
+                    <t t-set="index" t-value="0" />
+                    <thead>
+                        <tr>
+                            <th>Travelling Details:</th>
+                            <th>Date &amp; Time</th>
+                            <th>Mode of Travel</th>
+                            <th>Expenses</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="timesheets.travel_details" t-as="timesheet">
+                        <t t-set="index" t-value="index + 1" />
+                        <tbody>
+
+                            <tr>
+                                <td><span t-esc="timesheet.travelling_details"/></td>
+
+                                <td> 
+                                <t t-if='timesheet.date_time'>
+                                    <span t-esc="timesheet.date_time.strftime('%d-%b-%y %H:%M:%S')"/>
+                                </t>
+                                </td>
+                                <td><span t-esc="timesheet.mode_of_travel"/></td>
+                                <td><span t-esc="timesheet.expenses"/></td>
+                            </tr>
+                        </tbody>
+                    </t>
+                </table>
+            </div> 
 
             <!-- <div class="container">
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#createTimeSheet" class="btn btn-primary btn_cta">Fill Timesheet Form</a> 
