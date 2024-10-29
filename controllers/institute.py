@@ -946,12 +946,15 @@ class InstitutePortal(CustomerPortal):
             [('id', '=', batch_id)])
         batches._compute_all_candidates_have_indos()
         
+        states = request.env['res.country.state'].sudo().search(
+        [('country_id.code', '=', 'IN')])
         
         
         vals = {'candidates': candidates, 
                 'page_name': 'gp_candidate',
                 'batch_id':batch_id,
                 'batches':batches,
+                'states':states,
                 'pager':page_detail,
                 'search_in':search_in,
                 'search':search,
@@ -995,10 +998,14 @@ class InstitutePortal(CustomerPortal):
         candidates = request.env["ccmc.candidate"].sudo().search(search_domain, limit= 40,offset=page_detail['offset'])
         batches = request.env["institute.ccmc.batches"].sudo().search(
             [('id', '=', batch_id)])
+
+        states = request.env['res.country.state'].sudo().search(
+        [('country_id.code', '=', 'IN')])
         vals = {'candidates': candidates,
                 'page_name': 'ccmc_candidate',
                 'batch_id':batch_id,
                 'batches':batches,
+                'states':states,
                 'pager':page_detail,
                 'search_in':search_in,
                 'search':search,

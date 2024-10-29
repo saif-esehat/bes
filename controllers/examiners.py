@@ -404,7 +404,7 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
             
-            import wdb;wdb.set_trace();
+            # import wdb;wdb.set_trace();
             return request.render("bes.examiner_candidate_list", 
                                   {'candidate': candidate,
                                    'ccmc_assignment':ccmc_assignment , 

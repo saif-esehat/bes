@@ -1570,7 +1570,6 @@ class ComparativeReport(models.Model):
 
 
     def _calculate_exam_statistics(self, exams, report):
-        """ Calculate statistics for fresh and repeater candidates """
         report_info = {
             'batch_name': report.sequence_report,  # Use the report's sequence number
             'fresh_appeared': 0,
