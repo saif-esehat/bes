@@ -18,13 +18,13 @@ class SurveySectionQuestionWizard(models.TransientModel):
     def action_add_question(self):
         print("Chapter "+ str(self.chapter.id))
         print("QB "+ str(self.qb.id))
-
+        sequence = self.chapter.sequence
         question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': self.description })
-        question_id.write({'page_id':self.chapter.id})
+        question_id.write({'page_id':self.chapter.id ,'sequence': sequence + 1})
         print("QB "+ str(question_id))
         question_ids = self.chapter.question_ids.ids
         print(question_ids)
-        seq = 0
+        # seq = 0
         # chapters = self.env['survey.question'].sudo().search([('survey_id','=',self.qb.id),('is_page','=',True)])
         # for chapter in chapters:
         #     seq = seq + 1
@@ -36,7 +36,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
                 
             
         
-        # self.chapter.write({'question_ids':[(6,0,question_id.id)]})
+        self.chapter.write({'question_ids':[(6,0,question_id.id)]})
         
 
 class InheritedSurvey(models.Model):
