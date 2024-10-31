@@ -1130,14 +1130,6 @@ class BatchesRegisterExamWizard(models.TransientModel):
             # import wdb;wdb.set_trace()
 
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
-<<<<<<< HEAD
-            # mek_survey_qb_input.generate_token()
-            mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
-            
-            gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
-            # gsk_survey_qb_input.generate_token()
-            gsk_survey_qb_input.write({'predefined_question_ids':gsk_predefined_questions.ids})
-=======
             # mek_survey_qb_input.write({'predefined_question_ids':mek_predefined_questions.ids})
             
             gsk_survey_qb_input = gsk_survey_qb._create_answer(user=candidate.user_id)
@@ -1150,7 +1142,6 @@ class BatchesRegisterExamWizard(models.TransientModel):
                                     'ip_address':gp_exam_schedule.ip_address,
                                     'exam_date': gp_exam_schedule.exam_date,
                                     'is_gp':True})
->>>>>>> 39585ee3d23280c5a90070c482703439d855e984
             
             gsk_survey_qb_input.write({
                                     'gp_candidate':candidate.id,
