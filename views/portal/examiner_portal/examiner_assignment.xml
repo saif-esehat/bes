@@ -132,7 +132,6 @@
                     <tr>
                         <th class="text-left">Batch</th>
                         <th class="text-left">Assignments</th>
-                        <th class="text-left">Time Sheet</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -144,9 +143,6 @@
                             </td>
                             <td class="text-left">
                                <a t-attf-href="/my/assignments/batches/{{batch.id}}">View</a>
-                            </td>
-                            <td class="text-left">
-                                <a t-attf-href="/my/assignments/timesheet/{{batch.id}}/{{examiner.id}}">Time Sheet List</a>
                             </td>
                         </tr>
                     </t>
@@ -199,8 +195,8 @@
                         <th class="text-left">Exam Date</th>
                         <th class="text-left">No of Candidates</th>
                         <th class="text-left">Candidates</th>
-                        <th class="text-left">Expenses</th>
-                        <!-- <th class="text-left">Time Sheet</th> -->
+                        <!-- <th class="text-left">Expenses</th> -->
+                        <th class="text-left">Time Sheet</th>
 
                     </tr>
                 </thead>
@@ -252,8 +248,11 @@
                             <td class="text-left">
                                 <a t-attf-href="/my/assignments/batches/candidates/{{batch}}/{{assignment.id}}">View</a>
                             </td>
-                            <td class="text-left">
+                            <!-- <td class="text-left">
                                 <a t-attf-href="/my/assignments/batches/expenses/{{assignment.id}}">Expense Form</a>
+                            </td> -->
+                            <td class="text-left">
+                                <a t-attf-href="/my/assignments/timesheet/{{batch}}/{{assignment.id}}">Fill Timesheet</a>
                             </td>
                         </tr>
                     </t>

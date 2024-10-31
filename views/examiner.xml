@@ -324,6 +324,7 @@
                 <form>
                     <header>
                             <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
+                            <button type="object" name="generate_timesheet" string="Generate Timesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
                     </header>
                   
                     <sheet>
@@ -398,7 +399,7 @@
                                     <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
                                     <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
                                     <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
-                                    <field name="expense_sheet" />
+                                    <!-- <field name="expense_sheet" /> -->
                                     <field name="time_sheet" />
                                     <field name="status" invisible="1" />
                                     <field name="candidates_count" string="Candidates Assigned" style="text-align: {center};"/>

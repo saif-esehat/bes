@@ -1383,7 +1383,15 @@ class ExamOralPractical(models.Model):
     
     # def generate_overall_expense(self):
         
-        
+    def generate_timesheet(self):
+        for assignment in self.examiners:
+            self.assignment.time_sheet = timesheet.id 
+            for examiner in assignment.examiner:
+                timesheet = self.env["time.sheet.report"].sudo().create({
+                    "dgs_batch": self.dgs_batch.id,
+                    "examiner":examiner.id,
+                    "institutes_id":self.institute_id.id
+                })
         
         
     
@@ -2326,46 +2334,61 @@ class ExamOralPracticalExaminers(models.Model):
                 if record.exam_type == 'practical_oral':
                     abs_count = 0
                     for sheet in record.marksheets:
-                        if sheet.gsk_oral.gsk_oral_remarks and sheet.gsk_prac.gsk_practical_remarks:
-                            if sheet.gsk_oral.gsk_oral_remarks.lower() == 'absent' and sheet.gsk_prac.gsk_practical_remarks.lower()  == 'absent':
+                        if sheet.gp_marksheet.gsk_oral_prac_attendance == 'absent':
                                 abs_count += 1
                     record.absent_candidates = abs_count
-                else:
-                    record.absent_candidates = 'NA'
+                elif record.exam_type == 'online':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.gp_marksheet.gsk_online_attendance == 'absent':
+                                abs_count += 1
+                    record.absent_candidates = abs_count
                     
             elif record.subject.name == 'MEK':
                 if record.exam_type == 'practical_oral':
                     abs_count = 0
                     for sheet in record.marksheets:
-                        if sheet.mek_oral.mek_oral_remarks and sheet.mek_prac.mek_practical_remarks: 
-                            if sheet.mek_oral.mek_oral_remarks.lower() == 'absent' and sheet.mek_prac.mek_practical_remarks.lower()  == 'absent':
-                                    abs_count += 1
+                        if sheet.gp_marksheet.mek_oral_prac_attendance == 'absent':
+                                abs_count += 1
                     record.absent_candidates = abs_count
-                else:
-                    record.absent_candidates = 'NA'
+                elif record.exam_type == 'online':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.gp_marksheet.mek_online_attendance == 'absent':
+                                abs_count += 1
+                    record.absent_candidates = abs_count
+                    
             
             elif record.subject.name == 'CCMC':
-                if record.exam_type == 'practical_oral':
+                if record.exam_type == 'practical_oral_cookery_bakery' :
                     abs_count = 0
                     for sheet in record.marksheets:
-                        if  sheet.cookery_bakery.cookery_practical_remarks and sheet.ccmc_oral.ccmc_oral_remarks:
-                            if sheet.cookery_bakery.cookery_practical_remarks.lower() == 'absent' and sheet.ccmc_oral.ccmc_oral_remarks.lower() == 'absent':
+                        if sheet.ccmc_marksheet.cookery_prac_attendance == 'absent':
                                 abs_count += 1
                     record.absent_candidates = abs_count
-                else:
-                    record.absent_candidates = 'NA'
             
-            elif record.subject.name == 'CCMC GSK Oral':
-                if record.exam_type == 'practical_oral':
+                elif record.exam_type == 'ccmc_oral':
                     abs_count = 0
                     for sheet in record.marksheets:
-                        if sheet.ccmc_gsk_oral.ccmc_gsk_oral_remarks:
-                            if sheet.ccmc_gsk_oral.ccmc_gsk_oral_remarks.lower() == 'absent':
+                        if sheet.ccmc_marksheet.ccmc_oral_attendance == 'absent':
                                 abs_count += 1
                     record.absent_candidates = abs_count
-                else:
-                    record.absent_candidates = 'NA'
-                    
+
+                elif record.exam_type == 'online':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_marksheet.ccmc_online_attendance == 'absent':
+                                abs_count += 1
+                    record.absent_candidates = abs_count
+
+            elif record.subject.name == 'CCMC GSK Oral':
+                if record.exam_type == 'gsk_oral':
+                    abs_count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_marksheet.ccmc_gsk_oral_attendance == 'absent':
+                                abs_count += 1
+                    record.absent_candidates = abs_count
+
             else:
                 record.absent_candidates = 'NA'
 

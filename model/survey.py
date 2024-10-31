@@ -316,9 +316,9 @@ class InheritedSurveyQuestions(models.Model):
         for record in self:
             record.answers_count = len(record.suggested_answer_ids)
 
-    @api.depends('suggested_answer_ids')
+    # @api.depends('suggested_answer_ids')
+    @api.depends('suggested_answer_ids.answer_score', 'suggested_answer_ids.is_correct')
     def _compute_score(self):
-        for record in self.suggested_answer_ids:
-            # import wdb;wdb.set_trace()
-            if record.answer_score > 0:
-                self.q_score = record.answer_score
+        for question in self:
+            correct_answers = question.suggested_answer_ids.filtered(lambda ans: ans.is_correct)
+            question.q_score = sum(answer.answer_score for answer in correct_answers)
