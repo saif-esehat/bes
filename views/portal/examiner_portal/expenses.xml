@@ -10,35 +10,13 @@
         </xpath>
 
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside" >
-            <!-- <t t-if="page_name == 'timesheet'">
-               
-                <li class="breadcrumb-item">
-                    <a t-attf-href="/my/assignments">Batches</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <t t-out="batches.batch_name"/>
-                </li>
-            </t> -->
-            
             <t t-if="page_name == 'timesheet'">
                 <li class="breadcrumb-item">
                     <a t-attf-href="/my/assignments">Batches</a>
                 </li>
-                <!-- <li class="breadcrumb-item">
-                    <t >
-                        <a t-attf-href="/my/assignments/batches/{{batch_id}}" t-out="assignments.dgs_batch.batch_name"/>
-                    </t>
-
-                </li> -->
-                <!-- <li class="breadcrumb-item">
-                    <a t-attf-href="/my/assignments/timesheet/{{batch.id}}/{{examiner.id}}">Timesheet</a>
-                </li>
                 <li class="breadcrumb-item">
-                    <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
-                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
-                    </t>
-
-                </li> -->
+                    <a t-attf-href="/my/assignments/batches/{{batch_id}}">Assignments</a>
+                </li>
                 
             </t>
 
@@ -47,18 +25,10 @@
                     <a t-attf-href="/my/assignments">Batches</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a t-attf-href="/my/assignments/timesheet/{{dgs_batch.id}}/{{examiner.id}}">Timesheets list</a>
-                </li>
-                <!-- <li class="breadcrumb-item">
-                </li>
-                <li class="breadcrumb-item">
-                    <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
-                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
-                    </t>
-
-                </li> -->
-                
+                    <a t-attf-href="/my/assignments/timesheet/{{dgs_batch.id}}/{{examiner.id}}">Timesheets</a>
+                </li>  
             </t>
+
         </xpath>
     </template>
     <template id="examiner_expenses" name="Examiner Expenses" >
@@ -386,73 +356,206 @@
 
     </template>
 
-    <template id="timesheet_list" name="Timesheet Lists">
+    <template id="timesheet_form" name="Timesheet Lists">
+        <script>
+            function openDayUpdateModal(button) {
+            // Retrieve the data-id attribute value from the clicked button
+            var dataId = button.getAttribute('assign-id');
+            // Update the content of the modal with the retrieved data
+            document.getElementById('assign_id').value = dataId;
+            
+            }
+    </script>
         <t t-call="portal.portal_layout">
-            <div class="modal fade" id="createTimeSheet" tabindex="-1" role="dialog" aria-labelledby="createTimeSheetLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <form action="/my/assignments/batches/timesheet/add" method="POST">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="createTimeSheetLabel">Time Sheet for Examinations</h5>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row mb-3 mx-2">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <input type="hidden" name="dgs_batch" t-att-value="assignments.dgs_batch.id" />
-                                    <label for="dgs_batch">Batch Name</label>
-                                    <input type="text" t-att-disabled="1" class="form-control mb-3" id="dgs_batch_name" name="dgs_batch_name" t-att-value="assignments.dgs_batch.batch_name"/>
 
-                                    <label for="institute_id">Institute Name</label>
-                                    <select class="form-control" id="institute_id" name="institute_id">
-                                        <t t-foreach="assignments.institute_id" t-as="institute_id">
-                                            <option t-attf-value="{{institute_id.id}}">
-                                                <t t-esc="institute_id.name"/>
-                                            </option>
-                                        </t>
-                                    </select>
+            <t t-if="not assignment.time_sheet">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateDayModal" onclick="openDayUpdateModal(this)"
+                t-attf-assign-id="{{assignment.id}}">Fill Timesheet Form</button>
+            </t>
+                <t t-set="today_date" t-value="datetime.date.today()"/>
+                <!-- Modal for Updating Details -->
+                <div class="modal fade" id="updateDayModal" tabindex="-1" role="dialog" aria-labelledby="updateDayModalLabel" aria-hidden="true">
+                    <form action="/my/assignments/batches/timesheet/submit" method="POST">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Time Sheet for Examination</h3>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Create</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <div class="modal-body">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="assign_id" name="assign_id"/>
+                                    <input type="hidden" id="exam_date" name="exam_date" t-att-value='assignment.exam_date'/>
+                                    <div class="form-group">
+                                        <label for="arrival_time">Arrival Time</label>
+                                        <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" required='1'/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="commencement_time">Commencement Time</label>
+                                        <input type="datetime-local" class="form-control" id="commencement_time" name="commencement_time" required='1'/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="completion_time">Completion Time</label>
+                                        <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" required='1'/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="candidates_examined">Candidates Examined</label>
+                                        <input type="number" class="form-control" id="candidates_examined" name="candidates_examined" required='1'/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="debriefing_time">Debriefing Time</label>
+                                        <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" required='1'/>
+                                    </div>
+                                </div>
+
+                                <t t-if="today_date == first_date or today_date == last_date">
+                                    <div class="row mx-2">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Travelling Details:</th>
+                                                    <th>Date &amp; Time</th>
+                                                    <th>Mode of Travel</th>
+                                                    <th>Expense(if occured)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Left Residence</td>
+                                                    <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Arrival at the Institute/Hotel</td>
+                                                    <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="arrival_institute_hotel_expenses" id="arrival_institute_hotel_expenses"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Left Institute/Hotel</td>
+                                                    <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="left_institute_expenses" id="left_institute_expenses"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Arrival at Residence</td>
+                                                    <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"/></td>
+                                                    <td>
+                                                        <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
+                                                            <option value="bus">Bus</option>
+                                                            <option value="cab">Cab</option>
+                                                            <option value="railway">Railways</option>
+                                                            <option value="airline">Airline</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="arrival_residence_expenses" id="arrival_residence_expenses"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
-            </div>
 
-            <div class="container">
-                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#createTimeSheet" class="btn btn-primary btn_cta">Add Time Sheet</a>  
-                <div class="card my-3">
-                    <table class="table table-bordered">
-                        <thead>
+                
+            <div class="row my-2">
+                <table class="table table-bordered">
+                    <!-- <t t-set="index" t-value="0" /> -->
+                    <thead>
+                        <tr>
+                            <!-- <th>Day</th> -->
+                            <th>Date</th>
+                            <th>Arrival</th>
+                            <th>Commencement</th>
+                            <th>Completion</th>
+                            <th>Candidates Examined</th>
+                            <th>Debriefing Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="timesheets.timesheet_examinations" t-as="timesheet">
+                        <!-- <t t-set="index" t-value="index + 1" /> -->
+                        <tbody>
                             <tr>
-                                <th class="text-left">Batch Name</th>
-                                <th class="text-left">Institute Name</th>
-                                <th class="text-left">Update Time Sheet</th>
+                                <!-- <td>Day <span t-esc="index"/></td> -->
+                                <td><span t-esc="timesheets.exam_date.strftime('%d-%m-%Y')"/></td>
+                                <td><span t-esc="timesheet.arrival_date_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.commence_exam.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.candidate_examined"/></td>
+                                <td><span t-esc="timesheet.debriefing_inst"/></td>
+                                <td>
+                                DELETE
+                                </td>
                             </tr>
-                        </thead>
-                    
-                        <t t-foreach="timesheets" t-as="timesheet">
-                            <tbody>
-                                <tr>
-                                    <td class="text-left">
-                                        <t t-out="timesheet.dgs_batch.batch_name" />
-                                    </td>
-                                    <td class="text-left">
-                                        <t t-out="timesheet.institutes_id.name" />
-                                    </td>
-                                    <td class="text-left">
-                                        <a t-attf-href="/my/assignments/timesheet/list/{{timesheet.id}}">Time Sheet Form</a>
+                        </tbody>
+                    </t>
+                </table>
+            </div> 
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </t>
-                    </table>
+            <div class="row my-2">
+                <table class="table table-bordered">
+                    <t t-set="index" t-value="0" />
+                    <thead>
+                        <tr>
+                            <th>Travelling Details:</th>
+                            <th>Date &amp; Time</th>
+                            <th>Mode of Travel</th>
+                            <th>Expenses</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="timesheets.travel_details" t-as="timesheet">
+                        <t t-set="index" t-value="index + 1" />
+                        <tbody>
 
-                </div>
-            </div>
+                            <tr>
+                                <td><span t-esc="timesheet.travelling_details"/></td>
+
+                                <td> 
+                                <t t-if='timesheet.date_time'>
+                                    <span t-esc="timesheet.date_time.strftime('%d-%b-%y %H:%M:%S')"/>
+                                </t>
+                                </td>
+                                <td><span t-esc="timesheet.mode_of_travel"/></td>
+                                <td><span t-esc="timesheet.expenses"/></td>
+                            </tr>
+                        </tbody>
+                    </t>
+                </table>
+            </div> 
+
+            <!-- <div class="container">
+                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#createTimeSheet" class="btn btn-primary btn_cta">Fill Timesheet Form</a> 
+            </div> -->
+
         </t>
     </template>
     <template id="timesheet_display" name="Timesheet Display">
@@ -495,9 +598,9 @@
                             <tr>
                                 <td>Day <span t-esc="index"/></td>
                                 <!-- <td><span t-esc="timesheet.exam_date.strftime('%d-%m-%Y')"/></td> -->
-                                <td><span t-esc="timesheet.arrival_date_time"/></td>
-                                <td><span t-esc="timesheet.commence_exam"/></td>
-                                <td><span t-esc="timesheet.completion_time"/></td>
+                                <td><span t-esc="timesheet.arrival_date_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.commence_exam.strftime('%d-%b-%y %H:%M:%S')"/></td>
+                                <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.candidate_examined"/></td>
                                 <td><span t-esc="timesheet.debriefing_inst"/></td>
                                 <td>

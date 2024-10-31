@@ -752,4 +752,3 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'docs': docs,
         }
 
-    

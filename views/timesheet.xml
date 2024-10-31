@@ -42,7 +42,7 @@
                         <group string="Time Sheet Report">
 
                             <!-- <field name="assignment_id"/> -->
-                            <!-- <field name="examiner_assignment"/> -->
+                            <field name="examiner_assignment"/>
                             <field name="examiner"/>
                             <field name="dgs_batch"/>
                             <field name="institutes_id"/>

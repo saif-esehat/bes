@@ -72,8 +72,11 @@ class GPCandidatePortal(CustomerPortal):
             return request.render("bes.gp_exam_candidate", vals)
         else:
 
-            partner_id = request.env.user.partner_id.id
-            registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+            partner_id = request.env.user.id
+            candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)])
+            registered_exams = request.env["survey.user_input"].sudo().search([('gp_candidate','=',candidate.id)])
+            print("registered_exams")
+            print(registered_exams)
             # import wdb; wdb.set_trace(); 
             vals = {"registered_exams":registered_exams}
             return request.render("bes.gp_exam_list_view", vals)

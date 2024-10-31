@@ -544,8 +544,13 @@
              />
 
         <menuitem id="menu_examiner_expenses" parent="menu_expenses"
-            name="Expenses" action="open_examiner_expenses"
+            name="Examiner Expenses" action="open_examiner_expenses"
             sequence="2"
+             />
+
+        <menuitem id="menu_ec_expenses" parent="menu_expenses"
+            name="EC Expenses" action="open_ec_expenses"
+            sequence="3"
              />
 
 

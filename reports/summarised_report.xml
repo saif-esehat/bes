@@ -10,6 +10,25 @@
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
     </record>
 
+<record id="combined_report_action" model="ir.actions.report">
+    <field name="name">Combined  Reports</field>
+    <field name="model">examination.report</field> <!-- You can choose a relevant model if needed -->
+    <field name="report_type">qweb-html</field>
+    <field name="report_name">bes.combined_report</field>
+    <field name="report_file">bes.combined_report</field>
+    <field name="paperformat_id" ref="bes.dgs_report_landscape"/> <!-- Use if specific paper format is needed -->
+</record>
+
+<record id="comparative_report_action" model="ir.actions.report">
+    <field name="name">Combined  Reports</field>
+    <field name="model">examination.report</field> <!-- You can choose a relevant model if needed -->
+    <field name="report_type">qweb-html</field>
+    <field name="report_name">bes.report_comparative</field>
+    <field name="report_file">bes.report_comparative</field>
+    <field name="paperformat_id" ref="bes.dgs_report_landscape"/> <!-- Use if specific paper format is needed -->
+</record>
+
+
     <template id="dgs_report_custom_header_footer_summarise">
         <style>
             @font-face {
@@ -1253,33 +1272,1296 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <h2>Comparative Report</h2>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Month of Exam Conducted for GP Rating</th>
-                            <th>Fresh Candidates Appeared</th>
-                            <th>Fresh Candidates % Pass</th>
-                            <th>Repeater Candidates Appeared</th>
-                            <th>Repeater Candidates % Pass</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="doc['report_data']" t-as="data">
-                            <tr>
-                                <td t-esc="data['batch_name']"/>
-                                <td t-esc="data['fresh_appeared']"/>
-                                <td t-esc="data['fresh_pass_percentage']"/>
-                                <td t-esc="data['repeater_appeared']"/>
-                                <td t-esc="data['repeater_pass_percentage']"/>
+                <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 100%;text-align: center;" border="1">
+                      <thead>
+                 
+                          <tr >
+                      
+                            <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; vertical-align: middle;">Month Of Examination conducted  For GP Rating</td>
+                            <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; vertical-align: middle;">FRESH CANDIDATES </td>
+                            <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; vertical-align: middle;">REPEATER CANDIDATES </td>
                             </tr>
-                        </t>
+                            <tr >
+                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">Appeared</td>
+                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">% Pass</td>
+                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">Appeared</td>
+                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">% Pass</td>
+                            </tr>
+                        
+                        </thead>
+                    <tbody>
+                
+                        <tr>
+                            <td></td>
+                            <td><span t-esc="gp_fresh_candidate_appeared"/></td>
+                            <td><span t-esc="round((gp_fresh_overall_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                            <td> <span t-esc="gp_repeater_overall_pass"/></td>
+                           <td><span t-esc="round((gp_repeater_overall_pass/gp_repeater_candidate_appeared)*100,2)"/>%</td>
+                        </tr>
+                 
                     </tbody>
                 </table>
             </t>
         </t>
     </template>
 
+   <template id="combined_report">
+            <t t-call="web.basic_layout">
 
+
+
+        <div class="page">
+            <!-- Header with Logo and Title -->
+                                <style>
+                @font-face {
+                    font-family: 'TimesNewRomanBold';
+                    src: url('/bes/static/src/fonts/Times New Roman Bold.ttf') format('truetype');
+                    font-weight: 900;
+                    font-style: normal;
+                }
+                
+                @font-face {
+                    font-family: 'TimesNewRoman';
+                    src: url('/bes/static/src/fonts/times.ttf') format('truetype');  
+                    font-weight: normal;
+                    font-style: normal;
+                }
+                .black-bordered-table {
+                    width: 100%;
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    margin-top: 30px;
+                    font-family: 'TimesNewRoman';
+                }
+                th, td, tr {
+                    border: 1px solid black;
+                    text-align: center;
+                    padding: 10px;
+                    border-collapse: collapse;
+                }
+                thead {
+                    padding-bottom: 0px;
+                    font-family: 'TimesNewRomanBold';
+                }
+                td{
+                    font-family: 'TimesNewRoman';
+                }
+                th {
+                    vertical-align: bottom;
+                }
+            </style>
+            
+                <div style="text-align: center;">
+                    <img class="img img-responsive img-top" src="/bes/static/src/img/logo_bes.jpg"
+                        style="max-width: 130px; max-height: 100px; padding: 2px;" alt="BES Logo" />
+                </div>
+                <h2 class="text-center">Board of Examinations for Seafarers Trust</h2>
+                <h3 class="text-center">Summarized Report</h3>
+                <h4 class="text-center">on</h4>
+                <h3 class="text-center">All India Exit Examination for Ratings</h3>
+                <h4 class="text-center">December 2023 Examinations</h4>
+           
+            <!-- Table of Enclosures -->
+            <table  class="black-bordered-table" style="font-family: 'TimesNewRomanBold';" border="1">
+                <!-- <thead style="font-family: 'TimesNewRomanBold';">
+                    <tr style="font-family: 'TimesNewRomanBold';">
+                        <th>Enclosure</th>
+                        <th>Description</th>
+                        <th>Pages</th>
+                    </tr>
+                </thead> -->
+                <tbody>
+                    <tr>
+                        <td>Enclosure 1</td>
+                        <td>Summarized report</td>
+                        <td>Pages 1-5</td>
+                    </tr>
+                    <tr>
+                        <td>Enclosure 2</td>
+                        <td>Summary of results - GP &amp; CCMC</td>
+                        <td>Pages 6-13</td>
+                    </tr>
+                    <tr>
+                        <td>Enclosure 3</td>
+                        <td>Comparative performance of institutes</td>
+                        <td>Pages 14-15</td>
+                    </tr>
+                    <tr>
+                        <td>Enclosure 4</td>
+                        <td>Institute wise result analysis</td>
+                        <td>Pages 16-19</td>
+                    </tr>
+                    <tr>
+                        <td>Enclosure 5</td>
+                        <td>Summary of ship visit (GP &amp; CCMC)</td>
+                        <td>Pages 20-25</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+            <div class="page" style="page-break-before: always;">
+            <!-- Header Section -->
+            <h2 style="text-align: center;font-weight: bold; text-decoration: underline;">Board of Examinations for Seafarers Trust</h2>
+            <h3 style="text-align: center;font-weight: bold; text-decoration: underline;">
+                All India Exit Examination for Ratings – December 2023
+            </h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 30px;">
+                <h4 style="margin-left: 100px; font-weight: bold; text-decoration: underline; text-align: left;">Summarized Report</h4>
+                <p style="margin-right: 200px; text-align: right;">Date: 7th Feb 2024</p>
+            </div>
+
+            <h5 style=" font-weight: bold; margin-left: 100px;margin-bottom: 30px; ">1. Report on the All India Exit Examination</h5>
+            <p style=" font-weight: bold; margin-left: 100px;">
+                <b>1.1 Online test Venues/ Invigilators:</b> The online test for all candidates was conducted at the respective institutes. In all cases, either BES or empaneled invigilators, supervised the process. The test had a full coverage of the syllabus in both GP and CCMC. GP online test consists of 45 minutes for GSK and 45 minutes for MEK. CCMC online test is of 60 minutes duration.
+            </p>
+            <p style=" font-weight: bold; margin-left: 100px;margin-bottom: 60px; "><b>1.2 Incidents of unfair means in the online test:<br/></b> NIL</p>
+
+            <h5 style=" font-weight: bold; margin-left: 100px;">2. Performance of G.P. Rating (Fresh candidates)</h5>
+            <p style=" font-weight: bold; margin-left: 100px;">(Figures in parentheses are for  <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Examination)</p>
+            <p style=" font-weight: bold; margin-left: 100px;">
+                In all, 4659(4350) candidates applied, of which 4651(4339) candidates appeared. 3980(3641) candidates passed. The overall result is 85.6% (83.9%).
+            </p>
+
+            <div>
+             <p style=" font-weight: bold; margin-left: 100px;margin-top: 60px;">
+               Subject Wise Pass Percentage OF GP Rating Examination For 50 Institutes Is As Follows;
+            </p>
+            </div>
+
+          <div style="text-align: center;margin-left: 200px;">
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 50%;text-align: center;" border="1">
+                <thead>
+                    <tr>
+                        <!-- Left-align the Subject header -->
+                        <th style="text-align: left;">Subject</th>
+                        <!-- Center-align the Passed (%) header -->
+                        <th style="text-align: center;">Passed (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="subject_pass_data" t-as="subject">
+                        <tr>
+                            <!-- Left-align the Subject label -->
+                            <td style="text-align: left;">
+                                <t t-esc="dict(subject._fields['subject'].selection).get(subject.subject)"/>
+                            </td>
+                            
+                            <!-- Center-align the Percentage value and rounding it to 2 decimal places -->
+                            <td style="text-align: center;">
+                                <t t-esc="'{:.2f}'.format(subject.percentage)"/>%
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+        <div class="page" style="page-break-before: always;">
+
+            <div>
+             <p style=" font-weight: bold; margin-left: 100px;margin-top: 60px;">
+               The Passing Percentage Of The Candidates For The Following Institutes Is Below 80%.
+            </p>
+            </div>
+            <div style="text-align: center;margin-left: 100px;">
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 80%;text-align: center;" border="1">
+                <thead>
+                 
+                        <tr >
+                      
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: left; font-weight: bold; width: 40%; vertical-align: middle;">Name Of The Institutes</td>
+                        <td colspan="3" style="border: 1px solid black; text-align: center; font-weight: bold; width: 22%; vertical-align: middle;">Exam held for  <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Batch</td>
+                    </tr>
+                    <tr >
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Appeared</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Passed</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">%</td>
+                        <!-- <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Course</td> -->
+                    </tr>
+                   
+                </thead>
+                <tbody>
+                 <t t-foreach="low_percentage_data" t-as="record">
+                    <tr>
+                        <td style="border: 1px solid black; text-align: left; vertical-align: middle;" t-esc="record.institute_id.name"/>  <!-- Name of the Institute -->
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="record.appeared"/>  <!-- Appeared Count -->
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="record.passed"/>  <!-- Passed Count -->
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="'{:.2f}'.format(record.percentage)"/>  <!-- Percentage -->
+                        <!-- <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="record.course and dict(record.fields_get()['course']['selection']).get(record.course)"/>  Course Label -->
+                    </tr>
+                </t>
+                </tbody>
+            </table>
+            </div>
+
+             <div>
+             <p style=" font-weight: bold; margin-left: 100px;margin-top: 10px;">
+             2A GP Repeater Candidates :
+            </p>
+            <p style="  margin-left: 100px;margin-top: 5px;">
+            (Figures in parentheses are for <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Examination)
+            </p>
+              <p style="  margin-left: 100px;margin-top: 5px;">
+               Candidates applied of which <span t-esc="total_appeared"/>() appeared, <span t-esc="total_passed"/>() Candidates passed giving success rate 
+            </p>
+            </div>
+
+
+            <div style="text-align: center;margin-left: 100px;">
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 80%;text-align: center;" border="1">
+                <thead>
+                 
+                        <tr >
+                      
+                        <td colspan="1" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 40%; vertical-align: middle;">Attempt Number</td>
+                        <td colspan="3" style="border: 1px solid black; text-align: center; font-weight: bold; width: 22%; vertical-align: middle;"><span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> </td>
+                    </tr>
+                    <tr >
+                       <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Including deferred</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Appeared</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Passed</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">%</td>
+                        <!-- <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Course</td> -->
+                    </tr>
+                   
+                </thead>
+                <tbody>
+                 <t t-foreach="gp_repeater_data" t-as="repeater">
+                    <tr>
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="repeater.attempt_number"/>  
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="repeater.appeared"/>  
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="repeater.passed"/>  
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="'{:.2f}'.format(repeater.pass_percentage)"/> 
+                        <!-- <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="record.course and dict(record.fields_get()['course']['selection']).get(record.course)"/>  Course Label -->
+                    </tr>
+                </t>
+                </tbody>
+            </table>
+            </div>
+
+            <h5 style=" font-weight: bold; margin-left: 100px;margin-top: 30px">3. Performance of  Certificate in Maritime Catering (CCMC)</h5>
+                <p style=" margin-left: 100px;">(Figures in parentheses are for  <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Examination)</p>
+
+                 <p style=" margin-left: 100px;">
+                In all, <span t-esc="total_ccmc_applied"/>() candidates applied, of which <span t-esc="total_ccmc_appeared"/>() candidates appeared. <span t-esc="total_ccmc_passed"/>() candidates passed. The overall result is <span t-esc="'{:.1f}%'.format(overall_ccmc_percentage)"/>(%).
+                </p>
+
+            <div style="text-align: center;margin-left: 100px;">
+            <table lass="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 80%;text-align: center;" border="1">
+                <thead>
+                    <tr >
+                      
+                        <td colspan="6" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 40%; vertical-align: middle;">CCMC <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Fresh candidates - The passing percentage of the Institutes is as follows:</td>
+                        <!-- <td colspan="3" style="border: 1px solid black; text-align: center; font-weight: bold; width: 22%; vertical-align: middle;"><span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> </td> -->
+                    </tr>
+                    <tr>
+                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 5%; vertical-align: middle;">Sr. No.</th>
+                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 60%; vertical-align: middle;">Name of the Institute</th>
+                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Applied</th>
+                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Appeared</th>
+                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Passed</th>
+                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <t t-set="index" t-value="0" />
+                   <t t-foreach="ccmc_percentage_data" t-as="ccmc">
+                   <t t-set="index" t-value="index + 1" />
+                    <tr>
+                    <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
+                                    <span t-esc="index" />
+                                </td>
+                        <td style="border: 1px solid black; text-align: left; vertical-align: middle;" t-esc="ccmc.institute_id.name"/>  <!-- Name of the Institute -->
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc.applied"/>
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc.appeared"/>  <!-- Appeared Count -->
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc.passed"/>  <!-- Passed Count -->
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="'{:.2f}'.format(ccmc.percentage)"/>  <!-- Percentage -->
+                        <!-- <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="record.course and dict(record.fields_get()['course']['selection']).get(record.course)"/>  Course Label -->
+                    </tr>
+                </t>
+                </tbody>
+              
+                <!-- <tfoot style="display: table-footer-group;">
+                    <tr>
+                        <td style="border: 1px solid black;" colspan="2">Total</td>
+                        <td style="border: 1px solid black;">
+                            <span t-esc="total_applied"/>
+                        </td>
+                        <td style="border: 1px solid black;">
+                            <span t-esc="total_appeared"/>
+                        </td>
+                        <td style="border: 1px solid black;">
+                            <span t-esc="total_passed"/>
+                        </td>
+                        <td style="border: 1px solid black;">
+                            <span t-esc="'{:.1f}%'.format(overall_percentage)"/>
+                        </td>
+                    </tr>
+                </tfoot> -->
+             
+            </table>
+            </div>
+         <div class="page" style="page-break-before: always;">
+            <h5 style=" font-weight: bold; margin-left: 100px;margin-top: 30px">3A  CCMC Repeaters :</h5>
+              <p style="  margin-left: 100px;margin-top: 5px;">
+                 <span t-esc="ccmc_r_total_appeared"/> appeared,  <span t-esc="ccmc_r_total_passed"/> passed.  The overall result is  <span t-esc="'{:.1f}%'.format(ccmc_r_overall_percentage)"/>
+            </p>
+
+            <div style="text-align: center;margin-left: 200px;">
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 50%;text-align: center;" border="1">
+                <thead>
+                 
+                        <tr >
+                      
+                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: left; font-weight: bold; width: 40%; vertical-align: middle;">Attempt Number</td>
+                        <td colspan="3" style="border: 1px solid black; text-align: center; font-weight: bold; width: 22%; vertical-align: middle;"><span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> </td>
+                    </tr>
+                    <tr >
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Appeared</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Passed</td>
+                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">% Pass</td>
+                        <!-- <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Course</td> -->
+                    </tr>
+                   
+                </thead>
+                <tbody>
+                 <t t-foreach="ccmc_repeater_data" t-as="ccmc_repeater">
+                    <tr>
+                        <td style="border: 1px solid black; text-align: left; vertical-align: middle;" t-esc="ccmc_repeater.attempt_number"/>  
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc_repeater.appeared"/>  
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc_repeater.passed"/>  
+                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="'{:.2f}'.format(ccmc_repeater.pass_percentage)"/> 
+                        <!-- <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="record.course and dict(record.fields_get()['course']['selection']).get(record.course)"/>  Course Label -->
+                    </tr>
+                </t>
+                </tbody>
+            </table>
+            </div>
+
+            <h6 style=" font-weight: bold; margin-left: 100px;margin-top: 50px">4  Examinations were conducted as follows : </h6>
+              <h6 style="margin-left: 120px;">> Oral and Practical were conducted at  50 training for GP and 18 training institute for CCMC between</h6>
+              <h6 style="margin-left: 120px; margin-top: 0;">> Online Examination was conducted at respective institute between</h6>
+
+              <h6 style=" font-weight: bold; margin-left: 100px;margin-top: 80px">5 Concluding Remrks </h6>
+              <p style=" margin-left: 100px;">
+              BES has been continuously striving to improve the process of examination and encouraging institutes to improve their infrastructure and training.
+              </p>
+               <p style=" margin-left: 100px;">
+              BES wishes "Thank You"  to The Directorate General of Shipping for continuing support and guidance.
+              </p>
+
+          <p style="margin-left: 100px; margin-top: 120px; margin-bottom: 0;">
+                Ravindra Nath Tripathi
+            </p>
+            <p style="margin-left: 100px; margin-top: 0; margin-bottom: 0;">
+                Chief Examinations Controller
+            </p>
+            <h6 style="font-weight: bold; margin-left: 100px; margin-top: 0;">
+                For Board of Examinations for Seafarers Trust
+            </h6>
+
+            <div class="page" style="page-break-before: always;margin-top: 50px">
+            <!-- <div class="container" t-attf-class="header article" t-att-style="report_header_style" style="margin-top:50px;">
+                        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+                        <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
+                            <div class="col-12" style="font-family: 'TimesNewRomanBold';">
+                                <t t-if="docs.course == 'gp'">
+                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
+                                </t>
+                                <t t-if="docs.course == 'ccmc'">
+                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
+                                </t>
+                                BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
+                                <span style="margin-left:5px; margin-right:5px;font-family: 'TimesNewRomanBold';"/> <br></br>
+                                <t t-if="docs.course == 'gp'">
+                                    <strong>GP RATING <span t-field="docs.exam_type"/> - <span t-esc="docs.examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                                </t>
+                                <t t-if="docs.course == 'ccmc'">
+                                    <strong>CCMC RATING <span t-field="docs.exam_type"/> - <span t-esc="docs.examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                                </t>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="container" style="margin-top:50px;">
+                        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+                        <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
+                            <div class="col-12" style="font-family: 'TimesNewRomanBold';">
+                                <t t-if="docs[0].course == 'gp'">
+                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
+                                </t>
+                                <t t-if="docs[0].course == 'ccmc'">
+                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
+                                </t>
+                                BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
+                                <span style="margin-left:5px; margin-right:5px;font-family: 'TimesNewRomanBold';"/> <br></br>
+                                <t t-if="docs[0].course == 'gp'">
+                                    <strong>GP RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                                </t>
+                                <t t-if="docs[0].course == 'ccmc'">
+                                    <strong>CCMC RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- Content below to be repeated for each document -->
+                <t t-foreach="docs" t-as="doc">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 image-container">
+                                <t t-if="doc.course == 'gp'">
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:95%;height:550px; margin-top:2px;"/>
+                                </t>
+                                <t t-elif="doc.course == 'ccmc'">
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:95%;height:550px; margin-top:2px;"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="my-table">
+                                    <tbody>
+                                        <tr t-foreach="range(0, int(len(institutes_data) / 3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
+                                            <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
+                                                <span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/>
+                                            </td>
+                                            <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
+                                                <span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/>
+                                            </td>
+                                            <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
+                                                <span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+
+          <div class="page" style="page-break-before: always;margin-top: 50px" t-if="course == 'gp' ">
+    
+      
+              <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12" style="text-align:center;">
+                        <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2a</span>
+                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> <span t-esc="exam_sequence"/> 70th All India Exit Examination Result for</h2>
+                        <h1 style="font-family: 'TimesNewRomanBold'; font-weight: 900;">
+                            <span t-field="examination_report.course"/> RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold';" border="1">
+                <thead  style="font-family: 'TimesNewRomanBold';" >
+                    <tr style="font-family: 'TimesNewRomanBold';">
+                        <th colspan="15" style="text-align:center; font-size:25px; margin:0; padding:0; ">Summary of Result of <span t-esc="report_type"/> Candidates </th>
+                    </tr>
+                    <tr style="font-family: 'TimesNewRomanBold';">
+                        <th rowspan="2">Sr. No.</th>
+                        <th rowspan="2">Code No.</th>
+                        <th rowspan="2" style="text-align:left;width: 60%; ">Name of the Institute</th>
+                        <th rowspan="2">Applied</th>
+                        <th rowspan="2">Candidate Appeard</th>
+                        <th colspan="2">GSK (P.O.J)</th>
+                        <th colspan="2">MEK (P.O.J)</th>
+                        <th colspan="2">GSK Online</th>
+                        <th colspan="2">MEK Online</th>
+                        <th rowspan="2">Overall Passed</th>
+                        <th rowspan="2">Overall Passed %</th>
+                    </tr>
+                    <tr style="font-family: 'TimesNewRomanBold';">
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                    </tr>
+                </thead>
+                <tbody style="font-family: 'TimesNewRomanBold';">
+                 
+
+                    <t t-set="index" t-value="0"/>
+                    <t t-set="region_index" t-value="0"/>
+                    <t t-set="regions" t-value="exam_region"/>
+                    <t t-set="region_length" t-value="len(exam_region)"/>
+
+                    <t t-set="nation_applied" t-value="0" />
+                    <t t-set="nation_candidate_appeared" t-value="0" />
+                    <t t-set="nation_gsk_prac_oral_pass" t-value="0" />
+                    <t t-set="nation_mek_prac_oral_pass" t-value="0" />
+
+                    <t t-set="nation_gsk_online_pass" t-value="0" />
+
+                    <t t-set="nation_mek_online_pass" t-value="0" />
+                    
+                    <t t-set="nation_overall_pass" t-value="0" />
+                    
+                    <t t-foreach="regions" t-as="center">
+                            <t t-set="region_index" t-value="region_index + 1"/>
+                                    
+                    
+                            <t t-set="institutes" t-value="env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docids),('exam_region','=',center)]).sorted(key=lambda r: r.institute_code)" />
+                            <t t-set="institutes_length" t-value="len(institutes)" />
+                            
+                            <t t-set="region_applied" t-value="0" />
+                            <t t-set="region_candidate_appeared" t-value="0" />
+                            <t t-set="region_gsk_prac_oral_pass" t-value="0" />
+                            <t t-set="region_mek_prac_oral_pass" t-value="0" />
+                            <t t-set="region_gsk_online_pass" t-value="0" />
+                            <t t-set="region_mek_online_pass" t-value="0" />
+                            <t t-set="region_overall_pass" t-value="0" />
+
+                            <t t-set="institutes_index" t-value="0"/>
+                            <t t-foreach="institutes" t-as="institute">
+                                <tr>
+                                    <t t-set="institutes_index" t-value="institutes_index + 1"/>
+                                    <t t-set="index" t-value="index + 1"/>
+
+                                    <td><span t-esc="index"/></td>
+                                    <td><span t-esc="institute.institute.code"/></td>
+                                    <td style="text-align:left;width: 60%; " ><span t-esc="institute.institute.name"/></td>
+                                    <td><span t-esc="institute.applied"/></td>
+                                    <td><span t-esc="institute.candidate_appeared"/></td>
+                                    <td><span t-esc="institute.gsk_prac_oral_pass"/></td>
+                                    <td><span t-esc="round(institute.gsk_prac_oral_pass_per,2)"/>%</td>
+                                    <td><span t-esc="institute.mek_prac_oral_pass"/></td>
+                                    <td><span t-esc="round(institute.mek_prac_oral_pass_per,2)"/>%</td>
+                                    <td><span t-esc="institute.gsk_online_pass"/></td>
+                                    <td><span t-esc="round(institute.gsk_online_pass_per,2)"/>%</td>
+                                    <td><span t-esc="institute.mek_online_pass"/></td>
+                                    <td><span t-esc="round(institute.mek_online_pass_per,2)"/>%</td>
+                                    <td><span t-esc="institute.overall_pass"/></td>
+                                    <td><span t-esc="round(institute.overall_pass_per,2)"/>%</td>
+
+                                    <t t-set="region_applied" t-value="region_applied+institute.applied" />
+                                    <t t-set="region_candidate_appeared" t-value="region_candidate_appeared + institute.candidate_appeared" />
+                                    <t t-set="region_gsk_prac_oral_pass" t-value="region_gsk_prac_oral_pass + institute.gsk_prac_oral_pass" />
+                                    <t t-set="region_mek_prac_oral_pass" t-value="region_mek_prac_oral_pass + institute.mek_prac_oral_pass" />
+                                    <t t-set="region_gsk_online_pass" t-value="region_gsk_online_pass + institute.gsk_online_pass" />
+                                    <t t-set="region_mek_online_pass" t-value="region_mek_online_pass + institute.mek_online_pass" />
+                                    <t t-set="region_overall_pass" t-value="region_overall_pass + institute.overall_pass" />
+
+                                </tr>
+
+                                <t t-if="institutes_index == institutes_length">
+                                    <tr style="background-color: #f2f2f2;">
+                                        <td></td>
+                                        <td></td>
+                                        <td><span t-esc="institute.exam_region.name"/> REGION</td>
+                                        <td><span t-esc="region_applied"/></td>
+                                        <td><span t-esc="region_candidate_appeared"/></td>
+                                        <td><span t-esc="region_gsk_prac_oral_pass"/></td>
+                                        <td><span t-esc="round((region_gsk_prac_oral_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="region_mek_prac_oral_pass"/></td>
+                                        <td><span t-esc="round((region_mek_prac_oral_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="region_gsk_online_pass"/></td>
+                                        <td><span t-esc="round((region_gsk_online_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="region_mek_online_pass"/></td>
+                                        <td><span t-esc="round((region_mek_online_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="region_overall_pass"/></td>
+                                        <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+
+
+                                        <t t-set="nation_applied" t-value="nation_applied + region_applied" />
+                                        <t t-set="nation_candidate_appeared" t-value="nation_candidate_appeared + region_candidate_appeared" />
+                                        <t t-set="nation_gsk_prac_oral_pass" t-value="nation_gsk_prac_oral_pass + region_gsk_prac_oral_pass" />
+                                        <t t-set="nation_mek_prac_oral_pass" t-value="nation_mek_prac_oral_pass + region_mek_prac_oral_pass" />
+                                        <t t-set="nation_gsk_online_pass" t-value="nation_gsk_online_pass + region_gsk_online_pass" />
+                                        <t t-set="nation_mek_online_pass" t-value="nation_mek_online_pass + region_mek_online_pass" />
+                                        <t t-set="nation_overall_pass" t-value="nation_overall_pass + region_overall_pass" />
+                                    </tr>
+                                </t>
+
+                            </t>
+
+                            <t t-if="region_index == region_length">
+                                    <tr style="background-color: #f2f2f2;">
+                                        <td></td>
+                                        <td></td>
+                                        <td>All India Results</td>
+                                        <td><span t-esc="nation_applied"/></td>
+                                        <td><span t-esc="nation_candidate_appeared"/></td>
+                                        <td><span t-esc="nation_gsk_prac_oral_pass"/></td>
+                                        <td><span t-esc="round((gp_fresh_gsk_prac_oral_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_mek_prac_oral_pass"/></td>
+                                         <td><span t-esc="round((gp_fresh_mek_prac_oral_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_gsk_online_pass"/></td>
+                                         <td><span t-esc="round((gp_fresh_gsk_online_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_mek_online_pass"/></td>
+                                         <td><span t-esc="round((gp_fresh_mek_online_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_overall_pass"/></td>
+                                        <td><span t-esc="round((gp_fresh_overall_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                    </tr>
+                            </t>
+
+                             <!-- <t t-if="region_index == region_length">
+                                    <tr style="background-color: #f2f2f2;">
+                                        <td></td>
+                                        <td></td>
+                                        <td>All India Results</td>
+                                        <td><span t-esc="nation_applied"/></td>
+                                        <td><span t-esc="nation_candidate_appeared"/></td>
+                                        <td><span t-esc="nation_gsk_prac_oral_pass"/></td>
+                                        <td><span t-esc="round((nation_gsk_prac_oral_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_mek_prac_oral_pass"/></td>
+                                        <td><span t-esc="round((nation_mek_prac_oral_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_gsk_online_pass"/></td>
+                                        <td><span t-esc="round((nation_gsk_online_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_mek_online_pass"/></td>
+                                        <td><span t-esc="round((nation_mek_online_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                        <td><span t-esc="nation_overall_pass"/></td>
+                                        <td><span t-esc="round((nation_overall_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                    </tr>
+                            </t> -->
+                       </t>
+
+                      
+                </tbody> 
+            </table>
+
+
+
+          
+
+             <div class="container-fluid"  style="margin-top: 50px" >
+                <div class="row">
+                    <div class="col-12" style="text-align:center;">
+                        <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2a</span>
+                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> <span t-esc="exam_sequence"/>70th - All India Exit Examination Result for</h2>
+                        <h1 style="font-family: 'TimesNewRomanBold'; font-weight: 900;">
+                            <span t-field="examination_report.course"/> RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold';" border="1">
+                <thead style="font-family: 'TimesNewRomanBold';">
+                     <tr style="font-family: 'TimesNewRomanBold';">
+                        <th colspan="19" style="text-align:center; font-size:25px; margin:0; padding:0; ">Summary of Result of <span t-esc="report_type"/> Candidates </th>
+                    </tr>
+                    <tr style="font-family: 'TimesNewRomanBold';">
+                        <th rowspan="2">Sr. No.</th>
+                        <th rowspan="2">Code No.</th>
+                        <th rowspan="2" style="text-align:left; ">Name of the Institute</th>
+                        <th rowspan="2">Applied</th>
+                        <th rowspan="2">Candidate Appeard</th>
+                        <th colspan="3">GSK (P.O.J)</th>
+                        <th colspan="3">MEK (P.O.J)</th>
+                        <th colspan="3">GSK Online</th>
+                        <th colspan="3">MEK Online</th>
+                        <th rowspan="2">Overall Passed</th>
+                        <th rowspan="2">Overall Passed %</th>
+                    </tr>
+                    <tr style="font-family: 'TimesNewRomanBold';">
+                        <th>Appeared</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                        <th>Appeared</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                        <th>Appeared</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                        <th>Appeared</th>
+                        <th>Passed</th>
+                        <th>% pass Institute wise</th>
+                    </tr>
+                </thead> 
+              
+                 <tbody style="font-family: 'TimesNewRomanBold';">
+                    <t t-set="index" t-value="0"/>
+                    <t t-set="region_index" t-value="0"/>
+                    <t t-set="regions" t-value="exam_region"/>
+                    <t t-set="region_length" t-value="len(exam_region)"/>
+
+                    <t t-set="nation_applied" t-value="0" />
+                    <t t-set="nation_candidate_appeared" t-value="0" />
+
+                    
+                    <t t-set="nation_gsk_prac_oral_appeared" t-value="0" />
+                    <t t-set="nation_gsk_prac_oral_pass" t-value="0" />
+
+                    <t t-set="nation_mek_prac_oral_appeared" t-value="0" />
+                    <t t-set="nation_mek_prac_oral_pass" t-value="0" />
+
+                    <t t-set="nation_gsk_online_appeared" t-value="0" />
+                    <t t-set="nation_gsk_online_pass" t-value="0" />
+                    
+                    <t t-set="nation_mek_online_appeared" t-value="0" />
+                    <t t-set="nation_mek_online_pass" t-value="0" />
+                    
+                    
+                    <t t-set="nation_overall_pass" t-value="0" />
+                    
+                    <t t-foreach="regions" t-as="center">
+                            <t t-set="region_index" t-value="region_index + 1"/>
+                                    
+                    
+                            <t t-set="gp_sumraise_repeater_data" t-value="env['summarised.gp.repeater.report'].sudo().search([('examination_report_batch','=',docids),('exam_region','=',center)]).sorted(key=lambda r: r.institute_code)" />
+                            <t t-set="institutes_length" t-value="len(gp_sumraise_repeater_data)" />
+                            
+                            <t t-set="region_applied" t-value="0" />
+                            <t t-set="region_candidate_appeared" t-value="0" />
+                            
+                            <t t-set="region_gsk_prac_oral_appeared" t-value="0" />
+                            <t t-set="region_mek_prac_oral_appeared" t-value="0" />
+                            <t t-set="region_gsk_online_appeared" t-value="0" />
+                            <t t-set="region_mek_online_appeared" t-value="0" />
+                            
+                            
+                            <t t-set="region_gsk_prac_oral_pass" t-value="0" />
+                            <t t-set="region_mek_prac_oral_pass" t-value="0" />
+                            <t t-set="region_gsk_online_pass" t-value="0" />
+                            <t t-set="region_mek_online_pass" t-value="0" />
+                            <t t-set="region_overall_pass" t-value="0" />
+
+                            <t t-set="institutes_index" t-value="0"/>
+                            <t t-foreach="gp_sumraise_repeater_data" t-as="institute">
+                                <tr>
+                                    <t t-set="institutes_index" t-value="institutes_index + 1"/>
+                                    <t t-set="index" t-value="index + 1"/>
+                                    <td><span t-esc="index"/></td>
+                                    <td><span t-esc="institute.institute.code"/></td>
+                                    <td style="text-align:left; " ><span t-esc="institute.institute.name"/></td>
+                                    <td><span t-esc="institute.applied"/></td>
+                                    <td><span t-esc="institute.candidate_appeared"/></td>
+
+                                    <t t-if="institute.gsk_prac_oral_appeared == 0">
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </t>
+                                    <t t-else="">
+                                        <td><span t-esc="institute.gsk_prac_oral_appeared"/></td>
+                                        <td><span t-esc="institute.gsk_prac_oral_pass"/></td>
+                                        <td><span t-esc="round(institute.gsk_prac_oral_pass_per,2)"/>%</td>
+                                    </t>
+
+                                    <t t-if="institute.mek_prac_oral_appeared == 0">
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </t>
+                                    <t t-else="">
+                                        
+                                        <td><span t-esc="institute.mek_prac_oral_appeared"/></td>
+                                        <td><span t-esc="institute.mek_prac_oral_pass"/></td>
+                                        <td><span t-esc="round(institute.mek_prac_oral_pass_per,2)"/>%</td>
+
+                                    </t>
+
+
+                                    <t t-if="institute.gsk_online_appeared == 0">
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </t>
+                                    <t t-else="">
+                                        
+                                        <td><span t-esc="institute.gsk_online_appeared"/></td>
+                                        <td><span t-esc="institute.gsk_online_pass"/></td>
+                                        <td><span t-esc="round(institute.gsk_online_pass_per,2)"/>%</td>
+
+                                    </t>
+
+                                        <t t-if="institute.mek_online_appeared == 0">
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </t>
+                                    <t t-else="">
+                                        <td><span t-esc="institute.mek_online_appeared"/></td>
+                                        <td><span t-esc="institute.mek_online_pass"/></td>
+                                        <td><span t-esc="round(institute.mek_online_pass_per,2)"/>%</td>
+                                    </t>
+
+                                    
+
+
+                                    
+                                    <td><span t-esc="institute.overall_pass"/></td>
+                                    <td><span t-esc="round(institute.overall_pass_per,2)"/>%</td>
+                                    <t t-set="region_applied" t-value="region_applied+institute.applied" />
+
+                                    <t t-set="region_candidate_appeared" t-value="region_candidate_appeared + institute.candidate_appeared" />
+                                    
+                                    <t t-set="region_gsk_prac_oral_appeared" t-value="region_gsk_prac_oral_appeared + institute.gsk_prac_oral_appeared" />
+                                    <t t-set="region_gsk_prac_oral_pass" t-value="region_gsk_prac_oral_pass + institute.gsk_prac_oral_pass" />
+
+                                    <t t-set="region_mek_prac_oral_appeared" t-value="region_mek_prac_oral_appeared + institute.mek_prac_oral_appeared" />                                        
+                                    <t t-set="region_mek_prac_oral_pass" t-value="region_mek_prac_oral_pass + institute.mek_prac_oral_pass" />
+
+                                    <t t-set="region_gsk_online_appeared" t-value="region_gsk_online_appeared + institute.gsk_online_appeared" />
+                                    <t t-set="region_gsk_online_pass" t-value="region_gsk_online_pass + institute.gsk_online_pass" />
+
+                                    <t t-set="region_mek_online_appeared" t-value="region_mek_online_appeared + institute.mek_online_appeared" />                                        
+                                    <t t-set="region_mek_online_pass" t-value="region_mek_online_pass + institute.mek_online_pass" />
+
+                                    <t t-set="region_overall_pass" t-value="region_overall_pass + institute.overall_pass" />
+
+                                </tr>
+
+                                <t t-if="institutes_index == institutes_length">
+                                    <tr style="background-color: #f2f2f2;">
+                                        <td></td>
+                                        <td></td>
+                                        <td><span t-esc="institute.exam_region.name"/> REGION</td>
+                                        <td><span t-esc="region_applied"/></td>
+                                        <td><span t-esc="region_candidate_appeared"/></td>
+
+
+
+                                        <t t-if="region_gsk_prac_oral_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">                                
+                                            <td><span t-esc="region_gsk_prac_oral_appeared"/></td>
+                                            <td><span t-esc="region_gsk_prac_oral_pass"/></td>
+                                            <td><span t-esc="round((region_gsk_prac_oral_pass/region_gsk_prac_oral_appeared)*100,2)"/>%</td>
+                                        </t>
+
+                                        <t t-if="region_mek_prac_oral_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="region_mek_prac_oral_appeared"/></td>
+                                            <td><span t-esc="region_mek_prac_oral_pass"/></td>
+                                            <td><span t-esc="round((region_mek_prac_oral_pass/region_mek_prac_oral_appeared)*100,2)"/>%</td>
+                                        </t>
+
+
+                                        <t t-if="region_gsk_online_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="region_gsk_online_appeared"/></td>
+                                            <td><span t-esc="region_gsk_online_pass"/></td>
+                                            <td><span t-esc="round((region_gsk_online_pass/region_gsk_online_appeared)*100,2)"/>%</td>
+                                        </t>
+
+
+                                        <t t-if="region_mek_online_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="region_mek_online_appeared"/></td>
+                                            <td><span t-esc="region_mek_online_pass"/></td>
+                                            <td><span t-esc="round((region_mek_online_pass/region_mek_online_appeared)*100,2)"/>%</td>
+                                        </t>
+
+
+                                        <t t-if="region_candidate_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="region_overall_pass"/></td>
+                                            <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                        </t>
+
+                                        
+                                       
+
+
+                                        
+                                        <t t-set="nation_applied" t-value="nation_applied + region_applied" />
+                                        <t t-set="nation_candidate_appeared" t-value="nation_candidate_appeared + region_candidate_appeared" />
+
+                                        <t t-set="nation_gsk_prac_oral_appeared" t-value="nation_gsk_prac_oral_appeared + region_gsk_prac_oral_appeared" />
+                                        <t t-set="nation_gsk_prac_oral_pass" t-value="nation_gsk_prac_oral_pass + region_gsk_prac_oral_pass" />
+                                        
+                                        <t t-set="nation_mek_prac_oral_appeared" t-value="nation_mek_prac_oral_appeared + region_mek_prac_oral_appeared" />
+                                        <t t-set="nation_mek_prac_oral_pass" t-value="nation_mek_prac_oral_pass + region_mek_prac_oral_pass" />
+
+                                        <t t-set="nation_gsk_online_appeared" t-value="nation_gsk_online_appeared + region_gsk_online_appeared" />
+                                        <t t-set="nation_gsk_online_pass" t-value="nation_gsk_online_pass + region_gsk_online_pass" />
+
+                                        <t t-set="nation_mek_online_appeared" t-value="nation_mek_online_appeared + region_mek_online_appeared" />
+                                        <t t-set="nation_mek_online_pass" t-value="nation_mek_online_pass + region_mek_online_pass" />
+
+
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-if="region_index == region_length">
+                                    <tr style="background-color: #f2f2f2;">
+                                        <td></td>
+                                        <td></td>
+                                        <td>All India Results</td>
+                                        <td><span t-esc="nation_applied"/></td>
+                                        <td><span t-esc="nation_candidate_appeared"/></td>
+                                        
+
+                                        <t t-if="nation_gsk_prac_oral_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="nation_gsk_prac_oral_appeared"/></td>
+                                            <td><span t-esc="nation_gsk_prac_oral_pass"/></td>
+                                            <td><span t-esc="round((nation_gsk_prac_oral_pass/nation_gsk_prac_oral_appeared)*100,2)"/>%</td>
+                                        </t>
+
+                                        <t t-if="nation_mek_prac_oral_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="nation_mek_prac_oral_appeared"/></td>
+                                            <td><span t-esc="nation_mek_prac_oral_pass"/></td>
+                                            <td><span t-esc="round((nation_mek_prac_oral_pass/nation_mek_prac_oral_appeared)*100,2)"/>%</td>
+                                        </t>
+
+                                        <t t-if="nation_gsk_online_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="nation_gsk_online_appeared"/></td>
+                                            <td><span t-esc="nation_gsk_online_pass"/></td>
+                                            <td><span t-esc="round((nation_gsk_online_pass/nation_gsk_online_appeared)*100,2)"/>%</td>
+                                        </t>
+
+                                        <t t-if="nation_mek_online_appeared == 0">
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td><span t-esc="nation_mek_online_appeared"/></td>
+                                            <td><span t-esc="nation_mek_online_pass"/></td>
+                                            <td><span t-esc="round((nation_mek_online_pass/nation_mek_online_appeared)*100,2)"/>%</td>
+                                        </t> 
+                                        
+                                        
+                                         <!-- <td></td>
+                                        <td>%</td> -->
+                                        <td><span t-esc="gp_repeater_overall_pass"/></td>
+                                        <td><span t-esc="round((gp_repeater_overall_pass/gp_repeater_candidate_appeared)*100,2)"/>%</td>
+                                    </tr>
+                            </t>
+                    </t>
+                </tbody> 
+            </table> 
+
+             </div>
+
+
+            <div class="page" style="page-break-before: always;margin-top: 50px"  t-if="course == 'ccmc' ">
+
+             <div class="container-fluid"  style="margin-top: 50px" >
+                <div class="row">
+                    <div class="col-12" style="text-align:center;">
+                        <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2b</span>
+                        <h2 style="font-family: 'TimesNewRomanBold'; font-weight: 900;"> <span t-esc="exam_sequence"/>63 rd   All India Exit Examination Result for</h2>
+                        <h1 style="font-family: 'TimesNewRomanBold'; font-weight: 900;">
+                            <span t-field="examination_report.course"/> RATING <span t-esc="report_type"/> - <span t-esc="examination_report.examination_batch.to_date.strftime('%b %y')"/>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold';" border="1">
+                        <thead style="font-family: 'TimesNewRomanBold';">
+                            <tr style="font-family: 'TimesNewRomanBold';">
+                                <th colspan="16" style="text-align:center; font-size:25px; margin:0; padding:0; ">Summary of Result of <span t-esc="report_type"/> Candidates </th>
+                            </tr>
+                            <tr style="font-family: 'TimesNewRomanBold';">
+                                <th rowspan="2">Sr. No.</th>
+                                <th rowspan="2">Code No.</th>
+                                <th rowspan="2" style="text-align:left">Name of the Institute</th>
+                                <th rowspan="2">Applied</th>
+                                <th rowspan="2">Candidate Appear</th>
+                                <th colspan="3">Practical</th>
+                                <th colspan="3">Oral</th>
+                                <th colspan="3">Online</th>
+                                <th rowspan="2">Overall Pass</th>
+                                <th rowspan="2">Overall Pass %</th>
+                            </tr>
+                            <tr style="font-family: 'TimesNewRomanBold';">
+                                <th>Appeared</th>
+                                <th>Pass</th>
+                                <th>% Pass Institutes Wise</th>
+                                <th>Appeared</th>
+                                <th>Pass</th>
+                                <th>% Pass Institutes Wise</th>
+                                <th>Appeared</th>
+                                <th>Pass</th>
+                                <th>% Pass  Institutes Wise</th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-family: 'TimesNewRomanBold';">
+                            <!-- sa
+                            <span t-esc="regions"/> -->
+                            <t t-set="nation_applied" t-value="0" />
+                            <t t-set="region_index" t-value="0"/>
+                            <t t-set="nation_candidate_appeared" t-value="0" />
+                            <t t-set="region_length" t-value="len(exam_region)"/>
+                            <t t-set="nation_practical_pass_appeared" t-value="0" />
+                            <t t-set="nation_practical_pass" t-value="0" />
+                            <t t-set="nation_oral_pass_appeared" t-value="0" />
+                            <t t-set="nation_oral_pass" t-value="0" />
+                            <t t-set="nation_online_pass_appeared" t-value="0" />
+                            <t t-set="nation_online_passs" t-value="0" />
+                            <t t-set="nation_overall_pass" t-value="0" />
+
+
+                            <t t-set="index" t-value="0"/>
+                            <t t-foreach="exam_region" t-as="center">
+
+                                    <t t-set="region_index" t-value="region_index + 1"/>
+                                    <t t-set="ccmc_sumraise_fresh_data" t-value="env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docids),('exam_region','=',center)]).sorted(key=lambda r: r.institute_code)" />
+                                        
+                                    <t t-set="institutes_length" t-value="len(ccmc_sumraise_fresh_data)" />
+
+                                    <t t-set="region_applied" t-value="0" />
+                                    <t t-set="region_candidate_appeared" t-value="0" />
+                                    <t t-set="region_practical_pass_appeared" t-value="0" />
+                                    <t t-set="region_practical_pass" t-value="0" />
+                                    <t t-set="region_oral_pass_appeared" t-value="0" />
+                                    <t t-set="region_oral_pass" t-value="0" />
+                                    <t t-set="region_online_pass_appeared" t-value="0" />
+                                    <t t-set="region_online_passs" t-value="0" />
+                                    <t t-set="region_online_pass_appeared" t-value="0" />
+                                    <t t-set="region_overall_pass" t-value="0" />
+
+
+                                    
+
+
+
+
+                                    <t t-set="institutes_index" t-value="0"/>
+
+                                    <t t-foreach="ccmc_sumraise_fresh_data" t-as="institute">
+                                        <tr style="font-family: 'TimesNewRomanBold';">
+                                            <t t-set="institutes_index" t-value="institutes_index + 1"/>
+
+                                            <t t-set="index" t-value="index + 1"/>
+                                            <td><span t-esc="index"/></td>
+                                            <td><span t-esc="institute.institute.code"/></td>
+                                            <td style="text-align:left"><span t-esc="institute.institute.name"/></td>
+                                            <td><span t-esc="institute.applied"/></td>
+                                            <td><span t-esc="institute.candidate_appeared"/></td>
+                                            <t t-if="institute.practical_pass_appeared == 0" >
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                            </t>
+                                            <t t-else="">
+                                                <td><span t-esc="institute.practical_pass_appeared"/></td>
+                                                <td><span t-esc="institute.practical_pass"/></td>
+                                                <td><span t-esc="round(institute.practical_pass_per,2)"/>%</td>
+                                            </t>
+                                            
+                                            <t t-if="institute.oral_pass_appeared == 0" >
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                            </t>
+                                            <t t-else="">
+                                                <td><span t-esc="institute.oral_pass_appeared"/></td>
+                                                <td><span t-esc="institute.oral_pass"/></td>
+                                                <td><span t-esc="round(institute.oral_pass_per,2)"/>%</td>
+                                            </t>
+
+                                            <t t-if="institute.online_pass_appeared == 0" >
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                            </t>
+                                            <t t-else="">
+                                                <td><span t-esc="institute.online_pass_appeared"/></td>
+                                                <td><span t-esc="institute.online_pass"/></td>
+                                                <td><span t-esc="round(institute.online_pass_per,2)"/>%</td>
+                                            </t>
+
+                                            
+
+
+                                            
+
+                                            <td><span t-esc="institute.overall_pass"/></td>
+                                            <td><span t-esc="round(institute.overall_pass_per,2)"/>%</td>
+
+                                            <t t-set="region_applied" t-value="region_applied + institute.applied" />
+                                            <t t-set="region_candidate_appeared" t-value="region_candidate_appeared + institute.candidate_appeared" />
+                                            <t t-set="region_practical_pass_appeared" t-value="region_practical_pass_appeared + institute.practical_pass_appeared" />
+                                            <t t-set="region_practical_pass" t-value="region_practical_pass + institute.practical_pass" />
+                                            <t t-set="region_oral_pass_appeared" t-value="region_oral_pass_appeared + institute.oral_pass_appeared" />
+                                            <t t-set="region_oral_pass" t-value="region_oral_pass + institute.oral_pass" />
+                                            <t t-set="region_online_pass_appeared" t-value="region_online_pass_appeared + institute.online_pass_appeared" />
+                                            <t t-set="region_online_passs" t-value="region_online_passs + institute.online_pass" />
+                                            <t t-set="region_overall_pass" t-value="region_overall_pass + institute.overall_pass" />
+
+
+
+                                        </tr>
+                                        <t t-if="institutes_index == institutes_length">
+
+                                            <tr style="background-color: #f2f2f2; font-family: 'TimesNewRomanBold';">
+                                                <!-- <td colspan="15" style="text-align: center;"><strong>All India Exit</strong></td> -->
+                                                <td></td>
+                                                <td></td>
+                                                <td><span t-esc="institute.exam_region.name"/> REGION</td>
+                                                <td><span t-esc="region_applied"/></td>
+                                                <td><span t-esc="region_candidate_appeared"/></td>
+                                             
+
+                                                <t t-if="region_practical_pass_appeared == 0">
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="region_practical_pass_appeared"/></td>
+                                                    <td><span t-esc="region_practical_pass"/></td>
+                                                    <td><span t-esc="round((region_practical_pass/region_practical_pass_appeared)*100,2)"/>%</td>
+                                                </t>
+
+                                                
+                                                
+                                                <t t-if="region_oral_pass_appeared == 0">
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="region_oral_pass_appeared"/></td>
+                                                    <td><span t-esc="region_oral_pass"/></td>
+                                                    <td><span t-esc="round((region_oral_pass/region_oral_pass_appeared)*100,2)"/>%</td>
+                                                </t>
+
+                                                <t t-if="region_online_pass_appeared == 0">
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="region_online_pass_appeared"/></td>
+                                                    <td><span t-esc="region_online_passs"/></td>
+                                                    <td><span t-esc="round((region_online_passs/region_online_pass_appeared)*100,2)"/>%</td>
+                                                </t>
+
+                                                
+                                                <td><span t-esc="region_overall_pass"/></td>
+                                                <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                                <!-- <td><span t-esc="institute.oral_pass_appeared"/></td>
+                                                <td><span t-esc="institute.oral_pass"/></td>
+                                                <td><span t-esc="round(institute.oral_pass_per,2)"/>%</td>
+                                                <td><span t-esc="institute.online_pass_appeared"/></td>
+                                                <td><span t-esc="institute.online_pass"/></td>
+                                                <td><span t-esc="round(institute.online_pass_per,2)"/>%</td>
+                                                <td><span t-esc="institute.overall_pass"/></td>
+                                                <td><span t-esc="round(institute.overall_pass_per,2)"/>%</td> -->
+
+                                                <t t-set="nation_applied" t-value="nation_applied + region_applied" />
+                                                <t t-set="nation_candidate_appeared" t-value="nation_candidate_appeared + region_candidate_appeared" />
+                                                <t t-set="nation_practical_pass_appeared" t-value="nation_practical_pass_appeared + region_practical_pass_appeared" />
+                                                <t t-set="nation_practical_pass" t-value="nation_practical_pass + region_practical_pass" />
+                                                <t t-set="nation_oral_pass_appeared" t-value="nation_oral_pass_appeared + region_oral_pass_appeared" />
+                                                <t t-set="nation_oral_pass" t-value="nation_oral_pass + region_oral_pass" />
+                                                <t t-set="nation_online_pass_appeared" t-value="nation_online_pass_appeared + region_online_pass_appeared" />
+                                                <t t-set="nation_online_passs" t-value="nation_online_passs + region_online_passs" />
+                                                <t t-set="nation_overall_pass" t-value="nation_overall_pass + region_overall_pass" />
+
+                                            </tr>
+                                        
+                                        </t>
+                                        
+                                    </t>
+
+                                    <t t-if="region_index == region_length">
+                                            <tr style="background-color: #f2f2f2; font-family: 'TimesNewRomanBold';">
+                                                <!-- <td colspan="15" style="text-align: center;"><strong>All India Exit</strong></td> -->
+
+                                         
+                                                <td colspan="3" style="font-family: 'TimesNewRomanBold';">All India Results</td>
+                                                <td><span t-esc="nation_applied"/></td>
+                                                <td><span t-esc="nation_candidate_appeared"/></td>
+                                                <t t-if="nation_practical_pass_appeared == 0">
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="nation_practical_pass_appeared"/></td>
+                                                    <td><span t-esc="nation_practical_pass"/></td>
+                                                    <td><span t-esc="round((nation_practical_pass/nation_practical_pass_appeared)*100,2)"/>%</td>
+                                                </t>
+
+                                                <t t-if="nation_oral_pass_appeared == 0">
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="nation_oral_pass_appeared"/></td>
+                                                    <td><span t-esc="nation_oral_pass"/></td>
+                                                    <td><span t-esc="round((nation_oral_pass/nation_oral_pass_appeared)*100,2)"/>%</td>
+                                                </t>
+
+                                                 <t t-if="nation_online_pass_appeared == 0">
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="nation_online_pass_appeared"/></td>
+                                                    <td><span t-esc="nation_online_passs"/></td>
+                                                    <td><span t-esc="round((nation_online_passs/nation_online_pass_appeared)*100,2)"/>%</td>
+                                                </t>
+
+                                             <td><span t-esc="nation_overall_pass"/></td>
+                                               <td><span t-esc="round((nation_overall_pass/nation_candidate_appeared)*100,2)"/>%</td>
+
+                                                <!-- <td><span t-esc="nation_gsk_prac_oral_pass"/></td>
+                                                <td><span t-esc="round((nation_gsk_prac_oral_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                                <td><span t-esc="nation_mek_prac_oral_pass"/></td>
+                                                <td><span t-esc="round((nation_mek_prac_oral_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                                <td><span t-esc="nation_gsk_online_pass"/></td>
+                                                <td><span t-esc="round((nation_gsk_online_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                                <td><span t-esc="nation_mek_online_pass"/></td>
+                                                <td><span t-esc="round((nation_mek_online_pass/nation_candidate_appeared)*100,2)"/>%</td>
+                                                <td><span t-esc="nation_overall_pass"/></td>
+                                                <td><span t-esc="round((nation_overall_pass/nation_candidate_appeared)*100,2)"/>%</td> -->
+                                            </tr>
+                                    </t>
+                            
+                            </t>
+                        </tbody>
+                    </table>
+                 </div>
+                </div>
+               </div>
+              </div>
+             </div>
+            </div>
+            </t>
+        </template>
     
 
 
