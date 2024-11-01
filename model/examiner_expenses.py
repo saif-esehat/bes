@@ -273,12 +273,13 @@ class ExaminerOverAllExpenses(models.Model):
         ('practical_oral', 'Practical/Oral'),
         ('online', 'Online'),
         ('team_lead', 'Team Lead'),
-        ('misc', 'Miscellaneous')
+        ('misc', 'Miscellaneous'),
+        ('outstation', 'Outstation')
     ], string='Expense Type')
     
     price = fields.Integer("Price",compute="_compute_total")
     
-    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.misc_expense_ids')
+    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.outstation_travel_expenses','examiner_expenses_id.misc_expense_ids')
     def _compute_total(self):
         for record in self:
             if record.expenses_type == 'practical_oral':
@@ -297,11 +298,14 @@ class ExaminerOverAllExpenses(models.Model):
                 else:
                     record.price = 0
             
-            elif record.expenses_type == 'misc':
-                if record.examiner_expenses_id.misc_expense_ids:
-                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.mapped('price'))
+            elif record.expenses_type == 'outstation':
+                if record.examiner_expenses_id.outstation_travel_expenses:
+                    record.price = sum(record.examiner_expenses_id.outstation_travel_expenses.mapped('price'))
                 else:
                     record.price = 0
+        
+            else:
+                record.price = 0
 
     
 
