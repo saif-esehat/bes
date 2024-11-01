@@ -80,6 +80,8 @@ class ExaminationReport(models.Model):
     def generate_comparative_report(self):
         # import wdb;wdb.set_trace()
         ids = self.env.context.get('active_ids')
+        examination_report_batches = self.browse(ids).sorted(key=lambda r: r.sequence_report)
+
         view_id = self.env.ref('bes.comparative_report_wizard_form').id
         return {
             'name': 'Comparative Report',
@@ -90,7 +92,7 @@ class ExaminationReport(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': {
-                'default_examination_report_batch': ids,
+                'default_examination_report_batch':[(6, 0, examination_report_batches.ids)],  # Use the correct tuple format,
             }
             }  
     
@@ -1557,28 +1559,19 @@ class ComparativeReport(models.Model):
     #     return self.env.ref('bes.comparative_report_action').report_action(self, data={'docs': final_report})
 
     def print_comparative_report(self):
+        ids = self.env.context.get('active_ids')
+        examination_report_batches = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: r.sequence_report)
+
+        gp_batches = examination_report_batches.filtered(lambda r: r.course == 'gp')
+        ccmc_batches = examination_report_batches.filtered(lambda r: r.course == 'ccmc')
 
         datas = {
             'doc_ids': self.ids,
-            # 'course': self.course,
-            # 'batch_id': self.examination_batch.id if self.examination_batch else None,
-            # 'report_type': 'Repeater' if self.exam_type == 'repeater' else 'Fresh'
+            'gp_batches': gp_batches.ids,
+            'ccmc_batches': ccmc_batches.ids,
         }
+
         return self.env.ref('bes.comparative_report_action').report_action(self, data=datas)
-
-    
-
-
-    def _calculate_exam_statistics(self, exams, report):
-        report_info = {
-            'batch_name': report.sequence_report,  # Use the report's sequence number
-            'fresh_appeared': 0,
-            'fresh_pass_percentage': 'Nil',
-            'repeater_appeared': 0,
-            'repeater_pass_percentage': 'Nil',
-        }
-
-        return {'type': 'ir.actions.act_window_close'}
 
 
 
@@ -1772,59 +1765,130 @@ class CombinedReport(models.AbstractModel):
 class ComparativeReport1(models.AbstractModel):
     _name = "report.bes.report_comparative"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Combined Summarised GP and Ship Visit Reports"
+    _description = "Comparative Report 1"
 
     @api.model
     def _get_report_values(self, docids, data=None):
         docids = data['doc_ids']
+        gp_batches = data['gp_batches']
+        ccmc_batches = data['ccmc_batches']
         
-        # Fetching examination reports
-        docs = self.env['examination.report'].sudo().browse(docids)
+        fresh_candidate_appeared = 0
+        fresh_overall_pass_percentage = 'Nil'
+        repeater_candidate_appeared = 0
+        repeater_overall_pass_percentage = 'Nil'
 
-        gp_sumraise_fresh_data = self.env['summarised.gp.report'].sudo().search(
-                    # [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
-                    [('examination_report_batch.course', '=', 'gp'), 
-                    ('examination_report_batch.exam_type', '=', 'fresh'),  
-                    # ('examination_report_batch', '=', docs1.id)
-                      ]).sorted(key=lambda r: r.institute_code)
-        exam_region = gp_sumraise_fresh_data.exam_region.ids
+        # import wdb; wdb.set_trace()
+        if gp_batches:
+            gp_fresh_batch_data = self.env['summarised.gp.report'].sudo().search([
+                ('examination_report_batch', 'in', gp_batches),
+                ])
+            gp_repeater_batch_data = self.env['summarised.gp.repeater.report'].sudo().search([
+                ('examination_report_batch', 'in', gp_batches),
+                ])
+            
+            if gp_fresh_batch_data:
+                fresh_candidate_appeared = sum(record.candidate_appeared for record in gp_fresh_batch_data)
+                fresh_overall_pass = sum(record.overall_pass for record in gp_fresh_batch_data)
+                fresh_overall_pass_percentage = round((fresh_overall_pass / fresh_candidate_appeared * 100), 1) if fresh_candidate_appeared > 0 else 'Nil'   
+                repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_repeater_batch_data)
+                repeater_overall_pass = sum(record.overall_pass for record in gp_repeater_batch_data)
+                repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
+            
+            elif gp_repeater_batch_data:
+                fresh_candidate_appeared = 'Nil'
+                fresh_overall_pass_percentage = 'Nil'
+                repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_repeater_batch_data)
+                repeater_overall_pass = sum(record.overall_pass for record in gp_repeater_batch_data)
+                repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
 
-        gp_fresh_candidate_appeared = sum(record.candidate_appeared for record in gp_sumraise_fresh_data)
-        gp_fresh_gsk_prac_oral_pass = sum(record.gsk_prac_oral_pass for record in gp_sumraise_fresh_data)
-        gp_fresh_mek_prac_oral_pass = sum(record.mek_prac_oral_pass for record in gp_sumraise_fresh_data)
-        gp_fresh_gsk_online_pass = sum(record.gsk_online_pass for record in gp_sumraise_fresh_data)
-        gp_fresh_mek_online_pass = sum(record.mek_online_pass for record in gp_sumraise_fresh_data)
-        gp_fresh_overall_pass = sum(record.overall_pass for record in gp_sumraise_fresh_data)
-
-
-
-        gp_sumraise_repeater_data = self.env['summarised.gp.repeater.report'].sudo().search(
-            [('examination_report_batch.exam_type', '=', 'repeater'),
-             ('examination_report_batch.course', '=', 'gp'),
-            # ('examination_report_batch', '=', docs1.id)
-
-           ]
-        ).sorted(key=lambda r: r.institute_code)
-
-        exam_region = gp_sumraise_repeater_data.exam_region.ids
+            return {
+                'docids': docids,
+                'doc_model': 'examination.report',
+                'docs': data,
+                'fresh_candidate_appeared': fresh_candidate_appeared,
+                'fresh_overall_pass_percentage': fresh_overall_pass_percentage,
+                'repeater_candidate_appeared': repeater_candidate_appeared,
+                'repeater_overall_pass_percentage': repeater_overall_pass_percentage,
+            }
         
-        gp_repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_sumraise_repeater_data)
-        gp_repeater_overall_pass = sum(record.overall_pass for record in gp_sumraise_repeater_data)
+        if ccmc_batches:
+            ccmc_fresh_batch_data = self.env['summarised.ccmc.report'].sudo().search([
+                ('examination_report_batch', 'in', ccmc_batches),
+                ])
+            ccmc_repeater_batch_data = self.env['summarised.ccmc.repeater.report'].sudo().search([
+                ('examination_report_batch', 'in', ccmc_batches),
+                ])
+            
+            if ccmc_fresh_batch_data:
+                fresh_candidate_appeared = sum(record.candidate_appeared for record in ccmc_fresh_batch_data)
+                fresh_overall_pass = sum(record.overall_pass for record in ccmc_fresh_batch_data)
+                fresh_overall_pass_percentage = round((fresh_overall_pass / fresh_candidate_appeared * 100), 1) if fresh_candidate_appeared > 0 else 'Nil'                   
+                repeater_candidate_appeared = sum(record.candidate_appeared for record in ccmc_repeater_batch_data)
+                repeater_overall_pass = sum(record.overall_pass for record in ccmc_repeater_batch_data)
+                repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
+            
+            elif ccmc_repeater_batch_data:
+                fresh_candidate_appeared = 'Nil'
+                fresh_overall_pass_percentage = 'Nil'
+                repeater_candidate_appeared = sum(record.candidate_appeared for record in ccmc_repeater_batch_data)
+                repeater_overall_pass = sum(record.overall_pass for record in ccmc_repeater_batch_data)
+                repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
+
+            return {
+                'docids': docids,
+                'doc_model': 'examination.report',
+                'docs': data,
+                'fresh_candidate_appeared': fresh_candidate_appeared,
+                'fresh_overall_pass_percentage': fresh_overall_pass_percentage,
+                'repeater_candidate_appeared': repeater_candidate_appeared,
+                'repeater_overall_pass_percentage': repeater_overall_pass_percentage,
+            }
+
+        # # Fetching examination reports
+        # docs = self.env['examination.report'].sudo().browse(docids)
+
+        # gp_sumraise_fresh_data = self.env['summarised.gp.report'].sudo().search(
+        #             # [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
+        #             [('examination_report_batch.course', '=', 'gp'), 
+        #             ('examination_report_batch.exam_type', '=', 'fresh'),  
+        #             # ('examination_report_batch', '=', docs1.id)
+        #               ]).sorted(key=lambda r: r.institute_code)
+
+        # gp_fresh_candidate_appeared = sum(record.candidate_appeared for record in gp_sumraise_fresh_data)
+        # gp_fresh_gsk_prac_oral_pass = sum(record.gsk_prac_oral_pass for record in gp_sumraise_fresh_data)
+        # gp_fresh_mek_prac_oral_pass = sum(record.mek_prac_oral_pass for record in gp_sumraise_fresh_data)
+        # gp_fresh_gsk_online_pass = sum(record.gsk_online_pass for record in gp_sumraise_fresh_data)
+        # gp_fresh_mek_online_pass = sum(record.mek_online_pass for record in gp_sumraise_fresh_data)
+        # gp_fresh_overall_pass = sum(record.overall_pass for record in gp_sumraise_fresh_data)
+
+
+
+        # gp_sumraise_repeater_data = self.env['summarised.gp.repeater.report'].sudo().search(
+        #     [('examination_report_batch.exam_type', '=', 'repeater'),
+        #      ('examination_report_batch.course', '=', 'gp'),
+        #     # ('examination_report_batch', '=', docs1.id)
+
+        #    ]
+        # ).sorted(key=lambda r: r.institute_code)
+
+        # exam_region = gp_sumraise_repeater_data.exam_region.ids
+        
+        # gp_repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_sumraise_repeater_data)
+        # gp_repeater_overall_pass = sum(record.overall_pass for record in gp_sumraise_repeater_data)
        
 
-        return {
-            'docids': docids,
-            'doc_model': 'examination.report',
-            'docs': docs,
-           'gp_sumraise_fresh_data': gp_sumraise_fresh_data,
-            'gp_fresh_candidate_appeared': gp_fresh_candidate_appeared,
-            'gp_fresh_overall_pass': gp_fresh_overall_pass,
-            'examination_report':docs,
-
-
-            'gp_sumraise_repeater_data': gp_sumraise_repeater_data,
-            'gp_repeater_candidate_appeared': gp_repeater_candidate_appeared,
-            'gp_repeater_overall_pass': gp_repeater_overall_pass,
+        # return {
+        #     'docids': docids,
+        #     'doc_model': 'examination.report',
+        #     'docs': docs,
+        #    'gp_sumraise_fresh_data': gp_sumraise_fresh_data,
+        #     'gp_fresh_candidate_appeared': gp_fresh_candidate_appeared,
+        #     'gp_fresh_overall_pass': gp_fresh_overall_pass,
+        #     'examination_report':docs,
+        #     'gp_sumraise_repeater_data': gp_sumraise_repeater_data,
+        #     'gp_repeater_candidate_appeared': gp_repeater_candidate_appeared,
+        #     'gp_repeater_overall_pass': gp_repeater_overall_pass,
 
          
-        }
+        # }

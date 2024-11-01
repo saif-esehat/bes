@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import base64
 from datetime import datetime, timedelta
 from odoo.service import security
+from odoo.exceptions import UserError,ValidationError
 
 
 class ExpenseController(http.Controller):
@@ -193,21 +194,22 @@ class ExpenseController(http.Controller):
         assignment.time_sheet = timesheet.id
 
         # Check if the current date matches either first or last date before creating timesheet lines
-        current_date = datetime.strptime(kw.get('exam_date'), '%Y-%m-%d').date()  # Ensure `exam_date` is passed correctly in the form data
         
-        if current_date == first_date or current_date == last_date:
-            timesheet_line = request.env['timesheet.lines'].sudo().create({'time_sheet_id': timesheet.id})
-            timesheet_line.write({
-                'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
-                'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
-                'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
-                'candidate_examined': kw.get('candidates_examined'),
-                'debriefing_inst': kw.get('debriefing_time'),
-            })
+        timesheet_line = request.env['timesheet.lines'].sudo().create({'time_sheet_id': timesheet.id})
+        timesheet_line.write({
+            'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
+            'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
+            'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
+            'candidate_examined': kw.get('candidates_examined'),
+            'debriefing_inst': kw.get('debriefing_time'),
+        })
 
-            # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
-            # Dynamically create travel lines using predefined phases
+        # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
+        # Dynamically create travel lines using predefined phases
+        if kw.get('left_residence_date_time') and kw.get('arrival_institute_hotel_date_time') and kw.get('left_institute_date_time') and kw.get('arrival_residence_date_time'):
             request.env['travel.details'].sudo().create_travel_lines(timesheet.id, kw)
+        else:
+            pass
 
 
         return request.redirect('/my/assignments/timesheet/'+str(assignment.dgs_batch.id) +'/' +str(assignment.id))
