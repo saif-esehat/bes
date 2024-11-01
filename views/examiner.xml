@@ -233,7 +233,7 @@
                             <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
                             <field name="exam_type"/>
                             <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
-                            <!-- <field name="outstation"/> -->
+                            <field name="outstation"/>
                             <field name="gp_marksheet_ids"  options="{'no_create':True}"/>
                             <field name="no_candidates"/>
                         </tree>
@@ -294,7 +294,7 @@
                             
                             <field name="exam_type"/>
                             <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
-                            <!-- <field name="outstation"/> -->
+                            <field name="outstation"/>
                             <field name="ccmc_marksheet_ids"  options="{'no_create':True}"/>
                             <field name="no_candidates"/>
                         </tree>
@@ -377,7 +377,7 @@
                                     <field name="exam_type" invisible="0"  />
                                     <field name="exam_region" invisible="1"/>
                                     <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]" attrs="{'readonly': [('all_marksheet_confirmed', '=', 'done')]}" />
-                                    <!-- <field name="outstation" invisible="0"  /> -->
+                                    <field name="outstation" invisible="0"  />
                                     <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
                                     <field name="team_lead" invisible="1"/>
                                     <field name="exam_date"/>
