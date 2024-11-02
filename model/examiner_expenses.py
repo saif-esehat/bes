@@ -70,12 +70,21 @@ class InstituteExpenseReport(models.Model):
     outstation_expenses = fields.Integer("Outstation Expenses",compute="_compute_outstation_expense")
     team_lead_expense = fields.Integer("Team Lead Expense",compute="_compute_tl_expense")
     non_mariner_expense = fields.Integer("Non Mariner Expense",compute="_compute_nm_expense")
+    local_travel_expense = fields.Integer("Local Travel Expense",compute="_compute_lt_expense")
     total = fields.Integer("Total Expense",compute="_compute_total")
     
     @api.depends('dgs_batch','institute')
     def _compute_total(self):
         for record in self:
-            record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense + record.non_mariner_expense
+            record.total = record.practical_oral_expenses + record.online_expenses + record.team_lead_expense + record.non_mariner_expense + record.outstation_expenses + record.local_travel_expense
+    
+    @api.depends('dgs_batch','institute')
+    def _compute_lt_expense(self):
+        for record in self:
+            data = self.env["exam.misc.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
+            record.local_travel_expense= sum(data.mapped('price'))        
+
+    
     
     @api.depends('dgs_batch','institute')
     def _compute_nm_expense(self):
@@ -274,7 +283,8 @@ class ExaminerOverAllExpenses(models.Model):
         ('online', 'Online'),
         ('team_lead', 'Team Lead'),
         ('misc', 'Miscellaneous'),
-        ('outstation', 'Outstation')
+        ('outstation', 'Outstation'),
+        ('local_travel', 'Local Travel Expense')
     ], string='Expense Type')
     
     price = fields.Integer("Price",compute="_compute_total")
@@ -301,6 +311,12 @@ class ExaminerOverAllExpenses(models.Model):
             elif record.expenses_type == 'outstation':
                 if record.examiner_expenses_id.outstation_travel_expenses:
                     record.price = sum(record.examiner_expenses_id.outstation_travel_expenses.mapped('price'))
+                else:
+                    record.price = 0
+            
+            elif record.expenses_type == 'local_travel':
+                if record.examiner_expenses_id.misc_expense_ids:
+                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.mapped('price'))
                 else:
                     record.price = 0
         
@@ -416,10 +432,14 @@ class ExamAssignmentExpense(models.Model):
 class ExamMiscExpense(models.Model):
     _name = 'exam.misc.expense'
     _description = 'Exam Miscellaneous Expense'
-
+    
+    assignment = fields.Many2one('exam.type.oral.practical.examiners', string="Assignment")
+    timesheet_report = fields.Many2one('time.sheet.report',related="assignment.time_sheet",store=True,string="Timesheet")
     description = fields.Char(string="Description")
-    price = fields.Float(string="Cost")
+    price = fields.Integer(string="Cost",related="timesheet_report.total_expenses")
     docs = fields.Many2many('ir.attachment', string="Documents")
+    dgs_batch = fields.Many2one("dgs.batches",related="examiner_expenses_id.dgs_batch",store=True)
+    institute = fields.Many2one('bes.institute',related="assignment.institute_id", string="Institute",store=True)
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
     ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
 

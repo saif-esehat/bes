@@ -1444,6 +1444,18 @@ class ExamOralPractical(models.Model):
                     "price_per_unit":price,
                     "assignment": assignment.id
                  })
+                
+            time_sheets = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.time_sheet)
+
+            if time_sheets:
+                for time_sheet in time_sheets:
+                    timeshee = time_sheet.time_sheet
+                    self.env["exam.misc.expense"].sudo().create({
+                    "examiner_expenses_id":expense.id,
+                    "assignment":time_sheet.id
+                 })
+                    
+
             
             outstations = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.outstation == 'yes')
             
@@ -1561,6 +1573,18 @@ class ExamOralPractical(models.Model):
                     "expenses_type": "outstation"
                 })
 
+            existing_local_travel_record = self.env["examiner.overall.expenses"].sudo().search([
+                ("examiner_expenses_id", "=", expense.id),
+                ("expenses_type", "=", "local_travel")
+            ])
+
+            if not existing_local_travel_record:
+                self.env["examiner.overall.expenses"].sudo().create({
+                    "examiner_expenses_id": expense.id,
+                    "expenses_type": "local_travel"
+                })
+
+            
                 # total_online = sum(expense.online_assignment_expense.mapped('price'))
 
             # if expense.team_lead_expense:
@@ -2260,6 +2284,7 @@ class ExamOralPracticalExaminers(models.Model):
         ('yes', 'Yes)'),
         ('no', 'No')  
     ], string='OutStation')
+    
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)

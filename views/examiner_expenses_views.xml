@@ -56,6 +56,8 @@
                 <field name="online_expenses"/>
                 <field name="outstation_expenses"/>
                 <field name="team_lead_expense"/>
+                <field name="local_travel_expense"/>
+                
                 <field name="non_mariner_expense"/>
                 <field name="total"/>
                 <!-- <field name="assignments"/> -->
@@ -164,7 +166,11 @@
                         <page string="Local Travels Expenses" attrs="{'invisible': [('designation', '=', 'non-mariner')]}">
                             <field name="misc_expense_ids">
                                 <tree editable="bottom">
-                                    <field name="description"/>
+                                    <field name="assignment"/>
+                                    <field name="timesheet_report"/>
+                                    
+                                    <field name="institute"/>
+                                    <field name="dgs_batch"/>
                                     <field name="price"/>
                                     <field name="docs"/>
                                 </tree>
@@ -206,7 +212,7 @@
                 <field name="online_total"/>
                 <field name="team_lead_total"/>
                 <field name="outstation_total"/>
-                <field name="misc_total"/>
+                <field name="misc_total" string="Local Travels"/>
                 <field name="total" sum="Total"/>
                 
             </tree>
