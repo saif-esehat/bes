@@ -1125,8 +1125,8 @@ class BatchesRegisterExamWizard(models.TransientModel):
                 "attempting_gsk_online":True})
             
             candidate.write({'batch_exam_registered':True})
-            # mek_predefined_questions = mek_survey_qb_input._prepare_user_input_predefined_questions()
-            # gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
+            mek_predefined_questions = mek_survey_qb._prepare_user_input_predefined_questions()
+            gsk_predefined_questions = gsk_survey_qb._prepare_user_input_predefined_questions()
             # import wdb;wdb.set_trace()
 
             mek_survey_qb_input = mek_survey_qb._create_answer(user=candidate.user_id)
