@@ -46,6 +46,7 @@
                             <field name="examiner"/>
                             <field name="dgs_batch"/>
                             <field name="institutes_id"/>
+                            
                             <!-- <field name="expense_sheet"/> -->
                             <!-- <field name="place"/> -->
                             <!-- <field name="exam_date"/> -->
@@ -85,6 +86,9 @@
                                 </field>
                             </page>
                         </notebook>
+                        <group>
+                            <field name="total_expenses"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

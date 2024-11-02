@@ -74,7 +74,7 @@ class ExpenseController(http.Controller):
     
     @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
     def TimeSheet(self,batch_id,assignment_id, **kw):
-
+        # import wdb;wdb.set_trace();
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
 
@@ -176,7 +176,6 @@ class ExpenseController(http.Controller):
     
     @http.route('/my/assignments/batches/timesheet/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_timesheet(self, **kw):
-        # import wdb;wdb.set_trace();
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
 

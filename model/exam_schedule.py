@@ -738,6 +738,10 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     parent_id = fields.Many2one("ccmc.examiner.assignment.wizard",string="Parent",tracking=True)
     
     exam_date = fields.Date('Exam Date',tracking=True)
+    outstation =  fields.Selection([
+        ('yes', 'Yes)'),
+        ('no', 'No')  
+    ], string='OutStation')
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     ccmc_marksheet_ids = fields.Many2many('ccmc.exam.schedule', string='Candidates',tracking=True)
@@ -1219,7 +1223,10 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
     _inherit = ['mail.thread','mail.activity.mixin']
     
     parent_id = fields.Many2one("examiner.assignment.wizard",string="Parent",tracking=True)
-
+    outstation =  fields.Selection([
+        ('yes', 'Yes)'),
+        ('no', 'No')  
+    ], string='OutStation')
     exam_date = fields.Date('Exam Date',tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
@@ -1262,6 +1269,7 @@ class ExamOralPractical(models.Model):
     # exam_schedule_id = fields.Many2one("bes.exam.schedule",string="Exam Schedule ID")
     # examiners = fields.Many2one('bes.examiner', string="Examiner")
     # subject = fields.Many2one("course.master.subject","Subject")
+    
     institute_code = fields.Char(string="Institute Code", related='institute_id.code', required=True,tracking=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Batch",required=True,tracking=True)
     team_lead = fields.Many2one("bes.examiner",string="Team Lead")
@@ -1437,6 +1445,41 @@ class ExamOralPractical(models.Model):
                     "assignment": assignment.id
                  })
                 
+            time_sheets = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.time_sheet)
+
+            if time_sheets:
+                for time_sheet in time_sheets:
+                    timeshee = time_sheet.time_sheet
+                    self.env["exam.misc.expense"].sudo().create({
+                    "examiner_expenses_id":expense.id,
+                    "assignment":time_sheet.id
+                 })
+                    
+
+            
+            outstations = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.outstation == 'yes')
+            
+            
+            if outstations:
+                for outstation in outstations:
+                    
+                     if outstation.examiner.designation in ['non-mariner','catering']:
+                        price =  self.env['product.product'].search([('default_code','=','outstation_non_mariner')]).standard_price
+                     elif outstation.examiner.designation in ['master','chief']:
+                        price =  self.env['product.product'].search([('default_code','=','outstation_mariner')]).standard_price
+                        
+                    
+                     self.env['examiner.outstation.expense'].sudo().create({
+                         "examiner_expenses_id":expense.id,
+                         "dgs_batch" : self.dgs_batch.id,
+                         "assignment": assignment.id,
+                         "exam_date": outstation.exam_date,
+                         "price": price
+                     })
+                    
+                    
+            
+                
             online_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type == 'online')
             
             
@@ -1519,17 +1562,29 @@ class ExamOralPractical(models.Model):
                 })
 
             # Check for 'misc' expenses_type
-            existing_misc_record = self.env["examiner.overall.expenses"].sudo().search([
+            existing_outstation_record = self.env["examiner.overall.expenses"].sudo().search([
                 ("examiner_expenses_id", "=", expense.id),
-                ("expenses_type", "=", "misc")
+                ("expenses_type", "=", "outstation")
             ])
 
-            if not existing_misc_record:
+            if not existing_outstation_record:
                 self.env["examiner.overall.expenses"].sudo().create({
                     "examiner_expenses_id": expense.id,
-                    "expenses_type": "misc"
+                    "expenses_type": "outstation"
                 })
 
+            existing_local_travel_record = self.env["examiner.overall.expenses"].sudo().search([
+                ("examiner_expenses_id", "=", expense.id),
+                ("expenses_type", "=", "local_travel")
+            ])
+
+            if not existing_local_travel_record:
+                self.env["examiner.overall.expenses"].sudo().create({
+                    "examiner_expenses_id": expense.id,
+                    "expenses_type": "local_travel"
+                })
+
+            
                 # total_online = sum(expense.online_assignment_expense.mapped('price'))
 
             # if expense.team_lead_expense:
@@ -2225,6 +2280,11 @@ class ExamOralPracticalExaminers(models.Model):
 
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="Exam Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
+    outstation =  fields.Selection([
+        ('yes', 'Yes)'),
+        ('no', 'No')  
+    ], string='OutStation')
+    
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
     course = fields.Many2one("course.master",related='prac_oral_id.course',string="Course",tracking=True)

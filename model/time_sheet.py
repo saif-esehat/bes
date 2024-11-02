@@ -17,6 +17,14 @@ class TimeSheetReport(models.Model):
     custom_form = fields.One2many('custom.form', 'time_sheet_id', string="Custom Form")
     expense_sheet = fields.Many2one('hr.expense.sheet','Expense')
 
+    total_expenses = fields.Integer(string="Total Expenses", compute='_compute_total_expenses',store=True)
+
+    @api.depends('travel_details.expenses')
+    def _compute_total_expenses(self):
+        for record in self:
+            record.total_expenses = sum(detail.expenses for detail in record.travel_details)
+
+    
 class TimesheetLines(models.Model):
     _name = 'timesheet.lines'
 
