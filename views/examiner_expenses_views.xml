@@ -255,7 +255,7 @@
                     <field name="no_of_candidates" readonly="1"/>
                     <field name="total_candidate_price" readonly="1"/>
                     <field name="coordination_fees" readonly="1"/>
-                    <field name="practical_oral_total" readonly="0"/>
+                    <field name="practical_oral_total"/>
                     <field name="online_assignment_expense" readonly="0"/>
                     <field name="total_expense" sum="Total"/>
                     

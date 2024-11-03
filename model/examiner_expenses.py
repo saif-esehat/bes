@@ -459,7 +459,7 @@ class ECExpense(models.Model):
 
     total_expense = fields.Integer(string="Total Expense", compute='_compute_total_expense', store=True)
 
-    practical_oral_total = fields.Integer("Practical/Oral Expense")
+    practical_oral_total = fields.Integer("Practical/Oral Expense",compute='_compute_ec_po_expense')
 
     online_assignment_expense = fields.Integer("Online expenses")
 
@@ -476,6 +476,18 @@ class ECExpense(models.Model):
 
 
 
+    @api.depends('dgs_batch')
+    def _compute_ec_po_expense(self):
+        for record in self:
+            institute = self.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',self.dgs_batch.id),('exam_region','=',self.exam_region.id)]).institute_id.ids
+            institute = set(institute)
+            no_of_ins = len(institute)
+            price = self.env['product.template'].sudo().search([('default_code','=','ec_po_expense')].list_price
+            # self.env['bes.institute'].sudo().browse(institute)
+            # import wdb;wdb.set_trace()
+            record.practical_oral_total = no_of_ins * price
+            print("Sa")
+    
     @api.depends('dgs_batch')
     def _compute_coordination_fees(self):
         for record in self:
