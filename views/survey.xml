@@ -209,7 +209,7 @@
                      <field name="template"/>
                      <field name="survey_start_url" />
                      <field name="examiner" /> 
-                     <field name="examiner_token" readonly="1" /> 
+                     <!-- <field name="examiner_token" readonly="1" />  -->
                      <button name="generate_token" string="Generate Token" type="object"/>
                      <field name="institute" />
                      <field name="course" />
@@ -270,7 +270,7 @@
                     <field name="dgs_batch" />
                     <field name="institute_id" />
                     <!-- <field name="examiner" /> -->
-                    <field name="examiner_token" />
+                    <!-- <field name="examiner_token" /> -->
                     <field name="token_regenrated" />
                     <field name="start_time"/>
                     <field name="end_time"/>

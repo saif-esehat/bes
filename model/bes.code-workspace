@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../survey_question_count"
+		},
+		{
+			"path": "../../bes_dashboard"
+		},
+		{
+			"path": "../../owl"
+		}
+	],
+	"settings": {
+		"python.languageServer": "None"
+	}
+}
