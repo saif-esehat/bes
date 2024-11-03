@@ -104,6 +104,8 @@ bes.group_exam_coordinator_gp_gsk_practical_line,access_exam_coordinator_gp_gsk_
 
 bes.group_exam_coordinator_ccmc_candidate,access_exam_coordinator_ccmc_candidate,bes.model_ccmc_candidate,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_online_attend_wizard,access_online_attendance_wizard,model_examiner_attendance_wizard,bes.group_exam_coordinator,1,1,1,1
+bes.group_exam_coordinator_ec_misc_expense,ec_access_ec_misc_expense,model_ec_misc_expense,bes.group_exam_coordinator,1,1,1,1
+
 
 
 

@@ -444,6 +444,14 @@ class ExamMiscExpense(models.Model):
     ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
 
 
+class ECMsicExpense(models.Model):
+    _name = 'ec.misc.expense'
+    ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
+    description = fields.Char(string="Description")
+    price = fields.Integer(string="Cost")
+    docs = fields.Many2many('ir.attachment', string="Documents")
+
+
 class ECExpense(models.Model):
     _name = 'ec.expenses'
     _description = 'EC Expenses'
@@ -455,13 +463,13 @@ class ECExpense(models.Model):
 
     coordination_fees = fields.Integer(string="Coordination Fees",compute='_compute_coordination_fees', store=True)
     total_candidate_price = fields.Integer(string="Total Candidate Cost", compute='_compute_total_candidate_price', store=True)
-    misc_expense_ids = fields.One2many('exam.misc.expense', 'ex_expense', string="Miscellaneous expenses")
+    ec_misc_expense_ids = fields.One2many('ec.misc.expense', 'ex_expense', string="Miscellaneous expenses")
 
     total_expense = fields.Integer(string="Total Expense", compute='_compute_total_expense', store=True)
 
     practical_oral_total = fields.Integer("Practical/Oral Expense",compute='_compute_ec_po_expense')
 
-    online_assignment_expense = fields.Integer("Online expenses")
+    online_assignment_expense = fields.Integer("Online expenses",compute='_compute_online_expense')
 
     def get_examiner_region(self):
         user_id = self.env.user.id
@@ -475,14 +483,28 @@ class ECExpense(models.Model):
     #         assignment = self.env['exam.type.oral.practical'].sudo().search([('dgs_batch','=',record.dgs_batch.id),('exam_region','=',record.exam_region.id)])
 
 
+    @api.depends('dgs_batch','exam_region')
+    def _compute_online_expense(self):
+        for record in self:
+            institute = self.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',self.dgs_batch.id),('exam_region','=',self.exam_region.id)]).institute_id.ids
+            print(institute)
+            institute = set(institute)
+            no_of_ins = len(institute)
+            
+            price = self.env['product.template'].sudo().search([('default_code','=','ec_online_po_expense')]).list_price
+            record.online_assignment_expense = no_of_ins * price
 
-    @api.depends('dgs_batch')
+            
+
+    @api.depends('dgs_batch','exam_region')
     def _compute_ec_po_expense(self):
         for record in self:
             institute = self.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',self.dgs_batch.id),('exam_region','=',self.exam_region.id)]).institute_id.ids
+            print(institute)
             institute = set(institute)
             no_of_ins = len(institute)
-            price = self.env['product.template'].sudo().search([('default_code','=','ec_po_expense')]).list_price
+            
+            price = self.env['product.template'].sudo().search([('default_code','=','ec_online_po_expense')]).list_price
             record.practical_oral_total = no_of_ins * price
 
     
@@ -513,10 +535,10 @@ class ECExpense(models.Model):
             record.total_candidate_price = record.no_of_candidates * product.list_price
 
 
-    @api.depends('total_candidate_price','misc_expense_ids','practical_oral_total','online_assignment_expense','coordination_fees')
+    @api.depends('total_candidate_price','ec_misc_expense_ids','practical_oral_total','online_assignment_expense','coordination_fees')
     def _compute_total_expense(self):
         for record in self:
-            record.total_expense = record.total_candidate_price + sum(record.misc_expense_ids.mapped('price')) + record.practical_oral_total + record.online_assignment_expense + record.coordination_fees
+            record.total_expense = record.total_candidate_price + sum(record.ec_misc_expense_ids.mapped('price')) + record.practical_oral_total + record.online_assignment_expense + record.coordination_fees
 
     @api.model
     def create(self, vals):
