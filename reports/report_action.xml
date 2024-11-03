@@ -252,9 +252,9 @@
         <field name="report_file">bes.report_survey_user_input</field>
         <field name="print_report_name">'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)</field>
         <field name="paperformat_id" ref="bes.survey_report_fomat"/>
-
     </record>
-        <record id="report_comparative_action" model="ir.actions.report">
+
+    <record id="report_comparative_action" model="ir.actions.report">
         <field name="name">Comparative Report</field>
         <field name="model">examination.report</field>
         <field name="report_type">qweb-html</field>
