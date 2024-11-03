@@ -482,11 +482,9 @@ class ECExpense(models.Model):
             institute = self.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',self.dgs_batch.id),('exam_region','=',self.exam_region.id)]).institute_id.ids
             institute = set(institute)
             no_of_ins = len(institute)
-            price = self.env['product.template'].sudo().search([('default_code','=','ec_po_expense')].list_price
-            # self.env['bes.institute'].sudo().browse(institute)
-            # import wdb;wdb.set_trace()
+            price = self.env['product.template'].sudo().search([('default_code','=','ec_po_expense')]).list_price
             record.practical_oral_total = no_of_ins * price
-            print("Sa")
+
     
     @api.depends('dgs_batch')
     def _compute_coordination_fees(self):
