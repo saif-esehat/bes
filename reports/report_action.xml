@@ -244,7 +244,7 @@
         <field name="dpi">120</field> <!-- DPI for print quality -->
     </record>
 
-    <record id="action_report_survey_user_input" model="ir.actions.report">
+    <!-- <record id="action_report_survey_user_input" model="ir.actions.report">
         <field name="name">Candidate Report</field>
         <field name="model">survey.user_input</field>
         <field name="report_type">qweb-html</field>
@@ -252,7 +252,16 @@
         <field name="report_file">bes.report_survey_user_input</field>
         <field name="print_report_name">'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)</field>
         <field name="paperformat_id" ref="bes.survey_report_fomat"/>
-    </record>
+    </record> -->
+    
+    <report
+        id="action_report_survey_user_input"
+        model="survey.user_input"
+        string="Candidate Report"
+        report_type="qweb-html"
+        name="bes.report_survey_user_input"
+        file="bes.report_survey_user_input"
+       />
 
     <record id="report_comparative_action" model="ir.actions.report">
         <field name="name">Comparative Report</field>
