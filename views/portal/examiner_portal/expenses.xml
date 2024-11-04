@@ -365,13 +365,25 @@
             document.getElementById('assign_id').value = dataId;
             
             }
+
+            function openEditTimeSheetModal(button) {
+            // Retrieve the data-id attribute value from the clicked button
+            var dataId = button.getAttribute('timesheet-id');
+            // Update the content of the modal with the retrieved data
+            document.getElementById('timesheet_id').value = dataId;
+            
+            }
     </script>
         <t t-call="portal.portal_layout">
 
             <t t-if="not assignment.time_sheet">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateDayModal" onclick="openDayUpdateModal(this)"
                 t-attf-assign-id="{{assignment.id}}">Fill Timesheet Form</button>
+
             </t>
+                <button type="button" data-toggle="modal" data-target="#editTimeSheet" class="btn btn-primary btn_cta" onclick="openEditTimeSheetModal(this)" t-attf-timesheet-id="{{timesheets.id}}">Edit Timesheet</button>
+                <!-- <span>HELOOOOOO <span t-esc="travel_details"/></span> -->
+
                 <t t-set="today_date" t-value="datetime.date.today()"/>
                 <!-- Modal for Updating Details -->
                 <div class="modal fade" id="updateDayModal" tabindex="-1" role="dialog" aria-labelledby="updateDayModalLabel" aria-hidden="true">
@@ -397,10 +409,10 @@
                                         <label for="completion_time">Completion Time</label>
                                         <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" required='1'/>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="candidates_examined">Candidates Examined</label>
                                         <input type="number" class="form-control" id="candidates_examined" name="candidates_examined" required='1'/>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group">
                                         <label for="debriefing_time">Debriefing Time</label>
                                         <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" required='1'/>
@@ -484,7 +496,182 @@
                 </div>
 
                 
-            <div class="row my-2">
+            <!-- <div class="row my-2"> -->
+                
+                <div class="modal fade" id="editTimeSheet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <form method="post" action="/my/editTimeSheet" enctype="multipart/form-data">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Time Sheet for Examination</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" id="timesheet_id" name="timesheet_id"/>
+
+
+                                    <t t-foreach="timesheets.timesheet_examinations" t-as="timesheet">
+                                        <div class="form-group">
+                                            <label for="arrival_time">Arrival Time</label>
+                                            <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" t-att-value ="timesheet.arrival_date_time"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="commencement_time">Commencement Time</label>
+                                            <input type="datetime-local" class="form-control" id="commencement_time" name="commencement_time" t-att-value ="timesheet.commence_exam"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="completion_time">Completion Time</label>
+                                            <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" t-att-value ="timesheet.completion_time"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="debriefing_time">Debriefing Time</label>
+                                            <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" t-att-value ="timesheet.debriefing_inst"/>
+                                        </div>
+                                    </t>
+
+                                    <t t-set="travel_details"  t-value="env['travel.details'].sudo().search([('timesheet_examinations','=',timesheets.timesheet_examinations.id)])"/>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Travelling Details:</th>
+                                                <th>Date &amp; Time</th>
+                                                <th>Mode of Travel</th>
+                                                <th>Expense(if occurred)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="travel_details" t-as="travel">
+                                                
+                                                <!-- Left Residence -->
+                                                <t t-if="travel.travelling_details == 'Left Residence'">
+                                                    <t t-set="record" t-value="env['travel.details'].sudo().search([('id', '=', travel.id)], limit=1)"/>
+                                                    <tr>
+                                                        <input type="hidden" class="form-control" id="left_residence_line_id" name="left_residence_line_id" t-att-value="travel.id"/>
+                                                        
+                                                        <td>Left Residence</td>
+                                                        
+                                                        <td>
+                                                            <input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"
+                                                                t-att-value="record.date_time and record.date_time.strftime('%Y-%m-%dT%H:%M') or ''"/>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
+                                                                <option value="bus" t-att-selected="'bus' == record.mode_of_travel">Bus</option>
+                                                                <option value="cab" t-att-selected="'cab' == record.mode_of_travel">Cab</option>
+                                                                <option value="railway" t-att-selected="'railway' == record.mode_of_travel">Railways</option>
+                                                                <option value="airline" t-att-selected="'airline' == record.mode_of_travel">Airline</option>
+                                                            </select>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"
+                                                                t-att-value="record.expenses or ''"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+
+                                                <!-- Arrival at the Institute/Hotel -->
+                                                <t t-if="travel.travelling_details == 'Arrival at the Institute/Hotel'">
+                                                    <t t-set="record" t-value="env['travel.details'].sudo().search([('id', '=', travel.id)], limit=1)"/>
+                                                    <tr>
+                                                        <input type="hidden" class="form-control" id="arrival_institute_line_id" name="arrival_institute_line_id" t-att-value="travel.id"/>
+                                                        
+                                                        <td>Arrival at the Institute/Hotel</td>
+                                                        
+                                                        <td>
+                                                            <input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"
+                                                                t-att-value="record.date_time and record.date_time.strftime('%Y-%m-%dT%H:%M') or ''"/>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
+                                                                <option value="bus" t-att-selected="'bus' == record.mode_of_travel">Bus</option>
+                                                                <option value="cab" t-att-selected="'cab' == record.mode_of_travel">Cab</option>
+                                                                <option value="railway" t-att-selected="'railway' == record.mode_of_travel">Railways</option>
+                                                                <option value="airline" t-att-selected="'airline' == record.mode_of_travel">Airline</option>
+                                                            </select>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <input type="number" class="form-control" name="arrival_institute_hotel_expenses" id="arrival_institute_hotel_expenses"
+                                                                t-att-value="record.expenses or ''"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+
+                                                <!-- Left Institute/Hotel -->
+                                                <t t-if="travel.travelling_details == 'Left Institute/Hotel'">
+                                                    <t t-set="record" t-value="env['travel.details'].sudo().search([('id', '=', travel.id)], limit=1)"/>
+                                                    <tr>
+                                                        <input type="hidden" class="form-control" id="left_institute_line_id" name="left_institute_line_id" t-att-value="travel.id"/>
+                                                        
+                                                        <td>Left Institute/Hotel</td>
+                                                        
+                                                        <td>
+                                                            <input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"
+                                                                t-att-value="record.date_time and record.date_time.strftime('%Y-%m-%dT%H:%M') or ''"/>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
+                                                                <option value="bus" t-att-selected="'bus' == record.mode_of_travel">Bus</option>
+                                                                <option value="cab" t-att-selected="'cab' == record.mode_of_travel">Cab</option>
+                                                                <option value="railway" t-att-selected="'railway' == record.mode_of_travel">Railways</option>
+                                                                <option value="airline" t-att-selected="'airline' == record.mode_of_travel">Airline</option>
+                                                            </select>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <input type="number" class="form-control" name="left_institute_expenses" id="left_institute_expenses"
+                                                                t-att-value="record.expenses or ''"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+
+                                                <!-- Arrival at Residence -->
+                                                <t t-if="travel.travelling_details == 'Arrival at Residence'">
+                                                    <t t-set="record" t-value="env['travel.details'].sudo().search([('id', '=', travel.id)], limit=1)"/>
+                                                    <tr>
+                                                        <input type="hidden" class="form-control" id="arrival_residence_line_id" name="arrival_residence_line_id" t-att-value="travel.id"/>
+                                                        
+                                                        <td>Arrival at Residence</td>
+                                                        
+                                                        <td>
+                                                            <input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"
+                                                                t-att-value="record.date_time and record.date_time.strftime('%Y-%m-%dT%H:%M') or ''"/>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
+                                                                <option value="bus" t-att-selected="'bus' == record.mode_of_travel">Bus</option>
+                                                                <option value="cab" t-att-selected="'cab' == record.mode_of_travel">Cab</option>
+                                                                <option value="railway" t-att-selected="'railway' == record.mode_of_travel">Railways</option>
+                                                                <option value="airline" t-att-selected="'airline' == record.mode_of_travel">Airline</option>
+                                                            </select>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <input type="number" class="form-control" name="arrival_residence_expenses" id="arrival_residence_expenses"
+                                                                t-att-value="record.expenses or ''"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+
+                                            </t>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <table class="table table-bordered">
                     <!-- <t t-set="index" t-value="0" /> -->
                     <thead>
@@ -496,7 +683,6 @@
                             <th>Completion</th>
                             <th>Candidates Examined</th>
                             <th>Debriefing Time</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <t t-foreach="timesheets.timesheet_examinations" t-as="timesheet">
@@ -510,16 +696,13 @@
                                 <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.candidate_examined"/></td>
                                 <td><span t-esc="timesheet.debriefing_inst"/></td>
-                                <td>
-                                DELETE
-                                </td>
                             </tr>
                         </tbody>
                     </t>
                 </table>
-            </div> 
+            <!-- </div>  -->
 
-            <div class="row my-2">
+            <!-- <div class="row my-2"> -->
                 <table class="table table-bordered">
                     <t t-set="index" t-value="0" />
                     <thead>
@@ -528,7 +711,6 @@
                             <th>Date &amp; Time</th>
                             <th>Mode of Travel</th>
                             <th>Expenses</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <t t-foreach="timesheets.travel_details" t-as="timesheet">
@@ -549,7 +731,7 @@
                         </tbody>
                     </t>
                 </table>
-            </div> 
+            <!-- </div>  -->
 
             <!-- <div class="container">
                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"  onclick="" data-target="#createTimeSheet" class="btn btn-primary btn_cta">Fill Timesheet Form</a> 
@@ -588,7 +770,6 @@
                             <th>Completion</th>
                             <th>Candidates Examined</th>
                             <th>Debriefing Time</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <t t-foreach="timesheets.timesheet_examinations" t-as="timesheet">
@@ -602,9 +783,6 @@
                                 <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.candidate_examined"/></td>
                                 <td><span t-esc="timesheet.debriefing_inst"/></td>
-                                <td>
-                                DELETE
-                                </td>
                             </tr>
                         </tbody>
                     </t>
@@ -618,7 +796,6 @@
                             <th>Date &amp; Time</th>
                             <th>Mode of Travel</th>
                             <th>Expenses</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <t t-foreach="timesheets.travel_details" t-as="timesheet">
@@ -659,10 +836,10 @@
                                         <label for="completion_time">Completion Time</label>
                                         <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" required='1'/>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="candidates_examined">Candidates Examined</label>
                                         <input type="number" class="form-control" id="candidates_examined" name="candidates_examined" required='1'/>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group">
                                         <label for="debriefing_time">Debriefing Time</label>
                                         <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" required='1'/>

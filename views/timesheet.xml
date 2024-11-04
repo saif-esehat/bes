@@ -67,6 +67,7 @@
                             <page string="Travel Details">
                                 <field name="travel_details">
                                     <tree editable="bottom">
+                                        <field name="timesheet_examinations"/>
                                         <field name="travelling_details"/>
                                         <field name="date_time"/>
                                         <field name="mode_of_travel"/>
