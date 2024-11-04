@@ -261,7 +261,8 @@
         report_type="qweb-html"
         name="bes.report_survey_user_input"
         file="bes.report_survey_user_input"
-       />
+        print_report_name="'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)"
+    />
 
     <record id="report_comparative_action" model="ir.actions.report">
         <field name="name">Comparative Report</field>
