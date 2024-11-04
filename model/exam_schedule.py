@@ -1228,7 +1228,7 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
         ('no', 'No')  
     ], string='OutStation')
     exam_date = fields.Date('Exam Date',tracking=True)
-    subject = fields.Man2one("course.master.subject",string="Subject",tracking=True)
+    subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
     gp_marksheet_ids = fields.Many2many('gp.exam.schedule', string='Candidates',tracking=True)
     exam_type = fields.Selection([
