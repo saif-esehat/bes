@@ -739,7 +739,7 @@ class CCMCExaminerAssignmentLineWizard(models.TransientModel):
     
     exam_date = fields.Date('Exam Date',tracking=True)
     outstation =  fields.Selection([
-        ('yes', 'Yes)'),
+        ('yes', 'Yes'),
         ('no', 'No')  
     ], string='OutStation')
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
