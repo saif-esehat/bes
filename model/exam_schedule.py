@@ -5692,24 +5692,29 @@ class ExaminerAttendanceWizard(models.TransientModel):
         exam_date = self.online_exam_date
 
         # Initialize arrays to store filtered candidates
-        gsk_candidates = []  
-        mek_candidates = [] 
-        gsk_mek_candidates = [] 
+        gsk_candidates = set() 
+        mek_candidates = set()
+        gsk_mek_candidates = set()
 
         for examiner in examiners:
             for marksheet in examiner.marksheets.gp_marksheet:
 
                 # Check if the candidate is attempting both GSK and MEK Online
                 if marksheet.attempting_gsk_online and marksheet.attempting_mek_online:
-                    gsk_mek_candidates.append(marksheet.id)
+                    gsk_mek_candidates.add(marksheet.id)
 
                 # Check if the candidate is attempting only GSK Online (and not MEK)
                 elif marksheet.attempting_gsk_online and not marksheet.attempting_mek_online:
-                    gsk_candidates.append(marksheet.id)
+                    gsk_candidates.add(marksheet.id)
 
                 # Check if the candidate is attempting only MEK Online (and not GSK)
                 elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
-                    mek_candidates.append(marksheet.id)
+                    mek_candidates.add(marksheet.id)
+
+
+        gsk_candidates = list(gsk_candidates)
+        mek_candidates = list(mek_candidates)
+        gsk_mek_candidates = list(gsk_mek_candidates)
 
         # import wdb; wdb.set_trace()
 
