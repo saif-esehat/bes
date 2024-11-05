@@ -206,10 +206,69 @@ class ExpenseController(http.Controller):
         # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
         # Dynamically create travel lines using predefined phases
         if kw.get('left_residence_date_time') and kw.get('arrival_institute_hotel_date_time') and kw.get('left_institute_date_time') and kw.get('arrival_residence_date_time'):
-            request.env['travel.details'].sudo().create_travel_lines(timesheet.id, kw)
+            request.env['travel.details'].sudo().create_travel_lines(timesheet.id,timesheet_line.id, kw)
         else:
             pass
 
 
         return request.redirect('/my/assignments/timesheet/'+str(assignment.dgs_batch.id) +'/' +str(assignment.id))
+    
+
+    # Controller method for editing timesheet day information
+    @http.route('/my/editTimeSheet', type='http', auth='user', methods=['POST'])
+    def edit_timesheet_day(self, **kw):
+        timesheet_id = kw.get('timesheet_id')
+        timesheet = request.env['time.sheet.report'].sudo().search([('id','=',timesheet_id)])
+
+        timesheet_line = request.env['timesheet.lines'].sudo().search([('time_sheet_id','=',timesheet.id)])
+
+        timesheet_line.write({
+            'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
+            'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
+            'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
+            'candidate_examined': kw.get('candidates_examined'),
+            'debriefing_inst': kw.get('debriefing_time'),
+        })
+
+                # Retrieve and update individual travel records
+        travel_updates = [
+            ('left_residence_line_id', {
+                'date_time': kw.get('left_residence_date_time'),
+                'mode_of_travel': kw.get('left_residence_mode_of_travel'),
+                'expense': kw.get('left_residence_expenses'),
+            }),
+            ('arrival_institute_line_id', {
+                'date_time': kw.get('arrival_institute_hotel_date_time'),
+                'mode_of_travel': kw.get('arrival_institute_hotel_mode_of_travel'),
+                'expense': kw.get('arrival_institute_hotel_expenses'),
+            }),
+            ('left_institute_line_id', {
+                'date_time': kw.get('left_institute_date_time'),
+                'mode_of_travel': kw.get('left_institute_mode_of_travel'),
+                'expense': kw.get('left_institute_expenses'),
+            }),
+            ('arrival_residence_line_id', {
+                'date_time': kw.get('arrival_residence_date_time'),
+                'mode_of_travel': kw.get('arrival_residence_mode_of_travel'),
+                'expense': kw.get('arrival_residence_expenses'),
+            })
+        ]
+        
+        for line_id_key, fields in travel_updates:
+            travel_id = kw.get(line_id_key)
+            if travel_id:
+                travel_record = request.env['travel.details'].sudo().search([('id', '=', int(travel_id))], limit=1)
+                if travel_record:
+                    travel_record.write({
+                        'date_time': datetime.strptime(fields['date_time'], '%Y-%m-%dT%H:%M') if fields['date_time'] else False,
+                        'mode_of_travel': fields['mode_of_travel'],
+                        'expenses': fields['expense'],
+                    })
+
+        # import wdb;wdb.set_trace();
+
+        assignment = timesheet.examiner_assignment
+
+        return request.redirect('/my/assignments/timesheet/'+str(assignment.dgs_batch.id) +'/' +str(assignment.id))
+
     

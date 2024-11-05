@@ -682,7 +682,7 @@
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
                                                     <t t-if="candidate.candidate_image">
-                                                        <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="rounded img-fluid" style="width: 150px;"/>
+                                                        <img t-attf-src="data:image/png; base64, {{candidate.candidate_image}}" alt="avatar" class="card-img rounded img-fluid" style="width: 150px;"/>
                                                     </t>
                                                     <t t-else="">
                                                         <img src="https://via.placeholder.com/150" class="card-img-top card-img" style="width: 150px;" alt="Candidate Photo" />
@@ -704,10 +704,10 @@
                                             <div class="col-md-5">
                                                 <div class="card-img-container">
                                                     <t t-if="candidate.candidate_signature">
-                                                        <img t-attf-src="data:image/png;base64,{{candidate.candidate_signature}}" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
+                                                        <img t-attf-src="data:image/png;base64,{{candidate.candidate_signature}}" class="card-img-top sign-img" style="width: 250px; height:75px" alt="Signature" />
                                                     </t>
                                                     <t t-else="">
-                                                        <img src="https://placehold.co/250x75" class="card-img-top card-img sign-img" style="width: 250px; height:75px" alt="Signature" />
+                                                        <img src="https://placehold.co/250x75" class="card-img-top sign-img" style="width: 250px; height:75px" alt="Signature" />
                                                     </t>
                                                 </div>
                                             </div>

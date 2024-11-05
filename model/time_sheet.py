@@ -34,8 +34,9 @@ class TimesheetLines(models.Model):
     commence_exam = fields.Datetime(string="Commencement of Practical/Oral Examination")
     completion_time = fields.Datetime(string='Time of completion')
     lunch_break = fields.Datetime(string='Lunch Break')
-    candidate_examined = fields.Integer(string='No.of candidates examined')
+    candidate_examined = fields.Integer(string='No.of candidates examined',related='time_sheet_id.examiner_assignment.candidates_count')
     debriefing_inst = fields.Integer(string='Time spent for debriefing the Institute (Last day of examination):')
+    travel_details = fields.One2many('travel.details', 'time_sheet_id', string="Travel Details")
 
 class TravelDetails(models.Model):
     _name = 'travel.details'
@@ -47,9 +48,10 @@ class TravelDetails(models.Model):
     mode_of_travel = fields.Char(string='Mode of travel')
     expenses = fields.Float(string='Expenses (if incurred)')
 
+    timesheet_examinations = fields.Many2one('timesheet.lines')
 
     @api.model
-    def create_travel_lines(self, timesheet_id, kw):
+    def create_travel_lines(self, timesheet_id,time_line_id, kw):
         """
         Create lines for each travel phase using direct creation for each predefined phase.
         The `kw` parameter contains the form data.
@@ -66,6 +68,7 @@ class TravelDetails(models.Model):
         for detail, date_time, mode_of_travel, expenses in travel_phases:
             self.env['travel.details'].sudo().create({
                 'time_sheet_id': timesheet_id,
+                'timesheet_examinations': time_line_id,
                 'travelling_details': detail,
                 'date_time': date_time,
                 'mode_of_travel': mode_of_travel,
