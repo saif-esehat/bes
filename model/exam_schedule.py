@@ -1297,7 +1297,7 @@ class ExamOralPractical(models.Model):
             'res_model': 'examiner.attendance.wizard',
             'target': 'new',
             'context': {
-                # 'default_examiner_id': False,  # Allow the user to select an examiner
+                'default_duty_id': self.id,  # Allow the user to select an examiner
                 'default_examiner_assignment': examiner_ids  # Pass the filtered examiner IDs to the context
             }
         }
@@ -5674,9 +5674,12 @@ class ExaminerAttendanceWizard(models.TransientModel):
             rec.examiners = rec.examiner_assignment.examiner.ids
 
     def generate_attendance_sheet(self):
-        examiner_duty_id  = self.env.context['params']['id']
-        
+        examiner_duty_id  = self.env.context.get("active_id")
+        print(examiner_duty_id)
         online_assignments = self.env['exam.type.oral.practical.examiners'].sudo().search([('prac_oral_id','=',examiner_duty_id),('exam_type','=','online'),('examiner','=',self.examiner.id),('exam_date','=',self.online_exam_date)])
+        
+        
+        
         # dgs_batch self.env['exam.type.oral.practical'].browse(self.env.context['params']['id']).dgs_batch
         # import wdb;wdb.set_trace()
 
