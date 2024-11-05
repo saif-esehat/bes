@@ -27,7 +27,7 @@
                     <p><strong>Unanswered Incorrectly:</strong> <t t-esc="doc.skipped_questions"/> Questions</p>
                     <p><strong>Required Passing Grade:</strong> 60%</p>
                     <p><strong>IP Address:</strong> <t t-esc="doc.ip_address"/></p>
-                    <p><strong>Examiner Token:</strong> <t t-esc="doc.examiner_token"/></p>
+                    <!-- <p><strong>Examiner Token:</strong> <t t-esc="doc.examiner_token"/></p> -->
                     <p><strong>Online Exam Date:</strong> <t t-esc="doc.exam_date.strftime('%d-%b-%Y') or False"/></p>
                     <p><strong>Time Taken:</strong> <t t-esc="doc.total_time"/></p>
                     

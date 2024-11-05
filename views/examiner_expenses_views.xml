@@ -239,6 +239,10 @@
                 <field name="exam_region"/>
                 <field name="no_of_candidates"/>
                 <field name="total_candidate_price"/>
+                <field name="coordination_fees"/>
+                <field name="practical_oral_total"/>
+                <field name="online_assignment_expense"/>
+                <field name="total_expense"/>
             </tree>
         </field>
     </record>
@@ -256,7 +260,7 @@
                     <field name="total_candidate_price" readonly="1"/>
                     <field name="coordination_fees" readonly="1"/>
                     <field name="practical_oral_total"/>
-                    <field name="online_assignment_expense" readonly="0"/>
+                    <field name="online_assignment_expense" readonly="1"/>
                     <field name="total_expense" sum="Total"/>
                     
                 </group>
