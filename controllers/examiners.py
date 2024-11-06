@@ -1036,7 +1036,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
 
         gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        gsk_oral_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
        
         gsk_oral_sheet.write("A2:D2", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
@@ -1106,7 +1106,7 @@ class ExaminerPortal(CustomerPortal):
 
         # Merge cells in the first row for the practical sheet
         gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        gsk_practical_sheet.write("E1:F1",examiner.name,merge_format)
+        gsk_practical_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         gsk_practical_sheet.write("G1:H1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
 
 
@@ -1252,7 +1252,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
 
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        mek_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        mek_oral_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         mek_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         mek_oral_sheet.write("A2:D2", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
         
@@ -1336,7 +1336,7 @@ class ExaminerPortal(CustomerPortal):
 
         # Merge cells in the first row for the practical sheet
         mek_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        mek_practical_sheet.write("E1:F1",examiner.name,merge_format)
+        mek_practical_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         mek_practical_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
 
         # Write the header row for the practical sheet
@@ -1728,12 +1728,12 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
+        # ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_cookery_bakery_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_cookery_bakery_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         ccmc_cookery_bakery_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
-        ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        # ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
 
 
         marks_values_5 = [0,1,2,3,4,5]
@@ -1964,7 +1964,7 @@ class ExaminerPortal(CustomerPortal):
         # ccmc_oral_summary_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         
         ccmc_oral_summary_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_oral_summary_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_oral_summary_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         ccmc_oral_summary_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         ccmc_oral_summary_sheet.write("A2:D2", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
 
@@ -2117,7 +2117,7 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_gsk_oral_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         ccmc_gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
 
 

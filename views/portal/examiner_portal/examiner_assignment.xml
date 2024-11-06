@@ -822,21 +822,21 @@
                 <t t-if="examiner_subject == 'MEK'">
                     <t t-if="date_valid">
                         <t t-if="not attendance_sheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-mek-assign-id="{{assignment_id}}" onclick="openMekAttendanceModal(this)" data-target="#uploadMekAttendanceModal" class="btn btn-primary btn_cta">Upload MEK Attendance Sheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-mek-assign-id="{{assignment_id}}" onclick="openMekAttendanceModal(this)" data-target="#uploadMekAttendanceModal" class="btn btn-primary btn_cta">Upload Physical Online Attendance Sheet</a>
                         </t>
                     </t>
                 </t>
                 <t t-if="examiner_subject == 'GSK'">
                     <t t-if="date_valid">
                         <t t-if="not attendance_sheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-gsk-assign-id="{{assignment_id}}" onclick="openGskAttendanceModal(this)" data-target="#uploadGskAttendanceModal" class="btn btn-primary btn_cta">Upload GSK Attendance Sheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-gsk-assign-id="{{assignment_id}}" onclick="openGskAttendanceModal(this)" data-target="#uploadGskAttendanceModal" class="btn btn-primary btn_cta">Upload Physical Online Attendance Sheet</a>
                         </t>
                     </t>
                 </t>
                 <t t-if="examiner_subject == 'CCMC'">
                     <t t-if="date_valid">
                         <t t-if="not attendance_sheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcAttendanceModal(this)" data-target="#uploadCcmcAttendanceModal" class="btn btn-primary btn_cta">Upload CCMC Attendance Sheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcAttendanceModal(this)" data-target="#uploadCcmcAttendanceModal" class="btn btn-primary btn_cta">Upload Physical Online Attendance Sheet</a>
                         </t>
                     </t>
                 </t>

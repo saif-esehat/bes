@@ -373,6 +373,20 @@
             document.getElementById('timesheet_id').value = dataId;
             
             }
+
+            function checkExpense() {
+                // Get the expense input and document input elements
+                const expenseInput = document.getElementById('arrival_institute_hotel_expenses');
+                const documentInput = document.getElementById('supporting_document');
+                
+                // If the expense is more than 0, make the document input required
+                if (expenseInput.value &gt; 0) {
+                    documentInput.required = true;
+                } else {
+                    documentInput.required = false;
+                }
+            }
+
     </script>
         <t t-call="portal.portal_layout">
 
@@ -537,6 +551,7 @@
                                                 <th>Date &amp; Time</th>
                                                 <th>Mode of Travel</th>
                                                 <th>Expense(if occurred)</th>
+                                                <th>Supporting Document</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -566,7 +581,11 @@
                                                         
                                                         <td>
                                                             <input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"
-                                                                t-att-value="record.expenses or ''"/>
+                                                                t-att-value="record.expenses or ''"  oninput="checkExpense()"/>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <input type="file" class="form-control" name="supporting_document" id="supporting_document" accept=".pdf, .jpg, .jpeg, .png"/>
                                                         </td>
                                                     </tr>
                                                 </t>

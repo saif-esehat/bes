@@ -47,7 +47,7 @@ class TravelDetails(models.Model):
     date_time = fields.Datetime(string='Date & Time')
     mode_of_travel = fields.Char(string='Mode of travel')
     expenses = fields.Float(string='Expenses (if incurred)')
-
+    document = fields.Binary(string='Upload Document')
     timesheet_examinations = fields.Many2one('timesheet.lines')
 
     @api.model

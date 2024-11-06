@@ -324,7 +324,7 @@
                 <form>
                     <header>
                             <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
-                            <button type="object" name="generate_timesheet" string="Generate Timesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
+                            <!-- <button type="object" name="generate_timesheet" string="Generate Timesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/> -->
                     </header>
                   
                     <sheet>
@@ -387,11 +387,11 @@
                                         type="object"
                                         class="btn-primary"
                                         />
-                                    <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
+                                    <!-- <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
                                         string="Attendance Sheet"
                                         type="object"
                                         class="btn-info"
-                                        icon="fa-download"/>
+                                        icon="fa-download"/> -->
                                         
                                     <!-- <field name="attendance_sheet_file" widget="binary" filename="attendance_sheet_name"/> -->
                                     <field name="attendance_sheet_files" widget="many2many_tags"/>

@@ -3215,12 +3215,12 @@ class GPExam(models.Model):
     
     exam_criteria = fields.Selection([
         ('', ''),
-        ('pending', 'Pending'),
-        ('passed', 'Complied'),
-    ], string='Exam Status' , compute="compute_certificate_criteria")
+        ('pending', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Result Status' , compute="compute_certificate_criteria")
     
     certificate_criteria = fields.Selection([
-        ('pending', 'Pending'),
+        ('pending', 'Not Complied'),
         ('passed', 'Complied'),
     ], string='Certificate Criteria',compute="compute_pending_certificate_criteria")
     
