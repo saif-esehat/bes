@@ -905,6 +905,7 @@
             
                 <thead>
                     <tr >
+                        <th class="text-left sticky">Sr No.</th>
                         <th class="text-left sticky">Candidate Name</th>
                         <th class="text-center">Roll No.</th>
                         <t t-if="exam_type == 'online'">
@@ -994,10 +995,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    <t t-set="index" t-value="0" />
                     <t t-foreach="marksheets" t-as="marksheet">
-
+                        <t t-set="index" t-value="index + 1" />
                         <tr>
+                            <td class="text-left sticky"><span t-esc="index" /></td>
                             <td class="text-left sticky" t-attf-id="candidate_name_{{marksheet.id}}">
                                 <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
                                 <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
