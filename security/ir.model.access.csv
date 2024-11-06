@@ -62,6 +62,7 @@ bes.admin_access_examiner_gp_exam_appear,acess_examiner_gp_exam_appear,model_gp_
 bes.admin_access_candidate_invoice_reset_wizard_manager,candidate_invoice_reset_wizard_manager,model_candidate_invoice_reset_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_access_candidate_inactive_wizard,candidate_inactive_wizard,model_candidate_inactive_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_access_exam_type_non_mariner,exam_type_non_mariner,model_exam_type_non_mariner,bes.group_bes_admin,1,1,1,1
+bes.admin_team_lead_access,institute_team_lead,model_institute_team_lead,bes.group_bes_admin,1,1,1,1
 
 
 

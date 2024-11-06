@@ -1508,11 +1508,12 @@ class ExamOralPractical(models.Model):
                             
             
                 examiners_team_lead = self.examiners.mapped('examiner')
+                print(examiners_team_lead)
                 
                 for team_lead in examiners_team_lead:
                     
                     if team_lead.id == self.team_lead.id:
-                        self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                        # self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
                         price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
                         
                         self.env["institute.team.lead"].sudo().create({
