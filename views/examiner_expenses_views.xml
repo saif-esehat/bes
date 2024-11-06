@@ -57,7 +57,6 @@
                 <field name="outstation_expenses"/>
                 <field name="team_lead_expense"/>
                 <field name="local_travel_expense"/>
-                
                 <field name="non_mariner_expense"/>
                 <field name="total"/>
                 <!-- <field name="assignments"/> -->
@@ -172,7 +171,10 @@
                                     <field name="institute"/>
                                     <field name="dgs_batch"/>
                                     <field name="price"/>
-                                    <field name="docs"/>
+                                    <field name="approval_status"/>
+
+                                    
+                                    <!-- <field name="docs"/> -->
                                 </tree>
                             </field>
                         </page>
@@ -285,15 +287,71 @@
     </record>
 
 
+    <record id="open_expense_approval_action" model="ir.actions.act_window">
+        <field name="name">Examiner Expenses Approval</field>
+        <field name="res_model">exam.misc.expense</field>
+        <field name="view_mode">tree</field>
+    </record>
+
     <record id="view_examiner_expenses_approval_tree" model="ir.ui.view">
         <field name="name">exam.misc.expense.tree</field>
         <field name="model">exam.misc.expense</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="dgs_batch"/>
+                <field name="assignment"/>
+                <field name="exam_region"/>
                 <field name="examiner"/>
+                <field name="institute"/>
                 <field name="price"/>
+                <field name="approval_status"/>
+                <button name="open_approval_wizard" string="View" type="object" class="btn-primary" />
+
             </tree>
+        </field>
+    </record>
+
+    <record id="view_expense_approval_wizard" model="ir.ui.view">
+        <field name="name">exam.misc.expense.approval.wizard.form</field>
+        <field name="model">exam.misc.expense.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form string="My Wizard">
+                <group>
+                    <field name="expense"/>
+                    <!-- <field name="tavel_details"/> -->
+                    <field name="tavel_details" widget="many2many"  readonly="0" >
+                        <tree>
+                            <field name="travelling_details"  readonly="1"/>
+                            <field name="date_time"  readonly="1"/>
+                            <field name="mode_of_travel"  readonly="1"/>
+                            <field name="expenses" string="Expense" readonly="0"/>
+                            <field name="remark"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Approve" type="object" name="approve_time_sheet" class="btn-primary"/>
+                    <!-- <button string="Cancel" special="cancel" class="btn-secondary"/> -->
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_travel_details_form" model="ir.ui.view">
+        <field name="name">travel.details.form</field>
+        <field name="model">travel.details</field>
+        <field name="arch" type="xml">
+            <form string="My Wizard">
+                <group>
+                    <field name="travelling_details" readonly="1"/>
+                    <field name="date_time" readonly="1"/>
+                    <field name="mode_of_travel" readonly="1"/>
+                    <field name="expenses" string="Expense"/>
+                     <field name="remark"/>
+                    <!-- <field name="tavel_details"/> -->
+                    
+                </group>
+            </form>
         </field>
     </record>
 

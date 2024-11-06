@@ -19,6 +19,12 @@ class TimeSheetReport(models.Model):
 
     total_expenses = fields.Integer(string="Total Expenses", compute='_compute_total_expenses',store=True)
 
+    approval_status = fields.Selection([
+        ('approved', 'Approved'),
+        ('pending','Pending')
+    ], string='State', default='pending')
+
+    
     @api.depends('travel_details.expenses')
     def _compute_total_expenses(self):
         for record in self:
@@ -47,6 +53,8 @@ class TravelDetails(models.Model):
     date_time = fields.Datetime(string='Date & Time')
     mode_of_travel = fields.Char(string='Mode of travel')
     expenses = fields.Float(string='Expenses (if incurred)')
+    remark = fields.Text(string='Remark')
+    
 
     timesheet_examinations = fields.Many2one('timesheet.lines')
 
