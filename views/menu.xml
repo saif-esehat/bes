@@ -557,6 +557,12 @@
             name="EC Expenses" action="open_ec_expenses"
             sequence="3"
              />
+        
+
+        <menuitem id="menu_expenses_approval" parent="bes_batch_examiner_duty_menus_group_examiner"
+            name="Expense Approval"
+            sequence="13"
+             />
 
 
     </data>

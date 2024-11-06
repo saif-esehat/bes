@@ -172,6 +172,11 @@ class ExaminerExpenses(models.Model):
         ('approved', 'Approved')
     ], string='State', default='draft')
     
+    pan_no = fields.Char("Pan No.",related='examiner_id.pan_no')
+    acc_no = fields.Char("Account No.",related='examiner_id.acc_no')
+    ifsc_code = fields.Char("IFSC Code",related='examiner_id.ifsc_code')
+    bank_name = fields.Char("Bank Name",related='examiner_id.bank_name')
+    
     
     overall_expense_ids = fields.One2many('examiner.overall.expenses', 'examiner_expenses_id', string="Overall Expenses")
 
@@ -439,6 +444,7 @@ class ExamMiscExpense(models.Model):
     price = fields.Integer(string="Cost",related="timesheet_report.total_expenses")
     docs = fields.Many2many('ir.attachment', string="Documents")
     dgs_batch = fields.Many2one("dgs.batches",related="examiner_expenses_id.dgs_batch",store=True)
+    examiner = fields.Many2one('bes.examiner',related="examiner_expenses_id.examiner_id",store=True)
     institute = fields.Many2one('bes.institute',related="assignment.institute_id", string="Institute",store=True)
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
     ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
