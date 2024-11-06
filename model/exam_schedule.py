@@ -1407,6 +1407,10 @@ class ExamOralPractical(models.Model):
         # import wdb;wdb.set_trace()
         
         for examiner in self.examiners.examiner:
+            
+            
+            
+            
             expense = self.env["examiner.expenses"].sudo().search([('examiner_id','=',examiner.id),('dgs_batch','=',self.dgs_batch.id)])
             
             expense_batch = self.env["exam.batch.expenses"].sudo().search([('dgs_batch','=',self.dgs_batch.id)])
@@ -1433,6 +1437,9 @@ class ExamOralPractical(models.Model):
             practical_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type != 'online')
             for assignment in practical_assignments:
                 # self.env["exam.assignment.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
+                if assignment.candidates_count != assignment.candidate_done:
+                    examiner_name = assignment.examiner.name
+                    raise ValidationError(str(assignment.candidate_done) +"/"+str(assignment.candidates_count)+" Candidate Confirmed for "+examiner_name+" Exam Date : "+ str(assignment.exam_date)  )
                 
                 if examiner.designation in ['non-mariner','catering']:
                     price =  self.env['product.product'].search([('default_code','=','practical_oral_non_mariner')]).standard_price
@@ -1507,20 +1514,18 @@ class ExamOralPractical(models.Model):
                         })
                             
             
-                examiners_team_lead = self.examiners.mapped('examiner')
-                print(examiners_team_lead)
+                # examiners_team_lead = self.examiners.mapped('examiner')
                 
-                for team_lead in examiners_team_lead:
-                    
-                    if team_lead.id == self.team_lead.id:
-                        # self.env["institute.team.lead"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
-                        price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
-                        
-                        self.env["institute.team.lead"].sudo().create({
-                            "examiner_expenses_id":expense.id,
-                            "examiner_duty":self.id,
-                            "price": price,
-                        })
+            ## Team Lead Expense    
+            if examiner.id == self.team_lead.id:
+                price =  self.env['product.product'].search([('default_code','=','team_lead')]).standard_price
+                self.env["institute.team.lead"].sudo().create({
+                    "examiner_expenses_id":expense.id,
+                    "examiner_duty":self.id,
+                    "price": price,
+                })
+                
+                
             
             
             # if expense.assignment_expense_ids:

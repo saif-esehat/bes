@@ -45,7 +45,7 @@ class ExaminerPortal(CustomerPortal):
             gp_marksheet = marksheet.gp_marksheet
             if gp_marksheet.token:
                 token = gp_marksheet.token
-                gp_marksheet.write({"gsk_online_attendance":attendance})
+                gp_marksheet.write({"mek_online_attendance":attendance})
             else:
                 token = gp_marksheet.generate_token()
                 gp_marksheet.write({"token":token,"mek_online_attendance":attendance})
@@ -60,18 +60,33 @@ class ExaminerPortal(CustomerPortal):
         if subject == "GSK" and attendance == "present":
             marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
             gp_marksheet = marksheet.gp_marksheet
-            if gp_marksheet.token:
-                token = gp_marksheet.token
-                gp_marksheet.write({"gsk_online_attendance":attendance})
+            
+            if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:            
+                if gp_marksheet.token:
+                    token = gp_marksheet.token
+                    gp_marksheet.write({"gsk_online_attendance":attendance , "mek_online_attendance":attendance})
+                else:
+                    token = gp_marksheet.generate_token()
+                    gp_marksheet.write({"token":token,"gsk_online_attendance":attendance,"mek_online_attendance":attendance})
+                return json.dumps({"token":token})
             else:
-                token = gp_marksheet.generate_token()
-                gp_marksheet.write({"token":token,"gsk_online_attendance":attendance})
-            return json.dumps({"token":token})
+                if gp_marksheet.token:
+                    token = gp_marksheet.token
+                    gp_marksheet.write({"gsk_online_attendance":attendance })
+                else:
+                    token = gp_marksheet.generate_token()
+                    gp_marksheet.write({"token":token,"gsk_online_attendance":attendance})
+                return json.dumps({"token":token})
+                
         elif subject == "GSK" and attendance == "absent":
             marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
             gp_marksheet = marksheet.gp_marksheet
-            gp_marksheet.write({"gsk_online_attendance":attendance})
-            return json.dumps({"token":False})
+            if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                gp_marksheet.write({"gsk_online_attendance":attendance,"mek_online_attendance":attendance})
+                return json.dumps({"token":False})
+            else:
+                gp_marksheet.write({"gsk_online_attendance":attendance})
+                return json.dumps({"token":False})
         
         
         if subject == "CCMC" and attendance == "present":

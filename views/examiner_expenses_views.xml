@@ -202,12 +202,16 @@
         </field>
     </record>
 
-     <record id="view_examiner_expenses_tree" model="ir.ui.view">
+    <record id="view_examiner_expenses_tree" model="ir.ui.view">
         <field name="name">examiner.expenses.tree</field>
         <field name="model">examiner.expenses</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="examiner_id"/>
+                <field name="pan_no"/>
+                <field name="acc_no"/>
+                <field name="ifsc_code"/>
+                <field name="bank_name"/>
                 <field name="practical_oral_total"/>
                 <field name="online_total"/>
                 <field name="team_lead_total"/>
@@ -277,6 +281,19 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+
+    <record id="view_examiner_expenses_approval_tree" model="ir.ui.view">
+        <field name="name">exam.misc.expense.tree</field>
+        <field name="model">exam.misc.expense</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="dgs_batch"/>
+                <field name="examiner"/>
+                <field name="price"/>
+            </tree>
         </field>
     </record>
 
