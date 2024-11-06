@@ -52,7 +52,7 @@
                             <!-- <field name="exam_date"/> -->
                         </group>
                         <notebook>
-                            <page string="Timesheet Examinations">
+                            <page string="Timesheet">
                                 <field name="timesheet_examinations" nolabel="1">
                                     <tree editable="bottom">
                                         <field name="arrival_date_time"/>
