@@ -5720,6 +5720,8 @@ class ExaminerAttendanceWizard(models.TransientModel):
         gsk_mek_candidates = list(gsk_mek_candidates)
 
         # import wdb; wdb.set_trace()
+        
+        
 
         # Render the report
         return self.env.ref('bes.action_attendance_sheet_online_gp_new').report_action(self,data={
@@ -5747,6 +5749,16 @@ class AttendanceSheetReport(models.AbstractModel):
         gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
         mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
         gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_mek_candidates'])
+        
+        print("MEK Candidate")
+        print(mek_candidates)
+        
+        print("GSK Candidate")
+        print(gsk_candidates)
+        
+        print("GSK MEK Candidate")
+        print(gsk_mek_candidates)
+        
         
         examiner_name = data['examiner_name']
         # Example string date
