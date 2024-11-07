@@ -432,6 +432,30 @@ class ExamAssignmentExpense(models.Model):
                     'assignment': []
                 }
             }
+            
+            
+class ExamMiscExpenseApprovalWizard(models.TransientModel):
+    _name = 'exam.misc.expense.approval.wizard'
+    _description = 'Expense Approval Wizard'
+    
+    expense = fields.Many2one('time.sheet.report', string="Timesheet")
+    tavel_details = fields.Many2many('travel.details', string="Travel Details")
+    
+    
+    
+    
+    def approve_time_sheet(self):
+        self.expense.sudo().write({'approval_status':'approved'})
+    
+    @api.onchange('expense')
+    def _onchange_many2one_field(self):
+        if self.expense:
+            
+            travel_details = self.env["travel.details"].sudo().search([('time_sheet_id','=',self.expense.id)])
+            
+            # Fetch related many2many records based on the many2one field
+            self.tavel_details = travel_details
+    
 
 
 class ExamMiscExpense(models.Model):
@@ -439,6 +463,8 @@ class ExamMiscExpense(models.Model):
     _description = 'Exam Miscellaneous Expense'
     
     assignment = fields.Many2one('exam.type.oral.practical.examiners', string="Assignment")
+    exam_region = fields.Many2one('exam.center', 'Exam Region',related="assignment.exam_region",store=True)
+
     timesheet_report = fields.Many2one('time.sheet.report',related="assignment.time_sheet",store=True,string="Timesheet")
     description = fields.Char(string="Description")
     price = fields.Integer(string="Cost",related="timesheet_report.total_expenses")
@@ -448,6 +474,22 @@ class ExamMiscExpense(models.Model):
     institute = fields.Many2one('bes.institute',related="assignment.institute_id", string="Institute",store=True)
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
     ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
+    approval_status = fields.Selection([
+        ('approved', 'Approved'),
+        ('pending','Pending')
+    ], string='State',related="timesheet_report.approval_status")
+    
+    def open_approval_wizard(self):
+        return {
+            'name': 'Expense Approval Wizard',
+            'type': 'ir.actions.act_window',
+            'res_model': 'exam.misc.expense.approval.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_expense': self.timesheet_report.id},
+        }
+
+    
 
 
 class ECMsicExpense(models.Model):

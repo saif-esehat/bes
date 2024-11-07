@@ -561,6 +561,7 @@
 
         <menuitem id="menu_expenses_approval" parent="bes_batch_examiner_duty_menus_group_examiner"
             name="Expense Approval"
+            action="open_expense_approval_action"
             sequence="13"
              />
 
