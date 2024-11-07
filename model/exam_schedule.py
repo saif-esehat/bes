@@ -2469,8 +2469,12 @@ class ExamOralPracticalExaminers(models.Model):
                        if sheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and sheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                            count += 1
                     record.candidate_done = count
-                else:
-                    record.candidate_done = 'NA'
+                elif record.exam_type == 'online':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.gp_marksheet.gsk_online_attendance:
+                            count += 1
+                    record.candidate_done = count
                     
             elif record.subject.name == 'MEK':
                 if record.exam_type == 'practical_oral':
@@ -2479,8 +2483,12 @@ class ExamOralPracticalExaminers(models.Model):
                         if sheet.mek_oral.mek_oral_draft_confirm == 'confirm' and sheet.mek_prac.mek_practical_draft_confirm == 'confirm':
                             count += 1
                     record.candidate_done = count
-                else:
-                    record.candidate_done = 'NA'
+                elif record.exam_type == 'online':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.gp_marksheet.mek_online_attendance:
+                            count += 1
+                    record.candidate_done = count
             
             elif record.subject.name == 'CCMC':
                 if record.exam_type == 'practical_oral':
@@ -2489,8 +2497,12 @@ class ExamOralPracticalExaminers(models.Model):
                         if sheet.cookery_bakery.cookery_draft_confirm == 'confirm' and sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
                             count += 1
                     record.candidate_done = count
-                else:
-                    record.candidate_done = 'NA'
+                elif record.exam_type == 'online':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_marksheet.ccmc_online_attendance:
+                            count += 1
+                    record.candidate_done = count
             
             elif record.subject.name == 'CCMC GSK Oral':
                 if record.exam_type == 'practical_oral':
@@ -2499,8 +2511,12 @@ class ExamOralPracticalExaminers(models.Model):
                         if sheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
                             count += 1
                     record.candidate_done = count
-                else:
-                    record.candidate_done = 'NA'
+                elif record.exam_type == 'online':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_marksheet.ccmc_online_attendance:
+                            count += 1
+                    record.candidate_done = count
                     
             else:
                 record.candidate_done = 'NA'
