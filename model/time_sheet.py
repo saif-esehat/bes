@@ -59,7 +59,7 @@ class TravelDetails(models.Model):
     supporting_document_filename = fields.Char(string="Document Filename")
     timesheet_examinations = fields.Many2one('timesheet.lines')
     remark = fields.Text(string='Remark')
-    
+
     @api.model
     def create_travel_lines(self, timesheet_id,time_line_id, kw):
         """
@@ -90,18 +90,18 @@ class TravelDetails(models.Model):
                 # Check if the supporting_document is base64 or file-like object
                 if isinstance(supporting_document, str):
                     # If it's a string, assume it's base64 encoded
-                    filename = supporting_document.filename
+                    # filename = supporting_document.filename
                     travel_details.sudo().write({
                         'supporting_document': base64.b64encode(supporting_document.encode('utf-8')),
-                        'supporting_document_filename': filename
+                        # 'supporting_document_filename': filename
                     })
                 else:
                     # If it's a file-like object, read its content and encode it in base64
                     file_content = supporting_document.read()
-                    filename = supporting_document.filename
+                    # filename = supporting_document.filename
                     travel_details.sudo().write({
                         'supporting_document': base64.b64encode(file_content),
-                        'supporting_document_filename': filename
+                        # 'supporting_document_filename': filename
                     })
 
     
