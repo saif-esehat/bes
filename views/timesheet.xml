@@ -72,6 +72,7 @@
                                         <field name="date_time"/>
                                         <field name="mode_of_travel"/>
                                         <field name="expenses"/>
+                                        <field name="supporting_document" widget="binary"/>
                                     </tree>
                                 </field>
                             </page>

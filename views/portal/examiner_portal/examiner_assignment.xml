@@ -446,14 +446,14 @@
                                     /* Style for the first column to be sticky */
                                     th.sticky, td.sticky {
                                         position: sticky;
-                                        left: 0;
+                                        <!-- left: 0; -->
                                         z-index: 1;
                                         background-color: white; /* Adjust as needed */
                                     }
-                                    /* Adjust the z-index for the table header */
+                                    <!-- /* Adjust the z-index for the table header */
                                     th.sticky {
                                         z-index: 2; /* Make sure the header stays above the content */
-                                    }
+                                    } -->
         </style>
         <t t-call="portal.portal_layout">
             <t t-set="exam_type" t-value="env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)]).exam_type"/>
@@ -822,21 +822,21 @@
                 <t t-if="examiner_subject == 'MEK'">
                     <t t-if="date_valid">
                         <t t-if="not attendance_sheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-mek-assign-id="{{assignment_id}}" onclick="openMekAttendanceModal(this)" data-target="#uploadMekAttendanceModal" class="btn btn-primary btn_cta">Upload MEK Attendance Sheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-mek-assign-id="{{assignment_id}}" onclick="openMekAttendanceModal(this)" data-target="#uploadMekAttendanceModal" class="btn btn-primary btn_cta">Upload Physical Online Attendance Sheet</a>
                         </t>
                     </t>
                 </t>
                 <t t-if="examiner_subject == 'GSK'">
                     <t t-if="date_valid">
                         <t t-if="not attendance_sheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-gsk-assign-id="{{assignment_id}}" onclick="openGskAttendanceModal(this)" data-target="#uploadGskAttendanceModal" class="btn btn-primary btn_cta">Upload GSK Attendance Sheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-gsk-assign-id="{{assignment_id}}" onclick="openGskAttendanceModal(this)" data-target="#uploadGskAttendanceModal" class="btn btn-primary btn_cta">Upload Physical Online Attendance Sheet</a>
                         </t>
                     </t>
                 </t>
                 <t t-if="examiner_subject == 'CCMC'">
                     <t t-if="date_valid">
                         <t t-if="not attendance_sheet_uploaded">
-                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcAttendanceModal(this)" data-target="#uploadCcmcAttendanceModal" class="btn btn-primary btn_cta">Upload CCMC Attendance Sheet</a>
+                            <a href="" style="margin:10px;" data-toggle="modal" t-attf-batch-id="{{batch_id}}" t-attf-ccmc-assign-id="{{assignment_id}}" onclick="openCcmcAttendanceModal(this)" data-target="#uploadCcmcAttendanceModal" class="btn btn-primary btn_cta">Upload Physical Online Attendance Sheet</a>
                         </t>
                     </t>
                 </t>
@@ -905,7 +905,8 @@
             
                 <thead>
                     <tr >
-                        <th class="text-left sticky">Candidate Name</th>
+                        <th class="text-left sticky" style="left: 0;">Sr No.</th>
+                        <th class="text-left sticky" style="left: 60;">Candidate Name</th>
                         <th class="text-center">Roll No.</th>
                         <t t-if="exam_type == 'online'">
                             <t t-if="commence_exam">
@@ -994,11 +995,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    <t t-set="index" t-value="0" />
                     <t t-foreach="marksheets" t-as="marksheet">
-
+                        <t t-set="index" t-value="index + 1" />
                         <tr>
-                            <td class="text-left sticky" t-attf-id="candidate_name_{{marksheet.id}}">
+                            <td class="text-left sticky" style="left: 0;"><span t-esc="index" /></td>
+                            <td class="text-left sticky" style="left: 50;" t-attf-id="candidate_name_{{marksheet.id}}">
                                 <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
                                 <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
                                 <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.name" />

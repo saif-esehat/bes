@@ -195,7 +195,7 @@ class DGSBatch(models.Model):
         ('3-dgs_approved', 'Approved')     
     ], string='State', default='1-on_going',tracking=True)
     
-    is_march_september = fields.Boolean(string="March/September Examination",compute="_compute_march_september",tracking=True)
+    is_march_september = fields.Boolean(string="March/September Examination")
     
     def _compute_march_september(self):
         for record in self:
