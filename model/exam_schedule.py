@@ -1298,7 +1298,8 @@ class ExamOralPractical(models.Model):
             'target': 'new',
             'context': {
                 'default_duty_id': self.id,  # Allow the user to select an examiner
-                'default_examiner_assignment': examiner_ids  # Pass the filtered examiner IDs to the context
+                'default_examiner_assignment': examiner_ids,  # Pass the filtered examiner IDs to the context
+                'default_course': self.course.id
             }
         }
     
@@ -5688,17 +5689,23 @@ class ExaminerAttendanceWizard(models.TransientModel):
     examiner = fields.Many2one('bes.examiner', string='Examiner')
     online_exam_date = fields.Date("Exam Date",widget="date",date_format="%d-%b-%y")
     examiners = fields.Many2many('bes.examiner', string='Examiners',compute='_compute_examiners')
+    course = fields.Many2one("course.master",string="Course")
 
     @api.depends('examiner_assignment')
     def _compute_examiners(self):
-        # import wdb;wdb.set_trace()
         for rec in self:
             rec.examiners = rec.examiner_assignment.examiner.ids
 
     def generate_attendance_sheet(self):
+        # import wdb;wdb.set_trace()
         examiner_duty_id  = self.env.context.get("active_id")
         print(examiner_duty_id)
-        online_assignments = self.env['exam.type.oral.practical.examiners'].sudo().search([('prac_oral_id','=',examiner_duty_id),('exam_type','=','online'),('examiner','=',self.examiner.id),('exam_date','=',self.online_exam_date)])
+        online_assignments = self.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('prac_oral_id','=',examiner_duty_id),
+            ('exam_type','=','online'),
+            ('examiner','=',self.examiner.id),
+            ('exam_date','=',self.online_exam_date)
+            ])
         
         
         
@@ -5717,44 +5724,58 @@ class ExaminerAttendanceWizard(models.TransientModel):
         exam_date = self.online_exam_date
 
         # Initialize arrays to store filtered candidates
-        gsk_candidates = set() 
-        mek_candidates = set()
-        gsk_mek_candidates = set()
+        if self.course.course_code == "GP":
+            gsk_candidates = set() 
+            mek_candidates = set()
+            gsk_mek_candidates = set()
 
-        for examiner in examiners:
-            for marksheet in examiner.marksheets.gp_marksheet:
+            for examiner in examiners:
+                for marksheet in examiner.marksheets.gp_marksheet:
 
-                # Check if the candidate is attempting both GSK and MEK Online
-                if marksheet.attempting_gsk_online and marksheet.attempting_mek_online:
-                    gsk_mek_candidates.add(marksheet.id)
+                    # Check if the candidate is attempting both GSK and MEK Online
+                    if marksheet.attempting_gsk_online and marksheet.attempting_mek_online:
+                        gsk_mek_candidates.add(marksheet.id)
 
-                # Check if the candidate is attempting only GSK Online (and not MEK)
-                elif marksheet.attempting_gsk_online and not marksheet.attempting_mek_online:
-                    gsk_candidates.add(marksheet.id)
+                    # Check if the candidate is attempting only GSK Online (and not MEK)
+                    elif marksheet.attempting_gsk_online and not marksheet.attempting_mek_online:
+                        gsk_candidates.add(marksheet.id)
 
-                # Check if the candidate is attempting only MEK Online (and not GSK)
-                elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
-                    mek_candidates.add(marksheet.id)
+                    # Check if the candidate is attempting only MEK Online (and not GSK)
+                    elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
+                        mek_candidates.add(marksheet.id)
 
 
-        gsk_candidates = list(gsk_candidates)
-        mek_candidates = list(mek_candidates)
-        gsk_mek_candidates = list(gsk_mek_candidates)
+            gsk_candidates = list(gsk_candidates)
+            mek_candidates = list(mek_candidates)
+            gsk_mek_candidates = list(gsk_mek_candidates)
 
-        # import wdb; wdb.set_trace()
-        
-        
+            # import wdb; wdb.set_trace()
+            # Render the report
+            return self.env.ref('bes.action_attendance_sheet_online_gp_new').report_action(self,data={
+                'docs': [self],  # Pass the current recordset to `docs`
+                'gsk_mek_candidates': gsk_mek_candidates,
+                'gsk_candidates': gsk_candidates,
+                'mek_candidates': mek_candidates,
+                'institute_name': institute_name,
+                'examiner_name': examiner_name,
+                'exam_date': exam_date,
+                })
+        elif self.course.course_code == "CCMC":
+            # import wdb;wdb.set_trace()
+            ccmc_candidates = set()
+            for examiner in examiners:
+                for marksheet in examiner.marksheets.ccmc_marksheet:
+                    ccmc_candidates.add(marksheet.id)
 
-        # Render the report
-        return self.env.ref('bes.action_attendance_sheet_online_gp_new').report_action(self,data={
-            'docs': [self],  # Pass the current recordset to `docs`
-            'gsk_mek_candidates': gsk_mek_candidates,
-            'gsk_candidates': gsk_candidates,
-            'mek_candidates': mek_candidates,
-            'institute_name': institute_name,
-            'examiner_name': examiner_name,
-            'exam_date': exam_date,
-            })
+            ccmc_candidates = list(ccmc_candidates)
+
+            return self.env.ref('bes.action_attendance_sheet_online_ccmc').report_action(self,data={
+                'docs': [self],  # Pass the current recordset to `docs`
+                'institute_name': institute_name,
+                'examiner_name': examiner_name,
+                'exam_date': exam_date,
+                'ccmc_candidates': ccmc_candidates
+                })
 
 
 class AttendanceSheetReport(models.AbstractModel):
@@ -5800,3 +5821,30 @@ class AttendanceSheetReport(models.AbstractModel):
                 "examiner_name":examiner_name,
                 "exam_date":exam_date,
                 }
+
+class CCMCAttendanceSheetReport(models.AbstractModel):
+    _name = 'report.bes.attendance_sheet_online_ccmc'
+    _description = 'Attendance Sheet Online'
+    
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        # import wdb;wdb.set_trace()
+        docs = self.env['exam.type.oral.practical.examiners'].browse(docids)
+
+        ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().browse(data['ccmc_candidates'])
+
+        examiner_name = data['examiner_name']
+        # Example string date
+        exam_date_str = data['exam_date']
+
+        # Convert the string to a datetime object
+        exam_date = datetime.strptime(exam_date_str, '%Y-%m-%d')
+        return {
+            'doc_ids': '',
+            'doc_model': 'ccmc.exam.schedule',
+            'docs': data,
+            'ccmc_candidates': ccmc_candidates,
+            'examiner_name': examiner_name,
+            'exam_date': exam_date,
+        }

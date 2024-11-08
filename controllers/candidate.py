@@ -75,6 +75,10 @@ class GPCandidatePortal(CustomerPortal):
             partner_id = request.env.user.id
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)])
             registered_exams = request.env["survey.user_input"].sudo().search([('gp_candidate','=',candidate.id)])
+            # Sort registered_exams so that 'GSK' subjects come first, 'MEK' subjects second, and others follow
+            registered_exams = registered_exams.sorted(
+                key=lambda exam: 0 if exam.survey_id.subject.name == 'GSK' else (1 if exam.survey_id.subject.name == 'MEK' else 2)
+            )
             print("registered_exams")
             print(registered_exams)
             # import wdb; wdb.set_trace(); 
@@ -143,7 +147,6 @@ class GPCandidatePortal(CustomerPortal):
         # if registered_exam.gp_candidate:
         gp_exam = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         
-        # import wdb; wdb.set_trace()
         gp_ip = gp_exam.ip_address.split(",")
         print(gp_exam)
         survey_examiner_token = gp_exam.token
@@ -151,6 +154,8 @@ class GPCandidatePortal(CustomerPortal):
         #     ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         #     survey_examiner_token = ccmc_exam.token
             
+        # import wdb; wdb.set_trace()
+
         if ip in gp_ip:
         
             if survey_examiner_token == examiner_token:
