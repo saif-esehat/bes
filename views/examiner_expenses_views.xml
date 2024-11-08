@@ -351,7 +351,11 @@
                     <field name="date_time" readonly="1"/>
                     <field name="mode_of_travel" readonly="1"/>
                     <field name="expenses" string="Expense"/>
-                     <field name="remark"/>
+                    <field name="remark"/>
+                    <field name="supporting_document_filename" invisible="1"/>
+                    <field name="supporting_document" widget="pdf_viewer"/>
+
+
                     <!-- <field name="tavel_details"/> -->
                     
                 </group>
