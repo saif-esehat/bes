@@ -199,10 +199,10 @@ class DGSBatch(models.Model):
     
     def _compute_march_september(self):
         for record in self:
-            if record.to_date.strftime('%B') in ['March','September']:
-                record.is_march_september = True
-            else:
-                record.is_march_september = False
+            # if record.to_date.strftime('%B') in ['March','September']:
+            #     record.is_march_september = True
+            # else:
+            record.is_march_september = False
 
     repeater_batch = fields.Boolean("Repeater Batch",default=False,tracking=True)
     gp_url = fields.Char('URL for GP candidates',compute="_compute_url")

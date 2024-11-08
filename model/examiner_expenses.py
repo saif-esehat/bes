@@ -498,6 +498,10 @@ class ECMsicExpense(models.Model):
     description = fields.Char(string="Description")
     price = fields.Integer(string="Cost")
     docs = fields.Many2many('ir.attachment', string="Documents")
+    approval_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('approved', 'Approved')     
+    ], string='State',default="pending")
 
 
 class ECExpense(models.Model):
@@ -518,7 +522,17 @@ class ECExpense(models.Model):
     practical_oral_total = fields.Integer("Practical/Oral Expense",compute='_compute_ec_po_expense')
 
     online_assignment_expense = fields.Integer("Online expenses",compute='_compute_online_expense')
+    
+    misc_expense = fields.Integer("Misc expenses",compute='_compute_misc_expense')
 
+    @api.depends("ec_misc_expense_ids")
+    def _compute_misc_expense(self):
+        for record in self:
+            # record.misc_expense = sum(record.ec_misc_expense_ids.mapped('price'))
+            record.misc_expense = sum(record.ec_misc_expense_ids.filtered(lambda r: r.approval_status == 'approved').mapped('price'))
+
+
+    
     def get_examiner_region(self):
         user_id = self.env.user.id
         region = self.env['exam.center'].sudo().search([('exam_co_ordinator','=',user_id)]).id
@@ -586,7 +600,7 @@ class ECExpense(models.Model):
     @api.depends('total_candidate_price','ec_misc_expense_ids','practical_oral_total','online_assignment_expense','coordination_fees')
     def _compute_total_expense(self):
         for record in self:
-            record.total_expense = record.total_candidate_price + sum(record.ec_misc_expense_ids.mapped('price')) + record.practical_oral_total + record.online_assignment_expense + record.coordination_fees
+            record.total_expense = record.total_candidate_price + record.misc_expense + record.practical_oral_total + record.online_assignment_expense + record.coordination_fees
 
     @api.model
     def create(self, vals):
