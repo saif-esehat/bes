@@ -323,7 +323,7 @@
             
             </script>
             <div class="container mt16">
-                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/3/4bc677d6-b8ed-45a9-928f-2afda007c659/4" target="_blank">here</a> to read instructions to fill the form</span>
+                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="/my/download_instruction/{{batch.id}}" target="_blank">here</a> to read instructions to fill the form</span>
 
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>

@@ -1115,3 +1115,22 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
         
         return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
+
+    @http.route(['/my/download_instruction/<int:batch_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadInstruction(self,batch_id,**kw ):
+        # import wdb; wdb.set_trace()
+
+        batch = request.env["dgs.batches"].sudo().search([('id', '=', batch_id)])
+
+         # Check if batch and instruction document exist
+        if batch and batch.instruction_document:
+            instruction_pdf = batch.instruction_document
+            pdfhttpheaders = [
+                ('Content-Type', 'application/pdf'),
+                ('Content-Disposition', 'attachment; filename="Certificate.pdf"'),
+                ('Content-Length', str(len(instruction_pdf)))
+            ]
+            return request.make_response(instruction_pdf, headers=pdfhttpheaders)
+        else:
+            # Return a 404 error if batch or document not found
+            return request.not_found()
