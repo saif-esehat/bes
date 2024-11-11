@@ -647,12 +647,17 @@
                             <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
-                                <select name="exam_centre" id="exam_centre" class="form-control" t-att-readonly="1" >
+                                <!-- <select name="exam_centre" id="exam_centre" class="form-control" t-att-disabled='0' >
 
                                     <t t-foreach="fresher_region" t-as="region">
                                         <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
-                                </select>
+                                </select> -->
+                                <input type="text" t-att-disabled="1" name="exam_centre_name" id="exam_centre_name" class="form-control" t-att-value="candidate.institute_id.exam_center.name"/>
+                                <input type="hidden"  name="exam_centre" id="exam_centre" class="form-control" t-att-value="candidate.institute_id.exam_center.id"/>
+
+
+
                             </t>
                             <t t-else="">
 

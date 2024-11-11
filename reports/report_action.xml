@@ -38,11 +38,19 @@
     <report
         id="action_attendance_sheet_online_ccmc"
         string="CCMC Attendance Sheet"
-        model="exam.type.oral.practical.examiners"
+        model="examiner.attendance.wizard"
         report_type="qweb-pdf"
         name="bes.attendance_sheet_online_ccmc"
         file="bes.attendance_sheet_online_ccmc"
        />
+        <!-- model="exam.type.oral.practical.examiners" -->
+    <!-- <report
+        id="action_attendance_sheet_online_ccmc_new"
+        string="CCMC Attendance Sheet"
+        report_type="qweb-pdf"
+        name="bes.attendance_sheet_online_ccmc_new"
+        file="bes.attendance_sheet_online_ccmc_new"
+       /> -->
     
     <!-- <report
         id="action_attendance_sheet_online_gp"
