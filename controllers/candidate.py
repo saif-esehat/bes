@@ -696,10 +696,14 @@ class GPCandidatePortal(CustomerPortal):
                     }
                     request.env['gp.candidate.stcw.certificate'].sudo().create(data)
             
+            
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
             
+            
             dgs_batch_id = int(kwargs.get('batch_id'))
+            
+            print(kwargs)
             exam_center = int(kwargs.get('exam_centre'))
             
             exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)

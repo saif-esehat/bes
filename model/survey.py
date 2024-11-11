@@ -5,6 +5,10 @@ import secrets
 import random
 import string
 from datetime import datetime
+import pandas as pd
+import base64
+from io import BytesIO
+
 
 
 class SurveySectionQuestionWizard(models.TransientModel):
@@ -14,29 +18,55 @@ class SurveySectionQuestionWizard(models.TransientModel):
     qb = fields.Many2one("survey.survey",string="Question Bank")
     chapter = fields.Many2one("survey.question",string="Course")
     description = fields.Text(string='Question Description')
+    upload_type = fields.Selection([
+        ('single', 'Single'),
+        ('bulk', 'Bulk')       
+    ], string='Upload Type', default='single')
+    file = fields.Binary(string="File", required=True)
+
 
     def action_add_question(self):
         print("Chapter "+ str(self.chapter.id))
         print("QB "+ str(self.qb.id))
-        sequence = self.chapter.sequence
-        question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': self.description })
-        question_id.write({'page_id':self.chapter.id ,'sequence': sequence + 1})
-        print("QB "+ str(question_id))
-        question_ids = self.chapter.question_ids.ids
-        print(question_ids)
-        # seq = 0
-        # chapters = self.env['survey.question'].sudo().search([('survey_id','=',self.qb.id),('is_page','=',True)])
-        # for chapter in chapters:
-        #     seq = seq + 1
-        #     chapter.write({'sequence':seq})
-        #     for question in chapter.question_ids:
-        #         # question = self.env['survey.question'].sudo().search([('id','=',question_id.id)]).write({'page_id':self.chapter.id})
-        #         seq = seq + 1
-        #         question.write({'sequence':seq})
-                
+        if self.upload_type == 'single':
+            sequence = self.chapter.sequence
+            question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': self.description })
+            question_id.write({'page_id':self.chapter.id ,'sequence': sequence + 1})
+            print("QB "+ str(question_id))
+            question_ids = self.chapter.question_ids.ids
+            print(question_ids)        
+            self.chapter.write({'question_ids':[(6,0,question_id.id)]})
+        elif self.upload_type == 'bulk':            
+            excel_data = base64.b64decode(self.file)
+
+            # Read the Excel data into a pandas DataFrame
+            df = pd.read_excel(BytesIO(excel_data))
             
-        
-        self.chapter.write({'question_ids':[(6,0,question_id.id)]})
+            grouped = df.groupby('Question')
+            sequence = self.chapter.sequence
+            sequence = sequence + 1
+            for question, group in grouped:
+                
+                question_text = group['Question'].iloc[0]
+                question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': question_text , 'page_id':self.chapter.id ,'sequence': int(sequence) })
+                # question_id.write({ })
+                choices = group['Choices'].dropna().tolist()
+                correct_answer = group[group['CorrectAnswer'] == 1]['Choices'].iloc[0]
+                for choice in choices:
+                    choice_id = self.env['survey.question.answer'].sudo().create({"question_id":question_id.id,"value":choice})
+                    print(choice)
+                    if correct_answer == choice:
+                        # import wdb;wdb.set_trace()
+                        marks = group[group['CorrectAnswer'] == 1]['Marks'].iloc[0]
+                        choice_id.write({"is_correct":True,"answer_score":marks})
+                        
+                        print(marks)
+          
+
+            
+ 
+
+            
         
 
 class InheritedSurvey(models.Model):
