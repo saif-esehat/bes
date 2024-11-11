@@ -31,7 +31,11 @@ class CandidatesApplication(models.Model):
     candidate_image = fields.Binary(string="Candidate Image")
     candidate_signature = fields.Binary(string="Candidate Signature",attachment=True, help='Select an image')
 
-    competency_deck = fields.Char(string="a) Competency (Deck/Engine)")
+    competency_deck = fields.Selection([
+        ('deck', 'Deck'),
+        ('engine', 'Engine'),
+
+        ], string='Competency')
     # grade = fields.Char(string="b) Grade")
     grade = fields.Selection([
         ('1CM', 'First Class Master'),
@@ -176,6 +180,10 @@ class CandidatesApplication(models.Model):
                 record.oral = False
 
 
+    def assign_competency(self):
+        for record in self:
+            if record.grade == '1CM' or record.grade == '2CM' or record.grade == 'SER':
+                record.compr
 
 
 

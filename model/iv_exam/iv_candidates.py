@@ -262,10 +262,31 @@ class IVAttendanceWizard(models.TransientModel):
 
             for candidate in candidates:
                 # Get the last candidate application
-                last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
+                # last_application_line = candidate.candidate_applications.sorted('id', reverse=True)[:1]
+
+                grade_order = {
+                    '1CM': 1,
+                    '2CM': 2,
+                    'SER': 3,
+                    'ME': 4,
+                    '1ED': 5,
+                    '2ED': 6
+                }
+
+                # Sorting candidate applications
+                # import wdb; wdb.set_trace(); 
+
+                last_application_line = candidate.candidate_applications[-1].application_id.sorted(
+                    key=lambda rec: (
+                        rec.is_repeater,  # False (freshers) will come first, True (repeaters) later
+                        grade_order.get(rec.grade, 999)  # Sort by custom grade order
+                    )
+                )
+                # import wdb; wdb.set_trace(); 
+
 
                 if last_application_line:
-                    application = last_application_line.application_id
+                    application = last_application_line
 
                     # Check the boolean fields 'written' and 'oral'
                     if application.written:
