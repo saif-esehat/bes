@@ -700,6 +700,7 @@ class GPCandidatePortal(CustomerPortal):
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
             
+            
             dgs_batch_id = int(kwargs.get('batch_id'))
             
             print(kwargs)
