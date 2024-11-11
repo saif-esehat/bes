@@ -225,6 +225,10 @@ class DGSBatch(models.Model):
     
     visible_generate_report = fields.Boolean(string='Visible Generate Button',compute="show_generate_report_button",tracking=True)
 
+    instruction_document = fields.Binary(string="Instruction Document")
+    instruction_document_name = fields.Char(string="Document Name")  # Name of the file
+
+    
     def open_release_admit_card_wizard(self):
         view_id = self.env.ref('bes.view_release_admit_card_form').id
         

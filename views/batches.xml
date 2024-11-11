@@ -500,14 +500,17 @@
                             <field name="repeater_batch"/>
                             <field name="is_march_september"/>
                             <field name="visible_generate_report" invisible="1"/>
+                        </group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="ccmc_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="form_deadline_start" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                             <field name="form_deadline" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
+                            <field name="instruction_document" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
                         </group>
 
                                                 
-                        <group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <!-- Mumbai Region -->
                             <group style="width:33%">
                                 <field name="mumbai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
@@ -522,7 +525,7 @@
                             </group>
                         </group>
                         
-                        <group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <!-- Kolkatta Region -->
                             <group style="width:33%">
                                 <field name="kolkatta_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
@@ -539,7 +542,7 @@
                             </group>
                         </group>
                         
-                        <group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <!-- Chennai Region -->
                             <group style="width:33%">
                                 <field name="chennai_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
@@ -554,7 +557,7 @@
                             </group>
                         </group>
                         
-                        <group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <!-- Delhi Region -->
                             <group style="width:33%">
                                 <field name="delhi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
@@ -569,7 +572,7 @@
                             </group>
                         </group>
                         
-                        <group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <!-- Kochi Region -->
                             <group style="width:33%">
                                 <field name="kochi_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
@@ -584,7 +587,7 @@
                             </group>
                         </group>
                         
-                        <group>
+                        <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <!-- Goa Region -->
                             <group style="width:33%">
                                 <field name="goa_region" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>

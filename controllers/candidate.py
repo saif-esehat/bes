@@ -696,11 +696,14 @@ class GPCandidatePortal(CustomerPortal):
                     }
                     request.env['gp.candidate.stcw.certificate'].sudo().create(data)
             
+            
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
             
             
             dgs_batch_id = int(kwargs.get('batch_id'))
+            
+            print(kwargs)
             exam_center = int(kwargs.get('exam_centre'))
             
             exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
@@ -1116,3 +1119,23 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
         
         return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
+
+    @http.route(['/my/download_instruction/<int:batch_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadInstruction(self,batch_id,**kw ):
+        
+        batch = request.env["dgs.batches"].sudo().search([('id', '=', int(batch_id))])
+
+        # import wdb; wdb.set_trace()
+         # Check if batch and instruction document exist
+        if batch and batch.instruction_document:
+            instruction_pdf = base64.b64decode(batch.instruction_document)  # Assuming this is already in binary format
+            # file_name = instruction_pdf.file_name
+            pdfhttpheaders = [
+                ('Content-Type', 'application/pdf'),
+                ('Content-Disposition', 'attachment; filename="Instruction.pdf"'),
+                ('Content-Length', u'%s' % len(instruction_pdf))
+            ]
+            return request.make_response(instruction_pdf, pdfhttpheaders)
+        else:
+            # Return a 404 error if batch or document not found
+            return request.not_found()

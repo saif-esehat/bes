@@ -629,7 +629,22 @@
     
                     }
 
+                function toggleAttendance2() {
+                    const attendance1 = document.getElementById("attendance1").value;
+                    const attendance2 = document.getElementById("attendance2");
 
+                    if (attendance1 === "yes") {
+                        attendance2.value = "na"; // Set value to "N/A"
+                        attendance2.disabled = true;
+                    } else {
+                        attendance2.disabled = false;
+                    }
+                }
+
+                // Initialize on page load
+                document.addEventListener("DOMContentLoaded", function() {
+                    toggleAttendance2();
+                });
 
 
                 
@@ -1351,19 +1366,22 @@
                                                         <button type="submit" class="btn btn-primary btn_cta">Update</button>
                                                     </div>
                                                     <div>
-                                                     <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
-                                                        <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP:
-                                                            <select name="attendance1">
+                                                        <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
+                                                        <h5 class="my-3">
+                                                            Whether Attendance record of the candidate complies with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP:
+                                                            <select name="attendance1" id="attendance1" onchange="toggleAttendance2()">
                                                                 <option value="yes" t-att-selected="candidate.attendance_compliance_1 == 'yes'">Yes</option>
-                                                                <option value="no"  t-att-selected="candidate.attendance_compliance_1 == 'no'">No</option>
+                                                                <option value="no" t-att-selected="candidate.attendance_compliance_1 == 'no'">No</option>
                                                             </select>
                                                         </h5>
                                                     </div>
                                                     <div>
-                                                        <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP and whether same has been informed to the DGS:
-                                                            <select name="attendance2">
+                                                        <h5 class="my-3">
+                                                            Attendance record of the candidate does not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP and whether same has been informed to the DGS:
+                                                            <select name="attendance2" id="attendance2">
                                                                 <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'">Yes</option>
                                                                 <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'">No</option>
+                                                                <option value="na" t-att-selected="candidate.attendance_compliance_2 == 'na'">N/A</option>
                                                             </select>
                                                         </h5>
                                                     </div>
@@ -5122,6 +5140,23 @@
 
                 }
 
+                function toggleAttendance2() {
+                    const attendance1 = document.getElementById("attendance1").value;
+                    const attendance2 = document.getElementById("attendance2");
+
+                    if (attendance1 === "yes") {
+                        attendance2.value = "na"; // Set value to "N/A"
+                        attendance2.disabled = true;
+                    } else {
+                        attendance2.disabled = false;
+                    }
+                }
+
+                // Initialize on page load
+                document.addEventListener("DOMContentLoaded", function() {
+                    toggleAttendance2();
+                });
+
                 
             </script>
             <style>
@@ -5802,9 +5837,9 @@
                                                         <button type="submit" class="btn btn-primary btn_cta">Update</button>
                                                     </div>
                                                     <div>
-                                                     <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
+                                                        <input type="hidden" id="candidate_id" t-attf-value="{{candidate.id}}" name="candidate_id"/>
                                                         <h5 class="my-3">Whether Attendance record of the candidate comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP:
-                                                            <select name="attendance1">
+                                                            <select name="attendance1" id="attendance1" onchange="toggleAttendance2()">
                                                                 <option value="yes" t-att-selected="candidate.attendance_compliance_1 == 'yes'">Yes</option>
                                                                 <option value="no"  t-att-selected="candidate.attendance_compliance_1 == 'no'">No</option>
                                                             </select>
@@ -5812,7 +5847,7 @@
                                                     </div>
                                                     <div>
                                                         <h5 class="my-3">Attendance record of the candidate not comply with DGS Guidelines 1 of 2018 as per para 3.2 for GP / 7 of 2010 as per para 3.3 for GP and whether same has been informed to the DGS:
-                                                            <select name="attendance2">
+                                                            <select name="attendance2" id="attendance2">
                                                                 <option value="yes" t-att-selected="candidate.attendance_compliance_2 == 'yes'">Yes</option>
                                                                 <option value="no" t-att-selected="candidate.attendance_compliance_2 == 'no'">No</option>
                                                             </select>
