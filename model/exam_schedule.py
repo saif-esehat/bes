@@ -1438,9 +1438,9 @@ class ExamOralPractical(models.Model):
             practical_assignments = self.examiners.filtered(lambda e: e.examiner.id == examiner.id and e.exam_type != 'online')
             for assignment in practical_assignments:
                 # self.env["exam.assignment.expense"].sudo().search([('examiner_expenses_id','=',expense.id)]).unlink()
-                if assignment.candidates_count != assignment.candidate_done:
-                    examiner_name = assignment.examiner.name
-                    raise ValidationError(str(assignment.candidate_done) +"/"+str(assignment.candidates_count)+" Candidate Confirmed for "+examiner_name+" Exam Date : "+ str(assignment.exam_date)  )
+                # if assignment.candidates_count != assignment.candidate_done:
+                #     examiner_name = assignment.examiner.name
+                #     raise ValidationError(str(assignment.candidate_done) +"/"+str(assignment.candidates_count)+" Candidate Confirmed for "+examiner_name+" Exam Date : "+ str(assignment.exam_date)  )
                 
                 if examiner.designation in ['non-mariner','catering']:
                     price =  self.env['product.product'].search([('default_code','=','practical_oral_non_mariner')]).standard_price

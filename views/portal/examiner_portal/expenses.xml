@@ -448,6 +448,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -464,6 +465,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -480,6 +482,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -496,6 +499,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -890,6 +894,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -903,6 +908,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -917,6 +923,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
@@ -931,6 +938,7 @@
                                                 <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"/></td>
                                                 <td>
                                                     <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
+                                                        <option value=""></option>
                                                         <option value="bus">Bus</option>
                                                         <option value="cab">Cab</option>
                                                         <option value="railway">Railways</option>
