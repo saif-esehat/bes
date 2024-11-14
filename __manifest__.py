@@ -78,6 +78,7 @@
         'views/ship_visit/ccmc_ship_visit.xml',
         'views/portal/ship_visit/ship_visit.xml',
         'views/portal/ship_visit/ccmc_ship_visi.xml',
+        'views/portal/sale_order_portal.xml'
  
        
         # 'views/sep_batches.xml',
