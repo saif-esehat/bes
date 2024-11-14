@@ -63,6 +63,8 @@ bes.admin_access_candidate_invoice_reset_wizard_manager,candidate_invoice_reset_
 bes.admin_access_candidate_inactive_wizard,candidate_inactive_wizard,model_candidate_inactive_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_access_exam_type_non_mariner,exam_type_non_mariner,model_exam_type_non_mariner,bes.group_bes_admin,1,1,1,1
 bes.admin_team_lead_access,institute_team_lead,model_institute_team_lead,bes.group_bes_admin,1,1,1,1
+bes.admin_travel_details,access_admin_travel_details,model_travel_details,bes.group_bes_admin,1,1,1,1
+bes.access_admin_group_expense_approval,coo_ceo_access_group_expense_approval,bes.model_exam_misc_expense_approval_wizard,bes.group_bes_admin,1,1,1,1
 
 
 
@@ -125,6 +127,7 @@ bes.group_exam_coordinator_ccmc_cookery_bakery_line,access_exam_coordinator_ccmc
 bes.ec_access_ccmc_exam_schedule,access_ec_ccmc_exam_schedule,bes.model_ccmc_exam_schedule,bes.group_exam_coordinator,1,1,0,0
 
 bes.access_candidate_integrity_violation_wizard,coo_ceo_access_candidate_integrity_violation_wizard,bes.model_candidate_integrity_violation_wizard,bes.group_report_violation,1,1,1,1
+
 
 
 bes.access_examination_report_user,access_examination_report_user,bes.model_examination_report,group_bes_report,1,1,1,1

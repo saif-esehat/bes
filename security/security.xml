@@ -79,6 +79,11 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <record id="group_expense_approval" model="res.groups">
+        <field name="name">Expense Approval</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <record id="examiner_duty_record_rule" model="ir.rule">
             <field name="name">Examiner Duty Record Rule</field>
             <field ref="model_exam_type_oral_practical" name="model_id"/>

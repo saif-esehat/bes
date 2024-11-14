@@ -336,7 +336,7 @@
                     </field>
                 </group>
                 <footer>
-                    <button string="Approve" type="object" name="approve_time_sheet" class="btn-primary"/>
+                    <button string="Approve" groups="bes.group_expense_approval" type="object" name="approve_time_sheet" class="btn-primary"/>
                     <!-- <button string="Cancel" special="cancel" class="btn-secondary"/> -->
                 </footer>
             </form>

@@ -323,7 +323,7 @@
             
             </script>
             <div class="container mt16">
-                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/8/66a3b44a-cabd-49a2-9117-d5b492fbdb20/5" target="_blank">here</a> to read instructions to fill the form</span>
+                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a t-attf-href="/my/download_instruction/{{batch.id}}" target="_blank">here</a> to read instructions to fill the form</span>
 
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
@@ -863,8 +863,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" oninput="this.value = this.value.replace(/\s/g, '');"/>
+                            <label for="upi_utr_no">UPI ID/ UTR No. <strong class="text-danger">*</strong></label>
+                            <input type="text" maxlength="12" name="upi_utr_no" id="upi_utr_no" required="True" class="form-control" oninput="this.value = this.value.replace(/\s/g, '');"/>
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
@@ -1182,7 +1182,7 @@
             
             </script>
             <div class="container mt16">
-                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/8/66a3b44a-cabd-49a2-9117-d5b492fbdb20/5" target="_blank">here</a> to read instructions to fill the form</span>
+                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a t-attf-href="/my/download_instruction/{{batch.id}}" target="_blank">here</a> to read instructions to fill the form</span>
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>
@@ -1675,8 +1675,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <label for="upi_utr_no">UPI TRANSACTION ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/\./g, '');" required="True" class="form-control" />
+                            <label for="upi_utr_no">UPI ID/ UTR No. <strong class="text-danger">*</strong></label>
+                            <input type="text" maxlength="12" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/\./g, '');" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>

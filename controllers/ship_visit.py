@@ -465,7 +465,10 @@ class GPShipVisitPortalController(http.Controller):
                 "imo_no": ship_visit.imo_no,
                 "name_of_ports_visited":ship_visit.port_name, 
                 "date_of_visits":ship_visit.date_of_visit,
-                "time_spent_on_ship":ship_visit.time_spent
+                "time_spent_on_ship":ship_visit.time_spent,
+                "bridge":ship_visit.bridge,
+                "eng_room":ship_visit.eng_room,
+                "cargo_area":ship_visit.cargo_area,
             })
         
         request.env['ccmc.candidate'].sudo().browse(candidate_ids)._check_ship_visit_criteria()
@@ -493,7 +496,7 @@ class GPShipVisitPortalController(http.Controller):
         ship_visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
         
         # for candidate in candidate_ids:
-        #     import wdb;wdb.set_trace()
+        # import wdb;wdb.set_trace()
         
         for candidate in candidate_ids:
             ship_visit.write({'candidate_ids': [(4,candidate)]})
@@ -504,7 +507,10 @@ class GPShipVisitPortalController(http.Controller):
                 "imo_no": ship_visit.imo_no,
                 "name_of_ports_visited":ship_visit.port_name, 
                 "date_of_visits":ship_visit.date_of_visit,
-                "time_spent_on_ship":ship_visit.time_spent
+                "time_spent_on_ship":ship_visit.time_spent,
+                "bridge":ship_visit.bridge,
+                "eng_room":ship_visit.eng_room,
+                "cargo_area":ship_visit.cargo_area,
             })
             
         
