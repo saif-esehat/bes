@@ -45,7 +45,7 @@ class ExaminerPortal(CustomerPortal):
             gp_marksheet = marksheet.gp_marksheet
             if gp_marksheet.token:
                 token = gp_marksheet.token
-                gp_marksheet.write({"gsk_online_attendance":attendance})
+                gp_marksheet.write({"mek_online_attendance":attendance})
             else:
                 token = gp_marksheet.generate_token()
                 gp_marksheet.write({"token":token,"mek_online_attendance":attendance})
@@ -60,18 +60,33 @@ class ExaminerPortal(CustomerPortal):
         if subject == "GSK" and attendance == "present":
             marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
             gp_marksheet = marksheet.gp_marksheet
-            if gp_marksheet.token:
-                token = gp_marksheet.token
-                gp_marksheet.write({"gsk_online_attendance":attendance})
+            
+            if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:            
+                if gp_marksheet.token:
+                    token = gp_marksheet.token
+                    gp_marksheet.write({"gsk_online_attendance":attendance , "mek_online_attendance":attendance})
+                else:
+                    token = gp_marksheet.generate_token()
+                    gp_marksheet.write({"token":token,"gsk_online_attendance":attendance,"mek_online_attendance":attendance})
+                return json.dumps({"token":token})
             else:
-                token = gp_marksheet.generate_token()
-                gp_marksheet.write({"token":token,"gsk_online_attendance":attendance})
-            return json.dumps({"token":token})
+                if gp_marksheet.token:
+                    token = gp_marksheet.token
+                    gp_marksheet.write({"gsk_online_attendance":attendance })
+                else:
+                    token = gp_marksheet.generate_token()
+                    gp_marksheet.write({"token":token,"gsk_online_attendance":attendance})
+                return json.dumps({"token":token})
+                
         elif subject == "GSK" and attendance == "absent":
             marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([('id','=',marksheet_id)])
             gp_marksheet = marksheet.gp_marksheet
-            gp_marksheet.write({"gsk_online_attendance":attendance})
-            return json.dumps({"token":False})
+            if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                gp_marksheet.write({"gsk_online_attendance":attendance,"mek_online_attendance":attendance})
+                return json.dumps({"token":False})
+            else:
+                gp_marksheet.write({"gsk_online_attendance":attendance})
+                return json.dumps({"token":False})
         
         
         if subject == "CCMC" and attendance == "present":
@@ -404,7 +419,7 @@ class ExaminerPortal(CustomerPortal):
                 # Handle the case when both gp_candidate and ccmc_candidate are not set
                 candidate = False
             
-            import wdb;wdb.set_trace();
+            # import wdb;wdb.set_trace();
             return request.render("bes.examiner_candidate_list", 
                                   {'candidate': candidate,
                                    'ccmc_assignment':ccmc_assignment , 
@@ -1036,7 +1051,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
 
         gsk_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        gsk_oral_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
        
         gsk_oral_sheet.write("A2:D2", "After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
@@ -1106,7 +1121,7 @@ class ExaminerPortal(CustomerPortal):
 
         # Merge cells in the first row for the practical sheet
         gsk_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        gsk_practical_sheet.write("E1:F1",examiner.name,merge_format)
+        gsk_practical_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         gsk_practical_sheet.write("G1:H1",examiner_assignments.exam_date.strftime('%d-%b-%y') ,merge_format)
 
 
@@ -1252,7 +1267,7 @@ class ExaminerPortal(CustomerPortal):
                                             })
 
         mek_oral_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        mek_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        mek_oral_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         mek_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         mek_oral_sheet.write("A2:D2", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
         
@@ -1336,7 +1351,7 @@ class ExaminerPortal(CustomerPortal):
 
         # Merge cells in the first row for the practical sheet
         mek_practical_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        mek_practical_sheet.write("E1:F1",examiner.name,merge_format)
+        mek_practical_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         mek_practical_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
 
         # Write the header row for the practical sheet
@@ -1728,12 +1743,12 @@ class ExaminerPortal(CustomerPortal):
                                             })
         
         # Merge 3 cells over two rows.
+        # ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
         ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_cookery_bakery_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_cookery_bakery_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_cookery_bakery_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         ccmc_cookery_bakery_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
-        ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
+        # ccmc_cookery_bakery_sheet.write("A2:D2","After filling the marks please save the file. \n Go back to the page where you download this excel and upload it.",instruction)
 
 
         marks_values_5 = [0,1,2,3,4,5]
@@ -1964,7 +1979,7 @@ class ExaminerPortal(CustomerPortal):
         # ccmc_oral_summary_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         
         ccmc_oral_summary_sheet.merge_range("A1:D1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_oral_summary_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_oral_summary_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         ccmc_oral_summary_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
         ccmc_oral_summary_sheet.write("A2:D2", "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",instruction)
 
@@ -2117,7 +2132,7 @@ class ExaminerPortal(CustomerPortal):
         
         # Merge 3 cells over two rows.
         ccmc_gsk_oral_sheet.merge_range("A1:G1", examiner_assignments.institute_id.name, merge_format)
-        ccmc_gsk_oral_sheet.write("E1:F1",examiner.name,merge_format)
+        ccmc_gsk_oral_sheet.write("E1:F1",examiner_assignments.examiner.name,merge_format)
         ccmc_gsk_oral_sheet.write("G1:H1","Exam Date:" + examiner_assignments.exam_date.strftime('%d-%b-%y'),merge_format)
 
 

@@ -323,7 +323,7 @@
             
             </script>
             <div class="container mt16">
-                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/3/4bc677d6-b8ed-45a9-928f-2afda007c659/4" target="_blank">here</a> to read instructions to fill the form</span>
+                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/8/66a3b44a-cabd-49a2-9117-d5b492fbdb20/5" target="_blank">here</a> to read instructions to fill the form</span>
 
                 <h2>Application Form GP Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
@@ -647,12 +647,17 @@
                             <t t-if="exam_month not in ['March','September']">
                             <t t-set="fresher_region" t-value="env['exam.center'].sudo().search([])"/>
 
-                                <select name="exam_centre" id="exam_centre" class="form-control" t-att-readonly="1" >
+                                <!-- <select name="exam_centre" id="exam_centre" class="form-control" t-att-disabled='0' >
 
                                     <t t-foreach="fresher_region" t-as="region">
                                         <option t-att-value="region.id" t-att-selected="region.id == candidate.institute_id.exam_center.id"><t t-esc="region.name"/></option>
                                     </t>
-                                </select>
+                                </select> -->
+                                <input type="text" t-att-disabled="1" name="exam_centre_name" id="exam_centre_name" class="form-control" t-att-value="candidate.institute_id.exam_center.name"/>
+                                <input type="hidden"  name="exam_centre" id="exam_centre" class="form-control" t-att-value="candidate.institute_id.exam_center.id"/>
+
+
+
                             </t>
                             <t t-else="">
 
@@ -1177,7 +1182,7 @@
             
             </script>
             <div class="container mt16">
-                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/3/4bc677d6-b8ed-45a9-928f-2afda007c659/4" target="_blank">here</a> to read instructions to fill the form</span>
+                <span style="color: red; font-weight: bold;font-size: 22px;">Click <a href="https://bestrust.in//document/download/8/66a3b44a-cabd-49a2-9117-d5b492fbdb20/5" target="_blank">here</a> to read instructions to fill the form</span>
                 <h2>Application Form CCMC Rating (Repeater) Examination</h2>
                 <p class="mb-0" style="font-size:20px;"><strong>Application For: <t t-out="batch.batch_name"/></strong></p>
                 <p class="mb-0" style="font-size:20px;"><strong class="text-danger">Last date of submission for <t t-out="batch.to_date.strftime('%B %Y')"/> Examination: <t t-out="batch.form_deadline.strftime('%d-%b-%y')"/></strong></p>

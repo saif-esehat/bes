@@ -31,6 +31,7 @@
         'views/courses_master.xml',
         'views/institution.xml',
         'views/survey.xml',
+        'views/books_order.xml',
         'views/invoice.xml',
         'views/marksheet_wizard.xml',
         'views/marksheets/mek.xml',

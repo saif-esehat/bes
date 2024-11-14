@@ -191,7 +191,30 @@
             <field name="perm_unlink" eval="False"/> <!-- Disable delete -->
         </record>
     <!-- </data> -->
+    
+        <record id="ec_expense_record_rule" model="ir.rule">
+            <field name="name">EC Expense Record Rule</field>
+            <field ref="model_ec_expenses" name="model_id"/>
+            <field name="groups" eval="[(4, ref('group_exam_coordinator'))]"/>
+            <field name="domain_force">[('exam_region.exam_co_ordinator','=',user.id)]</field>
+            <!-- <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="active" eval="True"/> -->
+        </record>
 
+        <record id="admin_ec_expense_record_rule" model="ir.rule">
+            <field name="name">EC Expense Record Rule</field>
+            <field ref="model_ec_expenses" name="model_id"/>
+            <field name="groups" eval="[(4, ref('group_bes_admin'))]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <!-- <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="active" eval="True"/> -->
+        </record>
    
 
 

@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import base64
 from datetime import datetime, timedelta
 from odoo.service import security
+from odoo.exceptions import UserError,ValidationError
 
 
 class ExpenseController(http.Controller):
@@ -71,113 +72,203 @@ class ExpenseController(http.Controller):
         
         return request.redirect('my/assignments/batches/expenses/'+str(assignment_id))
     
-    @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:examiner_id>'], type="http", auth="user", website=True)
-    def TimeSheet(self,batch_id,examiner_id, **kw):
+    @http.route(['/my/assignments/timesheet/<int:batch_id>/<int:assignment_id>'], type="http", auth="user", website=True)
+    def TimeSheet(self,batch_id,assignment_id, **kw):
         # import wdb;wdb.set_trace();
-        assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
-        timesheets = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',batch_id),('examiner','=',examiner_id)])
+        user_id = request.env.user.id
+        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+
+        assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+        timesheets = request.env['time.sheet.report'].sudo().search([('examiner_assignment','=',assignment.id)])
+        
+        # Get associated institute and duty records
+        exam_duty = request.env['exam.type.oral.practical'].sudo().search([('dgs_batch.id', '=', batch_id), ('institute_id', '=', assignment.institute_id.id)])
+
+        # Collect all exam dates for the examiner's assignments
+        exam_dates = []
+        for exam in exam_duty:
+            assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+                ('prac_oral_id', '=', exam.id),
+                ('examiner', '=', examiner.id)
+            ])
+            exam_dates.extend(assignments.mapped('exam_date'))
+
+        # Determine the first and last dates
+        first_date = min(exam_dates) if exam_dates else None
+        last_date = max(exam_dates) if exam_dates else None
         
         vals = {
             'timesheets': timesheets,
-            'assignments':assignments,
+            'assignment':assignment,
             'batch_id':batch_id,
-            'examiner_id':examiner_id,
+            'examiner_id':examiner.id,
+            'exam_date':kw.get('exam_date'),
+            'first_date':first_date,
+            'last_date':last_date,
             'page_name': 'timesheet'
                 }
-        return request.render("bes.timesheet_list", vals)
+        return request.render("bes.timesheet_form", vals)
 
-    @http.route(['/my/assignments/batches/timesheet/add'], methods=['POST','GET'],type="http", auth="user", website=True)
-    def TimeSheetAdd(self, **kw):
+    # @http.route(['/my/assignments/batches/timesheet/add'], methods=['POST','GET'],type="http", auth="user", website=True)
+    # def TimeSheetAdd(self, **kw):
 
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+    #     user_id = request.env.user.id
+    #     examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
 
-        institute_id = request.env['bes.institute'].sudo().search([('id','=',kw.get('institute_id'))])
-        dgs_batch = request.env['dgs.batches'].sudo().search([('id','=',kw.get('dgs_batch'))])
+    #     institute_id = request.env['bes.institute'].sudo().search([('id','=',kw.get('institute_id'))])
+    #     dgs_batch = request.env['dgs.batches'].sudo().search([('id','=',kw.get('dgs_batch'))])
 
-        # import wdb;wdb.set_trace();
-        timesheet = request.env['time.sheet.report'].sudo().create({
-            'examiner': examiner.id,
-            'dgs_batch': dgs_batch.id,
-            'institutes_id': institute_id.id
-        })
+    #     # import wdb;wdb.set_trace();
+    #     timesheet = request.env['time.sheet.report'].sudo().create({
+    #         'examiner': examiner.id,
+    #         'dgs_batch': dgs_batch.id,
+    #         'institutes_id': institute_id.id
+    #     })
 
-        # return request.redirect('/my/assignments/timesheet/'+str(dgs_batch.id) +'/' +str(examiner.id))
-        return request.redirect('/my/assignments/timesheet/list/'+str(timesheet.id))
+    #     # return request.redirect('/my/assignments/timesheet/'+str(dgs_batch.id) +'/' +str(examiner.id))
+    #     return request.redirect('/my/assignments/timesheet/list/'+str(timesheet.id))
 
     
-    @http.route(['/my/assignments/timesheet/list/<int:timesheet_id>'], type="http", auth="user", website=True)
-    def TimeSheetLists(self,timesheet_id, **kw):
-        # import wdb;wdb.set_trace();
-        user_id = request.env.user.id
-        examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
+    # @http.route(['/my/assignments/timesheet/list/<int:timesheet_id>'], type="http", auth="user", website=True)
+    # def TimeSheetLists(self,timesheet_id, **kw):
+    #     # import wdb;wdb.set_trace();
+    #     user_id = request.env.user.id
+    #     examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
 
-        timesheets = request.env['time.sheet.report'].sudo().search([('id','=',timesheet_id)])
-        institute_id = timesheets.institutes_id
-        dgs_batch = timesheets.dgs_batch
-        assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
-            ('dgs_batch','=',dgs_batch.id),('examiner','=',examiner.id),('institute_id','=',institute_id.id)])
+    #     timesheets = request.env['time.sheet.report'].sudo().search([('id','=',timesheet_id)])
+    #     institute_id = timesheets.institutes_id
+    #     dgs_batch = timesheets.dgs_batch
+    #     assignments = request.env['exam.type.oral.practical.examiners'].sudo().search([
+    #         ('dgs_batch','=',dgs_batch.id),('examiner','=',examiner.id),('institute_id','=',institute_id.id)])
 
-        # Assuming first_exam_date and last_exam_date are datetime objects
-        def generate_date_range(first_exam_date, last_exam_date):
-                # Assuming the format of your date strings is 'YYYY-MM-DD'
-            date_format = '%d-%m-%Y'
+    #     # Assuming first_exam_date and last_exam_date are datetime objects
+    #     def generate_date_range(first_exam_date, last_exam_date):
+    #             # Assuming the format of your date strings is 'YYYY-MM-DD'
+    #         date_format = '%d-%m-%Y'
 
-            # Convert the strings to datetime objects
-            first_exam_date = datetime.strptime(first_exam_date, date_format).date()
-            last_exam_date = datetime.strptime(last_exam_date, date_format).date()
+    #         # Convert the strings to datetime objects
+    #         first_exam_date = datetime.strptime(first_exam_date, date_format).date()
+    #         last_exam_date = datetime.strptime(last_exam_date, date_format).date()
 
-            # Now calculate the delta
-            delta = last_exam_date - first_exam_date
-            date_list = [first_exam_date + timedelta(days=i) for i in range(delta.days + 1)]
-            return date_list
+    #         # Now calculate the delta
+    #         delta = last_exam_date - first_exam_date
+    #         date_list = [first_exam_date + timedelta(days=i) for i in range(delta.days + 1)]
+    #         return date_list
         
 
-        exam_dates = assignments.mapped('exam_date')  # Get a list of exam dates
-        first_exam_date = exam_dates[0].strftime('%d-%m-%Y') if exam_dates else None
-        last_exam_date = exam_dates[-1].strftime('%d-%m-%Y') if exam_dates else None
-        exam_days = generate_date_range(first_exam_date, last_exam_date)
+    #     exam_dates = assignments.mapped('exam_date')  # Get a list of exam dates
+    #     first_exam_date = exam_dates[0].strftime('%d-%m-%Y') if exam_dates else None
+    #     last_exam_date = exam_dates[-1].strftime('%d-%m-%Y') if exam_dates else None
+    #     exam_days = generate_date_range(first_exam_date, last_exam_date)
 
-        vals = {
-            'assignments':assignments,
-            'timesheets': timesheets,
-            'institute':institute_id,
-            'dgs_batch':dgs_batch,
-            'examiner':examiner,
-            'first_exam_date': first_exam_date,
-            'last_exam_date': last_exam_date,
-            'exam_days': exam_days,
-            'page_name': 'institute_timesheets'
-            }
-        return request.render("bes.timesheet_display", vals)
+    #     vals = {
+    #         'assignments':assignments,
+    #         'timesheets': timesheets,
+    #         'institute':institute_id,
+    #         'dgs_batch':dgs_batch,
+    #         'examiner':examiner,
+    #         'first_exam_date': first_exam_date,
+    #         'last_exam_date': last_exam_date,
+    #         'exam_days': exam_days,
+    #         'page_name': 'institute_timesheets'
+    #         }
+    #     return request.render("bes.timesheet_display", vals)
     
     @http.route('/my/assignments/batches/timesheet/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_timesheet(self, **kw):
-
-        # Extract form data from the request
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-        dgs_batch = request.env['dgs.batches'].sudo().search([('id', '=', int(kw.get('dgs_batch_id')))])
-        institute_id = request.env['bes.institute'].sudo().search([('id', '=', int(kw.get('institute_id')))])
 
-        timesheet = request.env['time.sheet.report'].sudo().search([('dgs_batch','=',dgs_batch.id),('examiner','=',examiner.id),('institutes_id','=',institute_id.id)])
+        assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',kw.get('assign_id'))])
 
+        # Get all dates for this examiner assignment to determine first and last dates
+        exam_dates = assignment.mapped('exam_date')
+        first_date = min(exam_dates) if exam_dates else None
+        last_date = max(exam_dates) if exam_dates else None
+        
+        timesheet = request.env['time.sheet.report'].sudo().create({
+            'examiner_assignment': assignment.id,
+        })
+
+        assignment.time_sheet = timesheet.id
+
+        # Check if the current date matches either first or last date before creating timesheet lines
+        
         timesheet_line = request.env['timesheet.lines'].sudo().create({'time_sheet_id': timesheet.id})
-        # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
+        timesheet_line.write({
+            'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
+            'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
+            'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
+            'candidate_examined': kw.get('candidates_examined'),
+            'debriefing_inst': kw.get('debriefing_time'),
+        })
 
-        # import wdb;wdb.set_trace();
+        # travel_details = request.env['travel.details'].sudo().create({'time_sheet_id': timesheet.id})
+        # Dynamically create travel lines using predefined phases
+        if kw.get('left_residence_date_time') and kw.get('arrival_institute_hotel_date_time') and kw.get('left_institute_date_time') and kw.get('arrival_residence_date_time'):
+            request.env['travel.details'].sudo().create_travel_lines(timesheet.id,timesheet_line.id, kw)
+        else:
+            pass
+
+
+        return request.redirect('/my/assignments/timesheet/'+str(assignment.dgs_batch.id) +'/' +str(assignment.id))
+    
+
+    # Controller method for editing timesheet day information
+    @http.route('/my/editTimeSheet', type='http', auth='user', methods=['POST'])
+    def edit_timesheet_day(self, **kw):
+        timesheet_id = kw.get('timesheet_id')
+        timesheet = request.env['time.sheet.report'].sudo().search([('id','=',timesheet_id)])
+
+        timesheet_line = request.env['timesheet.lines'].sudo().search([('time_sheet_id','=',timesheet.id)])
 
         timesheet_line.write({
             'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
             'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
             'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
-
             'candidate_examined': kw.get('candidates_examined'),
             'debriefing_inst': kw.get('debriefing_time'),
         })
 
-        # Dynamically create travel lines using predefined phases
-        request.env['travel.details'].sudo().create_travel_lines(timesheet.id, kw)
-        # Redirect to the timesheet list or any other page after saving
-        return request.redirect('/my/assignments/timesheet/list/'+str(timesheet.id))
+                # Retrieve and update individual travel records
+        travel_updates = [
+            ('left_residence_line_id', {
+                'date_time': kw.get('left_residence_date_time'),
+                'mode_of_travel': kw.get('left_residence_mode_of_travel'),
+                'expense': kw.get('left_residence_expenses'),
+            }),
+            ('arrival_institute_line_id', {
+                'date_time': kw.get('arrival_institute_hotel_date_time'),
+                'mode_of_travel': kw.get('arrival_institute_hotel_mode_of_travel'),
+                'expense': kw.get('arrival_institute_hotel_expenses'),
+            }),
+            ('left_institute_line_id', {
+                'date_time': kw.get('left_institute_date_time'),
+                'mode_of_travel': kw.get('left_institute_mode_of_travel'),
+                'expense': kw.get('left_institute_expenses'),
+            }),
+            ('arrival_residence_line_id', {
+                'date_time': kw.get('arrival_residence_date_time'),
+                'mode_of_travel': kw.get('arrival_residence_mode_of_travel'),
+                'expense': kw.get('arrival_residence_expenses'),
+            })
+        ]
+        
+        for line_id_key, fields in travel_updates:
+            travel_id = kw.get(line_id_key)
+            if travel_id:
+                travel_record = request.env['travel.details'].sudo().search([('id', '=', int(travel_id))], limit=1)
+                if travel_record:
+                    travel_record.write({
+                        'date_time': datetime.strptime(fields['date_time'], '%Y-%m-%dT%H:%M') if fields['date_time'] else False,
+                        'mode_of_travel': fields['mode_of_travel'],
+                        'expenses': fields['expense'],
+                    })
+
+        # import wdb;wdb.set_trace();
+
+        assignment = timesheet.examiner_assignment
+
+        return request.redirect('/my/assignments/timesheet/'+str(assignment.dgs_batch.id) +'/' +str(assignment.id))
+
     

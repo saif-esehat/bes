@@ -49,7 +49,10 @@
                                                 <t t-if="question.allow_value_image">
                                                     <t t-foreach="question.suggested_answer_ids" t-as="answer" >
                                                         <t t-if="answer.is_correct">
-                                                            <div style="background-color: green;"><t  t-esc="answer.value"/></div><img t-attf-src="data:image/png;base64,{{answer.value_image}}"/><t t-esc="answer.answer_score"/>  Marks
+                                                            <div style="background-color: green;">
+                                                                <t  t-esc="answer.value"/>
+                                                            </div>
+                                                            <img t-attf-src="data:image/png;base64,{{answer.value_image}}"/><t t-esc="answer.answer_score"/>  Marks
                                                             <br/>
                                                         </t>
                                                         <t t-else="">
@@ -206,7 +209,7 @@
                      <field name="template"/>
                      <field name="survey_start_url" />
                      <field name="examiner" /> 
-                     <field name="examiner_token" readonly="1" /> 
+                     <!-- <field name="examiner_token" readonly="1" />  -->
                      <button name="generate_token" string="Generate Token" type="object"/>
                      <field name="institute" />
                      <field name="course" />
@@ -267,7 +270,7 @@
                     <field name="dgs_batch" />
                     <field name="institute_id" />
                     <!-- <field name="examiner" /> -->
-                    <field name="examiner_token" />
+                    <!-- <field name="examiner_token" /> -->
                     <field name="token_regenrated" />
                     <field name="start_time"/>
                     <field name="end_time"/>
@@ -437,7 +440,10 @@
                     <group>
                         <field name="qb" readonly="1"/>
                         <field name="chapter" string="Chapter" domain="[('survey_id', '=', qb),('is_page','=',True)]"/>
-                        <field name="description"/>
+                        <field name="upload_type"/>
+                        <field name="file"  attrs="{'invisible': [('upload_type', '=', 'single')]}" />
+                        
+                        <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
                     </group>
                     <footer>
                         <button string="Add" type="object" name="action_add_question" class="btn-primary"/>

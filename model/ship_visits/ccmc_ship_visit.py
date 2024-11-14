@@ -15,6 +15,8 @@ class CCMCShipVisit(models.Model):
 
 
     ship_name2 = fields.Char(string="Ship Name")
+    type_of_ship = fields.Char(string="Type of Ship",tracking=True)
+    master_name = fields.Char(string="Master Name")
     port_name = fields.Char(string="Port Name")
     imo_no = fields.Char(string="IMO  No.")
     date_of_visit = fields.Date(string="Date Of Visit")

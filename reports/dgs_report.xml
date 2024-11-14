@@ -145,7 +145,7 @@
                                         <!-- <t t-esc="formatted_date" /> -->
                                     </td>
                                     
-                                    <t t-if="exam.gsk_oral_prac_carry_forward">
+                                    <t t-if="exam.gsk_oral_prac_carry_forward and exam.gsk_oral_prac_status == 'passed'">
                                         <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_oral_prac_status == 'passed'">
@@ -158,7 +158,7 @@
                                         <td style="text-align: center; color: red;  width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
-                                    <t t-if="exam.mek_oral_prac_carry_forward">
+                                    <t t-if="exam.mek_oral_prac_carry_forward and exam.mek_oral_prac_status == 'passed'">
                                         <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_oral_prac_status == 'passed'">
@@ -172,7 +172,7 @@
                                     </t>
 
                                     
-                                    <t t-if="exam.gsk_online_carry_forward">
+                                    <t t-if="exam.gsk_online_carry_forward and exam.gsk_online_status == 'passed'">
                                         <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.gsk_online_status == 'passed'">
@@ -185,7 +185,7 @@
                                         <td style="text-align: center; color: red;  width:8px; height:8px;"><strong>F</strong></td>
                                     </t>                                    
                                     
-                                    <t t-if="exam.mek_online_carry_forward">
+                                    <t t-if="exam.mek_online_carry_forward and exam.mek_online_status == 'passed'">
                                         <td style="text-align:center;color:green;  width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.mek_online_status == 'passed'">
@@ -292,7 +292,7 @@
                                         <span t-esc="formatted_date"/>
                                     </td>
 
-                                    <t t-if="exam.cookery_prac_carry_forward">
+                                    <t t-if="exam.cookery_prac_carry_forward and exam.cookery_bakery_prac_status == 'passed'">
                                         <td style="text-align:center;color: green; width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.cookery_bakery_prac_status == 'passed'">
@@ -305,7 +305,7 @@
                                         <td style="text-align: center; color: red; width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
-                                    <t t-if="exam.cookery_oral_carry_forward">
+                                    <t t-if="exam.cookery_oral_carry_forward and exam.ccmc_oral_prac_status == 'passed'">
                                         <td style="text-align:center;color: green; width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.ccmc_oral_prac_status == 'passed'">
@@ -318,7 +318,7 @@
                                         <td style="text-align: center; color: red; width:8px; height:8px;"><strong>F</strong></td>
                                     </t>
 
-                                    <t t-if="exam.cookery_gsk_online_carry_forward">
+                                    <t t-if="exam.cookery_gsk_online_carry_forward and exam.ccmc_online_status == 'passed'">
                                         <td style="text-align:center;color: green; width:8px; height:8px;"><strong>AP</strong></td>
                                     </t>
                                     <t t-elif="exam.ccmc_online_status == 'passed'">
@@ -351,205 +351,171 @@
 
 
 
-    <template id="ccmc_batch_ship_visit_report">
-    <t t-call="web.html_container">
-        <div class="page">
-        <div class="header">
-                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                <h5 style="text-align: center; font-weight: bold;">
-                        CCMC INSTITUTES
-
-                </h5>
+<template id="ccmc_batch_ship_visit_report">
+    <t t-call="web.basic_layout">
+        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+        <t t-foreach="docs" t-as="doc">
+            <div class="page" style="font-family: 'TimesNewRoman';">
                 
-    
-                  </table>
+                <!-- Header section to appear on all pages -->
+                <div class="font-bold" style="text-align: center; position: relative;">
+                    <span style="position: absolute; right: 0; top: 0; font-size: 12px;">ENCL - 5</span>
+                    <h4 style="font-weight: bold; text-align: center;">
+                        All India Exit Examination for Ratings - <span t-esc="doc.to_date.strftime('%B %Y')"/>
+                    </h4>
+                    <h5 style="font-weight: bold; text-align: center;">
+                        Summary of Ship Visit Record for CCMC Fresh Candidates
+                    </h5>
                 </div>
 
-        <table  class="black-bordered-table" style="" border="1">
-
-                        <thead>
+                <!-- Main table with border and cell styling -->
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;" border="1">
+                    <thead style="font-family: 'TimesNewRomanBold'; border: 1px solid black;">
+                        <tr>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Sr. No.</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Code No.</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Name of the Institute</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">No of Candidates</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">No of Ship Visit</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Name of the Ship Visited / Ship In Campus</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">IMO No.</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Name of the Port Visited / Place of SIC</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Date of Visit</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Time Spent on Ship (Hrs)</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">Remark</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px;">CENTER</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-family: 'TimesNewRoman'; border: 1px solid black;">
+                        <t t-set="index" t-value="0"/>
+                        <t t-foreach="exams" t-as="exam">
+                        <t t-set="ship_visit_count" t-value="len(ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id))"/>
                             <tr>
-                                <th style="vertical-align: bottom; width:8px; height:8px;">Sr. No.</th>
-                                <th style="vertical-align: bottom;">Code No.</th>
-                                <th style="vertical-align: bottom;">Name of the Institute</th>
-                                <th style="vertical-align: bottom;">No of Candidates</th>
-                                <th style="vertical-align: bottom;">Name of the Ship Visited / Ship In Campus</th>
-                                <th style="vertical-align: bottom;">IMO No.</th>
-                                <th style="vertical-align: bottom;">Name of the Port Visited / Place of SIC</th>
-                                <th style="vertical-align: bottom;">Date of Visit</th>
-                                <th style="vertical-align: bottom;">Time Spent on Ship (Hrs)</th>
-                                <th style="vertical-align: bottom;">Provided Evidence</th>
-                                <th style="vertical-align: bottom;">Remark</th>
-                                <th style="vertical-align: bottom;">CENTER</th>
-                                
+                                <t t-set="index" t-value="index + 1"/>
+                                <td style="text-align: center; border: 1px solid black; padding:5px;"><span t-esc="index"/></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px;"><span t-esc="exam.institute_id.code"/></td>
+                                <td style="white-space: normal; max-width: 400px; text-align: center; border: 1px solid black; padding:5px;"><span t-esc="exam.institute_id.name"/></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px;"><span t-esc="exam.candidate_count"/></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="ship_visit_count"/></td>
+                                <td style="white-space: normal; max-width: 400px; text-align: center; border: 1px solid black; padding:5px;">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit">
+                                        <span t-esc="visit.ship_name2"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="white-space: normal; text-align: center; border: 1px solid black; padding:5px;">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit">
+                                        <span t-esc="visit.imo_no"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="white-space: normal; max-width: 400px; text-align: center; border: 1px solid black; padding:5px;">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit">
+                                        <span t-esc="visit.port_name"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="white-space: nowrap; text-align: center; border: 1px solid black; padding:5px;">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit">
+                                        <span t-esc="visit.date_of_visit.strftime('%d-%m-%y')"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px;">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit">
+                                        <span t-esc="visit.time_spent"/> HOURS <br/>
+                                    </t>
+                                </td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px;"></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px;"><span t-esc="exam.exam_region"/></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Add rows with student data here -->
-                            <t t-set="index" t-value="0" />
-                            <t t-foreach="exams" t-as="exam">
-                                <tr>
-                                    <t t-set="index" t-value="index + 1"/>
-                                    <td><span t-esc="index"/></td>
-                                    <td style="text-align:center"><span t-esc="exam.institute_id.code"/></td>
-                                    <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.institute_id.name"/></td>
-                                    <td style="text-align:center"><span t-esc="exam.candidate_count"/></td>
-                                   
-                                   <td style="white-space: nowrap; overflow: hidden; max-width: 250px; text-align: center">
-                                        <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                            <span t-esc="visit.ship_name2" 
-                                                t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                        </t>
-                                    </td>
-                                                            
-                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.imo_no"   
-                                         t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.port_name" 
-                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.date_of_visit" 
-                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                <td style="text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.time_spent" 
-                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                <td style="text-align:center">
-                                 
-                                </td>
-                                  <td style="text-align:center">
-                                 
-                                </td>
-                                 <td style="text-align:center"><span t-esc="exam.exam_region"/></td>
-                                </tr>
-                               
-                            </t>
-                          
-                           
-                        </tbody>
-                    </table>
-           
-        </div>
-    </t>
-</template>
-
-
- <template id="gp_batch_ship_visit_report">
-    <t t-call="web.html_container">
-        <div class="page">
-        <div class="header">
-                <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
-                <h5 style="text-align: center; font-weight: bold;">
-                        GP INSTITUTES
-
-                </h5>
-                
-    
-                  </table>
-                </div>
-
-        <table  class="black-bordered-table" style="" border="1">
-
-                        <thead>
-                            <tr>
-                                <th style="vertical-align: bottom; width:8px; height:8px;">Sr. No.</th>
-                                <th style="vertical-align: bottom;">Code No.</th>
-                                <th style="vertical-align: bottom;">Name of the Institute</th>
-                                <th style="vertical-align: bottom;">No of Candidates</th>
-                                <th style="vertical-align: bottom;">Name of the Ship Visited / Ship In Campus</th>
-                                <th style="vertical-align: bottom;">IMO No.</th>
-                                <th style="vertical-align: bottom;">Name of the Port Visited / Place of SIC</th>
-                                <th style="vertical-align: bottom;">Date of Visit</th>
-                                <th style="vertical-align: bottom;">Time Spent on Ship (Hrs)</th>
-                                <th style="vertical-align: bottom;">Provided Evidence</th>
-                                <th style="vertical-align: bottom;">Remark</th>
-                                <th style="vertical-align: bottom;">CENTER</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Add rows with student data here -->
-                            <t t-set="index" t-value="0" />
-                            <t t-foreach="exams" t-as="exam">
-                                <tr>
-                                    <t t-set="index" t-value="index + 1"/>
-                                    <td><span t-esc="index"/></td>
-                                    <td style="text-align:center"><span t-esc="exam.institute_id.code"/></td>
-                                    <td style="white-space: nowrap; overflow: hidden; max-width: 500px;"><span t-esc="exam.institute_id.name"/></td>
-                                    <td style="text-align:center"><span t-esc="exam.candidate_count"/></td>
-                                   
-                                   <td style="white-space: nowrap; overflow: hidden; max-width: 250px; text-align: center">
-                                        <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                            <span t-esc="visit.ship_name1" 
-                                                t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                        </t>
-                                    </td>
-                                                            
-                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.imo_no"   
-                                         t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                 <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.port_name" 
-                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                <td style="white-space: nowrap; overflow: hidden; max-width: 250px;text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.date_of_visit" 
-                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                <td style="text-align:center">
-                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
-                                        <span t-esc="visit.time_spent" 
-                                           t-attf-style="border-bottom: #{'1px solid black' if visit_index != len(ship_visits) - 1 else 'none'}; display: block; padding-bottom: 1px;" />
-                                          
-                                    </t>
-                                </td>
-                                <td style="text-align:center">
-                                 
-                                </td>
-                                  <td style="text-align:center">
-                                 
-                                </td>
-                                 <td style="text-align:center"><span t-esc="exam.exam_region"/></td>
-                                </tr>
-                               
-                            </t>
-                          
-                           
-                        </tbody>
-                    </table>
-           
-        </div>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
     </t>
 </template>
 
 
 
+<template id="gp_batch_ship_visit_report">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="doc">
+            <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+            <div class="page" style="font-family: 'TimesNewRomanBold','TimesNewRoman';">
+                
+                <!-- Header section to appear on all pages -->
+                <div class="font-bold" style="text-align: center; position: relative; font-family: 'TimesNewRomanBold';">
+                    <span style="position: absolute; right: 0; top: 0; font-size: 12px; font-family: 'TimesNewRomanBold';">ENCL - 5</span>
+                    <h4 style="font-weight: bold; text-align: center; font-family: 'TimesNewRomanBold';">
+                        All India Exit Examination for Ratings - <span t-esc="doc.to_date.strftime('%B %Y')"/>
+                    </h4>
+                    <h5 style="font-weight: bold; text-align: center; font-family: 'TimesNewRomanBold';">
+                        Summary of Ship Visit Record for GP Fresh Candidates
+                    </h5>
+                </div>
 
-    
+                <!-- Main table with border and cell styling -->
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-family: 'TimesNewRoman';" border="1">
+                    <thead style="font-family: 'TimesNewRomanBold'; border: 1px solid black;">
+                        <tr>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Sr. No.</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Code No.</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Name of the Institute</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">No of Candidates</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">No of Ship Visit</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Name of the Ship Visited / Ship In Campus</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">IMO No.</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Name of the Port Visited / Place of SIC</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Date of Visit</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Time Spent on Ship (Hrs)</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">Remark</th>
+                            <th style="text-align: center; border: 1px solid black; padding:5px; ">CENTER</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-family: 'TimesNewRoman'; border: 1px solid black;">
+                        <!-- Rows with data -->
+                        <t t-set="index" t-value="0"/>
+                        <t t-foreach="exams" t-as="exam">
+                        <t t-set="ship_visit_count" t-value="len(ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id))"/>
+                            <tr>
+                                <t t-set="index" t-value="index + 1"/>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="index"/></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.institute_id.code"/></td>
+                                <td style="white-space: nowrap; max-width: 400px; text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.institute_id.name"/></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.candidate_count"/></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="ship_visit_count"/></td>
+                                <td style="white-space: nowrap; max-width: 250px; text-align: center; border: 1px solid black; padding:5px; ">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.ship_name1"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="white-space: nowrap; text-align: center; border: 1px solid black; padding:5px; ">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.imo_no"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="white-space: nowrap; max-width: 400px; text-align: center; border: 1px solid black; padding:5px; ">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.port_name"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="white-space: nowrap; text-align: center; border: 1px solid black; padding:5px; ">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.date_of_visit.strftime('%d-%m-%y')"/> <br/>
+                                    </t>
+                                </td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; ">
+                                    <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
+                                        <span t-esc="visit.time_spent"/> HOURS <br/>
+                                    </t>
+                                </td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "></td>
+                                <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.exam_region"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+
 </odoo>
