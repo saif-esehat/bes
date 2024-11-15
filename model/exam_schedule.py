@@ -1227,6 +1227,23 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
         ('yes', 'Yes'),
         ('no', 'No')  
     ], string='OutStation')
+    examiner_domain = fields.Char(compute='_compute_examiner_domain')
+    
+    @api.depends('subject')
+    def _compute_examiner_domain(self):
+        for record in self:
+            if record.subject and record.subject.name == 'GSK':
+                record.examiner_domain = [('designation', '=', 'master')]
+            elif record.subject and record.subject.name == 'MEK':
+                record.examiner_domain = [('designation', '=', 'chief')]
+            else:
+                record.examiner_domain = []
+    
+    @api.onchange('subject')
+    def _onchange_subject(self):
+        return {'domain': {'examiner': self.examiner_domain}}
+
+    
     exam_date = fields.Date('Exam Date',tracking=True)
     subject = fields.Many2one("course.master.subject",string="Subject",tracking=True)
     examiner = fields.Many2one('bes.examiner', string="Examiner",tracking=True)
@@ -2288,7 +2305,7 @@ class ExamOralPracticalExaminers(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",related='prac_oral_id.dgs_batch',string="Exam Batch",store=True,required=False,tracking=True)
     exam_region = fields.Many2one('exam.center', 'Exam Center',related='prac_oral_id.exam_region',store=True,tracking=True)
     outstation =  fields.Selection([
-        ('yes', 'Yes)'),
+        ('yes', 'Yes'),
         ('no', 'No')  
     ], string='OutStation')
     
