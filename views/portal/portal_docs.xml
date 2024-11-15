@@ -125,9 +125,9 @@
                             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/institute_document/list">
                                 Upload Documents
                             </a>
-                            <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/book_orders/list">
+                            <!-- <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" href="/my/book_orders/list">
                                 Books Order Form
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </t>

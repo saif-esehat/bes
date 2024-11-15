@@ -3,7 +3,7 @@
     <template id="bes_portal_sale_inherited" inherit_id="sale.portal_my_orders">
         <xpath expr="//t[@t-call='portal.portal_searchbar']" position="after">
 
-           <a href="#" class="btn btn-primary btn_cta">Create Books Order</a>
+           <a href="/my/create_books_order" class="btn btn-primary btn_cta">Create Books Order</a>
         </xpath>
 
     </template>

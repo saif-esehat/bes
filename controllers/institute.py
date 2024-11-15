@@ -270,6 +270,7 @@ class InstitutePortal(CustomerPortal):
                     [('country_id.code', '=', 'IN')])
         state_data = [{'id': state.id, 'name': state.name} for state in states]
         return json.dumps(state_data)
+
     
     @http.route(['/my/downloadtransactionslip/<int:invoice_id>'],method=["POST"], type="http", auth="user", website=True)
     def DownloadTransactionSlip(self,invoice_id,**kw):
@@ -4195,12 +4196,35 @@ class InstitutePortal(CustomerPortal):
         
         return request.redirect('/my/ccmccandidateprofile/'+str(kw.get("candidate_id")))
 
-    @http.route(['/my/book_orders/list'], type="http", auth="user", website=True)
-    def BookOrdersList(self, **kw):
+    # @http.route(['/my/book_orders/list'], type="http", auth="user", website=True)
+    # def BookOrdersList(self, **kw):
+    #     user_id = request.env.user.id
+    #     institute_id = request.env["bes.institute"].sudo().search(
+    #         [('user_id', '=', user_id)]).id
+       
+
+    #     vals = {'institute_id':institute_id, "page_name": "book_orders"}
+    #     return request.render("bes.book_orders_list", vals)
+
+    @http.route(['/my/create_books_order'], type="http", auth="user", website=True)
+    def CreateBookOrders(self, **kw):
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)]).id
        
 
         vals = {'institute_id':institute_id, "page_name": "book_orders"}
-        return request.render("bes.book_orders_list", vals)
+        return request.render("bes.books_order_create_template",vals)
+    
+    @http.route(['/getProduct'], methods=['POST'], type='json', auth='user', website=True)
+    def GetProduct(self, **kw):
+        # import wdb; wdb.set_trace();
+        data = request.jsonrequest
+        productID = data['productID']
+        
+        
+        price_per_unit = request.env["product.template"].sudo().search(
+            [('id', '=', int(productID))]).standard_price
+
+        return json.dumps({"status":"success", 'price_per_unit':price_per_unit})
+    

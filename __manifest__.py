@@ -38,6 +38,7 @@
         'views/marksheets/gsk.xml',
         'views/exam_schedule.xml',
         'views/hr_employee.xml',
+        'views/sales_order.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/examiner_expenses_views.xml',

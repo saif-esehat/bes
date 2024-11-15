@@ -6590,6 +6590,198 @@
         </t>
     </template>
 
+    <template id="books_order_create_template" name="Books Order Form">
+        <script>
+            function add_books(element){
+                <!-- debugger; -->
+                const selected_product =  document.getElementById('product').selectedIndex
+                const quantity =  document.getElementById('quantity').value
+
+                const product_id = document.getElementById('product')[selected_product].id 
+                product_value = document.getElementById('product')[selected_product].id 
+
+
+                const books_order_table = document.getElementById('books_order_table').children[1]
+
+                const newRow = document.createElement('tr');
+
+                const deleteCell = document.createElement('td');
+                const productCell = document.createElement('td');
+                const quantityCell = document.createElement('td');
+                const priceUnitCell = document.createElement('td');
+                const totalpriceUnitCell = document.createElement('td');
+
+
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                    deleteButton.style = 'background:transparent;border:none;';
+                    deleteButton.onclick = function() {
+                        openDeleteBookOrder(deleteButton);
+                    };
+                    deleteButton.innerHTML = `
+                        <i class="fa-solid fa-trash" style="rgba(199,8,8,1);"></i>
+                    `;
+                const product = document.createElement('input');
+                const quantity_input = document.createElement('input');
+
+                deleteCell.appendChild(deleteButton)
+                productCell.appendChild(product)
+                QuantityCell.appendChild(quantity_input)
+
+                newRow.appendChild(deleteCell)
+                newRow.appendChild(productCell)
+                newRow.appendChild(quantityCell)
+
+                books_order_table.appendChild(newRow);
+
+
+
+
+
+                <!-- const data = {
+                    'productId':product_id
+                }
+                fetch('/getProduct', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                }); -->
+            }
+        </script>
+        <t t-call="portal.portal_layout">
+
+            <div class="container">
+                <div class="card">
+
+                    <div class="card-body">
+                        <h2 class="form-title mb-4">Books Order</h2>
+
+                        <form method="post">
+                            <div class="row">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="payment_slip_upload">Payment Slip Upload</label>
+                                            <input type="file" class="form-control" id="payment_slip_upload" name="payment_slip_upload"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#addBooks" class="btn btn-primary btn_cta">Add</a>
+                                
+                                <div class="modal fade" id="addBooks" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <!-- <form method="post" action="/my/addBooks" enctype="multipart/form-data">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" /> -->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Add Books Order</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="tracking_id">Tracking ID</label>
+                                                                <input type="text" name="tracking_id" id="tracking_id" class="form-control"/>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="sequence">Sequence</label>
+                                                                <input type="text" name="sequence" id="sequence" class="form-control"/>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="product">Product</label>
+                                                                <select id="product" name="product" class="form-control">
+                                                                    <t t-foreach="request.env['product.template'].sudo().search([('default_code','=','publication_books')])" t-as="product">
+                                                                        <option t-att-id="product.id">
+                                                                            <t t-esc="product.name"/>
+                                                                        </option>
+                                                                    </t>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="quantity">Quantity</label>
+                                                                <input type="number" name="quantity" id="quantity" class="form-control"/>
+                                                                
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                    </div>
+                                                    
+
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button onclick="add_books(this)" class="btn btn-primary">Add</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        <!-- </form> -->
+                                    </div>
+                                </div>
+                                <div class="table-responsive border rounded border-top-0 ">
+                                    <table class="table rounded mb-0 bg-white o_portal_my_doc_table" id="books_order_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Action</th>
+                                                <th>Sequence</th>
+                                                <th>Tracking ID</th>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Price Per Unit</th>
+                                                <th>Total Price</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     
 
 </odoo>
