@@ -6617,6 +6617,10 @@
                     productDetails.splice(indexToDelete, 1);
                 }
 
+                const jsonString = JSON.stringify(productDetails);
+
+                document.getElementById('productTable').value = jsonString;
+
                 sumTotal()
 
                 console.log('test')
