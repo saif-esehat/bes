@@ -6592,63 +6592,124 @@
 
     <template id="books_order_create_template" name="Books Order Form">
         <script>
+
+            let productDetails = [];
+
+            function deleteRow(evt) {
+                debugger
+                var tablerow = evt.target.parentNode
+                var tablerow_id = evt.target.parentNode.id
+
+                const rowIdToDelete = tablerow_id;
+
+                const indexToDelete = productDetails.findIndex(function(obj) {
+                    return obj.row_id === rowIdToDelete;
+                });
+
+
+                <!-- remove from view -->
+                tablerow.remove()
+
+                <!-- remove from productDetails array -->
+
+                if (indexToDelete !== -1) {
+                    // Remove the object from the array
+                    productDetails.splice(indexToDelete, 1);
+                }
+
+                sumTotal()
+
+                console.log('test')
+            }
+
             function add_books(element){
-                <!-- debugger; -->
-                const selected_product =  document.getElementById('product').selectedIndex
+             
+                
+
                 const quantity =  document.getElementById('quantity').value
 
-                const product_id = document.getElementById('product')[selected_product].id 
-                product_value = document.getElementById('product')[selected_product].id 
+                const selectElement = document.getElementById('product');
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const selected_product = selectedOption.value
+                const selected_product_name = selectedOption.innerText
 
+                <!-- debugger -->
+
+                const rowID = productDetails.length + 1
+                const price = selectedOption.getAttribute('price');
+
+                const total_price = price * quantity;
+
+
+
+                var newRow = document.createElement('tr');
+                newRow.id = "row_id_"+rowID.toString()
+
+                var cells = [
+                    document.createElement('button'), // Action
+                    document.createElement('td'), // Product
+                    document.createElement('td'), // Quantity
+                    document.createElement('td'), // Price Per Unit
+                    document.createElement('td')  // Total Price
+                ];
+
+                var data = ['View', selected_product_name, quantity,price,total_price];
+
+                cells.forEach(function(cell,index){
+
+                    if(index==0){
+                        cell.id = rowID
+                        cell.type = 'button'
+                        cell.textContent = 'Delete';
+                        cell.addEventListener('click', deleteRow);
+                        newRow.appendChild(cell);   
+                    }else if(index==1){
+                     var productInput = document.createElement('input')
+                     productInput.type = 'hidden'
+                     productInput.value = selected_product
+                     newRow.appendChild(productInput);
+                     cell.textContent = selected_product_name;
+                     newRow.appendChild(cell);   
+                    }else{
+                     cell.textContent = data[index];
+                     newRow.appendChild(cell);  
+                    }
+                
+
+                })
+
+                const newData = {row_id:"row_id_"+rowID.toString(), product_id: selected_product, product_name : selected_product_name ,quantity: quantity , total_price: total_price};
+                productDetails.push(newData)
+                const jsonString = JSON.stringify(productDetails);
+
+                document.getElementById('productTable').value = jsonString;
+                
 
                 const books_order_table = document.getElementById('books_order_table').children[1]
-
-                const newRow = document.createElement('tr');
-
-                const deleteCell = document.createElement('td');
-                const productCell = document.createElement('td');
-                const quantityCell = document.createElement('td');
-                const priceUnitCell = document.createElement('td');
-                const totalpriceUnitCell = document.createElement('td');
-
-
-                const deleteButton = document.createElement('button');
-                deleteButton.type = 'button';
-                    deleteButton.style = 'background:transparent;border:none;';
-                    deleteButton.onclick = function() {
-                        openDeleteBookOrder(deleteButton);
-                    };
-                    deleteButton.innerHTML = `
-                        <i class="fa-solid fa-trash" style="rgba(199,8,8,1);"></i>
-                    `;
-                const product = document.createElement('input');
-                const quantity_input = document.createElement('input');
-
-                deleteCell.appendChild(deleteButton)
-                productCell.appendChild(product)
-                QuantityCell.appendChild(quantity_input)
-
-                newRow.appendChild(deleteCell)
-                newRow.appendChild(productCell)
-                newRow.appendChild(quantityCell)
-
                 books_order_table.appendChild(newRow);
-
-
-
-
-
-                <!-- const data = {
-                    'productId':product_id
-                }
-                fetch('/getProduct', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                }); -->
+                sumTotal();
+                $('#addBooks').modal('hide')
+                
             }
+
+
+            function sumTotal(){
+
+                let totalSum = 0;
+
+                productDetails.forEach(function(cell,index){
+
+                    totalSum += productDetails[index].total_price;
+
+                })
+
+                document.getElementById('total-amount').innerText = totalSum;
+
+
+            }
+
+
+
         </script>
         <t t-call="portal.portal_layout">
 
@@ -6658,10 +6719,75 @@
                     <div class="card-body">
                         <h2 class="form-title mb-4">Books Order</h2>
 
+                        <div class="modal fade" id="addBooks" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <!-- <form method="post" action="/my/addBooks" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" /> -->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Add Books Order</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="tracking_id">Tracking ID</label>
+                                                        <input type="text" name="tracking_id" id="tracking_id" class="form-control"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="sequence">Sequence</label>
+                                                        <input type="text" name="sequence" id="sequence" class="form-control"/>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="product">Product</label>
+                                                        <select id="product" name="product" class="form-control">
+                                                            <t t-foreach="request.env['product.template'].sudo().search([('categ_id.name','=','Books')])" t-as="product">
+                                                                <option t-attf-value="{{product.id}}" t-attf-price="{{product.list_price}}" >
+                                                                    <t t-esc="product.name"/>
+                                                                </option>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="quantity">Quantity</label>
+                                                        <input type="number" name="quantity" id="quantity" class="form-control"/>
+                                                        
+                                                    </div>
+                                                </div>
+
+                                                
+                                            </div>
+                                            
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" onclick="add_books(this)" class="btn btn-primary">Add</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                <!-- </form> -->
+                            </div>
+                        </div>
+
+                        
                         <form method="post">
                             <div class="row">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                
+                                <input type="hidden" id="productTable" name="hiddenInput" value=""/>
+
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -6689,77 +6815,14 @@
                                 </div>
                                 <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#addBooks" class="btn btn-primary btn_cta">Add</a>
                                 
-                                <div class="modal fade" id="addBooks" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <!-- <form method="post" action="/my/addBooks" enctype="multipart/form-data">
-                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" /> -->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Add Books Order</h5>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="tracking_id">Tracking ID</label>
-                                                                <input type="text" name="tracking_id" id="tracking_id" class="form-control"/>
-                                                                
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="sequence">Sequence</label>
-                                                                <input type="text" name="sequence" id="sequence" class="form-control"/>
-                                                                
-                                                            </div>
-                                                        </div>
-                                                        
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="product">Product</label>
-                                                                <select id="product" name="product" class="form-control">
-                                                                    <t t-foreach="request.env['product.template'].sudo().search([('default_code','=','publication_books')])" t-as="product">
-                                                                        <option t-att-id="product.id">
-                                                                            <t t-esc="product.name"/>
-                                                                        </option>
-                                                                    </t>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="quantity">Quantity</label>
-                                                                <input type="number" name="quantity" id="quantity" class="form-control"/>
-                                                                
-                                                            </div>
-                                                        </div>
-
-                                                        
-                                                    </div>
-                                                    
-
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button onclick="add_books(this)" class="btn btn-primary">Add</button>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        <!-- </form> -->
-                                    </div>
-                                </div>
+                                
                                 <div class="table-responsive border rounded border-top-0 ">
                                     <table class="table rounded mb-0 bg-white o_portal_my_doc_table" id="books_order_table">
                                         <thead>
                                             <tr>
                                                 <th>Action</th>
-                                                <th>Sequence</th>
-                                                <th>Tracking ID</th>
+                                                <!-- <th>Sequence</th>
+                                                <th>Tracking ID</th> -->
                                                 <th>Product</th>
                                                 <th>Quantity</th>
                                                 <th>Price Per Unit</th>
@@ -6772,6 +6835,9 @@
 
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="total-container" style="margin-top:30px;" >
+                                    <p>Total: <span id="total-amount">0</span></p>
                                 </div>
                                 
 
