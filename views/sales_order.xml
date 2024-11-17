@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="sales_order_inherited" model="ir.ui.view">
-            <field name="name">sale.order.inheried</field>
+            <field name="name">sale.order.inherited</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
@@ -11,8 +11,14 @@
                     <field name="slip_file_name" invisible="1" />
 
                 </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                    <field name="tracking_id"/>
+                    <field name="transaction_id"/>
+                </xpath>
             </field>
         </record>
+
+       
 
     </data>
 </odoo>

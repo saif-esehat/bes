@@ -7,5 +7,17 @@
         </xpath>
 
     </template>
+    <template id="bes_portal_sale_form_inherited" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='informations']" position="after">
+
+            <t t-if="sale_order.payment_slip">
+                
+                <a t-att-href="'/sale_order/payment_slip/' + str(sale_order.id)" target="_blank">
+                    Download Payment Slip
+                </a>
+            </t>
+           
+        </xpath>
+    </template>
 
 </odoo>

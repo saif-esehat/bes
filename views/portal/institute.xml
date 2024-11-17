@@ -6732,7 +6732,7 @@
                                             <h5 class="modal-title" id="exampleModalLabel">Add Books Order</h5>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="row">
+                                            <!-- <div class="row">
                                                 
 
                                                 <div class="col-md-6">
@@ -6748,7 +6748,7 @@
                                                     </div>
                                                 </div>
                                                 
-                                            </div>
+                                            </div> -->
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -6787,7 +6787,7 @@
                         </div>
 
                         
-                        <form method="post">
+                        <form method="post" action="/my/submit_books_order" enctype="multipart/form-data">
                             <div class="row">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <input type="hidden" id="productTable" name="hiddenInput" value=""/>

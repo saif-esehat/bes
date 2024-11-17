@@ -4216,6 +4216,52 @@ class InstitutePortal(CustomerPortal):
         vals = {'institute_id':institute_id, "page_name": "book_orders"}
         return request.render("bes.books_order_create_template",vals)
     
+    @http.route(['/my/submit_books_order'], type="http", auth="user", website=True)
+    def SubmitBookOrder(self, **kw):
+
+        user_id = request.env.user.id
+        institute_id = request.env["bes.institute"].sudo().search(
+            [('user_id', '=', user_id)]).id
+        hidden_input = kw.get('hiddenInput')
+        product_lines = json.loads(hidden_input)
+        order_lines_data = []
+        for line in product_lines:
+            product_id = int(line.get('product_id'))
+            quantity = float(line.get('quantity', 0))
+            product = request.env['product.product'].sudo().browse(product_id)
+            order_lines_data.append((0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': quantity,
+                'price_unit': product.list_price, 
+            }))
+        # import wdb; wdb.set_trace();
+        payment_slip = request.httprequest.files.get('payment_slip_upload')
+        if payment_slip:
+            payment_slip_file = payment_slip.read()
+            payment_slip_filename = payment_slip.filename
+        
+            order = request.env['sale.order'].sudo().create({
+                'partner_id': institute_id,
+                'payment_slip':base64.b64encode(payment_slip_file),
+                'slip_file_name':payment_slip_filename,
+                'order_line': order_lines_data,
+            })
+        else:
+            order = request.env['sale.order'].sudo().create({
+                'partner_id': institute_id,
+                'order_line': order_lines_data,
+            })
+
+        order.sudo().write({
+            'l10n_in_gst_treatment': 'unregistered',
+            'state':'sale'
+        })
+        return request.redirect('/my/orders')
+
+        
+        
+
+    
     @http.route(['/getProduct'], methods=['POST'], type='json', auth='user', website=True)
     def GetProduct(self, **kw):
         # import wdb; wdb.set_trace();
@@ -4227,4 +4273,24 @@ class InstitutePortal(CustomerPortal):
             [('id', '=', int(productID))]).standard_price
 
         return json.dumps({"status":"success", 'price_per_unit':price_per_unit})
+    
+    @http.route(['/sale_order/payment_slip/<int:sale_order_id>'], type='http', auth='user')
+    def download_payment_slip(self, sale_order_id, **kw):
+        sale_order = request.env['sale.order'].browse(sale_order_id)
+        # import wdb; wdb.set_trace();
+
+        if sale_order.payment_slip:
+            file_data = sale_order.payment_slip
+            
+            # Ensure the binary data is handled correctly (no need to decode base64)
+            # Just ensure that it's returned as a proper bytes object
+            if isinstance(file_data, bytes):
+                file_data = bytes(file_data)
+            
+            # Return the file content with appropriate headers
+            return request.make_response(
+                file_data,
+                headers=[('Content-Type', 'application/pdf'),  # Ensure PDF content type
+                         ('Content-Disposition', 'attachment; filename=payment_slip.pdf')]
+            )
     
