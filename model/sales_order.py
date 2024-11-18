@@ -16,3 +16,4 @@ class SalesOrderInherited(models.Model):
 
     tracking_id = fields.Char('Tracking Id')
     transaction_id = fields.Char("Transaction Id")
+    sequence_id = fields.Char("Sequence")
