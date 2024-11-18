@@ -4254,7 +4254,8 @@ class InstitutePortal(CustomerPortal):
 
         order.sudo().write({
             'l10n_in_gst_treatment': 'unregistered',
-            'state':'sale'
+            'state':'sale',
+            'user_id':False
         })
         return request.redirect('/my/orders')
 
