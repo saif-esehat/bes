@@ -231,6 +231,7 @@
                         <tree editable="bottom">
                             <field name="exam_date" />
                             <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
+                            <field name="examiner_domain" invisible="1"/>
                             <field name="exam_type"/>
                             <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
                             <field name="outstation"/>

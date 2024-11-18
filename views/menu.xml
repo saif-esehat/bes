@@ -238,6 +238,17 @@
 
         </record>
 
+        <record id="book_order_action" model="ir.actions.act_window">
+            <field name="name">Book Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">order.books</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Book Orders</p>
+            </field>
+        </record>
+
 
         <menuitem id="prev_candidate_ccmc_rating_menu"
             parent="candidate_menus"
@@ -373,6 +384,11 @@
             parent="ship_visit_menu"
             name="CCMC Ship Visits"
             action="ccmc_candidate_ship_visits_action" />
+            
+        <menuitem id="book_order_menu"
+            parent="bes_menu"
+            name="Book Order"
+            action="book_order_action" />
 
         <menuitem id="exam_duty_menu"
             parent="bes_batch_examiner_duty_menus_group_examiner"

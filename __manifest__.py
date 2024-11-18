@@ -31,12 +31,14 @@
         'views/courses_master.xml',
         'views/institution.xml',
         'views/survey.xml',
+        'views/books_order.xml',
         'views/invoice.xml',
         'views/marksheet_wizard.xml',
         'views/marksheets/mek.xml',
         'views/marksheets/gsk.xml',
         'views/exam_schedule.xml',
         'views/hr_employee.xml',
+        'views/sales_order.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/examiner_expenses_views.xml',
@@ -78,6 +80,7 @@
         'views/ship_visit/ccmc_ship_visit.xml',
         'views/portal/ship_visit/ship_visit.xml',
         'views/portal/ship_visit/ccmc_ship_visi.xml',
+        'views/portal/sale_order_portal.xml'
  
        
         # 'views/sep_batches.xml',
