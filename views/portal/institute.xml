@@ -6624,6 +6624,7 @@
                 sumTotal()
 
                 console.log('test')
+                document.getElementById('books_add_btn').style.display = ''
             }
 
             function add_books(element){
@@ -6693,6 +6694,7 @@
                 books_order_table.appendChild(newRow);
                 sumTotal();
                 $('#addBooks').modal('hide')
+                document.getElementById('books_add_btn').style.display = 'none'
                 
             }
 
@@ -6732,23 +6734,7 @@
                                             <h5 class="modal-title" id="exampleModalLabel">Add Books Order</h5>
                                         </div>
                                         <div class="modal-body">
-                                            <!-- <div class="row">
-                                                
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="tracking_id">Tracking ID</label>
-                                                        <input type="text" name="tracking_id" id="tracking_id" class="form-control"/>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="sequence">Sequence</label>
-                                                        <input type="text" name="sequence" id="sequence" class="form-control"/>
-                                                    </div>
-                                                </div>
-                                                
-                                            </div> -->
+                                            
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -6817,7 +6803,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#addBooks" class="btn btn-primary btn_cta">Add</a>
+                                <a href="" id="books_add_btn" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#addBooks" class="btn btn-primary btn_cta">Add</a>
                                 
                                 
                                 <div class="table-responsive border rounded border-top-0 ">
