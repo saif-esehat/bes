@@ -22,7 +22,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('single', 'Single'),
         ('bulk', 'Bulk')       
     ], string='Upload Type', default='single')
-    file = fields.Binary(string="File", required=True)
+    file = fields.Binary(string="File", required=False)
 
 
     def action_add_question(self):
