@@ -19,6 +19,7 @@
             <form string="IV Attendance Sheet">
                  <header>
                 <button name="print_iv_invigilator_report" string="Invigilator Report" type="object" class="btn-primary" />
+                <button name="print_iv_invigilator_report1" string="Invigilator Report Print" type="object" class="btn-primary" />
                </header>
                 <sheet>
 

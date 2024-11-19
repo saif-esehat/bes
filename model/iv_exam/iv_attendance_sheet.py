@@ -59,6 +59,15 @@ class IVAttendanceSheet(models.Model):
         return self.env.ref('bes.action_report_iv_invigilator').report_action(self, data=datas)
 
 
+    def print_iv_invigilator_report1(self):
+        datas = {
+            'doc_ids': self.id,
+        }
+
+        return self.env.ref('bes.action_report_iv_invigilator1').report_action(self, data=datas)
+
+
+
 
 import logging
 class IVWrittenAttendance(models.AbstractModel):
