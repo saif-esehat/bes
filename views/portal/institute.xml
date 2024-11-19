@@ -6802,6 +6802,13 @@
                                             <input type="file" class="form-control" id="payment_slip_upload" name="payment_slip_upload"/>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="transaction_id">Transaction ID</label>
+                                            <input type="text" name="transaction_id" id="transaction_id" class="form-control"/>
+                                            
+                                        </div>
+                                    </div>
                                 </div>
                                 <a href="" id="books_add_btn" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" data-target="#addBooks" class="btn btn-primary btn_cta">Add</a>
                                 
