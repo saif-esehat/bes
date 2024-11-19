@@ -21,6 +21,8 @@ from . import examination_report
 from . import candidate_approval
 from . import sep_batches
 from . import sep_candidate
+from . import books_order
+from . import sales_order
 from .iv_exam import iv_batches
 from .iv_exam import iv_candidates
 from .iv_exam import candidates_application

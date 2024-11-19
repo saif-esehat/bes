@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="books_order_form" model="ir.ui.view">
+            <field name="name">order.books.form</field>
+            <field name="model">order.books</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+
+                        <group>
+                            <group>
+                                <field name="institute_id" />
+                                <field name="tracking_id" />
+                                <field name="payment_slip" filename="slip_file_name"/>
+                                <field name="slip_file_name" invisible="1"/>
+
+                            </group>
+                            <group>
+                                <field name="order_date" />
+                                <field name="transaction_id" />
+                            </group>
+                        </group>
+                        <field name="order_lines" >
+                            <tree editable="bottom"> 
+                                <field name="product_id" />
+                                <field name="quantity" />
+                                <field name="price_per_unit" />
+                                <field name="total_price" />
+
+                            </tree>
+                        </field>
+
+                        
+
+                    </sheet>
+                   
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

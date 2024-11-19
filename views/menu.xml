@@ -138,8 +138,13 @@
             action="course_master_action" sequence="1" />
         <menuitem id="subject_menu" parent="course_master_menu" name="Subject"
             action="subject_master_action" sequence="2" />
-        <menuitem id="timesheet_menu" parent="bes_menu" name="TimeSheet"
-        action="action_time_sheet_form" sequence="10" />
+
+        <menuitem 
+        id="timesheet_menu" 
+        parent="bes_batch_examiner_duty_menus_group_examiner" 
+        name="Timesheet"
+        action="action_time_sheet_form" 
+        sequence="10" />
 
 
         <menuitem id="institute_menu" parent="bes_menu" name="Institute Master"
@@ -231,6 +236,17 @@
             <field name="view_id" ref="previous_ccmc_candidate_tree" />
             <field name="act_window_id" ref="previous_candidate_ccmc_rating_menu" />
 
+        </record>
+
+        <record id="book_order_action" model="ir.actions.act_window">
+            <field name="name">Book Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">order.books</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Book Orders</p>
+            </field>
         </record>
 
 
@@ -368,6 +384,11 @@
             parent="ship_visit_menu"
             name="CCMC Ship Visits"
             action="ccmc_candidate_ship_visits_action" />
+            
+        <menuitem id="book_order_menu"
+            parent="bes_menu"
+            name="Book Order"
+            action="book_order_action" />
 
         <menuitem id="exam_duty_menu"
             parent="bes_batch_examiner_duty_menus_group_examiner"
@@ -551,6 +572,13 @@
         <menuitem id="menu_ec_expenses" parent="menu_expenses"
             name="EC Expenses" action="open_ec_expenses"
             sequence="3"
+             />
+        
+
+        <menuitem id="menu_expenses_approval" parent="bes_batch_examiner_duty_menus_group_examiner"
+            name="Expense Approval"
+            action="open_expense_approval_action"
+            sequence="13"
              />
 
 

@@ -231,9 +231,10 @@
                         <tree editable="bottom">
                             <field name="exam_date" />
                             <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
+                            <field name="examiner_domain" invisible="1"/>
                             <field name="exam_type"/>
                             <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
-                            <!-- <field name="outstation"/> -->
+                            <field name="outstation"/>
                             <field name="gp_marksheet_ids"  options="{'no_create':True}"/>
                             <field name="no_candidates"/>
                         </tree>
@@ -294,7 +295,7 @@
                             
                             <field name="exam_type"/>
                             <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>
-                            <!-- <field name="outstation"/> -->
+                            <field name="outstation"/>
                             <field name="ccmc_marksheet_ids"  options="{'no_create':True}"/>
                             <field name="no_candidates"/>
                         </tree>
@@ -324,6 +325,7 @@
                 <form>
                     <header>
                             <button type="object" name="generate_expense_sheet" string="Generate Expensesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/>
+                            <!-- <button type="object" name="generate_timesheet" string="Generate Timesheet"  attrs="{'invisible': [('expense_sheet_status', '==', 'generated')]}"/> -->
                     </header>
                   
                     <sheet>
@@ -376,7 +378,7 @@
                                     <field name="exam_type" invisible="0"  />
                                     <field name="exam_region" invisible="1"/>
                                     <field name="examiner" required="1" domain="[('exam_center','=', exam_region)]" attrs="{'readonly': [('all_marksheet_confirmed', '=', 'done')]}" />
-                                    <!-- <field name="outstation" invisible="0"  /> -->
+                                    <field name="outstation" invisible="0"  />
                                     <field name="institute_id" required="1" domain="[('exam_center','=', exam_region)]"/>
                                     <field name="team_lead" invisible="1"/>
                                     <field name="exam_date"/>
@@ -386,11 +388,11 @@
                                         type="object"
                                         class="btn-primary"
                                         />
-                                    <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
+                                    <!-- <button attrs="{'invisible': [('exam_type', '!=', 'online')]}" name="download_attendance_sheet"
                                         string="Attendance Sheet"
                                         type="object"
                                         class="btn-info"
-                                        icon="fa-download"/>
+                                        icon="fa-download"/> -->
                                         
                                     <!-- <field name="attendance_sheet_file" widget="binary" filename="attendance_sheet_name"/> -->
                                     <field name="attendance_sheet_files" widget="many2many_tags"/>
@@ -398,7 +400,7 @@
                                     <!-- <field name="online_from_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"  />
                                     <field name="online_to_date" attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"   /> -->
                                     <!-- <field name="no_days"  attrs="{'column_invisible': [('exam_type', '==', 'practical_oral' )]}"/> -->
-                                    <field name="expense_sheet" />
+                                    <!-- <field name="expense_sheet" /> -->
                                     <field name="time_sheet" />
                                     <field name="status" invisible="1" />
                                     <field name="candidates_count" string="Candidates Assigned" style="text-align: {center};"/>

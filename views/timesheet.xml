@@ -42,16 +42,17 @@
                         <group string="Time Sheet Report">
 
                             <!-- <field name="assignment_id"/> -->
-                            <!-- <field name="examiner_assignment"/> -->
+                            <field name="examiner_assignment"/>
                             <field name="examiner"/>
                             <field name="dgs_batch"/>
                             <field name="institutes_id"/>
+                            
                             <!-- <field name="expense_sheet"/> -->
                             <!-- <field name="place"/> -->
                             <!-- <field name="exam_date"/> -->
                         </group>
                         <notebook>
-                            <page string="Timesheet Examinations">
+                            <page string="Timesheet">
                                 <field name="timesheet_examinations" nolabel="1">
                                     <tree editable="bottom">
                                         <field name="arrival_date_time"/>
@@ -66,10 +67,12 @@
                             <page string="Travel Details">
                                 <field name="travel_details">
                                     <tree editable="bottom">
+                                        <!-- <field name="timesheet_examinations"/> -->
                                         <field name="travelling_details"/>
                                         <field name="date_time"/>
                                         <field name="mode_of_travel"/>
                                         <field name="expenses"/>
+                                        <field name="supporting_document" widget="binary"/>
                                     </tree>
                                 </field>
                             </page>
@@ -85,6 +88,9 @@
                                 </field>
                             </page>
                         </notebook>
+                        <group>
+                            <field name="total_expenses"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

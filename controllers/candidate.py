@@ -75,6 +75,10 @@ class GPCandidatePortal(CustomerPortal):
             partner_id = request.env.user.id
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)])
             registered_exams = request.env["survey.user_input"].sudo().search([('gp_candidate','=',candidate.id)])
+            # Sort registered_exams so that 'GSK' subjects come first, 'MEK' subjects second, and others follow
+            registered_exams = registered_exams.sorted(
+                key=lambda exam: 0 if exam.survey_id.subject.name == 'GSK' else (1 if exam.survey_id.subject.name == 'MEK' else 2)
+            )
             print("registered_exams")
             print(registered_exams)
             # import wdb; wdb.set_trace(); 
@@ -143,7 +147,6 @@ class GPCandidatePortal(CustomerPortal):
         # if registered_exam.gp_candidate:
         gp_exam = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         
-        # import wdb; wdb.set_trace()
         gp_ip = gp_exam.ip_address.split(",")
         print(gp_exam)
         survey_examiner_token = gp_exam.token
@@ -151,6 +154,8 @@ class GPCandidatePortal(CustomerPortal):
         #     ccmc_exam = request.env["ccmc.exam.schedule"].sudo().search([('ccmc_candidate','=',registered_exam.gp_candidate.id),('dgs_batch','=',registered_exam.dgs_batch.id)],limit=1)
         #     survey_examiner_token = ccmc_exam.token
             
+        # import wdb; wdb.set_trace()
+
         if ip in gp_ip:
         
             if survey_examiner_token == examiner_token:
@@ -691,10 +696,14 @@ class GPCandidatePortal(CustomerPortal):
                     }
                     request.env['gp.candidate.stcw.certificate'].sudo().create(data)
             
+            
             if candidate.dgs_batch.id == 4:
                 candidate.write({'previous_repeater':True})
             
+            
             dgs_batch_id = int(kwargs.get('batch_id'))
+            
+            print(kwargs)
             exam_center = int(kwargs.get('exam_centre'))
             
             exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
@@ -1110,3 +1119,23 @@ class GPCandidatePortal(CustomerPortal):
         candidate._check_stcw_certificate()
         
         return request.redirect('/ccmccandidate/repeater/'+str(dgs_batch_id))
+
+    @http.route(['/my/download_instruction/<int:batch_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
+    def DownloadInstruction(self,batch_id,**kw ):
+        
+        batch = request.env["dgs.batches"].sudo().search([('id', '=', int(batch_id))])
+
+        # import wdb; wdb.set_trace()
+         # Check if batch and instruction document exist
+        if batch and batch.instruction_document:
+            instruction_pdf = base64.b64decode(batch.instruction_document)  # Assuming this is already in binary format
+            # file_name = instruction_pdf.file_name
+            pdfhttpheaders = [
+                ('Content-Type', 'application/pdf'),
+                ('Content-Disposition', 'attachment; filename="Instruction.pdf"'),
+                ('Content-Length', u'%s' % len(instruction_pdf))
+            ]
+            return request.make_response(instruction_pdf, pdfhttpheaders)
+        else:
+            # Return a 404 error if batch or document not found
+            return request.not_found()

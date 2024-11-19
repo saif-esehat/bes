@@ -38,11 +38,19 @@
     <report
         id="action_attendance_sheet_online_ccmc"
         string="CCMC Attendance Sheet"
-        model="exam.type.oral.practical.examiners"
+        model="examiner.attendance.wizard"
         report_type="qweb-pdf"
         name="bes.attendance_sheet_online_ccmc"
         file="bes.attendance_sheet_online_ccmc"
        />
+        <!-- model="exam.type.oral.practical.examiners" -->
+    <!-- <report
+        id="action_attendance_sheet_online_ccmc_new"
+        string="CCMC Attendance Sheet"
+        report_type="qweb-pdf"
+        name="bes.attendance_sheet_online_ccmc_new"
+        file="bes.attendance_sheet_online_ccmc_new"
+       /> -->
     
     <!-- <report
         id="action_attendance_sheet_online_gp"
@@ -244,7 +252,7 @@
         <field name="dpi">120</field> <!-- DPI for print quality -->
     </record>
 
-    <record id="action_report_survey_user_input" model="ir.actions.report">
+    <!-- <record id="action_report_survey_user_input" model="ir.actions.report">
         <field name="name">Candidate Report</field>
         <field name="model">survey.user_input</field>
         <field name="report_type">qweb-html</field>
@@ -252,9 +260,19 @@
         <field name="report_file">bes.report_survey_user_input</field>
         <field name="print_report_name">'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)</field>
         <field name="paperformat_id" ref="bes.survey_report_fomat"/>
+    </record> -->
+    
+    <report
+        id="action_report_survey_user_input"
+        model="survey.user_input"
+        string="Candidate Report"
+        report_type="qweb-html"
+        name="bes.report_survey_user_input"
+        file="bes.report_survey_user_input"
+        print_report_name="'Exam Report - %s' % (object.gp_candidate.name or object.ccmc_candidate.name)"
+    />
 
-    </record>
-        <record id="report_comparative_action" model="ir.actions.report">
+    <record id="report_comparative_action" model="ir.actions.report">
         <field name="name">Comparative Report</field>
         <field name="model">examination.report</field>
         <field name="report_type">qweb-html</field>

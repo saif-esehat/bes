@@ -34,4 +34,8 @@ class GPShipVisit(models.Model):
     dgs_batch = fields.Many2one('dgs.batches', string="DGS Batch", required=True)
     # institute_batch_id = fields.Many2one('institute.batch', string="Institute Batch")
 
+    def delete_candidate(self):
+        for ship_visit in self.candidate_ids.ship_visits:
+            print(ship_visit)
+            ship_visit.unlink()
 

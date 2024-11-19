@@ -1270,7 +1270,7 @@
 
     <template id="report_comparative">
         <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="doc">
+            <!-- <t t-foreach="docs" t-as="doc"> -->
                 <h2>Comparative Report</h2>
                 <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 100%;text-align: center;" border="1">
                       <thead>
@@ -1292,16 +1292,16 @@
                     <tbody>
                 
                         <tr>
-                            <td></td>
-                            <td><span t-esc="gp_fresh_candidate_appeared"/></td>
-                            <td><span t-esc="round((gp_fresh_overall_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
-                            <td> <span t-esc="gp_repeater_overall_pass"/></td>
-                           <td><span t-esc="round((gp_repeater_overall_pass/gp_repeater_candidate_appeared)*100,2)"/>%</td>
+                            <td><span t-esc="sequence_report"/> Exam <span t-esc="sequence_report"/></td>
+                            <td><span t-esc="fresh_candidate_appeared"/></td>
+                            <td><span t-esc="fresh_overall_pass_percentage"/>%</td>
+                            <td><span t-esc="repeater_candidate_appeared"/></td>
+                           <td><span t-esc="repeater_overall_pass_percentage"/>%</td>
                         </tr>
                  
                     </tbody>
                 </table>
-            </t>
+            <!-- </t> -->
         </t>
     </template>
 
