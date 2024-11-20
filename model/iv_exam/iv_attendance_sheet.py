@@ -37,7 +37,7 @@ class IVAttendanceSheet(models.Model):
 
     dob = fields.Date(string="Date of Birth")
     
-    indos_no = fields.Char(string="INDOs No")
+    indos_no = fields.Char(string="Indos No")
 
     candidate_signature = fields.Binary(string="Candidate Signature")
     classroom_no = fields.Char("Classroom No")
@@ -51,23 +51,109 @@ class IVAttendanceSheet(models.Model):
     def print_report(self):
         return self.env.ref('bes.action_report_iv_attendance_sheet').report_action(self)
 
-    def print_iv_invigilator_report(self):
-        datas = {
-            'doc_ids': self.id,
+    
+
+
+    
+    
+
+    def generate_written_marksheets(self):
+        for record in self:
+            record.env['iv.written.exam'].sudo().create({
+                'candidate':record.candidate_name.id,
+                'batch_id':record.batch_id.id,
+                'grade':record.grade_applied,
+                'roll_no':record.roll_no,
+                'indos_no':record.indos_no
+            })
+
+    def create_invigilator_record(self):
+        active_ids = self._context['active_ids']
+        records = []
+
+        candidates_1cm = 0
+        candidates_2cm = 0
+        candidates_ser = 0
+        candidates_eng = 0
+        candidates_1ed = 0
+        candidates_2ed = 0
+        for candidate_id in active_ids:
+            records.append(self.env['iv.attendance.sheet'].sudo().search([('id','=',candidate_id)]))
+        for record in records:
+            if record.grade_applied == '1CM':
+                candidates_1cm += 1
+            if record.grade_applied == '2CM':
+                candidates_2cm += 1
+            if record.grade_applied == 'SER':
+                candidates_ser += 1
+            if record.grade_applied == 'ME':
+                candidates_eng += 1
+            if record.grade_applied == '1ED':
+                candidates_1ed += 1
+            if record.grade_applied == '2ED':
+                candidates_2ed += 1
+        # import wdb; wdb.set_trace(); 
+        
+
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invigilator Wizard',
+            'view_mode': 'form',
+            'res_model': 'iv.invigilator.assignment.wizard',
+            'target': 'new',
+            'context': {'default_batch_id': self.batch_id.id,'default_classroom_no':int(self[0].classroom_no),'candidates_1cm':candidates_1cm,
+                        'candidates_2cm':candidates_2cm,
+                        'candidates_ser':candidates_ser,
+                        'candidates_eng':candidates_eng,
+                        'candidates_1ed':candidates_1ed,
+                        'candidates_2ed':candidates_2ed}
         }
 
-        return self.env.ref('bes.action_report_iv_invigilator').report_action(self, data=datas)
+    
+class IvinvigilatorAssignmentWizard(models.TransientModel):
+    _name='iv.invigilator.assignment.wizard'
+
+    classroom_capacity = fields.Integer("Classroom Capacity")
+    # classroom_no = fields.Integer("Classroom No")
+    # batch_id = fields.Many2one('iv.batches')
+    invigilators = fields.One2many('invigilator.assignment.lines','parent_id',string="Invigilators")
+    
+
+    def generate_invigilators_records(self):
+        classroom_no = self._context['default_classroom_no']
+        batch_id = int(self._context['default_batch_id'])
+        candidates_1cm = self._context['candidates_1cm']
+        candidates_2cm = self._context['candidates_2cm']
+        candidates_ser = self._context['candidates_ser']
+        candidates_eng = self._context['candidates_eng']
+        candidates_1ed = self._context['candidates_1ed']
+        candidates_2ed = self._context['candidates_2ed']
+
+        for record in self:
+            invigilators_data = [
+                (0, 0, {'invigilator': inv.invigilator.id})  # Prepare a new One2many record
+                for inv in record.invigilators if inv.invigilator
+            ]
+            record.env['iv.invigilator.sheet'].sudo().create({
+                'classroom_no': classroom_no,
+                'classroom_capacity': record.classroom_capacity,
+                'batch_id': batch_id,
+                'candidates_1cm': candidates_1cm,
+                'candidates_2cm': candidates_2cm,
+                'candidates_ser': candidates_ser,
+                'candidates_eng': candidates_eng,
+                'candidates_1ed': candidates_1ed,
+                'candidates_2ed': candidates_2ed,
+                'invigilators': invigilators_data,  # Create One2many records
+            })
 
 
-    def print_iv_invigilator_report1(self):
-        datas = {
-            'doc_ids': self.id,
-        }
+class InvigilatorAssignmentLine(models.TransientModel):
+    _name='invigilator.assignment.lines'
 
-        return self.env.ref('bes.action_report_iv_invigilator1').report_action(self, data=datas)
-
-
-
+    parent_id = fields.Many2one('iv.invigilator.assignment.wizard')
+    invigilator = fields.Many2one('res.partner',"Invigilator",domain=[('category_id.name', 'ilike', 'Invigilator')])
 
 import logging
 class IVWrittenAttendance(models.AbstractModel):
@@ -116,3 +202,5 @@ class IVWrittenAttendance(models.AbstractModel):
             'page_splits': page_splits,
             'total_pages': total_pages,
         }
+
+

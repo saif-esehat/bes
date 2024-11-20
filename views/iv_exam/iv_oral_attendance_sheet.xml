@@ -2,12 +2,12 @@
 <odoo>
     <data>
     <record id="iv_oral_attendance_action" model="ir.actions.act_window">
-            <field name="name">IV Oral Attendace Sheet</field>
+            <field name="name">IV Oral Attendance Sheet</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">iv.oral.attendance.sheet</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">IV Oral Attendace Sheet</p>
+                <p class="o_view_nocontent_smiling_face">IV Oral Attendance Sheet</p>
             </field>
         </record>
 
@@ -47,9 +47,11 @@
         <field name="model">iv.oral.attendance.sheet</field>
         <field name="arch" type="xml">
             <tree>
-              <!-- <header>
-                <button name="action_print_bulk_attendance" type="object" string="Written Attendance " class="btn-primary"/>
-            </header>     -->
+              <header>
+                <button name="generate_oral_marksheets" string="Generate Oral Marksheet" type="object" class="btn-primary" />
+                
+                <!-- <button name="action_print_bulk_attendance" type="object" string="Written Attendance " class="btn-primary"/> -->
+            </header>    
                 <field name="indos_no" />
                 <field name="roll_no"/>
                 <field name="batch_id"/>

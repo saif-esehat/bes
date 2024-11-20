@@ -249,6 +249,8 @@
             </field>
         </record>
 
+        
+
 
         <menuitem id="prev_candidate_ccmc_rating_menu"
             parent="candidate_menus"
@@ -580,6 +582,8 @@
             action="open_expense_approval_action"
             sequence="13"
              />
+
+        
 
 
     </data>
