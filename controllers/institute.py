@@ -4250,6 +4250,7 @@ class InstitutePortal(CustomerPortal):
                 'price_unit': product.list_price, 
             }))
         # import wdb; wdb.set_trace();
+        transaction_id = kw.get('transaction_id')
         payment_slip = request.httprequest.files.get('payment_slip_upload')
         if payment_slip:
             payment_slip_file = payment_slip.read()
@@ -4257,6 +4258,7 @@ class InstitutePortal(CustomerPortal):
         
             order = request.env['sale.order'].sudo().create({
                 'partner_id': institute_id,
+                'transaction_id':transaction_id,
                 'payment_slip':base64.b64encode(payment_slip_file),
                 'slip_file_name':payment_slip_filename,
                 'order_line': order_lines_data,

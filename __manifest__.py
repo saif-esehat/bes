@@ -66,6 +66,7 @@
         'reports/iv_candidate_admit_card.xml',
         'views/iv_exam/candidate_remark.xml',
         'views/iv_exam/iv_attendance_sheet.xml',
+        'views/iv_exam/iv_invigilator_sheet.xml',
         'reports/iv_attandance_report/iv_written_attendance.xml',
         'views/iv_exam/iv_oral_attendance_sheet.xml',
         'views/iv_exam/iv_exams.xml',

@@ -26,20 +26,24 @@
         <field name="name">iv.written.exam.form</field>
         <field name="model">iv.written.exam</field>
         <field name="arch" type="xml">
-            <form string="IV Candidate">
+            <form>
                 <sheet>
                     <group>
                         <group>
                             <field name="candidate" />
-                            <field name="batch_id" />
+                            <field name="roll_no" />
                             <field name="grade" />
                             <field name="mmb_marks" />
+                            <field name="mmb_status" readonly="1"/>
 
                         </group>
                         <group>
+                            <field name="batch_id" />
+                            <field name="indos_no" />
                             <field name="marks" />
                             <field name="attendance" />
                             <field name="status" readonly="1"/>
+
                         </group>
                     </group>
                 
@@ -79,10 +83,16 @@
         <field name="model">iv.written.exam</field>
         <field name="arch" type="xml">
             <tree>
+                <header>
+                    <button name="create_oral_attendance" type="object" string="Generate Oral Attendance" class="btn-primary"/>
+                </header>
+                
                 <field name="candidate" />
                 <field name="batch_id" />
                 <field name="grade" />
                 <field name="status" />
+                <field name="mmb_status"/>
+
             </tree>
         </field>
     </record>

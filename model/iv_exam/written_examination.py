@@ -24,7 +24,9 @@ class IVWrittenExam(models.Model):
         ], string='Grade')
     marks = fields.Float('Total Marks')
     mmb_marks = fields.Float("MMB Marks")
-    attendance = fields.Boolean('Candidate Present')
+    attendance = fields.Boolean('Candidate Present',default=True)
+    roll_no = fields.Char("Roll No")
+    indos_no = fields.Char(string="Indos No")
 
     status = fields.Selection([
         ('passed', 'Passed'),
@@ -32,20 +34,36 @@ class IVWrittenExam(models.Model):
         ('absent', 'Absent'),
         ], string='Status',default='failed',compute="_compute_status")
     
+    mmb_status = fields.Selection([
+        ('passed', 'Passed'),
+        ('failed', 'Failed'),
+        ('absent', 'Absent'),
+        ], string='MMB Status',default='failed',compute="_compute_mmb_status")
+    
     @api.onchange('marks')
     def _change_marks(self):
         for record in self:
             record.mmb_marks = record.marks
 
-    @api.depends('attendance','mmb_marks')
+    @api.depends('attendance','marks')
     def _compute_status(self):
         for record in self:
-            if record.mmb_marks < 25:
+            if record.marks < 25:
                 record.status = 'failed'
-            if record.mmb_marks >= 25:
+            if record.marks >= 25:
                 record.status = 'passed'
             if record.attendance == False:
                 record.status = 'absent'
+
+    @api.depends('attendance','mmb_marks')
+    def _compute_mmb_status(self):
+        for record in self:
+            if record.mmb_marks < 25:
+                record.mmb_status = 'failed'
+            if record.mmb_marks >= 25:
+                record.mmb_status = 'passed'
+            if record.attendance == False:
+                record.mmb_status = 'absent'
 
 
     def create_oral_exam_records(self):
@@ -61,6 +79,18 @@ class IVWrittenExam(models.Model):
                 })
         else:
             raise UserError("No candidates have passed the written exam.")           
+        
+
+    def create_oral_attendance(self):
+        for record in self:
+            if record.status == 'passed':
+                record.env['iv.oral.attendance.sheet'].sudo().create({
+                    'candidate_name':record.candidate.id,
+                    'roll_no':record.roll_no,
+                    'grade_applied':record.grade,
+                    'batch_id':record.batch_id.id,
+                    'indos_no':record.indos_no
+                })
 
 
     
@@ -281,3 +311,5 @@ class IVOralAssessmentSheet(models.AbstractModel):
             'data': data,
             'docs': sorted_docs,
             'candidates': candidates       }
+    
+

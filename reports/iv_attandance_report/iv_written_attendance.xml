@@ -19,12 +19,23 @@
     file="bes.report_iv_attendance_sheet"
     print_report_name="IV Attendance Sheet"/>
 
-      <record id="action_report_iv_invigilator" model="ir.actions.report">
+    <record id="action_report_iv_invigilator" model="ir.actions.report">
         <field name="name">Invigilator Reports</field>
         <field name="model">iv.attendance.sheet</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.reports_iv_invigilator</field>
         <field name="report_file">bes.reports_iv_invigilator</field>
+        <field name="print_report_name">Invigilator Report</field>
+        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
+        <!-- <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/> -->
+    </record>
+
+    <record id="action_report_iv_invigilator1" model="ir.actions.report">
+        <field name="name">Invigilator Reports</field>
+        <field name="model">iv.attendance.sheet</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bes.reports_iv_invigilator1</field>
+        <field name="report_file">bes.reports_iv_invigilator1</field>
         <field name="print_report_name">Invigilator Report</field>
         <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
         <!-- <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/> -->
@@ -312,6 +323,87 @@
                             
          </table>
 
+            
+        
+    </t>
+   
+
+</template>
+
+
+
+
+
+ <template id="reports_iv_invigilator1">
+    <t t-call="web.basic_layout">
+            <div class="header">
+                    <table style="width:100%; border: 1px solid black; font-family: 'TimesNewRoman';">
+                          <h5 style="text-align: center; font-weight: bold;">
+                         P.E.S  Central School , CBD Belapur , (East) Navi Mumbai,
+                        </h5>
+
+                        <!-- Second Line -->
+
+                            <h5 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                            Invigilation  Duty Chart Cum Check List For Distribution   &amp;  Collection Q. Papers  10th November, 2024
+                                 <!-- <span t-field="docs[0].batch_id.name"/> -->
+                            </h5>
+                   
+                    </table>
+
+                   
+                </div>
+
+                 <table class="table table-condensed" style="width: 100%; border-collapse: collapse;">
+					<thead >
+						<tr cols="12">
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Sr. No 
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Name of the Invigilator's
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Duty on Class Room
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Capacity on Class Room
+							</td>
+							
+
+							<td colspan="3" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Total No Of Candidates
+
+							</td>
+
+                            <td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Record of issued Packet (Put tick mark)
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Signature
+                            
+							</td>
+
+                            <td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Record of  Packet received (Put tick mark)
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Signature
+                            
+							</td>
+						</tr>
+						<tr>
+
+							<td  style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">ENGR
+
+							</td>
+							<td  style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">1ED
+
+							</td>
+                            <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">2ED
+
+							</td>
+							
+						</tr>
+						</thead>
+						  <tbody>
+
+						</tbody>
+					</table>
+              
+          
+             
             
         
     </t>

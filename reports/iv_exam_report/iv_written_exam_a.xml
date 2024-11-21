@@ -78,13 +78,13 @@
                                     <span t-esc="written.marks" />
                                 </td>
                                  <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.status == 'failed' else 'lightgreen' if written.status == 'passed' else ''};">
-                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-esc="written.status" />
+                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-field="written.status" />
                                 </td>
                                   <td  style="border: 1px solid black; padding:6px;text-align: center;">
                                     <span t-esc="written.mmb_marks" />
                                 </td>
-                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.status == 'failed' else 'lightgreen' if written.status == 'passed' else ''};">
-                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-esc="written.status" />
+                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.mmb_status == 'failed' else 'lightgreen' if written.mmb_status == 'passed' else ''};">
+                                    <span t-attf-style="color: #{'red' if written.mmb_status == 'failed' else 'green' if written.mmb_status == 'passed' else ''};" t-field="written.mmb_status" />
                                 </td>
                                
                             </tr>
@@ -165,8 +165,8 @@
                                     <span t-field="written.candidate.name" />
                                 </td>
                              
-                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.status == 'failed' else 'lightgreen' if written.status == 'passed' else ''};">
-                                    <span t-attf-style="color: #{'red' if written.status == 'failed' else 'green' if written.status == 'passed' else ''};" t-esc="written.status" />
+                                 <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if written.mmb_status == 'failed' else 'lightgreen' if written.mmb_status == 'passed' else ''};">
+                                    <span t-attf-style="color: #{'red' if written.mmb_status == 'failed' else 'green' if written.mmb_status == 'passed' else ''};" t-field="written.mmb_status" />
                                 </td>
                               
                                
