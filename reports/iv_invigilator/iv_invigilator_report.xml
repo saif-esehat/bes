@@ -127,17 +127,14 @@
                                     <span t-esc="index" />
                                 </td>
                               
-                       
-                            
-                                <td style="border: 1px solid black; padding: 10px; text-align: center; vertical-align: middle;">
-                                    <t t-foreach="doc.invigilators" t-as="invigilator">
-                                        <!-- Creating a new line for each invigilator -->
-                                        <div style="margin-bottom: 5px;">
-                                            <span t-field="invigilator.invigilator.name" />
-                                        </div>
-                                    </t>
-                                </td>
-                          
+                    
+                        <td style="border: 1px solid black; padding: 0; text-align: center; vertical-align: middle;">
+                            <t t-foreach="doc.invigilators" t-as="invigilator">
+                                <div style="border-bottom: 1px solid black; padding: 10px; display: flex; justify-content: center; align-items: center; width: 100%;">
+                                    <span t-field="invigilator.invigilator.name" />
+                                </div>
+                            </t>
+                        </td>
 
                                 <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
                                     <span t-field="doc.classroom_no" />
@@ -292,14 +289,14 @@
                               
                        
                             
-                                <td style="border: 1px solid black; padding: 10px; text-align: center; vertical-align: middle;">
+                                 <td style="border: 1px solid black; padding: 0; text-align: center; vertical-align: middle;">
                                     <t t-foreach="doc.invigilators" t-as="invigilator">
-                                        <!-- Creating a new line for each invigilator -->
-                                        <div style="margin-bottom: 5px;">
+                                        <div style="border-bottom: 1px solid black; padding: 10px; display: flex; justify-content: center; align-items: center; width: 100%;">
                                             <span t-field="invigilator.invigilator.name" />
                                         </div>
                                     </t>
                                 </td>
+
                           
 
                                 <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
