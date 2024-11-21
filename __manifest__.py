@@ -81,7 +81,8 @@
         'views/ship_visit/ccmc_ship_visit.xml',
         'views/portal/ship_visit/ship_visit.xml',
         'views/portal/ship_visit/ccmc_ship_visi.xml',
-        'views/portal/sale_order_portal.xml'
+        'views/portal/sale_order_portal.xml',
+        'reports/iv_invigilator/iv_invigilator_report.xml'
  
        
         # 'views/sep_batches.xml',

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report
+        id="reports_iv_written_attendance"
+        string="Invigilator Report Engine"
+        model="iv.invigilator.sheet"
+        report_type="qweb-pdf"
+        name="bes.reports_iv_invigilator_report_engine"
+        file="bes.reports_iv_invigilator_report_engine"
+    />
+
+    <report
+        id="reports_iv_invigilator_report_d"
+        string="Invigilator Report Deck"
+        model="iv.invigilator.sheet"
+        report_type="qweb-pdf"
+        name="bes.reports_iv_invigilator_report_deck"
+        file="bes.reports_iv_invigilator_report_deck"
+    />
+
+ 
+
+
+ <template id="reports_iv_invigilator_report_engine">
+    <t t-call="web.basic_layout">
+           <style>
+                        @font-face {
+                            font-family: 'TimesNewRomanBold';
+                            src: url('/bes/static/src/fonts/Times New Roman Bold.ttf') format('truetype');
+                            font-weight: 900;
+                            font-style: normal;
+                        }
+                        
+                        @font-face {
+                            font-family: 'TimesNewRoman';
+                            src: url('/bes/static/src/fonts/times.ttf') format('truetype');  
+                            font-weight: normal;
+                            font-style: normal;
+                        }
+                        .black-bordered-table {
+                            width: 100%;
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            margin-top: 30px;
+                        }
+                        th, td, tr {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding: 10px;
+                            border-collapse: collapse;
+                            font-family: 'TimesNewRomanBold';
+                        }
+                        thead {
+                            padding-bottom: 0px;
+                        }
+                        th {
+                            vertical-align: bottom;
+                        }
+                    </style>
+            <div class="header">
+                    <table style="width:100%; border: 1px solid black; font-family: 'TimesNewRoman';">
+                          <h5 style="text-align: center; font-weight: bold;">
+                         P.E.S  Central School , CBD Belapur , (East) Navi Mumbai,
+                        </h5>
+
+                        <!-- Second Line -->
+
+                            <h5 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                            Invigilation  Duty Chart Cum Check List For Distribution   &amp;  Collection Q. Papers  10th November, 2024
+                                 <!-- <span t-field="docs[0].batch_id.name"/> -->
+                            </h5>
+                   
+                    </table>
+
+                   
+                </div>
+
+                 <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 100%;text-align: center;" border="1">
+					<thead >
+						<tr cols="12">
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Sr. No 
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Name of the Invigilator's
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Duty on Class Room
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Capacity on Class Room
+							</td>
+							
+
+							<td colspan="3" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Total No Of Candidates
+
+							</td>
+
+                            <td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Record of issued Packet (Put tick mark)
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Signature
+                            
+							</td>
+
+                            <td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Record of  Packet received (Put tick mark)
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Signature
+                            
+							</td>
+						</tr>
+						<tr>
+
+							<td  style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">ENGR
+
+							</td>
+							<td  style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">1ED
+
+							</td>
+                            <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">2ED
+
+							</td>
+							
+						</tr>
+						</thead>
+						 <t t-set="index" t-value="0" />
+                       <tr t-foreach="docs" t-as="doc">
+                            <t t-set="index" t-value="index + 1" />
+                           
+                                <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-esc="index" />
+                                </td>
+                              
+                       
+                            
+                                <td style="border: 1px solid black; padding: 10px; text-align: center; vertical-align: middle;">
+                                    <t t-foreach="doc.invigilators" t-as="invigilator">
+                                        <!-- Creating a new line for each invigilator -->
+                                        <div style="margin-bottom: 5px;">
+                                            <span t-field="invigilator.invigilator.name" />
+                                        </div>
+                                    </t>
+                                </td>
+                          
+
+                                <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-field="doc.classroom_no" />
+                                </td>
+                                <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-field="doc.classroom_capacity" />
+                                </td>
+                                <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-field="doc.candidates_eng" />
+                                </td>
+                                <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-esc="doc.candidates_1ed" />
+                                </td>
+								  <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-esc="doc.candidates_2ed" />
+                                </td>
+
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                
+                            </tr>
+                         
+						  <tbody>
+
+						</tbody>
+					</table>
+              
+          
+             
+            
+        
+    </t>
+   
+
+</template>
+
+
+<template id="reports_iv_invigilator_report_deck">
+    <t t-call="web.basic_layout">
+           <style>
+                        @font-face {
+                            font-family: 'TimesNewRomanBold';
+                            src: url('/bes/static/src/fonts/Times New Roman Bold.ttf') format('truetype');
+                            font-weight: 900;
+                            font-style: normal;
+                        }
+                        
+                        @font-face {
+                            font-family: 'TimesNewRoman';
+                            src: url('/bes/static/src/fonts/times.ttf') format('truetype');  
+                            font-weight: normal;
+                            font-style: normal;
+                        }
+                        .black-bordered-table {
+                            width: 100%;
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            margin-top: 30px;
+                        }
+                        th, td, tr {
+                            border: 1px solid black;
+                            text-align: left;
+                            padding: 10px;
+                            border-collapse: collapse;
+                            font-family: 'TimesNewRomanBold';
+                        }
+                        thead {
+                            padding-bottom: 0px;
+                        }
+                        th {
+                            vertical-align: bottom;
+                        }
+                    </style>
+            <div class="header">
+                    <table style="width:100%; border: 1px solid black; font-family: 'TimesNewRoman';">
+                          <h5 style="text-align: center; font-weight: bold;">
+                         P.E.S  Central School , CBD Belapur , (East) Navi Mumbai,
+                        </h5>
+
+                        <!-- Second Line -->
+
+                            <h5 style="text-align: center; font-weight: bold; margin-top: 10px;">
+                            Invigilation  Duty Chart Cum Check List For Distribution   &amp;  Collection Q. Papers  10th November, 2024
+                                 <!-- <span t-field="docs[0].batch_id.name"/> -->
+                            </h5>
+                   
+                    </table>
+
+                   
+                </div>
+
+                 <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 100%;text-align: center;" border="1">
+					<thead >
+						<tr cols="12">
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Sr. No 
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Name of the Invigilator's
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Duty on Class Room
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Capacity on Class Room
+							</td>
+							
+
+							<td colspan="3" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Total No Of Candidates
+
+							</td>
+
+                            <td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Record of issued Packet (Put tick mark)
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Signature
+                            
+							</td>
+
+                            <td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;"> Record of  Packet received (Put tick mark)
+							</td>
+							<td rowspan="2" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">Signature
+                            
+							</td>
+						</tr>
+						<tr>
+
+							<td  style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">1CM
+
+							</td>
+							<td  style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">2CM
+
+							</td>
+                            <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">SER
+
+							</td>
+							
+						</tr>
+						</thead>
+						 <t t-set="index" t-value="0" />
+                       <tr t-foreach="docs" t-as="doc">
+                            <t t-set="index" t-value="index + 1" />
+                           
+                                <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-esc="index" />
+                                </td>
+                              
+                       
+                            
+                                <td style="border: 1px solid black; padding: 10px; text-align: center; vertical-align: middle;">
+                                    <t t-foreach="doc.invigilators" t-as="invigilator">
+                                        <!-- Creating a new line for each invigilator -->
+                                        <div style="margin-bottom: 5px;">
+                                            <span t-field="invigilator.invigilator.name" />
+                                        </div>
+                                    </t>
+                                </td>
+                          
+
+                                <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-field="doc.classroom_no" />
+                                </td>
+                                <td style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-field="doc.classroom_capacity" />
+                                </td>
+                                <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-field="doc.candidates_1cm" />
+                                </td>
+                                <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-esc="doc.candidates_2cm" />
+                                </td>
+								  <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    <span t-esc="doc.candidates_ser" />
+                                </td>
+
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                 <td colspan="1" style="border: 1px solid black; padding:10px; text-align:center; vertical-align: middle;">
+                                    
+                                </td>
+                                
+                            </tr>
+                         
+						  <tbody>
+
+						</tbody>
+					</table>
+              
+          
+             
+            
+        
+    </t>
+   
+
+</template>
+
+
+
+ 
+
+
+
+</odoo>

@@ -46,10 +46,10 @@
         <field name="model">iv.invigilator.sheet</field>
         <field name="arch" type="xml">
             <tree>
-                <header>
+                <!-- <header>
                     <button name="print_iv_invigilator_report1" string="Invigilator Report Print" type="object" class="btn-primary" />
 
-                </header>
+                </header> -->
                 
                 <field name="classroom_no" />
                 <field name="classroom_capacity" />
