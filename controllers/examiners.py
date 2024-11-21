@@ -3377,7 +3377,7 @@ class ExaminerPortal(CustomerPortal):
         workbook = xlrd.open_workbook(file_contents=file_content)
         worksheet_oral = workbook.sheet_by_index(0)
         for row_num in range(
-            2, worksheet_oral.nrows
+            3, worksheet_oral.nrows
         ):  # Assuming first row contains headers
             row = worksheet_oral.row_values(row_num)
 
