@@ -178,6 +178,9 @@ bes.iv_access_candidate_applications_line,access_candidate_applications_line,bes
 bes.access_gp_batches_ship_visit,access_gp_batches_ship_visit,bes.model_gp_batches_ship_visit,base.group_user,1,1,1,1
 bes.access_ccmc_batches_ship_visit,access_ccmc_batches_ship_visit,bes.model_ccmc_batches_ship_visit,base.group_user,1,1,1,1
 bes.iv_access_iv_attendance_wizard,access_iv_attendance_wizard,bes.model_iv_attendance_wizard,base.group_user,1,1,1,1
+bes.iv_access_iv_invigilator_assignment_wizard,access_iv_invigilator_assignment_wizard,bes.model_iv_invigilator_assignment_wizard,base.group_user,1,1,1,1
+bes.iv_access_invigilators_assigned,access_invigilators_assigned,bes.model_invigilators_assigned,base.group_user,1,1,1,1
+bes.iv_access_iv_invigilator_sheet,access_iv_invigilator_sheet,bes.model_iv_invigilator_sheet,base.group_user,1,1,1,1
 
 
 bes.group_exam_coordinator_exam_batch_expenses,access_exam_batch_expenses,bes.model_exam_batch_expenses,bes.group_exam_coordinator,1,1,1,1

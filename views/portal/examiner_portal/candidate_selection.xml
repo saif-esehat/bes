@@ -1398,7 +1398,7 @@
                                         <label for="state">Status</label>
                                         <select class="form-control" id="state" name="state">
                                             <option value="draft" t-att-selected="ccmc_oral.ccmc_oral_draft_confirm == 'draft'">Draft</option>
-                                            <option value="confirm" t-att-selected="ccmc_oral.ccmc_oral_draft_confirm == 'draft'">Confirm</option>
+                                            <option value="confirm" t-att-selected="ccmc_oral.ccmc_oral_draft_confirm == 'confirm'">Confirm</option>
                                         
                                         </select>
                                     </div>

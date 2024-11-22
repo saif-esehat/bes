@@ -9,6 +9,19 @@
     </template>
     <template id="bes_portal_sale_form_inherited" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//div[@id='informations']" position="after">
+            <t t-if="sale_order.tracking_id">
+                <p class=""><b>Tracking ID:</b><t t-esc="sale_order.tracking_id"/></p>
+            </t>
+            <t t-else="">
+                <p class=""><b>Tracking ID:</b>Not Alloted</p>
+            </t>
+
+            <t t-if="sale_order.sequence_id">
+                <p class=""><b>Sequence:</b><t t-esc="sale_order.sequence_id"/></p>
+            </t>
+            <t t-else="">
+                <p class=""><b>Sequence:</b>Not Alloted</p>
+            </t>
 
             <t t-if="sale_order.payment_slip">
                 

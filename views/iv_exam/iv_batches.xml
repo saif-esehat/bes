@@ -58,6 +58,17 @@
         </field>
         </record>
 
+        <record id="iv_invigilator_sheet_action" model="ir.actions.act_window">
+            <field name="name">Invigilators Sheet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">iv.invigilator.sheet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Invigilators Sheet</p>
+            </field>
+        </record>
+
          <menuitem id="iv_menu" name="IV Exam"  sequence="1"
                   groups="bes.group_bes_admin" web_icon="bes,static/description/iv_exam.png"/>
                 
@@ -69,6 +80,16 @@
 
         <menuitem id="menu_iv_examinations" name="IV Examinations"
            parent="iv_menu" sequence="11"/>
+
+
+        <menuitem id="iv_invigilators" name="Invigilators"
+           parent="iv_menu" sequence="12"/>
+
+        <menuitem id="iv_invigilator_sheet_menu" 
+                parent="iv_invigilators" 
+                name="Invigilator Sheet"
+                action="iv_invigilator_sheet_action"
+                sequence="10" />
 
         
 

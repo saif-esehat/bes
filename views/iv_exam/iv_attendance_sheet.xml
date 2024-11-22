@@ -2,12 +2,12 @@
 <odoo>
     <data>
     <record id="iv_attendance_action" model="ir.actions.act_window">
-            <field name="name">IV Attendace Sheet</field>
+            <field name="name">IV Attendance Sheet</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">iv.attendance.sheet</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">IV Attendace Sheet</p>
+                <p class="o_view_nocontent_smiling_face">IV Attendance Sheet</p>
             </field>
         </record>
 
@@ -17,9 +17,7 @@
         <field name="model">iv.attendance.sheet</field>
         <field name="arch" type="xml">
             <form string="IV Attendance Sheet">
-                 <header>
-                <button name="print_iv_invigilator_report" string="Invigilator Report" type="object" class="btn-primary" />
-               </header>
+                
                 <sheet>
 
                            
@@ -40,6 +38,7 @@
                             <field name="grade_applied" />
                             <field name="candidate_signature" widget="image" class="oe_avatar" options="{'size': [120, 50]}"/>                        </group>
                         </group>
+                        
                   
                 </sheet>
             </form>
@@ -54,6 +53,9 @@
 
               <header>
                 <button name="print_report" type="object" string="Roll No Print" class="btn-primary"/>
+                <button name="generate_written_marksheets" string="Generate Written Marksheet" type="object" class="btn-primary" />
+                <button name="create_invigilator_record" string="Assign Invigilators" type="object" class="btn-primary" />
+
             </header>
           
                 <field name="indos_no" />
@@ -83,6 +85,28 @@
                   action="iv_attendance_action"
                   sequence="10" />
 
+
+    <record id="iv_invigilator_assignment_wizard_form" model="ir.ui.view">
+        <field name="name">iv.invigilator.assignment.wizard.form</field>
+        <field name="model">iv.invigilator.assignment.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="classroom_capacity" />
+                </group>
+                <field name="invigilators">
+                    <tree editable="bottom">
+                        <field name="invigilator" />
+
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Assign" type="object" name="generate_invigilators_records" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
 </data>
 </odoo>

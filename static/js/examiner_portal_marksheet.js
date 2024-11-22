@@ -298,10 +298,13 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                     return; // If the user cancels, stop further processin
                 }
 
-
-
-
-                
+                // Check if attendance is marked as 'present' but oral or practical marks are not present
+                if (attendance_element.value === 'present' && (parseInt(ccmc_total_marks) == 0)) {
+                    var confirmation = confirm("Are you sure you want to mark this candidate present even though their marks are 0?");   
+                    if(!confirmation){
+                        return;
+                    }
+                }
 
                 var postData = {
                     id: gsk_oral_marksheet_id, // Assuming you want to pass the ID in the request body
@@ -348,7 +351,7 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
         }
     )
 
-    publicWidget.registry.ExaminerPortalCCMCOral = publicWidget.Widget.extend(
+    publicWidget.registry.ExaminerPortalCCMCPrac = publicWidget.Widget.extend(
         {
             selector : ".confirm_ccmc_prac_marksheet_class",
             events:{
@@ -388,7 +391,13 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
 
                         return; // If the user cancels, stop further processin
                 }
-
+                // Check if attendance is marked as 'present' but oral or practical marks are not present
+                if (attendance_element.value === 'present' && (parseInt(ccmc_prac_total_marks) == 0)) {
+                    var confirmation = confirm("Are you sure you want to mark this candidate present even though their marks are 0?");   
+                    if(!confirmation){
+                        return;
+                    }
+                }
                 
                 var postData = {
                     id: ccmc_prac_marksheet_id, // Assuming you want to pass the ID in the request body
@@ -477,9 +486,17 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
                         return; // If the user cancels, stop further processin
                 }
 
+                // Check if attendance is marked as 'present' but oral or practical marks are not present
+                if (attendance_element.value === 'present' && (parseInt(ccmc_oral_total_marks) == 0)) {
+                    var confirmation = confirm("Are you sure you want to mark this candidate present even though their marks are 0?");   
+                    if(!confirmation){
+                        return;
+                    }
+                }
+
                 
                 var postData = {
-                    id: ccmc_prac_marksheet_id, // Assuming you want to pass the ID in the request body
+                    id: ccmc_oral_marksheet_id, // Assuming you want to pass the ID in the request body
                     attendance_element: attendance_element,
                     attendance_id:attendance_id,
                     marksheet_ccmc_status :marksheet_ccmc_status
@@ -491,9 +508,9 @@ odoo.define('bes.ExaminerPortalMarksheet', function (require) {
     
                 $.ajax({
                     type: "POST",
-                    url: '/confirm/ccmc_prac/marksheet',
+                    url: '/confirm/ccmc_oral/marksheet',
                     indexValue: {
-                        id: ccmc_prac_marksheet_id, // Assuming you want to pass the ID in the request body
+                        id: ccmc_oral_marksheet_id, // Assuming you want to pass the ID in the request body
                         attendance_element: attendance_element,
                         marksheet_ccmc_status :marksheet_ccmc_status
                     },

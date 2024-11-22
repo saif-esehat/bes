@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="iv_invigilator_sheet_form" model="ir.ui.view">
+        <field name="name">iv.invigilator.sheet.form</field>
+        <field name="model">iv.invigilator.sheet</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="print_iv_invigilator_report" string="Invigilator Report" type="object" class="btn-primary" />
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <!-- <field name="competency" /> -->
+                            <field name="classroom_no" />
+                            <field name="batch_id" />
+                            <field name="candidates_1cm" />
+                            <field name="candidates_ser" />
+                            <field name="candidates_1ed" />
+
+                        </group>
+                        <group>
+                            <field name="classroom_capacity" />
+                            <field name="candidates_2cm" />
+                            <field name="candidates_eng" />
+                            <field name="candidates_2ed" />
+
+                        </group>
+                    </group>
+                    <field name="invigilators">
+                        <tree editable='bottom'>
+                            <field name="invigilator" />
+                        </tree>
+                    </field>
+
+                
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="iv_invigilator_sheet_tree" model="ir.ui.view">
+        <field name="name">iv.invigilator.sheet.tree</field>
+        <field name="model">iv.invigilator.sheet</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- <header>
+                    <button name="print_iv_invigilator_report1" string="Invigilator Report Print" type="object" class="btn-primary" />
+
+                </header> -->
+                
+                <field name="classroom_no" />
+                <field name="classroom_capacity" />
+                <field name="batch_id" />
+                <field name="competency" />
+                <field name="invigilators"/>
+
+            </tree>
+        </field>
+    </record>
+    </data>
+</odoo>

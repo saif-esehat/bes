@@ -843,7 +843,7 @@
             </t>
 
 
-            <t t-if="exam_type == 'practical_oral'">
+            <t t-if="exam_type == 'practical_oral' or exam_type == 'practical_oral_cookery_bakery' or exam_type == 'ccmc_oral' or exam_type == 'gsk_oral'">
                 
                 <t t-if="examiner_subject == 'GSK'">
                     
@@ -865,7 +865,7 @@
                 </t>    
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC GSK Oral'"> -->
-                    <t t-if="examiner_subject== 'CCMC GSK Oral'">
+                    <t t-if="examiner_subject== 'CCMC GSK Oral' or examiner_subject== 'CCMC' and exam_type == 'gsk_oral'">
                         <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC GSK Oral Marksheet</a>
                         <t t-if="date_valid">    
                             <t t-if="not marksheet_uploaded">
@@ -876,7 +876,7 @@
                         
                 
                 <!-- <t t-if="examiner.subject_id.name == 'CCMC Oral and Practical'"> -->
-                <t t-if="examiner_subject == 'CCMC'">
+                <t t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral_cookery_bakery'">
                     <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_practical_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Practical Marksheet</a>
                     <t t-if="date_valid">
                         <t t-if="not marksheet_uploaded">
@@ -884,7 +884,7 @@
                         </t>
                     </t>
                 </t>
-                <t t-if="examiner_subject == 'CCMC'">
+                <t t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'">
                     <a t-attf-href="/open_ccmc_candidate_form/download_ccmc_oral_marksheet/{{batch_id}}/{{assignment_id}}" style="margin:10px;" class="btn btn-primary btn_cta">Download CCMC Oral Marksheet</a>
                     <t t-if="date_valid">
                         <t t-if="not marksheet_uploaded">
