@@ -43,6 +43,9 @@ class GPCandidatePortal(CustomerPortal):
     def GPExamListView(self,**kwargs):
         parameter_value = kwargs.get('gpexamcand')
         print(parameter_value)
+        session = request.session
+        print("Session")
+        print(session)
         if parameter_value:
             partner_id = request.env.user.id
             print(partner_id)
