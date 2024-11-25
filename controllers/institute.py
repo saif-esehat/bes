@@ -4221,7 +4221,7 @@ class InstitutePortal(CustomerPortal):
 
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+            [('user_id', '=', user_id)]).user_id.partner_id.id
         hidden_input = kw.get('hiddenInput')
         product_lines = json.loads(hidden_input)
         order_lines_data = []
