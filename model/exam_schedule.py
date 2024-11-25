@@ -2509,10 +2509,22 @@ class ExamOralPracticalExaminers(models.Model):
                     record.candidate_done = count
             
             elif record.subject.name == 'CCMC':
-                if record.exam_type == 'practical_oral':
+                if record.exam_type == 'practical_oral_cookery_bakery':
                     count = 0
                     for sheet in record.marksheets:
-                        if sheet.cookery_bakery.cookery_draft_confirm == 'confirm' and sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                        if sheet.cookery_bakery.cookery_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                elif record.exam_type == 'ccmc_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                elif record.exam_type == 'gsk_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
                             count += 1
                     record.candidate_done = count
                 elif record.exam_type == 'online':

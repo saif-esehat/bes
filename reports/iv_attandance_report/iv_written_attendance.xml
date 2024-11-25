@@ -30,16 +30,16 @@
         <!-- <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/> -->
     </record>
 
-    <record id="action_report_iv_invigilator1" model="ir.actions.report">
+    <!-- <record id="action_report_iv_invigilator1" model="ir.actions.report">
         <field name="name">Invigilator Reports</field>
         <field name="model">iv.attendance.sheet</field>
         <field name="report_type">qweb-html</field>
         <field name="report_name">bes.reports_iv_invigilator1</field>
         <field name="report_file">bes.reports_iv_invigilator1</field>
         <field name="print_report_name">Invigilator Report</field>
-        <!-- <field name="binding_model_id" ref="bes.model_dgs_batches"/> -->
-        <!-- <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/> -->
-    </record>
+        <field name="binding_model_id" ref="bes.model_dgs_batches"/>
+        <field name="paperformat_id" ref="bes.dgs_final_report_landscape"/>
+    </record> -->
 
     <template id="reports_iv_written_attendance_sheet1">
     <t t-call="web.basic_layout">
