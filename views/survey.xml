@@ -429,6 +429,9 @@
                     <label for="q_no" />
                     <field name="q_no" />
                 </xpath>
+                <xpath expr="//field[@name='title']" position="after">
+                    <field name="difficulty_level" />
+                </xpath>
             </field>
         </record>
 
