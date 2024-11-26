@@ -305,6 +305,26 @@ class InstitutePortal(CustomerPortal):
  
         
         return request.redirect("/my/invoices/"+str(invoice_id))
+    
+    
+    @http.route(['/getinvoiceqty'],method=["POST"], type="json", auth="user", website=True)
+    def getqty(self, **kw):
+        data = request.jsonrequest
+        print(request.jsonrequest)
+        user_id = request.env.user.id
+        batch_id = data["invoice_batch_id"]
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        
+        product_price = batch.course.exam_fees.lst_price
+        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])     
+        print("Qty",batch)   
+        total_price = product_price * qty
+        return json.dumps({
+            "candidate_qty": qty,
+            "total_price":total_price
+            
+        })
+        
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
@@ -315,6 +335,16 @@ class InstitutePortal(CustomerPortal):
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
+        
+        
+        transaction_date = kw.get('transaction_date')        
+        transaction_id = kw.get('transaction_id')
+        bank_name = kw.get('bank_name')
+        transaction_amount = kw.get('transaction_amount')
+        transaction_slip = request.httprequest.files.get('transaction_slip')
+
+        transaction_slip_file = transaction_slip.read()
+        transaction_slip_filename = transaction_slip.filename
         
         
       
@@ -357,6 +387,16 @@ class InstitutePortal(CustomerPortal):
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
         candidates.write({'invoice_generated': True})
         new_invoice.action_post()
+
+        new_invoice.write({
+            "transaction_id": transaction_id,
+            "bank_name": bank_name,
+            "transaction_slip":transaction_slip_file,
+            "file_name": transaction_slip_filename,
+            "transaction_date": transaction_date,
+            "total_amount": transaction_amount
+            
+            })
         # import wdb; wdb.set_trace();
         batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
         

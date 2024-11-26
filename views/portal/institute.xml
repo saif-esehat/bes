@@ -211,6 +211,33 @@
                 // Update the content of the modal with the retrieved data
                 document.getElementById('invoice_batch_id').value = dataId;
                 <!-- debugger -->
+                
+                var postData = {
+                    "invoice_batch_id": dataId
+                }
+                
+
+                $.ajax({
+                        type: "POST",
+                        url: '/getinvoiceqty',
+                        data: JSON.stringify(postData),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            
+                            debugger
+                            <!-- var amount = JSON.parse(response) -->
+                            var qty = JSON.parse(response.result).candidate_qty
+                            var total_price = JSON.parse(response.result).total_price
+                            document.getElementById('invoice-candidate-count').innerText = qty
+                            document.getElementById('invoice-total-price').innerText = total_price
+                                        
+                        },
+                            error: function (xhr, status, error) {
+                                console.error("POST request failed:", error);
+
+                                // Handle error
+                            }
+                        });
 
                 }
 
@@ -267,35 +294,29 @@
                                     <h5 class="modal-title" id="exampleModalLabel">Generate Invoice</h5>
                                 </div>
                                 <input type="hidden" id="invoice_batch_id" name="invoice_batch_id"/>
+
                                 <div class="modal-body">
-
-                                    <!-- <div class="container mt-5">
-
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="transaction_id">Transaction ID</label>
-                                                <input required="True" type="text" class="form-control" id="transaction_id" name="transaction_id"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="bank_name">Bank Name and Address</label>
-                                                <input required="True" type="text" class="form-control" id="bank_name" name="bank_name" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="total_amount">Total Amount ₹</label>
-                                                <input required="True" type="number" class="form-control" id="total_amount" name="total_amount" min="0"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="transaction_slip">Upload Transaction Pay Slip</label>
-                                                <input required="True" type="file" class="form-control-file" accept=".jpeg,.jpg,.png,.pdf" name="transaction_slip" id="transaction_slip"/>
-                                            </div>
-                                        </div>
-
-
-
-                                    </div> -->
-
                                     Are you Sure you want to Generate Invoice ?
+                                    <p>Price for the <span id="invoice-candidate-count"></span> candidates will be <span id="invoice-total-price"></span> Rs.</p>
+
+                                    <label for="transaction_id">Transaction ID</label>
+                                    <input  class="form-control" id="transaction_id" required="1" name="transaction_id"/>
+
+                                    <label for="bank_name">Bank Name</label>
+                                    <input  class="form-control" id="bank_name" required="1" name="bank_name"/>
+
+
+                                    <label for="transaction_amount">Transaction Amount</label>
+                                    <input  class="form-control" id="transaction_amount" required="1" name="transaction_amount"/>
+
+
+                                    <label for="transaction_slip">Transaction Slip</label>
+                                    <input type="file" class="form-control" name="transaction_slip" required="1"  id="transaction_slip" accept=".pdf, .jpg, .jpeg, .png"/>
+
+                                    <label for="transaction_date">Transaction Date</label>
+                                    <input type="date" class="form-control" name="transaction_date" required="1"  id="transaction_date"/>
+
+
 
                                 </div>
                                 <div class="modal-footer">

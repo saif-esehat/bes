@@ -169,7 +169,7 @@
                             <!-- total += parseFloat(checkbox.value); -->
                             $.ajax({
                                         type: "POST",
-                                        url: '/my/getproductprice',
+                                        url: '/getinvoiceqty',
                                         data: JSON.stringify(postData),
                                         contentType: 'application/json',
                                         success: function (response) {
