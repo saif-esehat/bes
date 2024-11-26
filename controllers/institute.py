@@ -3794,31 +3794,55 @@ class InstitutePortal(CustomerPortal):
             # Check if MTI NO is present and convert to int
             if row[4]:  # If there's a value in the fifth column
                 try:
-                    mti_no = int(row[4])  # Assuming MTI NO is in the fifth column
+                    # Convert to string, remove unwanted spaces
+                    value = str(row[4]).strip()
+                    
+                    # Check if it's a float ending in .0 and convert to int
+                    if value.endswith('.0'):
+                        mti_no = int(float(value))
+                    else:
+                        mti_no = int(value)
                 except ValueError:
                     raise ValidationError(f"Incorrect MTI NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
 
             # Check if CERTIFICATE NO is present and convert to int
             if row[5]:  # If there's a value in the sixth column
                 try:
-                    certificate_no = int(row[5])  # Assuming CERTIFICATE NO is in the sixth column
+                    value = str(row[5]).strip()
+                    
+                    if value.endswith('.0'):
+                        certificate_no = int(float(value))
+                    else:
+                        certificate_no = int(value)
                 except ValueError:
                     raise ValidationError(f"Incorrect Certificate NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
-
+                
             # Check if COURSE START DATE is present
             if row[6]:  # If there's a value in the seventh column
                 try:
-                    course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
-                except ValueError:
-                    raise ValidationError(f"Incorrect Course Start Date in row {row_num + 1}, Please enter valid date and check for unwanted spaces")
-
+                    # If row[6] is a float, treat it as an Excel date
+                    if isinstance(row[6], (int, float)):
+                        course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[6]).replace('\xa0', ' ').strip()
+                        course_start_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course Start Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
 
             # Check if COURSE END DATE is present
             if row[7]:  # If there's a value in the eighth column
                 try:
-                    course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
-                except ValueError:
-                    raise ValidationError(f"Incorrect Course End Date in row {row_num + 1}, Please enter valid date and check for unwanted spaces")
+                    # If row[7] is a float, treat it as an Excel date
+                    if isinstance(row[7], (int, float)):
+                        course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[7]).replace('\xa0', ' ').strip()
+                        course_end_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course End Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
+
 
             # Find the candidate based on INDOS NO
             candidate = request.env["gp.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
@@ -4072,32 +4096,55 @@ class InstitutePortal(CustomerPortal):
             # Check if MTI NO is present and convert to int
             if row[4]:  # If there's a value in the fifth column
                 try:
-                    mti_no = int(row[4])  # Assuming MTI NO is in the fifth column
+                    # Convert to string, remove unwanted spaces
+                    value = str(row[4]).strip()
+                    
+                    # Check if it's a float ending in .0 and convert to int
+                    if value.endswith('.0'):
+                        mti_no = int(float(value))
+                    else:
+                        mti_no = int(value)
                 except ValueError:
                     raise ValidationError(f"Incorrect MTI NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
-                    # continue  # Skip this row if conversion fails
 
             # Check if CERTIFICATE NO is present and convert to int
             if row[5]:  # If there's a value in the sixth column
                 try:
-                    certificate_no = int(row[5])  # Assuming CERTIFICATE NO is in the sixth column
+                    value = str(row[5]).strip()
+                    
+                    if value.endswith('.0'):
+                        certificate_no = int(float(value))
+                    else:
+                        certificate_no = int(value)
                 except ValueError:
                     raise ValidationError(f"Incorrect Certificate NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
-                    # continue  # Skip this row if conversion fails
-
+                
             # Check if COURSE START DATE is present
             if row[6]:  # If there's a value in the seventh column
                 try:
-                    course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
-                except ValueError:
-                    raise ValidationError(f"Incorrect Course Start Date in row {row_num + 1}, Please enter valid date and check for unwanted spaces")
+                    # If row[6] is a float, treat it as an Excel date
+                    if isinstance(row[6], (int, float)):
+                        course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[6]).replace('\xa0', ' ').strip()
+                        course_start_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course Start Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
 
             # Check if COURSE END DATE is present
             if row[7]:  # If there's a value in the eighth column
                 try:
-                    course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
-                except ValueError:
-                    raise ValidationError(f"Incorrect Course End Date in row {row_num + 1}, Please enter valid date and check for unwanted spaces")
+                    # If row[7] is a float, treat it as an Excel date
+                    if isinstance(row[7], (int, float)):
+                        course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[7]).replace('\xa0', ' ').strip()
+                        course_end_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course End Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
+
 
             # Find the candidate based on INDOS NO
             candidate = request.env["ccmc.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
