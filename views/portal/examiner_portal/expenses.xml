@@ -385,6 +385,20 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the current date and time
+            let now = new Date();
+            
+            // Format the date and time for the datetime-local input (YYYY-MM-DDTHH:MM)
+            let formattedDateTime = now.toISOString().slice(0, 16);
+            
+            // Set the input field to the current date and time
+            document.getElementById('left_residence_date_time').value = formattedDateTime;
+            document.getElementById('arrival_institute_hotel_date_time').value = formattedDateTime;
+            document.getElementById('left_institute_date_time').value = formattedDateTime;
+            document.getElementById('arrival_residence_date_time').value = formattedDateTime;
+        });
+
     </script>
         <t t-call="portal.portal_layout">
 
@@ -445,7 +459,7 @@
                                         <tbody>
                                             <tr>
                                                 <td>Left Residence</td>
-                                                <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time"/></td>
+                                                <td><input type="datetime-local" class="form-control" name="left_residence_date_time" id="left_residence_date_time" required="1"/></td>
                                                 <td>
                                                     <select class="form-control" name="left_residence_mode_of_travel" id="left_residence_mode_of_travel">
                                                         <option value=""></option>
@@ -462,7 +476,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Arrival at the Institute/Hotel</td>
-                                                <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time"/></td>
+                                                <td><input type="datetime-local" class="form-control" name="arrival_institute_hotel_date_time" id="arrival_institute_hotel_date_time" required="1"/></td>
                                                 <td>
                                                     <select class="form-control" name="arrival_institute_hotel_mode_of_travel" id="arrival_institute_hotel_mode_of_travel">
                                                         <option value=""></option>
@@ -479,7 +493,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Left Institute/Hotel</td>
-                                                <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time"/></td>
+                                                <td><input type="datetime-local" class="form-control" name="left_institute_date_time" id="left_institute_date_time" required="1"/></td>
                                                 <td>
                                                     <select class="form-control" name="left_institute_mode_of_travel" id="left_institute_mode_of_travel">
                                                         <option value=""></option>
@@ -496,7 +510,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Arrival at Residence</td>
-                                                <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time"/></td>
+                                                <td><input type="datetime-local" class="form-control" name="arrival_residence_date_time" id="arrival_residence_date_time" required="1"/></td>
                                                 <td>
                                                     <select class="form-control" name="arrival_residence_mode_of_travel" id="arrival_residence_mode_of_travel">
                                                         <option value=""></option>
