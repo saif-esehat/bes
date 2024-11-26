@@ -1405,7 +1405,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.merge_range(
             "A1:D1", examiner_assignments.institute_id.name, merge_format
         )
-        gsk_oral_sheet.write("E1:F1", examiner_assignments.examiner.name, merge_format)
+        gsk_oral_sheet.write("E1:F1","Examiner Name: "+ examiner_assignments.examiner.name, merge_format)
 
         gsk_oral_sheet.write(
             "A2:D2",
@@ -1437,88 +1437,9 @@ class ExaminerPortal(CustomerPortal):
         marks_values_8 = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         marks_values_10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         marks_values_12 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        marks_values_18 = [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-        ]
-        marks_values_25 = [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-        ]
-        marks_values_30 = [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-        ]
+        marks_values_18 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,]
+        marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,]
+        marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,]
 
         gsk_oral_sheet.data_validation(
             "D3:D1048576", {"validate": "list", "source": marks_values_25}
@@ -1600,12 +1521,12 @@ class ExaminerPortal(CustomerPortal):
             "A1:D1", examiner_assignments.institute_id.name, merge_format
         )
         gsk_practical_sheet.write(
-            "E1:F1", examiner_assignments.examiner.name, merge_format
+            "E1:F1","Examiner Name: "+ examiner_assignments.examiner.name, merge_format
         )
         gsk_practical_sheet.write(
-            "G1:H1", examiner_assignments.exam_date.strftime("%d-%b-%y"), merge_format
+            "G1:H1","Exam Date: "+ examiner_assignments.exam_date.strftime("%d-%b-%y"), merge_format
         )
-        gsk_practical_sheet.write("I1:K1", "GSK Practical", merge_format)
+        gsk_practical_sheet.write("I1:K1", "Subject: GSK Practical", merge_format)
 
         # Write the header row for the practical sheet
         header_prac = [
@@ -1992,7 +1913,7 @@ class ExaminerPortal(CustomerPortal):
             "E1:F1","Examiner Name: " + examiner_assignments.examiner.name, merge_format
         )
         mek_practical_sheet.write(
-            "G1:H1",
+            "H1:I1",
             "Exam Date:" + examiner_assignments.exam_date.strftime("%d-%b-%y"),
             merge_format,
         )
