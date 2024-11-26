@@ -40,14 +40,14 @@ class IVInvigilator(models.Model):
 
         return self.env.ref('bes.action_report_iv_invigilator').report_action(self, data=datas)
     
-    def print_iv_invigilator_report1(self):
-        # import wdb; wdb.set_trace(); 
+    # def print_iv_invigilator_report1(self):
+    #     # import wdb; wdb.set_trace(); 
 
-        datas = {
-            'doc_ids': self.id,
-        }
+    #     datas = {
+    #         'doc_ids': self.id,
+    #     }
 
-        return self.env.ref('bes.action_report_iv_invigilator1').report_action(self, data=datas)
+    #     return self.env.ref('bes.action_report_iv_invigilator1').report_action(self, data=datas)
 
 
 
@@ -58,3 +58,33 @@ class IVinvigilatorAssigned(models.Model):
 
     invigilator = fields.Many2one('res.partner',string="Invigilator",domain=[('category_id.name', 'ilike', 'Invigilator')])
 
+
+class IVInvigilatorReportEngine(models.AbstractModel):
+    _name = 'report.bes.reports_iv_invigilator_report_engine'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['iv.invigilator.sheet'].sudo().browse(docids)
+
+        return {
+            'docids': docids,
+            'doc_model': 'iv.invigilator.sheet',
+            'data': data,
+            'docs': docs,
+        }
+
+class IVInvigilatorReportDeck(models.AbstractModel):
+    _name = 'report.bes.reports_iv_invigilator_report_deck'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['iv.invigilator.sheet'].sudo().browse(docids)
+
+        return {
+            'docids': docids,
+            'doc_model': 'iv.invigilator.sheet',
+            'data': data,
+            'docs': docs,
+        }
