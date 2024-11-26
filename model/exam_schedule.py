@@ -3159,7 +3159,7 @@ class GPExam(models.Model):
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
-    certificate_id = fields.Char(string="Certificate ID",tracking=True)
+    certificate_id = fields.Char(string="Certificate No.",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
@@ -4536,7 +4536,7 @@ class CCMCExam(models.Model):
     _description= 'CCMC Schedule'
     
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
-    certificate_id = fields.Char(string="Certificate ID",tracking=True)
+    certificate_id = fields.Char(string="Certificate No.",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
     hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
