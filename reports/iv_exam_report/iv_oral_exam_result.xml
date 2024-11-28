@@ -81,7 +81,7 @@
                                     <span t-esc="oral.marks" />
                                 </td>
                                  <td t-attf-style="border: 1px solid black; padding: 6px; text-align: center; background-color: #{'lightpink' if oral.status == 'failed' else 'lightgreen' if oral.status == 'passed' else ''};">
-                                    <span t-attf-style="color: #{'red' if oral.status == 'failed' else 'green' if oral.status == 'passed' else ''};" t-esc="oral.status" />
+                                    <span t-attf-style="color: #{'red' if oral.status == 'failed' else 'green' if oral.status == 'passed' else ''};" t-field="oral.status" />
                                 </td>
                             </tr>
                            

@@ -305,6 +305,26 @@ class InstitutePortal(CustomerPortal):
  
         
         return request.redirect("/my/invoices/"+str(invoice_id))
+    
+    
+    @http.route(['/getinvoiceqty'],method=["POST"], type="json", auth="user", website=True)
+    def getqty(self, **kw):
+        data = request.jsonrequest
+        print(request.jsonrequest)
+        user_id = request.env.user.id
+        batch_id = data["invoice_batch_id"]
+        batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
+        
+        product_price = batch.course.exam_fees.lst_price
+        qty = request.env['gp.candidate'].sudo().search_count([('institute_batch_id','=',batch.id),('fees_paid','=','yes'),('invoice_generated','=',False)])     
+        print("Qty",batch)   
+        total_price = product_price * qty
+        return json.dumps({
+            "candidate_qty": qty,
+            "total_price":total_price
+            
+        })
+        
 
     @http.route(['/my/creategpinvoice'],method=["POST"], type="http", auth="user", website=True)
     def CreateGPinvoice(self, **kw):
@@ -315,6 +335,16 @@ class InstitutePortal(CustomerPortal):
         batch = request.env['institute.gp.batches'].sudo().search([('id','=',batch_id)])
         institute_id = request.env["bes.institute"].sudo().search(
             [('user_id', '=', user_id)])
+        
+        
+        transaction_date = kw.get('transaction_date')        
+        transaction_id = kw.get('transaction_id')
+        bank_name = kw.get('bank_name')
+        transaction_amount = kw.get('transaction_amount')
+        transaction_slip = request.httprequest.files.get('transaction_slip')
+
+        transaction_slip_file = transaction_slip.read()
+        transaction_slip_filename = transaction_slip.filename
         
         
       
@@ -357,6 +387,16 @@ class InstitutePortal(CustomerPortal):
         new_invoice = request.env['account.move'].sudo().create(invoice_vals)
         candidates.write({'invoice_generated': True})
         new_invoice.action_post()
+
+        new_invoice.write({
+            "transaction_id": transaction_id,
+            "bank_name": bank_name,
+            "transaction_slip":transaction_slip_file,
+            "file_name": transaction_slip_filename,
+            "transaction_date": transaction_date,
+            "total_amount": transaction_amount
+            
+            })
         # import wdb; wdb.set_trace();
         batch.write({"invoice_created":True,"account_move":new_invoice.id,'state': '3-pending_invoice'})
         
@@ -3794,24 +3834,55 @@ class InstitutePortal(CustomerPortal):
             # Check if MTI NO is present and convert to int
             if row[4]:  # If there's a value in the fifth column
                 try:
-                    mti_no = int(row[4])  # Assuming MTI NO is in the fifth column
+                    # Convert to string, remove unwanted spaces
+                    value = str(row[4]).strip()
+                    
+                    # Check if it's a float ending in .0 and convert to int
+                    if value.endswith('.0'):
+                        mti_no = int(float(value))
+                    else:
+                        mti_no = int(value)
                 except ValueError:
-                    continue  # Skip this row if conversion fails
+                    raise ValidationError(f"Incorrect MTI NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
 
             # Check if CERTIFICATE NO is present and convert to int
             if row[5]:  # If there's a value in the sixth column
                 try:
-                    certificate_no = int(row[5])  # Assuming CERTIFICATE NO is in the sixth column
+                    value = str(row[5]).strip()
+                    
+                    if value.endswith('.0'):
+                        certificate_no = int(float(value))
+                    else:
+                        certificate_no = int(value)
                 except ValueError:
-                    continue  # Skip this row if conversion fails
-
+                    raise ValidationError(f"Incorrect Certificate NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
+                
             # Check if COURSE START DATE is present
             if row[6]:  # If there's a value in the seventh column
-                course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+                try:
+                    # If row[6] is a float, treat it as an Excel date
+                    if isinstance(row[6], (int, float)):
+                        course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[6]).replace('\xa0', ' ').strip()
+                        course_start_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course Start Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
 
             # Check if COURSE END DATE is present
             if row[7]:  # If there's a value in the eighth column
-                course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
+                try:
+                    # If row[7] is a float, treat it as an Excel date
+                    if isinstance(row[7], (int, float)):
+                        course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[7]).replace('\xa0', ' ').strip()
+                        course_end_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course End Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
+
 
             # Find the candidate based on INDOS NO
             candidate = request.env["gp.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
@@ -4065,24 +4136,55 @@ class InstitutePortal(CustomerPortal):
             # Check if MTI NO is present and convert to int
             if row[4]:  # If there's a value in the fifth column
                 try:
-                    mti_no = int(row[4])  # Assuming MTI NO is in the fifth column
+                    # Convert to string, remove unwanted spaces
+                    value = str(row[4]).strip()
+                    
+                    # Check if it's a float ending in .0 and convert to int
+                    if value.endswith('.0'):
+                        mti_no = int(float(value))
+                    else:
+                        mti_no = int(value)
                 except ValueError:
-                    continue  # Skip this row if conversion fails
+                    raise ValidationError(f"Incorrect MTI NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
 
             # Check if CERTIFICATE NO is present and convert to int
             if row[5]:  # If there's a value in the sixth column
                 try:
-                    certificate_no = int(row[5])  # Assuming CERTIFICATE NO is in the sixth column
+                    value = str(row[5]).strip()
+                    
+                    if value.endswith('.0'):
+                        certificate_no = int(float(value))
+                    else:
+                        certificate_no = int(value)
                 except ValueError:
-                    continue  # Skip this row if conversion fails
-
+                    raise ValidationError(f"Incorrect Certificate NO in row {row_num + 1}, Please enter only numbers and check for unwanted spaces")
+                
             # Check if COURSE START DATE is present
             if row[6]:  # If there's a value in the seventh column
-                course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+                try:
+                    # If row[6] is a float, treat it as an Excel date
+                    if isinstance(row[6], (int, float)):
+                        course_start_date = xlrd.xldate.xldate_as_datetime(row[6], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[6]).replace('\xa0', ' ').strip()
+                        course_start_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course Start Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
 
             # Check if COURSE END DATE is present
             if row[7]:  # If there's a value in the eighth column
-                course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
+                try:
+                    # If row[7] is a float, treat it as an Excel date
+                    if isinstance(row[7], (int, float)):
+                        course_end_date = xlrd.xldate.xldate_as_datetime(row[7], workbook.datemode).date()
+                    else:
+                        # If it's a string, replace non-breaking spaces, strip, and parse manually
+                        cleaned_date = str(row[7]).replace('\xa0', ' ').strip()
+                        course_end_date = datetime.strptime(cleaned_date, "%d-%b-%Y").date()  # Adjust format if necessary
+                except (ValueError, TypeError):
+                    raise ValidationError(f"Incorrect Course End Date in row {row_num + 1}, Please enter a valid date and check for unwanted spaces")
+
 
             # Find the candidate based on INDOS NO
             candidate = request.env["ccmc.candidate"].sudo().search([('institute_batch_id', '=', batch_id), ('indos_no', '=', indos_no)], limit=1)
@@ -4221,7 +4323,7 @@ class InstitutePortal(CustomerPortal):
 
         user_id = request.env.user.id
         institute_id = request.env["bes.institute"].sudo().search(
-            [('user_id', '=', user_id)]).id
+            [('user_id', '=', user_id)]).user_id.partner_id.id
         hidden_input = kw.get('hiddenInput')
         product_lines = json.loads(hidden_input)
         order_lines_data = []
@@ -4235,6 +4337,7 @@ class InstitutePortal(CustomerPortal):
                 'price_unit': product.list_price, 
             }))
         # import wdb; wdb.set_trace();
+        transaction_id = kw.get('transaction_id')
         payment_slip = request.httprequest.files.get('payment_slip_upload')
         if payment_slip:
             payment_slip_file = payment_slip.read()
@@ -4242,6 +4345,7 @@ class InstitutePortal(CustomerPortal):
         
             order = request.env['sale.order'].sudo().create({
                 'partner_id': institute_id,
+                'transaction_id':transaction_id,
                 'payment_slip':base64.b64encode(payment_slip_file),
                 'slip_file_name':payment_slip_filename,
                 'order_line': order_lines_data,

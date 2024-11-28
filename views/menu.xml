@@ -143,8 +143,9 @@
         id="timesheet_menu" 
         parent="bes_batch_examiner_duty_menus_group_examiner" 
         name="Timesheet"
+        groups="bes.group_bes_admin"
         action="action_time_sheet_form" 
-        sequence="10" />
+        sequence="20" />
 
 
         <menuitem id="institute_menu" parent="bes_menu" name="Institute Master"
@@ -248,6 +249,8 @@
                 <p class="o_view_nocontent_smiling_face">Book Orders</p>
             </field>
         </record>
+
+        
 
 
         <menuitem id="prev_candidate_ccmc_rating_menu"
@@ -580,6 +583,8 @@
             action="open_expense_approval_action"
             sequence="13"
              />
+
+        
 
 
     </data>

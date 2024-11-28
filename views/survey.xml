@@ -237,6 +237,7 @@
                 </xpath>
                 <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
                     <field name="q_score" string="Score" style="text-align: center;"/>
+                    <field name="difficulty_level" style="text-align: center;"/>
                 </xpath>
                 <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
                     <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
@@ -428,6 +429,9 @@
                     <label for="q_no" />
                     <field name="q_no" />
                 </xpath>
+                <xpath expr="//field[@name='title']" position="after">
+                    <field name="difficulty_level" />
+                </xpath>
             </field>
         </record>
 
@@ -442,7 +446,7 @@
                         <field name="chapter" string="Chapter" domain="[('survey_id', '=', qb),('is_page','=',True)]"/>
                         <field name="upload_type"/>
                         <field name="file"  attrs="{'invisible': [('upload_type', '=', 'single')]}" />
-                        
+
                         <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
                     </group>
                     <footer>
