@@ -67,7 +67,7 @@ bes.admin_travel_details,access_admin_travel_details,model_travel_details,bes.gr
 bes.access_admin_group_expense_approval,coo_ceo_access_group_expense_approval,bes.model_exam_misc_expense_approval_wizard,bes.group_bes_admin,1,1,1,1
 
 
-
+bes.admin_question_section,access_question_section,model_survey_question_section,bes.group_bes_admin,1,1,1,1
 bes.admin_access_dgs_batches,acess_dgs_batches,model_dgs_batches,bes.group_bes_admin,1,1,1,1
 bes.admin_access_batch_delete_wizard,access_batch_delete_wizard,model_batch_delete_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_ccmc_admit_card_release,access_ccmc_admit_card_release,model_ccmc_admit_card_release,bes.group_bes_admin,1,1,1,1
