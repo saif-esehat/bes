@@ -310,7 +310,7 @@
         <menuitem id="bes_exams_menu"
             parent="bes_menu"
             name="Exam Marksheet Master"
-            sequence="5" />
+            sequence="7" />
 
         <menuitem id="bes_exam"
             parent="bes_exams_menu"
@@ -341,7 +341,7 @@
             web_icon="bes,static/description/books.png" />
 
 
-        <menuitem id="batches_menu" parent="bes_menu" name="Institute Batches" />
+        <menuitem id="batches_menu" parent="bes_menu" name="Institute Batches" sequence="5"/>
 
         <menuitem id="gp_batches_menu"
             parent="batches_menu" name="GP Batch"
@@ -354,11 +354,11 @@
         <menuitem id="dgs_batch_menu"
             parent="bes_menu"
             name="Exam Batches"
-            action="dgs_batch_action" />
+            action="dgs_batch_action" sequence="6" />
 
         <menuitem id="report_master_menu"
             parent="bes_menu"
-            name="Report Master" />
+            name="Report Master" sequence="8" />
 
 
         <menuitem id="menu_examination_report" name="Examination Reports"

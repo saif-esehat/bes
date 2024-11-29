@@ -2350,7 +2350,8 @@ class ExamOralPracticalExaminers(models.Model):
             'target': 'new',
             'context': {
                 'default_examiners_id': self.id ,# Pass the current record ID to the wizard
-                'default_exam_date':self.exam_date
+                'default_exam_date':self.exam_date,
+                'default_ip_address':self.ipaddr,
             },
         }
     
@@ -5682,7 +5683,7 @@ class OnlineExamWizard(models.TransientModel):
             self.examiners_id.ipaddr = self.ip_address
             # import wdb;wdb.set_trace();  
             if self.examiners_id.course.course_code == 'GP':
-                # import wdb;wdb.set_trace(); 
+                import wdb;wdb.set_trace(); 
 
                 if self.examiners_id.subject.name == "GSK":
                     self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})

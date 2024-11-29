@@ -429,8 +429,8 @@
                     <field name="exam_region"/>
                     <field name="ccmc_from_date"/>
                     <field name="ccmc_to_date"/>
-                    <field name="candidate_count"/>
                     <field name="dgs_approved_capacity" readonly="1"/>
+                    <field name="candidate_count"/>
                 </tree>
             </field>
         </record>
