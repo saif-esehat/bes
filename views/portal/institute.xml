@@ -423,17 +423,6 @@
                 document.getElementById('modal_batch_id').value = dataId;
 
                 }
-
-                function openRaiseInvoiceModal(button) {
-                // Retrieve the data-id attribute value from the clicked button
-                var dataId = button.getAttribute('data-id');
-                // Update the content of the modal with the retrieved data
-                document.getElementById('ccmc_invoice_batch_id').value = dataId;
-                <!-- debugger -->
-
-                }
-
-                
                 
                 function openCCMCRaiseInvoiceModal(button) {
                 // Retrieve the data-id attribute value from the clicked button
