@@ -2350,7 +2350,8 @@ class ExamOralPracticalExaminers(models.Model):
             'target': 'new',
             'context': {
                 'default_examiners_id': self.id ,# Pass the current record ID to the wizard
-                'default_exam_date':self.exam_date
+                'default_exam_date':self.exam_date,
+                'default_ip_address':self.ipaddr,
             },
         }
     
