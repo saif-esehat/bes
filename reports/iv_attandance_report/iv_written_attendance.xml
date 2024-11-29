@@ -2,13 +2,12 @@
 <odoo>
 
     <report
-        id="reports_iv_written_attendance"
-        string="IV Written Attendance Sheet"
+        id="action_iv_written_attendance_sheet1"
+        string="IV  Written Attendance Sheet"
         model="iv.attendance.sheet"
         report_type="qweb-pdf"
         name="bes.reports_iv_written_attendance_sheet1"
-        file="bes.reports_iv_written_attendance_sheet1"
-    />
+        file="bes.reports_iv_written_attendance_sheet1"/>
 
     <report
     id="action_report_iv_attendance_sheet"
@@ -17,7 +16,7 @@
     report_type="qweb-pdf"
     name="bes.report_iv_attendance_sheet"
     file="bes.report_iv_attendance_sheet"
-    print_report_name="IV Attendance Sheet"/>
+    />
 
     <record id="action_report_iv_invigilator" model="ir.actions.report">
         <field name="name">Invigilator Reports</field>
