@@ -467,7 +467,7 @@
         <report
         id="action_report_survey_pdf"
         model="survey.survey"
-        string="Survey Report"
+        string="Exam Questions"
         report_type="qweb-pdf"
         name="bes.report_survey_pdf"
         file="bes.report_survey_pdf"
