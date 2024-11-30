@@ -22,9 +22,13 @@ class TimeSheetReport(models.Model):
     total_expenses = fields.Integer(string="Total Expenses", compute='_compute_total_expenses',store=True)
 
     approval_status = fields.Selection([
-        ('approved', 'Approved'),
+        ('ceo_approved', 'CEO Approved'),
+        ('rejected_ceo', 'Rejected by CEO'),
+        ('approved_ec', 'EC Approved'),
         ('pending','Pending')
     ], string='State', default='pending')
+    
+    reject_reason = fields.Text("Reject Reason")
 
     
     @api.depends('travel_details.expenses')

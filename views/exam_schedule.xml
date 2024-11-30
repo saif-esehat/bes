@@ -783,7 +783,7 @@
         <field name="arch" type="xml">
             <form string="Online Exam Wizard">
                 <group>
-                    <field name="ip_address" string="IP Address"/>
+                    <field name="ip_address" string="IP Address" required="1" />
                 </group>
                 <footer>
                     <button string="Save IP Address" type="object" name="save_ip_address" class="btn-primary"/>

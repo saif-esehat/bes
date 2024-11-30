@@ -14,6 +14,7 @@ class SalesOrderInherited(models.Model):
     tracking_id = fields.Char('Tracking Id')
     transaction_id = fields.Char("Transaction Id")
     sequence_id = fields.Char("Sequence")
+    outward_no = fields.Char("Outward No.")
 
 
     def _prepare_invoice(self):

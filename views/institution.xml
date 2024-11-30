@@ -99,6 +99,7 @@
                         <group style="width:50%;">
                             <field name="code" required="1"/>
                             <field name="institute_repeater"/>
+                            <field name="outstation" />
                         </group>
                         <group>
 

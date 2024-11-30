@@ -1000,27 +1000,37 @@
                         <t t-set="index" t-value="index + 1" />
                         <tr>
                             <td class="text-left sticky" style="left: 0;"><span t-esc="index" /></td>
-                            <td class="text-left sticky" style="left: 50;" t-attf-id="candidate_name_{{marksheet.id}}">
-                                <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
-                                <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
-                                <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.name" />
-                                <t t-if="examiner_subject == 'CCMC'" t-out="marksheet.ccmc_candidate.name" />
-                            </td>
+                            <t t-if="date_valid">
+                                <td class="text-left sticky" style="left: 50;" t-attf-id="candidate_name_{{marksheet.id}}">
+                                    <t t-if="examiner_subject == 'GSK'" t-out="marksheet.gp_candidate.name" />
+                                    <t t-if="examiner_subject == 'MEK'" t-out="marksheet.gp_candidate.name" />
+                                    <t t-if="examiner_subject == 'CCMC GSK Oral'" t-out="marksheet.ccmc_candidate.name" />
+                                    <t t-if="examiner_subject == 'CCMC'" t-out="marksheet.ccmc_candidate.name" />
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="text-left sticky" style="left: 50;" > --- </td>
+                            </t>
 
-                            <td  class="text-center" t-attf-id="candidate_roll_no_{{marksheet.id}}">
-                                <t t-if="examiner_subject == 'GSK'">
-                                    <t t-out="marksheet.gp_marksheet.exam_id" />
-                                </t>
-                                <t t-elif="examiner_subject == 'MEK'">
-                                    <t t-out="marksheet.gp_marksheet.exam_id" />
-                                </t>
-                                <t t-elif="examiner_subject == 'CCMC'">
-                                    <t t-out="marksheet.ccmc_marksheet.exam_id" />
-                                </t>
-                                <t t-elif="examiner_subject == 'CCMC GSK Oral'">
-                                    <t t-out="marksheet.ccmc_marksheet.exam_id" />
-                                </t>
-                            </td>
+                            <t t-if="date_valid">
+                                <td  class="text-center" t-attf-id="candidate_roll_no_{{marksheet.id}}">
+                                    <t t-if="examiner_subject == 'GSK'">
+                                        <t t-out="marksheet.gp_marksheet.exam_id" />
+                                    </t>
+                                    <t t-elif="examiner_subject == 'MEK'">
+                                        <t t-out="marksheet.gp_marksheet.exam_id" />
+                                    </t>
+                                    <t t-elif="examiner_subject == 'CCMC'">
+                                        <t t-out="marksheet.ccmc_marksheet.exam_id" />
+                                    </t>
+                                    <t t-elif="examiner_subject == 'CCMC GSK Oral'">
+                                        <t t-out="marksheet.ccmc_marksheet.exam_id" />
+                                    </t>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="text-left sticky" style="left: 50;" > --- </td>
+                            </t>
 
 
                             <!-- Modal For Present Confirmation -->
