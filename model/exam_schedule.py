@@ -4643,7 +4643,7 @@ class CCMCExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria")
     
     ccmc_online_status = fields.Selection([
         ('pending', 'Pending'),
