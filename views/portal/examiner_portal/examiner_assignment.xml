@@ -1174,7 +1174,7 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_gsk_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_oral={{ marksheet.gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}">
-                                    <span class='p-2'>Edit</span></a>
+                                    <span class='p-2'>View</span></a>
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>
@@ -1214,7 +1214,7 @@
                             <td t-if="examiner_subject == 'GSK' and exam_type == 'practical_oral'" class="text-center">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_gsk_practical_form?rec_id={{ marksheet.gp_candidate.id }}&amp;gsk_practical={{ marksheet.gsk_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                    <span class='p-2'>Edit</span></a>
+                                    <span class='p-2'>View</span></a>
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>
@@ -1256,7 +1256,7 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_mek_oral_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_oral={{marksheet.mek_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                    <span class='p-2'>Edit</span></a>
+                                    <span class='p-2'>View</span></a>
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>
@@ -1297,7 +1297,7 @@
                             <td t-if="examiner_subject == 'MEK' and exam_type == 'practical_oral'" class="text-left">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_practical_mek_form?rec_id={{ marksheet.gp_candidate.id }}&amp;mek_practical={{ marksheet.mek_prac.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                    <span class='p-2'>Edit</span></a>
+                                    <span class='p-2'>View</span></a>
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>
@@ -1337,7 +1337,7 @@
                             <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral' " class="text-left">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_ccmc_gsk_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_gsk_oral={{ marksheet.ccmc_gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                    <span>Edit</span></a>
+                                    <span>View</span></a>
                                 </t>
                                 <t t-else="">
                                     <span class="text-warning">Disabled</span>
@@ -1412,7 +1412,7 @@
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_ccmc_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_oral={{ marksheet.ccmc_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                        <span>Edit</span>
+                                        <span>View</span>
                                     </a>
                                 </t>
                                 <t t-else="">
@@ -1476,7 +1476,7 @@
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'practical_oral_cookery_bakery'" class="text-left">
                             <t t-if="date_valid">
                                 <a t-attf-href="/open_cookery_bakery_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;cookery_bakery={{ marksheet.cookery_bakery.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
-                                    <span>Edit</span>
+                                    <span>View</span>
                                 </a>
                             </t>
                             <t t-else="">

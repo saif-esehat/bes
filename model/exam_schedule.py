@@ -2307,7 +2307,7 @@ class ExamOralPracticalExaminers(models.Model):
     outstation =  fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')  
-    ], string='OutStation')
+    ], string='OutStation',compute='_compute_outstation')
     
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
@@ -2338,7 +2338,13 @@ class ExamOralPracticalExaminers(models.Model):
     active = fields.Boolean(string="Active",default=True)
     commence_exam = fields.Boolean(string="Commence Exam",default=False)
     
-    
+    def _compute_outstation(self):
+        if self.institute_id.outstation:
+            self.outstation = 'yes'
+        else:
+            self.outstation = 'no'
+
+
     def commence_online_exam(self):
         # import wdb; wdb.set_trace()
         self.commence_exam = True
