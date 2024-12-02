@@ -3465,7 +3465,7 @@
                             
                             <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
 
-                            <t t-if='batches.admit_card_status == "issued"'>
+                            <!-- <t t-if='batches.admit_card_status == "issued"'> -->
                                 <t t-if='hold_admit_card'>
                                     <td class="text-center">
                                         <span class="text-danger">On Hold</span>
@@ -3476,12 +3476,12 @@
                                         <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                                     </td>
                                 </t>
-                            </t>
+                            <!-- </t>
                             <t t-else=''>
                                 <td class="text-center">
                                     <span class="text-danger">Pending</span>
                                 </td>
-                            </t>
+                            </t> -->
                            
                             <t t-set="exams_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
                             <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
@@ -4429,18 +4429,22 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
-                            <t t-set="admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('attendance_criteria','=','passed')])"/>
                             
-                            <t t-if='batches.admit_card_status == "issued"'>
+                            <t t-set="admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('attendance_criteria','=','passed')])"/>
+                            <t t-set="hold_admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+                            
+                            <t t-if='hold_admit_card'>
                                 <td class="text-center">
-                                    <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
+                                    <span class="text-danger">On Hold</span>
                                 </td>
                             </t>
                             <t t-else=''>
                                 <td class="text-center">
-                                    <span class="text-danger">Pending</span>
+                                    <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                                 </td>
                             </t>
+
+
                             <t t-set="exams_certificate" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
 
                             <t t-if='exams_certificate'>
