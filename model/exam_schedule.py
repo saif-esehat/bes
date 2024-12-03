@@ -1232,10 +1232,14 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
     @api.depends('subject')
     def _compute_examiner_domain(self):
         for record in self:
-            if record.subject and record.subject.name == 'GSK':
+            if record.subject and record.subject.name == 'GSK' and record.exam_type and record.exam_type == 'practical_oral':
                 record.examiner_domain = [('designation', '=', 'master')]
-            elif record.subject and record.subject.name == 'MEK':
+            elif record.subject and record.subject.name == 'MEK' and record.exam_type and record.exam_type == 'practical_oral':
                 record.examiner_domain = [('designation', '=', 'chief')]
+            elif record.subject and record.subject.name == 'GSK' and record.exam_type and record.exam_type == 'online':
+                record.examiner_domain = [('designation', 'in', ('chief', 'master','non_mariner','catering'))]
+            elif record.subject and record.subject.name == 'MEK' and record.exam_type and record.exam_type == 'oline':
+                record.examiner_domain = [('designation', 'in', ('chief', 'master','non_mariner','catering'))]
             else:
                 record.examiner_domain = []
     
