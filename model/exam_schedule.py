@@ -3112,23 +3112,16 @@ class GpAdmitCardRelease(models.TransientModel):
     exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
     exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
     dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
-    is_march_september = fields.Boolean(string="March/September Examination",related='dgs_batch.is_march_september',store=True)
-    is_current_batch = fields.Boolean(string="March/September Examination",related='dgs_batch.is_current_batch',store=True)
-    repeater_batch = fields.Boolean(string="March/September Examination",related='dgs_batch.repeater_batch',store=True)
 
     check_batch = fields.Selection([('invisible', 'Invisible'), ('required', 'Required')],compute='_compute_check_batch')
 
-    @api.depends('is_current_batch', 'is_march_september', 'repeater_batch')
+    @api.depends('dgs_batch')
     def _compute_check_batch(self):
         for record in self:
-            if record.is_current_batch or not record.is_march_september and not record.repeater_batch:
+            if record.dgs_batch.is_current_batch or not record.dgs_batch.is_march_september and not record.dgs_batch.repeater_batch:
                 record.check_batch = 'invisible'
-            elif record.repeater_batch and record.is_march_september and not record.is_current_batch:
-                record.check_batch = 'invisible'
-            elif record.repeater_batch and not record.is_march_september and not record.is_current_batch:
+            elif record.dgs_batch.repeater_batch and not record.dgs_batch.is_march_september and not record.dgs_batch.is_current_batch:
                 record.check_batch = 'required'
-            else:
-                record.check_batch = 'invisible'
             
 
     def release_gp_admit_card(self, *args, **kwargs):
@@ -4519,6 +4512,22 @@ class CcmcAdmitCardRelease(models.TransientModel):
     candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
     result_message = fields.Text(string='Result', readonly=True)
 
+    exam_date_practical = fields.Date(string="Exam Date Practical From",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical To",tracking=True)
+    exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
+    dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
+    check_batch = fields.Selection([('invisible', 'Invisible'), ('required', 'Required')],compute='_compute_check_batch')
+
+    @api.depends('dgs_batch')
+    def _compute_check_batch(self):
+        for record in self:
+            if record.dgs_batch.is_current_batch or not record.dgs_batch.is_march_september and not record.dgs_batch.repeater_batch:
+                record.check_batch = 'invisible'
+            elif record.dgs_batch.repeater_batch and not record.dgs_batch.is_march_september and not record.dgs_batch.is_current_batch:
+                record.check_batch = 'required'
+            
+
     def release_ccmc_admit_card(self, *args, **kwargs):
         exam_ids = self.env.context.get('active_ids')
         candidates = self.env["ccmc.exam.schedule"].sudo().browse(exam_ids)
@@ -4533,8 +4542,10 @@ class CcmcAdmitCardRelease(models.TransientModel):
             delhi_region = candidate.dgs_batch.delhi_region
             kochi_region = candidate.dgs_batch.kochi_region
             goa_region = candidate.dgs_batch.goa_region
+            is_march_september = candidate.dgs_batch.is_march_september
             
             candidate_release = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', candidate.ccmc_candidate.id), ('hold_admit_card', '=', True)])
+            # import wdb;wdb.set_trace()
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             if candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
@@ -4559,6 +4570,15 @@ class CcmcAdmitCardRelease(models.TransientModel):
                 else:
                     print("Kolakata Not Set")
                     candidate.write({'hold_admit_card':False})
+
+                if not is_march_september:
+                    candidate.write({
+                        'exam_date_practical':self.exam_date_practical,
+                        'exam_date_practical_to':self.exam_date_practical_to,
+                        'exam_date_online':self.exam_date_online,
+                        'exam_date_online_to':self.exam_date_online_to,
+                        
+                        })
             else:
                 candidate.write({'hold_admit_card':True})
 
@@ -4767,6 +4787,12 @@ class CCMCExam(models.Model):
     ],string='Result Status',store=True,compute='_compute_result_status_2')
     
     exam_date = fields.Date(string="Exam Date",tracking=True)
+    exam_date_practical = fields.Date(string="Exam Date Practical",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical",tracking=True)
+    exam_date_online = fields.Date(string="Exam Date Online",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
+
+    
     @api.depends('certificate_criteria')
     def _compute_result_status_2(self):
         for record in self:
