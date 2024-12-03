@@ -142,6 +142,10 @@
                                                 <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_gsk_oral_prac or o.attempting_mek_oral_prac or o.attempting_gsk_online or o.attempting_mek_online">Exam Date </th>
                                                 <!-- <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_gsk_online or o.attempting_mek_online">Exam Date Online</th> -->
                                             </t>
+                                            <t t-elif="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
+                                                <th scope="col" class="table-secondary" style="border: 1px solid black;" 
+                                                t-if="o.attempting_gsk_oral_prac or o.attempting_mek_oral_prac or o.attempting_gsk_online or o.attempting_mek_online">Exam Date </th>
+                                            </t>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -174,6 +178,12 @@
                                                         <t t-esc="o.dgs_batch.kochi_prac_oral_date.strftime('%d-%b-%Y')"/>
                                                         <span>– <t t-if="o.dgs_batch.kochi_prac_oral_to_date" t-esc="o.dgs_batch.kochi_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
+                                                </td>
+                                            </t>
+                                            <t t-elif="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
+                                                <td style="border: 1px solid black;">
+                                                    <span><t t-if="o.exam_date_practical"  t-esc="o.exam_date_practical.strftime('%d-%b-%Y')"/></span>
+                                                    <span> - <t t-if="o.exam_date_practical_to" t-esc="o.exam_date_practical_to.strftime('%d-%b-%Y')"/></span>
                                                 </td>
                                             </t>
                                         </tr>
@@ -209,6 +219,12 @@
                                                     </t>
                                                 </td>
                                             </t>
+                                            <t t-elif="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
+                                                <td style="border: 1px solid black;">
+                                                    <span><t t-if="o.exam_date_online"  t-esc="o.exam_date_online.strftime('%d-%b-%Y')"/></span>
+                                                    <span> - <t t-if="o.exam_date_online_to" t-esc="o.exam_date_online_to.strftime('%d-%b-%Y')"/></span>
+                                                </td>
+                                            </t>
                                         </tr>
                                     
                                         <!-- MEK Practical & Oral -->
@@ -240,6 +256,12 @@
                                                         <t t-esc="o.dgs_batch.kochi_prac_oral_date.strftime('%d-%b-%Y')"/>
                                                         <span> - <t t-if="o.dgs_batch.kochi_prac_oral_to_date" t-esc="o.dgs_batch.kochi_prac_oral_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
+                                                </td>
+                                            </t>
+                                            <t t-elif="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
+                                                <td style="border: 1px solid black;">
+                                                    <span><t t-if="o.exam_date_practical"  t-esc="o.exam_date_practical.strftime('%d-%b-%Y')"/></span>
+                                                    <span> - <t t-if="o.exam_date_practical_to" t-esc="o.exam_date_practical_to.strftime('%d-%b-%Y')"/></span>
                                                 </td>
                                             </t>
                                         </tr>
@@ -274,6 +296,12 @@
                                                         <t t-esc="o.dgs_batch.kochi_online_date.strftime('%d-%b-%Y')"/>
                                                         <span> - <t t-if="o.dgs_batch.kochi_online_to_date" t-esc="o.dgs_batch.kochi_online_to_date.strftime('%d-%b-%Y')"/></span>
                                                     </t>
+                                                </td>
+                                            </t>
+                                            <t t-elif="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
+                                                <td style="border: 1px solid black;">
+                                                    <span><t t-if="o.exam_date_online"  t-esc="o.exam_date_online.strftime('%d-%b-%Y')"/></span>
+                                                    <span> - <t t-if="o.exam_date_online_to" t-esc="o.exam_date_online_to.strftime('%d-%b-%Y')"/></span>
                                                 </td>
                                             </t>
                                         </tr>
