@@ -3110,8 +3110,6 @@ class GpAdmitCardRelease(models.TransientModel):
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
             if candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
-                # import  wdb; wdb.set_trace()
-                # print("insnlasndfsdf")
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                     candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
                     # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
