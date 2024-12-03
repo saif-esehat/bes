@@ -1240,7 +1240,7 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
     ], string='OutStation')
     examiner_domain = fields.Char(compute='_compute_examiner_domain')
     
-    @api.depends('subject')
+    @api.depends('subject','exam_type')
     def _compute_examiner_domain(self):
         for record in self:
             if record.subject and record.subject.name == 'GSK' and record.exam_type and record.exam_type == 'practical_oral':
@@ -1249,12 +1249,12 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
                 record.examiner_domain = [('designation', '=', 'chief')]
             elif record.subject and record.subject.name == 'GSK' and record.exam_type and record.exam_type == 'online':
                 record.examiner_domain = [('designation', 'in', ('chief', 'master','non_mariner','catering'))]
-            elif record.subject and record.subject.name == 'MEK' and record.exam_type and record.exam_type == 'oline':
+            elif record.subject and record.subject.name == 'MEK' and record.exam_type and record.exam_type == 'online':
                 record.examiner_domain = [('designation', 'in', ('chief', 'master','non_mariner','catering'))]
             else:
                 record.examiner_domain = []
     
-    @api.onchange('subject')
+    @api.onchange('subject','exam_type')
     def _onchange_subject(self):
         return {'domain': {'examiner': self.examiner_domain}}
 
