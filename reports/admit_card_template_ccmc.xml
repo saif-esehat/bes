@@ -22,7 +22,10 @@
                             <strong>Exam Center: <t t-esc="o.registered_institute.name"/></strong>
                         </t>
                         <t t-elif="o.attempt_number > 1">
-                            <t t-if="o.exam_region.id == 1">
+                            <t t-if="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
+                                    <strong>Exam Center:<t t-esc="o.registered_institute.name"/></strong>
+                            </t>
+                            <t t-elif="o.exam_region.id == 1">
                                 <strong>Exam Center: <t t-esc="o.dgs_batch.mumbai_region.name"/></strong>
                             </t>
                             <t t-elif="o.exam_region.id == 3">

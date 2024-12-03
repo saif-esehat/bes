@@ -423,15 +423,42 @@
                 document.getElementById('modal_batch_id').value = dataId;
 
                 }
-
-                function openRaiseInvoiceModal(button) {
+                
+                function openCCMCRaiseInvoiceModal(button) {
                 // Retrieve the data-id attribute value from the clicked button
                 var dataId = button.getAttribute('data-id');
                 // Update the content of the modal with the retrieved data
                 document.getElementById('ccmc_invoice_batch_id').value = dataId;
-                <!-- debugger -->
-
+                debugger
+                
+                var postData = {
+                    "ccmc_invoice_batch_id": dataId
                 }
+
+                $.ajax({
+                        type: "POST",
+                        url: '/getccmcinvoiceqty',
+                        data: JSON.stringify(postData),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            
+                            debugger
+                            <!-- var amount = JSON.parse(response) -->
+                            var qty = JSON.parse(response.result).candidate_qty
+                            var total_price = JSON.parse(response.result).total_price
+                            document.getElementById('invoice-candidate-count').innerText = qty
+                            document.getElementById('invoice-total-price').innerText = total_price
+                                        
+                        },
+                            error: function (xhr, status, error) {
+                                console.error("POST request failed:", error);
+
+                                // Handle error
+                            }
+                        });
+                }
+
+
         
         </script>
         <t t-call="portal.portal_layout">
@@ -478,7 +505,7 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="generate_invoice_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="generate_ccmc_invoice_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <form method="post" action="/my/createccmcinvoice" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -487,9 +514,32 @@
                                     <h5 class="modal-title" id="exampleModalLabel">Generate Invoice</h5>
                                 </div>
                                 <input type="hidden" id="ccmc_invoice_batch_id" name="ccmc_invoice_batch_id"/>
-                                <div class="modal-body">
 
-                                        Are you sure you want to generate invoice ?
+                                <div class="modal-body">
+                                    Are you Sure you want to Generate Invoice ?
+                                    <p>Price for the 
+                                        <span id="invoice-candidate-count"></span> 
+                                    candidates will be 
+                                        <span id="invoice-total-price">
+                                    </span> Rs.</p>
+
+
+                                    <label for="transaction_id">Transaction ID</label>
+                                    <input  class="form-control" id="transaction_id" required="1" name="transaction_id"/>
+
+                                    <label for="bank_name">Bank Name</label>
+                                    <input  class="form-control" id="bank_name" required="1" name="bank_name"/>
+
+
+                                    <label for="transaction_amount">Transaction Amount</label>
+                                    <input  class="form-control" id="transaction_amount" required="1" name="transaction_amount"/>
+
+
+                                    <label for="transaction_slip">Transaction Slip</label>
+                                    <input type="file" class="form-control" name="transaction_slip" required="1"  id="transaction_slip" accept=".pdf, .jpg, .jpeg, .png"/>
+
+                                    <label for="transaction_date">Transaction Date</label>
+                                    <input type="date" class="form-control" name="transaction_date" required="1"  id="transaction_date"/>
 
                                 </div>
                                 <div class="modal-footer">
@@ -565,7 +615,7 @@
                             </t> -->
                             <t t-if="batch.candidate_user_invoice_criteria == True and not batch.all_invoice_generated">
                                 <td class="text-center">
-                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openRaiseInvoiceModal(this)" data-target="#generate_invoice_modal">Generate Invoice</a>
+                                    <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openCCMCRaiseInvoiceModal(this)" data-target="#generate_ccmc_invoice_modal">Generate Invoice</a>
                                 </td>
                             </t>
                             
@@ -3415,7 +3465,7 @@
                             
                             <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
 
-                            <t t-if='batches.admit_card_status == "issued"'>
+                            <!-- <t t-if='batches.admit_card_status == "issued"'> -->
                                 <t t-if='hold_admit_card'>
                                     <td class="text-center">
                                         <span class="text-danger">On Hold</span>
@@ -3426,12 +3476,12 @@
                                         <a t-attf-href="/my/gpcandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                                     </td>
                                 </t>
-                            </t>
+                            <!-- </t>
                             <t t-else=''>
                                 <td class="text-center">
                                     <span class="text-danger">Pending</span>
                                 </td>
-                            </t>
+                            </t> -->
                            
                             <t t-set="exams_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
                             <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
@@ -4379,18 +4429,22 @@
                             <td class="text-center">
                                 <a t-attf-href="/my/ccmccandidateprofile/{{candidate.id}}" class="fa">View/Update</a>
                             </td>
-                            <t t-set="admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('attendance_criteria','=','passed')])"/>
                             
-                            <t t-if='batches.admit_card_status == "issued"'>
+                            <t t-set="admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('attendance_criteria','=','passed')])"/>
+                            <t t-set="hold_admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+                            
+                            <t t-if='hold_admit_card'>
                                 <td class="text-center">
-                                    <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
+                                    <span class="text-danger">On Hold</span>
                                 </td>
                             </t>
                             <t t-else=''>
                                 <td class="text-center">
-                                    <span class="text-danger">Pending</span>
+                                    <a t-attf-href="/my/ccmccandidates/download_admit_card/{{candidate.id}}" class="fa">Download Admit Card</a>
                                 </td>
                             </t>
+
+
                             <t t-set="exams_certificate" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',candidate.id),('certificate_criteria','=','passed'),('state','=','3-certified')])"/>
 
                             <t t-if='exams_certificate'>

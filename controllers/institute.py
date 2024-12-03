@@ -520,12 +520,38 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/invoices/")
 
     # CCMC Invoice
+
     @http.route(
-        ["/my/createccmcinvoice"],
-        method=["POST"],
-        type="http",
-        auth="user",
-        website=True,
+        ["/getccmcinvoiceqty"], method=["POST"], type="json", auth="user", website=True
+    )
+    def getccmcqty(self, **kw):
+        data = request.jsonrequest
+        # import wdb; wdb.set_trace()
+        print(request.jsonrequest)
+        user_id = request.env.user.id
+        batch_id = data["ccmc_invoice_batch_id"]
+        batch = (
+            request.env["institute.ccmc.batches"].sudo().search([("id", "=", batch_id)])
+        )
+
+        product_price = batch.ccmc_course.exam_fees.lst_price
+        qty = (
+            request.env["ccmc.candidate"]
+            .sudo()
+            .search_count(
+                [
+                    ("institute_batch_id", "=", batch.id),
+                    ("fees_paid", "=", "yes"),
+                    ("invoice_generated", "=", False),
+                ]
+            )
+        )
+        print("Qty", batch)
+        total_price = product_price * qty
+        return json.dumps({"candidate_qty": qty, "total_price": total_price})
+
+    @http.route(
+        ["/my/createccmcinvoice"],method=["POST"],type="http",auth="user",website=True,
     )
     def CreateCCMCinvoice(self, **kw):
         # import wdb; wdb.set_trace();
@@ -539,6 +565,15 @@ class InstitutePortal(CustomerPortal):
         institute_id = (
             request.env["bes.institute"].sudo().search([("user_id", "=", user_id)])
         )
+
+        transaction_date = kw.get("transaction_date")
+        transaction_id = kw.get("transaction_id")
+        bank_name = kw.get("bank_name")
+        transaction_amount = kw.get("transaction_amount")
+        transaction_slip = request.httprequest.files.get("transaction_slip")
+
+        transaction_slip_file = transaction_slip.read()
+        transaction_slip_filename = transaction_slip.filename
 
         ccmc_partner_id = institute_id.user_id.partner_id.id
         product_id_ccmc = batch.ccmc_course.exam_fees.id
@@ -606,6 +641,17 @@ class InstitutePortal(CustomerPortal):
         candidates.write({"invoice_generated": True})
         new_invoice.action_post()
         # import wdb; wdb.set_trace();
+
+        new_invoice.write(
+            {
+                "transaction_id": transaction_id,
+                "bank_name": bank_name,
+                "transaction_slip": transaction_slip_file,
+                "file_name": transaction_slip_filename,
+                "transaction_date": transaction_date,
+                "total_amount": transaction_amount,
+            }
+        )
         batch.write(
             {
                 "ccmc_invoice_created": True,
