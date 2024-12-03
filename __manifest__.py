@@ -66,6 +66,7 @@
         'reports/iv_candidate_admit_card.xml',
         'views/iv_exam/candidate_remark.xml',
         'views/iv_exam/iv_attendance_sheet.xml',
+        'views/iv_exam/iv_invigilator_sheet.xml',
         'reports/iv_attandance_report/iv_written_attendance.xml',
         'views/iv_exam/iv_oral_attendance_sheet.xml',
         'views/iv_exam/iv_exams.xml',
@@ -80,7 +81,9 @@
         'views/ship_visit/ccmc_ship_visit.xml',
         'views/portal/ship_visit/ship_visit.xml',
         'views/portal/ship_visit/ccmc_ship_visi.xml',
-        'views/portal/sale_order_portal.xml'
+        'views/portal/sale_order_portal.xml',
+        'reports/iv_invigilator/iv_invigilator_report.xml',
+        'reports/sales_order_template.xml'
  
        
         # 'views/sep_batches.xml',

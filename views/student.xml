@@ -1295,14 +1295,14 @@
                                 <span>10 Marks</span>
                             </div>
                         </group>
-                        <group>
+                        <!-- <group>
                             <label for="gsk_ccmc" />
                             <div>
                                 <field name="gsk_ccmc" nolabel="1"/>
                                         / 
                                 <span>20 Marks</span>
                             </div>
-                        </group>
+                        </group> -->
                         <!-- <group>
                             <label for="safety_ccmc"/>
                             <div>
@@ -1316,7 +1316,7 @@
                             <div>
                                 <field name="toal_ccmc_rating" nolabel="1"/>
                                         / 
-                                <span>100 Marks</span>
+                                <span>80 Marks</span>
                             </div>
                         </group>
                         <group>

@@ -539,6 +539,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         
         records = self.examiner_lines_ids
         
+        if record.ccmc_prac_oral_candidates == 0 and record.ccmc_gsk_oral_candidates == 0 and record.ccmc_online_candidates == 0:
+            raise ValidationError("No Candidates Available for Assignment")
+
+        
         for record in records:
             if record.subject.name == 'CCMC':
                 if record.exam_type == 'practical_oral_cookery_bakery': #Means Cookery Bakery
@@ -1004,6 +1008,13 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     def confirm(self):
         records = self.examiner_lines_ids
         
+        if (self.gsk_prac_oral_candidates == 0 and
+            self.mek_prac_oral_candidates == 0 and
+            self.gsk_online_candidates == 0 and
+            self.mek_online_candidates == 0):
+            raise ValidationError("No Candidates Available for Assignment")
+
+        
         for record in records:
             
             if record.subject.name == 'GSK':
@@ -1229,17 +1240,21 @@ class ExaminerAssignmentLineWizard(models.TransientModel):
     ], string='OutStation')
     examiner_domain = fields.Char(compute='_compute_examiner_domain')
     
-    @api.depends('subject')
+    @api.depends('subject','exam_type')
     def _compute_examiner_domain(self):
         for record in self:
-            if record.subject and record.subject.name == 'GSK':
+            if record.subject and record.subject.name == 'GSK' and record.exam_type and record.exam_type == 'practical_oral':
                 record.examiner_domain = [('designation', '=', 'master')]
-            elif record.subject and record.subject.name == 'MEK':
+            elif record.subject and record.subject.name == 'MEK' and record.exam_type and record.exam_type == 'practical_oral':
                 record.examiner_domain = [('designation', '=', 'chief')]
+            elif record.subject and record.subject.name == 'GSK' and record.exam_type and record.exam_type == 'online':
+                record.examiner_domain = [('designation', 'in', ('chief', 'master','non_mariner','catering'))]
+            elif record.subject and record.subject.name == 'MEK' and record.exam_type and record.exam_type == 'online':
+                record.examiner_domain = [('designation', 'in', ('chief', 'master','non_mariner','catering'))]
             else:
                 record.examiner_domain = []
     
-    @api.onchange('subject')
+    @api.onchange('subject','exam_type')
     def _onchange_subject(self):
         return {'domain': {'examiner': self.examiner_domain}}
 
@@ -2307,7 +2322,7 @@ class ExamOralPracticalExaminers(models.Model):
     outstation =  fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')  
-    ], string='OutStation')
+    ], string='OutStation',compute='_compute_outstation')
     
     prac_oral_id = fields.Many2one("exam.type.oral.practical",string="Exam Practical/Oral ID",store=True,required=False,tracking=True)
     institute_id = fields.Many2one("bes.institute",string="Institute",tracking=True)
@@ -2338,7 +2353,13 @@ class ExamOralPracticalExaminers(models.Model):
     active = fields.Boolean(string="Active",default=True)
     commence_exam = fields.Boolean(string="Commence Exam",default=False)
     
-    
+    def _compute_outstation(self):
+        if self.institute_id.outstation:
+            self.outstation = 'yes'
+        else:
+            self.outstation = 'no'
+
+
     def commence_online_exam(self):
         # import wdb; wdb.set_trace()
         self.commence_exam = True
@@ -2350,7 +2371,8 @@ class ExamOralPracticalExaminers(models.Model):
             'target': 'new',
             'context': {
                 'default_examiners_id': self.id ,# Pass the current record ID to the wizard
-                'default_exam_date':self.exam_date
+                'default_exam_date':self.exam_date,
+                'default_ip_address':self.ipaddr,
             },
         }
     
@@ -2509,10 +2531,22 @@ class ExamOralPracticalExaminers(models.Model):
                     record.candidate_done = count
             
             elif record.subject.name == 'CCMC':
-                if record.exam_type == 'practical_oral':
+                if record.exam_type == 'practical_oral_cookery_bakery':
                     count = 0
                     for sheet in record.marksheets:
-                        if sheet.cookery_bakery.cookery_draft_confirm == 'confirm' and sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                        if sheet.cookery_bakery.cookery_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                elif record.exam_type == 'ccmc_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                            count += 1
+                    record.candidate_done = count
+                elif record.exam_type == 'gsk_oral':
+                    count = 0
+                    for sheet in record.marksheets:
+                        if sheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
                             count += 1
                     record.candidate_done = count
                 elif record.exam_type == 'online':
@@ -3090,27 +3124,29 @@ class GpAdmitCardRelease(models.TransientModel):
             
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
-            # import  wdb; wdb.set_trace()
-            if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
-            elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
-                candidate.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
-            elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
-                candidate.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
-            elif candidate.exam_region.name == 'DELHI' and delhi_region:
-                candidate.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
-            elif candidate.exam_region.name == 'KOCHI' and kochi_region:
-                candidate.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
-            elif candidate.exam_region.name == 'GOA' and goa_region:
-                candidate.write({'hold_admit_card':False,'registered_institute':goa_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+            if candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
+                if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                    candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+                elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                    candidate.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+                elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                    candidate.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+                elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                    candidate.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+                elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                    candidate.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+                elif candidate.exam_region.name == 'GOA' and goa_region:
+                    candidate.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+                else:
+                    candidate.write({'hold_admit_card':False})
             else:
-                candidate.write({'hold_admit_card':False})
+                candidate.write({'hold_admit_card':True})
             
             # message = "GP Admit Card Released for "+str(len(exam_ids))+ " Candidates"
 
@@ -3147,7 +3183,7 @@ class GPExam(models.Model):
     registered_institute = fields.Many2one("bes.institute",string="Examination Center",tracking=True)
     
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
-    certificate_id = fields.Char(string="Certificate ID",tracking=True)
+    certificate_id = fields.Char(string="Certificate No.",tracking=True)
     gp_candidate = fields.Many2one("gp.candidate","GP Candidate",store=True,tracking=True)
     # roll_no = fields.Char(string="Roll No",required=True, copy=False, readonly=True,
     #                             default=lambda self: _('New')) 
@@ -4473,30 +4509,32 @@ class CcmcAdmitCardRelease(models.TransientModel):
             
             candidate_release = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', candidate.ccmc_candidate.id), ('hold_admit_card', '=', True)])
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                
-            if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
-                # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
-            elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
-                print("Kolakata")
-                candidate.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
-                # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
-            elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
-                candidate.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
-                # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
-            elif candidate.exam_region.name == 'DELHI' and delhi_region:
-                candidate.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
-                # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
-            elif candidate.exam_region.name == 'KOCHI' and kochi_region:
-                candidate.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
-                # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
-            elif candidate.exam_region.name == 'GOA' and goa_region:
-                candidate.write({'hold_admit_card':False,'registered_institute':goa_region.id})
-                # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+            if candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
+                if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                    candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+                elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                    print("Kolakata")
+                    candidate.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+                elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                    candidate.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+                elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                    candidate.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+                elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                    candidate.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+                elif candidate.exam_region.name == 'GOA' and goa_region:
+                    candidate.write({'hold_admit_card':False,'registered_institute':goa_region.id})
+                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
+                else:
+                    print("Kolakata Not Set")
+                    candidate.write({'hold_admit_card':False})
             else:
-                print("Kolakata Not Set")
-                candidate.write({'hold_admit_card':False})
-            
+                candidate.write({'hold_admit_card':True})
+
             # Calculate the total number of candidates and those whose admit cards were already released
             total_candidates = len(exam_ids)
             newly_released_count = total_candidates - len(already_released_count)
@@ -4524,7 +4562,7 @@ class CCMCExam(models.Model):
     _description= 'CCMC Schedule'
     
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
-    certificate_id = fields.Char(string="Certificate ID",tracking=True)
+    certificate_id = fields.Char(string="Certificate No.",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
     hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
@@ -4578,10 +4616,12 @@ class CCMCExam(models.Model):
     
     attempted_ccmc_online = fields.Boolean("Attempted CCMC Online",tracking=True)
     
-    cookery_oral = fields.Float("CCMC/GSK Oral",readonly=True,tracking=True)
-    ccmc_gsk_oral_marks = fields.Float("CCMC GSK Oral",readonly=True,tracking=True)
-    ccmc_oral_percentage = fields.Float("Cookery Oral Percentage",readonly=True,tracking=True)
-    ccmc_gsk_oral_percentage = fields.Float("CCMC GSK Oral Percentage",readonly=True,tracking=True)
+    cookery_oral = fields.Float("Catering",readonly=True,tracking=True)
+    
+    
+    ccmc_gsk_oral_marks = fields.Float("GSK Oral",readonly=True,tracking=True)
+    ccmc_oral_percentage = fields.Float("Catering Percentage",readonly=True,tracking=True)
+    ccmc_gsk_oral_percentage = fields.Float("GSK Oral Percentage",readonly=True,tracking=True)
     
     # Attempting Exams
     attempting_cookery = fields.Boolean("Attempting Cookery Bakery",tracking=True)
@@ -4593,6 +4633,19 @@ class CCMCExam(models.Model):
         ('failed', 'Failed'),
         ('passed', 'Passed'),
     ], string='CCMC Oral Status',default="pending",tracking=True)
+    
+    ccmc_catering_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='Catering Status',default="pending",tracking=True)
+    
+    ccmc_gsk_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('failed', 'Failed'),
+        ('passed', 'Passed'),
+    ], string='GSK Status',default="pending",tracking=True)
+    
     
     token = fields.Char(string='Online Token',tracking=True)
     
@@ -4624,7 +4677,7 @@ class CCMCExam(models.Model):
         ('', ''),
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Exam Status' , compute="compute_certificate_criteria",tracking=True)
+    ], string='Exam Status' , compute="compute_certificate_criteria")
     
     ccmc_online_status = fields.Selection([
         ('pending', 'Pending'),
@@ -5209,6 +5262,10 @@ class CCMCExam(models.Model):
                     if ccmc_oral_state:
                         ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
                         self.cookery_oral = ccmc_oral_marks
+                        
+                        #GSK Oral Makrs
+                        ccmc_gsk_marks =  self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                        self.ccmc_gsk_oral_marks = ccmc_gsk_marks
                     else:
                         error_msg = _("CCMC Oral  Not Confirmed for'%s'") % (self.ccmc_candidate.name)
                         raise ValidationError(error_msg)
@@ -5235,12 +5292,12 @@ class CCMCExam(models.Model):
                     cookery_gsk_online = self.cookery_gsk_online
                     self.cookery_gsk_online = cookery_gsk_online
                 
-                self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online
+                self.overall_marks = self.cookery_practical  + self.ccmc_gsk_oral_marks + self.cookery_oral + self.cookery_gsk_online
                 
                 #Percentage Calculation
                 #  import wdb; wdb.set_trace(); 
                 self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
-                self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+                self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
                 self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
                 
                 self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
@@ -5285,7 +5342,11 @@ class CCMCExam(models.Model):
                     ccmc_oral_marks = self.cookery_oral
                     self.cookery_oral = ccmc_oral_marks
                     self.cookery_practical = cookery_bakery_marks
-                    cookery_gsk_online = self.cookery_gsk_online
+                    cookery_gsk_online = self.cookery_gsk_online                    
+                    ccmc_gsk_marks =  self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                    self.ccmc_gsk_oral_marks = ccmc_gsk_marks
+
+                    
                     self.cookery_gsk_online = cookery_gsk_online
                     self.overall_marks = ccmc_oral_marks + cookery_bakery_marks + cookery_gsk_online
                     
@@ -5400,7 +5461,7 @@ class CCMCExam(models.Model):
                 #Percentage Calculation
                 
                 self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
-                self.ccmc_oral_percentage = (self.cookery_oral/100) * 100
+                self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
                 self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
                 
 

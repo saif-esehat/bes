@@ -153,6 +153,14 @@ class CustomPaymentRegister(models.TransientModel):
         # import wdb; wdb.set_trace(); 
             if invoice.gp_batch_ok: #in GP Invoice
                 print("gopppppppppppppppppppppppppppppppppppppp")
+                print(invoice.gp_candidates)
+                for candidate in invoice.gp_candidates:
+                    indos = candidate.indos_no
+                    user = self.env['res.users'].search([('login', '=', indos)], limit=1)
+                    if user:
+                        raise ValidationError("Validation Error: The INDOS number "+indos+" already exists in the system.")
+
+                    
                 gp_candidates = invoice.gp_candidates.ids
                 batch = invoice.batch
                 # self.env['batches.gp.register.exam.wizard'].sudo().register(batch.id)

@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-<!-- 
-        <menuitem id="time_sheet_parent" name="Time Sheet"/>
-
-        <menuitem id="time_sheet_id" 
-            name="Sub Menu" 
-            sequence="1"
-            parent="bes_menu"
-            action="action_time_sheet_form"/> -->
 
         <!-- Define the Action -->
         <record id="action_time_sheet_form" model="ir.actions.act_window">

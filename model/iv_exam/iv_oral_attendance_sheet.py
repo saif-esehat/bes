@@ -33,10 +33,19 @@ class IVAttendanceSheet(models.Model):
        
     )
     
-    indos_no = fields.Char(string="INDOs No")
+    indos_no = fields.Char(string="Indos No")
 
     candidate_signature = fields.Binary(string="Candidate Signature")
     class_no = fields.Char(string="Class Room: No.")
+
+
+    def generate_oral_marksheets(self):
+        for record in self:
+            record.env['iv.oral.exam'].sudo().create({
+                'candidate':record.candidate_name.id,
+                'batch_id':record.batch_id.id,
+                'grade':record.grade_applied
+            })
 
 
 

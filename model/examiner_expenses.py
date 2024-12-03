@@ -441,11 +441,44 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
     expense = fields.Many2one('time.sheet.report', string="Timesheet")
     tavel_details = fields.Many2many('travel.details', string="Travel Details")
     
+    expense_readonly = fields.Boolean(string='Approved', compute='_compute_expense_readonly')
+    
+    state = fields.Selection([
+        ('ceo_approved', 'CEO Approved'),
+        ('rejected_ceo', 'Rejected by CEO'),
+        ('approved_ec', 'EC Approved'),
+        ('pending','Pending')
+    ], string='State',related="expense.approval_status")
+
+    reject_reason = fields.Text("Reject Reason")
+
+    @api.depends('expense_readonly')
+    def _compute_is_approved(self):
+        for record in self:
+            # Assuming 'group_approver' is the group that can approve
+            
+            is_expense_approval_ec = self.env.user.has_group('bes.group_expense_approval_ec')
+            
+            record.expense_readonly = is_expense_approval_ec
+            
+            # if 
+            
+            # record.expense_readonly = self.env.user.has_group('your_module.group_approver')
+
     
     
+    def approve_time_sheet_ec(self):
+        self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
     
-    def approve_time_sheet(self):
-        self.expense.sudo().write({'approval_status':'approved'})
+    def approve_time_sheet_ceo(self):
+        self.expense.sudo().write({'approval_status':'ceo_approved','reject_reason': ''})
+    
+    def reject_time_sheet_ceo(self):
+        
+        if not self.reject_reason:
+            raise ValidationError("Reject Reason Required")
+        
+        self.expense.sudo().write({'approval_status':'rejected_ceo','reject_reason': self.reject_reason})
     
     @api.onchange('expense')
     def _onchange_many2one_field(self):
@@ -475,9 +508,14 @@ class ExamMiscExpense(models.Model):
     examiner_expenses_id = fields.Many2one('examiner.expenses', string="Examiner Expenses")
     ex_expense = fields.Many2one('ec.expenses', string="EC Expense")
     approval_status = fields.Selection([
-        ('approved', 'Approved'),
+        ('ceo_approved', 'CEO Approved'),
+        ('approved_ec', 'EC Approved'),
+        ('rejected_ceo', 'Rejected by CEO'),
         ('pending','Pending')
     ], string='State',related="timesheet_report.approval_status")
+    
+    reject_reason = fields.Text("Reject Reason",related="timesheet_report.reject_reason")
+
     
     def open_approval_wizard(self):
         return {

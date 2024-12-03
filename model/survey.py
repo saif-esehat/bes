@@ -5,7 +5,7 @@ import secrets
 import random
 import string
 from datetime import datetime
-import pandas as pd
+# import pandas as pd
 import base64
 from io import BytesIO
 
@@ -22,7 +22,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('single', 'Single'),
         ('bulk', 'Bulk')       
     ], string='Upload Type', default='single')
-    file = fields.Binary(string="File", required=True)
+    file = fields.Binary(string="File", required=False)
 
 
     def action_add_question(self):
@@ -105,7 +105,6 @@ class InheritedSurvey(models.Model):
         ('page_per_section', 'One page per section'),
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
-    
     
     def action_open_add_section(self):
         self.ensure_one()
@@ -340,7 +339,13 @@ class InheritedSurveyQuestions(models.Model):
     q_no = fields.Char("Q.No")
     q_score = fields.Char("Q.Score",compute="_compute_score",store=True)
     answers_count = fields.Integer("No. of Answers",compute="_answer_count",store=True)
+    difficulty_level = fields.Selection([
+        ('easy','Easy'),
+        ('moderate','Moderate'),
+        ('hard','Hard')
+    ], string="Difficulty Level",default='easy')
 
+    
     @api.depends('suggested_answer_ids')
     def _answer_count(self):
         for record in self:

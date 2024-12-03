@@ -1756,7 +1756,7 @@ class CcmcOralLine(models.Model):
     def _compute_ccmc_rating_total(self):
         for record in self:
             rating_total = (
-                record.gsk_ccmc +
+                # record.gsk_ccmc +
                 # record.safety_ccmc+
                 record.house_keeping+
                 record.f_b+
