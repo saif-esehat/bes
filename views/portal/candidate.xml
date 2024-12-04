@@ -367,7 +367,7 @@
                             <td class="text-center">
                                 <t t-out="rec.gp_candidate.name" />
                             </td>
-                            <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_admit_card','=',True)])"/>
+                            <t t-set="hold_admit_card" t-value="env['gp.exam.schedule'].sudo().search([('id','=',rec.id),('hold_admit_card','=',True)])"/>
                             <!-- <t t-if="show_admit_card"> -->
                                 <td class="text-center">
                                     <t t-if="hold_admit_card">
@@ -378,7 +378,7 @@
                                     </t>
                                 </td>
                             <!-- </t> -->
-                            <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate.id),('hold_certificate','=',True)])"/>
+                            <t t-set="hold_certificate" t-value="env['gp.exam.schedule'].sudo().search([('id','=',rec.id),('hold_certificate','=',True)])"/>
                             <t t-if="show_certificate">
                                 <td class="text-center">
                                     <t t-if="hold_certificate">
@@ -431,9 +431,6 @@
                             <t  t-if="show_admit_card">
                                 Admit Card
                             </t>
-                            <!-- <t  t-else="">
-                                Admit Card
-                            </t> -->
                         </th>
                         <th t-if="show_certificate" class="text-center">Certificate</th>
 
@@ -455,7 +452,7 @@
 
 
                             </td> -->
-                            <t t-set="hold_admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_candidate','=',rec.ccmc_candidate.id),('hold_admit_card','=',True)])"/>
+                            <t t-set="hold_admit_card" t-value="env['ccmc.exam.schedule'].sudo().search([('id','=',rec.id),('hold_admit_card','=',True)])"/>
 
                             <td class="text-center">
                                 <t  t-if="hold_admit_card">

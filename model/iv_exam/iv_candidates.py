@@ -61,6 +61,8 @@ class IVCandidates(models.Model):
     
     candidate_applications = fields.One2many('candidate.applications.line','candidate_id',string="Candidate Applications")
 
+    admit_card_received = fields.Boolean(string="Admit Card Received")
+
     def create_attendance_record(self):
         return {
             'type': 'ir.actions.act_window',

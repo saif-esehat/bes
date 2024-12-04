@@ -177,7 +177,8 @@
                     <t t-foreach="docs" t-as="doc">
                         <!-- Print the roll_no in red and without borders -->
                         <td style="color: red;border:none;vertical-align: middle; padding: 10px;text-align:center;"> <!-- Padding for spacing -->
-                            <t t-esc="doc.roll_no"/>
+                            <!-- <t t-esc="doc.roll_no"/> -->
+                             <strong><t t-esc="doc.roll_no" /></strong>
                         </td>
                         
                         <!-- Increment counter and check if 3 records have been printed -->
