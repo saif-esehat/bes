@@ -539,7 +539,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         
         records = self.examiner_lines_ids
         
-        if record.ccmc_prac_oral_candidates == 0 and record.ccmc_gsk_oral_candidates == 0 and record.ccmc_online_candidates == 0:
+        if self.ccmc_prac_oral_candidates == 0 and self.ccmc_gsk_oral_candidates == 0 and self.ccmc_online_candidates == 0:
             raise ValidationError("No Candidates Available for Assignment")
 
         

@@ -154,9 +154,15 @@ class CustomPaymentRegister(models.TransientModel):
             if invoice.gp_batch_ok: #in GP Invoice
                 print("gopppppppppppppppppppppppppppppppppppppp")
                 print(invoice.gp_candidates)
+                indos_set = set()
                 for candidate in invoice.gp_candidates:
                     indos = candidate.indos_no
+                    if indos in indos_set:
+                        raise ValidationError(f"Validation Error: Duplicate INDOS number {indos} in same list.")
+                    indos_set.add(indos)
+                    
                     user = self.env['res.users'].search([('login', '=', indos)], limit=1)
+                    print("working is here")
                     if user:
                         raise ValidationError("Validation Error: The INDOS number "+indos+" already exists in the system.")
 
