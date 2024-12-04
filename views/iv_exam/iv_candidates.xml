@@ -58,6 +58,7 @@
                             <field name="remark" />
                             <field name="examination_date" />
                             <field name="certificate_valid_date" />
+                             <field name="admit_card_received" />
 
                         </group>
                       

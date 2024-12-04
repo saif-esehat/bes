@@ -694,6 +694,20 @@ class CandidatesApplication(models.Model):
             if record.zip and (len(record.zip) > 6 or not record.zip.isdigit()):
                 raise ValidationError("Zip code must contain exactly 6 digits.")
 
+    def open_datetime_assignment_wizard(self):
+        """Open the wizard and pass active_ids."""
+        return {
+            'name': 'Assign Date Time',
+            'type': 'ir.actions.act_window',
+            'res_model': 'iv.date.time.assignment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'active_model': self._name,  # Pass the current model
+                'active_ids': self.ids,  # Pass selected record IDs
+            },
+        }
+
  
  
     
@@ -759,4 +773,28 @@ class IVCanditateApplicationEligible(models.AbstractModel):
             'data': data,
             'docs': docs,
         }
+
+
+class IvDateTimeAssignmentWizard(models.TransientModel):
+    _name='iv.date.time.assignment.wizard'
+
+    assign_date = fields.Date('Reporting Date')
+    assign_time = fields.Char('Reporting Time')
+
+    
+   
+    def assign_datetime(self):
+        """Assign the datetime to selected Candidate Application."""
+        # Retrieve active model and record IDs from context
+        active_model = self.env.context.get('active_model')
+        active_ids = self.env.context.get('active_ids')
+
+        if active_model and active_ids:
+            # Browse the selected records and update them
+            recordset = self.env[active_model].browse(active_ids)
+            # Combine fields into a single dictionary
+            recordset.write({
+                'reporting_date': self.assign_date,
+                'reporting_time': self.assign_time,
+            })
 

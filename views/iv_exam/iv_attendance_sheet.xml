@@ -55,6 +55,7 @@
                 <button name="print_report" type="object" string="Roll No Print" class="btn-primary"/>
                 <button name="generate_written_marksheets" string="Generate Written Marksheet" type="object" class="btn-primary" />
                 <button name="create_invigilator_record" string="Assign Invigilators" type="object" class="btn-primary" />
+                <button string="Assign Classroom" type="object" name="open_classroom_assignment_wizard" class="btn-primary"/>
 
             </header>
           
@@ -103,6 +104,22 @@
                 <footer>
                     <button string="Assign" type="object" name="generate_invigilators_records" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+   <record id="iv_classroom_assignment_wizard_form" model="ir.ui.view">
+        <field name="name">iv.class.assignment.wizard.form</field>
+        <field name="model">iv.class.assignment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Assign Classroom">
+                <group>
+                    <field name="classroom_assign" />
+                </group>
+                <footer>
+                    <button string="Assign" type="object" name="assign_classroom" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
         </field>

@@ -6,12 +6,12 @@
         string="IV  Hold Candidate List"
         model="candidates.application"
         report_type="qweb-pdf"
-        name="bes.reports_iv_hold_candidate_list"
-        file="bes.reports_iv_hold_candidate_list"/>
+        name="bes.reports_iv_hold_candidate_list1"
+        file="bes.reports_iv_hold_candidate_list1"/>
 
 
 
-<template id="reports_iv_hold_candidate_list">
+<template id="reports_iv_hold_candidate_list1">
     <t t-call="web.basic_layout">
             <div class="page">
              <div class="header">
