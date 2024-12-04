@@ -233,6 +233,7 @@
                     <header>
                         <button type="object" class="oe_highlight" name="assign_rollno" string="Assign Rollno"/>
                         <button type="object" class="oe_highlight" name="assign_hold_candidates_rollno" string="Assign Hold Candidates Rollno"/>
+                         <button string="Assign Date Time" type="object" name="open_datetime_assignment_wizard" class="btn-primary"/>
                        
                     </header>
 
@@ -277,6 +278,25 @@
 
          <menuitem id="menu_iv_candidats_application_detail" name="Candidats Detail"
            parent="menu_iv_candidats_application" action="iv_candidats_application_action" sequence="2"/>
+
+
+
+           <record id="iv_datetime_assignment_wizard_form" model="ir.ui.view">
+            <field name="name">iv.date.time.assignment.wizard.form</field>
+            <field name="model">iv.date.time.assignment.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Assign Classroom">
+                    <group>
+                        <field name="assign_date" />
+                         <field name="assign_time" />
+                    </group>
+                    <footer>
+                        <button string="Assign" type="object" name="assign_datetime" class="btn-primary" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
 
         
 

@@ -425,7 +425,13 @@
                 <form string="Release GP Admit Card">
                     <sheet>
                         <group>
-                            <span>Are you sure you want to release Admit card for selected candidate</span>
+                            <h3>Are you sure you want to release Admit card for selected candidate</h3>
+                            <field name="exam_date_practical"  attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+                            <field name="exam_date_practical_to" attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+                            <field name="exam_date_online" attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+                            <field name="exam_date_online_to" attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+
+                            <field name="check_batch" invisible="1"/>
                         </group>
                         <footer>
                             <button name="release_gp_admit_card" string="Generate Admit Card" type="object" class="oe_highlight"/>
@@ -654,7 +660,13 @@
                 <form string="Release CCMC Admit Card">
                     <sheet>
                         <group>
-                            <span>Are you sure you want to release Admit card for selected candidate</span>
+                            <h3>Are you sure you want to release Admit card for selected candidate</h3>
+                            <field name="exam_date_practical"  attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+                            <field name="exam_date_practical_to" attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+                            <field name="exam_date_online" attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+                            <field name="exam_date_online_to" attrs="{'invisible': [('check_batch', '=', 'invisible')]}"/>
+
+                            <field name="check_batch" invisible="1"/>
                         </group>
                         <footer>
                             <button name="release_ccmc_admit_card" string="Generate Admit Card" type="object" class="oe_highlight"/>

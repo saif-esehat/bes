@@ -539,7 +539,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         
         records = self.examiner_lines_ids
         
-        if record.ccmc_prac_oral_candidates == 0 and record.ccmc_gsk_oral_candidates == 0 and record.ccmc_online_candidates == 0:
+        if self.ccmc_prac_oral_candidates == 0 and self.ccmc_gsk_oral_candidates == 0 and self.ccmc_online_candidates == 0:
             raise ValidationError("No Candidates Available for Assignment")
 
         
@@ -3107,6 +3107,23 @@ class GpAdmitCardRelease(models.TransientModel):
     candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
     result_message = fields.Text(string='Result', readonly=True)
 
+    exam_date_practical = fields.Date(string="Exam Date Practical From",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical To",tracking=True)
+    exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
+    dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
+
+    check_batch = fields.Selection([('invisible', 'Invisible'), ('required', 'Required')],compute='_compute_check_batch')
+
+    @api.depends('dgs_batch')
+    def _compute_check_batch(self):
+        for record in self:
+            if record.dgs_batch.is_current_batch or not record.dgs_batch.is_march_september and not record.dgs_batch.repeater_batch:
+                record.check_batch = 'invisible'
+            elif record.dgs_batch.repeater_batch and not record.dgs_batch.is_march_september and not record.dgs_batch.is_current_batch:
+                record.check_batch = 'required'
+            
+
     def release_gp_admit_card(self, *args, **kwargs):
         exam_ids = self.env.context.get('active_ids')
         candidates = self.env["gp.exam.schedule"].sudo().browse(exam_ids)
@@ -3121,10 +3138,11 @@ class GpAdmitCardRelease(models.TransientModel):
             delhi_region = candidate.dgs_batch.delhi_region
             kochi_region = candidate.dgs_batch.kochi_region
             goa_region = candidate.dgs_batch.goa_region
-            
+            is_march_september = candidate.dgs_batch.is_march_september
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
             if candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
+
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                     candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
                     # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
@@ -3145,6 +3163,15 @@ class GpAdmitCardRelease(models.TransientModel):
                     # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
                 else:
                     candidate.write({'hold_admit_card':False})
+
+                if not is_march_september:
+                    candidate.write({
+                        'exam_date_practical':self.exam_date_practical,
+                        'exam_date_practical_to':self.exam_date_practical_to,
+                        'exam_date_online':self.exam_date_online,
+                        'exam_date_online_to':self.exam_date_online_to,
+                        
+                        })
             else:
                 candidate.write({'hold_admit_card':True})
             
@@ -3466,6 +3493,11 @@ class GPExam(models.Model):
     hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_date = fields.Date(string="Exam Date",tracking=True)
+    exam_date_practical = fields.Date(string="Exam Date Practical",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical",tracking=True)
+    exam_date_online = fields.Date(string="Exam Date Online",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
+
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
@@ -3513,20 +3545,7 @@ class GPExam(models.Model):
     def action_open_gp_admit_card_release_wizard(self, exam_ids=None):
         view_id = self.env.ref('bes.view_release_admit_card_form_gp').id
         # import wdb; wdb.set_trace();
-        # if exam_ids:
-        #     # Get the exam regions of all selected exams
-        #     exams = self.env['gp.exam.schedule'].browse(exam_ids)
-        #     exam_regions = exams.mapped('exam_region')
-
-        #     # Check if all selected exams have the same region
-        #     if len(set(exam_regions.ids)) == 1:
-        #         exam_ids = exams.ids  # Retain only candidates with the same region
-        #     else:
-        #         # Filter exams to include only those with the same region as the first exam
-        #         exams = exams.filtered(lambda e: e.exam_region == exam_regions[0])
-        #         exam_ids = exams.ids
-
-        # Proceed with the wizard
+        dgs_batch = self.env['gp.exam.schedule'].browse(exam_ids).dgs_batch.id
         return {
             'type': 'ir.actions.act_window',
             'name': 'Release GP Admit Card',
@@ -3536,6 +3555,7 @@ class GPExam(models.Model):
             'target': 'new',
             'context': {
                 'default_exam_ids': exam_ids,
+                'default_dgs_batch': dgs_batch
             }
         }
 
@@ -4492,6 +4512,22 @@ class CcmcAdmitCardRelease(models.TransientModel):
     candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
     result_message = fields.Text(string='Result', readonly=True)
 
+    exam_date_practical = fields.Date(string="Exam Date Practical From",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical To",tracking=True)
+    exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
+    dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
+    check_batch = fields.Selection([('invisible', 'Invisible'), ('required', 'Required')],compute='_compute_check_batch')
+
+    @api.depends('dgs_batch')
+    def _compute_check_batch(self):
+        for record in self:
+            if record.dgs_batch.is_current_batch or not record.dgs_batch.is_march_september and not record.dgs_batch.repeater_batch:
+                record.check_batch = 'invisible'
+            elif record.dgs_batch.repeater_batch and not record.dgs_batch.is_march_september and not record.dgs_batch.is_current_batch:
+                record.check_batch = 'required'
+            
+
     def release_ccmc_admit_card(self, *args, **kwargs):
         exam_ids = self.env.context.get('active_ids')
         candidates = self.env["ccmc.exam.schedule"].sudo().browse(exam_ids)
@@ -4506,8 +4542,10 @@ class CcmcAdmitCardRelease(models.TransientModel):
             delhi_region = candidate.dgs_batch.delhi_region
             kochi_region = candidate.dgs_batch.kochi_region
             goa_region = candidate.dgs_batch.goa_region
+            is_march_september = candidate.dgs_batch.is_march_september
             
             candidate_release = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', candidate.ccmc_candidate.id), ('hold_admit_card', '=', True)])
+            # import wdb;wdb.set_trace()
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             if candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
@@ -4532,6 +4570,15 @@ class CcmcAdmitCardRelease(models.TransientModel):
                 else:
                     print("Kolakata Not Set")
                     candidate.write({'hold_admit_card':False})
+
+                if not is_march_september:
+                    candidate.write({
+                        'exam_date_practical':self.exam_date_practical,
+                        'exam_date_practical_to':self.exam_date_practical_to,
+                        'exam_date_online':self.exam_date_online,
+                        'exam_date_online_to':self.exam_date_online_to,
+                        
+                        })
             else:
                 candidate.write({'hold_admit_card':True})
 
@@ -4740,6 +4787,12 @@ class CCMCExam(models.Model):
     ],string='Result Status',store=True,compute='_compute_result_status_2')
     
     exam_date = fields.Date(string="Exam Date",tracking=True)
+    exam_date_practical = fields.Date(string="Exam Date Practical",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical",tracking=True)
+    exam_date_online = fields.Date(string="Exam Date Online",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
+
+    
     @api.depends('certificate_criteria')
     def _compute_result_status_2(self):
         for record in self:

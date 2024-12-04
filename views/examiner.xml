@@ -291,7 +291,7 @@
                     <field name="examiner_lines_ids" >
                         <tree editable="bottom">
                             <field name="exam_date" />
-                            <field name="subject" domain="[('course_id','=', parent.course)]" options="{'no_create':True}"/>
+                            <field name="subject" domain="[('course_id','=', parent.course),('name','=', 'CCMC')]" options="{'no_create':True}"/>
                             
                             <field name="exam_type"/>
                             <field name="examiner" domain="[('exam_center','=', parent.exam_region)]" options="{'no_create':True}"/>

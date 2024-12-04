@@ -7,6 +7,8 @@ import xlsxwriter
 from datetime import datetime
 import xlrd
 from odoo.exceptions import UserError
+import logging
+_logger = logging.getLogger(__name__)
 
 
 
@@ -51,6 +53,19 @@ class IVAttendanceSheet(models.Model):
     def print_report(self):
         return self.env.ref('bes.action_report_iv_attendance_sheet').report_action(self)
 
+    def open_classroom_assignment_wizard(self):
+        """Open the wizard and pass active_ids."""
+        return {
+            'name': 'Assign Classroom',
+            'type': 'ir.actions.act_window',
+            'res_model': 'iv.class.assignment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'active_model': self._name,  # Pass the current model
+                'active_ids': self.ids,  # Pass selected record IDs
+            },
+        }
     
 
 
@@ -109,6 +124,8 @@ class IVAttendanceSheet(models.Model):
                         'candidates_1ed':candidates_1ed,
                         'candidates_2ed':candidates_2ed}
         }
+
+
 
     
 class IvinvigilatorAssignmentWizard(models.TransientModel):
@@ -204,3 +221,26 @@ class IVWrittenAttendance(models.AbstractModel):
         }
 
 
+class IvClassAssignmentWizard(models.TransientModel):
+    _name='iv.class.assignment.wizard'
+
+    classroom_assign = fields.Integer("Classroom No")
+
+    
+   
+    def assign_classroom(self):
+        """Assign the classroom to selected attendance sheets."""
+        # Retrieve active model and record IDs from context
+        active_model = self.env.context.get('active_model')
+        active_ids = self.env.context.get('active_ids')
+
+        if active_model and active_ids:
+            # Browse the selected records and update them
+            recordset = self.env[active_model].browse(active_ids)
+            recordset.write({'classroom_no': self.classroom_assign})
+
+
+
+
+
+    
