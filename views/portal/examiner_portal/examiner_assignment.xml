@@ -191,6 +191,7 @@
                 <thead>
                     <tr>
                         <th class="text-left">Institute</th>
+                        <th class="text-left">Subject</th>
                         <th class="text-left">Exam Type</th>
                         <th class="text-left">Exam Date</th>
                         <th class="text-left">No of Candidates</th>
@@ -208,6 +209,11 @@
                                 <!-- <t t-out="assignment.institute_id.name" /> -->
                                 <t t-out="assignment.institute_id.name" />
                             </td>
+                            <td class="text-left">
+                                <!-- <t t-out="assignment.institute_id.name" /> -->
+                                <t t-out="assignment.subject.name" />
+                            </td>
+
                             <td class="text-left">
                                 <t t-if="assignment.exam_type == 'practical_oral'">
                                     Practical/Oral

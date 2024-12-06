@@ -49,14 +49,21 @@ class ExaminerPortal(CustomerPortal):
                 .search([("id", "=", marksheet_id)])
             )
             gp_marksheet = marksheet.gp_marksheet
-            if gp_marksheet.token:
-                token = gp_marksheet.token
-                gp_marksheet.write({"mek_online_attendance": attendance})
-            else:
-                token = gp_marksheet.generate_token()
-                gp_marksheet.write(
-                    {"token": token, "mek_online_attendance": attendance}
-                )
+            if (
+                gp_marksheet.attempting_gsk_online
+                and gp_marksheet.attempting_mek_online
+            ):
+                if gp_marksheet.token:
+                    token = gp_marksheet.token
+                    gp_marksheet.write({"mek_online_attendance": attendance,
+                                        "gsk_online_attendance": attendance})
+                else:
+                    token = gp_marksheet.generate_token()
+                    gp_marksheet.write(
+                        {"token": token, 
+                         "mek_online_attendance": attendance,
+                         "gsk_online_attendance": attendance}
+                    )
             return json.dumps({"token": token})
         elif subject == "MEK" and attendance == "absent":
             marksheet = (
@@ -338,8 +345,13 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search([("dgs_batch.id", "=", batch_id), ("examiner", "=", examiner.id)])
+            .search([("id", "=", assignment_id)])
         )
+        # examiner_assignments = (
+        #     request.env["exam.type.oral.practical.examiners"]
+        #     .sudo()
+        #     .search([("dgs_batch.id", "=", batch_id), ("examiner", "=", examiner.id)])
+        # )
         marksheets = (
             request.env["exam.type.oral.practical.examiners.marksheet"]
             .sudo()
