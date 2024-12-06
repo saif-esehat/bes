@@ -651,7 +651,7 @@ class InstituteCcmcBatches(models.Model):
         ('4-invoiced', 'Invoice Generated'),
         ('5-exam_scheduled', 'Fees Received'),
         ('6-done', 'Done')        
-    ], string='State', default='1-ongoing')
+    ], string='State', default='1-ongoing',tracking=True)
     
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
