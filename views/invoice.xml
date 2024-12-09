@@ -14,6 +14,9 @@
         </record>
 
 
+
+
+
         <record id="account_move_inherit_form" model="ir.ui.view">
             <field name="name">account.move.form.inherit.bes</field>
             <field name="model">account.move</field>
@@ -94,6 +97,29 @@
                 
             </field>
         </record>
+
+        <record id="view_institute_invoices_tree" model="ir.ui.view">
+            <field name="name">institute.invoices.tree</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <tree string="Institute Invoices">
+                    <!-- Add your fields here -->
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="transaction_id"/>
+                    <field name="transaction_slip"/>
+                    <field name="transaction_date"/>
+                    <field name="no_of_gpcandidates"/>
+                    <field name="no_of_ccmccandidates"/>
+                    <field name="amount_total_signed"/>
+                    <field name="state"/>
+                    <field name="payment_state"/>
+
+                    <!-- Add more fields as needed -->
+                </tree>
+            </field>
+        </record>
+
 
 
       
