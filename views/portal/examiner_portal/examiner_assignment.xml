@@ -47,7 +47,7 @@
                 </li>
                 <li class="breadcrumb-item">
                     <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
-                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
+                        <!-- <span t-out="assignments.institute_id.name"/> -->
                     </t>
 
                 </li>

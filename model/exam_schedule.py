@@ -419,6 +419,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
             num_examiners_ccmc_prac_oral = len(examiners_ccmc_prac_oral)
             
             
+            
             ###  CCMC Oral 80 Marks
             
             examiners_ccmc_gsk_oral = records.filtered(lambda r: r.subject.name == 'CCMC GSK Oral' or r.subject.name == 'CCMC'  and r.exam_type == 'ccmc_oral').ids
@@ -495,8 +496,10 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     else:
                         raise ValidationError("Please Add Atleast One CCMC Online Examiner")
                 
+            print('ccmc_prac_oral_assignments')
+            print(ccmc_prac_oral_assignments)
+            print(ccmc_gsk_oral_assignments)
 
-            
             ### CCMC Oral Prac ASSIGNMENTS    
             for examiner, assigned_candidates in ccmc_prac_oral_assignments.items():
                 examiner_id = examiner

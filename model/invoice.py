@@ -59,12 +59,28 @@ class BatchInvoice(models.Model):
                 record.visible_reset_invoice = True
             else:
                 record.visible_reset_invoice = False
+    
+    
                 
     batch = fields.Many2one("institute.gp.batches","Batch")
     ccmc_batch = fields.Many2one("institute.ccmc.batches","CCMC Batch")
     ccmc_batch_ok = fields.Boolean("CCMC Batch Required")
+    
     gp_candidates = fields.Many2many('gp.candidate', string='GP Candidate')
+    no_of_gpcandidates = fields.Integer("No. of GP Batch Candidates",compute='_compute_no_of_gpcandidates')
+    @api.depends('gp_candidates')
+    def _compute_no_of_gpcandidates(self):
+        for record in self:
+            record.no_of_gpcandidates = len(record.gp_candidates)
+
+    
     ccmc_candidates = fields.Many2many('ccmc.candidate', string='CCMC Candidate')
+    no_of_ccmccandidates = fields.Integer("No. of CCMC Batch Candidates",compute='_compute_no_of_ccmccandidates')
+    @api.depends('ccmc_candidates')
+    def _compute_no_of_ccmccandidates(self):
+        for record in self:
+            record.no_of_ccmccandidates = len(record.ccmc_candidates)
+    
     transaction_id = fields.Char("Transaction ID")
     bank_name = fields.Char("Bank Name & Address")
     total_amount =  fields.Float("Total Amount")
