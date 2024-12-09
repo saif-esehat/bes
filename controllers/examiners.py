@@ -1453,20 +1453,20 @@ class ExaminerPortal(CustomerPortal):
         marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,]
         marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,]
 
-        gsk_oral_sheet.data_validation(
-            "D3:D1048576", {"validate": "list", "source": marks_values_25}
-        )
-        gsk_oral_sheet.data_validation(
-            "E3:E1048576", {"validate": "list", "source": marks_values_25}
-        )
-        gsk_oral_sheet.data_validation(
-            "F3:F1048576", {"validate": "list", "source": marks_values_25}
-        )
+        # gsk_oral_sheet.data_validation(
+        #     "D3:D1048576", {"validate": "list", "source": marks_values_25}
+        # )
+        # gsk_oral_sheet.data_validation(
+        #     "E3:E1048576", {"validate": "list", "source": marks_values_25}
+        # )
+        # gsk_oral_sheet.data_validation(
+        #     "F3:F1048576", {"validate": "list", "source": marks_values_25}
+        # )
 
+        # gsk_oral_sheet.data_validation(
+        #     "G3:G1048576", {"validate": "list", "source": remarks}
+        # )
         remarks = ["Good", "Average", "Weak", "Absent"]
-        gsk_oral_sheet.data_validation(
-            "G3:G1048576", {"validate": "list", "source": remarks}
-        )
 
         # Example lists for candidates and their codes (replace with actual data)
         candidate_list = [candidate.gp_candidate.name for candidate in marksheets]
@@ -1882,22 +1882,22 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write(f"H{row_num}", "", dropdown_format)
             mek_oral_sheet.write(f"I{row_num}", "", dropdown_format)
 
-        mek_oral_sheet.data_validation(
-            "E3:E1048576", {"validate": "list", "source": marks_values_20}
-        )
-        mek_oral_sheet.data_validation(
-            "F3:F1048576", {"validate": "list", "source": marks_values_20}
-        )
-        mek_oral_sheet.data_validation(
-            "G3:G1048576", {"validate": "list", "source": marks_values_10}
-        )
-        mek_oral_sheet.data_validation(
-            "H3:H1048576", {"validate": "list", "source": marks_values_25}
-        )
+        # mek_oral_sheet.data_validation(
+        #     "E3:E1048576", {"validate": "list", "source": marks_values_20}
+        # )
+        # mek_oral_sheet.data_validation(
+        #     "F3:F1048576", {"validate": "list", "source": marks_values_20}
+        # )
+        # mek_oral_sheet.data_validation(
+        #     "G3:G1048576", {"validate": "list", "source": marks_values_10}
+        # )
+        # mek_oral_sheet.data_validation(
+        #     "H3:H1048576", {"validate": "list", "source": marks_values_25}
+        # )
 
-        mek_oral_sheet.data_validation(
-            "I3:I1048576", {"validate": "list", "source": remarks}
-        )
+        # mek_oral_sheet.data_validation(
+        #     "I3:I1048576", {"validate": "list", "source": remarks}
+        # )
 
         # For GSK Practical Marksheet
         # Set column widths for the practical sheet
