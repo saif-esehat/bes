@@ -322,7 +322,7 @@ class SurveyInherited(Survey):
         
         try:
             last_question_time = answer_sudo.user_input_line_ids[-1].create_date
-            one_minutes_later = last_question_time + timedelta(minutes=1)
+            one_minutes_later = last_question_time + timedelta(minutes=7)
             if current_time > one_minutes_later:
                 return True
             else:

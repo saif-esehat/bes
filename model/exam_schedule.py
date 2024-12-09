@@ -3110,8 +3110,8 @@ class GpAdmitCardRelease(models.TransientModel):
     candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
     result_message = fields.Text(string='Result', readonly=True)
 
-    exam_date_practical = fields.Date(string="Exam Date Practical From",tracking=True)
-    exam_date_practical_to = fields.Date(string="Exam Date Practical To",tracking=True)
+    exam_date_practical = fields.Date(string="Exam Date Practical & Oral From",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical & Oral To",tracking=True)
     exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
     exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
     dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
@@ -4515,8 +4515,8 @@ class CcmcAdmitCardRelease(models.TransientModel):
     candidates_count = fields.Integer(string='Candidates Processed', readonly=True)
     result_message = fields.Text(string='Result', readonly=True)
 
-    exam_date_practical = fields.Date(string="Exam Date Practical From",tracking=True)
-    exam_date_practical_to = fields.Date(string="Exam Date Practical To",tracking=True)
+    exam_date_practical = fields.Date(string="Exam Date Practical/Oral From",tracking=True)
+    exam_date_practical_to = fields.Date(string="Exam Date Practical/Oral To",tracking=True)
     exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
     exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
     dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
