@@ -1404,10 +1404,10 @@
                             </td>
 
                             <t t-set="ccmc_oral_total" t-value="int(marksheet.ccmc_oral.toal_ccmc_rating)"/>
-                            <t t-set="ccmc_oral_percentage" t-value="(int(ccmc_oral_total)/100)*100"/>
+                            <t t-set="ccmc_oral_percentage" t-value="(int(ccmc_oral_total)/80)*100"/>
 
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-center">
-                                <t t-if="ccmc_oral_percentage > 60">
+                                <t t-if="ccmc_oral_percentage >= 60">
                                     <span class="badge bg-success">Pass</span>
                                 </t>
                                 <t t-else="ccmc_oral_percentage &lt; 60">

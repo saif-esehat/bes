@@ -2160,10 +2160,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignment.write({"marksheet_uploaded": True})
 
         return request.redirect(
-            "/my/assignments/batches/candidates/"
-            + str(batch_id)
-            + "/"
-            + str(assignment_id)
+            "/my/assignments/batches/candidates/" + str(batch_id) + "/"     + str(assignment_id)
         )
 
     @http.route("/my/uploadmekmarksheet", type="http", auth="user", website=True)
