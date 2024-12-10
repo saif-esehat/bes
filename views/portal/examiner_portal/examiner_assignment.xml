@@ -967,6 +967,7 @@
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">GSK</th>
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">Safety</th>
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">CCMC GSK Oral</th>
+                        <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">Edit Marks</th>
 
                         <!-- CCMC Oral Subjects -->
@@ -1338,6 +1339,18 @@
                             
                             <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" t-attf-id="marksheet_ccmc_gsk_total_{{marksheet.id}}" class="text-center">
                                 <t t-out="marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating"/>
+                            </td>
+
+                            <t t-set="ccmc_gsk_total" t-value="int(marksheet.ccmc_gsk_oral.toal_ccmc_rating)"/>
+                            <t t-set="ccmc_gsk_percentage" t-value="(int(ccmc_gsk_total)/20)*100"/>
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-center">
+                                <t t-if="ccmc_gsk_percentage >= 60">
+                                    <span class="badge bg-success">Pass</span>
+                                </t>
+                                <t t-else="ccmc_gsk_percentage &lt; 60">
+                                    <span class="badge bg-danger">Fail</span>
+                                </t>
                             </td>
 
                             <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral' " class="text-left">
