@@ -1341,7 +1341,7 @@
                                 <t t-out="marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating"/>
                             </td>
 
-                            <t t-set="ccmc_gsk_total" t-value="int(marksheet.ccmc_gsk_oral.toal_ccmc_rating)"/>
+                            <t t-set="ccmc_gsk_total" t-value="int(marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating)"/>
                             <t t-set="ccmc_gsk_percentage" t-value="(int(ccmc_gsk_total)/20)*100"/>
 
                             <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-center">
