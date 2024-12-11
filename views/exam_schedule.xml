@@ -560,6 +560,7 @@
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
                             <field name="ccmc_catering_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="ccmc_gsk_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <field name="ccmc_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <!-- <field name="ccmc_gsk_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/> -->
                             <!-- <field name="oral_prac_status"/> -->
