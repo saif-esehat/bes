@@ -1312,6 +1312,12 @@ class ExamOralPractical(models.Model):
     exam_region = fields.Many2one('exam.center', 'Exam Region',default=lambda self: self.get_examiner_region(),tracking=True)
     active = fields.Boolean(string="Active",default=True)
 
+    def unlink(self):
+        if len(self.examiners) > 0:
+            raise ValidationError("unlPlease Delete Examiner Assignment First")
+            
+
+    
     
     def open_online_attendance(self):
         # Search for examiners who are assigned to the specific course, batch, and exam type
@@ -5856,14 +5862,19 @@ class ExaminerAttendanceWizard(models.TransientModel):
         institute_name = examiners[0].institute_id.name
         examiner_name = examiners[0].examiner.name
         exam_date = self.online_exam_date
-
+        
+        
+        
+        
         # Initialize arrays to store filtered candidates
         if self.course.course_code == "GP":
             gsk_candidates = set() 
             mek_candidates = set()
             gsk_mek_candidates = set()
-
+            
             for examiner in examiners:
+                print("examiner.marksheets.gp_marksheet")
+                print(examiner.marksheets.gp_marksheet)
                 for marksheet in examiner.marksheets.gp_marksheet:
 
                     # Check if the candidate is attempting both GSK and MEK Online
