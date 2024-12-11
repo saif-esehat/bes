@@ -5370,16 +5370,21 @@ class CCMCExam(models.Model):
                         self.cookery_bakery_prac_status = 'passed'
                 else:
                         self.cookery_bakery_prac_status = 'failed'
-                        
+                
                 if self.ccmc_oral_percentage >= 60:
-                    self.ccmc_oral_prac_status = 'passed'
+                        self.ccmc_catering_status = 'passed'
                 else:
-                    self.ccmc_oral_prac_status = 'failed'
+                        self.ccmc_catering_status = 'failed'
                 
                 if self.ccmc_gsk_oral_percentage >= 60:
-                    self.ccmc_gsk_oral_prac_status = 'passed'
+                        self.ccmc_gsk_status = 'passed'
                 else:
-                    self.ccmc_gsk_oral_prac_status = 'failed'
+                        self.ccmc_gsk_status = 'failed'
+                        
+                if self.ccmc_oral_percentage < 60 or self.ccmc_gsk_oral_percentage < 60:
+                    self.ccmc_oral_prac_status = 'failed'
+                else:
+                    self.ccmc_oral_prac_status = 'passed'
                     
                     
                 if self.cookery_gsk_online_percentage  >= 60:
@@ -5427,15 +5432,20 @@ class CCMCExam(models.Model):
                     else:
                         self.cookery_bakery_prac_status = 'failed'
                         
-                    if self.cookery_oral >= 60:
-                        self.ccmc_oral_prac_status = 'passed'
+                    if self.ccmc_oral_percentage >= 60:
+                            self.ccmc_catering_status = 'passed'
                     else:
-                        self.ccmc_oral_prac_status = 'failed'
+                            self.ccmc_catering_status = 'failed'
                     
                     if self.ccmc_gsk_oral_percentage >= 60:
-                        self.ccmc_gsk_oral_prac_status = 'passed'
+                            self.ccmc_gsk_status = 'passed'
                     else:
-                        self.ccmc_gsk_oral_prac_status = 'failed'
+                            self.ccmc_gsk_status = 'failed'
+                            
+                    if self.ccmc_oral_percentage < 60 or self.ccmc_gsk_oral_percentage < 60:
+                        self.ccmc_oral_prac_status = 'failed'
+                    else:
+                        self.ccmc_oral_prac_status = 'passed'
                     
                     
                     if self.cookery_gsk_online  >= 60:
@@ -5537,14 +5547,19 @@ class CCMCExam(models.Model):
                         self.cookery_bakery_prac_status = 'failed'
                         
                 if self.ccmc_oral_percentage >= 60:
-                    self.ccmc_oral_prac_status = 'passed'
+                        self.ccmc_catering_status = 'passed'
                 else:
-                    self.ccmc_oral_prac_status = 'failed'
+                        self.ccmc_catering_status = 'failed'
                 
                 if self.ccmc_gsk_oral_percentage >= 60:
-                    self.ccmc_gsk_oral_prac_status = 'passed'
+                        self.ccmc_gsk_status = 'passed'
                 else:
-                    self.ccmc_gsk_oral_prac_status = 'failed'
+                        self.ccmc_gsk_status = 'failed'
+                        
+                if self.ccmc_oral_percentage < 60 or self.ccmc_gsk_oral_percentage < 60:
+                    self.ccmc_oral_prac_status = 'failed'
+                else:
+                    self.ccmc_oral_prac_status = 'passed'
                     
                     
                 if self.cookery_gsk_online_percentage  >= 60:
@@ -5595,17 +5610,20 @@ class CCMCExam(models.Model):
                         self.cookery_bakery_prac_status = 'failed'
                         
                         
-                    if self.ccmc_oral_percentage >= 60 :
-                        self.ccmc_oral_prac_status = 'passed'
+                    if self.ccmc_oral_percentage >= 60:
+                            self.ccmc_catering_status = 'passed'
                     else:
-                        self.ccmc_oral_prac_status = 'failed'
-                        
-                        
+                            self.ccmc_catering_status = 'failed'
                     
                     if self.ccmc_gsk_oral_percentage >= 60:
-                        self.ccmc_gsk_oral_prac_status = 'passed'
+                            self.ccmc_gsk_status = 'passed'
                     else:
-                        self.ccmc_gsk_oral_prac_status = 'failed'
+                            self.ccmc_gsk_status = 'failed'
+                            
+                    if self.ccmc_oral_percentage < 60 or self.ccmc_gsk_oral_percentage < 60:
+                        self.ccmc_oral_prac_status = 'failed'
+                    else:
+                        self.ccmc_oral_prac_status = 'passed'
                         
                         
                     
