@@ -28,7 +28,7 @@
                                     <t t-esc="institute_name" />
                                 </span></span>
                             <span style="margin-left:150px;">Subjects : 
-                                <span style="text-align:center;">GSK&amp;MEK</span>
+                                <span style="text-align:center;">CCMC</span>
                             </span>
                             <span style="float:right;">Date : 
                                     <t t-esc="exam_date.strftime('%d-%b-%Y')" />
