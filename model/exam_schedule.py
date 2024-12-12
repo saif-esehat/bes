@@ -2613,7 +2613,7 @@ class ExamOralPracticalExaminers(models.Model):
                     'target': 'new',
                 }
             
-        elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC':
+        elif self.exam_type == 'practical_oral_cookery_bakery' and self.subject.name == 'CCMC':
         
             url = '/open_ccmc_candidate_form/download_ccmc_practical_marksheet/'+str(batch_id)+'/'+str(self.id)
             
@@ -2623,7 +2623,17 @@ class ExamOralPracticalExaminers(models.Model):
                     'target': 'new',
                 }
         
-        elif self.exam_type == 'practical_oral' and self.subject.name == 'CCMC GSK Oral':
+        elif self.exam_type == 'ccmc_oral' and self.subject.name == 'CCMC':
+        
+            url = '/open_ccmc_candidate_form/download_ccmc_oral_marksheet/'+str(batch_id)+'/'+str(self.id)
+            
+            return {
+                    'type': 'ir.actions.act_url',
+                    'url': url,
+                    'target': 'new',
+                }
+        
+        elif self.exam_type == 'gsk_oral' and self.subject.name == 'CCMC' or self.subject.name == 'CCMC GSK Oral':
         
             url = '/open_ccmc_candidate_form/download_ccmc_gsk_oral_marksheet/'+str(batch_id)+'/'+str(self.id)
             
