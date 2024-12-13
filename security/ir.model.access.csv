@@ -36,7 +36,8 @@ bes.admin_access_create_institute_batches_wizard,access_create_institute_batches
 bes.admin_access_bes_institute,access_bes_institute,bes.model_bes_institute,bes.group_bes_admin,1,1,1,1
 bes.admin_access_institute_courses,access_institute_courses,bes.model_institute_courses,bes.group_bes_admin,1,1,1,1
 bes.admin_access_institute_faculty,access_institute_faculty,bes.model_institute_faculty,bes.group_bes_admin,1,1,1,1
-bes.admin_access_bes_examiner,access_bes_examiner,bes.model_bes_examiner,bes.group_bes_admin,1,1,1,1
+bes.admin_access_bes_examiner_admin,access_bes_examiner,bes.model_bes_examiner,bes.group_bes_admin,1,1,0,0
+bes.admin_access_bes_examiner_chief,access_bes_examiner,bes.model_bes_examiner,bes.group_bes_coo,1,1,1,1
 bes.admin_access_lod_institute,access_lod_institute,bes.model_lod_institute,bes.group_bes_admin,1,1,1,1
 bes.admin_access_institute_payment_slip_line,access_institute_payment_slip_line,bes.model_institute_payment_slip_line,bes.group_bes_admin,1,1,1,1
 bes.admin_access_ccmc_oral_line,access_ccmc_oral_line,bes.model_ccmc_oral_line,bes.group_bes_admin,1,1,1,1
@@ -109,7 +110,8 @@ bes.group_exam_coordinator_gp_candidate_ec_bes_institute,access_ec_bes_institute
 
 bes.group_exam_coordinator_gp_mek_oral_line,access_exam_coordinator_gp_mek_oral_line,bes.model_gp_mek_oral_line,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_gp_mek_practical_line,access_exam_coordinator_gp_mek_practical_line,bes.model_gp_mek_practical_line,bes.group_exam_coordinator,1,1,1,1
-bes.group_ec_examiner,access_ec_bes_examiner,bes.model_bes_examiner,bes.group_exam_coordinator,1,0,1,0
+bes.group_ec_examiner,access_ec_bes_examiner,bes.model_bes_examiner,bes.group_exam_coordinator,1,1,0,0
+bes.group_ec_examiner_coo,access_ec_bes_examiner,bes.model_bes_examiner,bes.group_bes_coo,1,1,1,1
 
 bes.group_exam_coordinator_gp_gsk_oral_line,access_exam_coordinator_gp_gsk_oral_line,bes.model_gp_gsk_oral_line,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_gp_gsk_practical_line,access_exam_coordinator_gp_gsk_practical_line,bes.model_gp_gsk_practical_line,bes.group_exam_coordinator,1,1,1,1

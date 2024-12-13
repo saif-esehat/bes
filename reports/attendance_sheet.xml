@@ -27,7 +27,7 @@
                             <span style="float:left;">Venue : <span style="text-align:left;">
                                     <t t-esc="institute_name" />
                                 </span></span>
-                            <span style="margin-left:150px;">Subjects : 
+                            <span style="margin-left:150px;">Subject : 
                                 <span style="text-align:center;">CCMC</span>
                             </span>
                             <span style="float:right;">Date : 
