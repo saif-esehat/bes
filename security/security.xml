@@ -60,7 +60,7 @@
     </record>
 
     <record id="group_bes_coo" model="res.groups">
-        <field name="name">Create Examiner</field>
+        <field name="name">BES COO/CEO</field>
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
