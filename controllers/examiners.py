@@ -3313,13 +3313,13 @@ class ExaminerPortal(CustomerPortal):
         examiner = (
             request.env["bes.examiner"].sudo().search([("user_id", "=", user_id)])
         )
-        examiner_assignments = (
+        examiner_assignment = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search([("dgs_batch.id", "=", batch_id), ("examiner", "=", examiner.id)])
+            .search([("id", "=", assignment_id)])
         )
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
-        examiner_assignments.write({"marksheet_uploaded": True})
+        examiner_assignment.write({"marksheet_uploaded": True})
 
         return request.redirect(
             "/my/assignments/batches/candidates/"
@@ -3340,9 +3340,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search(
-                [("dgs_batch.id", "=", batch_id), ("examiner.user_id", "=", user_id)]
-            )
+             .search([("id", "=", assignment_id)])
         )
         examiner_assignments.sudo().write(
             {
