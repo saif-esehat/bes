@@ -3340,9 +3340,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search(
-                [("dgs_batch.id", "=", batch_id), ("examiner.user_id", "=", user_id)]
-            )
+             .search([("id", "=", assignment_id)])
         )
         examiner_assignments.sudo().write(
             {
