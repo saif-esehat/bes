@@ -195,6 +195,19 @@ class CustomPaymentRegister(models.TransientModel):
                 
                 # import wdb; wdb.set_trace(); 
             elif invoice.ccmc_batch_ok: #if CCMC Inovice
+                
+                indos_set = set()
+                for candidate in invoice.ccmc_candidates:
+                    indos = candidate.indos_no
+                    if indos in indos_set:
+                        raise ValidationError(f"Validation Error: Duplicate INDOS number {indos} in same list.")
+                    indos_set.add(indos)
+                    
+                    user = self.env['res.users'].search([('login', '=', indos)], limit=1)
+                    print("working is here")
+                    if user:
+                        raise ValidationError("Validation Error: The INDOS number "+indos+" already exists in the system.")
+                
                 ccmc_candidates = invoice.ccmc_candidates.ids
                 print("cmmmmmmmmmmmmmmmmmmmmmmccccccccccccccccccccccccccc")
                 batch = invoice.ccmc_batch
