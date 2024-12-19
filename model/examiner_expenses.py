@@ -82,7 +82,8 @@ class InstituteExpenseReport(models.Model):
     def _compute_lt_expense(self):
         for record in self:
             data = self.env["exam.misc.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
-            record.local_travel_expense= sum(data.mapped('price'))        
+            record.local_travel_expense= sum(data.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))    
+            
 
     
     
@@ -97,6 +98,8 @@ class InstituteExpenseReport(models.Model):
         for record in self:
             data = self.env["examiner.outstation.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
             record.outstation_expenses = sum(data.mapped('price'))
+            
+            
     
     
     
@@ -447,8 +450,11 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
         ('ceo_approved', 'CEO Approved'),
         ('rejected_ceo', 'Rejected by CEO'),
         ('approved_ec', 'EC Approved'),
-        ('pending','Pending')
+        ('pending','Pending'),
+        ('modified_approved','Modified & Approved')
     ], string='State',related="expense.approval_status")
+    
+    modification_comment = fields.Text(string='Modification Comment')
 
     reject_reason = fields.Text("Reject Reason")
 
@@ -468,7 +474,13 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
     
     
     def approve_time_sheet_ec(self):
-        self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
+        if self.expense.approval_status == 'pending':
+            self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
+        elif self.expense.approval_status == 'rejected_ceo':
+            if not self.modification_comment:
+                raise ValidationError("Modification Comment Required")
+                
+            self.expense.sudo().write({'approval_status':'modified_approved','modification_comment': self.modification_comment})
     
     def approve_time_sheet_ceo(self):
         self.expense.sudo().write({'approval_status':'ceo_approved','reject_reason': ''})
@@ -518,13 +530,14 @@ class ExamMiscExpense(models.Model):
 
     
     def open_approval_wizard(self):
+                
         return {
             'name': 'Expense Approval Wizard',
             'type': 'ir.actions.act_window',
             'res_model': 'exam.misc.expense.approval.wizard',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_expense': self.timesheet_report.id},
+            'context': {'default_expense': self.timesheet_report.id ,'default_modification_comment': self.timesheet_report.modification_comment },
         }
 
     

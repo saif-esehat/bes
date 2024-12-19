@@ -20,12 +20,14 @@ class TimeSheetReport(models.Model):
     expense_sheet = fields.Many2one('hr.expense.sheet','Expense')
 
     total_expenses = fields.Integer(string="Total Expenses", compute='_compute_total_expenses',store=True)
+    modification_comment = fields.Text(string='Modification Comment')
 
     approval_status = fields.Selection([
         ('ceo_approved', 'CEO Approved'),
         ('rejected_ceo', 'Rejected by CEO'),
         ('approved_ec', 'EC Approved'),
-        ('pending','Pending')
+        ('pending','Pending'),
+        ('modified_approved','Modified & Approved')
     ], string='State', default='pending')
     
     reject_reason = fields.Text("Reject Reason")
