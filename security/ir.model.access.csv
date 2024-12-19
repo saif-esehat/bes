@@ -66,6 +66,7 @@ bes.admin_team_lead_access,institute_team_lead,model_institute_team_lead,bes.gro
 bes.admin_travel_details,access_admin_travel_details,model_travel_details,bes.group_bes_admin,1,1,1,1
 
 bes.access_ec_group_expense_approval,ec_access_group_expense_approval,bes.model_exam_misc_expense_approval_wizard,bes.group_expense_approval_ec,1,1,1,1
+bes.access_ec_group_expense_approval_travel_details,ec_access_group_expense_approval,bes.model_travel_details,bes.group_expense_approval_ec,1,1,0,0
 bes.access_ceo_group_expense_approval,ceo_access_group_expense_approval,bes.model_exam_misc_expense_approval_wizard,bes.group_expense_approval_ceo,1,1,1,1
 bes.admin_access_time_sheet_report,admin_access_time_sheet_report,bes.model_time_sheet_report,bes.group_bes_admin,1,1,1,1
 bes.admin_access_time_sheet_lines,admin_access_time_sheet_lines,bes.model_timesheet_lines,bes.group_bes_admin,1,1,1,1

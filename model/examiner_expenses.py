@@ -222,19 +222,18 @@ class ExaminerExpenses(models.Model):
             else:
                 record.team_lead_total = 0
             
-            
             if record.outstation_travel_expenses:
                 record.outstation_total = sum(record.outstation_travel_expenses.mapped('price'))
             else:
                 record.outstation_total = 0
                 
             if record.misc_expense_ids:
-                record.misc_total = sum(record.misc_expense_ids.mapped('price'))
+                record.misc_total = sum(record.misc_expense_ids.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))
             else:
                 record.misc_total = 0
      
     
-    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price','outstation_travel_expenses','non_mariner_expense.price')
+    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price','misc_expense_ids.approval_status' ,'misc_expense_ids.price','outstation_travel_expenses','non_mariner_expense.price')
     def _compute_total_expense(self):
         for record in self:
             total_assignment = sum(record.assignment_expense_ids.mapped('total'))
@@ -242,7 +241,8 @@ class ExaminerExpenses(models.Model):
             total_team_lead = sum(record.team_lead_expense.mapped('price'))
             total_non_mariner = sum(record.non_mariner_expense.mapped('price'))
             total_outstation = sum(record.outstation_travel_expenses.mapped('price'))
-            total_misc = sum(record.misc_expense_ids.mapped('price'))
+            total_misc = sum(record.misc_expense_ids.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))
+            # total_misc = 0
             record.total = total_assignment + total_online + total_team_lead + total_misc + total_non_mariner + total_outstation
     
     
@@ -294,7 +294,7 @@ class ExaminerOverAllExpenses(models.Model):
     
     price = fields.Integer("Price",compute="_compute_total")
     
-    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.outstation_travel_expenses','examiner_expenses_id.misc_expense_ids')
+    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.outstation_travel_expenses','examiner_expenses_id.misc_expense_ids.price','examiner_expenses_id.misc_expense_ids.approval_status')
     def _compute_total(self):
         for record in self:
             if record.expenses_type == 'practical_oral':
@@ -321,7 +321,7 @@ class ExaminerOverAllExpenses(models.Model):
             
             elif record.expenses_type == 'local_travel':
                 if record.examiner_expenses_id.misc_expense_ids:
-                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.mapped('price'))
+                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))                    
                 else:
                     record.price = 0
         
