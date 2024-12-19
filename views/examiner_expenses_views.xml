@@ -338,6 +338,7 @@
                 </group>
                 <group>
                     <!-- <field name="expense_readonly"/> -->
+                    <field name="total_expenses"/> 
                     <field name="state"/>
                     <field name="reject_reason" attrs="{'invisible': [('state', 'not in', ('modified_approved','approved_ec'))]}" groups="bes.group_expense_approval_ceo"/>
                     <field name="modification_comment" attrs="{'invisible': [('state', 'not in', ('modified_approved','rejected_ceo'))],'readonly':[('state','=','modified_approved')]}" groups="bes.group_expense_approval_ceo"/>
@@ -380,7 +381,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">exam.misc.expense</field>
         <field name="view_mode">tree</field>
-        <field name="domain">[('approval_status', 'in', ['approved_ec', 'ceo_approved'])]</field>
+        <field name="domain">[('approval_status', 'in', ['approved_ec', 'ceo_approved','modified_approved'])]</field>
     </record>
 
 
