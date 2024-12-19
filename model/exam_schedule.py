@@ -1334,9 +1334,13 @@ class ExamOralPractical(models.Model):
     active = fields.Boolean(string="Active",default=True)
 
     def unlink(self):
+        
         if len(self.examiners) > 0:
-            raise ValidationError("unlPlease Delete Examiner Assignment First")
-            
+            raise ValidationError("Please Delete Examiner Assignment First")
+
+        result = super(ExamOralPractical, self).unlink()
+        return result
+
 
     
     
