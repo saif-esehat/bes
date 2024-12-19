@@ -374,4 +374,17 @@
         </field>
     </record>
 
+
+    <record id="ceo_expense_approval_action" model="ir.actions.act_window">
+        <field name="name">Expense Approval</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">exam.misc.expense</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('approval_status', 'in', ['approved_ec', 'ceo_approved'])]</field>
+    </record>
+
+
+
+
+
 </odoo>
