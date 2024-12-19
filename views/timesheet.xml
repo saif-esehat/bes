@@ -47,7 +47,7 @@
                             <page string="Timesheet">
                                 <field name="timesheet_examinations" nolabel="1">
                                     <tree editable="bottom">
-                                        <field name="arrival_date_time"/>
+                                        <!-- <field name="arrival_date_time"/> -->
                                         <field name="commence_exam"/>
                                         <!-- <field name="lunch_break"/> -->
                                         <field name="completion_time"/>

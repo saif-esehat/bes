@@ -75,7 +75,8 @@ class TravelDetails(models.Model):
             ('Left Residence', datetime.strptime(kw.get('left_residence_date_time'), '%Y-%m-%dT%H:%M'), kw.get('left_residence_mode_of_travel'), kw.get('left_residence_expenses'),kw.get('supporting_document_left_residence')),
             ('Arrival at the Institute/Hotel', datetime.strptime(kw.get('arrival_institute_hotel_date_time'), '%Y-%m-%dT%H:%M'), kw.get('arrival_institute_hotel_mode_of_travel'), kw.get('arrival_institute_hotel_expenses'),kw.get('supporting_document_arrival_institute')),
             ('Left Institute/Hotel', datetime.strptime(kw.get('left_institute_date_time'), '%Y-%m-%dT%H:%M'), kw.get('left_institute_mode_of_travel'), kw.get('left_institute_expenses'),kw.get('supporting_document_left_institute')),
-            ('Arrival at Residence', datetime.strptime(kw.get('arrival_residence_date_time'), '%Y-%m-%dT%H:%M'), kw.get('arrival_residence_mode_of_travel'), kw.get('arrival_residence_expenses'),kw.get('supporting_document_arrival_residence'))
+            ('Arrival at Residence', datetime.strptime(kw.get('arrival_residence_date_time'), '%Y-%m-%dT%H:%M'), kw.get('arrival_residence_mode_of_travel'), kw.get('arrival_residence_expenses'),kw.get('supporting_document_arrival_residence')),
+            ('Miscellaneous', None,None,None,None),
         ]
 
         # Loop through each travel phase and create a travel detail line

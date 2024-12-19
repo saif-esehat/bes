@@ -424,21 +424,13 @@
                                     <input type="hidden" id="assign_id" name="assign_id"/>
                                     <input type="hidden" id="exam_date" name="exam_date" t-att-value='assignment.exam_date'/>
                                     <div class="form-group">
-                                        <label for="arrival_time">Arrival Time</label>
-                                        <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" required='1'/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="commencement_time">Commencement Time</label>
+                                        <label for="commencement_time">Commencement Time of Exam</label>
                                         <input type="datetime-local" class="form-control" id="commencement_time" name="commencement_time" required='1'/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="completion_time">Completion Time</label>
+                                        <label for="completion_time">Completion Time of Exam</label>
                                         <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" required='1'/>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label for="candidates_examined">Candidates Examined</label>
-                                        <input type="number" class="form-control" id="candidates_examined" name="candidates_examined" required='1'/>
-                                    </div> -->
                                     <div class="form-group">
                                         <label for="debriefing_time">Debriefing Time</label>
                                         <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" required='1'/>
@@ -552,12 +544,7 @@
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <input type="hidden" id="timesheet_id" name="timesheet_id"/>
 
-
                                     <t t-foreach="timesheets.timesheet_examinations" t-as="timesheet">
-                                        <div class="form-group">
-                                            <label for="arrival_time">Arrival Time</label>
-                                            <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" t-att-value ="timesheet.arrival_date_time"/>
-                                        </div>
                                         <div class="form-group">
                                             <label for="commencement_time">Commencement Time</label>
                                             <input type="datetime-local" class="form-control" id="commencement_time" name="commencement_time" t-att-value ="timesheet.commence_exam"/>
@@ -722,11 +709,8 @@
                     <!-- <t t-set="index" t-value="0" /> -->
                     <thead>
                         <tr>
-                            <!-- <th>Day</th> -->
-                            <th>Date</th>
-                            <th>Arrival</th>
-                            <th>Commencement</th>
-                            <th>Completion</th>
+                            <th>Commencement of Exam</th>
+                            <th>Completion of Exam</th>
                             <th>Candidates Examined</th>
                             <th>Debriefing Time</th>
                         </tr>
@@ -736,8 +720,6 @@
                         <tbody>
                             <tr>
                                 <!-- <td>Day <span t-esc="index"/></td> -->
-                                <td><span t-esc="timesheets.exam_date.strftime('%d-%m-%Y')"/></td>
-                                <td><span t-esc="timesheet.arrival_date_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.commence_exam.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.completion_time.strftime('%d-%b-%y %H:%M:%S')"/></td>
                                 <td><span t-esc="timesheet.candidate_examined"/></td>
@@ -763,7 +745,8 @@
                         <t t-set="index" t-value="index + 1" />
                         <tbody>
 
-                            <tr>
+                            <tr t-if="timesheet.travelling_details != 'Miscellaneous'" >
+                               
                                 <td><span t-esc="timesheet.travelling_details"/></td>
 
                                 <td> 
@@ -810,8 +793,6 @@
                     <thead>
                         <tr>
                             <th>Day</th>
-                            <!-- <th>Date</th> -->
-                            <th>Arrival</th>
                             <th>Commencement</th>
                             <th>Completion</th>
                             <th>Candidates Examined</th>
