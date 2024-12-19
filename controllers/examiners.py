@@ -345,8 +345,13 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search([("dgs_batch.id", "=", batch_id), ("examiner", "=", examiner.id)])
+            .search([("id", "=", assignment_id)])
         )
+        # examiner_assignments = (
+        #     request.env["exam.type.oral.practical.examiners"]
+        #     .sudo()
+        #     .search([("dgs_batch.id", "=", batch_id), ("examiner", "=", examiner.id)])
+        # )
         marksheets = (
             request.env["exam.type.oral.practical.examiners.marksheet"]
             .sudo()
@@ -1448,20 +1453,20 @@ class ExaminerPortal(CustomerPortal):
         marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,]
         marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,]
 
-        gsk_oral_sheet.data_validation(
-            "D3:D1048576", {"validate": "list", "source": marks_values_25}
-        )
-        gsk_oral_sheet.data_validation(
-            "E3:E1048576", {"validate": "list", "source": marks_values_25}
-        )
-        gsk_oral_sheet.data_validation(
-            "F3:F1048576", {"validate": "list", "source": marks_values_25}
-        )
+        # gsk_oral_sheet.data_validation(
+        #     "D3:D1048576", {"validate": "list", "source": marks_values_25}
+        # )
+        # gsk_oral_sheet.data_validation(
+        #     "E3:E1048576", {"validate": "list", "source": marks_values_25}
+        # )
+        # gsk_oral_sheet.data_validation(
+        #     "F3:F1048576", {"validate": "list", "source": marks_values_25}
+        # )
 
+        # gsk_oral_sheet.data_validation(
+        #     "G3:G1048576", {"validate": "list", "source": remarks}
+        # )
         remarks = ["Good", "Average", "Weak", "Absent"]
-        gsk_oral_sheet.data_validation(
-            "G3:G1048576", {"validate": "list", "source": remarks}
-        )
 
         # Example lists for candidates and their codes (replace with actual data)
         candidate_list = [candidate.gp_candidate.name for candidate in marksheets]
@@ -1877,22 +1882,22 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write(f"H{row_num}", "", dropdown_format)
             mek_oral_sheet.write(f"I{row_num}", "", dropdown_format)
 
-        mek_oral_sheet.data_validation(
-            "E3:E1048576", {"validate": "list", "source": marks_values_20}
-        )
-        mek_oral_sheet.data_validation(
-            "F3:F1048576", {"validate": "list", "source": marks_values_20}
-        )
-        mek_oral_sheet.data_validation(
-            "G3:G1048576", {"validate": "list", "source": marks_values_10}
-        )
-        mek_oral_sheet.data_validation(
-            "H3:H1048576", {"validate": "list", "source": marks_values_25}
-        )
+        # mek_oral_sheet.data_validation(
+        #     "E3:E1048576", {"validate": "list", "source": marks_values_20}
+        # )
+        # mek_oral_sheet.data_validation(
+        #     "F3:F1048576", {"validate": "list", "source": marks_values_20}
+        # )
+        # mek_oral_sheet.data_validation(
+        #     "G3:G1048576", {"validate": "list", "source": marks_values_10}
+        # )
+        # mek_oral_sheet.data_validation(
+        #     "H3:H1048576", {"validate": "list", "source": marks_values_25}
+        # )
 
-        mek_oral_sheet.data_validation(
-            "I3:I1048576", {"validate": "list", "source": remarks}
-        )
+        # mek_oral_sheet.data_validation(
+        #     "I3:I1048576", {"validate": "list", "source": remarks}
+        # )
 
         # For GSK Practical Marksheet
         # Set column widths for the practical sheet
@@ -2155,10 +2160,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignment.write({"marksheet_uploaded": True})
 
         return request.redirect(
-            "/my/assignments/batches/candidates/"
-            + str(batch_id)
-            + "/"
-            + str(assignment_id)
+            "/my/assignments/batches/candidates/" + str(batch_id) + "/"     + str(assignment_id)
         )
 
     @http.route("/my/uploadmekmarksheet", type="http", auth="user", website=True)
@@ -3131,7 +3133,8 @@ class ExaminerPortal(CustomerPortal):
                         "hygien_grooming": hygien_grooming,
                         "appearance": appearance,
                         "taste": taste,
-                        "texture": appearance_2,
+                        "texture": texture,
+                        "appearance_2": appearance_2,
                         "taste_2": taste_2,
                         "texture_2": texture_2,
                         "appearance_3": appearance_3,
@@ -3310,13 +3313,13 @@ class ExaminerPortal(CustomerPortal):
         examiner = (
             request.env["bes.examiner"].sudo().search([("user_id", "=", user_id)])
         )
-        examiner_assignments = (
+        examiner_assignment = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search([("dgs_batch.id", "=", batch_id), ("examiner", "=", examiner.id)])
+            .search([("id", "=", assignment_id)])
         )
         # marksheets = request.env['exam.type.oral.practical.examiners.marksheet'].sudo().search([('examiners_id','=',assignment_id)])
-        examiner_assignments.write({"marksheet_uploaded": True})
+        examiner_assignment.write({"marksheet_uploaded": True})
 
         return request.redirect(
             "/my/assignments/batches/candidates/"
@@ -3337,9 +3340,7 @@ class ExaminerPortal(CustomerPortal):
         examiner_assignments = (
             request.env["exam.type.oral.practical.examiners"]
             .sudo()
-            .search(
-                [("dgs_batch.id", "=", batch_id), ("examiner.user_id", "=", user_id)]
-            )
+             .search([("id", "=", assignment_id)])
         )
         examiner_assignments.sudo().write(
             {

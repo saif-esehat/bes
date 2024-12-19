@@ -159,18 +159,18 @@
                         </group>                        
                         <group style="width:50%">
                         
-                            <field name="mek_oral"/>
-                             <field name="gsk_oral"/>
+                            <field name="mek_oral" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                             <field name="gsk_oral" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                         </group>
                         <group style="width:50%">
-                            <field name="mek_prac"/>
-                            <field name="gsk_prac"/>
+                            <field name="mek_prac" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="gsk_prac" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                         </group>
                         <group style="width:50%">
-                            <field name="gsk_online"/>
+                            <field name="gsk_online" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                         </group>
                         <group style="width:50%">
-                            <field name="mek_online"/>
+                            <field name="mek_online" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <div style="display:flex">
                                 <h1>Attendance</h1>
                             </div>
@@ -180,28 +180,28 @@
                             <group style="width:50%">
                                 <label for="gsk_practical_marks"/>
                                 <div>
-                                    <field name="gsk_practical_marks" nolabel="1"/>
+                                    <field name="gsk_practical_marks"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 / 
                                     <span>100</span>
                                 </div>
 
                                 <label for="mek_practical_marks"/>
                                 <div>
-                                    <field name="mek_practical_marks" nolabel="1"/>
+                                    <field name="mek_practical_marks"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 / 
                                     <span>100</span>
                                 </div>
 
                                 <label for="gsk_oral_marks"/>
                                 <div>
-                                    <field name="gsk_oral_marks" nolabel="1"/>
+                                    <field name="gsk_oral_marks"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 / 
                                     <span>75</span>
                                 </div>
 
                                 <label for="mek_oral_marks"/>
                                 <div>
-                                    <field name="mek_oral_marks" nolabel="1"/>
+                                    <field name="mek_oral_marks"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 / 
                                     <span>75</span>
                                 </div>
@@ -214,22 +214,22 @@
                                 </div> -->
                                 <label for="gsk_oral_prac_attendance"/>
                                 <div>
-                                    <field name="gsk_oral_prac_attendance" nolabel="1"/>
+                                    <field name="gsk_oral_prac_attendance" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 </div>
 
                                 <label for="gsk_online_attendance"/>
                                 <div>
-                                    <field name="gsk_online_attendance" nolabel="1"/>
+                                    <field name="gsk_online_attendance" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 </div>
 
                                 <label for="mek_oral_prac_attendance"/>
                                 <div>
-                                    <field name="mek_oral_prac_attendance" nolabel="1"/>
+                                    <field name="mek_oral_prac_attendance" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 </div>
 
                                 <label for="mek_online_attendance"/>
                                 <div>
-                                    <field name="mek_online_attendance" nolabel="1"/>
+                                    <field name="mek_online_attendance" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                                 </div>
                             </group>
                         </group>
@@ -242,43 +242,43 @@
                         
                             <label for="gsk_total"/>
                             <div>
-                                <field name="gsk_total" nolabel="1"/>
+                                <field name="gsk_total" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                             / 
                                 <span>175</span>
                             </div>
                       
                             <label for="mek_total"/>
                             <div>
-                                <field name="mek_total" nolabel="1"/>
+                                <field name="mek_total" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                             / 
                                 <span>175</span>
                             </div>
                             <label for="mek_online_marks"/>
                             <div>
-                                <field name="mek_online_marks" nolabel="1"/>
+                                <field name="mek_online_marks" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                             / 
                                 <span>75</span>
                             </div>
                             <label for="gsk_online_marks"/>
                             <div>
-                                <field name="gsk_online_marks" nolabel="1"/>
+                                <field name="gsk_online_marks" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                             / 
                                 <span>75</span>
                             </div>
                             <label for="overall_marks"/>
                             <div>
-                                <field name="overall_marks" nolabel="1"/>
+                                <field name="overall_marks" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" nolabel="1"/>
                             / 
                                 <span>500</span>
                             </div>
                       
                         </group>
                         <group style="width:50%">
-                            <field name="gsk_percentage" readonly="1"/>
-                            <field name="mek_percentage" readonly="1"/>
-                            <field name="mek_online_percentage" readonly="1"/>
-                            <field name="gsk_online_percentage" readonly="1"/>
-                            <field name="overall_percentage" readonly="1"/>
+                            <field name="gsk_percentage"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="mek_percentage"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="mek_online_percentage"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="gsk_online_percentage"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="overall_percentage"  attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                         </group>
                         <group style="width:100%" invisible="1">
                             <field name="gsk_oral_prac_carry_forward" readonly="1"/>
@@ -560,6 +560,7 @@
                         <group style="width:33.33%">
                             <field name="cookery_bakery_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}" />
                             <field name="ccmc_catering_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
+                            <field name="ccmc_gsk_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <field name="ccmc_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/>
                             <!-- <field name="ccmc_gsk_oral_prac_status" attrs="{'readonly': [('edit_marksheet_status', '!=', True)]}"/> -->
                             <!-- <field name="oral_prac_status"/> -->

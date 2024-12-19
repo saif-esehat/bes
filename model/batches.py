@@ -651,7 +651,7 @@ class InstituteCcmcBatches(models.Model):
         ('4-invoiced', 'Invoice Generated'),
         ('5-exam_scheduled', 'Fees Received'),
         ('6-done', 'Done')        
-    ], string='State', default='1-ongoing')
+    ], string='State', default='1-ongoing',tracking=True)
     
     payment_state = fields.Selection([
         ('not_paid', 'Not Paid'),
@@ -675,7 +675,7 @@ class InstituteCcmcBatches(models.Model):
     
     cookery_bakery_qb =fields.Many2one("survey.survey",string="Cookery Bakery Question Bank")
     
-    admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count",tracking=True)
+    admit_card_alloted = fields.Integer("No. of Candidate Eligible for Admit Card",compute="_compute_admit_card_count")
 
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
     candidate_ids = fields.Many2many('gp.candidate', string="Candidates")

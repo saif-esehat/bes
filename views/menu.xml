@@ -529,6 +529,7 @@
             <field name="name">Institute Invoices</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_institute_invoices_tree"/>
             <field name="domain">['|',
                 ('gp_batch_ok', '=', True),
                 ('ccmc_batch_ok', '=', True)

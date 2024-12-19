@@ -47,7 +47,7 @@
                 </li>
                 <li class="breadcrumb-item">
                     <t t-attf-href="/my/assignments/batches/candidates/{{batch_id}}/{{assignment_id}}">
-                        <span t-out="assignments.prac_oral_id.institute_id.name"/>
+                        <!-- <span t-out="assignments.institute_id.name"/> -->
                     </t>
 
                 </li>
@@ -967,6 +967,7 @@
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">GSK</th>
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">Safety</th>
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">CCMC GSK Oral</th>
+                        <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-left">Edit Marks</th>
 
                         <!-- CCMC Oral Subjects -->
@@ -975,7 +976,7 @@
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">Orals on Housekeeping and F &amp; B Service</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">Attitude &amp; Proffesionalism</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">Identification of Equipment</th>
-                        <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">GSK</th>
+                        <!-- <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">GSK</th> -->
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">CCMC Oral Total</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">Pass/Fail</th>
                         <th t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-left">Edit Marks</th>
@@ -1340,6 +1341,18 @@
                                 <t t-out="marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating"/>
                             </td>
 
+                            <t t-set="ccmc_gsk_total" t-value="int(marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating)"/>
+                            <t t-set="ccmc_gsk_percentage" t-value="(int(ccmc_gsk_total)/20)*100"/>
+
+                            <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral'" class="text-center">
+                                <t t-if="ccmc_gsk_percentage >= 60">
+                                    <span class="badge bg-success">Pass</span>
+                                </t>
+                                <t t-else="ccmc_gsk_percentage &lt; 60">
+                                    <span class="badge bg-danger">Fail</span>
+                                </t>
+                            </td>
+
                             <td t-if="examiner_subject == 'CCMC GSK Oral' or examiner_subject == 'CCMC' and exam_type == 'gsk_oral' " class="text-left">
                                 <t t-if="date_valid">
                                     <a t-attf-href="/open_ccmc_gsk_oral_form?rec_id={{ marksheet.ccmc_candidate.id }}&amp;ccmc_gsk_oral={{ marksheet.ccmc_gsk_oral.id }}&amp;assignment_id={{marksheet.examiners_id.id}}&amp;batch_id={{batch_id}}" >
@@ -1388,9 +1401,9 @@
                             </td>
                             
                             <!-- <t t-if="marksheet.ccmc_gsk_oral.toal_ccmc_oral_rating"> -->
-                                <td t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-center">
+                                <!-- <td t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-center">
                                     <t t-out="marksheet.ccmc_oral.gsk_ccmc"/>
-                                </td>
+                                </td> -->
                                 
                             <!-- </t> -->
                             <!-- <t t-else="">
@@ -1404,10 +1417,10 @@
                             </td>
 
                             <t t-set="ccmc_oral_total" t-value="int(marksheet.ccmc_oral.toal_ccmc_rating)"/>
-                            <t t-set="ccmc_oral_percentage" t-value="(int(ccmc_oral_total)/100)*100"/>
+                            <t t-set="ccmc_oral_percentage" t-value="(int(ccmc_oral_total)/80)*100"/>
 
                             <td t-if="examiner_subject == 'CCMC' and exam_type == 'ccmc_oral'" class="text-center">
-                                <t t-if="ccmc_oral_percentage > 60">
+                                <t t-if="ccmc_oral_percentage >= 60">
                                     <span class="badge bg-success">Pass</span>
                                 </t>
                                 <t t-else="ccmc_oral_percentage &lt; 60">
