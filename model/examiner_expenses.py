@@ -455,6 +455,7 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
     ], string='State',related="expense.approval_status")
     
     modification_comment = fields.Text(string='Modification Comment')
+    total_expenses = fields.Integer(string="Total Expenses",related="expense.total_expenses")
 
     reject_reason = fields.Text("Reject Reason")
 
@@ -514,7 +515,9 @@ class ExamMiscExpense(models.Model):
         ('ceo_approved', 'CEO Approved'),
         ('approved_ec', 'EC Approved'),
         ('rejected_ceo', 'Rejected by CEO'),
+        ('modified_approved', 'Modified Approve'),
         ('pending','Pending')
+        
     ], string='State',related="timesheet_report.approval_status")
     
     reject_reason = fields.Text("Reject Reason",related="timesheet_report.reject_reason")
