@@ -460,19 +460,10 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
 
     @api.depends('expense_readonly')
     def _compute_is_approved(self):
-        for record in self:
-            # Assuming 'group_approver' is the group that can approve
-            
+        for record in self:     
             is_expense_approval_ec = self.env.user.has_group('bes.group_expense_approval_ec')
-            
             record.expense_readonly = is_expense_approval_ec
-            
-            # if 
-            
-            # record.expense_readonly = self.env.user.has_group('your_module.group_approver')
 
-    
-    
     def approve_time_sheet_ec(self):
         if self.expense.approval_status == 'pending':
             self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
