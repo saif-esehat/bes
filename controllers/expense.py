@@ -196,7 +196,6 @@ class ExpenseController(http.Controller):
         
         timesheet_line = request.env['timesheet.lines'].sudo().create({'time_sheet_id': timesheet.id})
         timesheet_line.write({
-            'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
             'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
             'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
             'candidate_examined': kw.get('candidates_examined'),
@@ -223,7 +222,6 @@ class ExpenseController(http.Controller):
         timesheet_line = request.env['timesheet.lines'].sudo().search([('time_sheet_id','=',timesheet.id)])
 
         timesheet_line.write({
-            'arrival_date_time': datetime.strptime(kw.get('arrival_time'), '%Y-%m-%dT%H:%M'),
             'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
             'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
             'candidate_examined': kw.get('candidates_examined'),

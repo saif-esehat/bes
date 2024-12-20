@@ -82,7 +82,8 @@ class InstituteExpenseReport(models.Model):
     def _compute_lt_expense(self):
         for record in self:
             data = self.env["exam.misc.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
-            record.local_travel_expense= sum(data.mapped('price'))        
+            record.local_travel_expense= sum(data.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))    
+            
 
     
     
@@ -97,6 +98,8 @@ class InstituteExpenseReport(models.Model):
         for record in self:
             data = self.env["examiner.outstation.expense"].sudo().search([('dgs_batch','=',record.dgs_batch.id),('institute','=',record.institute.id)])
             record.outstation_expenses = sum(data.mapped('price'))
+            
+            
     
     
     
@@ -222,19 +225,18 @@ class ExaminerExpenses(models.Model):
             else:
                 record.team_lead_total = 0
             
-            
             if record.outstation_travel_expenses:
                 record.outstation_total = sum(record.outstation_travel_expenses.mapped('price'))
             else:
                 record.outstation_total = 0
                 
             if record.misc_expense_ids:
-                record.misc_total = sum(record.misc_expense_ids.mapped('price'))
+                record.misc_total = sum(record.misc_expense_ids.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))
             else:
                 record.misc_total = 0
      
     
-    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price', 'misc_expense_ids.price','outstation_travel_expenses','non_mariner_expense.price')
+    @api.depends('assignment_expense_ids.total', 'online_assignment_expense.price', 'team_lead_expense.price','misc_expense_ids.approval_status' ,'misc_expense_ids.price','outstation_travel_expenses','non_mariner_expense.price')
     def _compute_total_expense(self):
         for record in self:
             total_assignment = sum(record.assignment_expense_ids.mapped('total'))
@@ -242,7 +244,8 @@ class ExaminerExpenses(models.Model):
             total_team_lead = sum(record.team_lead_expense.mapped('price'))
             total_non_mariner = sum(record.non_mariner_expense.mapped('price'))
             total_outstation = sum(record.outstation_travel_expenses.mapped('price'))
-            total_misc = sum(record.misc_expense_ids.mapped('price'))
+            total_misc = sum(record.misc_expense_ids.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))
+            # total_misc = 0
             record.total = total_assignment + total_online + total_team_lead + total_misc + total_non_mariner + total_outstation
     
     
@@ -294,7 +297,7 @@ class ExaminerOverAllExpenses(models.Model):
     
     price = fields.Integer("Price",compute="_compute_total")
     
-    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.outstation_travel_expenses','examiner_expenses_id.misc_expense_ids')
+    @api.depends('examiner_expenses_id.assignment_expense_ids','examiner_expenses_id.online_assignment_expense','examiner_expenses_id.team_lead_expense','examiner_expenses_id.outstation_travel_expenses','examiner_expenses_id.misc_expense_ids.price','examiner_expenses_id.misc_expense_ids.approval_status')
     def _compute_total(self):
         for record in self:
             if record.expenses_type == 'practical_oral':
@@ -321,7 +324,7 @@ class ExaminerOverAllExpenses(models.Model):
             
             elif record.expenses_type == 'local_travel':
                 if record.examiner_expenses_id.misc_expense_ids:
-                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.mapped('price'))
+                    record.price = sum(record.examiner_expenses_id.misc_expense_ids.filtered(lambda x: x.approval_status == 'ceo_approved').mapped('price'))                    
                 else:
                     record.price = 0
         
@@ -447,8 +450,12 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
         ('ceo_approved', 'CEO Approved'),
         ('rejected_ceo', 'Rejected by CEO'),
         ('approved_ec', 'EC Approved'),
-        ('pending','Pending')
+        ('pending','Pending'),
+        ('modified_approved','Modified & Approved')
     ], string='State',related="expense.approval_status")
+    
+    modification_comment = fields.Text(string='Modification Comment')
+    total_expenses = fields.Integer(string="Total Expenses",related="expense.total_expenses")
 
     reject_reason = fields.Text("Reject Reason")
 
@@ -468,7 +475,13 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
     
     
     def approve_time_sheet_ec(self):
-        self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
+        if self.expense.approval_status == 'pending':
+            self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
+        elif self.expense.approval_status == 'rejected_ceo':
+            if not self.modification_comment:
+                raise ValidationError("Modification Comment Required")
+                
+            self.expense.sudo().write({'approval_status':'modified_approved','modification_comment': self.modification_comment})
     
     def approve_time_sheet_ceo(self):
         self.expense.sudo().write({'approval_status':'ceo_approved','reject_reason': ''})
@@ -511,20 +524,23 @@ class ExamMiscExpense(models.Model):
         ('ceo_approved', 'CEO Approved'),
         ('approved_ec', 'EC Approved'),
         ('rejected_ceo', 'Rejected by CEO'),
+        ('modified_approved', 'Modified Approve'),
         ('pending','Pending')
+        
     ], string='State',related="timesheet_report.approval_status")
     
     reject_reason = fields.Text("Reject Reason",related="timesheet_report.reject_reason")
 
     
     def open_approval_wizard(self):
+                
         return {
             'name': 'Expense Approval Wizard',
             'type': 'ir.actions.act_window',
             'res_model': 'exam.misc.expense.approval.wizard',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_expense': self.timesheet_report.id},
+            'context': {'default_expense': self.timesheet_report.id ,'default_modification_comment': self.timesheet_report.modification_comment },
         }
 
     
