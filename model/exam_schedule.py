@@ -1217,34 +1217,22 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     def _compute_gsk_prac_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            if record.institute_id.code == "M05":
-                record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
 
     @api.depends('institute_id')
     def _compute_mek_prac_oral_candidates(self):
         for record in self:
-            if record.institute_id.code == "M05":
-                record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     @api.depends('institute_id')
     def _compute_gsk_online_candidates(self):
         for record in self:
-            if record.institute_id.code == "M05":
-                record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     @api.depends('institute_id')
     def _compute_mek_online_candidates(self):
         for record in self:
-            if record.institute_id.code == "M05":
-                record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     #CCMC Course
     
@@ -3185,7 +3173,7 @@ class GpAdmitCardRelease(models.TransientModel):
             is_march_september = candidate.dgs_batch.is_march_september
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
-            if candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
+            if (candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed'):
 
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                     candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
@@ -3542,15 +3530,13 @@ class GPExam(models.Model):
     exam_date_online = fields.Date(string="Exam Date Online",tracking=True)
     exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
 
+    ceo_override = fields.Boolean("CEO Override", related='gp_candidate.ceo_override',store=True,tracking=True)
+
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
-            
-            
             # candidate_image
             if record.gp_candidate.candidate_image:
-                
-                
                 record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
@@ -4992,6 +4978,9 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Cookery Online Attendance")
+
+    ceo_override = fields.Boolean("CEO Override", related='ccmc_candidate.ceo_override',store=True,tracking=True)
+
     
     def open_reset_online_exam_wizard(self):
         view_id = self.env.ref('bes.reset_online_exam_wizard').id

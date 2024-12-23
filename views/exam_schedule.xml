@@ -146,6 +146,7 @@
                             <field name="reissued" readonly="1"/>
                             <field name="reissued_date" attrs="{'invisible': [('reissued', '=', False)]}" />
                             <field name="hold_admit_card" readonly='1' />
+                            <field name="ceo_override" readonly='1' />
                             <field name="hold_certificate" readonly='1' />
                             
                             <field name="dgs_batch" readonly="1"/>
@@ -491,6 +492,7 @@
                             <field name="reissued"/>                            
                             <field name="reissued_date"/>
                             <field name="hold_admit_card" readonly='1' />
+                            <field name="ceo_override" readonly='1' />
                             <field name="hold_certificate" readonly='1' />
                             
                             <field name="dgs_batch" readonly="1"/>

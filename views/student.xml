@@ -282,34 +282,35 @@
                             </button> -->
                         </div>
 
-                        <field name="candidate_image" widget="image" class="oe_avatar" />
+                        <field name="candidate_image" widget="image" class="oe_avatar" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                         <div class="oe_title mb24">
 
                             <h1>
-                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name "/>
+                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name " attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             </h1>
 
                         </div>
                         <group style="width:100%;">
-                            <field name="candidate_code"/>
+                            <field name="candidate_code" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                         </group>
                         <group>
-                            <field name="candidate_signature" widget="image" class="oe_avatar" />
+                            <field name="candidate_signature" widget="image" class="oe_avatar" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             
                         </group>
                         <group style="width:100%;">
 
                             <field name="roll_no"/>
 
-                            <field name="name" placeholder="Candidate" required="1"/>
-                            <field name="gender" placeholder="Gender" required="1"/>
-                            <field name="institute_id"/>
+                            <field name="name" placeholder="Candidate" required="1"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="gender" placeholder="Gender" required="1"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="institute_id"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
 
-                            <field name="indos_no"/>
+                            <field name="indos_no"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="user_state" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
-                            <field name="black_listed"/>
-                            <field name="dob"/>
-                            <field name="age"/>
+                            <field name="black_listed"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="edit_profile_status" invisible="1"/>
+                            <field name="dob"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="age"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="result_status"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
 
@@ -323,37 +324,37 @@
                                     <b>Address</b>
                                 </span>
                                 <div class="o_address_format">
-                                    <field name="street" placeholder="Street..." class="o_address_street" />
-                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                    <field name="city" placeholder="City" class="o_address_city" />
-                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
-                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                    <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                                 </div>
                             </group>
                             <group >
-                                <field name="phone" widget="phone"/>
-                                <field name="mobile" widget="phone"/>
-                                <field name="email"/>
+                                <field name="phone" widget="phone" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                <field name="mobile" widget="phone" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                <field name="email" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             </group>
                         </group>
 
                         <group style="width:100%;">
-                         <field name="dgs_batch" />
-                        <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                         <field name="dgs_batch" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                        <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                         </group>
 
 
                         <group style="width:50%;">
-                            <field name="qualification"/>
-                            <field name="eighth_percent" />
-                            <field name="tenth_percent" />
-                            <field name="twelve_percent" />
-                            <field name="iti_percent" />
-                            <field name="sc_st"/>
-                            <field name="candidate_attendance_record"/>
-                            <field name="fees_paid" string="Fees Paid by Institute"/>
+                            <field name="qualification" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="eighth_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="tenth_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="twelve_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="iti_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="sc_st" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="candidate_attendance_record" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="fees_paid" string="Fees Paid by Institute" />
                             <field name="invoice_no"/>
-                            <field name="withdrawn_state"/>
+                            <field name="withdrawn_state" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
 
                             
@@ -534,6 +535,9 @@
             <field name="model">gp.candidate</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_expense_approval_ceo"/>
+                    </header>
                     <field name="indos_no"  optional="show"/>
                     <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
                     <field name="black_listed" optional="hide"/>
@@ -767,28 +771,28 @@
                             </button> -->
                         </div>
 
-                        <field name="candidate_image" widget="image" class="oe_avatar" />
+                        <field name="candidate_image" widget="image" class="oe_avatar" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                         <div class="oe_title mb24">
 
                             <h1>
-                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name "/>
+                                <field class="text-break" name="name" default_focus="1" placeholder="Candidate Name " attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             </h1>
 
                         </div>
                         <group>
-                            <field name="candidate_signature" widget="image" class="oe_avatar" />
+                            <field name="candidate_signature" widget="image" class="oe_avatar" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                         </group>
                         <group style="width:100%;">
-                            <field name="candidate_code"/>
                             <field name="roll_no"/>
-                            <field name="institute_id"/>
+                            <field name="candidate_code" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="institute_id" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <!-- <field name="name" placeholder="Candidate" required="1"/> -->
-                            <field name="indos_no"/>
-                            <field name="gender" placeholder="Gender" required="1"/>
+                            <field name="indos_no" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="gender" placeholder="Gender" required="1" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="ccmc_user_state" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
-                            <field name="black_listed"/>
-                            <field name="dob"/>
-                            <field name="age"/>
+                            <field name="black_listed" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="dob" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="age" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
 
                         </group>
 
@@ -798,23 +802,24 @@
                                     <b>Address</b>
                                 </span>
                                 <div class="o_address_format">
-                                    <field name="street" placeholder="Street..." class="o_address_street" />
-                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                    <field name="city" placeholder="City" class="o_address_city" />
-                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
-                                    <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                    <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                                 </div>
                             </group>
                             <group >
-                                <field name="phone" widget="phone"/>
-                                <field name="mobile" widget="phone"/>
-                                <field name="email"/>
+                                <field name="phone" widget="phone" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                <field name="mobile" widget="phone" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                                <field name="email" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             </group>
                         </group>
 
                         <group style="width:100%;">
-                              <field name="dgs_batch"  />
-                             <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" />
+                            <field name="dgs_batch"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="edit_profile_status" invisible="1"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
 
                             <!-- <field name="institute_batch_id"/> -->
@@ -822,16 +827,16 @@
 
 
                         <group style="width:50%;">
-                            <field name="qualification"/>
-                            <field name="eighth_percent" />
-                            <field name="tenth_percent" />
-                            <field name="twelve_percent" />
-                            <field name="iti_percent" />
-                            <field name="sc_st"/>
-                            <field name="candidate_attendance_record"/>
-                            <field name="fees_paid" />
-                            <field name="invoice_no"/>
-                            <field name="withdrawn_state"/>
+                            <field name="qualification" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="eighth_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="tenth_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="twelve_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="iti_percent" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="sc_st" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="candidate_attendance_record" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="fees_paid" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="invoice_no" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="withdrawn_state" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="withdrawn_reason" attrs="{'invisible': [('withdrawn_state', '!=', 'yes')]}"/>
                             
                         </group>
@@ -989,6 +994,9 @@
             <field name="model">ccmc.candidate</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_expense_approval_ceo"/>
+                    </header>
                     <field name="indos_no"  optional="show"/>
                     <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
                     <field name="black_listed" optional="hide"/>
