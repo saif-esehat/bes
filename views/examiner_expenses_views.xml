@@ -270,6 +270,11 @@
                     <field name="online_assignment_expense" readonly="1"/>
                     <field name="misc_expense" />
                     <field name="total_expense" sum="Total"/>
+
+                    <field name="pan_no" />
+                    <field name="acc_no" />
+                    <field name="ifsc_code" />
+                    <field name="bank_name" />
                 </group>
                     <notebook>
                         <page string="Miscellaneous Expenses" >

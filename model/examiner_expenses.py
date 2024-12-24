@@ -570,6 +570,11 @@ class ECExpense(models.Model):
     
     misc_expense = fields.Integer("Misc expenses",compute='_compute_misc_expense')
 
+    pan_no = fields.Char("Pan No .",related="exam_region.pan_no",tracking=True)
+    acc_no = fields.Char(string="Account Number",related="exam_region.acc_no",tracking=True)
+    ifsc_code = fields.Char(string="IFSC Code",related="exam_region.ifsc_code",tracking=True)
+    bank_name = fields.Char(string="Bank Name",related="exam_region.bank_name",tracking=True)
+
     @api.depends("ec_misc_expense_ids")
     def _compute_misc_expense(self):
         for record in self:

@@ -2403,10 +2403,15 @@ class ExamOralPracticalExaminers(models.Model):
         
 
     
-    @api.depends('examiner.name', 'subject.name', 'exam_date')
+    @api.depends('examiner.name', 'subject.name', 'exam_date', 'dgs_batch.batch_name', 'institute_id.name')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"{record.examiner.name} - {record.subject.name} - {record.exam_date}"
+
+            if record.exam_date:
+                date = record.exam_date.strftime('%d-%m-%Y')
+            else:
+                date = False
+            record.display_name = f"{record.examiner.name} - {record.institute_id.name} - {record.subject.name} - {date} - {record.dgs_batch.batch_name}"
 
     @api.depends('candidates_count','candidate_done')
     def compute_marksheet_done(self):
@@ -5782,36 +5787,40 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
         for candidate in self.candidate_ids:
             # Check the course for the candidate
-            if candidate.examiners_id.course.course_code == "GP":
-                if candidate.examiners_id.subject.name == 'GSK':
-                    # Check if both oral and practical drafts are confirmed
-                    if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate 
-                    elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
+            if candidate.examiners_id.exam_type != "online":
+                if candidate.examiners_id.course.course_code == "GP":
+                    if candidate.examiners_id.subject.name == 'GSK':
+                        # Check if both oral and practical drafts are confirmed
+                        if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate 
+                        elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
 
-                elif candidate.examiners_id.subject.name == 'MEK':
-                    if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
-                        
-            elif candidate.examiners_id.course.course_code == "CCMC":
-                if candidate.examiners_id.subject.name == 'CCMC':
-                    if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
+                    elif candidate.examiners_id.subject.name == 'MEK':
+                        if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
+                            
+                elif candidate.examiners_id.course.course_code == "CCMC":
+                    if candidate.examiners_id.subject.name == 'CCMC':
+                        if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
 
-                    if candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
-                        
+                        if candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
+            else:
+                candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
+
+
         # Raise an error if there are confirmed candidates
         if confirmed_candidates:
             raise ValidationError("Candidates Already Confirmed: {}".format(", ".join(confirmed_candidates)))
