@@ -1247,7 +1247,7 @@ class ExaminerPortal(CustomerPortal):
             # Convert string values to integers
             gsk_ccmc = int(rec["gsk_ccmc"])
             safety_ccmc = int(rec["safety_ccmc"])
-            remarks = int(rec["ccmc_gsk_oral_remarks"])
+            remarks = rec["ccmc_gsk_oral_remarks"]
             state = rec["state"]
 
             # Construct the dictionary with integer values
