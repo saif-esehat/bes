@@ -21,7 +21,7 @@ class ExaminationReport(models.Model):
     
     
     examination_batch = fields.Many2one("dgs.batches",string="Examination Batch",tracking=True)
-    
+    incident_report = fields.Char("Incident Report",tracking=True)
     
     course = fields.Selection([
         ('gp', 'GP'),
@@ -1594,6 +1594,51 @@ class CombinedReport(models.AbstractModel):
             [('examination_report_batch', '=', docs1.id)]
         )
 
+        # Fetching GP exam schedules
+        current_gp_candidate_applied = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch', '=', docs1.examination_batch.id)]
+        )
+
+        current_gp_candidate_appeared = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch', '=', docs1.examination_batch.id),('absent_status', '=', 'present')]
+        )
+
+        current_gp_candidate_passed = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch', '=', docs1.examination_batch.id),('absent_status', '=', 'present'),('result', '=', 'passed')]
+        )
+
+        current_gp_pass_percentage = (current_gp_candidate_passed / current_gp_candidate_appeared) * 100
+
+
+
+        current_gp_candidate_repeater_applied = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch.to_date','=',docs1.examination_batch.to_date),('dgs_batch.repeater_batch', '=', True)]
+        )
+
+        current_gp_candidate_repeater_appeared = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch.to_date','=',docs1.examination_batch.to_date),('dgs_batch.repeater_batch', '=', True),('absent_status', '=', 'present')]
+        )
+
+        current_gp_candidate_repeater_passed = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch.to_date','=',docs1.examination_batch.to_date),('dgs_batch.repeater_batch', '=', True),('absent_status', '=', 'present'),('result', '=', 'passed')]
+        )
+
+        current_gp_pass_repeater_percentage = (current_gp_candidate_repeater_passed / current_gp_candidate_repeater_appeared) * 100
+
+        # previous_gp_candidate_applied = self.env['gp.exam.schedule'].sudo().search(
+        #     [('dgs_batch', '=', docs1.previous_batch.id)]
+        # )
+
+        # previous_gp_candidate_appeared = self.env['gp.exam.schedule'].sudo().search(
+        #     [('dgs_batch', '=', docs1.previous_batch.id),('absent_status', '=', 'present')]
+        # )
+
+        # previous_gp_candidate_passed = self.env['gp.exam.schedule'].sudo().search(
+        #     [('dgs_batch', '=', docs1.previous_batch.id),('absent_status', '=', 'present'),('result', '=', 'passed')]
+        # )
+
+        # previous_gp_pass_percentage = (len(previous_gp_candidate_passed) / len(previous_gp_candidate_appeared)) * 100
+
         # Fetching ship visit reports
         # gp_ship_visits = self.env['gp.candidate.ship.visits'].sudo().search(
         #     [('dgs_batch', '=', docs1.id)]
@@ -1612,10 +1657,11 @@ class CombinedReport(models.AbstractModel):
         # courses = {record.institute_id.id: record.course for record in low_percentage_data}
 
         gp_repeater_data = self.env['attempt.wise.report'].sudo().search(
-            [('examination_report_batch.exam_type', '=', 'repeater'),
-             ('examination_report_batch.course', '=', 'gp'),
-           ]
-        )
+                [('examination_report_batch.exam_type', '=', 'repeater'),
+                 ('examination_report_batch.course', '=', 'gp'),
+                ('examination_batch.to_date','=',docs1.examination_batch.to_date)
+               ]
+            )
 
         total_passed = sum(repeater.passed for repeater in gp_repeater_data)
         total_appeared = sum(repeater.appeared for repeater in gp_repeater_data)
@@ -1632,6 +1678,7 @@ class CombinedReport(models.AbstractModel):
         ccmc_repeater_data = self.env['attempt.wise.report'].sudo().search(
             [('examination_report_batch.exam_type', '=', 'repeater'),
              ('examination_report_batch.course', '=', 'ccmc'),
+              ('examination_batch.to_date','=',docs1.examination_batch.to_date)
            ]
         )
 
@@ -1699,29 +1746,38 @@ class CombinedReport(models.AbstractModel):
         institutes_data = []
         
         # Determine course type and fetch institutes based on dgs_batch
-        batch_id = docs1.id
+        batch_id = docs1.examination_batch.id
         if docs1.course == 'gp':
-            institutes = self.env['gp.exam.schedule'].sudo().search(
-                [('dgs_batch', '=', batch_id)]
-            ).sorted(key=lambda r: r.institute_code).institute_id
+            institutes = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
         elif docs1.course == 'ccmc':
-            institutes = self.env['ccmc.exam.schedule'].sudo().search(
-                [('dgs_batch', '=', batch_id)]
-            ).sorted(key=lambda r: r.institute_code).institute_id
+            institutes = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
 
         # Create dictionary for each institute with code and name
         for institute in institutes:
             ins = {'code': institute.code, 'name': institute.name}
             institutes_data.append(ins)
+                # Function to format the date
+        def format_date():
+            date = datetime.now()
+            day = date.day
+            month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            month = month_names[date.month - 1]
+            year = date.year
 
+            # Add ordinal suffix
+            def ordinal_suffix(d):
+                if 11 <= d <= 13: return "th"
+                return {1: "st", 2: "nd", 3: "rd"}.get(d % 10, "th")
+
+            return f"{day}{ordinal_suffix(day)} {month} {year}"
+
+        # import  wdb;wdb.set_trace()
 
         return {
             'docids': docids,
             'doc_model': 'examination.report',
+            'current_date': format_date(),
             'docs': docs1,
-            # 'summarized_docs': summarized_data,
-            # 'gp_ship_visits': gp_ship_visits,
-            # 'institutes_data': institutes_data,
             'subject_pass_data': subject_pass_data,
             'low_percentage_data': low_percentage_data,
             'gp_repeater_data': gp_repeater_data,
@@ -1745,8 +1801,6 @@ class CombinedReport(models.AbstractModel):
             'gp_fresh_gsk_online_pass': gp_fresh_gsk_online_pass,
             'gp_fresh_mek_online_pass': gp_fresh_mek_online_pass,
             'gp_fresh_overall_pass': gp_fresh_overall_pass,
-
-
             'gp_sumraise_repeater_data': gp_sumraise_repeater_data,
             'gp_repeater_overall_pass': gp_repeater_overall_pass,
             'gp_repeater_candidate_appeared': gp_repeater_candidate_appeared,
@@ -1754,10 +1808,23 @@ class CombinedReport(models.AbstractModel):
             'ccmc_repeater_overall_pass': ccmc_repeater_overall_pass,
 
             'institutes_data': institutes_data,
+
+            'current_gp_candidate_applied':current_gp_candidate_applied,  
+            'current_gp_candidate_appeared':current_gp_candidate_appeared,  
+            'current_gp_candidate_passed':current_gp_candidate_passed,
+            'current_gp_pass_percentage':current_gp_pass_percentage,
+
+            'current_gp_candidate_repeater_applied':current_gp_candidate_repeater_applied,  
+            'current_gp_candidate_repeater_appeared':current_gp_candidate_repeater_appeared,  
+            'current_gp_candidate_repeater_passed':current_gp_candidate_repeater_passed,
+            'current_gp_pass_repeater_percentage':current_gp_pass_repeater_percentage,
             
          
 
         }
+    
+
+
 
 
 

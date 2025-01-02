@@ -70,9 +70,10 @@
                             <field name="visible_gp_repeater_report_button" invisible="1"/>  
                             <field name="visible_ccmc_repeater_report_button" invisible="1"/>      
                             <field name="examination_batch"/>
-                            <field name="sequence_report"/>            
                             <field name="course"/>                  
                             <field name="exam_type"/>                         
+                            <field name="sequence_report"/>            
+                            <field name="incident_report"/>            
                         </group>
                        
                     </sheet>
