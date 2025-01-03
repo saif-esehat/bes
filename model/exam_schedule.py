@@ -3445,7 +3445,7 @@ class GPExam(models.Model):
 
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
-    rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
+    rank = fields.Char("Rank",compute='_compute_rank',tracking=True,store=True)
     
     institute_code = fields.Char(string="Institute Code", related='institute_id.code',store=True,tracking=True)
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True,tracking=True)
@@ -3536,6 +3536,11 @@ class GPExam(models.Model):
     exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
 
     ceo_override = fields.Boolean("CEO Override", related='gp_candidate.ceo_override',store=True,tracking=True)
+
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ],string="Gender",related='gp_candidate.gender',store=True,tracking=True)
 
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
@@ -4858,6 +4863,12 @@ class CCMCExam(models.Model):
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
     fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
+
+    
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ],string="Gender",related='ccmc_candidate.gender',store=True,tracking=True)
     
     def _fees_paid_by_candidate(self):
         for rec in self:

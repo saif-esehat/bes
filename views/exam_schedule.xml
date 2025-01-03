@@ -153,6 +153,7 @@
                             <field name="gp_candidate" readonly="1"/>
                             <field name="candidate_code" readonly="1"/>
                             <field name="indos_no" readonly="1"/>
+                            <field name="gender" readonly="1"/>
                             <field name="institute_name" invisible="1" />
                         </group>
                         <group>
@@ -354,6 +355,7 @@
                      <field name="institute_code" force_save="1" optional="show"/>
                     <field name="exam_violation_state" optional="show"/>
                     <field name="gp_candidate" optional="show"/>
+                    <field name="gender" optional="show"/>
                     <field name="candidate_code" optional="show"/>
                     <field name="registered_institute" readonly="1" optional="show"/>
                     <field name="exam_region" readonly="1" optional="show"/>
@@ -499,6 +501,7 @@
                             <field name="ccmc_candidate" readonly="1"/>
                             <field name="candidate_code" readonly="1"/>
                             <field name="indos_no" readonly="1"/>
+                            <field name="gender" readonly="1"/>
                             <field name="institute_name" invisible="1" />
                             <!-- <field name="roll_no" readonly="1"/> -->
                         </group>
@@ -616,6 +619,7 @@
                     <field name="institute_code" optional="show"/> 
                     <field name="exam_violation_state" optional="show"/>
                     <field name="ccmc_candidate"  optional="show"/>
+                    <field name="gender" optional="show"/>
                     <field name="candidate_code" optional="show"/>
                     <field name="registered_institute" optional="show"/>
                     <field name="exam_region" optional="show"/>
