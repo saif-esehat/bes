@@ -6,7 +6,43 @@ import xlsxwriter
 from datetime import datetime
 import xlrd
 
-    
+
+class SendMailWizard(models.TransientModel):
+    _name = 'send.mail.wizard'
+    _description = 'Wizard to Send Mail'
+
+    template_id = fields.Many2one('mail.template', string='Mail Template', required=True)
+    subject = fields.Char(string='Subject')
+    body_html = fields.Html(string='Body')
+
+    @api.onchange('template_id')
+    def _onchange_template_id(self):
+        if self.template_id:
+            self.subject = self.template_id.subject
+            self.body_html = self.template_id.body_html
+
+    def action_send_mail(self):
+        self.ensure_one()
+        active_ids = self.env.context.get('active_ids', [])
+        active_model = self.env.context.get('active_model', False)
+        
+        
+        # import wdb;wdb.set_trace()
+        if active_model and active_ids:
+            records = self.env[active_model].browse(active_ids)
+            for record in records:
+                email_context = {
+                    'email_to': record.institute_id.email,
+                    'subject': self.subject,
+                    'body_html': self.body_html,
+                    'auto_delete': False
+                    
+                }
+                self.template_id.send_mail(record.id,email_values=email_context, force_send=True)
+        return {'type': 'ir.actions.act_window_close'}
+
+
+
 
 
 class InstituteGPBatches(models.Model):
@@ -14,6 +50,8 @@ class InstituteGPBatches(models.Model):
     _rec_name = "batch_name"
     _inherit = ['mail.thread','mail.activity.mixin']
     _description= 'GP Batches'
+    
+    
     
     
     institute_id = fields.Many2one("bes.institute",string="Institute",required=True,tracking=True)
@@ -78,6 +116,20 @@ class InstituteGPBatches(models.Model):
     gsk_survey_qb = fields.Many2one("survey.survey",string="Gsk Question Bank",tracking=True)
     
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
+    
+    def action_open_send_mail_wizard(self):
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Send Mail',
+            'res_model': 'send.mail.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {            
+                'active_ids': self.ids
+            },
+        }
+    
     def _compute_all_candidates_have_indos(self):
         for record in self:
             # import wdb; wdb.set_trace()

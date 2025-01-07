@@ -2,6 +2,33 @@
 <odoo>
     <data>
 
+
+        <record id="view_send_mail_wizard_form" model="ir.ui.view">
+            <field name="name">send.mail.wizard.form</field>
+            <field name="model">send.mail.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Send Mail">
+                    <group>
+                        <field name="template_id" widget="selection"/>
+                        <field name="subject"/>
+                        <field name="body_html"/>
+                    </group>
+                    <footer>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Send" class="btn-primary" type="object" name="action_send_mail"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- <record id="action_open_send_mail_wizard" model="ir.actions.act_window">
+            <field name="name">Send Mail</field>
+            <field name="res_model">send.mail.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record> -->
+
         <!-- Institute Batches -->
 
         <record id="gp_batch_form" model="ir.ui.view">
@@ -10,6 +37,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        
+
                         
                         <!-- <button name="move_to_invoiced" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '3-pending_invoice'),]}"/> -->
                         <!-- <button name="confirm_batch" string="Confirm" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-ongoing')]}"/>  -->
@@ -111,6 +140,10 @@
                 <tree>
                     <header>
                         <button name="action_delete_batches" type="object" string="Delete Batches" class="oe_highlight" />
+                        <button string="Send Mail" 
+                            type="object" 
+                            name="action_open_send_mail_wizard" 
+                            class="btn-primary"/>
                     </header>
                     <field name="batch_name"/>
                     <field name="institute_id"/>
