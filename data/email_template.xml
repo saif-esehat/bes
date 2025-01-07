@@ -114,4 +114,27 @@
             <field name="report_template" ref="bes.report_ccmc_certificate"/>
 
         </record>
+
+        <!-- <record id="" model="mail.template">
+           <field name="name">EMAIL TEMPLATE NAME</field>
+           <field name="model_id" ref="module_name.model_sample_name"/>
+           <field name="auto_delete" eval="True"/>
+           <field name="email_from">{{object.res_user_id.email}}</field>
+           <field name="email_to">{{object.client_name.email}}</field>
+           <field name="report_template" ref="action_example_pdf"/>
+           <field name="subject">{{object.amc}}</field>
+           <field name="body_html">
+               <p>
+                Dear<t t-out="object.client_name.name"/>,
+                   <br/>
+                   <br/>
+                   Good job, this is our first e-mail template!
+                   <br/>
+               </p>
+               Regards,
+               <br/>
+               <t t-out="object.company_id.name"/>
+           </field>
+       </record> -->
+
 </odoo>
