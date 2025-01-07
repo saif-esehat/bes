@@ -11,7 +11,7 @@ from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
 import xlsxwriter
 from io import BytesIO
-from PyPDF2 import PdfMerger
+# from PyPDF2 import PdfMerger
 
 
 
@@ -1098,70 +1098,70 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
 
-    def print_multiple_reports(self):
-        reports_data = []
+    # def print_multiple_reports(self):
+    #     reports_data = []
 
-        # Add Summarised GP Report
-        reports_data.append({
-            'report_name': 'bes.summarised_gp_report_action',
-            'doc_ids': self.ids,
-            'data': {
-                'course': 'GP',
-                'batch_id': self.examination_batch.id,
-            },
-        })
+    #     # Add Summarised GP Report
+    #     reports_data.append({
+    #         'report_name': 'bes.summarised_gp_report_action',
+    #         'doc_ids': self.ids,
+    #         'data': {
+    #             'course': 'GP',
+    #             'batch_id': self.examination_batch.id,
+    #         },
+    #     })
 
-        # Add Summarised GP Repeater Report
-        reports_data.append({
-            'report_name': 'bes.summarised_gp_repeater_report_action',
-            'doc_ids': self.ids,
-            'data': {
-                'course': 'GP',
-                'batch_id': self.examination_batch.id,
-            },
-        })
+    #     # Add Summarised GP Repeater Report
+    #     reports_data.append({
+    #         'report_name': 'bes.summarised_gp_repeater_report_action',
+    #         'doc_ids': self.ids,
+    #         'data': {
+    #             'course': 'GP',
+    #             'batch_id': self.examination_batch.id,
+    #         },
+    #     })
 
-        # Add Summarised CCMC Report
-        reports_data.append({
-            'report_name': 'bes.summarised_ccmc_report_action',
-            'doc_ids': self.ids,
-            'data': {
-                'course': 'CCMC',
-                'batch_id': self.examination_batch.id,
-            },
-        })
+    #     # Add Summarised CCMC Report
+    #     reports_data.append({
+    #         'report_name': 'bes.summarised_ccmc_report_action',
+    #         'doc_ids': self.ids,
+    #         'data': {
+    #             'course': 'CCMC',
+    #             'batch_id': self.examination_batch.id,
+    #         },
+    #     })
 
-        # Combine PDFs and return the download action
-        combined_pdf = self.combine_pdfs(reports_data)
+    #     # Combine PDFs and return the download action
+    #     combined_pdf = self.combine_pdfs(reports_data)
 
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/web/content?model=examination.report&id=%s&field=combined_pdf&filename=Combined_Reports.pdf' % self.id,
-            'target': 'new',
-        }
+    #     return {
+    #         'type': 'ir.actions.act_url',
+    #         'url': '/web/content?model=examination.report&id=%s&field=combined_pdf&filename=Combined_Reports.pdf' % self.id,
+    #         'target': 'new',
+    #     }
 
 
-    def combine_pdfs(self, reports_data):
-        merger = PdfMerger()
+    # def combine_pdfs(self, reports_data):
+    #     merger = PdfMerger()
 
-        for report_action in reports_data:
-            # Generate PDF data for each report
-            report = self.env.ref(report_action['report_name'])
-            pdf_data, _ = report._render_qweb_pdf(report_action['doc_ids'], data=report_action.get('data'))
+    #     for report_action in reports_data:
+    #         # Generate PDF data for each report
+    #         report = self.env.ref(report_action['report_name'])
+    #         pdf_data, _ = report._render_qweb_pdf(report_action['doc_ids'], data=report_action.get('data'))
 
-            # Add the PDF binary data to the merger
-            pdf_stream = io.BytesIO(pdf_data)
-            merger.append(pdf_stream)
+    #         # Add the PDF binary data to the merger
+    #         pdf_stream = io.BytesIO(pdf_data)
+    #         merger.append(pdf_stream)
 
-        # Combine all PDFs into a single file
-        output = io.BytesIO()
-        merger.write(output)
-        merger.close()
+    #     # Combine all PDFs into a single file
+    #     output = io.BytesIO()
+    #     merger.write(output)
+    #     merger.close()
 
-        # Store the combined PDF in a binary field
-        self.combined_pdf = output.getvalue()
+    #     # Store the combined PDF in a binary field
+    #     self.combined_pdf = output.getvalue()
 
-        return self.combined_pdf
+    #     return self.combined_pdf
 
 
         

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from io import BytesIO
-from PyPDF2 import PdfMerger
+# from PyPDF2 import PdfMerger
 
 class ReleaseAdmitCard(models.TransientModel):
     _name = 'release.admit.card'
