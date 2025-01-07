@@ -10,6 +10,8 @@ import math
 from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
 import xlsxwriter
+from io import BytesIO
+from PyPDF2 import PdfMerger
 
 
 
@@ -21,7 +23,9 @@ class ExaminationReport(models.Model):
     
     
     examination_batch = fields.Many2one("dgs.batches",string="Examination Batch",tracking=True)
+    previous_batch = fields.Many2one("dgs.batches",string="Previous Batch",tracking=True)
     incident_report = fields.Char("Incident Report",tracking=True)
+    combined_pdf = fields.Binary(string="Combined PDF", readonly=True)
     
     course = fields.Selection([
         ('gp', 'GP'),
@@ -1093,6 +1097,73 @@ class ExaminationReport(models.Model):
             datas['report_type'] = 'Fresh'
             
         return self.env.ref('bes.bar_graph_report').report_action(self ,data=datas) 
+
+    def print_multiple_reports(self):
+        reports_data = []
+
+        # Add Summarised GP Report
+        reports_data.append({
+            'report_name': 'bes.summarised_gp_report_action',
+            'doc_ids': self.ids,
+            'data': {
+                'course': 'GP',
+                'batch_id': self.examination_batch.id,
+            },
+        })
+
+        # Add Summarised GP Repeater Report
+        reports_data.append({
+            'report_name': 'bes.summarised_gp_repeater_report_action',
+            'doc_ids': self.ids,
+            'data': {
+                'course': 'GP',
+                'batch_id': self.examination_batch.id,
+            },
+        })
+
+        # Add Summarised CCMC Report
+        reports_data.append({
+            'report_name': 'bes.summarised_ccmc_report_action',
+            'doc_ids': self.ids,
+            'data': {
+                'course': 'CCMC',
+                'batch_id': self.examination_batch.id,
+            },
+        })
+
+        # Combine PDFs and return the download action
+        combined_pdf = self.combine_pdfs(reports_data)
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/web/content?model=examination.report&id=%s&field=combined_pdf&filename=Combined_Reports.pdf' % self.id,
+            'target': 'new',
+        }
+
+
+    def combine_pdfs(self, reports_data):
+        merger = PdfMerger()
+
+        for report_action in reports_data:
+            # Generate PDF data for each report
+            report = self.env.ref(report_action['report_name'])
+            pdf_data, _ = report._render_qweb_pdf(report_action['doc_ids'], data=report_action.get('data'))
+
+            # Add the PDF binary data to the merger
+            pdf_stream = io.BytesIO(pdf_data)
+            merger.append(pdf_stream)
+
+        # Combine all PDFs into a single file
+        output = io.BytesIO()
+        merger.write(output)
+        merger.close()
+
+        # Store the combined PDF in a binary field
+        self.combined_pdf = output.getvalue()
+
+        return self.combined_pdf
+
+
         
     
 
@@ -1223,6 +1294,8 @@ class SummarisedGPReport(models.AbstractModel):
     
     @api.model
     def _get_report_values(self, docids, data=None):
+
+        
         docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
         
@@ -1486,7 +1559,15 @@ class BarGraphReport(models.AbstractModel):
     
     @api.model
     def _get_report_values(self, docids, data=None):
-        docids = data['doc_ids']
+
+                
+        # import wdb;wdb.set_trace()
+        if  "doc_ids" in data:
+            docids = data['doc_ids']
+        else:
+            docids = docids
+
+
         docs1 = self.env['examination.report'].sudo().browse(docids)
         batch_id = docs1.examination_batch.id
         institutes_data = []
@@ -1581,9 +1662,14 @@ class CombinedReport(models.AbstractModel):
     _description = "Combined Summarised GP and Ship Visit Reports"
 
     @api.model
-    def _get_report_values(self, docids, data=None):
-        docids = data['doc_ids']
+    def _get_report_values(self, docids=None, data=None):
         
+        # import wdb;wdb.set_trace()
+        if  "doc_ids" in data:
+            docids = data['doc_ids']
+        else:
+            docids = docids
+
         # Fetching examination reports
         docs1 = self.env['examination.report'].sudo().browse(docids)
         # summarized_data = self.env['summarised.gp.report'].sudo().search(
@@ -1625,22 +1711,25 @@ class CombinedReport(models.AbstractModel):
 
         current_gp_pass_repeater_percentage = (current_gp_candidate_repeater_passed / current_gp_candidate_repeater_appeared) * 100
 
-        # previous_gp_candidate_applied = self.env['gp.exam.schedule'].sudo().search(
-        #     [('dgs_batch', '=', docs1.previous_batch.id)]
-        # )
+        previous_gp_candidate_applied = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch', '=', docs1.previous_batch.id)]
+        )
 
-        # previous_gp_candidate_appeared = self.env['gp.exam.schedule'].sudo().search(
-        #     [('dgs_batch', '=', docs1.previous_batch.id),('absent_status', '=', 'present')]
-        # )
+        previous_gp_candidate_appeared = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch', '=', docs1.previous_batch.id),('absent_status', '=', 'present')]
+        )
 
-        # previous_gp_candidate_passed = self.env['gp.exam.schedule'].sudo().search(
-        #     [('dgs_batch', '=', docs1.previous_batch.id),('absent_status', '=', 'present'),('result', '=', 'passed')]
-        # )
+        previous_gp_candidate_passed = self.env['gp.exam.schedule'].sudo().search_count(
+            [('dgs_batch', '=', docs1.previous_batch.id),('absent_status', '=', 'present'),('result', '=', 'passed')]
+        )
 
-        # previous_gp_pass_percentage = (len(previous_gp_candidate_passed) / len(previous_gp_candidate_appeared)) * 100
+        previous_gp_pass_percentage = (previous_gp_candidate_passed / previous_gp_candidate_appeared) * 100
+
+        # import wdb; wdb.set_trace()
+
 
         # Fetching ship visit reports
-        # gp_ship_visits = self.env['gp.candidate.ship.visits'].sudo().search(
+        # gp_ship_visits = self.env['gp.candidate.ship.visits'].sudo().search_count(
         #     [('dgs_batch', '=', docs1.id)]
         # )
         
@@ -1756,7 +1845,26 @@ class CombinedReport(models.AbstractModel):
         for institute in institutes:
             ins = {'code': institute.code, 'name': institute.name}
             institutes_data.append(ins)
+
+        
+
+        
+        repeater_institutes_data = []
+        
+        # Determine course type and fetch institutes based on dgs_batch
+        batch_id = self.env['dgs.batches'].sudo().search([('to_date','=',docs1.examination_batch.to_date),('repeater_batch', '=', True)]).id
+        if docs1.course == 'gp':
+            repeater_institutes = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+        elif docs1.course == 'ccmc':
+            repeater_institutes = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+
+        # Create dictionary for each institute with code and name
+        for institute in repeater_institutes:
+            ins = {'code': institute.code, 'name': institute.name}
+            repeater_institutes_data.append(ins)
                 # Function to format the date
+        repeater_doc = self.env['examination.report'].sudo().browse(batch_id)
+
         def format_date():
             date = datetime.now()
             day = date.day
@@ -1778,6 +1886,7 @@ class CombinedReport(models.AbstractModel):
             'doc_model': 'examination.report',
             'current_date': format_date(),
             'docs': docs1,
+            'repeater_doc': repeater_doc,
             'subject_pass_data': subject_pass_data,
             'low_percentage_data': low_percentage_data,
             'gp_repeater_data': gp_repeater_data,
@@ -1808,11 +1917,17 @@ class CombinedReport(models.AbstractModel):
             'ccmc_repeater_overall_pass': ccmc_repeater_overall_pass,
 
             'institutes_data': institutes_data,
+            'repeater_institutes_data': repeater_institutes_data,
 
             'current_gp_candidate_applied':current_gp_candidate_applied,  
             'current_gp_candidate_appeared':current_gp_candidate_appeared,  
             'current_gp_candidate_passed':current_gp_candidate_passed,
             'current_gp_pass_percentage':current_gp_pass_percentage,
+
+            'previous_gp_candidate_applied':previous_gp_candidate_applied,  
+            'previous_gp_candidate_appeared':previous_gp_candidate_appeared,  
+            'previous_gp_candidate_passed':previous_gp_candidate_passed,
+            'previous_gp_pass_percentage':previous_gp_pass_percentage,
 
             'current_gp_candidate_repeater_applied':current_gp_candidate_repeater_applied,  
             'current_gp_candidate_repeater_appeared':current_gp_candidate_repeater_appeared,  

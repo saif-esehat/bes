@@ -334,7 +334,7 @@ class InstituteCourses(models.Model):
     dgs_document_name = fields.Char('Document Name')
     dgs_document = fields.Binary(string='Upload DGS Document',tracking=True)
     batcher_per_year = fields.Integer("Batches per Year",tracking=True)
-    intake_capacity = fields.Integer("Intake Capacity",tracking=True)
+    intake_capacity = fields.Integer("Per Batch Intake Capacity",tracking=True)
     total = fields.Integer('Total',tracking=True, compute='_computer_total')
 
     @api.constrains('batcher_per_year','intake_capacity')

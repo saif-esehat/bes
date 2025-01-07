@@ -87,7 +87,7 @@ class InstitutePortal(CustomerPortal):
             }
         )
 
-        return request.redirect("/my/ccmcbatch")
+        return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
     @http.route(["/my/ccmcbatch"], type="http", auth="user", website=True)
     def CCMCBatchList(self, **kw):

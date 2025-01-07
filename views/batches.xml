@@ -483,6 +483,8 @@
                         <button name="open_release_admit_card_wizard" string="Release Admit Card" type="object" class="btn-primary" />
                         <button name="print_ccmc_batch_report" string="CCMC Ship Visit Report" type="object" class="btn-primary" />
                         <button name="print_gp_batch_report" string="GP Ship Visit Report" type="object" class="btn-primary" />
+                        <!-- <button name="print_combined_reports" string="Combine Report" type="object" class="btn-primary"/> -->
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

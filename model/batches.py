@@ -68,7 +68,7 @@ class InstituteGPBatches(models.Model):
         ('partial', 'Partially Paid')     
     ], string='Payment State', default='not_paid',compute="_compute_payment_state",tracking=True)
     
-    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",compute='_compute_batch_capacity',tracking=True)
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",tracking=True)
     dgs_approval_state = fields.Boolean(string="DGS Approval Status",tracking=True)
     dgs_document = fields.Binary(string="DGS Document",tracking=True)
     document_name = fields.Char("Name of Document",tracking=True)
@@ -92,13 +92,56 @@ class InstituteGPBatches(models.Model):
             else:
                 record.all_candidates_have_indos = False
 
-    @api.depends('institute_id')
-    def _compute_batch_capacity(self):
-        for rec in self:
-            if rec.institute_id.courses[0].course.course_code == 'GP':
-                # import wdb; wdb.set_trace()
-                rec.dgs_approved_capacity = rec.institute_id.courses[0].intake_capacity
-    
+    # @api.depends('institute_id')
+    # def _compute_batch_capacity(self):
+    #     for rec in self:
+    #         if rec.institute_id.courses[0].course.course_code == 'GP':
+    #             # import wdb; wdb.set_trace()
+    #             rec.dgs_approved_capacity = rec.institute_id.courses[0].intake_capacity
+
+    @api.constrains('dgs_approved_capacity', 'institute_id')
+    def _check_total_capacity(self):
+        for batch in self:
+            year = batch.from_date.year if batch.from_date else None
+            if not year:
+                continue
+
+            # Get all batches for the same institute and course in the given year
+            jan_to_jun_batches = self.env['institute.gp.batches'].search([
+                ('institute_id', '=', batch.institute_id.id),
+                ('course', '=', batch.course.id),
+                ('from_date', '>=', f'{year}-01-01'),
+                ('to_date', '<=', f'{year}-06-30')
+            ])
+
+            jul_to_dec_batches = self.env['institute.gp.batches'].search([
+                ('institute_id', '=', batch.institute_id.id),
+                ('course', '=', batch.course.id),
+                ('from_date', '>=', f'{year}-07-01'),
+                ('to_date', '<=', f'{year}-12-31')
+            ])
+
+            # Calculate total approved capacity
+            jan_to_jun_capacity = sum(jan_to_jun_batches.mapped('dgs_approved_capacity'))
+            jul_to_dec_capacity = sum(jul_to_dec_batches.mapped('dgs_approved_capacity'))
+
+            total_capacity = jan_to_jun_capacity + jul_to_dec_capacity
+
+            # Fetch the total intake capacity from the associated course
+            course_record = self.env['institute.courses'].search([
+                ('institute_id', '=', batch.institute_id.id),
+                ('course', '=', batch.course.id)
+            ], limit=1)
+
+            if course_record and total_capacity > course_record.total:
+                raise ValidationError(
+                    f"DGS Capacity exceeded for the year {year}. "
+                    f"Total approved capacity ({total_capacity}) exceeds the intake capacity "
+                    f"({course_record.total})."
+                )
+
+
+
     @api.model
     def create(self, values):
         record = super(InstituteGPBatches, self).create(values)
@@ -667,7 +710,7 @@ class InstituteCcmcBatches(models.Model):
     ],default="pending", string='Admit Card Status')
     
     
-    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity",compute='_compute_batch_capacity')
+    dgs_approved_capacity = fields.Integer(string="DGS Approved Capacity")
     dgs_approval_state = fields.Boolean(string="DGS Approval Status")
     dgs_document = fields.Binary(string="DGS Document")
     document_name = fields.Char("Name of Document")
@@ -694,17 +737,46 @@ class InstituteCcmcBatches(models.Model):
             else:
                 record.all_candidates_have_indos = False
 
-    @api.depends('institute_id')
-    def _compute_batch_capacity(self):
-        for rec in self:
-            # if len(rec.institute_id.courses) > 1 and rec.institute_id.courses[1].course.course_code == 'CCMC':
-            #     rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
-            
-            if len(rec.institute_id.courses) > 1:
-                rec.dgs_approved_capacity = rec.institute_id.courses[1].intake_capacity
-            else:
-                rec.dgs_approved_capacity = 0
-            # rec.dgs_approved_capacity = 100
+    @api.constrains('dgs_approved_capacity', 'institute_id')
+    def _check_total_capacity(self):
+        for batch in self:
+            year = batch.ccmc_from_date.year if batch.ccmc_from_date else None
+            if not year:
+                continue
+
+            # Get all batches for the same institute and course in the given year
+            jan_to_jun_batches = self.env['institute.ccmc.batches'].search([
+                ('institute_id', '=', batch.institute_id.id),
+                ('ccmc_course', '=', batch.ccmc_course.id),
+                ('ccmc_from_date', '>=', f'{year}-01-01'),
+                ('ccmc_to_date', '<=', f'{year}-06-30')
+            ])
+
+            jul_to_dec_batches = self.env['institute.ccmc.batches'].search([
+                ('institute_id', '=', batch.institute_id.id),
+                ('ccmc_course', '=', batch.ccmc_course.id),
+                ('ccmc_from_date', '>=', f'{year}-07-01'),
+                ('ccmc_to_date', '<=', f'{year}-12-31')
+            ])
+
+            # Calculate total approved capacity
+            jan_to_jun_capacity = sum(jan_to_jun_batches.mapped('dgs_approved_capacity'))
+            jul_to_dec_capacity = sum(jul_to_dec_batches.mapped('dgs_approved_capacity'))
+
+            total_capacity = jan_to_jun_capacity + jul_to_dec_capacity
+
+            # Fetch the total intake capacity from the associated course
+            course_record = self.env['institute.courses'].search([
+                ('institute_id', '=', batch.institute_id.id),
+                ('course', '=', batch.ccmc_course.id)
+            ], limit=1)
+
+            if course_record and total_capacity > course_record.total:
+                raise ValidationError(
+                    f"DGS Capacity exceeded for the year {year}. "
+                    f"Total approved capacity ({total_capacity}) exceeds the intake capacity "
+                    f"({course_record.total})."
+                )
 
     @api.depends("admit_card_alloted")
     def _compute_admit_card_count(self):

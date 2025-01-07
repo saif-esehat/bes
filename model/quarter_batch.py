@@ -5,7 +5,8 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import io
 import base64
-
+from io import BytesIO
+from PyPDF2 import PdfMerger
 
 class ReleaseAdmitCard(models.TransientModel):
     _name = 'release.admit.card'
@@ -641,6 +642,42 @@ class DGSBatch(models.Model):
         # return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
     #     return self.env.ref('bes.ship_visit_report_action').report_action(self ,data=datas) 
 
+    # def print_summarised_gp_report(self):
+    #     doc_id = self.env['examination.report'].sudo().search([('examination_batch','=',self.id),('course','=','gp')], limit=1)
+
+    #     datas = {
+    #         'doc_ids': doc_id.id,
+    #         'course': 'GP',
+    #         'batch_id': self.id  # Assuming examination_batch is a recordset and you want its ID
+    #     }
+        
+    #     if self.repeater_batch:
+    #         datas['report_type'] = 'Repeater'
+    #     else:
+    #         datas['report_type'] = 'Fresh'
+            
+    #     return self.env.ref('bes.summarised_gp_report_action').report_action(self ,data=datas)
+    
+    # def print_summarised_ccmc_report(self):
+    #     doc_id = self.env['examination.report'].sudo().search([('examination_batch','=',self.id),('course','=','ccmc')], limit=1)
+    #     exam_sequence = 12
+    #     datas = {
+    #         'doc_ids': doc_id.id,
+    #         'course': 'CCMC',
+    #         'batch_id': self.id,  # Assuming examination_batch is a recordset and you want its ID
+    #         'exam_sequence': exam_sequence
+    #     }
+        
+    #     if self.repeater_batch:
+    #         datas['report_type'] = 'Repeater'
+    #         datas['exam_sequence'] = exam_sequence
+    #     else:
+    #         datas['report_type'] = 'Fresh'
+    #         datas['exam_sequence'] = exam_sequence
+            
+    #     return self.env.ref('bes.summarised_ccmc_report_action').report_action(self ,data=datas) 
+
+
         
 
 class DGSBatchReport(models.AbstractModel):
@@ -798,11 +835,6 @@ class ShipVisitReportModel(models.AbstractModel):
             # 'course': course
         }
 
-
-
-
-
-
 class CCMCBatchShipVisitReport(models.AbstractModel):
     _name = "report.bes.ccmc_batch_ship_visit_report"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -883,3 +915,88 @@ class GPBatchShipVisitReport(models.AbstractModel):
             'ship_visits': ship_visits, 
             'name': 'Report'
         }
+    
+
+# class SummarisedGPReport(models.AbstractModel):
+#     _name = "report.bes.summarised_gp_report"
+#     _inherit = ['mail.thread','mail.activity.mixin']
+#     _description = "Summarised GP Report"
+    
+#     @api.model
+#     def _get_report_values(self, docids, data=None):
+#         docids = data['doc_ids']
+#         docs1 = self.env['examination.report'].sudo().browse(docids)
+        
+#         data = self.env['summarised.gp.report'].sudo().search(
+#                     [('examination_report_batch', '=', docs1.id)]).sorted(key=lambda r: r.institute_code)
+#         exam_region = data.exam_region.ids
+        
+#         data = self.env['summarised.gp.report'].sudo().search([('examination_report_batch','=',docs1.id)])
+
+        
+#         print(exam_region)
+#         # report_type = data['report_type']
+#         # course = data['course']
+
+#         # if report_type == 'Fresh' and course == 'GP':
+#         #     exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
+#         # elif report_type == 'Repeater' and course == 'GP':
+#         #     exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
+        
+#         # institutes = self.env['bes.institute'].sudo().search([], order='code asc')
+#         # exam_centers = self.env['exam.center'].sudo().search([])
+
+#         return {
+#             'docids': docids,
+#             'doc_model': 'summarised.gp.report',
+#             'docs': data,
+#             'exam_regions': exam_region,
+#             'examination_report':docs1
+#             # 'exams': exams,
+#             # 'institutes': institutes,
+#             # 'exam_centers': exam_centers,
+#             # 'report_type': report_type,
+#             # 'course': course
+#         }
+    
+    
+# class SummarisedCCMCReport(models.AbstractModel):
+#     _name = "report.bes.summarised_ccmc_report"
+#     _inherit = ['mail.thread','mail.activity.mixin']
+#     _description = "Summarised CCMC Report"
+    
+#     @api.model
+#     def _get_report_values(self, docids, data=None):
+#         docids = data['doc_ids']
+#         exam_sequence = data['exam_sequence']
+#         print(data)
+#         docs1 = self.env['examination.report'].sudo().browse(docids)
+#         data = self.env['summarised.ccmc.report'].sudo().search([('examination_report_batch','=',docs1.id)]).sorted(key=lambda r: r.institute_code)
+#         print(docs1)
+#         print(data)
+#         exam_region = data.exam_region.ids
+#         print(exam_region)
+#         # report_type = data['report_type']
+#         # course = data['course']
+
+#         # if report_type == 'Fresh' and course == 'CCMC':
+#         #     exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',docs1.id), ('attempt_number', '=', '1')])
+#         # elif report_type == 'Repeater' and course == 'CCMC':
+#         #     exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', docs1.id), ('attempt_number', '>', '1')])
+        
+#         # institutes = self.env['bes.institute'].sudo().search([], order='code asc')
+#         # exam_centers = self.env['exam.center'].sudo().search([])
+
+#         return {
+#             'docids': docids,
+#             'doc_model': 'summarised.ccmc.report',
+#             'docs': docids,
+#             'exam_regions': exam_region,
+#             'examination_report':docs1,
+#             'exam_sequence':exam_sequence
+#             # 'exams': exams,
+#             # 'institutes': institutes,
+#             # 'exam_centers': exam_centers,
+#             # 'report_type': report_type,
+#             # 'course': course
+#         }

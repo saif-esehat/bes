@@ -1422,10 +1422,10 @@
                     (Figures in parentheses are for <span t-esc="docs.examination_batch.to_date.strftime('%b %Y')"/> Examination)
                 </p>
                 <p style="margin-bottom: 20px; text-align: justify; line-height: 1.5; font-family: 'TimesNewRoman'; font-size: 18px;">
-                    In all, <t t-esc="current_gp_candidate_applied"/>(4350) candidates applied, 
-                    of which <t t-esc="current_gp_candidate_appeared"/>(4339) candidates appeared. 
-                    <t t-esc="current_gp_candidate_passed"/>(3641) candidates passed. 
-                    The overall result is <t t-esc="'{:.1f}'.format(current_gp_pass_percentage )"/>% (83.9%).
+                    In all, <t t-esc="current_gp_candidate_applied"/>(<t t-esc="previous_gp_candidate_applied"/>) candidates applied, 
+                    of which <t t-esc="current_gp_candidate_appeared"/>(<t t-esc="previous_gp_candidate_appeared"/>) candidates appeared. 
+                    <t t-esc="current_gp_candidate_passed"/>(<t t-esc="previous_gp_candidate_passed"/>) candidates passed. 
+                    The overall result is <t t-esc="'{:.1f}'.format(current_gp_pass_percentage )"/>% (<t t-esc="'{:.1f}'.format(previous_gp_pass_percentage )"/>%).
                 </p>
 
                 <!-- Table Section -->
@@ -1535,106 +1535,8 @@
                 </div>
             </div>
 
-            <!-- <h5 style=" font-weight: bold; margin-left: 100px;margin-top: 30px">3. Performance of  Certificate in Maritime Catering (CCMC)</h5>
-                <p style=" margin-left: 100px;">(Figures in parentheses are for  <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Examination)</p>
-
-                 <p style=" margin-left: 100px;">
-                In all, <span t-esc="total_ccmc_applied"/>() candidates applied, of which <span t-esc="total_ccmc_appeared"/>() candidates appeared. <span t-esc="total_ccmc_passed"/>() candidates passed. The overall result is <span t-esc="'{:.1f}%'.format(overall_ccmc_percentage)"/>(%).
-                </p>
-
-            <div style="text-align: center;margin-left: 100px;">
-            <table lass="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 80%;text-align: center;" border="1">
-                <thead>
-                    <tr >
-                      
-                        <td colspan="6" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 40%; vertical-align: middle;">CCMC <span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> Fresh candidates - The passing percentage of the Institutes is as follows:</td>
-                    </tr>
-                    <tr>
-                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 5%; vertical-align: middle;">Sr. No.</th>
-                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 60%; vertical-align: middle;">Name of the Institute</th>
-                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Applied</th>
-                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Appeared</th>
-                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">Passed</th>
-                        <th style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; width: 10%; vertical-align: middle;">%</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <t t-set="index" t-value="0" />
-                   <t t-foreach="ccmc_percentage_data" t-as="ccmc">
-                   <t t-set="index" t-value="index + 1" />
-                    <tr>
-                    <td colspan="1" style="border: 1px solid black; padding:6px; text-align: center;">
-                                    <span t-esc="index" />
-                                </td>
-                        <td style="border: 1px solid black; text-align: left; vertical-align: middle;" t-esc="ccmc.institute_id.name"/> 
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc.applied"/>
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc.appeared"/> 
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc.passed"/> 
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="'{:.2f}'.format(ccmc.percentage)"/> 
-                    </tr>
-                </t>
-                </tbody>
             
-            </table>
-            </div>
-         <div class="page" style="page-break-before: always;">
-            <h5 style=" font-weight: bold; margin-left: 100px;margin-top: 30px">3A  CCMC Repeaters :</h5>
-              <p style="  margin-left: 100px;margin-top: 5px;">
-                 <span t-esc="ccmc_r_total_appeared"/> appeared,  <span t-esc="ccmc_r_total_passed"/> passed.  The overall result is  <span t-esc="'{:.1f}%'.format(ccmc_r_overall_percentage)"/>
-            </p>
-
-            <div style="text-align: center;margin-left: 200px;">
-            <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 50%;text-align: center;" border="1">
-                <thead>
-                 
-                        <tr >
-                      
-                        <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: left; font-weight: bold; width: 40%; vertical-align: middle;">Attempt Number</td>
-                        <td colspan="3" style="border: 1px solid black; text-align: center; font-weight: bold; width: 22%; vertical-align: middle;"><span t-esc="subject_pass_data.examination_batch.to_date.strftime('%b %y')"/> </td>
-                    </tr>
-                    <tr >
-                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Appeared</td>
-                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">Passed</td>
-                        <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 8%; vertical-align: middle;">% Pass</td>
-                    </tr>
-                   
-                </thead>
-                <tbody>
-                 <t t-foreach="ccmc_repeater_data" t-as="ccmc_repeater">
-                    <tr>
-                        <td style="border: 1px solid black; text-align: left; vertical-align: middle;" t-esc="ccmc_repeater.attempt_number"/>  
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc_repeater.appeared"/>  
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="ccmc_repeater.passed"/>  
-                        <td style="border: 1px solid black; text-align: center; vertical-align: middle;" t-esc="'{:.2f}'.format(ccmc_repeater.pass_percentage)"/> 
-                    </tr>
-                </t>
-                </tbody>
-            </table>
-            </div>
-
-            <h6 style=" font-weight: bold; margin-left: 100px;margin-top: 50px">4  Examinations were conducted as follows : </h6>
-              <h6 style="margin-left: 120px;">> Oral and Practical were conducted at  50 training for GP and 18 training institute for CCMC between</h6>
-              <h6 style="margin-left: 120px; margin-top: 0;">> Online Examination was conducted at respective institute between</h6>
-
-              <h6 style=" font-weight: bold; margin-left: 100px;margin-top: 80px">5 Concluding Remrks </h6>
-              <p style=" margin-left: 100px;">
-              BES has been continuously striving to improve the process of examination and encouraging institutes to improve their infrastructure and training.
-              </p>
-               <p style=" margin-left: 100px;">
-              BES wishes "Thank You"  to The Directorate General of Shipping for continuing support and guidance.
-              </p>
-
-          <p style="margin-left: 100px; margin-top: 120px; margin-bottom: 0;">
-                Ravindra Nath Tripathi
-            </p>
-            <p style="margin-left: 100px; margin-top: 0; margin-bottom: 0;">
-                Chief Examinations Controller
-            </p>
-            <h6 style="font-weight: bold; margin-left: 100px; margin-top: 0;">
-                For Board of Examinations for Seafarers Trust
-            </h6> -->
-    
-    <!-- Header Section -->
+            <!-- Header Section -->
             <div class="page" style="page-break-before: always;">
                 <h3 style="font-weight: bold; margin-left: 10px; margin-bottom: 15px; font-size: 20px; font-family: 'TimesNewRomanBold';">
                     3. Performance of Certificate Course in Maritime Catering (CCMC)
@@ -1737,62 +1639,52 @@
                 </div>
             </div>
 
-
-        </t>
-    </template>
-</odoo>  
-
-
-<!-- 
-            <div class="page" style="page-break-before: always;margin-top: 50px">
-                    <div class="container" style="margin-top:50px;">
-                        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
-                        <div class="row" style="text-align:center; font-size:25px; font-family: 'TimesNewRomanBold'; font-weight:900;">
-                            <div class="col-12" style="font-family: 'TimesNewRomanBold';">
-                                <t t-if="docs[0].course == 'gp'">
-                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
-                                </t>
-                                <t t-if="docs[0].course == 'ccmc'">
-                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
-                                </t>
-                                BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
-                                <span style="margin-left:5px; margin-right:5px;font-family: 'TimesNewRomanBold';"/> <br></br>
-                                <t t-if="docs[0].course == 'gp'">
-                                    <strong>GP RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
-                                </t>
-                                <t t-if="docs[0].course == 'ccmc'">
-                                    <strong>CCMC RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
-                                </t>
-                            </div>
+            <div class="page" style="page-break-before: always; margin-top: 20px;">
+                <div class="container" style="margin-top: 20px;">
+                    <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+                    <div class="row" style="text-align: center; font-size: 20px; font-family: 'TimesNewRomanBold'; font-weight: 900;">
+                        <div class="col-12" style="font-family: 'TimesNewRomanBold';">
+                            <t t-if="docs[0].course == 'gp'">
+                                <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
+                            </t>
+                            <t t-if="docs[0].course == 'ccmc'">
+                                <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
+                            </t>
+                            BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
+                            <br></br>
+                            <t t-if="docs[0].course == 'gp'">
+                                <strong>GP RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                            </t>
+                            <t t-if="docs[0].course == 'ccmc'">
+                                <strong>CCMC RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                            </t>
                         </div>
                     </div>
+                </div>
 
                 <t t-foreach="docs" t-as="doc">
                     <div class="container">
                         <div class="row">
                             <div class="col-12 image-container">
                                 <t t-if="doc.course == 'gp'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width:95%;height:550px; margin-top:2px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width: 95%; height: auto; margin-top: 5px;"/>
                                 </t>
                                 <t t-elif="doc.course == 'ccmc'">
-                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width:95%;height:550px; margin-top:2px;"/>
+                                    <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width: 95%; height: auto; margin-top: 5px;"/>
                                 </t>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="">
                             <div class="col-12">
-                                <table class="my-table">
+                                <table class="my-table" style="width: 100%; font-size: 12px; text-align: left; border:none;">
                                     <tbody>
-                                        <tr t-foreach="range(0, int(len(institutes_data) / 3 + 0.5 - 1e-10))" t-as="i" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
-                                            <td t-if="i * 3 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
-                                                <span t-esc="institutes_data[i * 3]['code']"/> - <span t-esc="institutes_data[i * 3]['name']"/>
+                                        <tr t-foreach="range(0, (len(institutes_data) + 1) // 2)" t-as="i" style="font-family: 'TimesNewRomanBold'; border:none;">
+                                            <td t-if="i * 2 &lt; len(institutes_data)" style="padding: 4px; border:none;">
+                                                <span t-esc="institutes_data[i * 2]['code']"/> - <span t-esc="institutes_data[i * 2]['name']"/>
                                             </td>
-                                            <td t-if="i * 3 + 1 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
-                                                <span t-esc="institutes_data[i * 3 + 1]['code']"/> - <span t-esc="institutes_data[i * 3 + 1]['name']"/>
-                                            </td>
-                                            <td t-if="i * 3 + 2 &lt; len(institutes_data)" style="font-family: 'TimesNewRomanBold'; font-size: 8px;">
-                                                <span t-esc="institutes_data[i * 3 + 2]['code']"/> - <span t-esc="institutes_data[i * 3 + 2]['name']"/>
+                                            <td t-if="i * 2 + 1 &lt; len(institutes_data)" style="padding: 4px; border:none;">
+                                                <span t-esc="institutes_data[i * 2 + 1]['code']"/> - <span t-esc="institutes_data[i * 2 + 1]['name']"/>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1801,12 +1693,70 @@
                         </div>
                     </div>
                 </t>
+            </div>
+            
 
+            <t t-if="repeater_institutes_data">
+                <div class="page" style="page-break-before: always; margin-top: 20px;">
+                    <div class="container" style="margin-top: 20px;">
+                        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
+                        <div class="row" style="text-align: center; font-size: 20px; font-family: 'TimesNewRomanBold'; font-weight: 900;">
+                            <div class="col-12" style="font-family: 'TimesNewRomanBold';">
+                                <t t-if="repeater_doc.course == 'gp'">
+                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
+                                </t>
+                                <t t-if="repeater_doc.course == 'ccmc'">
+                                    <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
+                                </t>
+                                BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
+                                <br></br>
+                                <t t-if="repeater_doc.course == 'gp'">
+                                    <strong>GP RATING <span t-field="repeater_doc.exam_type"/> - <span t-esc="docs.examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                                </t>
+                                <t t-if="repeater_doc.course == 'ccmc'">
+                                    <strong>CCMC RATING <span t-field="repeater_doc.exam_type"/> - <span t-esc="docs.examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="page" style="page-break-before: always;margin-top: 50px" t-if="course == 'gp' ">
-    
+                    <t t-foreach="repeater_doc" t-as="doc">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12 image-container">
+                                    <t t-if="doc.course == 'gp'">
+                                        <img t-attf-src="data:image/png;base64,{{doc.examination_batch.gp_plot_image}}" alt="Image" class="img img-fluid" style="width: 95%; height: auto; margin-top: 5px;"/>
+                                    </t>
+                                    <t t-elif="doc.course == 'ccmc'">
+                                        <img t-attf-src="data:image/png;base64,{{doc.examination_batch.ccmc_plot_image}}" alt="Image" class="img img-responsive" style="width: 95%; height: auto; margin-top: 5px;"/>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="row" style="">
+                                <div class="col-12">
+                                    <table class="my-table" style="width: 100%; font-size: 12px; text-align: left; border:none;">
+                                        <tbody>
+                                            <tr t-foreach="range(0, (len(repeater_institutes_data) + 1) // 2)" t-as="i" style="font-family: 'TimesNewRomanBold'; border:none;">
+                                                <td t-if="i * 2 &lt; len(repeater_institutes_data)" style="padding: 4px; border:none;">
+                                                    <span t-esc="repeater_institutes_data[i * 2]['code']"/> - <span t-esc="repeater_institutes_data[i * 2]['name']"/>
+                                                </td>
+                                                <td t-if="i * 2 + 1 &lt; len(repeater_institutes_data)" style="padding: 4px; border:none;">
+                                                    <span t-esc="repeater_institutes_data[i * 2 + 1]['code']"/> - <span t-esc="repeater_institutes_data[i * 2 + 1]['name']"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
       
-              <div class="container-fluid">
+        <!-- <div class="page" style="page-break-before: always;" t-if="course == 'gp' ">
+             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12" style="text-align:center;">
                         <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2a</span>
@@ -1944,36 +1894,42 @@
                             </t>
 
                             <t t-if="region_index == region_length">
-                                    <tr style="background-color: #f2f2f2;">
-                                        <td></td>
-                                        <td></td>
-                                        <td>All India Results</td>
-                                        <td><span t-esc="nation_applied"/></td>
-                                        <td><span t-esc="nation_candidate_appeared"/></td>
-                                        <td><span t-esc="nation_gsk_prac_oral_pass"/></td>
-                                        <td><span t-esc="round((gp_fresh_gsk_prac_oral_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
-                                        <td><span t-esc="nation_mek_prac_oral_pass"/></td>
-                                         <td><span t-esc="round((gp_fresh_mek_prac_oral_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
-                                        <td><span t-esc="nation_gsk_online_pass"/></td>
-                                         <td><span t-esc="round((gp_fresh_gsk_online_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
-                                        <td><span t-esc="nation_mek_online_pass"/></td>
-                                         <td><span t-esc="round((gp_fresh_mek_online_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
-                                        <td><span t-esc="nation_overall_pass"/></td>
-                                        <td><span t-esc="round((gp_fresh_overall_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
-                                    </tr>
+                                <tr style="background-color: #f2f2f2;">
+                                    <td></td>
+                                    <td></td>
+                                    <td>All India Results</td>
+                                    <td><span t-esc="nation_applied"/></td>
+                                    <td><span t-esc="nation_candidate_appeared"/></td>
+                                    <td><span t-esc="nation_gsk_prac_oral_pass"/></td>
+                                    <td><span t-esc="round((gp_fresh_gsk_prac_oral_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                    <td><span t-esc="nation_mek_prac_oral_pass"/></td>
+                                    <td><span t-esc="round((gp_fresh_mek_prac_oral_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                    <td><span t-esc="nation_gsk_online_pass"/></td>
+                                    <td><span t-esc="round((gp_fresh_gsk_online_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                    <td><span t-esc="nation_mek_online_pass"/></td>
+                                    <td><span t-esc="round((gp_fresh_mek_online_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                    <td><span t-esc="nation_overall_pass"/></td>
+                                    <td><span t-esc="round((gp_fresh_overall_pass/gp_fresh_candidate_appeared)*100,2)"/>%</td>
+                                </tr>
                             </t>
-
                        </t>
-
-                      
                 </tbody> 
-            </table>
+            </table> 
+        </div>
+ -->
 
 
+        </t>
 
-          
 
-             <div class="container-fluid"  style="margin-top: 50px" >
+    </template>
+</odoo>  
+
+
+<!-- 
+
+
+            <div class="container-fluid"  style="margin-top: 50px" >
                 <div class="row">
                     <div class="col-12" style="text-align:center;">
                         <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold'; ">ENCL.2a</span>
@@ -2304,7 +2260,6 @@
                 </tbody> 
             </table> 
 
-             </div>
 
 
             <div class="page" style="page-break-before: always;margin-top: 50px"  t-if="course == 'ccmc' ">
