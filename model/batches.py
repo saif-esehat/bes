@@ -151,6 +151,7 @@ class InstituteGPBatches(models.Model):
     #             # import wdb; wdb.set_trace()
     #             rec.dgs_approved_capacity = rec.institute_id.courses[0].intake_capacity
 
+    # @api.depends("dgs_approved_capacity")
     def update_dgs_capacity(self):
         """
         Enforces capacity rules for DGS batches based on the associated course's batcher_per_year.
@@ -166,6 +167,7 @@ class InstituteGPBatches(models.Model):
                 ('course.course_code', '=', 'GP')
             ], limit=1)
 
+            # import wdb; wdb.set_trace()
             if not course_record:
                 raise ValidationError("No course record found for the selected institute and course.")
 

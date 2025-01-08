@@ -59,6 +59,7 @@ class InstitutePortal(CustomerPortal):
                 #  "dgs_document":base64.b64encode(file_content)
             }
         )
+        batch.update_dgs_capacity()
 
         return request.redirect("/my/gpbatch/candidates/" + str(batch_id))
 
@@ -86,6 +87,7 @@ class InstitutePortal(CustomerPortal):
                 #  "dgs_document":base64.b64encode(file_content)
             }
         )
+        batch.update_dgs_capacity()
 
         return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
