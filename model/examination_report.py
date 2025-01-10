@@ -1076,11 +1076,7 @@ class ExaminationReport(models.Model):
             
         return self.env.ref('bes.ship_visit_report_actions').report_action(self ,data=datas) 
 
-    
 
-
-        
-    
     def print_gp_graph_report(self):
         
         datas = {
@@ -1295,8 +1291,12 @@ class SummarisedGPReport(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
 
-        
-        docids = data['doc_ids']
+        # import wdb; wdb.set_trace()
+        if  "doc_ids" in data:
+            docids = data['doc_ids']
+        else:
+            docids = docids
+        # docids = data['doc_ids']
         docs1 = self.env['examination.report'].sudo().browse(docids)
         
         data = self.env['summarised.gp.report'].sudo().search(
@@ -1567,6 +1567,8 @@ class BarGraphReport(models.AbstractModel):
         else:
             docids = docids
 
+        # docids = data['doc_ids']
+
 
         docs1 = self.env['examination.report'].sudo().browse(docids)
         batch_id = docs1.examination_batch.id
@@ -1643,16 +1645,18 @@ class ComparativeReport(models.Model):
         ids = self.env.context.get('active_ids')
         examination_report_batches = self.env['examination.report'].sudo().browse(ids).sorted(key=lambda r: r.sequence_report)
 
+
         gp_batches = examination_report_batches.filtered(lambda r: r.course == 'gp')
         ccmc_batches = examination_report_batches.filtered(lambda r: r.course == 'ccmc')
 
+        import wdb;wdb.set_trace()
         datas = {
             'doc_ids': self.ids,
             'gp_batches': gp_batches.ids,
             'ccmc_batches': ccmc_batches.ids,
         }
 
-        return self.env.ref('bes.comparative_report_action').report_action(self, data=datas)
+        return self.env.ref('bes.report_comparative_action').report_action(self, data=datas)
 
 
 
@@ -1960,7 +1964,7 @@ class ComparativeReport1(models.AbstractModel):
         repeater_candidate_appeared = 0
         repeater_overall_pass_percentage = 'Nil'
 
-        # import wdb; wdb.set_trace()
+        import wdb; wdb.set_trace()
         if gp_batches:
             gp_fresh_batch_data = self.env['summarised.gp.report'].sudo().search([
                 ('examination_report_batch', 'in', gp_batches),
@@ -1983,6 +1987,7 @@ class ComparativeReport1(models.AbstractModel):
                 repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_repeater_batch_data)
                 repeater_overall_pass = sum(record.overall_pass for record in gp_repeater_batch_data)
                 repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
+
 
             return {
                 'docids': docids,
