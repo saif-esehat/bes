@@ -44,7 +44,10 @@
                         <button name="print_bar_graph_report" string="Graph Report" type="object" class="btn-primary"/>
                         <!-- <button name="print_summarised_ccmc_report" string="CCMC Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_ccmc_report_button','!=',True)]}"/> -->
                         <button name="print_ship_visit_report" string="Ship Visit Report" type="object" class="btn-primary"/>
-                        <button name="print_combined_reports" string="Combine  Report" type="object" class="btn-primary"/>
+                        <!-- <button name="print_comparative_report" string="Comparative Report" type="object" class="btn-primary"/> -->
+                        <!-- <button name="print_combined_reports" string="Combine  Report" type="object" class="btn-primary"/>
+                        <button name="print_multiple_reports" type="object" string="Download All Reports" class="btn-primary"/> -->
+
                         
                         <!-- <button name="summarised_report" string="Summartise Rep" type="object" class="btn-primary"/> -->   
                     </header>
@@ -70,9 +73,12 @@
                             <field name="visible_gp_repeater_report_button" invisible="1"/>  
                             <field name="visible_ccmc_repeater_report_button" invisible="1"/>      
                             <field name="examination_batch"/>
-                            <field name="sequence_report"/>            
+                            <field name="previous_batch"/>
+                            <field name="combined_pdf"/>
                             <field name="course"/>                  
                             <field name="exam_type"/>                         
+                            <field name="sequence_report"/>            
+                            <field name="incident_report"/>            
                         </group>
                        
                     </sheet>

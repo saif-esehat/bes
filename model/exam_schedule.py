@@ -1217,34 +1217,22 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     def _compute_gsk_prac_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            if record.institute_id.code == "M05":
-                record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
 
     @api.depends('institute_id')
     def _compute_mek_prac_oral_candidates(self):
         for record in self:
-            if record.institute_id.code == "M05":
-                record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.mek_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_mek_oral_prac','=',True),('hold_admit_card','=',False),('mek_oral_prac_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     @api.depends('institute_id')
     def _compute_gsk_online_candidates(self):
         for record in self:
-            if record.institute_id.code == "M05":
-                record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.gsk_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('hold_admit_card','=',False),('gsk_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     @api.depends('institute_id')
     def _compute_mek_online_candidates(self):
         for record in self:
-            if record.institute_id.code == "M05":
-                record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
-            else:
-                record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.mek_online_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_mek_online','=',True),('hold_admit_card','=',False),('mek_online_assignment','=',False),('stcw_criterias','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
     
     #CCMC Course
     
@@ -2415,10 +2403,15 @@ class ExamOralPracticalExaminers(models.Model):
         
 
     
-    @api.depends('examiner.name', 'subject.name', 'exam_date')
+    @api.depends('examiner.name', 'subject.name', 'exam_date', 'dgs_batch.batch_name', 'institute_id.name')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"{record.examiner.name} - {record.subject.name} - {record.exam_date}"
+
+            if record.exam_date:
+                date = record.exam_date.strftime('%d-%m-%Y')
+            else:
+                date = False
+            record.display_name = f"{record.examiner.name} - {record.institute_id.name} - {record.subject.name} - {date} - {record.dgs_batch.batch_name}"
 
     @api.depends('candidates_count','candidate_done')
     def compute_marksheet_done(self):
@@ -3185,7 +3178,7 @@ class GpAdmitCardRelease(models.TransientModel):
             is_march_september = candidate.dgs_batch.is_march_september
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
-            if candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
+            if (candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed'):
 
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                     candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
@@ -3452,7 +3445,7 @@ class GPExam(models.Model):
 
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
-    rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
+    rank = fields.Char("Rank",compute='_compute_rank',tracking=True,store=True)
     
     institute_code = fields.Char(string="Institute Code", related='institute_id.code',store=True,tracking=True)
     candidate_code = fields.Char(string="Candidate Code", related='gp_candidate.candidate_code',store=True,tracking=True)
@@ -3542,15 +3535,18 @@ class GPExam(models.Model):
     exam_date_online = fields.Date(string="Exam Date Online",tracking=True)
     exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
 
+    ceo_override = fields.Boolean("CEO Override", related='gp_candidate.ceo_override',store=True,tracking=True)
+
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ],string="Gender",related='gp_candidate.gender',store=True,tracking=True)
+
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
-            
-            
             # candidate_image
             if record.gp_candidate.candidate_image:
-                
-                
                 record.candidate_image_status = 'done'
             else:
                 record.candidate_image_status = 'pending'
@@ -4867,6 +4863,12 @@ class CCMCExam(models.Model):
     ccmc_rank = fields.Char("Rank",compute='_compute_rank',tracking=True)
     
     fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
+
+    
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ],string="Gender",related='ccmc_candidate.gender',store=True,tracking=True)
     
     def _fees_paid_by_candidate(self):
         for rec in self:
@@ -4992,6 +4994,9 @@ class CCMCExam(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
     ],string="Cookery Online Attendance")
+
+    ceo_override = fields.Boolean("CEO Override", related='ccmc_candidate.ceo_override',store=True,tracking=True)
+
     
     def open_reset_online_exam_wizard(self):
         view_id = self.env.ref('bes.reset_online_exam_wizard').id
@@ -5793,36 +5798,40 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
         for candidate in self.candidate_ids:
             # Check the course for the candidate
-            if candidate.examiners_id.course.course_code == "GP":
-                if candidate.examiners_id.subject.name == 'GSK':
-                    # Check if both oral and practical drafts are confirmed
-                    if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate 
-                    elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
+            if candidate.examiners_id.exam_type != "online":
+                if candidate.examiners_id.course.course_code == "GP":
+                    if candidate.examiners_id.subject.name == 'GSK':
+                        # Check if both oral and practical drafts are confirmed
+                        if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate 
+                        elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
 
-                elif candidate.examiners_id.subject.name == 'MEK':
-                    if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
-                        
-            elif candidate.examiners_id.course.course_code == "CCMC":
-                if candidate.examiners_id.subject.name == 'CCMC':
-                    if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
+                    elif candidate.examiners_id.subject.name == 'MEK':
+                        if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
+                            
+                elif candidate.examiners_id.course.course_code == "CCMC":
+                    if candidate.examiners_id.subject.name == 'CCMC':
+                        if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
 
-                    if candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft':
-                        candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                    elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
-                        confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
-                        candidate.examiners_id.compute_candidates_done()
-                        
+                        if candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
+                            confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
+            else:
+                candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
+
+
         # Raise an error if there are confirmed candidates
         if confirmed_candidates:
             raise ValidationError("Candidates Already Confirmed: {}".format(", ".join(confirmed_candidates)))

@@ -44,3 +44,22 @@ class CandidateController(http.Controller):
 
 			record = candidate.create(rec_dict)
 			return request.render("bes.candidate_thankyou", {})
+		
+
+		
+# class ExaminationReportController(http.Controller):
+#     @http.route('/web/content', type='http', auth='user')
+#     def download_combined_pdf(self, model, id, field, filename=None, **kwargs):
+#         record = request.env[model].browse(int(id))
+#         if record:
+#             pdf_data = getattr(record, field)
+#             if pdf_data:
+#                 response = request.make_response(
+#                     pdf_data,
+#                     headers=[
+#                         ('Content-Type', 'application/pdf'),
+#                         ('Content-Disposition', f'attachment; filename={filename}')
+#                     ]
+#                 )
+#                 return response
+#         return request.not_found()

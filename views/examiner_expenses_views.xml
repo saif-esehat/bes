@@ -272,6 +272,11 @@
                     <field name="online_assignment_expense" readonly="1"/>
                     <field name="misc_expense" />
                     <field name="total_expense" sum="Total"/>
+
+                    <field name="pan_no" />
+                    <field name="acc_no" />
+                    <field name="ifsc_code" />
+                    <field name="bank_name" />
                 </group>
                     <notebook>
                         <page string="Miscellaneous Expenses" >
@@ -342,13 +347,12 @@
                     <!-- <field name="expense_readonly"/> -->
                     <field name="total_expenses"/> 
                     <field name="state"/>
-                    <field name="reject_reason" attrs="{'invisible': [('state', 'not in', ('modified_approved','approved_ec'))]}" groups="bes.group_expense_approval_ceo"/>
-                    <field name="modification_comment" attrs="{'invisible': [('state', 'not in', ('modified_approved','rejected_ceo'))],'readonly':[('state','=','modified_approved')]}" groups="bes.group_expense_approval_ceo"/>
+                    <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo"/>
                 </group>
                 <footer>
                     <button string="Approve" attrs="{'invisible': [('state', '!=', 'pending'),('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ec" type="object" name="approve_time_sheet_ec" class="btn-primary"/>
-                    <button string="Approve" attrs="{'invisible': [('state', 'not in', ('approved_ec','modified_approved'))]}" groups="bes.group_expense_approval_ceo" type="object" name="approve_time_sheet_ceo" class="btn-primary"/>
-                    <button string="Reject" attrs="{'invisible': [('state', 'not in', ('approved_ec','modified_approved'))]}" groups="bes.group_expense_approval_ceo" type="object" name="reject_time_sheet_ceo" class="btn-primary"/>
+                    <button string="Approve" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo" type="object" name="approve_time_sheet_ceo" class="btn-primary"/>
+                    <button string="Reject" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo" type="object" name="reject_time_sheet_ceo" class="btn-primary"/>
                     <!-- <button string="Cancel" special="cancel" class="btn-secondary"/> -->
                 </footer>
             </form>

@@ -11,8 +11,8 @@ class BatchWizard(models.TransientModel):
         ('jan', 'Jan - June'),
         ('july', 'July - Dec'),
     ], string="Batch Name")
-    from_date = fields.Date("From Date")
-    to_date = fields.Date("To Date")
+    from_date = fields.Date("From Date",related='dgs_batch.from_date')
+    to_date = fields.Date("To Date",related='dgs_batch.to_date')
     
     def create_batches(self):
         institutes = self.env['bes.institute'].search([('id', '=', self.env.context.get('active_ids'))])

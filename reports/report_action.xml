@@ -216,11 +216,12 @@
         <field name="report_name">bes.summarised_ccmc_report</field>
         <field name="report_file">bes.summarised_report</field>
     </record>
-   
+
+                                   
     <record id="bar_graph_report_action" model="ir.actions.report">
         <field name="name">Bar Graph Report</field>
         <field name="model">examination.report</field>
-        <field name="report_type">qweb-html</field>
+        <field name="report_type">qweb-pdf</field>
         <field name="report_name">bes.bar_graph_report</field>
         <field name="report_file">bes.bar_graph_report</field>
         <field name="paperformat_id" ref="bes.dgs_report_landscape"/>
@@ -280,14 +281,43 @@
         <field name="report_file">bes.report_comparative</field>
     </record>
 
-    <!-- <report
-        id="report_comparative_action"
+    <record id="combined_report_action" model="ir.actions.report">
+        <field name="name">Combined  Reports</field>
+        <field name="model">examination.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bes.combined_report</field>
+        <field name="report_file">bes.combined_report</field>
+        <!-- <field name="paperformat_id" ref="bes.dgs_report_landscape"/>  -->
+    </record>
+
+    <report
+        id="action_combined_report"
+        string="Report Part 1"
         model="examination.report"
-        string="Comparative Report"
         report_type="qweb-pdf"
-        name="bes.report_comparative"
-        file="bes.report_comparative"
-    /> -->
+        name="bes.combined_report"
+        file="bes.combined_report"/>
+
+    <report
+        id="print_action_bar_graph_report"
+        string="Bar Graph Report"
+        model="examination.report"
+        report_type="qweb-pdf"
+        name="bes.bar_graph_report"
+        file="bes.bar_graph_report"
+        paperformat="bes.dgs_report_landscape"
+    />
+
+    <report
+        id="action_summarised_gp_report"
+        string="Summarised Report"
+        model="examination.report"
+        report_type="qweb-pdf"
+        name="bes.summarised_gp_report"
+        file="bes.summarised_gp_report"
+    />
+
+
 
 
 </odoo>

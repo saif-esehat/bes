@@ -17,7 +17,10 @@ class ExamCenter(models.Model):
     gp_candidate = fields.Many2one('gp.exam.schedule')
     repeater_region = fields.Boolean("Repeater Region")
     
-
+    pan_no = fields.Char("Pan No .",tracking=True)
+    acc_no = fields.Char(string="Account Number",tracking=True)
+    ifsc_code = fields.Char(string="IFSC Code",tracking=True)
+    bank_name = fields.Char(string="Bank Name",tracking=True)
 
     def examiners(self):
         

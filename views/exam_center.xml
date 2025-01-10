@@ -36,7 +36,10 @@
                             <field name="mobile"/>
                             <field name="email" />
                             <field name="repeater_region" />
-
+                            <field name="pan_no" />
+                            <field name="acc_no" />
+                            <field name="ifsc_code" />
+                            <field name="bank_name" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">

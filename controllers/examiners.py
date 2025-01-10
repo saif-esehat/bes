@@ -615,7 +615,7 @@ class ExaminerPortal(CustomerPortal):
             # subject_area4 = int(rec['subject_area4'])
             # subject_area5 = int(rec['subject_area5'])
             # subject_area6 = int(rec['subject_area6'])
-            state = rec["state"]
+            # state = rec["state"]
 
             # exam_date = rec['exam_date']
             practical_record_journals = int(rec["practical_record_journals"])
@@ -640,7 +640,7 @@ class ExaminerPortal(CustomerPortal):
                 # 'subject_area_5': subject_area5,
                 # 'subject_area_6': subject_area6,
                 "practical_record_journals": practical_record_journals,
-                "gsk_oral_draft_confirm": state,
+                # "gsk_oral_draft_confirm": state,
                 "gsk_oral_remarks": remarks_oral_gsk,
             }
 
@@ -726,7 +726,7 @@ class ExaminerPortal(CustomerPortal):
             # fast_ropes = int(rec['fast_ropes'])
             # knots_bend = int(rec['knots_bend'])
             # sounding_rod = int(rec['sounding_rod'])
-            state = rec["state"]
+            # state = rec["state"]
             remarks_oral_gsk = rec["gsk_practical_remarks"]
 
             # marksheet = request.env['gp.gsk.practical.line'].sudo().search([('id','=',rec['gsk_oral'])])
@@ -745,7 +745,7 @@ class ExaminerPortal(CustomerPortal):
                 # 'fast_ropes': fast_ropes,
                 # 'knots_bend': knots_bend,
                 # 'sounding_rod': sounding_rod,
-                "gsk_practical_draft_confirm": state,
+                # "gsk_practical_draft_confirm": state,
                 "gsk_practical_remarks": remarks_oral_gsk,
             }
 
@@ -833,7 +833,7 @@ class ExaminerPortal(CustomerPortal):
                 "electrical": subject_area5,
                 "journal": subject_area6,
                 "mek_oral_remarks": mek_oral_remarks,
-                "mek_oral_draft_confirm": state,
+                # "mek_oral_draft_confirm": state,
             }
 
             marksheet = (
@@ -934,7 +934,7 @@ class ExaminerPortal(CustomerPortal):
                 # 'lathe': subject_area8,
                 "electrical": subject_area9,
                 "mek_practical_remarks": mek_practical_remarks,
-                "mek_practical_draft_confirm": state,
+                # "mek_practical_draft_confirm": state,
             }
 
             marksheet = (
@@ -1025,7 +1025,7 @@ class ExaminerPortal(CustomerPortal):
             subject_area11 = int(rec["identification_of_ingredients"])
             subject_area12 = int(rec["knowledge_of_menu"])
             remarks = rec["cookery_practical_remarks"]
-            state = rec["state"]
+            # state = rec["state"]
 
             candidate_rec = candidate.search([("indos_no", "=", indos)])
 
@@ -1044,7 +1044,7 @@ class ExaminerPortal(CustomerPortal):
                 "identification_ingredians": subject_area11,
                 "knowledge_of_menu": subject_area12,
                 "cookery_practical_remarks": remarks,
-                "cookery_draft_confirm": state,
+                # "cookery_draft_confirm": state,
             }
 
             print("valssssssssssssssssssssssssssssssssssssssssssssssss", vals)
@@ -1183,7 +1183,7 @@ class ExaminerPortal(CustomerPortal):
                 "attitude_proffessionalism": subject_area6,
                 "equipment_identification": subject_area7,
                 "ccmc_oral_remarks": remarks,
-                "ccmc_oral_draft_confirm": state,
+                # "ccmc_oral_draft_confirm": state,
             }
 
             # Write to the One2many field using the constructed dictionary
@@ -1247,7 +1247,7 @@ class ExaminerPortal(CustomerPortal):
             # Convert string values to integers
             gsk_ccmc = int(rec["gsk_ccmc"])
             safety_ccmc = int(rec["safety_ccmc"])
-            remarks = int(rec["ccmc_gsk_oral_remarks"])
+            remarks = rec["ccmc_gsk_oral_remarks"]
             state = rec["state"]
 
             # Construct the dictionary with integer values
@@ -1255,7 +1255,7 @@ class ExaminerPortal(CustomerPortal):
                 "gsk_ccmc": gsk_ccmc,
                 "safety_ccmc": safety_ccmc,
                 "ccmc_gsk_oral_remarks": remarks,
-                "ccmc_oral_draft_confirm": state,
+                # "ccmc_oral_draft_confirm": state,
             }
 
             # import wdb;wdb.set_trace();

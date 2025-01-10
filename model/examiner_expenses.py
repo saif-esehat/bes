@@ -469,19 +469,10 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
 
     @api.depends('expense_readonly')
     def _compute_is_approved(self):
-        for record in self:
-            # Assuming 'group_approver' is the group that can approve
-            
+        for record in self:     
             is_expense_approval_ec = self.env.user.has_group('bes.group_expense_approval_ec')
-            
             record.expense_readonly = is_expense_approval_ec
-            
-            # if 
-            
-            # record.expense_readonly = self.env.user.has_group('your_module.group_approver')
 
-    
-    
     def approve_time_sheet_ec(self):
         if self.expense.approval_status == 'pending':
             self.expense.sudo().write({'approval_status':'approved_ec','reject_reason': ''})
@@ -586,6 +577,11 @@ class ECExpense(models.Model):
     online_assignment_expense = fields.Integer("Online expenses",compute='_compute_online_expense')
     
     misc_expense = fields.Integer("Misc expenses",compute='_compute_misc_expense')
+
+    pan_no = fields.Char("Pan No .",related="exam_region.pan_no",tracking=True)
+    acc_no = fields.Char(string="Account Number",related="exam_region.acc_no",tracking=True)
+    ifsc_code = fields.Char(string="IFSC Code",related="exam_region.ifsc_code",tracking=True)
+    bank_name = fields.Char(string="Bank Name",related="exam_region.bank_name",tracking=True)
 
     @api.depends("ec_misc_expense_ids")
     def _compute_misc_expense(self):

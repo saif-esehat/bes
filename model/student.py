@@ -200,6 +200,32 @@ class GPCandidate(models.Model):
     exam_registered = fields.Boolean("Exam Registered")
 
     withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
+    ceo_override = fields.Boolean("CEO Override",default=False,tracking=True)
+
+    edit_profile_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group',store=False)
+
+    @api.depends('fees_paid')
+    def _compute_is_in_group(self):
+        for record in self:
+            user = self.env.user
+            # import wdb; wdb.set_trace()
+            # Check if user belongs to the group
+            has_group_access = user.has_group('bes.group_expense_approval_ceo')
+            if record.fees_paid != 'yes':
+                # Editable for all users if fees_paid is not 'yes'
+                record.edit_profile_status = True
+            else:
+                # Editable only if the user has group access
+                record.edit_profile_status = has_group_access
+
+
+
+    def action_ceo_overriden(self):
+        for record in self:
+            record.ceo_override = not record.ceo_override
+            record._check_stcw_certificate()
+            record._check_ship_visit_criteria()
+            record._check_attendance_criteria()
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
@@ -286,27 +312,13 @@ class GPCandidate(models.Model):
          for record in self:
             # Retrieve all the STCW certificate records
             stcw_certificates = record.stcw_certificate
-
             course_type_already  = [course.course_name for course in record.stcw_certificate]
-            
-            # print("Checkin STCW") 
-            # print(course_type_already)            
             gp_exam_count = self.env['gp.exam.schedule'].sudo().search_count([('gp_candidate','=',record.id)])          
-            # import wdb; wdb.set_trace();          
 
-            # all_types_exist = all(course_type in course_type_already for course_type in all_course_types)
             all_types_exist = record.check_combination_exists(course_type_already)
-            
-            # Check if the candidate_cert_no is present for all the STCW certificates
-            all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            # if gp_exam_count > 1:
-            #     if all_types_exist:
-            #         record.stcw_criteria = 'passed'
-            #     else:   
-            #         record.stcw_criteria = 'pending'
-            # elif gp_exam_count in [0,1]:
-            if all_types_exist and all_cert_nos_present:
+            all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
+            if all_types_exist and all_cert_nos_present or record.ceo_override:
                 record.stcw_criteria = 'passed'
             else:
                 record.stcw_criteria = 'pending'
@@ -316,7 +328,7 @@ class GPCandidate(models.Model):
     def _check_ship_visit_criteria(self):
         for record in self:
             # import wdb; wdb.set_trace();
-            if len(record.ship_visits) > 0:
+            if len(record.ship_visits) > 0 or record.ceo_override:
                 record.ship_visit_criteria = 'passed'
             else:
                 record.ship_visit_criteria = 'pending'
@@ -325,24 +337,11 @@ class GPCandidate(models.Model):
     @api.depends('attendance_compliance_1','attendance_compliance_2')
     def _check_attendance_criteria(self):
        for record in self:
-            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
+            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes' or record.ceo_override:
                 record.attendance_criteria = 'passed'
             else:
                 record.attendance_criteria = 'pending'
 
-    # @api.constrains('phone')
-    # def _check_valid_phone(self):
-    #     for record in self:
-    #         # Check if phone has 8 digits
-    #         if record.phone and not record.phone.isdigit() or len(record.phone) != 8 or len(record.phone) != 0:
-    #             raise ValidationError("Phone number must be 8 digits.")
-
-    # @api.constrains('mobile')
-    # def _check_valid_mobile(self):
-    #     for record in self:
-    #         # Check if mobile has 10 digits
-    #         if record.mobile and not record.mobile.isdigit() or len(record.mobile) != 10:
-    #             raise ValidationError("Mobile number must be 10 digits.")
 
     @api.constrains('email')
     def _check_valid_email(self):
@@ -836,6 +835,30 @@ class CCMCCandidate(models.Model):
     ], string='User Withdrawn',default="no",tracking=True)
     
     withdrawn_reason = fields.Char("Withdraw Reason",tracking=True)
+
+    ceo_override = fields.Boolean("CEO Override",default=False,tracking=True)
+    
+    edit_profile_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group',store=False)
+
+    @api.depends('fees_paid')
+    def _compute_is_in_group(self):
+        for record in self:
+            user = self.env.user
+            # import wdb; wdb.set_trace()
+            # Check if user belongs to the group
+            has_group_access = user.has_group('bes.group_expense_approval_ceo')
+            if record.fees_paid != 'yes':
+                # Editable for all users if fees_paid is not 'yes'
+                record.edit_profile_status = True
+            else:
+                # Editable only if the user has group access
+                record.edit_profile_status = has_group_access
+    def action_ceo_overriden(self):
+        for record in self:
+            record.ceo_override = not record.ceo_override
+            record._check_stcw_certificate()
+            record._check_ship_visit_criteria()
+            record._check_attendance_criteria()
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
