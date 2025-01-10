@@ -229,6 +229,13 @@ class DGSBatch(models.Model):
     instruction_document = fields.Binary(string="Instruction Document")
     instruction_document_name = fields.Char(string="Document Name")  # Name of the file
 
+    dgs_approval_state = fields.Selection([
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+    ], string='DGS Approval', default='pending',tracking=True)
+
+    def dgs_approved(self):
+        self.dgs_approval_state = 'approved'
     
     def open_release_admit_card_wizard(self):
         view_id = self.env.ref('bes.view_release_admit_card_form').id

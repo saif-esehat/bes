@@ -511,11 +511,12 @@
                         <button name="get_pass_percentage" string="Generate Graph" type="object" class="btn-primary" />
                         <button name="ccmc_get_pass_percentage" string="Generate Graph CCMC" type="object" class="btn-primary" />
                         <button name="move_confirm" string="Process Marksheet" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '1-on_going')]}" />
-                        <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '2-confirmed')]}" />
+                        <button name="move_dgs_approved" string="Approve Certificate" type="object" class="btn-primary" attrs="{'invisible': [('dgs_approval_state', '!=', 'approved'),('state', '!=', '2-confirmed')]}" />
                         <button name="generate_report" string="Generate Report" type="object" class="btn-primary" attrs="{'invisible': [('visible_generate_report', '=', False)]}"  />
                         <button name="open_release_admit_card_wizard" string="Release Admit Card" type="object" class="btn-primary" />
                         <button name="print_ccmc_batch_report" string="CCMC Ship Visit Report" type="object" class="btn-primary" />
                         <button name="print_gp_batch_report" string="GP Ship Visit Report" type="object" class="btn-primary" />
+                        <button name="dgs_approved" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_approval_state', '!=', 'pending')]}"/>
                         <!-- <button name="print_combined_reports" string="Combine Report" type="object" class="btn-primary"/> -->
 
                         <field name="state" widget="statusbar"/>
@@ -535,6 +536,7 @@
                             <field name="repeater_batch"/>
                             <field name="is_march_september"/>
                             <field name="visible_generate_report" invisible="1"/>
+                            <field name="dgs_approval_state"/>
                         </group>
                         <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
                             <field name="gp_url" attrs="{'invisible': [('repeater_batch', '=', False)]}"/>
