@@ -208,9 +208,9 @@
         <field name="name">examiner.expenses.tree</field>
         <field name="model">examiner.expenses</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="examiner_id"/>
+            <tree editable="bottom"  create="1" edit="1">
                 <field name="pan_no"/>
+                <field name="examiner_id"/>
                 <field name="acc_no"/>
                 <field name="ifsc_code"/>
                 <field name="bank_name"/>
@@ -220,6 +220,8 @@
                 <field name="outstation_total"/>
                 <field name="misc_total" string="Local Travels"/>
                 <field name="total" sum="Total"/>
+                <field name="payment_state"/>
+                <field name="utr_no"/>                
                 
             </tree>
         </field>
