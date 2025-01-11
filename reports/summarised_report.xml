@@ -1273,14 +1273,19 @@
                         
                         </thead>
                     <tbody>
+
+                         <t t-foreach="data.items" t-as="rec">
                 
                         <tr>
-                            <td><span t-esc="sequence_report"/> Exam <span t-esc="sequence_report"/></td>
-                            <td><span t-esc="fresh_candidate_appeared"/></td>
-                            <td><span t-esc="fresh_overall_pass_percentage"/>%</td>
-                            <td><span t-esc="repeater_candidate_appeared"/></td>
-                           <td><span t-esc="repeater_overall_pass_percentage"/>%</td>
+                            <td>
+                                <t t-foreach="rec.items()" t-as="pair">
+                                    <p>Key: <t t-esc="pair[0]" /></p>
+                                    <p>Value: <t t-esc="pair[1]" /></p>
+                                </t> Exam 
+                            </td>
                         </tr>
+
+                        </t>
                  
                     </tbody>
                 </table>

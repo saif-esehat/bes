@@ -1649,7 +1649,7 @@ class ComparativeReport(models.Model):
         gp_batches = examination_report_batches.filtered(lambda r: r.course == 'gp')
         ccmc_batches = examination_report_batches.filtered(lambda r: r.course == 'ccmc')
 
-        import wdb;wdb.set_trace()
+        # import wdb;wdb.set_trace()
         datas = {
             'doc_ids': self.ids,
             'gp_batches': gp_batches.ids,
@@ -1964,39 +1964,53 @@ class ComparativeReport1(models.AbstractModel):
         repeater_candidate_appeared = 0
         repeater_overall_pass_percentage = 'Nil'
 
-        import wdb; wdb.set_trace()
+        
+        
+
         if gp_batches:
-            gp_fresh_batch_data = self.env['summarised.gp.report'].sudo().search([
-                ('examination_report_batch', 'in', gp_batches),
-                ])
-            gp_repeater_batch_data = self.env['summarised.gp.repeater.report'].sudo().search([
-                ('examination_report_batch', 'in', gp_batches),
-                ])
-            
-            if gp_fresh_batch_data:
-                fresh_candidate_appeared = sum(record.candidate_appeared for record in gp_fresh_batch_data)
-                fresh_overall_pass = sum(record.overall_pass for record in gp_fresh_batch_data)
-                fresh_overall_pass_percentage = round((fresh_overall_pass / fresh_candidate_appeared * 100), 1) if fresh_candidate_appeared > 0 else 'Nil'   
-                repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_repeater_batch_data)
-                repeater_overall_pass = sum(record.overall_pass for record in gp_repeater_batch_data)
-                repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
-            
-            elif gp_repeater_batch_data:
-                fresh_candidate_appeared = 'Nil'
-                fresh_overall_pass_percentage = 'Nil'
-                repeater_candidate_appeared = sum(record.candidate_appeared for record in gp_repeater_batch_data)
-                repeater_overall_pass = sum(record.overall_pass for record in gp_repeater_batch_data)
-                repeater_overall_pass_percentage = round((repeater_overall_pass / repeater_candidate_appeared * 100), 1) if repeater_candidate_appeared > 0 else 'Nil'
+            batches = self.env['examination.report'].sudo().browse(gp_batches)
 
+            
+            sequence_dict = {}
+            for record in batches:
+                sequence = record.sequence_report
+                
+                if record.exam_type == 'fresh':  # Replace 'sequence' with the actual field name for sequence
+                    data = self.env['summarised.gp.report'].sudo().search([
+                            ('examination_report_batch', '=', record.id),
+                            ])
+                    
+                    candidate_appeared = sum(record.candidate_appeared for record in data)
+                    overall_pass = sum(record.overall_pass for record in data)
+                    overall_pass_percentage = round((overall_pass / candidate_appeared * 100), 1) if candidate_appeared > 0 else 'Nil' 
+                
+                if record.exam_type == 'repeater':
+                    data = self.env['summarised.gp.repeater.report'].sudo().search([
+                            ('examination_report_batch', '=', record.id),
+                            ])
+                    
+                    candidate_appeared = sum(record.candidate_appeared for record in data)
+                    overall_pass = sum(record.overall_pass for record in data)
+                    overall_pass_percentage = round((overall_pass / candidate_appeared * 100), 1) if candidate_appeared > 0 else 'Nil' 
 
-            return {
-                'docids': docids,
-                'doc_model': 'examination.report',
-                'docs': data,
-                'fresh_candidate_appeared': fresh_candidate_appeared,
-                'fresh_overall_pass_percentage': fresh_overall_pass_percentage,
-                'repeater_candidate_appeared': repeater_candidate_appeared,
-                'repeater_overall_pass_percentage': repeater_overall_pass_percentage,
+                
+                
+                if sequence not in sequence_dict:
+                    sequence_dict[sequence] = []
+                sequence_dict[sequence].append({'id': record.id ,'exam_type': record.exam_type, 'candidate_appeared': candidate_appeared, 'overall_pass': overall_pass, 'overall_pass_percentage': overall_pass_percentage})
+
+            data = []
+            sequence_list =list(sequence_dict)
+            for seq in sequence_list:
+
+                vals = {seq: sequence_dict[seq]}
+                data.append(vals)
+            
+            # import wdb; wdb.set_trace()
+
+            return{
+                'sequence_list': sequence_list,
+                'data': data
             }
         
         if ccmc_batches:

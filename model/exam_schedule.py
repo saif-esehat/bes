@@ -4059,7 +4059,7 @@ class GPExam(models.Model):
         
     def process_marks(self):
         
-        if self.exam_violation_state == 'na':
+        if self.exam_violation_state == 'na' and self.stcw_criterias == self.ship_visit_criteria == self.attendance_criteria == "passing":
         
 
             mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
@@ -4242,7 +4242,7 @@ class GPExam(models.Model):
     def move_done(self):
                 # import wdb; wdb.set_trace();
 
-        if self.exam_violation_state == 'na':
+        if self.exam_violation_state == 'na' and self.stcw_criterias == self.ship_visit_criteria == self.attendance_criteria == "passing":
         
 
             mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
