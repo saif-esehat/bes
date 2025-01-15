@@ -113,11 +113,17 @@
                         <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', False)]}"/>
                         <!-- "Hold Certificate" Button -->
+                        <!-- <button name="HoldCertificate" string="Hold Certificate" type="object" class="btn-primary" 
+                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', True)]}"/> -->
                         <button name="HoldCertificate" string="Hold Certificate" type="object" class="btn-primary" 
-                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', True)]}"/>
+                        attrs="{'invisible': [('hold_certificate', '=', True)]}"/>
+
+                        
                         <!-- "Release Certificate" Button -->
+                        <!-- <button name="ReleaseCertificate" string="Release Certificate" type="object" class="btn-primary" 
+                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', False)]}"/> -->
                         <button name="ReleaseCertificate" string="Release Certificate" type="object" class="btn-primary" 
-                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', False)]}"/>
+                        attrs="{'invisible': [('hold_certificate', '=', False)]}"/>
 
 
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
