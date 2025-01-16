@@ -3443,7 +3443,7 @@ class GPExam(models.Model):
     mek_online_carry_forward = fields.Boolean("MEK Online Carry Forward",tracking=True)
     gsk_online_carry_forward = fields.Boolean("GSK Online Carry Forward",tracking=True)
 
-    exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
+    exam_pass_date = fields.Date(string="Date of DGS Approval:",tracking=True)
     certificate_issue_date = fields.Date(string="Date of Issue of Certificate:",tracking=True)
     rank = fields.Char("Rank",compute='_compute_rank',tracking=True,store=True)
     
