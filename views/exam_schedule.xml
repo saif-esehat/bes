@@ -113,11 +113,17 @@
                         <button name="ReleaseAdmitCard" string="Release Admit Card" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('state', '!=', '1-in_process'), ('hold_admit_card', '=', False)]}"/>
                         <!-- "Hold Certificate" Button -->
+                        <!-- <button name="HoldCertificate" string="Hold Certificate" type="object" class="btn-primary" 
+                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', True)]}"/> -->
                         <button name="HoldCertificate" string="Hold Certificate" type="object" class="btn-primary" 
-                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', True)]}"/>
+                        attrs="{'invisible': [('hold_certificate', '=', True)]}"/>
+
+                        
                         <!-- "Release Certificate" Button -->
+                        <!-- <button name="ReleaseCertificate" string="Release Certificate" type="object" class="btn-primary" 
+                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', False)]}"/> -->
                         <button name="ReleaseCertificate" string="Release Certificate" type="object" class="btn-primary" 
-                        attrs="{'invisible': ['|', ('state', '!=', '3-certified'), ('hold_certificate', '=', False)]}"/>
+                        attrs="{'invisible': [('hold_certificate', '=', False)]}"/>
 
 
                         <button name="dgs_approval" string="DGS Approval" type="object" class="btn-primary" attrs="{'invisible': [('dgs_visible', '=', False)]}"/>
@@ -346,9 +352,9 @@
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
 
-                <tree>
+                <tree create="0">
                     <header>
-                        <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
+                        <!-- <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/> -->
                         <button name="action_open_gp_admit_card_release_wizard" string="Release Admit Card" type="object" class="oe_highlight"/>
                     </header>
                     <field name="exam_id" optional="show"/>

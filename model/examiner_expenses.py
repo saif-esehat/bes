@@ -207,6 +207,14 @@ class ExaminerExpenses(models.Model):
     
     misc_total = fields.Integer("Misc. Expense",compute="_compute_total")
     
+    payment_state = fields.Selection([
+        ('pending', 'Pending'),
+        ('unpaid', 'Un-Paid'),
+        ('paid', 'Paid')
+    ], string='Payment State', default='pending')
+    
+    utr_no = fields.Char("UTR No.")
+    
     @api.depends('assignment_expense_ids.total','online_assignment_expense.price','team_lead_expense.price','misc_expense_ids.price')
     def _compute_total(self):
         for record in self:

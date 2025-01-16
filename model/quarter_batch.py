@@ -198,6 +198,8 @@ class DGSBatch(models.Model):
     
     is_march_september = fields.Boolean(string="March/September Examination")
     
+
+    
     def _compute_march_september(self):
         for record in self:
             # if record.to_date.strftime('%B') in ['March','September']:
@@ -233,6 +235,17 @@ class DGSBatch(models.Model):
         ('pending', 'Pending'),
         ('approved', 'Approved'),
     ], string='DGS Approval', default='pending',tracking=True)
+    
+    dgs_approval_button_visible = fields.Boolean("DGS Approval Button Visible",compute="compute_dgs_approval_button_visible")
+    
+    @api.depends('state','dgs_approval_state')
+    def compute_dgs_approval_button_visible(self):
+        for record in self:
+            if record.state == '2-confirmed' and record.dgs_approval_state == 'pending':
+                record.dgs_approval_button_visible = True
+            else:
+                record.dgs_approval_button_visible = False
+             
 
     def dgs_approved(self):
         self.dgs_approval_state = 'approved'

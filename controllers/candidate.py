@@ -358,6 +358,9 @@ class GPCandidatePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
         exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',int(exam_id))])
         
+        if exam_id.stcw_criterias == 'pending' or exam_id.attendance_criteria == 'pending' or exam_id.ship_visit_criteria == 'pending':
+            raise ValidationError("Elligiblity Criteria Not Satisfied")
+            
         print("INSIDE DOWNLOAD Certificate")
         
         print("Indos" + str(exam_id.indos_no))

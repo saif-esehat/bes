@@ -1251,42 +1251,124 @@
         </t>
     </template>
 
-    <template id="report_comparative">
+   <template id="report_comparative">
         <t t-call="web.html_container">
-            <!-- <t t-foreach="docs" t-as="doc"> -->
-                <h2>Comparative Report</h2>
-                <table class="black-bordered-table" style="font-family: 'TimesNewRomanBold'; width: 100%;text-align: center;" border="1">
-                      <thead>
-                 
-                          <tr >
-                      
-                            <td rowspan="2" style="border: 1px solid black; border-bottom:none; text-align: center; font-weight: bold; vertical-align: middle;">Month Of Examination conducted  For GP Rating</td>
-                            <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; vertical-align: middle;">FRESH CANDIDATES </td>
-                            <td colspan="2" style="border: 1px solid black; text-align: center; font-weight: bold; vertical-align: middle;">REPEATER CANDIDATES </td>
-                            </tr>
-                            <tr >
-                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">Appeared</td>
-                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">% Pass</td>
-                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">Appeared</td>
-                                <td style="border: 1px solid black; text-align: center; font-weight: bold;  vertical-align: middle;">% Pass</td>
-                            </tr>
-                        
-                        </thead>
-                    <tbody>
-                
+            <style>
+                @font-face {
+                    font-family: 'TimesNewRomanBold';
+                    src: url('/bes/static/src/fonts/Times New Roman Bold.ttf') format('truetype');
+                    font-weight: 900;
+                    font-style: normal;
+                }
+
+                body {
+                    font-family: 'TimesNewRomanBold'; /* Apply font globally */
+                }
+
+                .my-table {
+                    border-collapse: collapse;
+                    width: 100%; /* Full width */
+                    margin: auto; /* Center align */
+                    font-size: 15px;
+                    font-family: 'TimesNewRomanBold';
+                }
+
+                .my-table td, .my-table th {
+                    border: 1px solid black;
+                    text-align: center;
+                    padding: 8px;
+                }
+
+                .my-table th {
+                    font-weight: bold;
+                }
+            </style>
+
+            <!-- Header for GP Batches -->
+            <t t-if="has_gp_batches">
+                <h1 style="text-align: center; font-family: 'TimesNewRomanBold';">
+                    <t t-esc="batch.sequence_report" /> All India Exit Examination for GP Rating - 
+                    <t t-esc="batch.examination_batch.to_date.strftime('%b %y')" />
+                </h1>
+                <h3 style="text-align: center; font-family: 'TimesNewRomanBold';">
+                    Comparative Results of <t t-raw="sequence_range" /> Examination
+                </h3>
+            </t>
+
+            <!-- Header for CCMC Batches -->
+            <t t-if="has_ccmc_batches">
+                <h1 style="text-align: center;">
+                    Certificate Course in Maritime Catering - 
+                    <t t-esc="batch.examination_batch.to_date.strftime('%b %y')" />
+                </h1>
+                <h3 style="text-align: center;">
+                    <t t-raw="sequence_range" /> EXAMINATION
+                </h3>
+                <h3 style="text-align: center;">
+                    Comparative Results of <t t-raw="sequence_range" /> Examination
+                </h3>
+            </t>
+
+            <table class="my-table">
+                <thead>
+                    <tr>
+                        <td rowspan="2" style="vertical-align: middle;">
+                            Month Of Examination conducted For GP Rating
+                        </td>
+                        <td colspan="2" style="vertical-align: middle;">
+                            FRESH CANDIDATES
+                        </td>
+                        <td colspan="2" style="vertical-align: middle;">
+                            REPEATER CANDIDATES
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            Appeared
+                        </td>
+                        <td style="vertical-align: middle;">
+                            % Pass
+                        </td>
+                        <td style="vertical-align: middle;">
+                            Appeared
+                        </td>
+                        <td style="vertical-align: middle;">
+                            % Pass
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="data" t-as="record">
                         <tr>
-                            <td><span t-esc="sequence_report"/> Exam <span t-esc="sequence_report"/></td>
-                            <td><span t-esc="fresh_candidate_appeared"/></td>
-                            <td><span t-esc="fresh_overall_pass_percentage"/>%</td>
-                            <td><span t-esc="repeater_candidate_appeared"/></td>
-                           <td><span t-esc="repeater_overall_pass_percentage"/>%</td>
+                            <!-- Sequence Name -->
+                            <td>
+                                <t t-esc="record['sequence']" />
+                            </td>
+
+                            <!-- Fresh Candidates Data -->
+                            <td>
+                                <t t-esc="record['fresh'].get('candidate_appeared', 'Nil')" />
+                            </td>
+                            <td>
+                                <t t-esc="record['fresh'].get('overall_pass_percentage', 'Nil')" />
+                            </td>
+
+                            <!-- Repeater Candidates Data -->
+                            <td>
+                                <t t-esc="record['repeater'].get('candidate_appeared', 'Nil')" />
+                            </td>
+                            <td>
+                                <t t-esc="record['repeater'].get('overall_pass_percentage', 'Nil')" />
+                            </td>
                         </tr>
-                 
-                    </tbody>
-                </table>
-            <!-- </t> -->
+                    </t>
+                </tbody>
+            </table>
         </t>
     </template>
+
+
+
 
    <template id="combined_report">
         <t t-call="web.basic_layout">
@@ -1379,7 +1461,6 @@
 
 
             <div class="page" style="page-break-before: always;">
-                <!-- Header Section -->
                 <h1 style="text-align: center; font-weight: bold; font-family: 'TimesNewRomanBold'; text-decoration: underline; font-size: 34px; margin-bottom: 20px; padding-top: 80px;">
                     Board of Examinations for Seafarers Trust
                 </h1>
@@ -1398,7 +1479,6 @@
                     </tr>
                 </table>
 
-                <!-- Section 1 -->
                 <h3 style="font-family: 'TimesNewRomanBold'; font-weight: bold; font-size: 20px; margin-left: 10px; margin-bottom: 10px;">
                     1. Report on the All India Exit Examination
                 </h3>
@@ -1414,7 +1494,6 @@
                     <t t-esc="docs.incident_report or 'NIL'"/>
                 </p>
 
-                <!-- Section 2 -->
                 <h3 style="font-weight: bold; margin-left: 10px; margin-bottom: 15px; font-size: 20px; font-family: 'TimesNewRomanBold';">
                     2. Performance of G.P. Rating (Fresh candidates)
                 </h3>
@@ -1428,7 +1507,6 @@
                     The overall result is <t t-esc="'{:.1f}'.format(current_gp_pass_percentage )"/>% (<t t-esc="'{:.1f}'.format(previous_gp_pass_percentage )"/>%).
                 </p>
 
-                <!-- Table Section -->
                 <p style="margin-bottom: 20px; font-weight: bold; font-size: 18px; font-family: 'TimesNewRoman';">
                     Subject wise pass percentage of GP rating examination for 50 institutes is as follows:
                 </p>
@@ -1443,7 +1521,6 @@
                         <t t-foreach="subject_pass_data" t-as="subject">
                             <tr>
                                 <td style="padding: 5px;">
-                                    <!-- Display value instead of the key -->
                                     <t t-esc="dict(subject._fields['subject'].selection).get(subject.subject)"/> 
                                 </td>
                                 <td style="text-align: center; padding: 5px;">
@@ -1457,14 +1534,12 @@
 
             <div class="page" style="page-break-before: always;">
 
-                <!-- Section Title -->
                 <div>
                     <p style="font-weight: bold; font-family: 'TimesNewRomanBold; text-align: center; font-size: 18px; margin-top: 60px;">
                         The Passing Percentage of the Candidates for the Following Institutes is Below 80%.
                     </p>
                 </div>
 
-                <!-- Institutes Table -->
                 <div style="text-align: center;">
                     <table class="black-bordered-table" style="font-family: 'TimesNewRoman'; width: 90%; text-align: center; border-collapse: collapse; margin: 20px auto;" border="1">
                         <thead>
@@ -1493,7 +1568,6 @@
                     </table>
                 </div>
 
-                <!-- GP Repeater Candidates Section -->
                 <div>
                     <p style="font-weight: bold; margin-left: 50px; margin-top: 30px; font-size: 18px;">
                         2A GP Repeater Candidates:
@@ -1510,7 +1584,6 @@
                     </p>
                 </div>
 
-                <!-- Repeater Table -->
                 <div style="text-align: center;">
                     <table class="black-bordered-table" style="font-family: 'TimesNewRoman'; width: 90%; text-align: center; border-collapse: collapse; margin: 20px auto;" border="1">
                         <thead>
@@ -1536,7 +1609,6 @@
             </div>
 
             
-            <!-- Header Section -->
             <div class="page" style="page-break-before: always;">
                 <h3 style="font-weight: bold; margin-left: 10px; margin-bottom: 15px; font-size: 20px; font-family: 'TimesNewRomanBold';">
                     3. Performance of Certificate Course in Maritime Catering (CCMC)
@@ -1644,10 +1716,10 @@
                     <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
                     <div class="row" style="text-align: center; font-size: 20px; font-family: 'TimesNewRomanBold'; font-weight: 900;">
                         <div class="col-12" style="font-family: 'TimesNewRomanBold';">
-                            <t t-if="docs[0].course == 'gp'">
+                            <t t-if="docs.course == 'gp'">
                                 <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
                             </t>
-                            <t t-if="docs[0].course == 'ccmc'">
+                            <t t-if="docs.course == 'ccmc'">
                                 <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
                             </t>
                             BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
