@@ -4273,7 +4273,7 @@ class GPExam(models.Model):
                             self.mek_oral_prac_status = 'failed'
                     else:
                         print("Exam_ID" + self.exam_id)
-                        raise ValidationError("MEK Oral Or Practical Not Confirmed")
+                        raise ValidationError("MEK Oral Or Practical Not Confirmed : " + str(self.exam_id))
 
                 if not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0):
                     
