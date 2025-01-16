@@ -4243,6 +4243,12 @@ class GPExam(models.Model):
         
     def move_done(self):
                 # import wdb; wdb.set_trace();
+                
+        if self.attempting_gsk_oral_prac and not self.gsk_oral_prac_assignment:
+            self.gsk_oral_prac_attendance = 'absent'
+        
+        if self.attempting_mek_oral_prac and not self.mek_oral_prac_assignment:
+            self.mek_oral_prac_attendance = 'absent'
 
         if self.exam_violation_state == 'na' and self.stcw_criterias == self.ship_visit_criteria == self.attendance_criteria == "passing":
         
@@ -4787,7 +4793,7 @@ class CCMCExam(models.Model):
     stcw_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='STCW Criteria',related='ccmc_candidate.stcw_criteria',tracking=True)
+    ], string='STCW Criteria',store=True,related='ccmc_candidate.stcw_criteria',tracking=True)
 
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
