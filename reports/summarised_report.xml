@@ -1253,7 +1253,6 @@
 
    <template id="report_comparative">
         <t t-call="web.html_container">
-        <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
             <style>
                 @font-face {
                     font-family: 'TimesNewRomanBold';
