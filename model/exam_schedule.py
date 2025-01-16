@@ -4120,9 +4120,15 @@ class GPExam(models.Model):
         
     def process_marks(self):
         
-        if self.exam_violation_state == 'na' and self.stcw_criterias == self.ship_visit_criteria == self.attendance_criteria == "passing":
+        if self.attempting_gsk_oral_prac and not self.gsk_oral_prac_assignment:
+            self.gsk_oral_prac_attendance = 'absent'
         
-
+        if self.attempting_mek_oral_prac and not self.mek_oral_prac_assignment:
+            self.mek_oral_prac_attendance = 'absent'
+        
+        if self.exam_violation_state == 'na':
+        
+            
             mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
             mek_practical_draft_confirm = self.mek_prac.mek_practical_draft_confirm == 'confirm'
             gsk_oral_draft_confirm = self.gsk_oral.gsk_oral_draft_confirm == 'confirm'
@@ -4309,7 +4315,7 @@ class GPExam(models.Model):
         if self.attempting_mek_oral_prac and not self.mek_oral_prac_assignment:
             self.mek_oral_prac_attendance = 'absent'
 
-        if self.exam_violation_state == 'na' and self.stcw_criterias == self.ship_visit_criteria == self.attendance_criteria == "passing":
+        if self.exam_violation_state == 'na':
         
 
             mek_oral_draft_confirm = self.mek_oral.mek_oral_draft_confirm == 'confirm'
