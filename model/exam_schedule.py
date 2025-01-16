@@ -3801,7 +3801,9 @@ class GPExam(models.Model):
     @api.depends('overall_percentage','gp_candidate')
     def _compute_rank(self):
         for rec in self:
-            sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+            # sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+            #                                                  order='overall_percentage desc , institute_code asc , gp_candidate asc')
+            sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1)],
                                                              order='overall_percentage desc , institute_code asc , gp_candidate asc')
         # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
@@ -3835,7 +3837,7 @@ class GPExam(models.Model):
     @api.depends('state')
     def compute_dgs_visible(self):
         for record in self:
-            if record.state == '2-done':
+            if record.certificate_criteria == 'passed' and record.state == '2-done' or record.state == '4-pending' :
                 record.dgs_visible = True
             else:
                 record.dgs_visible = False
@@ -4272,8 +4274,9 @@ class GPExam(models.Model):
                         else:
                             self.mek_oral_prac_status = 'failed'
                     else:
+                        
                         print("Exam_ID" + self.exam_id)
-                        raise ValidationError("MEK Oral Or Practical Not Confirmed")
+                        # raise ValidationError("MEK Oral Or Practical Not Confirmed")
 
                 if not (len(self.gsk_oral) == 0 and len(self.gsk_prac) == 0):
                     
@@ -4291,7 +4294,8 @@ class GPExam(models.Model):
                         else:
                             self.gsk_oral_prac_status = 'failed'
                     else:
-                        raise ValidationError("GSK Oral Or Practical Not Confirmed :"+str(self.exam_id))
+                        print("Exam_ID" + self.exam_id)
+                        # raise ValidationError("GSK Oral Or Practical Not Confirmed :"+str(self.exam_id))
                 
                 if not (len(self.gsk_online) == 0):
                 # if False:
@@ -4306,7 +4310,8 @@ class GPExam(models.Model):
                         else:
                             self.gsk_online_status = 'failed'
                     else:
-                        raise ValidationError("GSK Online Exam Not Done or Confirmed")
+                        print("Exam_ID" + self.exam_id)
+                        # raise ValidationError("GSK Online Exam Not Done or Confirmed")
                 
                 else:
                     # self.gsk_online_marks = self.gsk_online.scoring_total
@@ -4336,7 +4341,8 @@ class GPExam(models.Model):
                         else:
                             self.mek_online_status = 'failed'
                     else:
-                        raise ValidationError("MEK Online Exam Not Done or Confirmed")
+                        print("Exam_ID" + self.exam_id)
+                        # raise ValidationError("MEK Online Exam Not Done or Confirmed")
                 else:
                     self.mek_online_percentage = (self.mek_online_marks/75)*100
                     if self.mek_online_percentage >= 60 :
@@ -4431,7 +4437,7 @@ class GPExam(models.Model):
                 
                 else:
                     print("Exam_ID" + self.exam_id)
-                    raise ValidationError("Exam ID "+str(self.exam_id)+" Not All exam are Confirmed")
+                    # raise ValidationError("Exam ID "+str(self.exam_id)+" Not All exam are Confirmed")
         else:
             pass
 
@@ -5358,7 +5364,7 @@ class CCMCExam(models.Model):
                         self.cookery_practical = cookery_bakery_marks
                     else:
                         error_msg = _("Cookery/Bakery Not Confirmed for'%s'") % (self.ccmc_candidate.name)
-                        raise ValidationError(error_msg)
+                        # raise ValidationError(error_msg)
                     
                 if not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0):
                     if ccmc_oral_state:
@@ -5370,7 +5376,7 @@ class CCMCExam(models.Model):
                         self.ccmc_gsk_oral_marks = ccmc_gsk_marks
                     else:
                         error_msg = _("CCMC Oral  Not Confirmed for'%s'") % (self.ccmc_candidate.name)
-                        raise ValidationError(error_msg)
+                        # raise ValidationError(error_msg)
 
                     
                     # if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
@@ -5529,7 +5535,7 @@ class CCMCExam(models.Model):
                         self.cookery_practical = cookery_bakery_marks
                     else:
                         error_msg = _("Cookery/Bakery Not Confirmed for'%s'") % (self.ccmc_candidate.name)
-                        raise ValidationError(error_msg)
+                        # raise ValidationError(error_msg)
                     
                 if not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0):
                     if ccmc_oral_state:
@@ -5537,7 +5543,7 @@ class CCMCExam(models.Model):
                         self.cookery_oral = ccmc_oral_marks
                     else:
                         error_msg = _("CCMC Oral  Not Confirmed for'%s'") % (self.ccmc_candidate.name)
-                        raise ValidationError(error_msg)
+                        # raise ValidationError(error_msg)
                 
                 # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
                     
@@ -5565,7 +5571,7 @@ class CCMCExam(models.Model):
                         self.cookery_gsk_online = cookery_gsk_online
                     else:
                         error_msg = _("CCMC Online Not Confirmed for Roll No:'%s'") % (self.exam_id)
-                        raise ValidationError(error_msg)
+                        # raise ValidationError(error_msg)
                     
                 
                 self.overall_marks = self.cookery_practical + self.cookery_oral + self.cookery_gsk_online
@@ -5684,7 +5690,8 @@ class CCMCExam(models.Model):
                     self.state = '2-done'
                     
                 else:
-                    raise ValidationError("Not All exam are Confirmed :"+str(self.exam_id))
+                    print("Sa")
+                    # raise ValidationError("Not All exam are Confirmed :"+str(self.exam_id))
                 # attempting_exam_list = fields.One2many("gp.exam.appear",'gp_exam_schedule_id',string="Attempting Exams Lists")
                     # all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criteria , self.ship_visit_criteria , self.attendance_criteria ])
         else:
