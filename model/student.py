@@ -222,10 +222,7 @@ class GPCandidate(models.Model):
 
     def action_ceo_overriden(self):
         for record in self:
-            record.ceo_override = not record.ceo_override
-            record._check_stcw_certificate()
-            record._check_ship_visit_criteria()
-            record._check_attendance_criteria()
+            record.ceo_override = True
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
@@ -318,7 +315,7 @@ class GPCandidate(models.Model):
             all_types_exist = record.check_combination_exists(course_type_already)
 
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
-            if all_types_exist and all_cert_nos_present or record.ceo_override:
+            if all_types_exist and all_cert_nos_present:
                 record.stcw_criteria = 'passed'
             else:
                 record.stcw_criteria = 'pending'
@@ -328,7 +325,7 @@ class GPCandidate(models.Model):
     def _check_ship_visit_criteria(self):
         for record in self:
             # import wdb; wdb.set_trace();
-            if len(record.ship_visits) > 0 or record.ceo_override:
+            if len(record.ship_visits) > 0:
                 record.ship_visit_criteria = 'passed'
             else:
                 record.ship_visit_criteria = 'pending'
@@ -337,7 +334,7 @@ class GPCandidate(models.Model):
     @api.depends('attendance_compliance_1','attendance_compliance_2')
     def _check_attendance_criteria(self):
        for record in self:
-            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes' or record.ceo_override:
+            if record.attendance_compliance_1 == 'yes' or record.attendance_compliance_2 == 'yes':
                 record.attendance_criteria = 'passed'
             else:
                 record.attendance_criteria = 'pending'
@@ -855,10 +852,7 @@ class CCMCCandidate(models.Model):
                 record.edit_profile_status = has_group_access
     def action_ceo_overriden(self):
         for record in self:
-            record.ceo_override = not record.ceo_override
-            record._check_stcw_certificate()
-            record._check_ship_visit_criteria()
-            record._check_attendance_criteria()
+            record.ceo_override = True
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
@@ -943,14 +937,6 @@ class CCMCCandidate(models.Model):
             # Check if the candidate_cert_no is present for all the STCW certificates
             all_cert_nos_present = all(cert.candidate_cert_no for cert in stcw_certificates)
 
-            # if all_types_exist and all_cert_nos_present:
-
-            # if exam_count > 1:
-            #     if all_types_exist:
-            #         record.stcw_criteria = 'passed'
-            #     else:
-            #         record.stcw_criteria = 'pending'
-            # elif exam_count in [0,1]:
             if all_types_exist and all_cert_nos_present:
                 record.stcw_criteria = 'passed'
             else:
