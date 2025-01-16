@@ -352,9 +352,9 @@
             <field name="model">gp.exam.schedule</field>
             <field name="arch" type="xml">
 
-                <tree>
+                <tree create="0">
                     <header>
-                        <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/>
+                        <!-- <button name="open_marksheet_wizard" string="Add Marksheet" type="object"/> -->
                         <button name="action_open_gp_admit_card_release_wizard" string="Release Admit Card" type="object" class="oe_highlight"/>
                     </header>
                     <field name="exam_id" optional="show"/>

@@ -1843,18 +1843,20 @@ class CombinedReport(models.AbstractModel):
         repeater_institutes_data = []
         
         # Determine course type and fetch institutes based on dgs_batch
-        batch_id = self.env['dgs.batches'].sudo().search([('to_date','=',docs1.examination_batch.to_date),('repeater_batch', '=', True)]).id
+        repeater_batch_id = self.env['dgs.batches'].sudo().search([('to_date','=',docs1.examination_batch.to_date),('repeater_batch', '=', True)]).id
         if docs1.course == 'gp':
-            repeater_institutes = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+            repeater_institutes = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',repeater_batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+            repeater_doc = self.env['examination.report'].sudo().search([('examination_batch', '=', repeater_batch_id),('course', '=', 'gp')])
         elif docs1.course == 'ccmc':
-            repeater_institutes = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+            repeater_institutes = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch', '=', repeater_batch_id)]).sorted(key=lambda r: r.institute_code).institute_id
+            repeater_doc = self.env['examination.report'].sudo().search([('examination_batch', '=', repeater_batch_id),('course', '=', 'ccmc')])
 
         # Create dictionary for each institute with code and name
         for institute in repeater_institutes:
             ins = {'code': institute.code, 'name': institute.name}
             repeater_institutes_data.append(ins)
                 # Function to format the date
-        repeater_doc = self.env['examination.report'].sudo().browse(batch_id)
+        # import  wdb;wdb.set_trace()
 
         def format_date():
             date = datetime.now()
@@ -1870,7 +1872,10 @@ class CombinedReport(models.AbstractModel):
 
             return f"{day}{ordinal_suffix(day)} {month} {year}"
 
-        # import  wdb;wdb.set_trace()
+
+        # if docs1.exam_type == 'fresh':
+        #     repeater_institutes_data = []
+
 
         return {
             'docids': docids,

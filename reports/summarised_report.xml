@@ -1461,7 +1461,6 @@
 
 
             <div class="page" style="page-break-before: always;">
-                <!-- Header Section -->
                 <h1 style="text-align: center; font-weight: bold; font-family: 'TimesNewRomanBold'; text-decoration: underline; font-size: 34px; margin-bottom: 20px; padding-top: 80px;">
                     Board of Examinations for Seafarers Trust
                 </h1>
@@ -1480,7 +1479,6 @@
                     </tr>
                 </table>
 
-                <!-- Section 1 -->
                 <h3 style="font-family: 'TimesNewRomanBold'; font-weight: bold; font-size: 20px; margin-left: 10px; margin-bottom: 10px;">
                     1. Report on the All India Exit Examination
                 </h3>
@@ -1496,7 +1494,6 @@
                     <t t-esc="docs.incident_report or 'NIL'"/>
                 </p>
 
-                <!-- Section 2 -->
                 <h3 style="font-weight: bold; margin-left: 10px; margin-bottom: 15px; font-size: 20px; font-family: 'TimesNewRomanBold';">
                     2. Performance of G.P. Rating (Fresh candidates)
                 </h3>
@@ -1510,7 +1507,6 @@
                     The overall result is <t t-esc="'{:.1f}'.format(current_gp_pass_percentage )"/>% (<t t-esc="'{:.1f}'.format(previous_gp_pass_percentage )"/>%).
                 </p>
 
-                <!-- Table Section -->
                 <p style="margin-bottom: 20px; font-weight: bold; font-size: 18px; font-family: 'TimesNewRoman';">
                     Subject wise pass percentage of GP rating examination for 50 institutes is as follows:
                 </p>
@@ -1525,7 +1521,6 @@
                         <t t-foreach="subject_pass_data" t-as="subject">
                             <tr>
                                 <td style="padding: 5px;">
-                                    <!-- Display value instead of the key -->
                                     <t t-esc="dict(subject._fields['subject'].selection).get(subject.subject)"/> 
                                 </td>
                                 <td style="text-align: center; padding: 5px;">
@@ -1539,14 +1534,12 @@
 
             <div class="page" style="page-break-before: always;">
 
-                <!-- Section Title -->
                 <div>
                     <p style="font-weight: bold; font-family: 'TimesNewRomanBold; text-align: center; font-size: 18px; margin-top: 60px;">
                         The Passing Percentage of the Candidates for the Following Institutes is Below 80%.
                     </p>
                 </div>
 
-                <!-- Institutes Table -->
                 <div style="text-align: center;">
                     <table class="black-bordered-table" style="font-family: 'TimesNewRoman'; width: 90%; text-align: center; border-collapse: collapse; margin: 20px auto;" border="1">
                         <thead>
@@ -1575,7 +1568,6 @@
                     </table>
                 </div>
 
-                <!-- GP Repeater Candidates Section -->
                 <div>
                     <p style="font-weight: bold; margin-left: 50px; margin-top: 30px; font-size: 18px;">
                         2A GP Repeater Candidates:
@@ -1592,7 +1584,6 @@
                     </p>
                 </div>
 
-                <!-- Repeater Table -->
                 <div style="text-align: center;">
                     <table class="black-bordered-table" style="font-family: 'TimesNewRoman'; width: 90%; text-align: center; border-collapse: collapse; margin: 20px auto;" border="1">
                         <thead>
@@ -1618,7 +1609,6 @@
             </div>
 
             
-            <!-- Header Section -->
             <div class="page" style="page-break-before: always;">
                 <h3 style="font-weight: bold; margin-left: 10px; margin-bottom: 15px; font-size: 20px; font-family: 'TimesNewRomanBold';">
                     3. Performance of Certificate Course in Maritime Catering (CCMC)
@@ -1726,10 +1716,10 @@
                     <link rel="stylesheet" href="/bes/static/src/css/style_gp.css"/>
                     <div class="row" style="text-align: center; font-size: 20px; font-family: 'TimesNewRomanBold'; font-weight: 900;">
                         <div class="col-12" style="font-family: 'TimesNewRomanBold';">
-                            <t t-if="docs[0].course == 'gp'">
+                            <t t-if="docs.course == 'gp'">
                                 <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2a</span>
                             </t>
-                            <t t-if="docs[0].course == 'ccmc'">
+                            <t t-if="docs.course == 'ccmc'">
                                 <span class="encla" style="position: absolute; right: 0; top: 0; font-family: 'TimesNewRomanBold';">ENCL.2b</span>
                             </t>
                             BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
