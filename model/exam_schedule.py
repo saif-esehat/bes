@@ -5345,7 +5345,10 @@ class CCMCExam(models.Model):
     def _compute_rank(self):
         
         for rec in self:
-            sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+            # sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
+            #                                                  order='overall_percentage desc , institute_code asc, ccmc_candidate asc')
+            
+            sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1)],
                                                              order='overall_percentage desc , institute_code asc, ccmc_candidate asc')
         
         # import wdb; wdb.set_trace();
