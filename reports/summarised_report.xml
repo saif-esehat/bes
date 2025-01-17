@@ -1608,7 +1608,7 @@
                 </div>
             </div>
 
-            <t t-elif="doc.course == 'ccmc'">
+            <t t-if="docs.course == 'ccmc'">
                 <div class="page" style="page-break-before: always;">
                     <h3 style="font-weight: bold; margin-left: 10px; margin-bottom: 15px; font-size: 20px; font-family: 'TimesNewRomanBold';">
                         3. Performance of Certificate Course in Maritime Catering (CCMC)
@@ -1664,7 +1664,7 @@
                 </div>
             </t>
 
-            <t t-elif="doc.course == 'ccmc'">
+            <t t-if="docs.course == 'ccmc'">
                 <div class="page" style="page-break-before: always;">
                     <h4 style="font-weight: bold; margin: 20px 0;">3A CCMC Repeaters</h4>
                     <p>
@@ -1727,11 +1727,11 @@
                             </t>
                             BEST - ALL INDIA EXIT EXAMINATIONS FOR SEAFARERS  
                             <br></br>
-                            <t t-if="docs[0].course == 'gp'">
-                                <strong>GP RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                            <t t-if="docs.course == 'gp'">
+                                <strong>GP RATING <span t-field="docs.exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
                             </t>
-                            <t t-if="docs[0].course == 'ccmc'">
-                                <strong>CCMC RATING <span t-field="docs[0].exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
+                            <t t-if="docs.course == 'ccmc'">
+                                <strong>CCMC RATING <span t-field="docs.exam_type"/> - <span t-esc="docs[0].examination_batch.to_date.strftime('%b-%y')"/> </strong>
                             </t>
                         </div>
                     </div>

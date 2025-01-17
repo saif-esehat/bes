@@ -401,7 +401,7 @@ class DGSBatch(models.Model):
         plt.savefig(buf, format='png',bbox_inches='tight')
         buf.seek(0)
         image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-
+        
         # Store the image in the record
         self.write({'gp_plot_image': image_base64}) 
         

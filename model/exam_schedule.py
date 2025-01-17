@@ -1251,7 +1251,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
     @api.depends('institute_id')
     def _compute_gsk_prac_oral_candidates(self):
         for record in self:
-            # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
+            # import wdb;wdb.set_trace() 
+            # ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
             record.gsk_prac_oral_candidates = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',record.exam_duty.dgs_batch.id),('registered_institute','=',record.institute_id.id),('state','=','1-in_process'),('attempting_gsk_oral_prac','=',True),('hold_admit_card','=',False),('gsk_oral_prac_assignment','=',False)                
                 ,'|',
                 ('ceo_override', '=', True),
@@ -5450,15 +5451,15 @@ class CCMCExam(models.Model):
                         # raise ValidationError(error_msg)
 
                     
-                    # if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
-                    #     cookery_bakery_marks = self.cookery_bakery.total_mrks
-                    #     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
+                    if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
+                        cookery_bakery_marks = self.cookery_bakery.total_mrks
+                        ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
 
-                    #     self.cookery_oral = ccmc_oral_marks
-                    #     self.cookery_practical = cookery_bakery_marks
-                    # else:
-                    #     error_msg = _("CCMC Oral Or Practical Not Confirmed for'%s'") % (self.ccmc_candidate.name)
-                    #     raise ValidationError(error_msg)
+                        self.cookery_oral = ccmc_oral_marks
+                        self.cookery_practical = cookery_bakery_marks
+                    else:
+                        error_msg = _("CCMC Oral Or Practical Not Confirmed for'%s'") % (self.ccmc_candidate.name)
+                        raise ValidationError(error_msg)
                     
                 if not (len(self.ccmc_online)==0):
                     if ccmc_online_state:
@@ -5622,19 +5623,19 @@ class CCMCExam(models.Model):
                     
                     
                     
-                    # if cookery_draft_confirm and ccmc_oral_state: ## THis is CHange for repeater case
-                    # #  if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
-                    #     cookery_bakery_marks = self.cookery_bakery.total_mrks
-                    #     ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
-                    #     ccmc_oral_gsk_marks = self.ccmc_gsk_oral.toal_ccmc_oral_rating
+                    if cookery_draft_confirm and ccmc_oral_state: ## THis is CHange for repeater case
+                    #  if cookery_draft_confirm and ccmc_oral_state and ccmc_gsk_oral_state:
+                        cookery_bakery_marks = self.cookery_bakery.total_mrks
+                        ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating
+                        ccmc_oral_gsk_marks = self.ccmc_gsk_oral.toal_ccmc_oral_rating
                         
-                    #     self.cookery_oral = ccmc_oral_marks
-                    #     self.cookery_practical = cookery_bakery_marks
-                    #     self.ccmc_gsk_oral_marks = ccmc_oral_gsk_marks
+                        self.cookery_oral = ccmc_oral_marks
+                        self.cookery_practical = cookery_bakery_marks
+                        self.ccmc_gsk_oral_marks = ccmc_oral_gsk_marks
                         
-                    # else:
-                    #     error_msg = _("CCMC Oral Or Practical Not Confirmed for Roll No: '%s'") % (self.exam_id)
-                    #     raise ValidationError(error_msg)
+                    else:
+                        error_msg = _("CCMC Oral Or Practical Not Confirmed for Roll No: '%s'") % (self.exam_id)
+                        raise ValidationError(error_msg)
                     
                 if not (len(self.ccmc_online)==0):
                     if ccmc_online_state:
