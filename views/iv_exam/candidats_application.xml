@@ -218,6 +218,29 @@
                     <group>
                         <field name="application_entered_by" />
                     </group>
+                    <!-- <group style="width:100%;"> -->
+                        <group style="width:50%;">
+                            <field name="self_attched" />
+                            <field name="original_notarize" />
+                            <field name="attched_educatinal" />
+                            <field name="attched_photo" />
+                            <field name="attched_medical" />
+                            <field name="attched_upi" />
+
+
+
+                        </group>
+                        <group style="width:50%;">
+                            <field name="origanal_se_certi" />
+                            <field name="attache_passport" />
+                            <field name="attched_leaving" />
+                            <field name="attched_modular" />
+                            <field name="attched_id_proof" />
+                            <field name="attched_driver_certificate" />
+
+
+                        </group>
+                    <!-- </group> -->
                  
                     
                  </sheet>
