@@ -8,6 +8,7 @@ import xlrd
 import qrcode
 import logging
 from dateutil.relativedelta import relativedelta
+from datetime import timedelta
 
 
 
@@ -110,18 +111,18 @@ class CandidatesApplication(models.Model):
 
     # 7)List of documents to be Attached
 
-    # self_attched = fields.Binary(string="a) Self-attached copy of previous COC (if any)")
-    # origanal_se_certi = fields.Binary(string="b) Original Sea Service Certificate")
-    # original_notarize = fields.Binary(string="c) Original Notarize Affidavite")
-    # attache_passport = fields.Binary(string="d) Self-attached copy of valid Passport OR Original Police Verification Certificate.")
-    # attched_educatinal = fields.Binary(string="e) Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)")
-    # attched_leaving = fields.Binary(string="f) Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate")
-    # attched_photo = fields.Binary(string="g) Self-attached Photo copy of the Residential Address Proof")
-    # attched_modular = fields.Binary(string="h) Self-attached copies of Modular Safety and Security Courses")
-    # attched_medical = fields.Binary(string="i) Self-attached valid Medical Certificate")
-    # attched_id_proof = fields.Binary(string="j) Self-attached photo copy of the ID Proof (Issued by Government)")
-    # attched_upi = fields.Binary(string="k) UPI/NEFT Payment Receipt")
-    # attched_driver_certificate = fields.Binary(string="l) Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From")
+    self_attched = fields.Binary(string="Self-attached copy of previous COC")
+    origanal_se_certi = fields.Binary(string="Original Sea Service Certificate")
+    original_notarize = fields.Binary(string="Original Notarize Affidavite")
+    attache_passport = fields.Binary(string="Self-attached copy of valid Passport OR Original Police Verification Certificate.")
+    attched_educatinal = fields.Binary(string="Self-attached copy of Educational Qualification Certificate (Minimum 8th Pass)")
+    attched_leaving = fields.Binary(string="Self-attached copy of School Leaving Certificate (SLC) OR Birth Certificate")
+    attched_photo = fields.Binary(string="Self-attached Photo copy of the Residential Address Proof")
+    attched_modular = fields.Binary(string="Self-attached copies of Modular Safety and Security Courses")
+    attched_medical = fields.Binary(string="Self-attached valid Medical Certificate")
+    attched_id_proof = fields.Binary(string="Self-attached photo copy of the ID Proof (Issued by Government)")
+    attched_upi = fields.Binary(string="UPI/NEFT Payment Receipt")
+    attched_driver_certificate = fields.Binary(string="Other State Serang/2nd Calss Engine Driver Certificate holder - Original Letter From")
   
     # declaration_date = fields.Date(string="Date")
     # place = fields.Char(string="Place")
@@ -568,7 +569,7 @@ class CandidatesApplication(models.Model):
         for record in self:
             if record.date_of_pst:
                 # Adding 5 years to the date_of_pst
-                record.date_of_validity_pst = record.date_of_pst + relativedelta(years=5)
+                record.date_of_validity_pst = record.date_of_pst + relativedelta(years=5) - timedelta(days=1)
             else:
                 record.date_of_validity_pst = False
 
@@ -582,7 +583,7 @@ class CandidatesApplication(models.Model):
         for record in self:
             if record.date_of_fpff:
                 # Adding 5 years to the date_of_fpff
-                record.date_of_validity_fpff = record.date_of_fpff + relativedelta(years=5)
+                record.date_of_validity_fpff = record.date_of_fpff + relativedelta(years=5) - timedelta(days=1)
             else:
                 record.date_of_validity_fpff = False
 
