@@ -4632,7 +4632,7 @@ class CcmcAdmitCardRelease(models.TransientModel):
     exam_date_practical = fields.Date(string="Exam Date Practical/Oral From",tracking=True)
     exam_date_practical_to = fields.Date(string="Exam Date Practical/Oral To",tracking=True)
     exam_date_online = fields.Date(string="Exam Date Online From",tracking=True)
-    exam_date_online_to = fields.Date(string="Exam Date Online To",tracking=True)
+    exam_date_online_to = fields.Date(string="Exam Date Online To",trcking=True)
     dgs_batch = fields.Many2one('dgs.batches', string='DGS Batch', readonly=True)
     check_batch = fields.Selection([('invisible', 'Invisible'), ('required', 'Required')],compute='_compute_check_batch')
 
