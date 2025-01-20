@@ -3417,7 +3417,7 @@ class GPExam(models.Model):
         ('', ''),
         ('pending', 'Failed'),
         ('passed', 'Passed'),
-    ], string='Result Status' , compute="compute_certificate_criteria")
+    ], string='Result Status',store=True, compute="compute_certificate_criteria")
     
     certificate_criteria = fields.Selection([
         ('pending', 'Not Complied'),
@@ -4923,6 +4923,8 @@ class CCMCExam(models.Model):
     exam_date_practical_to = fields.Date(string="Exam Date Practical",tracking=True)
     exam_date_online = fields.Date(string="Exam Date Online",tracking=True)
     exam_date_online_to = fields.Date(string="Exam Date Online",tracking=True)
+    
+    is_processed = fields.Boolean(string="Processed", default=False)
 
     
     @api.depends('certificate_criteria')

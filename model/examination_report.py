@@ -320,7 +320,7 @@ class ExaminationReport(models.Model):
                 mek_online_passed_percentage = (mek_online_passed_count/appeared) * 100
                 
                 
-                overall_passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('result','=','passed')])
+                overall_passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('exam_criteria','=','passed')])
                 
                 vals = {
                     'examination_report_batch': self.id,  # Assuming 1 is the ID of the examination report batch
@@ -768,7 +768,7 @@ class ExaminationReport(models.Model):
             for institute_id in institute_ids:
                 applied = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
                 appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
-                passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('result','=','passed')])
+                passed = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present'),('exam_criteria','=','passed')])
                 vals = {
                     'examination_report_batch': self.id,  # Replace with the actual ID of the examination report batch
                     'institute_id': institute_id,              # Replace with the actual ID of the institute
