@@ -221,13 +221,13 @@ class ExaminationReport(models.Model):
                 applied_records = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number)])
                 for record in applied_records:
                     row = []
-                    if record.cookery_prac_carry_forward and record.cookery_bakery_prac_oral_status == 'passed':
+                    if record.cookery_prac_carry_forward and record.cookery_bakery_prac_status == 'passed':
                         cookery_prac_status = "AP"
                         row.append(cookery_prac_status)
-                    elif record.cookery_bakery_prac_oral_status == "passed":
+                    elif record.cookery_bakery_prac_status == "passed":
                         cookery_prac_status = "P"
                         row.append(cookery_prac_status)
-                    elif record.cookery_prac_attendance:
+                    elif record.cookery_prac_attendance  == 'absent':
                         cookery_prac_status = "A"
                         row.append(cookery_prac_status)
                     else:
@@ -240,7 +240,7 @@ class ExaminationReport(models.Model):
                     elif record.ccmc_oral_prac_status == "passed":
                         ccmc_oral_prac_status = "P"
                         row.append(ccmc_oral_prac_status)
-                    elif record.ccmc_gsk_oral_attendance:
+                    elif record.ccmc_gsk_oral_attendance  == 'absent':
                         ccmc_oral_prac_status = "A"
                         row.append(ccmc_oral_prac_status)
                     else:
@@ -250,7 +250,7 @@ class ExaminationReport(models.Model):
                     if record.cookery_gsk_online_carry_forward and record.ccmc_online_status == 'passed':
                         ccmc_online_status = "AP"
                         row.append(ccmc_online_status)
-                    elif record.ccmc_oral_prac_status == "passed":
+                    elif record.ccmc_online_status == "passed":
                         ccmc_online_status = "P"
                         row.append(ccmc_online_status)
                     elif record.ccmc_online_attendance == 'absent':
@@ -268,13 +268,17 @@ class ExaminationReport(models.Model):
                         absent = absent + 1    
                 
                 appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number)])
-                appeared = appeared - absent
-                passed = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number),('result','=','passed')])
-                print('appeared')
+                print('before absent appeared')
                 print(appeared)
-                print('passed')
-                print(passed)
-                
+                appeared = appeared - absent
+                print('after absent appeared')
+                print(appeared)
+                passed = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('attempt_number','=',attempt_number),('result','=','passed')])
+                # print('appeared')
+                # print(appeared)
+                # print('passed')
+                # print(passed)
+            
                 data = {
                     'examination_report_batch':self.id,
                     'attempt_number': self.ordinal(attempt_number),
@@ -538,13 +542,13 @@ class ExaminationReport(models.Model):
                 for record in applied_records:
                     index = 0
                     row = []
-                    if record.cookery_prac_carry_forward and record.cookery_bakery_prac_oral_status == 'passed':
+                    if record.cookery_prac_carry_forward and record.cookery_bakery_prac_status == 'passed':
                         cookery_prac_status = "AP"
                         row.append(cookery_prac_status)
-                    elif record.cookery_bakery_prac_oral_status == "passed":
+                    elif record.cookery_bakery_prac_status == "passed":
                         cookery_prac_status = "P"
                         row.append(cookery_prac_status)
-                    elif record.cookery_prac_attendance:
+                    elif record.cookery_prac_attendance == "absent":
                         cookery_prac_status = "A"
                         row.append(cookery_prac_status)
                     else:
@@ -557,7 +561,7 @@ class ExaminationReport(models.Model):
                     elif record.ccmc_oral_prac_status == "passed":
                         ccmc_oral_prac_status = "P"
                         row.append(ccmc_oral_prac_status)
-                    elif record.ccmc_gsk_oral_attendance:
+                    elif record.ccmc_gsk_oral_attendance == "absent":
                         ccmc_oral_prac_status = "A"
                         row.append(ccmc_oral_prac_status)
                     else:
@@ -567,10 +571,10 @@ class ExaminationReport(models.Model):
                     if record.cookery_gsk_online_carry_forward and record.ccmc_online_status == 'passed':
                         ccmc_online_status = "AP"
                         row.append(ccmc_online_status)
-                    elif record.ccmc_oral_prac_status == "passed":
+                    elif record.ccmc_online_status == "passed":
                         ccmc_online_status = "P"
                         row.append(ccmc_online_status)
-                    elif record.ccmc_gsk_oral_attendance:
+                    elif record.ccmc_online_attendance == "absent":
                         ccmc_online_status = "A"
                         row.append(ccmc_online_status)
                     else:
@@ -585,7 +589,8 @@ class ExaminationReport(models.Model):
                         absent = absent + 1    
                 
                 applied = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id)])
-       
+                print("absent summarise ccmc")
+                print(absent)
                 appeared = applied - absent                        
                 # appeared = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
 
