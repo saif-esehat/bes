@@ -960,11 +960,12 @@ class ExaminationReport(models.Model):
         }      
 
     def print_summarised_gp_report(self):
-        
+        exam_sequence = self.get_ordinal(self.sequence_report) 
         datas = {
             'doc_ids': self.id,
             'course': 'GP',
-            'batch_id': self.examination_batch  # Assuming examination_batch is a recordset and you want its ID
+            'batch_id': self.examination_batch,  # Assuming examination_batch is a recordset and you want its ID
+            'exam_sequence': exam_sequence
         }
         
         if self.exam_type == 'repeater':
