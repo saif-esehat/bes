@@ -3298,7 +3298,7 @@ class GpAdmitCardRelease(models.TransientModel):
             is_march_september = candidate.dgs_batch.is_march_september
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
             candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
-            if (candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed'):
+            if (candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
 
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                     candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
@@ -4739,7 +4739,7 @@ class CcmcAdmitCardRelease(models.TransientModel):
             candidate_release = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', candidate.ccmc_candidate.id), ('hold_admit_card', '=', True)])
             # import wdb;wdb.set_trace()
             # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-            if candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed':
+            if (candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
                     candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
                     # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
