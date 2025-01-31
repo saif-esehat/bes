@@ -348,6 +348,8 @@
                     <field name="total_expenses"/> 
                     <field name="state"/>
                     <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo"/>
+                    <field name="modification_comment" attrs="{'invisible': [('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ceo"/>
+
                 </group>
                 <footer>
                     <button string="Approve" attrs="{'invisible': [('state', '!=', 'pending'),('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ec" type="object" name="approve_time_sheet_ec" class="btn-primary"/>
