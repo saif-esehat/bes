@@ -3286,8 +3286,9 @@ class GpAdmitCardRelease(models.TransientModel):
         candidates = self.env["gp.exam.schedule"].sudo().browse(exam_ids)
         
         # Count candidates who have already had their admit cards released
-        already_released_count = candidates.filtered(lambda c: not c.hold_admit_card)
+        already_released_count = len(candidates.filtered(lambda c: not c.hold_admit_card))
         
+        count = 0
         for candidate in candidates:
             mumbai_region = candidate.dgs_batch.mumbai_region
             kolkata_region = candidate.dgs_batch.kolkatta_region
@@ -3296,61 +3297,60 @@ class GpAdmitCardRelease(models.TransientModel):
             kochi_region = candidate.dgs_batch.kochi_region
             goa_region = candidate.dgs_batch.goa_region
             is_march_september = candidate.dgs_batch.is_march_september
-            # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-            candidate_release = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', candidate.gp_candidate.id), ('hold_admit_card', '=', True)])
+
+            # Check if the candidate meets the criteria for releasing the admit card
             if (candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
-
+                # Determine the region-specific institute
+                registered_institute = None
                 if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                    candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
+                    registered_institute = mumbai_region.id
                 elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
-                    candidate.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
+                    registered_institute = kolkata_region.id
                 elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
-                    candidate.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
+                    registered_institute = chennai_region.id
                 elif candidate.exam_region.name == 'DELHI' and delhi_region:
-                    candidate.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
+                    registered_institute = delhi_region.id
                 elif candidate.exam_region.name == 'KOCHI' and kochi_region:
-                    candidate.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
+                    registered_institute = kochi_region.id
                 elif candidate.exam_region.name == 'GOA' and goa_region:
-                    candidate.write({'hold_admit_card':False,'registered_institute':goa_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
-                else:
-                    candidate.write({'hold_admit_card':False})
+                    registered_institute = goa_region.id
 
+                # Only update if hold_admit_card is being set to False
+                if candidate.hold_admit_card:
+                    candidate.write({
+                        'hold_admit_card': False,
+                        'registered_institute': registered_institute,
+                    })
+                    count += 1  # Increment count only when hold_admit_card is updated to False
+
+                # Update exam dates if not March/September
                 if not is_march_september:
                     candidate.write({
-                        'exam_date_practical':self.exam_date_practical,
-                        'exam_date_practical_to':self.exam_date_practical_to,
-                        'exam_date_online':self.exam_date_online,
-                        'exam_date_online_to':self.exam_date_online_to,
-                        
-                        })
+                        'exam_date_practical': self.exam_date_practical,
+                        'exam_date_practical_to': self.exam_date_practical_to,
+                        'exam_date_online': self.exam_date_online,
+                        'exam_date_online_to': self.exam_date_online_to,
+                    })
             else:
-                candidate.write({'hold_admit_card':True})
-            
-            # message = "GP Admit Card Released for "+str(len(exam_ids))+ " Candidates"
+                # If criteria are not met, set hold_admit_card to True
+                candidate.write({'hold_admit_card': True})
 
-            # Calculate the total number of candidates and those whose admit cards were already released
-            total_candidates = len(exam_ids)
-            newly_released_count = total_candidates - len(already_released_count)
-            already_released_msg = f"Out of {total_candidates} selected candidates, {len(already_released_count)} admit cards were already released."
-            message = f"GP Admit Card Released for {newly_released_count} Candidates. {already_released_msg}"
+        # Calculate the total number of candidates
+        total_candidates = len(exam_ids)
+
+        # Final message
+        message = f"GP Admit Card Released for {count} Candidates. Out of {total_candidates} selected candidates, {already_released_count} admit cards were already released."
 
         # Return a notification
         return {
-                'name': 'Admit Card Released',
-                'type': 'ir.actions.act_window',
-                'res_model': 'batch.pop.up.wizard',
-                'view_mode': 'form',
-                'view_type': 'form',
-                'target': 'new',
-                'context': {'default_message': message},
-            }
-
+            'name': 'Admit Card Released',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
+        }
 
     
     
@@ -4725,8 +4725,9 @@ class CcmcAdmitCardRelease(models.TransientModel):
         candidates = self.env["ccmc.exam.schedule"].sudo().browse(exam_ids)
         
         # Count candidates who have already had their admit cards released
-        already_released_count = candidates.filtered(lambda c: not c.hold_admit_card)
+        already_released_count = len(candidates.filtered(lambda c: not c.hold_admit_card))
 
+        count = 0
         for candidate in candidates:
             mumbai_region = candidate.dgs_batch.mumbai_region
             kolkata_region = candidate.dgs_batch.kolkatta_region
@@ -4735,51 +4736,48 @@ class CcmcAdmitCardRelease(models.TransientModel):
             kochi_region = candidate.dgs_batch.kochi_region
             goa_region = candidate.dgs_batch.goa_region
             is_march_september = candidate.dgs_batch.is_march_september
-            
-            candidate_release = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', candidate.ccmc_candidate.id), ('hold_admit_card', '=', True)])
-            # import wdb;wdb.set_trace()
-            # if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-            if (candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
-                if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                    candidate.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+mumbai_region.name
-                elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
-                    print("Kolakata")
-                    candidate.write({'hold_admit_card':False,  'registered_institute':kolkata_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kolkata_region.name
-                elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
-                    candidate.write({'hold_admit_card':False,   'registered_institute':chennai_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+chennai_region.name
-                elif candidate.exam_region.name == 'DELHI' and delhi_region:
-                    candidate.write({'hold_admit_card':False,'registered_institute':delhi_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+delhi_region.name
-                elif candidate.exam_region.name == 'KOCHI' and kochi_region:
-                    candidate.write({'hold_admit_card':False,'registered_institute':kochi_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidate_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+kochi_region.name
-                elif candidate.exam_region.name == 'GOA' and goa_region:
-                    candidate.write({'hold_admit_card':False,'registered_institute':goa_region.id})
-                    # message = "GP Admit Card Released for the "+str(candidates_count)+" Candidate for Exam Region "+self.exam_region.name+". The exam center set is "+goa_region.name            
-                else:
-                    print("Kolakata Not Set")
-                    candidate.write({'hold_admit_card':False})
 
+            # Check if the candidate meets the criteria for releasing the admit card
+            if (candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
+                # Determine the region-specific institute
+                registered_institute = None
+                if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                    registered_institute = mumbai_region.id
+                elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                    registered_institute = kolkata_region.id
+                elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                    registered_institute = chennai_region.id
+                elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                    registered_institute = delhi_region.id
+                elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                    registered_institute = kochi_region.id
+                elif candidate.exam_region.name == 'GOA' and goa_region:
+                    registered_institute = goa_region.id
+
+                # Only update if hold_admit_card is being set to False
+                if candidate.hold_admit_card:
+                    candidate.write({
+                        'hold_admit_card': False,
+                        'registered_institute': registered_institute,
+                    })
+                    count += 1  # Increment count only when hold_admit_card is updated to False
+
+                # Update exam dates if not March/September
                 if not is_march_september:
                     candidate.write({
-                        'exam_date_practical':self.exam_date_practical,
-                        'exam_date_practical_to':self.exam_date_practical_to,
-                        'exam_date_online':self.exam_date_online,
-                        'exam_date_online_to':self.exam_date_online_to,
-                        
-                        })
+                        'exam_date_practical': self.exam_date_practical,
+                        'exam_date_practical_to': self.exam_date_practical_to,
+                        'exam_date_online': self.exam_date_online,
+                        'exam_date_online_to': self.exam_date_online_to,
+                    })
             else:
-                candidate.write({'hold_admit_card':True})
+                # If criteria are not met, set hold_admit_card to True
+                candidate.write({'hold_admit_card': True})
 
             # Calculate the total number of candidates and those whose admit cards were already released
             total_candidates = len(exam_ids)
-            newly_released_count = total_candidates - len(already_released_count)
-            already_released_msg = f"Out of {total_candidates} selected candidates, {len(already_released_count)} admit cards were already released."
-            message = f"CCMC Admit Card Released for {newly_released_count} Candidates. {already_released_msg}"
-            # message = "CCMC Admit Card Released for the "+str(len(exam_ids))+" Candidates"  
+            message = f"CCMC Admit Card Released for {count} Candidates. Out of {total_candidates} selected candidates, {already_released_count} admit cards were already released."
+
 
         # Return a notification
         return {
