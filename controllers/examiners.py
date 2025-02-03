@@ -64,7 +64,7 @@ class ExaminerPortal(CustomerPortal):
                          "mek_online_attendance": attendance,
                          "gsk_online_attendance": attendance}
                     )
-            return json.dumps({"token": token})
+                return json.dumps({"token": token})
         elif subject == "MEK" and attendance == "absent":
             marksheet = (
                 request.env["exam.type.oral.practical.examiners.marksheet"]
