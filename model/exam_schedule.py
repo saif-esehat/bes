@@ -2504,7 +2504,7 @@ class ExamOralPracticalExaminers(models.Model):
 
     def commence_online_exam(self):
         # import wdb; wdb.set_trace()
-        self.commence_exam = True
+        # self.commence_exam = True
         return {
             'name': 'Commence Online Exam',
             'type': 'ir.actions.act_window',
@@ -2513,8 +2513,8 @@ class ExamOralPracticalExaminers(models.Model):
             'target': 'new',
             'context': {
                 'default_examiners_id': self.id ,# Pass the current record ID to the wizard
-                'default_exam_date':self.exam_date,
-                'default_ip_address':self.ipaddr,
+                # 'default_exam_date':self.exam_date,
+                # 'default_ip_address':self.ipaddr,
                 # 'default_dgs_batch':self.dgs_batch,
                 # 'default_institute_id':self.institute_id,
             },
@@ -6005,24 +6005,52 @@ class OnlineExamWizard(models.TransientModel):
     def save_ip_address(self):
         """Save the IP address to both examiner's record and institute's record."""
         # Fetch the related examiner and set the IP address
-        import wdb;wdb.set_trace();
-        if self.examiners_id:
-            # Set the IP address to the examiner
-            self.examiners_id.ipaddr = self.ip_address
-            # import wdb;wdb.set_trace();  
-            if self.examiners_id.course.course_code == 'GP':
-                # import wdb;wdb.set_trace(); 
+        # import wdb;wdb.set_trace();
+        online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+            ('dgs_batch','=',self.dgs_batch.id),
+            ('institute_id','=',self.institute_id.id),
+            # ('exam_date','=',self.exam_date),
+            ('exam_type','=','online')
+            ])
 
-                if self.examiners_id.subject.name == "GSK":
-                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-                    self.examiners_id.marksheets.gsk_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-                if self.examiners_id.subject.name == "MEK":
-                    self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-                    self.examiners_id.marksheets.mek_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+        for examiner in online_assignment:
+            examiner.ipaddr = self.ip_address
+            examiner.commence_exam = True
+            if examiner.course.course_code == 'GP':
+                if examiner.subject.name == "GSK":
+                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                if examiner.subject.name == "MEK":
+                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+            elif examiner.course.course_code == 'CCMC':
+                examiner.marksheets.ccmc_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+
+   
+
+                # for marksheet in examiner.marksheets:
+
+
+
+
+        # if self.examiners_id:
+        #     # Set the IP address to the examiner
+        #     self.examiners_id.ipaddr = self.ip_address
+        #     # import wdb;wdb.set_trace();  
+        #     if self.examiners_id.course.course_code == 'GP':
+        #         # import wdb;wdb.set_trace(); 
+
+        #         if self.examiners_id.subject.name == "GSK":
+        #             self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+        #             self.examiners_id.marksheets.gsk_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+        #         if self.examiners_id.subject.name == "MEK":
+        #             self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+        #             self.examiners_id.marksheets.mek_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
                 
-            elif self.examiners_id.course.course_code == 'CCMC':
-                self.examiners_id.marksheets.ccmc_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-                self.examiners_id.marksheets.ccmc_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+        #     elif self.examiners_id.course.course_code == 'CCMC':
+        #         self.examiners_id.marksheets.ccmc_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
+        #         self.examiners_id.marksheets.ccmc_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
 
                 
                 
