@@ -2515,6 +2515,8 @@ class ExamOralPracticalExaminers(models.Model):
                 'default_examiners_id': self.id ,# Pass the current record ID to the wizard
                 'default_exam_date':self.exam_date,
                 'default_ip_address':self.ipaddr,
+                # 'default_dgs_batch':self.dgs_batch,
+                # 'default_institute_id':self.institute_id,
             },
         }
     
@@ -5997,10 +5999,13 @@ class OnlineExamWizard(models.TransientModel):
     ip_address = fields.Char(string='IP Address')     
     examiners_id = fields.Many2one('exam.type.oral.practical.examiners', string='Examiners')  # Link to the main model
     exam_date = fields.Date(string='Exam Date')
+    institute_id = fields.Many2one('bes.institute', string='Institute')
+    dgs_batch =fields.Many2one('dgs.batches', string='Batch')
+
     def save_ip_address(self):
         """Save the IP address to both examiner's record and institute's record."""
         # Fetch the related examiner and set the IP address
-        # import wdb;wdb.set_trace();
+        import wdb;wdb.set_trace();
         if self.examiners_id:
             # Set the IP address to the examiner
             self.examiners_id.ipaddr = self.ip_address
