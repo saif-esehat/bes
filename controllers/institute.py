@@ -4086,7 +4086,7 @@ class InstitutePortal(CustomerPortal):
         worksheet = workbook.sheet_by_index(0)
         for row_num in range(1, worksheet.nrows):  # Assuming first row contains headers
             row = worksheet.row_values(row_num)
-            import wdb; wdb.set_trace()
+            # import wdb; wdb.set_trace()
             # try:
             try:
                 indos_no = row[0].replace(" ", "")

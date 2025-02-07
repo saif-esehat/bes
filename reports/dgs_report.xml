@@ -479,10 +479,10 @@
                                 <t t-set="index" t-value="index + 1"/>
                                 <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="index"/></td>
                                 <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.institute_id.code"/></td>
-                                <td style="white-space: nowrap; max-width: 400px; text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.institute_id.name"/></td>
+                                <td style="white-space: normal; max-width: 400px; text-align: center; border: 1px solid black; padding:5px;"><span t-esc="exam.institute_id.name"/></td>
                                 <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="exam.candidate_count"/></td>
                                 <td style="text-align: center; border: 1px solid black; padding:5px; "><span t-esc="ship_visit_count"/></td>
-                                <td style="white-space: nowrap; max-width: 250px; text-align: center; border: 1px solid black; padding:5px; ">
+                                <td style="white-space: normal; max-width: 250px; text-align: center; border: 1px solid black; padding:5px; ">
                                     <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
                                         <span t-esc="visit.ship_name1"/> <br/>
                                     </t>

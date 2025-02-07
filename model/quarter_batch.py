@@ -916,6 +916,7 @@ class GPBatchShipVisitReport(models.AbstractModel):
       
 
         print("Ship Visits Found: ", ship_visits)
+        # import wdb; wdb.set_trace();
 
         exams_with_ship_visits = exams.filtered(lambda exam: ship_visits.filtered(lambda visit: visit.institute_id == exam.institute_id))
 

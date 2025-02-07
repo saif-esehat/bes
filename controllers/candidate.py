@@ -134,6 +134,7 @@ class GPCandidatePortal(CustomerPortal):
     
     @http.route(['/my/gpexam/startexam'],type="json",auth="user",website=True)
     def VerifyToken(self,**kw):
+        # import wdb; wdb.set_trace()
         partner_id = request.env.user.partner_id.id
     
         

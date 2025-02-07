@@ -118,6 +118,9 @@
                 
                     var subject = document.getElementById('online_subject_'+dataId).innerText;
                     document.getElementById('online_subject').value = subject;
+                
+                    var exam_date = document.getElementById('exam_date_'+dataId).value;
+                    document.getElementById('exam_date').value = exam_date;
                 }, 1000); 
 
                 }
@@ -150,6 +153,7 @@
 
                                         <input type="hidden" id="survey_input_id" name="survey_input_id"/>
                                         <input type="hidden" id="online_subject" name="online_subject"/>
+                                        <input type="hidden" id="exam_date" name="exam_date"/>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -185,6 +189,7 @@
                 <tbody>
                     <t t-foreach="registered_exams" t-as="registered_exam">
                         <t t-if="registered_exam.state != 'done'">
+                            <input type="hidden" t-attf-id="exam_date_{{registered_exam.exam_date}}" name="exam_date"/>
                             <tr>
                                 <td class="text-center">
                                     <t t-out="registered_exam.survey_id.title" />

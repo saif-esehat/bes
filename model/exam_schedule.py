@@ -2503,22 +2503,24 @@ class ExamOralPracticalExaminers(models.Model):
 
 
     def commence_online_exam(self):
-        # import wdb; wdb.set_trace()
-        # self.commence_exam = True
+        record = self.search([], limit=1)  # Fetch the first available record
+
+        if not record:
+            raise UserError("No records found to commence the exam.")  # Show an error if no records exist
+
         return {
             'name': 'Commence Online Exam',
             'type': 'ir.actions.act_window',
             'res_model': 'online.exam.wizard',
             'view_mode': 'form',
+            'views': [(False, 'form')],  # Explicitly add "views" to fix the issue
             'target': 'new',
             'context': {
-                'default_examiners_id': self.id ,# Pass the current record ID to the wizard
-                # 'default_exam_date':self.exam_date,
-                # 'default_ip_address':self.ipaddr,
-                # 'default_dgs_batch':self.dgs_batch,
-                # 'default_institute_id':self.institute_id,
+                'default_examiners_id': record.id,  # Pass first found record ID
             },
         }
+
+
     
     def end_online_exam(self):
         self.commence_exam = False
@@ -6026,42 +6028,12 @@ class OnlineExamWizard(models.TransientModel):
             elif examiner.course.course_code == 'CCMC':
                 examiner.marksheets.ccmc_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
                 examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-
-   
-
-                # for marksheet in examiner.marksheets:
-
-
-
-
-        # if self.examiners_id:
-        #     # Set the IP address to the examiner
-        #     self.examiners_id.ipaddr = self.ip_address
-        #     # import wdb;wdb.set_trace();  
-        #     if self.examiners_id.course.course_code == 'GP':
-        #         # import wdb;wdb.set_trace(); 
-
-        #         if self.examiners_id.subject.name == "GSK":
-        #             self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-        #             self.examiners_id.marksheets.gsk_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-        #         if self.examiners_id.subject.name == "MEK":
-        #             self.examiners_id.marksheets.gp_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-        #             self.examiners_id.marksheets.mek_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-                
-        #     elif self.examiners_id.course.course_code == 'CCMC':
-        #         self.examiners_id.marksheets.ccmc_marksheet.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-        #         self.examiners_id.marksheets.ccmc_online.write({'ip_address':self.ip_address,'exam_date':self.exam_date})
-
-                
-                
-            
-            
-            
-                
-
-            
-
-        return {'type': 'ir.actions.act_window_close'}
+        # return {'type': 'ir.actions.act_window_close'}
+            # Close the wizard and refresh the page
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
         
     # Online Attendance Sheet

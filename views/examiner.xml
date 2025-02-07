@@ -496,11 +496,10 @@
     <field name="name">exam.type.oral.practical.examiners.tree</field>
     <field name="model">exam.type.oral.practical.examiners</field>
     <field name="arch" type="xml">
-        <tree editable="bottom">
-            <header>
-                <!-- Commence Exam button in the header -->
+        <tree js_class="button_in_tree">
+            <!-- <header>
                 <button string="Commence Exam" type="object" class="btn-primary" name="commence_online_exam" attrs="{}"/>
-            </header>
+            </header> -->
             <field name="dgs_batch" readonly="1"/>
             <field name="subject" readonly="1"/>
             <field name="examiner" readonly="1"/>
