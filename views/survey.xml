@@ -205,6 +205,10 @@
             <field name="model">survey.survey</field>
             <field name="inherit_id" ref="survey.survey_form"/>
             <field name="arch" type="xml">
+            <xpath expr="//header" position="replace">
+                <header/>
+            </xpath>
+
                  <xpath expr="//field[@name='user_id']" position="after">
                      <field name="template"/>
                      <field name="survey_start_url" />
@@ -229,12 +233,12 @@
                 <xpath expr="//label[@for='is_time_limited']" position="replace">
                     <label for="is_time_limited" string="Exam Time Limit"/>
                 </xpath>
-                 <xpath expr="//button[@name='action_print_survey']" position="after">
+                 <!-- <xpath expr="//button[@name='action_print_survey']" position="after">
                     <button name="start_exam" string="Start" type="object"  attrs="{'invisible': [('exam_state', '=', 'in_progress')]}"/>
                     <button name="stop_exam" string="Stop" type="object"  attrs="{'invisible': [('exam_state', '=', 'stopped')]}"/>
                     <button name="done_exam" string="Done" type="object"  />
 
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
                     <field name="q_score" string="Score" style="text-align: center;"/>
                     <field name="difficulty_level" style="text-align: center;"/>
@@ -277,6 +281,7 @@
                     <field name="institute_id" />
                     <!-- <field name="examiner" /> -->
                     <!-- <field name="examiner_token" /> -->
+                    <field name="commence_online_exam" />
                     <field name="token_regenrated" />
                     <field name="start_time"/>
                     <field name="end_time"/>

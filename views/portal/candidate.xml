@@ -213,14 +213,19 @@
                                 <td class="text-center">
                                     <!-- <t t-if="registered_exam.survey_id.exam_state == 'in_progress'"> -->
                                         <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
-                                    <t t-if="gp_exam_schedule.token">
-                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+                                    <t t-if="registered_exam.commence_online_exam">
+                                        <t t-if="gp_exam_schedule.token">
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
 
-                                        <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                            <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                        </t>
+                                        <t t-else="">
+                                            Token Not Generated
+                                        </t>
                                     </t>
-                                    <!-- <t t-else="">
-
-                                    </t> -->
+                                    <t t-else="">
+                                        Exam not Started
+                                    </t>
                                 </td>
                             </tr>
                         </t>
@@ -315,10 +320,17 @@
                                 <t t-set="ccmc_exam_schedule" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_online','=',registered_exam.id)])" />
 
                                 <td class="text-center">
+                                    <t t-if="registered_exam.commence_online_exam">
                                         <t t-if="ccmc_exam_schedule.token">
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
                                         </t>
-                                    <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                        <t t-else="">
+                                            Token Not Generated
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        Exam not Started
+                                    </t>
                                 </td>
                             </tr>
                         </t>

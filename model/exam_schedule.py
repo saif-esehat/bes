@@ -2523,7 +2523,23 @@ class ExamOralPracticalExaminers(models.Model):
 
     
     def end_online_exam(self):
-        self.commence_exam = False
+        online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',self.id)])
+
+        for examiner in online_assignment:
+            examiner.commence_exam = False
+            if examiner.course.course_code == 'GP':
+                if examiner.subject.name == "GSK":
+                    examiner.marksheets.gsk_online.write({'commence_online_exam':False})
+                if examiner.subject.name == "MEK":
+                    examiner.marksheets.mek_online.write({'commence_online_exam':False})
+            elif examiner.course.course_code == 'CCMC':
+                examiner.marksheets.ccmc_online.write({'commence_online_exam':False})
+        # return {'type': 'ir.actions.act_window_close'}
+            # Close the wizard and refresh the page
+        # return {
+        #     'type': 'ir.actions.client',
+        #     'tag': 'reload',
+        # }
         
 
     
@@ -2975,12 +2991,12 @@ class OralPracticalExaminersMarksheet(models.Model):
     ccmc_gsk_oral_remarks = fields.Char(" Remarks",tracking=True,related='ccmc_gsk_oral.ccmc_gsk_oral_remarks')
     ccmc__gsk_oral_draft_confirm = fields.Selection([('draft','Draft'),('confirm','Confirm')],string="Status",default="draft",related='ccmc_gsk_oral.ccmc_oral_draft_confirm')
     
-    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
+    ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True,related="ccmc_marksheet.ccmc_online")
 
 
     
-    gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True)
-    mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True)
+    gsk_online = fields.Many2one("survey.user_input","GSK Online",tracking=True,related="gp_marksheet.gsk_online")
+    mek_online = fields.Many2one("survey.user_input","MEK Online",tracking=True,related="gp_marksheet.mek_online")
     
     display_name = fields.Char(string='Name', compute='_compute_display_name')
    
@@ -2993,7 +3009,7 @@ class OralPracticalExaminersMarksheet(models.Model):
                 else:
                     record.display_name = f"{record.ccmc_candidate.name}"
 
-            
+
 
     def open_reallocate_candidates(self):
         # import wdb;wdb.set_trace();
@@ -3170,7 +3186,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             'token_regenrated': True,
                                             'is_gp': True,
                                             'is_ccmc': False,
-                                            'exam_date': gp_exam.exam_date
+                                            'exam_date': gp_exam.exam_date,
+                                            'commence_online_exam':True
                                             })
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
@@ -3197,7 +3214,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             'token_regenrated': True,
                                             'is_gp': True,
                                             'is_ccmc': False,
-                                            'exam_date': gp_exam.exam_date
+                                            'exam_date': gp_exam.exam_date,
+                                            'commence_online_exam':True
                                             })
 
                 gp_exam.write({
@@ -3229,7 +3247,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                                     'token_regenrated': True,
                                     'is_gp': False,
                                     'is_ccmc': True,
-                                    'exam_date': ccmc_exam.exam_date
+                                    'exam_date': ccmc_exam.exam_date,
+                                    'commence_online_exam':True
                                     })
 
                 ccmc_exam.write({
@@ -3468,8 +3487,7 @@ class GPExam(models.Model):
     gsk_online_assignment = fields.Boolean('gsk_online_assignment')
     
     edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
-    
-    
+
 
     def _compute_is_in_group(self):
         for record in self:
@@ -6021,13 +6039,13 @@ class OnlineExamWizard(models.TransientModel):
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":
                     examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
                 if examiner.subject.name == "MEK":
                     examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
             elif examiner.course.course_code == 'CCMC':
                 examiner.marksheets.ccmc_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
+                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
         # return {'type': 'ir.actions.act_window_close'}
             # Close the wizard and refresh the page
         return {
