@@ -118,9 +118,6 @@
                 
                     var subject = document.getElementById('online_subject_'+dataId).innerText;
                     document.getElementById('online_subject').value = subject;
-                
-                    var exam_date = document.getElementById('exam_date_'+dataId).value;
-                    document.getElementById('exam_date').value = exam_date;
                 }, 1000); 
 
                 }
@@ -153,7 +150,6 @@
 
                                         <input type="hidden" id="survey_input_id" name="survey_input_id"/>
                                         <input type="hidden" id="online_subject" name="online_subject"/>
-                                        <input type="hidden" id="exam_date" name="exam_date"/>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -241,14 +237,20 @@
        <script>
 
                 function openTokenModal(button) {
-                // Retrieve the data-id attribute value from the clicked button
-                var dataId = button.getAttribute('data-id');
-                // Update the content of the modal with the retrieved data
-                document.getElementById('survey_input_id').value = dataId;
 
-                var subject = document.getElementById('online_subject_'+dataId).innerText;
-                document.getElementById('online_subject').value = subject;
+                setTimeout(function() {
+                    var dataId = button.getAttribute('data-id');
+                    document.getElementById('survey_input_id').value = dataId;
+                
+                    var subject = document.getElementById('online_subject_'+dataId).innerText;
+                    document.getElementById('online_subject').value = subject;
+                }, 1000); 
 
+                }
+
+                function validateToken(input) {
+                    // Remove all spaces from the input value
+                    input.value = input.value.replace(/\s/g, '');
                 }
         
        </script>
@@ -276,7 +278,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="examiner_token_input">Token</label>
-                                                <input type="text" class="form-control" id="examiner_token_input" name="examiner_token_input" />
+                                                <input type="text" class="form-control" id="examiner_token_input" name="examiner_token_input" oninput="validateToken(this)"/>
                                             </div>
                                         </div>
 
