@@ -65,6 +65,16 @@ class ExaminerPortal(CustomerPortal):
                          "gsk_online_attendance": attendance}
                     )
                 return json.dumps({"token": token})
+            else:
+                if gp_marksheet.token:
+                    token = gp_marksheet.token
+                    gp_marksheet.write({"mek_online_attendance": attendance})
+                else:
+                    token = gp_marksheet.generate_token()
+                    gp_marksheet.write(
+                        {"token": token, "mek_online_attendance": attendance}
+                    )
+                return json.dumps({"token": token})
         elif subject == "MEK" and attendance == "absent":
             marksheet = (
                 request.env["exam.type.oral.practical.examiners.marksheet"]

@@ -259,9 +259,14 @@
             <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
             <field name="arch" type="xml">
                 <!-- Inherit the header and add a button -->
-                <!-- <xpath expr="//header" position="inside">
-                    <button name="calculate_time" class="oe_highlight" string="Calculate Time" type="object" />
-                </xpath> -->
+                <xpath expr="//header/button[@name='action_print_answers']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_resend']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
                 <xpath expr="//field[@name='survey_id']" position="after">
                     
                     <field name="gp_candidate"  attrs="{'invisible': [('is_gp', '=', False)]}"/>
