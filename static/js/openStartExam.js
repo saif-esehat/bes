@@ -15,6 +15,13 @@ odoo.define('bes.OpenStartExam', function (require) {
             start_gp_exam: function (e) {
                 // e.preventDefault();
                 // e.stopPropagation(); 
+
+                debugger;
+                // if (!examiner_token) {
+                //     alert('Examiner token is empty. Please provide a valid token.');
+                //     return; // Stop further process
+                // }
+
                 console.log("inside start gp exam");                
                 var survey_input_id = document.getElementById("survey_input_id").value;
                 var examiner_token = document.getElementById('examiner_token_input').value;

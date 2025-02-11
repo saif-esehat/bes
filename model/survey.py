@@ -213,6 +213,7 @@ class SurveyUserInputInherited(models.Model):
     )
 
     token_regenrated = fields.Boolean("Token Regenerated", default=False)
+    commence_online_exam = fields.Boolean('commence_online_exam', default=False)
 
 
     @api.depends('user_input_line_ids')
