@@ -120,7 +120,9 @@ class InheritedSurvey(models.Model):
             }
             
         }
-
+# Survey Question Access rights
+# bes.admin_survey_question_answer,access_survey_question_answer,model_survey_question_answer,bes.group_bes_admin,1,0,0,0
+# access_survey_question_answer,Survey Question Answer,survey.model_survey_question_answer,bes.group_bes_admin,1,0,0,0
     
     
     def generate_unique_string(self):
