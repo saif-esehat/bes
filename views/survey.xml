@@ -169,8 +169,7 @@
                         <a role="button" class="btn btn-primary btn-lg" t-att-href="exam_url">
 
                             <i role="img"/>
-                                Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/>
-    Exam
+                                Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/> Exam
                         </a>
                     </t>
 
@@ -198,6 +197,12 @@
                 
             </xpath>
         </template>
+
+        <!-- <template id="custom_survey_title" inherit_id="survey.survey_fill_form_done">
+            <xpath expr="//title" position="replace">
+                <title>Taking Exam</title>
+            </xpath>
+        </template> -->
 
         <record id="survey_kanban_inherited" model="ir.ui.view">
             <field name="name">survey.survey.inherit</field>
