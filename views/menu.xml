@@ -3,12 +3,20 @@
     <data>
 
         <record model="ir.actions.act_window" id="survey.action_survey_form">
-            <field name="name">Examinations</field>
+            <field name="name">Question Banks</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Examinations
                 </p>
             </field>
+        </record>
+
+        <record id="survey.action_survey_form" model="ir.actions.act_window">
+            <field name="view_mode">tree,form</field> 
+        </record>
+
+        <record id="survey.survey_menu_user_inputs" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('bes.group_expense_approval_ceo')])]"/> <!-- Hide it from all users except those in the specified group -->
         </record>
 
         <record id="open_ec_gp_exam_schedule_mek_prac" model="ir.actions.act_window">

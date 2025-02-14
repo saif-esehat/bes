@@ -204,28 +204,32 @@
             </xpath>
         </template> -->
 
-        <record id="survey_kanban_inherited" model="ir.ui.view">
-            <field name="name">survey.survey.inherit</field>
+        <record id="survey_survey_tree_inherit" model="ir.ui.view">
+            <field name="name">survey.survey.tree.inherit</field>
             <field name="model">survey.survey</field>
-            <field name="inherit_id" ref="survey.survey_kanban"/>
+            <field name="inherit_id" ref="survey.survey_tree"/>
             <field name="arch" type="xml">
-                <!-- Keep the "Candidates" stat only if answer_done_count is not 0 -->
-                <xpath expr="//div[@class='container o_kanban_card_content']" position="replace">
-                    <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0">
-                        <div class="row mt-4 ml-5">
-                            <div class="d-flex flex-column align-items-center">
-                                <span class="font-weight-bold">
-                                    <field name="answer_done_count"/>
-                                </span>
-                                <span class="text-muted">Candidates</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Remove specific fields -->
+                <xpath expr="//field[@name='answer_count']" position="attributes">
+                    <attribute name="string">Candidates Registered</attribute>
+                </xpath>
+                <xpath expr="//field[@name='answer_done_count']" position="attributes">
+                    <attribute name="string">Exams Completed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='answer_duration_avg']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='success_count']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='success_ratio']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='answer_score_avg']" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>
-
-
 
         <record id="survey_form_inherited" model="ir.ui.view">
             <field name="name">survey.survey.inherited</field>
@@ -285,6 +289,39 @@
                 <!-- <xpath expr="//field[@name='question_and_page_ids']/tree/field[@name='suggested_answer_ids']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath> -->
+
+                <!-- ✅ Hide specific fields in the "Options" tab -->
+                <xpath expr="//page[@name='options']//group[@name='candidates']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='scoring']//field[@name='scoring_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='scoring']//field[@name='certification']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='progression_mode']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='questions_layout']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='questions_selection']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='users_can_go_back']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+<xpath expr="//page[@name='options']//group[field[@name='session_speed_rating']]" position="attributes">
+    <attribute name="invisible">1</attribute>
+</xpath>
+
+
 
               
             </field>
