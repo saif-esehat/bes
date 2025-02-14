@@ -1073,34 +1073,36 @@
                             
 
                             <t t-if="commence_exam">
+                                <t t-if="date_valid">  
 
-                                <td  t-if="examiner_subject == 'GSK' and exam_type == 'online'" class="text-center">
-                                    <select t-attf-id="attendance_dropdown_{{marksheet.id}}" name="attendance_dropdown" t-att-disabled="marksheet.gp_marksheet.gsk_online_attendance" style="width: 80px; height: 30px; font-size: 0.7rem;" required="1">
-                                        <option value="" t-att-selected="marksheet.gp_marksheet.gsk_online_attendance == ''">Select Attendance</option>
-                                        <option value="present" t-att-selected="marksheet.gp_marksheet.gsk_online_attendance == 'present'">Present</option>
-                                        <option value="absent" t-att-selected="marksheet.gp_marksheet.gsk_online_attendance == 'absent'">Absent</option>
-                                    </select>
-                                    <button t-attf-id="attendance_confirm_{{marksheet.id}}" t-if="not marksheet.gp_marksheet.gsk_online_attendance" class="gsk_online_attendace" data-target="#attendanceConfirmationModal" onclick="checkAndOpenModal(this)"  t-attf-data-id="{{marksheet.id}}" t-attf-data-subject="{{examiner_subject}}">Confirm</button>
-                                </td>
+                                    <td  t-if="examiner_subject == 'GSK' and exam_type == 'online'" class="text-center">
+                                        <select t-attf-id="attendance_dropdown_{{marksheet.id}}" name="attendance_dropdown" t-att-disabled="marksheet.gp_marksheet.gsk_online_attendance" style="width: 80px; height: 30px; font-size: 0.7rem;" required="1">
+                                            <option value="" t-att-selected="marksheet.gp_marksheet.gsk_online_attendance == ''">Select Attendance</option>
+                                            <option value="present" t-att-selected="marksheet.gp_marksheet.gsk_online_attendance == 'present'">Present</option>
+                                            <option value="absent" t-att-selected="marksheet.gp_marksheet.gsk_online_attendance == 'absent'">Absent</option>
+                                        </select>
+                                        <button t-attf-id="attendance_confirm_{{marksheet.id}}" t-if="not marksheet.gp_marksheet.gsk_online_attendance" class="gsk_online_attendace" data-target="#attendanceConfirmationModal" onclick="checkAndOpenModal(this)"  t-attf-data-id="{{marksheet.id}}" t-attf-data-subject="{{examiner_subject}}">Confirm</button>
+                                    </td>
 
-                                <td  t-if="examiner_subject == 'MEK' and exam_type == 'online'" class="text-center">
-                                    <select t-attf-id="attendance_dropdown_{{marksheet.id}}" t-att-disabled="marksheet.gp_marksheet.mek_online_attendance" name="attendance_dropdown" style="width: 80px; height: 30px; font-size: 0.7rem;" required="1">
-                                        <option value="" t-att-selected="marksheet.gp_marksheet.mek_online_attendance == ''" >Select Attendance</option>
-                                        <option value="present" t-att-selected="marksheet.gp_marksheet.mek_online_attendance == 'present'">Present</option>
-                                        <option value="absent" t-att-selected="marksheet.gp_marksheet.mek_online_attendance == 'absent'">Absent</option>
-                                    </select>
-                                    <button t-attf-id="attendance_confirm_{{marksheet.id}}" t-if="not marksheet.gp_marksheet.mek_online_attendance" class="mek_online_attendace" data-target="#attendanceConfirmationModal" onclick="checkAndOpenModal(this)" t-attf-data-id="{{marksheet.id}}" t-attf-data-subject="{{examiner_subject}}">Confirm</button>
-                                </td>
+                                    <td  t-if="examiner_subject == 'MEK' and exam_type == 'online'" class="text-center">
+                                        <select t-attf-id="attendance_dropdown_{{marksheet.id}}" t-att-disabled="marksheet.gp_marksheet.mek_online_attendance" name="attendance_dropdown" style="width: 80px; height: 30px; font-size: 0.7rem;" required="1">
+                                            <option value="" t-att-selected="marksheet.gp_marksheet.mek_online_attendance == ''" >Select Attendance</option>
+                                            <option value="present" t-att-selected="marksheet.gp_marksheet.mek_online_attendance == 'present'">Present</option>
+                                            <option value="absent" t-att-selected="marksheet.gp_marksheet.mek_online_attendance == 'absent'">Absent</option>
+                                        </select>
+                                        <button t-attf-id="attendance_confirm_{{marksheet.id}}" t-if="not marksheet.gp_marksheet.mek_online_attendance" class="mek_online_attendace" data-target="#attendanceConfirmationModal" onclick="checkAndOpenModal(this)" t-attf-data-id="{{marksheet.id}}" t-attf-data-subject="{{examiner_subject}}">Confirm</button>
+                                    </td>
 
-                                <td  t-if="examiner_subject == 'CCMC' and exam_type == 'online'" class="text-center">
-                                    <select t-attf-id="attendance_dropdown_{{marksheet.id}}" t-att-disabled="marksheet.ccmc_marksheet.ccmc_online_attendance" name="attendance_dropdown" style="width: 80px; height: 30px; font-size: 0.7rem;" required="1">
-                                        <option value=""  t-att-selected="marksheet.ccmc_marksheet.ccmc_online_attendance == ''" >Select Attendance</option>
-                                        <option value="present" t-att-selected="marksheet.ccmc_marksheet.ccmc_online_attendance == 'present'">Present</option>
-                                        <option value="absent" t-att-selected="marksheet.ccmc_marksheet.ccmc_online_attendance == 'absent'">Absent</option>
-                                    </select>
-                                    <button t-attf-id="attendance_confirm_{{marksheet.id}}" t-if="not marksheet.ccmc_marksheet.ccmc_online_attendance"  class="ccmc_online_attendace" data-target="#attendanceConfirmationModal"  onclick="checkAndOpenModal(this)" t-attf-data-id="{{marksheet.id}}" t-attf-data-subject="{{examiner_subject}}">Confirm</button>
-                                </td>
+                                    <td  t-if="examiner_subject == 'CCMC' and exam_type == 'online'" class="text-center">
+                                        <select t-attf-id="attendance_dropdown_{{marksheet.id}}" t-att-disabled="marksheet.ccmc_marksheet.ccmc_online_attendance" name="attendance_dropdown" style="width: 80px; height: 30px; font-size: 0.7rem;" required="1">
+                                            <option value=""  t-att-selected="marksheet.ccmc_marksheet.ccmc_online_attendance == ''" >Select Attendance</option>
+                                            <option value="present" t-att-selected="marksheet.ccmc_marksheet.ccmc_online_attendance == 'present'">Present</option>
+                                            <option value="absent" t-att-selected="marksheet.ccmc_marksheet.ccmc_online_attendance == 'absent'">Absent</option>
+                                        </select>
+                                        <button t-attf-id="attendance_confirm_{{marksheet.id}}" t-if="not marksheet.ccmc_marksheet.ccmc_online_attendance"  class="ccmc_online_attendace" data-target="#attendanceConfirmationModal"  onclick="checkAndOpenModal(this)" t-attf-data-id="{{marksheet.id}}" t-attf-data-subject="{{examiner_subject}}">Confirm</button>
+                                    </td>
 
+                                </t>
                             </t>
 
                             <td  t-if="examiner_subject in ['GSK','MEK','CCMC'] and exam_type == 'online'" class="text-center">

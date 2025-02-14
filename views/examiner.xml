@@ -503,7 +503,7 @@
             <field name="dgs_batch" readonly="1"/>
             <field name="subject" readonly="1"/>
             <field name="examiner" readonly="1"/>
-            <field name="exam_type" readonly="1"/>
+            <!-- <field name="exam_type" readonly="1"/> -->
             <field name="institute_id" readonly="1"/>
             <field name="exam_region" readonly="1"/>
             <field name="exam_date" readonly="1"/>

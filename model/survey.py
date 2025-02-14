@@ -106,7 +106,22 @@ class InheritedSurvey(models.Model):
         ('page_per_section', 'One page per section'),
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
+    progression_mode = fields.Selection([
+        ('percent', 'Percentage'),
+        ('number', 'Number')], string='Progression Mode', default='number',
+        help="If Number is selected, it will display the number of questions answered on the total number of question to answer.")
     
+    questions_selection = fields.Selection([
+        ('all', 'All questions'),
+        ('random', 'Randomized per section')],
+        string="Selection", required=True, default='random',
+        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.")
+    
+    is_time_limited = fields.Boolean('The survey is limited in time',default=True)
+    time_limit = fields.Float("Time limit (minutes)", default=0)
+    users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.",default=False)
+    scoring_success_min = fields.Float('Success %', default=0)
+    certification = fields.Boolean('Is a Certification',readonly=True, store=True,default=False)
     def action_open_add_section(self):
         self.ensure_one()
         return {
