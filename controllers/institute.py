@@ -3166,6 +3166,20 @@ class InstitutePortal(CustomerPortal):
             "C2:C1048576", {"validate": "list", "source": gender_values}
         )
 
+        # Add data validation to enforce 6-digit PIN codes
+        candidate_worksheet.data_validation(
+            "I2:I1048576",  # Apply to all rows in column I (starting from row 2)
+            {
+                "validate": "length",  # Validate based on length
+                "criteria": "==",      # Ensure the length is exactly equal to
+                "value": 6,            # 6 characters
+                "input_title": "PIN Code",  # Input prompt title
+                "input_message": "Please enter a 6-digit PIN code.",  # Input prompt message
+                "error_title": "Invalid PIN Code",  # Error message title
+                "error_message": "The PIN code must be exactly 6 digits.",  # Error message
+            }
+        )
+
         state_cheatsheet = workbook.add_worksheet("States")
         state_cheatsheet.write("A1", "Code")
         state_cheatsheet.write("B1", "State")
@@ -3666,6 +3680,19 @@ class InstitutePortal(CustomerPortal):
         candidate_worksheet.data_validation(
             "C2:C1048576", {"validate": "list", "source": gender_values}
         )
+        # Add data validation to enforce 6-digit PIN codes
+        candidate_worksheet.data_validation(
+            "I2:I1048576",  # Apply to all rows in column I (starting from row 2)
+            {
+                "validate": "length",  # Validate based on length
+                "criteria": "==",      # Ensure the length is exactly equal to
+                "value": 6,            # 6 characters
+                "input_title": "PIN Code",  # Input prompt title
+                "input_message": "Please enter a 6-digit PIN code.",  # Input prompt message
+                "error_title": "Invalid PIN Code",  # Error message title
+                "error_message": "The PIN code must be exactly 6 digits.",  # Error message
+            }
+        )
 
         state_cheatsheet = workbook.add_worksheet("States")
         state_cheatsheet.write("A1", "Code")
@@ -4161,7 +4188,7 @@ class InstitutePortal(CustomerPortal):
                 pin_code = int(row[8])
             except:
                 raise ValidationError(
-                    f"Invalid or Missing Pin Code in row {row_num + 1}, Please use the given format and check for unwanted spaces"
+                    f"Invalid or Missing Pin Code in row {row_num + 1}, Please use the given format and check for unwanted spaces, Pin Code must be 6 digits"
                 )
 
             try:
@@ -4298,7 +4325,7 @@ class InstitutePortal(CustomerPortal):
                 )
             except Exception as e:
                 raise ValidationError(
-                    f"Error creating candidate , \n Incorrect format for row {row_num + 1}"
+                    f"Error creating candidate, Incorrect format for row {row_num + 1}"
                 )
             # except ValidationError as e:
             #     raise ValidationError(f"Incorrect Excel format please check {row_num + 1}")
@@ -4501,7 +4528,7 @@ class InstitutePortal(CustomerPortal):
                 pin_code = int(row[8])
             except:
                 raise ValidationError(
-                    f"Invalid or Missing Pin Code in row {row_num + 1}, Please use the given format and check for unwanted spaces"
+                    f"Invalid or Missing Pin Code in row {row_num + 1}, Please use the given format and check for unwanted spaces, Pin Code must be 6 digits"
                 )
 
             try:
@@ -4638,7 +4665,7 @@ class InstitutePortal(CustomerPortal):
                 )
             except:
                 raise ValidationError(
-                    f"Error creating candidate , \n Incorrect format for row {row_num + 1}"
+                    f"Error creating candidate, Incorrect format for row {row_num + 1}"
                 )
 
         # workbook.close()

@@ -811,6 +811,8 @@
         <field name="arch" type="xml">
             <form string="Online Exam Wizard">
                 <group>
+                    <field name="dgs_batch" string="Batch" required="1" />
+                    <field name="institute_id" string="Institute" required="1" />
                     <field name="ip_address" string="IP Address" required="1" />
                 </group>
                 <footer>

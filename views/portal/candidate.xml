@@ -185,6 +185,7 @@
                 <tbody>
                     <t t-foreach="registered_exams" t-as="registered_exam">
                         <t t-if="registered_exam.state != 'done'">
+                            <input type="hidden" t-attf-id="exam_date_{{registered_exam.exam_date}}" name="exam_date"/>
                             <tr>
                                 <td class="text-center">
                                     <t t-out="registered_exam.survey_id.title" />
@@ -208,14 +209,19 @@
                                 <td class="text-center">
                                     <!-- <t t-if="registered_exam.survey_id.exam_state == 'in_progress'"> -->
                                         <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
-                                    <t t-if="gp_exam_schedule.token">
-                                        <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+                                    <t t-if="registered_exam.commence_online_exam">
+                                        <t t-if="gp_exam_schedule.token">
+                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
 
-                                        <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                            <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                        </t>
+                                        <t t-else="">
+                                            Token Not Generated
+                                        </t>
                                     </t>
-                                    <!-- <t t-else="">
-
-                                    </t> -->
+                                    <t t-else="">
+                                        Exam not Started
+                                    </t>
                                 </td>
                             </tr>
                         </t>
@@ -231,14 +237,20 @@
        <script>
 
                 function openTokenModal(button) {
-                // Retrieve the data-id attribute value from the clicked button
-                var dataId = button.getAttribute('data-id');
-                // Update the content of the modal with the retrieved data
-                document.getElementById('survey_input_id').value = dataId;
 
-                var subject = document.getElementById('online_subject_'+dataId).innerText;
-                document.getElementById('online_subject').value = subject;
+                setTimeout(function() {
+                    var dataId = button.getAttribute('data-id');
+                    document.getElementById('survey_input_id').value = dataId;
+                
+                    var subject = document.getElementById('online_subject_'+dataId).innerText;
+                    document.getElementById('online_subject').value = subject;
+                }, 1000); 
 
+                }
+
+                function validateToken(input) {
+                    // Remove all spaces from the input value
+                    input.value = input.value.replace(/\s/g, '');
                 }
         
        </script>
@@ -266,7 +278,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="examiner_token_input">Token</label>
-                                                <input type="text" class="form-control" id="examiner_token_input" name="examiner_token_input" />
+                                                <input type="text" class="form-control" id="examiner_token_input" name="examiner_token_input" oninput="validateToken(this)"/>
                                             </div>
                                         </div>
 
@@ -310,10 +322,17 @@
                                 <t t-set="ccmc_exam_schedule" t-value="env['ccmc.exam.schedule'].sudo().search([('ccmc_online','=',registered_exam.id)])" />
 
                                 <td class="text-center">
+                                    <t t-if="registered_exam.commence_online_exam">
                                         <t t-if="ccmc_exam_schedule.token">
                                             <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
                                         </t>
-                                    <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                        <t t-else="">
+                                            Token Not Generated
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        Exam not Started
+                                    </t>
                                 </td>
                             </tr>
                         </t>

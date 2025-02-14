@@ -94,6 +94,11 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <!-- <record id="group_online_exam" model="res.groups">
+        <field name="name">Online Exam Access</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record> -->
+
 
     <record id="examiner_duty_record_rule" model="ir.rule">
             <field name="name">Examiner Duty Record Rule</field>
@@ -238,6 +243,18 @@
             <field name="groups" eval="[(4, ref('group_expense_approval_ceo'))]"/>
             <field name="domain_force">[(1,'=',1)]</field>
         </record>
+
+        <!-- <record id="restrict_edit_survey" model="ir.rule">
+            <field name="name">Restrict Edit Survey</field>
+            <field name="model_id" ref="bes.model_survey_survey"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_bes_admin'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record> -->
+
    
 
 

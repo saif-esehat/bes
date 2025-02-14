@@ -134,6 +134,7 @@ class GPCandidatePortal(CustomerPortal):
     
     @http.route(['/my/gpexam/startexam'],type="json",auth="user",website=True)
     def VerifyToken(self,**kw):
+        # import wdb; wdb.set_trace()
         partner_id = request.env.user.partner_id.id
     
         
@@ -421,42 +422,42 @@ class GPCandidatePortal(CustomerPortal):
         partner_id = request.env.user.id
         candidate = request.env["gp.candidate"].sudo().search([('user_id', '=', partner_id)])
         previous_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id)], order='attempt_number desc', limit=1)
-        if candidate.indos_no == "24GM0634":
+        # if candidate.indos_no == "24GM0634":
 
-            if previous_exam.attempt_number == 7:
-                raise ValidationError("Max Exam Attempt Exceded")
-            new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
-            # current_year = datetime.datetime.now().year
-            
-            invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
-            course = "GP"
-            # import wdb; wdb.set_trace()
+        if previous_exam.attempt_number == 7:
+            raise ValidationError("Max Exam Attempt Exceded")
+        new_exam = request.env['gp.exam.schedule'].sudo().search([('gp_candidate', '=', candidate.id),('dgs_batch','=',batch.id)])
+        # current_year = datetime.datetime.now().year
+        
+        invoice_exist = request.env['account.move'].sudo().search([('gp_candidate','=',candidate.id),('repeater_exam_batch','=',batch.id)])
+        course = "GP"
+        # import wdb; wdb.set_trace()
 
-            if batch.form_deadline_start > datetime.today().date():
-                raise ValidationError(f"Form Submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is not Started Yet.")
-            
-            if batch.form_deadline < datetime.today().date():
-                raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
+        if batch.form_deadline_start > datetime.today().date():
+            raise ValidationError(f"Form Submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is not Started Yet.")
+        
+        if batch.form_deadline < datetime.today().date():
+            raise ValidationError(f"Last date of submission of Application for Repeater {batch.to_date.strftime('%B %Y')} examination is Over.")
 
-            vals = {
-                'candidate': candidate,
-                'exam': previous_exam,
-                'batch':batch,
-                # 'year':current_year,
-                'invoice_exist':invoice_exist,
-                'course':course,
-                'new_exam':new_exam
-            }
-            
-            if previous_exam.state == '3-certified':
-                return request.render("bes.application_status", vals)
-            
-            if not invoice_exist:
-                return request.render("bes.exam_application_form_template", vals)
-            else:
-                return request.render("bes.application_status", vals)
+        vals = {
+            'candidate': candidate,
+            'exam': previous_exam,
+            'batch':batch,
+            # 'year':current_year,
+            'invoice_exist':invoice_exist,
+            'course':course,
+            'new_exam':new_exam
+        }
+        
+        if previous_exam.state == '3-certified':
+            return request.render("bes.application_status", vals)
+        
+        if not invoice_exist:
+            return request.render("bes.exam_application_form_template", vals)
         else:
-            raise ValidationError("Not allowed")
+            return request.render("bes.application_status", vals)
+        # else:
+        #     raise ValidationError("Not allowed")
     
     @http.route(['/ccmccandidate/repeater/<int:batch_id>'], type="http", auth="user", website=True)
     @check_user_groups("bes.group_ccmc_candidates")

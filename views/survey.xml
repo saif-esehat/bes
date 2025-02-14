@@ -140,6 +140,21 @@
             </xpath>
         </template>
 
+        <template id="survey_page_fill_inherit" inherit_id="survey.survey_page_fill">
+        <!-- Use xpath to locate the 'name' attribute -->
+            <xpath expr="//t[@t-name='survey.survey_page_fill']" position="attributes">
+                <!-- Replace the 'name' attribute -->
+                <attribute name="name">Online Examination</attribute>
+            </xpath>
+        </template>
+
+
+        <template id="survey_fill_form_in_progress_inherited" inherit_id="survey.survey_fill_form_in_progress">
+            <xpath expr="//span[2]" position="replace">
+
+            </xpath>
+        </template>
+
 
 
         
@@ -169,8 +184,7 @@
                         <a role="button" class="btn btn-primary btn-lg" t-att-href="exam_url">
 
                             <i role="img"/>
-                                Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/>
-    Exam
+                                Start <span class="font-weight-bold" t-esc="survey.trigger_exam.title"/> Exam
                         </a>
                     </t>
 
@@ -199,25 +213,67 @@
             </xpath>
         </template>
 
+        <!-- <template id="custom_survey_title" inherit_id="survey.survey_fill_form_done">
+            <xpath expr="//title" position="replace">
+                <title>Taking Exam</title>
+            </xpath>
+        </template> -->
+
+        <record id="survey_survey_tree_inherit" model="ir.ui.view">
+            <field name="name">survey.survey.tree.inherit</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_tree"/>
+            <field name="arch" type="xml">
+                <!-- Remove specific fields -->
+                <xpath expr="//field[@name='answer_count']" position="attributes">
+                    <attribute name="string">Candidates Registered</attribute>
+                </xpath>
+                <xpath expr="//field[@name='answer_done_count']" position="attributes">
+                    <attribute name="string">Exams Completed</attribute>
+                </xpath>
+                <xpath expr="//field[@name='answer_duration_avg']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='success_count']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='success_ratio']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='answer_score_avg']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
 
         <record id="survey_form_inherited" model="ir.ui.view">
             <field name="name">survey.survey.inherited</field>
             <field name="model">survey.survey</field>
             <field name="inherit_id" ref="survey.survey_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='user_id']" position="after">
-                     <field name="template"/>
-                     <field name="survey_start_url" />
-                     <field name="examiner" /> 
-                     <!-- <field name="examiner_token" readonly="1" />  -->
-                     <button name="generate_token" string="Generate Token" type="object"/>
-                     <field name="institute" />
-                     <field name="course" />
-                     <field name="subject_ids" invisible="1" />
-                     <field name="subject" domain="[('id', 'in', subject_ids)]" />
-                     <field name="start_time" />
-                     <field name="end_time" />
-                     <field name="exam_state" readonly="1" />
+                <xpath expr="//header" position="replace">
+                    <header/>
+                </xpath>
+                <!-- Locate the button and change the string -->
+                <xpath expr="//button[field[@name='answer_done_count']]" position="replace">
+                    <button name="action_survey_user_input_completed" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                        <field string="Candidates" name="answer_done_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="template"/>
+                    <field name="survey_start_url" readonly='0'/>
+                    <field name="examiner" /> 
+                    <!-- <field name="examiner_token" readonly="1" />  -->
+                    <button name="generate_token" string="Generate Token" type="object"/>
+                    <field name="institute" />
+                    <field name="course" />
+                    <field name="subject_ids" invisible="1" />
+                    <field name="subject" domain="[('id', 'in', subject_ids)]" />
+                    <field name="start_time" />
+                    <field name="end_time" />
+                    <field name="exam_state" readonly="1" />
                     <button string="Add Question" type="object" name="action_open_add_section" class="btn-primary"/>
 
                 </xpath>
@@ -229,12 +285,12 @@
                 <xpath expr="//label[@for='is_time_limited']" position="replace">
                     <label for="is_time_limited" string="Exam Time Limit"/>
                 </xpath>
-                 <xpath expr="//button[@name='action_print_survey']" position="after">
+                 <!-- <xpath expr="//button[@name='action_print_survey']" position="after">
                     <button name="start_exam" string="Start" type="object"  attrs="{'invisible': [('exam_state', '=', 'in_progress')]}"/>
                     <button name="stop_exam" string="Stop" type="object"  attrs="{'invisible': [('exam_state', '=', 'stopped')]}"/>
                     <button name="done_exam" string="Done" type="object"  />
 
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
                     <field name="q_score" string="Score" style="text-align: center;"/>
                     <field name="difficulty_level" style="text-align: center;"/>
@@ -249,6 +305,39 @@
                     <attribute name="invisible">1</attribute>
                 </xpath> -->
 
+                <!-- ✅ Hide specific fields in the "Options" tab -->
+                <xpath expr="//page[@name='options']//group[@name='candidates']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='scoring']//field[@name='scoring_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='scoring']//field[@name='certification']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='progression_mode']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='questions_layout']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='questions_selection']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='options']//group[@name='questions']//field[@name='users_can_go_back']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+<xpath expr="//page[@name='options']//group[field[@name='session_speed_rating']]" position="attributes">
+    <attribute name="invisible">1</attribute>
+</xpath>
+
+
+
               
             </field>
         </record>
@@ -259,9 +348,14 @@
             <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
             <field name="arch" type="xml">
                 <!-- Inherit the header and add a button -->
-                <!-- <xpath expr="//header" position="inside">
-                    <button name="calculate_time" class="oe_highlight" string="Calculate Time" type="object" />
-                </xpath> -->
+                <xpath expr="//header/button[@name='action_print_answers']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_resend']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
                 <xpath expr="//field[@name='survey_id']" position="after">
                     
                     <field name="gp_candidate"  attrs="{'invisible': [('is_gp', '=', False)]}"/>
@@ -272,7 +366,8 @@
                     <field name="institute_id" />
                     <!-- <field name="examiner" /> -->
                     <!-- <field name="examiner_token" /> -->
-                    <field name="token_regenrated" />
+                    <field name="commence_online_exam" invisible="1"/>
+                    <field name="token_regenrated" readonly="1"/>
                     <field name="start_time"/>
                     <field name="end_time"/>
                     <field name="total_time" />
@@ -287,6 +382,26 @@
                 </xpath>
                 <xpath expr="//field[@name='scoring_percentage']" position="after">
                         <field name="scoring_total" />
+                </xpath>
+
+                <xpath expr="//label[@for='attempts_number']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='attempts_number']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='attempts_limit']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//div[field[@name='attempts_number']]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='create_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='deadline']" position="attributes">
@@ -352,7 +467,7 @@
                     <field name="ccmc_exam" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="institute_id"/>
                     <field name="indos"/>
-                    <field name="examiner_token"/>
+                    <!-- <field name="examiner_token"/> -->
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
                     <field name="ip_address"/>
                     <field name="start_time"/>

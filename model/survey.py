@@ -8,6 +8,7 @@ from datetime import datetime
 # import pandas as pd
 import base64
 from io import BytesIO
+import pytz
 
 
 
@@ -105,7 +106,22 @@ class InheritedSurvey(models.Model):
         ('page_per_section', 'One page per section'),
         ('page_per_question', 'One page per question')],
         string="Layout", required=True, default='page_per_section')
+    progression_mode = fields.Selection([
+        ('percent', 'Percentage'),
+        ('number', 'Number')], string='Progression Mode', default='number',
+        help="If Number is selected, it will display the number of questions answered on the total number of question to answer.")
     
+    questions_selection = fields.Selection([
+        ('all', 'All questions'),
+        ('random', 'Randomized per section')],
+        string="Selection", required=True, default='random',
+        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.")
+    
+    is_time_limited = fields.Boolean('The survey is limited in time',default=True)
+    time_limit = fields.Float("Time limit (minutes)", default=0)
+    users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.",default=False)
+    scoring_success_min = fields.Float('Success %', default=0)
+    certification = fields.Boolean('Is a Certification',readonly=True, store=True,default=False)
     def action_open_add_section(self):
         self.ensure_one()
         return {
@@ -119,7 +135,9 @@ class InheritedSurvey(models.Model):
             }
             
         }
-
+# Survey Question Access rights
+# bes.admin_survey_question_answer,access_survey_question_answer,model_survey_question_answer,bes.group_bes_admin,1,0,0,0
+# access_survey_question_answer,Survey Question Answer,survey.model_survey_question_answer,bes.group_bes_admin,1,0,0,0
     
     
     def generate_unique_string(self):
@@ -186,8 +204,8 @@ class SurveyUserInputInherited(models.Model):
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)
-    gp_exam = fields.Many2one('gp.exam.schedule', string='GP Exam', readonly=True)
-    ccmc_exam = fields.Many2one('ccmc.exam.schedule', string='CCMC Exam', readonly=True)
+    gp_exam = fields.Many2one('gp.exam.schedule', string='GP Exam (Roll No)', readonly=True)
+    ccmc_exam = fields.Many2one('ccmc.exam.schedule', string='CCMC Exam (Roll No)', readonly=True)
     exam_date = fields.Date(string="Exam Date", readonly=True)
     is_gp = fields.Boolean('Is GP')
     is_ccmc = fields.Boolean('Is CCMC')
@@ -213,6 +231,7 @@ class SurveyUserInputInherited(models.Model):
     )
 
     token_regenrated = fields.Boolean("Token Regenerated", default=False)
+    commence_online_exam = fields.Boolean('commence_online_exam', default=False)
 
 
     @api.depends('user_input_line_ids')
@@ -253,30 +272,35 @@ class SurveyUserInputInherited(models.Model):
                 record.examiner_token = record.gp_exam.token
     
 
-    @api.depends('user_input_line_ids','state')
+    @api.depends('user_input_line_ids', 'state')
     def _compute_total_time(self):
+        ist_tz = pytz.timezone('Asia/Kolkata')  # Define IST timezone
         for record in self:
             if record.state == 'done' and record.user_input_line_ids:
-                # print(record.user_input_line_ids,"gellllllllllloooooooooooooooooooooooo")
-                start_time = record.user_input_line_ids[0].create_date
-                end_time = record.user_input_line_ids[-1].create_date
+                start_time_utc = record.user_input_line_ids[0].create_date
+                end_time_utc = record.user_input_line_ids[-1].create_date
 
-                total_time = end_time - start_time
-                # Format the times as hours:minutes:seconds
-                record.start_time = start_time.strftime('%H:%M:%S')
-                record.end_time = end_time.strftime('%H:%M:%S')
-                
-                # Convert the total_time (timedelta) to hours, minutes, and seconds
-                total_seconds = int(total_time.total_seconds())
-                hours, remainder = divmod(total_seconds, 3600)
-                minutes, seconds = divmod(remainder, 60)
-                
-                # Format total_time as HH:MM:SS
-                record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
-            else:
-                record.total_time = "00:00:00"
-                record.start_time = "00:00:00"
-                record.end_time = "00:00:00"
+                if start_time_utc and end_time_utc:
+                    # Convert UTC time to IST
+                    start_time_ist = start_time_utc.astimezone(ist_tz)
+                    end_time_ist = end_time_utc.astimezone(ist_tz)
+
+                    total_time = end_time_ist - start_time_ist
+
+                    # Format the times as hours:minutes:seconds
+                    record.start_time = start_time_ist.strftime('%H:%M:%S')
+                    record.end_time = end_time_ist.strftime('%H:%M:%S')
+
+                    # Convert total_time (timedelta) to HH:MM:SS
+                    total_seconds = int(total_time.total_seconds())
+                    hours, remainder = divmod(total_seconds, 3600)
+                    minutes, seconds = divmod(remainder, 60)
+
+                    record.total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+                else:
+                    record.total_time = "00:00:00"
+                    record.start_time = "00:00:00"
+                    record.end_time = "00:00:00"
 
     def calculate_time(self):
         for record in self:
