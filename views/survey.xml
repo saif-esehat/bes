@@ -343,24 +343,24 @@
 
                 <xpath expr="//field[@name='survey_id']" position="after">
                     
-                    <field name="gp_candidate"  attrs="{'invisible': [('is_gp', '=', False)]}"/>
+                    <field name="gp_candidate"  attrs="{'invisible': [('is_gp', '=', False)]}"  optional="show"/>
                     <field name="gp_exam"  attrs="{'invisible': [('is_gp', '=',False)]}"/>
-                    <field name="ccmc_candidate"  attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
-                    <field name="ccmc_exam"  attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
-                    <field name="dgs_batch" />
-                    <field name="institute_id" />
+                    <field name="ccmc_candidate"  attrs="{'invisible': [('is_ccmc', '=', False)]}"  optional="show"/>
+                    <field name="ccmc_exam"  attrs="{'invisible': [('is_ccmc', '=', False)]}"  optional="show"/>
+                    <field name="dgs_batch"  optional="show"/>
+                    <field name="institute_id"  optional="show"/>
                     <!-- <field name="examiner" /> -->
                     <!-- <field name="examiner_token" /> -->
                     <field name="commence_online_exam" invisible="1"/>
-                    <field name="token_regenrated" readonly="1"/>
-                    <field name="start_time"/>
-                    <field name="end_time"/>
-                    <field name="total_time" />
-                    <field name="ip_address" />
-                    <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
-                    <field name="correct_answers"/>
-                    <field name="wrong_answers"/>
-                    <field name="skipped_questions"/>
+                    <field name="token_regenrated" readonly="1"  optional="show"/>
+                    <field name="start_time" optional="show"/>
+                    <field name="end_time" optional="show"/>
+                    <field name="total_time"  optional="show"/>
+                    <field name="ip_address"  optional="show"/>
+                    <field name="result_status" optional="show" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
+                    <field name="correct_answers" optional="show"/>
+                    <field name="wrong_answers" optional="show"/>
+                    <field name="skipped_questions" optional="show"/>
                     <field name="is_gp" invisible="1"/>
                     <field name="is_ccmc" invisible="1"/>
 

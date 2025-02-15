@@ -497,20 +497,19 @@
     <field name="model">exam.type.oral.practical.examiners</field>
     <field name="arch" type="xml">
         <tree js_class="button_in_tree">
-            <!-- <header>
-                <button string="Commence Exam" type="object" class="btn-primary" name="commence_online_exam" attrs="{}"/>
-            </header> -->
-            <field name="dgs_batch" readonly="1"/>
-            <field name="subject" readonly="1"/>
-            <field name="examiner" readonly="1"/>
+            <field name="dgs_batch" readonly="1" optional="show"/>
+            <field name="subject" readonly="1" optional="show"/>
+            <field name="examiner" readonly="1" optional="show"/>
             <!-- <field name="exam_type" readonly="1"/> -->
-            <field name="institute_id" readonly="1"/>
-            <field name="exam_region" readonly="1"/>
-            <field name="exam_date" readonly="1"/>
+            <field name="institute_id" readonly="1" optional="show"/>
+            <field name="exam_region" readonly="1" optional="show"/>
+            <field name="exam_date" readonly="1" optional="show"/>
             <field name="marksheets" invisible="1" readonly="1"/>
-            <field name="candidates_count" readonly="1"/>
-            <field name="commence_exam" readonly="1"/>
-            <field name="ipaddr" readonly="1"/>
+            <field name="candidates_count" readonly="1" optional="show"/>
+            <field name="commence_exam" readonly="1" optional="show"/>
+            <field name="ipaddr" readonly="1" optional="show"/>
+            <field name="online_start_time" readonly="1" optional="show"/>
+            <field name="online_end_time" readonly="1" optional="show"/>
             <!-- End Exam button (row-level, conditionally visible) -->
             <button attrs="{'invisible': [('commence_exam', '!=', True)]}" string="End Exam" type="object" class="oe_highlight" name="end_online_exam"/>
         </tree>

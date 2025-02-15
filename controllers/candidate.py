@@ -9,7 +9,7 @@ from odoo.service import security
 from odoo.exceptions import UserError,ValidationError
 import json
 import requests
-
+from pytz import timezone
 from functools import wraps
 from odoo.exceptions import AccessError
 
@@ -42,19 +42,19 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/list'],type="http",auth="user",website=True)
     def GPExamListView(self,**kwargs):
         parameter_value = kwargs.get('gpexamcand')
-        print(parameter_value)
+        # print(parameter_value)
         session = request.session
-        print("Session")
-        print(session)
+        # print("Session")
+        # print(session)
         if parameter_value:
             partner_id = request.env.user.id
-            print(partner_id)
+            # print(partner_id)
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)])
             exam_region = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.exam_center.name
             institute_code = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)]).institute_id.code
             registered_exams = request.env["gp.exam.schedule"].sudo().search([('gp_candidate','=',candidate.id),('state','in',('1-in_process','3-certified'))])
             
-            print('registered_examsssssssssssssssssssssssssssss',registered_exams)
+            # print('registered_examsssssssssssssssssssssssssssss',registered_exams)
             # registered_exams
             # import wdb; wdb.set_trace(); 
             
@@ -71,9 +71,13 @@ class GPCandidatePortal(CustomerPortal):
             vals = {"registered_exams":registered_exams,"candidate":registered_exams.gp_candidate,
                     "show_certificate":show_certificate,
                     'show_admit_card':show_admit_card,'exam_region':exam_region,'institute_code':institute_code}
-            print(vals)
+            # print(vals)
             return request.render("bes.gp_exam_candidate", vals)
         else:
+            # Ensure current time is timezone-aware (Odoo uses UTC)
+            utc_now = fields.Datetime.now()  # Odoo gives naive datetime in UTC
+            ist_timezone = timezone('Asia/Kolkata')
+            ist_now = utc_now.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)  # Convert to naive
 
             partner_id = request.env.user.id
             candidate = request.env["gp.candidate"].sudo().search([('user_id','=',partner_id)])
@@ -82,10 +86,23 @@ class GPCandidatePortal(CustomerPortal):
             registered_exams = registered_exams.sorted(
                 key=lambda exam: 0 if exam.survey_id.subject.name == 'GSK' else (1 if exam.survey_id.subject.name == 'MEK' else 2)
             )
-            print("registered_exams")
-            print(registered_exams)
+            for exam in registered_exams:
+                if exam.online_start_time and exam.online_end_time:
+                    # Convert to UTC timezone-aware datetime
+                    online_start_time = exam.online_start_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+                    online_end_time = exam.online_end_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+
+                    # Convert to naive datetime before assigning back to Odoo fields
+                    exam.online_start_time = online_start_time.replace(tzinfo=None)
+                    exam.online_end_time = online_end_time.replace(tzinfo=None)
+
+            # print("registered_exams")
+            # print(registered_exams)
             # import wdb; wdb.set_trace(); 
-            vals = {"registered_exams":registered_exams}
+            vals = {
+                "registered_exams": registered_exams,
+                "ist_now": ist_now,  # Pass IST time to the template
+            }
             return request.render("bes.gp_exam_list_view", vals)
         
 
@@ -111,11 +128,27 @@ class GPCandidatePortal(CustomerPortal):
             vals = {"registered_exams":registered_exams,"candidate":registered_exams.ccmc_candidate,"show_certificate":show_certificate,'show_admit_card':show_admit_card}
             return request.render("bes.ccmc_exam_candidate", vals)
         else:
+            # Ensure current time is timezone-aware (Odoo uses UTC)
+            utc_now = fields.Datetime.now()  # Odoo gives naive datetime in UTC
+            ist_timezone = timezone('Asia/Kolkata')
+            ist_now = utc_now.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)  # Convert to naive
 
             partner_id = request.env.user.partner_id.id
             registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
+            for exam in registered_exams:
+                if exam.online_start_time and exam.online_end_time:
+                    # Convert to UTC timezone-aware datetime
+                    online_start_time = exam.online_start_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+                    online_end_time = exam.online_end_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+
+                    # Convert to naive datetime before assigning back to Odoo fields
+                    exam.online_start_time = online_start_time.replace(tzinfo=None)
+                    exam.online_end_time = online_end_time.replace(tzinfo=None)
             # import wdb; wdb.set_trace(); 
-            vals = {"registered_exams":registered_exams}
+            vals = {
+                "registered_exams": registered_exams,
+                "ist_now": ist_now,  # Pass IST time to the template
+            }
             return request.render("bes.ccmc_exam_list_view", vals)
     
     

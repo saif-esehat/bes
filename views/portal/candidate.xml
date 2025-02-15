@@ -210,18 +210,25 @@
                                     <!-- <t t-if="registered_exam.survey_id.exam_state == 'in_progress'"> -->
                                         <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a> -->
                                     <t t-if="registered_exam.commence_online_exam">
-                                        <t t-if="gp_exam_schedule.token">
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
-
-                                            <!-- <a t-attf-href="/my/gpexam/startexam?id={{registered_exam.id}}" class="fa">Start Exam</a> -->
+                                        <t t-if="registered_exam.online_start_time &lt;= ist_now and ist_now &lt;= registered_exam.online_end_time">
+                                            <t t-if="gp_exam_schedule.token">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal"
+                                                t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)"
+                                                data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+                                            </t>
+                                            <t t-else="">
+                                                Token Not Generated
+                                            </t>
                                         </t>
                                         <t t-else="">
-                                            Token Not Generated
+                                            Only Available from <br/> 
+                                            <t t-out="registered_exam.online_start_time" /> to <t t-out="registered_exam.online_end_time" /> 
                                         </t>
                                     </t>
                                     <t t-else="">
                                         Exam not Started
                                     </t>
+
                                 </td>
                             </tr>
                         </t>
@@ -323,11 +330,17 @@
 
                                 <td class="text-center">
                                     <t t-if="registered_exam.commence_online_exam">
-                                        <t t-if="ccmc_exam_schedule.token">
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+                                        <t t-if="registered_exam.online_start_time &lt;= ist_now and ist_now &lt;= registered_exam.online_end_time">
+                                            <t t-if="ccmc_exam_schedule.token">
+                                                <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#examiner_token" class="btn btn-primary btn_cta">Start Exam</a>
+                                            </t>
+                                            <t t-else="">
+                                                Token Not Generated
+                                            </t>
                                         </t>
                                         <t t-else="">
-                                            Token Not Generated
+                                            Only Available from <br/> 
+                                            <t t-out="registered_exam.online_start_time" /> to <t t-out="registered_exam.online_end_time" /> 
                                         </t>
                                     </t>
                                     <t t-else="">

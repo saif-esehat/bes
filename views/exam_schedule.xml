@@ -815,11 +815,20 @@
                     <field name="institute_id" string="Institute" required="1" />
                     <field name="ip_address" string="IP Address" required="1" />
                 </group>
+                <group>
+                    <group>
+                        <field name="online_start_time" string="Start Time" required="1" />
+                    </group>
+                    <group>
+                        <field name="online_end_time" string="End Time" required="1" />
+                    </group>
+                </group>
                 <footer>
                     <button string="Save IP Address" type="object" name="save_ip_address" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
+
         </field>
     </record>
 

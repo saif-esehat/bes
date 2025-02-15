@@ -232,6 +232,8 @@ class SurveyUserInputInherited(models.Model):
 
     token_regenrated = fields.Boolean("Token Regenerated", default=False)
     commence_online_exam = fields.Boolean('commence_online_exam', default=False)
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
 
 
     @api.depends('user_input_line_ids')

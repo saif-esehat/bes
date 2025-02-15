@@ -2494,7 +2494,38 @@ class ExamOralPracticalExaminers(models.Model):
     display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
     active = fields.Boolean(string="Active",default=True)
     commence_exam = fields.Boolean(string="Commence Exam",default=False)
+
+    online_from_date = fields.Date("From")
+    online_to_date = fields.Date("To Date")
+    team_lead = fields.Boolean("TL")
+    no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
     
+    expense_sheet = fields.Many2one('hr.expense.sheet', string="Renumeration")
+    time_sheet = fields.Many2one("time.sheet.report",string="Time sheet")
+    
+    status = fields.Selection([
+        ('draft', 'Draft'), 
+        ('confirmed', 'Confirmed')
+    ], string='Status',default="draft" )
+    
+    extended = fields.Boolean("Extended")
+    
+    marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
+    marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
+    marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    attendance_sheet_uploaded = fields.Boolean(string="Attendance Sheet Uploaded",tracking=True)
+    # attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
+    attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
+    attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
+
+    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
+    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
+    # Add One2many field
+    assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
+    
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
+        
     def _compute_outstation(self):
         if self.institute_id.outstation:
             self.outstation = 'yes'
@@ -2563,36 +2594,6 @@ class ExamOralPracticalExaminers(models.Model):
             else:
                 record.all_marksheet_confirmed = 'pending'
              
-    
-    
-
-    online_from_date = fields.Date("From")
-    online_to_date = fields.Date("To Date")
-    team_lead = fields.Boolean("TL")
-    no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
-    
-    expense_sheet = fields.Many2one('hr.expense.sheet', string="Renumeration")
-    time_sheet = fields.Many2one("time.sheet.report",string="Time sheet")
-    
-    status = fields.Selection([
-        ('draft', 'Draft'), 
-        ('confirmed', 'Confirmed')
-    ], string='Status',default="draft" )
-    
-    extended = fields.Boolean("Extended")
-    
-    marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
-    marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
-    marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
-    attendance_sheet_uploaded = fields.Boolean(string="Attendance Sheet Uploaded",tracking=True)
-    # attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
-    attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
-    attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
-
-    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
-    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
-    # Add One2many field
-    assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
     
     
     @api.depends('marksheets')
@@ -3508,6 +3509,8 @@ class GPExam(models.Model):
     
     fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
     
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
     def _fees_paid_by_candidate(self):
         for rec in self:
             # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
@@ -5006,7 +5009,8 @@ class CCMCExam(models.Model):
     
     is_processed = fields.Boolean(string="Processed", default=False)
 
-    
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
     @api.depends('certificate_criteria')
     def _compute_result_status_2(self):
         for record in self:
@@ -6021,11 +6025,12 @@ class OnlineExamWizard(models.TransientModel):
     exam_date = fields.Date(string='Exam Date')
     institute_id = fields.Many2one('bes.institute', string='Institute')
     dgs_batch =fields.Many2one('dgs.batches', string='Batch')
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
 
     def save_ip_address(self):
         """Save the IP address to both examiner's record and institute's record."""
         # Fetch the related examiner and set the IP address
-        # import wdb;wdb.set_trace();
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
             ('dgs_batch','=',self.dgs_batch.id),
             ('institute_id','=',self.institute_id.id),
@@ -6033,19 +6038,23 @@ class OnlineExamWizard(models.TransientModel):
             ('exam_type','=','online')
             ])
 
+        # import wdb;wdb.set_trace();
         for examiner in online_assignment:
             examiner.ipaddr = self.ip_address
             examiner.commence_exam = True
+            examiner.online_start_time = self.online_start_time
+            examiner.online_end_time = self.online_end_time
+
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":
-                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
+                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,})
+                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True,'online_start_time':examiner.online_start_time,'online_end_time':examiner.online_end_time})
                 if examiner.subject.name == "MEK":
                     examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
+                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True,'online_start_time':examiner.online_start_time,'online_end_time':examiner.online_end_time})
             elif examiner.course.course_code == 'CCMC':
                 examiner.marksheets.ccmc_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
+                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True,'online_start_time':examiner.online_start_time,'online_end_time':examiner.online_end_time})
         # return {'type': 'ir.actions.act_window_close'}
             # Close the wizard and refresh the page
         return {
