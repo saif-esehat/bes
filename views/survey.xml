@@ -140,6 +140,21 @@
             </xpath>
         </template>
 
+        <template id="survey_page_fill_inherit" inherit_id="survey.survey_page_fill">
+        <!-- Use xpath to locate the 'name' attribute -->
+            <xpath expr="//t[@t-name='survey.survey_page_fill']" position="attributes">
+                <!-- Replace the 'name' attribute -->
+                <attribute name="name">Online Examination</attribute>
+            </xpath>
+        </template>
+
+
+        <template id="survey_fill_form_in_progress_inherited" inherit_id="survey.survey_fill_form_in_progress">
+            <xpath expr="//span[2]" position="replace">
+
+            </xpath>
+        </template>
+
 
 
         

@@ -5516,6 +5516,13 @@ class CCMCExam(models.Model):
         
     def processMarks(self):
          # import wdb; wdb.set_trace();
+        if self.attempting_cookery and not self.ccmc_oral_prac_assignment:
+            self.cookery_prac_attendance = 'absent'
+        
+        if self.attempting_oral and not self.ccmc_gsk_oral_assignment:
+            self.ccmc_oral_attendance = 'absent'
+            self.ccmc_gsk_oral_attendance = 'absent'
+            
         
         if self.exam_violation_state == 'na': 
          
@@ -5689,6 +5696,13 @@ class CCMCExam(models.Model):
     
     
     def move_done(self):
+        
+        if self.attempting_cookery and not self.ccmc_oral_prac_assignment:
+            self.cookery_prac_attendance = 'absent'
+        
+        if self.attempting_oral and not self.ccmc_gsk_oral_assignment:
+            self.ccmc_oral_attendance = 'absent'
+            self.ccmc_gsk_oral_attendance = 'absent'
         
         # import wdb; wdb.set_trace();
         
