@@ -86,19 +86,8 @@ class GPCandidatePortal(CustomerPortal):
             registered_exams = registered_exams.sorted(
                 key=lambda exam: 0 if exam.survey_id.subject.name == 'GSK' else (1 if exam.survey_id.subject.name == 'MEK' else 2)
             )
-            for exam in registered_exams:
-                if exam.online_start_time and exam.online_end_time:
-                    # Convert to UTC timezone-aware datetime
-                    online_start_time = exam.online_start_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
-                    online_end_time = exam.online_end_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+            # import wdb; wdb.set_trace();
 
-                    # Convert to naive datetime before assigning back to Odoo fields
-                    exam.online_start_time = online_start_time.replace(tzinfo=None)
-                    exam.online_end_time = online_end_time.replace(tzinfo=None)
-
-            # print("registered_exams")
-            # print(registered_exams)
-            # import wdb; wdb.set_trace(); 
             vals = {
                 "registered_exams": registered_exams,
                 "ist_now": ist_now,  # Pass IST time to the template

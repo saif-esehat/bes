@@ -508,8 +508,9 @@
             <field name="candidates_count" readonly="1" optional="show"/>
             <field name="commence_exam" readonly="1" optional="show"/>
             <field name="ipaddr" readonly="1" optional="show"/>
-            <field name="online_start_time" readonly="1" optional="show"/>
-            <field name="online_end_time" readonly="1" optional="show"/>
+            <field name="online_start_time" string="Start Time" widget="datetime" options="{'format': 'YYYY-MM-DD HH:mm:ss'}" optional="show"/>
+            <field name="online_end_time" string="End Time" widget="datetime" options="{'format': 'YYYY-MM-DD HH:mm:ss'}" optional="show"/>
+
             <!-- End Exam button (row-level, conditionally visible) -->
             <button attrs="{'invisible': [('commence_exam', '!=', True)]}" string="End Exam" type="object" class="oe_highlight" name="end_online_exam"/>
         </tree>

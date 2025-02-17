@@ -9,6 +9,7 @@ from datetime import datetime
 import base64
 from io import BytesIO
 import pytz
+from pytz import timezone, UTC
 
 
 
@@ -232,9 +233,9 @@ class SurveyUserInputInherited(models.Model):
 
     token_regenrated = fields.Boolean("Token Regenerated", default=False)
     commence_online_exam = fields.Boolean('commence_online_exam', default=False)
+
     online_start_time = fields.Datetime("Start Time")
     online_end_time = fields.Datetime("End Time")
-
 
     @api.depends('user_input_line_ids')
     def _compute_correct_answers(self):

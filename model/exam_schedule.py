@@ -12,6 +12,7 @@ from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
 import xlsxwriter
 import random
+from pytz import timezone
 
 
 
@@ -2523,9 +2524,9 @@ class ExamOralPracticalExaminers(models.Model):
     # Add One2many field
     assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
     
-    online_start_time = fields.Datetime("Start Time")
-    online_end_time = fields.Datetime("End Time")
-        
+    online_start_time = fields.Datetime("Start Time",store=True)
+    online_end_time = fields.Datetime("End Time",store=True)
+
     def _compute_outstation(self):
         if self.institute_id.outstation:
             self.outstation = 'yes'
@@ -3162,6 +3163,7 @@ class ResetOnlineExamWizard(models.TransientModel):
     def confirm_reset(self):
         self.ensure_one()
         # import wdb;wdb.set_trace()
+        ist_timezone = timezone('Asia/Kolkata')
         if self.model == "gp.exam.schedule":
             if self.gp_subject == "gsk":
                 
@@ -3169,7 +3171,14 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gp_exam = self.env[self.model].browse(active_id)
                 if not gp_exam.attempting_gsk_online:
                     raise ValidationError("Candidate is Not Appearing for GSK online")
-                    
+                
+                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+                    ('dgs_batch','=',gp_exam.dgs_batch.id),
+                    ('institute_id','=',gp_exam.institute_id.id),
+                    ('exam_type','=','online'),
+                    ('subject','=','GSK'),
+                    ])
+                
                     
                 gp_exam.gsk_online.unlink()
                 # gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
@@ -3177,6 +3186,10 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
+                # ✅ Use already stored IST values
+                start_time_ist = online_assignment.online_start_time
+                end_time_ist = online_assignment.online_end_time
+
                 
                 gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
@@ -3188,7 +3201,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             'is_gp': True,
                                             'is_ccmc': False,
                                             'exam_date': gp_exam.exam_date,
-                                            'commence_online_exam':True
+                                            'commence_online_exam':True,
+                                            "online_start_time": start_time_ist,
+                                            "online_end_time": end_time_ist,
                                             })
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
@@ -3203,10 +3218,23 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gp_exam = self.env[self.model].browse(active_id)
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
+                
+                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+                    ('dgs_batch','=',gp_exam.dgs_batch.id),
+                    ('institute_id','=',gp_exam.institute_id.id),
+                    ('exam_type','=','online'),
+                    ('subject','=','MEK'),
+                    ])
                 gp_exam.mek_online.unlink()
                 # mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
                 mek_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+
+                # ✅ Use already stored IST values
+                start_time_ist = online_assignment.online_start_time
+                end_time_ist = online_assignment.online_end_time
+
+                
                 mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
                                            'gp_exam':gp_exam.id,
                                             'institute_id': gp_exam.gp_candidate.institute_id.id,
@@ -3216,7 +3244,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             'is_gp': True,
                                             'is_ccmc': False,
                                             'exam_date': gp_exam.exam_date,
-                                            'commence_online_exam':True
+                                            'commence_online_exam':True,
+                                            "online_start_time": start_time_ist,
+                                            "online_end_time": end_time_ist,
                                             })
 
                 gp_exam.write({
@@ -6042,6 +6072,14 @@ class OnlineExamWizard(models.TransientModel):
     online_start_time = fields.Datetime("Start Time")
     online_end_time = fields.Datetime("End Time")
 
+    def convert_to_ist(self, dt_utc):
+        """Convert UTC datetime to IST."""
+        if not dt_utc:
+            return False  # Handle cases where the datetime is not provided
+        ist_timezone = timezone('Asia/Kolkata')
+        ist_time = dt_utc.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)
+        return ist_time
+
     def save_ip_address(self):
         """Save the IP address to both examiner's record and institute's record."""
         # Fetch the related examiner and set the IP address
@@ -6052,23 +6090,58 @@ class OnlineExamWizard(models.TransientModel):
             ('exam_type','=','online')
             ])
 
-        # import wdb;wdb.set_trace();
         for examiner in online_assignment:
             examiner.ipaddr = self.ip_address
             examiner.commence_exam = True
-            examiner.online_start_time = self.online_start_time
-            examiner.online_end_time = self.online_end_time
+            examiner.online_start_time = self.convert_to_ist(self.online_start_time)  # Convert only once
+            examiner.online_end_time = self.convert_to_ist(self.online_end_time)  # Convert only once
+
+            # import wdb;wdb.set_trace();
+            # examiner.online_start_time = self.online_start_time  # Convert only once
+            # examiner.online_end_time = self.online_end_time  # Convert only once
+
 
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":
-                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,})
-                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True,'online_start_time':examiner.online_start_time,'online_end_time':examiner.online_end_time})
+                    examiner.marksheets.gp_marksheet.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        })
+                    
+                    examiner.marksheets.gsk_online.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        'commence_online_exam':True,
+                        'online_start_time': examiner.online_start_time,
+                        'online_end_time': examiner.online_end_time,
+                        })
+                    
                 if examiner.subject.name == "MEK":
-                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True,'online_start_time':examiner.online_start_time,'online_end_time':examiner.online_end_time})
+                    examiner.marksheets.gp_marksheet.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        })
+                    
+                    examiner.marksheets.mek_online.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        'commence_online_exam':True,
+                        'online_start_time':examiner.online_start_time,
+                        'online_end_time':examiner.online_end_time,
+                        })
             elif examiner.course.course_code == 'CCMC':
-                examiner.marksheets.ccmc_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True,'online_start_time':examiner.online_start_time,'online_end_time':examiner.online_end_time})
+                examiner.marksheets.ccmc_marksheet.write({
+                    'ip_address':examiner.ipaddr,
+                    'exam_date':examiner.exam_date
+                    })
+                
+                examiner.marksheets.ccmc_online.write({
+                    'ip_address':examiner.ipaddr,
+                    'exam_date':examiner.exam_date,
+                    'commence_online_exam':True,
+                    'online_start_time':examiner.online_start_time,
+                    'online_end_time':examiner.online_end_time
+                    })
         # return {'type': 'ir.actions.act_window_close'}
             # Close the wizard and refresh the page
         return {
