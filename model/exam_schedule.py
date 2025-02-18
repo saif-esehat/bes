@@ -6,7 +6,7 @@ import logging
 import qrcode
 import io
 import base64
-from datetime import datetime , date
+from datetime import datetime , date, timedelta
 import math
 from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
@@ -6093,8 +6093,8 @@ class OnlineExamWizard(models.TransientModel):
         for examiner in online_assignment:
             examiner.ipaddr = self.ip_address
             examiner.commence_exam = True
-            examiner.online_start_time = self.convert_to_ist(self.online_start_time)  # Convert only once
-            examiner.online_end_time = self.convert_to_ist(self.online_end_time)  # Convert only once
+            examiner.online_start_time = self.online_start_time  # Convert only once
+            examiner.online_end_time = self.online_end_time  # Convert only once
 
             # import wdb;wdb.set_trace();
             # examiner.online_start_time = self.online_start_time  # Convert only once
@@ -6112,8 +6112,8 @@ class OnlineExamWizard(models.TransientModel):
                         'ip_address':examiner.ipaddr,
                         'exam_date':examiner.exam_date,
                         'commence_online_exam':True,
-                        'online_start_time': examiner.online_start_time,
-                        'online_end_time': examiner.online_end_time,
+                        'online_start_time':  self.convert_to_ist(self.online_start_time),
+                        'online_end_time': self.convert_to_ist(self.online_end_time),
                         })
                     
                 if examiner.subject.name == "MEK":
@@ -6121,13 +6121,14 @@ class OnlineExamWizard(models.TransientModel):
                         'ip_address':examiner.ipaddr,
                         'exam_date':examiner.exam_date,
                         })
+                    import wdb;wdb.set_trace()
                     
                     examiner.marksheets.mek_online.write({
                         'ip_address':examiner.ipaddr,
                         'exam_date':examiner.exam_date,
                         'commence_online_exam':True,
-                        'online_start_time':examiner.online_start_time,
-                        'online_end_time':examiner.online_end_time,
+                        'online_start_time': self.convert_to_ist(self.online_start_time),
+                        'online_end_time': self.convert_to_ist(self.online_end_time),
                         })
             elif examiner.course.course_code == 'CCMC':
                 examiner.marksheets.ccmc_marksheet.write({
@@ -6139,8 +6140,8 @@ class OnlineExamWizard(models.TransientModel):
                     'ip_address':examiner.ipaddr,
                     'exam_date':examiner.exam_date,
                     'commence_online_exam':True,
-                    'online_start_time':examiner.online_start_time,
-                    'online_end_time':examiner.online_end_time
+                    'online_start_time': self.convert_to_ist(self.online_start_time),
+                    'online_end_time': self.convert_to_ist(self.online_end_time),
                     })
         # return {'type': 'ir.actions.act_window_close'}
             # Close the wizard and refresh the page
