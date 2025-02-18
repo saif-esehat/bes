@@ -222,7 +222,7 @@
                                         </t>
                                         <t t-else="">
                                             <!-- Only Available from <br/> 
-                                            <t t-out="registered_exam.online_start_time" /> to <t t-out="registered_exam.online_end_time" /> -->
+                                            <t t-out="registered_exam.online_start_time" /> <br/> <t t-out="registered_exam.online_end_time" /> -->
                                         </t>
                                     </t>
                                     <t t-else="">

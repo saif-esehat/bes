@@ -3157,7 +3157,13 @@ class ResetOnlineExamWizard(models.TransientModel):
     gp_subject = fields.Selection([('gsk','GSK'), ('mek', 'MEK')], string="GP Subject")
     ccmc_subject = fields.Selection([('ccmc', 'CCMC')],default="ccmc", string="CCMC Subject")
     
-    
+    def convert_to_ist(self, dt_utc):
+        """Convert UTC datetime to IST."""
+        if not dt_utc:
+            return False  # Handle cases where the datetime is not provided
+        ist_timezone = timezone('Asia/Kolkata')
+        ist_time = dt_utc.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)
+        return ist_time
     
     
     def confirm_reset(self):
@@ -3186,10 +3192,10 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
-                # ✅ Use already stored IST values
-                start_time_ist = online_assignment.online_start_time
-                end_time_ist = online_assignment.online_end_time
+                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
+                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
 
+                # import wdb;wdb.set_trace()
                 
                 gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
@@ -3231,8 +3237,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
 
                 # ✅ Use already stored IST values
-                start_time_ist = online_assignment.online_start_time
-                end_time_ist = online_assignment.online_end_time
+                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
+                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
 
                 
                 mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
@@ -3267,6 +3273,18 @@ class ResetOnlineExamWizard(models.TransientModel):
                     raise ValidationError("Candidate is Not Appearing for CCMC online")
                 
                 ccmc_exam.ccmc_online.unlink()
+
+                                
+                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+                    ('dgs_batch','=',ccmc_exam.dgs_batch.id),
+                    ('institute_id','=',ccmc_exam.institute_id.id),
+                    ('exam_type','=','online'),
+                    ('subject','=','CCMC'),
+                    ])
+
+                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
+                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+                
                 # ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
                 ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
@@ -3279,7 +3297,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                     'is_gp': False,
                                     'is_ccmc': True,
                                     'exam_date': ccmc_exam.exam_date,
-                                    'commence_online_exam':True
+                                    'commence_online_exam':True,
+                                    "online_start_time": start_time_ist,
+                                    "online_end_time": end_time_ist,
                                     })
 
                 ccmc_exam.write({
@@ -6121,7 +6141,6 @@ class OnlineExamWizard(models.TransientModel):
                         'ip_address':examiner.ipaddr,
                         'exam_date':examiner.exam_date,
                         })
-                    import wdb;wdb.set_trace()
                     
                     examiner.marksheets.mek_online.write({
                         'ip_address':examiner.ipaddr,
