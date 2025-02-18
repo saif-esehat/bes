@@ -3019,7 +3019,7 @@ class OralPracticalExaminersMarksheet(models.Model):
         
         examiner_id = self.examiners_id.id
         
-        print(self.env.context.get("active_ids"))
+        # print(self.env.context.get("active_ids"))
         
         # examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id','=',assignment_id.id)])
         
@@ -6036,6 +6036,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
     def action_reallocate(self):
         confirmed_candidates = []  # List to hold names of confirmed candidates
+        # import wdb; wdb.set_trace();
 
         for candidate in self.candidate_ids:
             # Check the course for the candidate
@@ -6069,15 +6070,52 @@ class ReallocateCandidatesWizard(models.TransientModel):
                         elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()
-            else:
-                candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
+            elif candidate.examiners_id.exam_type == "online":
+                if candidate.examiners_id.course.course_code == "GP":
+                    if candidate.examiners_id.subject.name == 'GSK':
+                        if not candidate.gp_marksheet.gsk_online_attendance and candidate.gp_marksheet.gsk_online.state != 'done':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.gp_marksheet.gsk_online_attendance:
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
 
+                    elif candidate.examiners_id.subject.name == 'MEK':
+                        if not candidate.mek_marksheet.mek_online_attendance and candidate.gp_marksheet.mek_online.state != 'done':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.mek_marksheet.mek_online_attendance:
+                            confirmed_candidates.append(candidate.mek_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
+                elif candidate.examiners_id.course.course_code == "CCMC":
+                    if candidate.examiners_id.subject.name == 'CCMC':
+                        if not candidate.ccmc_marksheet.ccmc_online_attendance and candidate.ccmc_marksheet.ccmc_online.state != 'done':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                        elif candidate.ccmc_marksheet.ccmc_online_attendance:
+                            confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                            candidate.examiners_id.compute_candidates_done()
 
-        # Raise an error if there are confirmed candidates
+            # else:
+            #     candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
+        
+
         if confirmed_candidates:
-            raise ValidationError("Candidates Already Confirmed: {}".format(", ".join(confirmed_candidates)))
+            message = (
+                    "The following candidates are marked as confirmed and cannot be reallocated:\n"
+                    f"{', '.join(confirmed_candidates)}.\n\n"
+                    f"Rest of the candidates have been allocated to the new examiner ( {self.examiner_id.display_name} )."
+                )
+        else:
+            message = f"Reallocation successful. All selected candidates have been reassigned to the new examiner( {self.examiner_id.display_name} )."
 
-        return {'type': 'ir.actions.act_window_close'}  # Close the wizard after reallocation
+        return {
+            'name': 'Reallocation Status',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
+        }
+
 
 
 class OnlineExamWizard(models.TransientModel):

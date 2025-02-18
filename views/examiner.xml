@@ -784,6 +784,9 @@
             <field name="model">exam.type.oral.practical.examiners.marksheet</field>
             <field name="arch" type="xml">
                 <tree>
+                    <header>
+                        <button name="open_reallocate_candidates" string="Reallocate Candidates" type="object" class="btn-primary" />
+                    </header>
                     <field name="ccmc_candidate"/>
                     <field name="ccmc_marksheet"/>
                     <field name="ccmc_online"/>
