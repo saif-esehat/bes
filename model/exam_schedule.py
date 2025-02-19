@@ -3156,7 +3156,7 @@ class ResetOnlineExamWizard(models.TransientModel):
     model = fields.Char("Model")
     gp_subject = fields.Selection([('gsk','GSK'), ('mek', 'MEK')], string="GP Subject")
     ccmc_subject = fields.Selection([('ccmc', 'CCMC')],default="ccmc", string="CCMC Subject")
-    
+    reset_reason = fields.Text(string='Reset Reason')
     def convert_to_ist(self, dt_utc):
         """Convert UTC datetime to IST."""
         if not dt_utc:
@@ -3168,7 +3168,16 @@ class ResetOnlineExamWizard(models.TransientModel):
     
     def confirm_reset(self):
         self.ensure_one()
+
+        record_id = self.env.context.get('active_id')
+        active_model = self.env.context.get('active_model')
+    
+        parent_record = self.env[active_model].browse(record_id)
+        message = f"Reason for Reset of Online Exam: {self.reset_reason}"
+        parent_record.message_post(body=message)
+
         # import wdb;wdb.set_trace()
+
         ist_timezone = timezone('Asia/Kolkata')
         if self.model == "gp.exam.schedule":
             if self.gp_subject == "gsk":

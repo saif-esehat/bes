@@ -700,6 +700,7 @@
 
                         <field name="gp_subject" attrs="{'invisible': [('model', '!=', 'gp.exam.schedule')]}" />
                         <field name="ccmc_subject" attrs="{'invisible': [('model', '!=', 'ccmc.exam.schedule')]}"/>
+                        <field name="reset_reason" required="1"/>
 
 
                     </group>
