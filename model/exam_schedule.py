@@ -6073,35 +6073,45 @@ class ReallocateCandidatesWizard(models.TransientModel):
             elif candidate.examiners_id.exam_type == "online":
                 if candidate.examiners_id.course.course_code == "GP":
                     if candidate.examiners_id.subject.name == 'GSK':
-                        if not candidate.gp_marksheet.gsk_online_attendance and candidate.gp_marksheet.gsk_online.state != 'done':
-                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                        elif candidate.gp_marksheet.gsk_online_attendance:
+                        if candidate.gp_marksheet.gsk_online_attendance == 'present' and candidate.gp_marksheet.gsk_online.state == 'done':
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                        elif not candidate.gp_marksheet.gsk_online_attendance or candidate.gp_marksheet.gsk_online_attendance == 'absent':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
                             candidate.examiners_id.compute_candidates_done()
 
                     elif candidate.examiners_id.subject.name == 'MEK':
-                        if not candidate.mek_marksheet.mek_online_attendance and candidate.gp_marksheet.mek_online.state != 'done':
+                        if candidate.gp_marksheet.mek_online_attendance == 'present' and candidate.gp_marksheet.mek_online.state == 'done':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                        elif not candidate.gp_marksheet.mek_online_attendance or candidate.gp_marksheet.mek_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                        elif candidate.mek_marksheet.mek_online_attendance:
-                            confirmed_candidates.append(candidate.mek_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()
                 elif candidate.examiners_id.course.course_code == "CCMC":
                     if candidate.examiners_id.subject.name == 'CCMC':
-                        if not candidate.ccmc_marksheet.ccmc_online_attendance and candidate.ccmc_marksheet.ccmc_online.state != 'done':
-                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                        elif candidate.ccmc_marksheet.ccmc_online_attendance:
+                        if candidate.ccmc_marksheet.ccmc_online_attendance == 'present' and candidate.ccmc_marksheet.ccmc_online.state == 'done':
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                        elif not candidate.ccmc_marksheet.ccmc_online_attendance or candidate.ccmc_marksheet.ccmc_online_attendance == 'absent':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
                             candidate.examiners_id.compute_candidates_done()
 
             # else:
             #     candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
         
 
+        total_selected = len(self.candidate_ids)
+        not_reallocated_count = len(confirmed_candidates)
+        reallocated_count = total_selected - not_reallocated_count
+
         if confirmed_candidates:
-            message = (
+            if reallocated_count > 0:
+                message = (
                     "The following candidates are marked as confirmed and cannot be reallocated:\n"
                     f"{', '.join(confirmed_candidates)}.\n\n"
-                    f"Rest of the candidates have been allocated to the new examiner ( {self.examiner_id.display_name} )."
+                    f"The remaining {reallocated_count} candidates have been allocated to the new examiner ({self.examiner_id.display_name})."
+                )
+            else:
+                message = (
+                    "All selected candidates are marked as confirmed and cannot be reallocated.\n"
+                    "No reallocation was performed."
                 )
         else:
             message = f"Reallocation successful. All selected candidates have been reassigned to the new examiner( {self.examiner_id.display_name} )."
