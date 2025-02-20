@@ -3189,7 +3189,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                 
                 online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
                     ('dgs_batch','=',gp_exam.dgs_batch.id),
-                    ('institute_id','=',gp_exam.institute_id.id),
+                    ('institute_id','=',gp_exam.registered_institute.id),
                     ('exam_type','=','online'),
                     ('subject','=','GSK'),
                     ])
