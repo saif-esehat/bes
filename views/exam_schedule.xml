@@ -639,6 +639,7 @@
                     <field name="cookery_practical" decoration-warning="attempting_cookery" optional="show"/> 
                     
                     <field name="cookery_oral"  decoration-warning="attempting_oral" optional="show"/> 
+                    <field name="ccmc_gsk_oral_marks"  decoration-warning="attempting_oral" optional="show"/> 
                     
                     <field name="cookery_gsk_online"  decoration-warning="attempting_online" optional="show"/>                    
                     
