@@ -9,6 +9,7 @@ from datetime import datetime
 import base64
 from io import BytesIO
 import pytz
+from pytz import timezone, UTC
 
 
 
@@ -233,6 +234,24 @@ class SurveyUserInputInherited(models.Model):
     token_regenrated = fields.Boolean("Token Regenerated", default=False)
     commence_online_exam = fields.Boolean('commence_online_exam', default=False)
 
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
+
+    # def convert_to_ist(self, dt_utc):
+    #     """Convert UTC datetime to IST."""
+    #     if not dt_utc:
+    #         return False  # Handle cases where the datetime is not provided
+    #     ist_timezone = timezone('Asia/Kolkata')
+    #     ist_time = dt_utc.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)
+    #     return ist_time
+    
+
+    # @api.depends('user_input_line_ids','online_start_time','online_end_time')
+    # def _compute_online_time(self):
+    #     for record in self:
+    #         record.online_start_time = self.convert_to_ist(record.online_start_time)
+    #         record.online_end_time = self.convert_to_ist(record.online_end_time)
+    
 
     @api.depends('user_input_line_ids')
     def _compute_correct_answers(self):

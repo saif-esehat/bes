@@ -6,12 +6,13 @@ import logging
 import qrcode
 import io
 import base64
-from datetime import datetime , date
+from datetime import datetime , date, timedelta
 import math
 from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
 import xlsxwriter
 import random
+from pytz import timezone
 
 
 
@@ -2494,7 +2495,38 @@ class ExamOralPracticalExaminers(models.Model):
     display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
     active = fields.Boolean(string="Active",default=True)
     commence_exam = fields.Boolean(string="Commence Exam",default=False)
+
+    online_from_date = fields.Date("From")
+    online_to_date = fields.Date("To Date")
+    team_lead = fields.Boolean("TL")
+    no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
     
+    expense_sheet = fields.Many2one('hr.expense.sheet', string="Renumeration")
+    time_sheet = fields.Many2one("time.sheet.report",string="Time sheet")
+    
+    status = fields.Selection([
+        ('draft', 'Draft'), 
+        ('confirmed', 'Confirmed')
+    ], string='Status',default="draft" )
+    
+    extended = fields.Boolean("Extended")
+    
+    marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
+    marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
+    marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
+    attendance_sheet_uploaded = fields.Boolean(string="Attendance Sheet Uploaded",tracking=True)
+    # attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
+    attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
+    attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
+
+    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
+    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
+    # Add One2many field
+    assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
+    
+    online_start_time = fields.Datetime("Start Time",store=True)
+    online_end_time = fields.Datetime("End Time",store=True)
+
     def _compute_outstation(self):
         if self.institute_id.outstation:
             self.outstation = 'yes'
@@ -2563,36 +2595,6 @@ class ExamOralPracticalExaminers(models.Model):
             else:
                 record.all_marksheet_confirmed = 'pending'
              
-    
-    
-
-    online_from_date = fields.Date("From")
-    online_to_date = fields.Date("To Date")
-    team_lead = fields.Boolean("TL")
-    no_days = fields.Integer("No. of Days" , compute='_compute_num_days' )
-    
-    expense_sheet = fields.Many2one('hr.expense.sheet', string="Renumeration")
-    time_sheet = fields.Many2one("time.sheet.report",string="Time sheet")
-    
-    status = fields.Selection([
-        ('draft', 'Draft'), 
-        ('confirmed', 'Confirmed')
-    ], string='Status',default="draft" )
-    
-    extended = fields.Boolean("Extended")
-    
-    marksheet_image = fields.Binary(string="Marksheet Image",tracking=True)
-    marksheet_image_name = fields.Char(string="Marksheet Image name",tracking=True)
-    marksheet_uploaded = fields.Boolean(string="Marksheet Uploaded",tracking=True)
-    attendance_sheet_uploaded = fields.Boolean(string="Attendance Sheet Uploaded",tracking=True)
-    # attendance_sheet_file = fields.Binary(string="Attendance Sheet File",tracking=True)
-    attendance_sheet_files = fields.Many2many('ir.attachment',string='Attendance Sheets',help='Upload multiple attendance sheets')
-    attendance_sheet_name = fields.Char(string="Attendance Sheet File name",tracking=True)
-
-    absent_candidates = fields.Char(string="Absent Candidates",compute='check_absent',store=True,tracking=True)
-    candidate_done = fields.Char("Marks Confirmed" , compute='compute_candidates_done',store=True,tracking=True)
-    # Add One2many field
-    assignment_expense_ids = fields.One2many('exam.assignment.expense', 'assignment', string="Assignment Expenses")
     
     
     @api.depends('marksheets')
@@ -3017,7 +3019,7 @@ class OralPracticalExaminersMarksheet(models.Model):
         
         examiner_id = self.examiners_id.id
         
-        print(self.env.context.get("active_ids"))
+        # print(self.env.context.get("active_ids"))
         
         # examiner_id = request.env["exam.type.oral.practical.examiners"].sudo().search([('prac_oral_id','=',assignment_id.id)])
         
@@ -3154,13 +3156,29 @@ class ResetOnlineExamWizard(models.TransientModel):
     model = fields.Char("Model")
     gp_subject = fields.Selection([('gsk','GSK'), ('mek', 'MEK')], string="GP Subject")
     ccmc_subject = fields.Selection([('ccmc', 'CCMC')],default="ccmc", string="CCMC Subject")
-    
-    
+    reset_reason = fields.Text(string='Reset Reason')
+    def convert_to_ist(self, dt_utc):
+        """Convert UTC datetime to IST."""
+        if not dt_utc:
+            return False  # Handle cases where the datetime is not provided
+        ist_timezone = timezone('Asia/Kolkata')
+        ist_time = dt_utc.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)
+        return ist_time
     
     
     def confirm_reset(self):
         self.ensure_one()
+
+        record_id = self.env.context.get('active_id')
+        active_model = self.env.context.get('active_model')
+    
+        parent_record = self.env[active_model].browse(record_id)
+        message = f"Reason for Reset of Online Exam: {self.reset_reason}"
+        parent_record.message_post(body=message)
+
         # import wdb;wdb.set_trace()
+
+        ist_timezone = timezone('Asia/Kolkata')
         if self.model == "gp.exam.schedule":
             if self.gp_subject == "gsk":
                 
@@ -3168,7 +3186,14 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gp_exam = self.env[self.model].browse(active_id)
                 if not gp_exam.attempting_gsk_online:
                     raise ValidationError("Candidate is Not Appearing for GSK online")
-                    
+                
+                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+                    ('dgs_batch','=',gp_exam.dgs_batch.id),
+                    ('institute_id','=',gp_exam.institute_id.id),
+                    ('exam_type','=','online'),
+                    ('subject','=','GSK'),
+                    ])
+                
                     
                 gp_exam.gsk_online.unlink()
                 # gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
@@ -3176,6 +3201,10 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
+                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
+                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+
+                # import wdb;wdb.set_trace()
                 
                 gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
                 gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
@@ -3187,7 +3216,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             'is_gp': True,
                                             'is_ccmc': False,
                                             'exam_date': gp_exam.exam_date,
-                                            'commence_online_exam':True
+                                            'commence_online_exam':True,
+                                            "online_start_time": start_time_ist,
+                                            "online_end_time": end_time_ist,
                                             })
                 gp_exam.write({
                     "gsk_online": gsk_survey_qb_input,
@@ -3202,10 +3233,23 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gp_exam = self.env[self.model].browse(active_id)
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
+                
+                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+                    ('dgs_batch','=',gp_exam.dgs_batch.id),
+                    ('institute_id','=',gp_exam.institute_id.id),
+                    ('exam_type','=','online'),
+                    ('subject','=','MEK'),
+                    ])
                 gp_exam.mek_online.unlink()
                 # mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
                 mek_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
                 mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+
+                # ✅ Use already stored IST values
+                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
+                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+
+                
                 mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
                                            'gp_exam':gp_exam.id,
                                             'institute_id': gp_exam.gp_candidate.institute_id.id,
@@ -3215,7 +3259,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             'is_gp': True,
                                             'is_ccmc': False,
                                             'exam_date': gp_exam.exam_date,
-                                            'commence_online_exam':True
+                                            'commence_online_exam':True,
+                                            "online_start_time": start_time_ist,
+                                            "online_end_time": end_time_ist,
                                             })
 
                 gp_exam.write({
@@ -3236,6 +3282,18 @@ class ResetOnlineExamWizard(models.TransientModel):
                     raise ValidationError("Candidate is Not Appearing for CCMC online")
                 
                 ccmc_exam.ccmc_online.unlink()
+
+                                
+                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
+                    ('dgs_batch','=',ccmc_exam.dgs_batch.id),
+                    ('institute_id','=',ccmc_exam.institute_id.id),
+                    ('exam_type','=','online'),
+                    ('subject','=','CCMC'),
+                    ])
+
+                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
+                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+                
                 # ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
                 ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
                 ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
@@ -3248,7 +3306,9 @@ class ResetOnlineExamWizard(models.TransientModel):
                                     'is_gp': False,
                                     'is_ccmc': True,
                                     'exam_date': ccmc_exam.exam_date,
-                                    'commence_online_exam':True
+                                    'commence_online_exam':True,
+                                    "online_start_time": start_time_ist,
+                                    "online_end_time": end_time_ist,
                                     })
 
                 ccmc_exam.write({
@@ -3508,6 +3568,8 @@ class GPExam(models.Model):
     
     fees_paid_candidate = fields.Char("Fees Paid by Candidate",tracking=True,compute="_fees_paid_by_candidate",store=True)
     
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
     def _fees_paid_by_candidate(self):
         for rec in self:
             # last_exam = self.env['gp.exam.schedule'].search([('gp_candidate','=',rec.id)], order='attempt_number desc', limit=1)
@@ -5006,7 +5068,8 @@ class CCMCExam(models.Model):
     
     is_processed = fields.Boolean(string="Processed", default=False)
 
-    
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
     @api.depends('certificate_criteria')
     def _compute_result_status_2(self):
         for record in self:
@@ -5982,6 +6045,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
 
     def action_reallocate(self):
         confirmed_candidates = []  # List to hold names of confirmed candidates
+        # import wdb; wdb.set_trace();
 
         for candidate in self.candidate_ids:
             # Check the course for the candidate
@@ -6015,15 +6079,62 @@ class ReallocateCandidatesWizard(models.TransientModel):
                         elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()
-            else:
-                candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
+            elif candidate.examiners_id.exam_type == "online":
+                if candidate.examiners_id.course.course_code == "GP":
+                    if candidate.examiners_id.subject.name == 'GSK':
+                        if candidate.gp_marksheet.gsk_online_attendance == 'present' and candidate.gp_marksheet.gsk_online.state == 'done':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                        elif not candidate.gp_marksheet.gsk_online_attendance or candidate.gp_marksheet.gsk_online_attendance == 'absent':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.examiners_id.compute_candidates_done()
 
+                    elif candidate.examiners_id.subject.name == 'MEK':
+                        if candidate.gp_marksheet.mek_online_attendance == 'present' and candidate.gp_marksheet.mek_online.state == 'done':
+                            confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
+                        elif not candidate.gp_marksheet.mek_online_attendance or candidate.gp_marksheet.mek_online_attendance == 'absent':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.examiners_id.compute_candidates_done()
+                elif candidate.examiners_id.course.course_code == "CCMC":
+                    if candidate.examiners_id.subject.name == 'CCMC':
+                        if candidate.ccmc_marksheet.ccmc_online_attendance == 'present' and candidate.ccmc_marksheet.ccmc_online.state == 'done':
+                            confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
+                        elif not candidate.ccmc_marksheet.ccmc_online_attendance or candidate.ccmc_marksheet.ccmc_online_attendance == 'absent':
+                            candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.examiners_id.compute_candidates_done()
 
-        # Raise an error if there are confirmed candidates
+            # else:
+            #     candidate.examiners_id = self.examiner_id.id  # For online exams, update the examiner
+        
+
+        total_selected = len(self.candidate_ids)
+        not_reallocated_count = len(confirmed_candidates)
+        reallocated_count = total_selected - not_reallocated_count
+
         if confirmed_candidates:
-            raise ValidationError("Candidates Already Confirmed: {}".format(", ".join(confirmed_candidates)))
+            if reallocated_count > 0:
+                message = (
+                    "The following candidates are marked as confirmed and cannot be reallocated:\n"
+                    f"{', '.join(confirmed_candidates)}.\n\n"
+                    f"The remaining {reallocated_count} candidates have been allocated to the new examiner ({self.examiner_id.display_name})."
+                )
+            else:
+                message = (
+                    "All selected candidates are marked as confirmed and cannot be reallocated.\n"
+                    "No reallocation was performed."
+                )
+        else:
+            message = f"Reallocation successful. All selected candidates have been reassigned to the new examiner( {self.examiner_id.display_name} )."
 
-        return {'type': 'ir.actions.act_window_close'}  # Close the wizard after reallocation
+        return {
+            'name': 'Reallocation Status',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
+        }
+
 
 
 class OnlineExamWizard(models.TransientModel):
@@ -6035,11 +6146,20 @@ class OnlineExamWizard(models.TransientModel):
     exam_date = fields.Date(string='Exam Date')
     institute_id = fields.Many2one('bes.institute', string='Institute')
     dgs_batch =fields.Many2one('dgs.batches', string='Batch')
+    online_start_time = fields.Datetime("Start Time")
+    online_end_time = fields.Datetime("End Time")
+
+    def convert_to_ist(self, dt_utc):
+        """Convert UTC datetime to IST."""
+        if not dt_utc:
+            return False  # Handle cases where the datetime is not provided
+        ist_timezone = timezone('Asia/Kolkata')
+        ist_time = dt_utc.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)
+        return ist_time
 
     def save_ip_address(self):
         """Save the IP address to both examiner's record and institute's record."""
         # Fetch the related examiner and set the IP address
-        # import wdb;wdb.set_trace();
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
             ('dgs_batch','=',self.dgs_batch.id),
             ('institute_id','=',self.institute_id.id),
@@ -6050,16 +6170,55 @@ class OnlineExamWizard(models.TransientModel):
         for examiner in online_assignment:
             examiner.ipaddr = self.ip_address
             examiner.commence_exam = True
+            examiner.online_start_time = self.online_start_time  # Convert only once
+            examiner.online_end_time = self.online_end_time  # Convert only once
+
+            # import wdb;wdb.set_trace();
+            # examiner.online_start_time = self.online_start_time  # Convert only once
+            # examiner.online_end_time = self.online_end_time  # Convert only once
+
+
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":
-                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.gsk_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
+                    examiner.marksheets.gp_marksheet.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        })
+                    
+                    examiner.marksheets.gsk_online.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        'commence_online_exam':True,
+                        'online_start_time':  self.convert_to_ist(self.online_start_time),
+                        'online_end_time': self.convert_to_ist(self.online_end_time),
+                        })
+                    
                 if examiner.subject.name == "MEK":
-                    examiner.marksheets.gp_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                    examiner.marksheets.mek_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
+                    examiner.marksheets.gp_marksheet.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        })
+                    
+                    examiner.marksheets.mek_online.write({
+                        'ip_address':examiner.ipaddr,
+                        'exam_date':examiner.exam_date,
+                        'commence_online_exam':True,
+                        'online_start_time': self.convert_to_ist(self.online_start_time),
+                        'online_end_time': self.convert_to_ist(self.online_end_time),
+                        })
             elif examiner.course.course_code == 'CCMC':
-                examiner.marksheets.ccmc_marksheet.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date})
-                examiner.marksheets.ccmc_online.write({'ip_address':examiner.ipaddr,'exam_date':examiner.exam_date,'commence_online_exam':True})
+                examiner.marksheets.ccmc_marksheet.write({
+                    'ip_address':examiner.ipaddr,
+                    'exam_date':examiner.exam_date
+                    })
+                
+                examiner.marksheets.ccmc_online.write({
+                    'ip_address':examiner.ipaddr,
+                    'exam_date':examiner.exam_date,
+                    'commence_online_exam':True,
+                    'online_start_time': self.convert_to_ist(self.online_start_time),
+                    'online_end_time': self.convert_to_ist(self.online_end_time),
+                    })
         # return {'type': 'ir.actions.act_window_close'}
             # Close the wizard and refresh the page
         return {

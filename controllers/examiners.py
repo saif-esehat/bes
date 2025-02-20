@@ -1,6 +1,7 @@
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.http import request, Response
 from odoo import http
+from odoo import fields
 from werkzeug.utils import secure_filename
 import base64
 import csv
@@ -14,6 +15,7 @@ import json
 from odoo.exceptions import UserError
 from odoo.tools import html_escape
 import mimetypes
+from pytz import timezone
 
 from functools import wraps
 
@@ -367,6 +369,10 @@ class ExaminerPortal(CustomerPortal):
             .sudo()
             .search([("examiners_id", "=", assignment_id)])
         )
+        # Ensure current time is timezone-aware (Odoo uses UTC)
+        utc_now = fields.Datetime.now()  # Odoo gives naive datetime in UTC
+        ist_timezone = timezone('Asia/Kolkata')
+        ist_now = utc_now.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)  # Convert to naive
 
         # import wdb; wdb.set_trace()
 
@@ -377,6 +383,7 @@ class ExaminerPortal(CustomerPortal):
             "marksheets": marksheets,
             "assignment_id": assignment_id,
             "batch_id": batch_id,
+            "ist_now": ist_now,  # Pass IST time to the template
             "page_name": "institutes1",
         }
 

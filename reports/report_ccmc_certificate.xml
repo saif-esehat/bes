@@ -286,13 +286,14 @@
                                             <span t-esc="doc.cookery_practical" t-options='{"widget": "float", "precision": 2}'/>
                                         </td>
                                     </tr>
+                                    <t t-set="oral_marks" t-value="doc.ccmc_gsk_oral_marks + doc.cookery_oral" />
                                     <tr>
                                         <td style="border: 1px solid #000;">3.</td>
                                         <td style="border: 1px solid #000;text-align: left; padding-left:6px;">Practical of Part 2.2+2.3 &amp; Oral of Part 1+2.2+2.3</td>
                                         <td style="border: 1px solid #000;">100</td>
                                         <td style="border: 1px solid #000;">60</td>
                                         <td style="border: 1px solid #000;">
-                                            <span t-esc="doc.cookery_oral" t-options='{"widget": "float", "precision": 2}'/>
+                                            <span t-esc="oral_marks" t-options='{"widget": "float", "precision": 2}'/>
                                         </td>
                                     </tr>
 
