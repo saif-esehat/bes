@@ -826,7 +826,7 @@
                     </group>
                 </group>
                 <footer>
-                    <button string="Save IP Address" type="object" name="save_ip_address" class="btn-primary"/>
+                    <button string="Commence Exam" type="object" name="save_ip_address" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
