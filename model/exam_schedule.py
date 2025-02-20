@@ -3191,6 +3191,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                     ('dgs_batch','=',gp_exam.dgs_batch.id),
                     ('institute_id','=',gp_exam.registered_institute.id),
                     ('exam_type','=','online'),
+                    ('exam_date', '=', gp_exam.exam_date),
                     ('subject','=','GSK'),
                     ])
                 
