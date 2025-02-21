@@ -450,6 +450,9 @@
                   <xpath expr="//field[@name='suggested_answer_id']" position="replace">
                         <field name="suggested_answer_id" string="Answer" />
                 </xpath>
+                  <xpath expr="//field[@name='user_input_line_ids']" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                </xpath>
                  
             </field>
 
