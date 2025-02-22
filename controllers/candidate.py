@@ -124,15 +124,15 @@ class GPCandidatePortal(CustomerPortal):
 
             partner_id = request.env.user.partner_id.id
             registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])
-            for exam in registered_exams:
-                if exam.online_start_time and exam.online_end_time:
-                    # Convert to UTC timezone-aware datetime
-                    online_start_time = exam.online_start_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
-                    online_end_time = exam.online_end_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+            # for exam in registered_exams:
+            #     if exam.online_start_time and exam.online_end_time:
+            #         # Convert to UTC timezone-aware datetime
+            #         online_start_time = exam.online_start_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
+            #         online_end_time = exam.online_end_time.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone)
 
-                    # Convert to naive datetime before assigning back to Odoo fields
-                    exam.online_start_time = online_start_time.replace(tzinfo=None)
-                    exam.online_end_time = online_end_time.replace(tzinfo=None)
+            #         # Convert to naive datetime before assigning back to Odoo fields
+            #         exam.online_start_time = online_start_time.replace(tzinfo=None)
+            #         exam.online_end_time = online_end_time.replace(tzinfo=None)
             # import wdb; wdb.set_trace(); 
             vals = {
                 "registered_exams": registered_exams,

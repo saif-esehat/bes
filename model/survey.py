@@ -195,6 +195,15 @@ class InheritedSurvey(models.Model):
             exam.trigger_exam_url = werkzeug.urls.url_join(exam.trigger_exam.get_base_url(), exam.trigger_exam.get_start_url()) if exam.trigger_exam else False
     
 
+# class SurveyUserInputLineInherited(models.Model):
+#     _inherit = "survey.user_input.line"
+    
+#     def write(self, vals):
+#         # Prevent any write operations
+#         raise ValidationError("Not allowed")
+    
+    
+
 
 class SurveyUserInputInherited(models.Model):
     _inherit = "survey.user_input"
