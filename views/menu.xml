@@ -518,7 +518,9 @@
             parent="survey.menu_surveys"
             name="Online Assignments"
             action="survey_online_assignment_action"
-            sequence="0" />
+            sequence="0" 
+            groups="bes.group_bes_admin"
+            />
 
         <record id="ccmc_repeater_invoices_action" model="ir.actions.act_window">
             <field name="name">CCMC Repeater Candidate Invoices</field>

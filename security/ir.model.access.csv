@@ -77,6 +77,8 @@ bes.admin_access_custom_form,admin_access_custom_form,bes.model_custom_form,bes.
 
 bes.admin_question_section,access_question_section,model_survey_question_section,bes.group_bes_admin,1,1,1,1
 bes.admin_survey_user_input,access_survey_user_input,model_survey_user_input,bes.group_bes_admin,1,0,0,0
+bes.admin_survey_question,access_survey_question,model_survey_question,bes.group_bes_admin,1,0,0,0
+
 
 
 
