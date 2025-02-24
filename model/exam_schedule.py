@@ -410,9 +410,50 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
     def update_marksheet(self):
             records = self.examiner_lines_ids
             
-            candidate_with_ccmc_oral_prac = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_cookery','=',True),('hold_admit_card','=',False),('ccmc_oral_prac_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
-            candidate_with_ccmc_gsk_oral = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_oral','=',True),('hold_admit_card','=',False),('ccmc_gsk_oral_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
-            candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')]).ids
+            candidate_with_ccmc_oral_prac = self.env['ccmc.exam.schedule'].sudo().search([
+                ('dgs_batch','=',self.exam_duty.dgs_batch.id),
+                ('registered_institute','=',self.institute_id.id),
+                ('state','=','1-in_process'),
+                ('attempting_cookery','=',True),
+                ('hold_admit_card','=',False),
+                ('ccmc_oral_prac_assignment','=',False),
+                    '|',
+                ('ceo_override', '=', True),
+                '&', '&',  # Explicitly combine three criteria with nested AND
+                ('stcw_criteria', '=', 'passed'),
+                ('ship_visit_criteria', '=', 'passed'),
+                ('attendance_criteria', '=', 'passed'),
+                ]).ids
+            
+            candidate_with_ccmc_gsk_oral = self.env['ccmc.exam.schedule'].sudo().search([
+                ('dgs_batch','=',self.exam_duty.dgs_batch.id),
+                ('registered_institute','=',self.institute_id.id),
+                ('state','=','1-in_process'),
+                ('attempting_oral','=',True),
+                ('hold_admit_card','=',False),
+                ('ccmc_gsk_oral_assignment','=',False),
+                    '|',
+                ('ceo_override', '=', True),
+                '&', '&',  # Explicitly combine three criteria with nested AND
+                ('stcw_criteria', '=', 'passed'),
+                ('ship_visit_criteria', '=', 'passed'),
+                ('attendance_criteria', '=', 'passed')
+                ]).ids
+            
+            candidate_with_ccmc_online = self.env['ccmc.exam.schedule'].sudo().search([
+                ('dgs_batch','=',self.exam_duty.dgs_batch.id),
+                ('registered_institute','=',self.institute_id.id),
+                ('state','=','1-in_process'),
+                ('attempting_online','=',True),
+                ('hold_admit_card','=',False),
+                ('ccmc_online_assignment','=',False),
+                    '|',
+                ('ceo_override', '=', True),
+                '&', '&',  # Explicitly combine three criteria with nested AND
+                ('stcw_criteria', '=', 'passed'),
+                ('ship_visit_criteria', '=', 'passed'),
+                ('attendance_criteria', '=', 'passed')
+                ]).ids
 
         
             examiners_ccmc_prac_oral = records.filtered(lambda r: r.subject.name == 'CCMC' and r.exam_type == 'practical_oral_cookery_bakery').ids
@@ -723,20 +764,59 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
             # import wdb;wdb.set_trace() 
-            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_cookery','=',True),('hold_admit_card','=',False),('ccmc_oral_prac_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.ccmc_prac_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([
+                ('dgs_batch','=',self.exam_duty.dgs_batch.id),
+                ('registered_institute','=',self.institute_id.id),
+                ('state','=','1-in_process'),
+                ('attempting_cookery','=',True),
+                ('hold_admit_card','=',False),
+                ('ccmc_oral_prac_assignment','=',False),
+                    '|',
+                ('ceo_override', '=', True),
+                '&', '&',  # Explicitly combine three criteria with nested AND
+                ('stcw_criteria', '=', 'passed'),
+                ('ship_visit_criteria', '=', 'passed'),
+                ('attendance_criteria', '=', 'passed')
+                ])
             
     
     @api.depends('institute_id')
     def _compute_ccmc_gsk_oral_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_oral','=',True),('hold_admit_card','=',False),('ccmc_gsk_oral_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.ccmc_gsk_oral_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([
+                ('dgs_batch','=',self.exam_duty.dgs_batch.id),
+                ('registered_institute','=',self.institute_id.id),
+                ('state','=','1-in_process'),
+                ('attempting_oral','=',True),
+                ('hold_admit_card','=',False),
+                ('ccmc_gsk_oral_assignment','=',False),
+                    '|',
+                ('ceo_override', '=', True),
+                '&', '&',  # Explicitly combine three criteria with nested AND
+                ('stcw_criteria', '=', 'passed'),
+                ('ship_visit_criteria', '=', 'passed'),
+                ('attendance_criteria', '=', 'passed')
+                ])
     
     @api.depends('institute_id')
     def _compute_ccmc_online_candidates(self):
         for record in self:
             # import wdb;wdb.set_trace() ('mek_oral_prac_assignment','=',False),('gsk_oral_prac_assignment','=',False)
-            record.ccmc_online_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([('dgs_batch','=',self.exam_duty.dgs_batch.id),('registered_institute','=',self.institute_id.id),('state','=','1-in_process'),('attempting_online','=',True),('hold_admit_card','=',False),('ccmc_online_assignment','=',False),('stcw_criteria','=','passed'),('ship_visit_criteria','=','passed'),('attendance_criteria','=','passed')])
+            record.ccmc_online_candidates = self.env['ccmc.exam.schedule'].sudo().search_count([
+                ('dgs_batch','=',self.exam_duty.dgs_batch.id),
+                ('registered_institute','=',self.institute_id.id),
+                ('state','=','1-in_process'),
+                ('attempting_online','=',True),
+                ('hold_admit_card','=',False),
+                ('ccmc_online_assignment','=',False),
+                    '|',
+                ('ceo_override', '=', True),
+                '&', '&',  # Explicitly combine three criteria with nested AND
+                ('stcw_criteria', '=', 'passed'),
+                ('ship_visit_criteria', '=', 'passed'),
+                ('attendance_criteria', '=', 'passed')
+                ])
 
 
 class CCMCExaminerAssignmentLineWizard(models.TransientModel):
