@@ -450,7 +450,12 @@
                 <xpath expr="//field[@name='suggested_answer_id']" position="replace">
                         <field name="suggested_answer_id" string="Answer" />
                 </xpath>
+                  <!-- <xpath expr="//field[@name='user_input_line_ids']" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                </xpath> 
                 
+                bes.admin_survey_question_answer,access_survey_question_answer,model_survey_question_answer,bes.group_bes_admin,1,0,0,0
+                -->
                  
             </field>
 
@@ -471,6 +476,7 @@
                     <!-- <field name="examiner_token"/> -->
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
                     <field name="ip_address"/>
+                    <field name="exam_date"/>
                     <field name="start_time"/>
                     <field name="end_time"/>
                     <field name="total_time"/>
