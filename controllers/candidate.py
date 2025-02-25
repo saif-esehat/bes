@@ -122,7 +122,7 @@ class GPCandidatePortal(CustomerPortal):
             ist_timezone = timezone('Asia/Kolkata')
             ist_now = utc_now.replace(tzinfo=timezone('UTC')).astimezone(ist_timezone).replace(tzinfo=None)  # Convert to naive
 
-            partner_id = request.env.user.partner_id.id
+            partner_id = request.env.user.id
             candidate = request.env["ccmc.candidate"].sudo().search([('user_id','=',partner_id)])
             registered_exams = request.env["survey.user_input"].sudo().search([('ccmc_candidate','=',candidate.id)])
             # registered_exams = request.env["survey.user_input"].sudo().search([('partner_id','=',partner_id)])

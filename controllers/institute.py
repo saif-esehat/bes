@@ -721,7 +721,7 @@ class InstitutePortal(CustomerPortal):
 
         if request.httprequest.method == "POST":
             name = kw.get("name")
-            indos_no = kw.get("indos_no").replace(" ", "")
+            indos_no = kw.get("indos_no").strip()
             gender = "male" if kw.get("gender") == "Male" else "female"
             date_str = kw.get("dob")
             try:
@@ -4089,7 +4089,7 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             # try:
             try:
-                indos_no = row[0].replace(" ", "")
+                indos_no = row[0].strip()
 
                 # Check if Indos No is missing or empty
                 if not indos_no:
@@ -4430,7 +4430,7 @@ class InstitutePortal(CustomerPortal):
             # import wdb; wdb.set_trace()
             # try:
             try:
-                indos_no = row[0].replace(" ", "")
+                indos_no = row[0].strip()
 
                 # Check if Indos No is missing or empty
                 if not indos_no:
