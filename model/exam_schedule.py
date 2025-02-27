@@ -6169,7 +6169,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         elif not candidate.gp_marksheet.gsk_online_attendance or candidate.gp_marksheet.gsk_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                            candidate.gp_marksheet.exam_date = self.examiner_id.exam_date
+                            # candidate.gp_marksheet.exam_date = self.examiner_id.exam_date
                             candidate.examiners_id.compute_candidates_done()
 
                     elif candidate.examiners_id.subject.name == 'MEK':
@@ -6177,7 +6177,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         elif not candidate.gp_marksheet.mek_online_attendance or candidate.gp_marksheet.mek_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                            candidate.gp_marksheet.exam_date = self.examiner_id.exam_date
+                            # candidate.gp_marksheet.exam_date = self.examiner_id.exam_date
                             candidate.examiners_id.compute_candidates_done()
                 elif candidate.examiners_id.course.course_code == "CCMC":
                     if candidate.examiners_id.subject.name == 'CCMC':
@@ -6185,7 +6185,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
                         elif not candidate.ccmc_marksheet.ccmc_online_attendance or candidate.ccmc_marksheet.ccmc_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
-                            candidate.ccmc_marksheet.exam_date = self.examiner_id.exam_date
+                            # candidate.ccmc_marksheet.exam_date = self.examiner_id.exam_date
                             candidate.examiners_id.compute_candidates_done()
 
             # else:
