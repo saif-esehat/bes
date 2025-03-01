@@ -1875,17 +1875,20 @@
                         </strong>
                     </div>
                 </t>
-                 <t t-elif="invoice_exist.payment_state == 'paid'">
-                    <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="pl-2" style="font-size:20px;">Application Confirmed.</strong>
-                    </div>
-                </t>
+               
                 <t t-elif="invoice_exist.state == 'posted'">
-                    <div class="d-flex justify-content-between">
-                        <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-warning pl-2" style="font-size:20px;">Application in Process.</strong>
-                    </div>
+                    <t if="invoice_exist.payment_state == 'paid'">
+                        <div class="d-flex justify-content-between">
+                            <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                            <strong class="pl-2" style="font-size:20px;">Application Confirmed.</strong>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="d-flex justify-content-between">
+                            <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
+                            <strong class="text-warning pl-2" style="font-size:20px;">Application in Process.</strong>
+                        </div>
+                    </t>
                 </t>
                 <t t-elif="invoice_exist and invoice_exist.state == 'draft'">
                     <div class="d-flex justify-content-between">
