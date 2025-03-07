@@ -33,11 +33,11 @@ class SurveySectionQuestionWizard(models.TransientModel):
         if self.upload_type == 'single':
             sequence = self.chapter.sequence
             question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': self.description })
-            question_id.write({'page_id':self.chapter.id ,'sequence': sequence + 1})
+            question_id.sudo().write({'page_id':self.chapter.id ,'sequence': sequence + 1})
             print("QB "+ str(question_id))
             question_ids = self.chapter.question_ids.ids
             print(question_ids)        
-            self.chapter.write({'question_ids':[(6,0,question_id.id)]})
+            self.chapter.sudo().write({'question_ids':[(6,0,question_id.id)]})
         elif self.upload_type == 'bulk':            
             excel_data = base64.b64decode(self.file)
 
@@ -409,3 +409,38 @@ class InheritedSurveyQuestions(models.Model):
         for question in self:
             correct_answers = question.suggested_answer_ids.filtered(lambda ans: ans.is_correct)
             question.q_score = sum(answer.answer_score for answer in correct_answers)
+    
+    def action_confirm_delete(self):
+        """ Opens a confirmation popup before deleting the question. """
+        self.ensure_one()
+        # import wdb;wdb.set_trace()
+        print(self,":===================================================================")
+
+        return {
+            'name': 'Confirm Delete',
+            'type': 'ir.actions.act_window',
+            'res_model': 'question.delete.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('bes.question_delete_wizard_form').id,
+            'target': 'new',
+            'context': {
+                'default_question_id': self.id,
+                'default_question_name': self.title,
+                # 'default_chapter': self.chapter,
+            }
+        }
+
+class QuestionDeleteWizard(models.TransientModel):
+    _name = 'question.delete.wizard'
+    _description = 'Confirm Question Deletion'
+# 
+    question_id = fields.Many2one('survey.question', string="Question", required=True)
+    question_name = fields.Char(string="Question", readonly=True)
+    # chapter = fields.Char(string="Chapter", readonly=True)
+
+    def action_delete_question(self):
+        """ Deletes the question after confirmation. """
+        self.ensure_one()
+        # print(self.question_id.title,"=======================================================")
+        self.question_id.sudo().unlink()
+        return {'type': 'ir.actions.act_window_close'}
