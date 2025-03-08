@@ -568,9 +568,10 @@
                         <field name="qb" readonly="1"/>
                         <field name="chapter" string="Chapter" domain="[('survey_id', '=', qb),('is_page','=',True)]"/>
                         <field name="upload_type"/>
-                        <field name="file"  attrs="{'invisible': [('upload_type', '=', 'single')]}" />
-
                         <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
+
+                        <field name="file"  attrs="{'invisible': [('upload_type', '=', 'single')]}" />
+                        <p class="o_form_label" attrs="{'invisible': [('upload_type', '=', 'single')]}">All Previous Question in the Selected Chapter will be deleted.</p>
                     </group>
                     <footer>
                         <button string="Add" type="object" name="action_add_question" class="btn-primary"/>

@@ -43,15 +43,38 @@ class SurveySectionQuestionWizard(models.TransientModel):
 
             # Read the Excel data into a pandas DataFrame
             df = pd.read_excel(BytesIO(excel_data))
-            
-            grouped = df.groupby('Question')
+            grouped = df.groupby('Question',sort=False)
+            # import wdb;wdb.set_trace()
             sequence = self.chapter.sequence
             sequence = sequence + 1
+                # Step 1: Find all questions related to the chapter
+            questions = self.chapter.sudo().question_ids
+            
+            if questions:
+                # Step 2: Find and delete all answers related to the questions
+                answers = self.env['survey.question.answer'].sudo().search([('question_id', 'in', questions.ids)])
+                if answers:
+                    answers.unlink()  # Delete all answers
+
+                # Step 3: Delete all questions
+                questions.unlink()
+            
+            
             for question, group in grouped:
                 
+                # import wdb;wdb.set_trace()
                 question_text = group['Question'].iloc[0]
-                question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': question_text , 'page_id':self.chapter.id ,'sequence': int(sequence) })
+                sr_no = group['Sr.No'].iloc[0]
+                question_id = self.env['survey.question'].sudo().create({
+                    'q_no':sr_no,
+                    'survey_id':self.qb.id ,
+                    'is_scored_question':True,
+                    'question_type':'simple_choice', 
+                    'title': question_text , 
+                    'page_id':self.chapter.id ,
+                    'sequence': int(sequence) })
                 # question_id.write({ })
+
                 choices = group['Choices'].dropna().tolist()
                 correct_answer = group[group['CorrectAnswer'] == 1]['Choices'].iloc[0]
                 for choice in choices:
@@ -414,7 +437,6 @@ class InheritedSurveyQuestions(models.Model):
         """ Opens a confirmation popup before deleting the question. """
         self.ensure_one()
         # import wdb;wdb.set_trace()
-        print(self,":===================================================================")
 
         return {
             'name': 'Confirm Delete',
@@ -441,6 +463,5 @@ class QuestionDeleteWizard(models.TransientModel):
     def action_delete_question(self):
         """ Deletes the question after confirmation. """
         self.ensure_one()
-        # print(self.question_id.title,"=======================================================")
         self.question_id.sudo().unlink()
         return {'type': 'ir.actions.act_window_close'}
