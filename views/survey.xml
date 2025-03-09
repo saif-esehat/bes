@@ -564,24 +564,38 @@
             <field name="model">survey.question.section</field>
             <field name="arch" type="xml">
                 <form string="My Wizard">
-                    <group>
-                        <field name="qb" readonly="1"/>
-                        <field name="chapter" string="Chapter" domain="[('survey_id', '=', qb),('is_page','=',True)]"/>
-                        <field name="upload_type"/>
-                        <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
-                        <field name="file"  attrs="{'invisible': [('upload_type', '=', 'single')]}" />
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="qb" readonly="1"/>
+                            <field name="chapter" string="Chapter"
+                                domain="[('survey_id', '=', qb), ('is_page', '=', True)]"/>
+                            <field name="upload_type"/>
+                            <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
+                            <field name="file" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
+                        </group>
+                        <group>
+                            <p attrs="{'invisible': [('upload_type', '=', 'single')]}">
+                                <strong style="color: red;">Note:</strong> 
+                                All previous questions in the selected chapter will be deleted.
+                            </p>
+                        </group>
+                        <group>   
+                            <span style="font-size: 18px;">
+                                Click <a href="https://bestrust.in/document/share/9/4f0f3222-2ce0-413e-94d9-53cc59e7851c"
+                                target="_blank"><strong style="color: red;">here</strong></a> 
+                                to download the uploading format for bulk upload.
+                            </span>
+                        </group>
 
-                    <group>
-                        <p attrs="{'invisible': [('upload_type', '=', 'single')]}">All Previous Question in the Selected Chapter will be deleted.</p>
-                    </group>
-                    <footer>
-                        <button string="Add" type="object" name="action_add_question" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
+                        <footer>
+                            <button string="Add" type="object" name="action_add_question" class="btn-primary"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
                 </form>
             </field>
         </record>
+
 
         <record id="view_survey_question_section_form_action" model="ir.actions.act_window">
             <field name="name">Add Question</field>
