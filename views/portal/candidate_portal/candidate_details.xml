@@ -1875,16 +1875,16 @@
                         </strong>
                     </div>
                 </t>
-                 <t t-elif="invoice_exist.state == 'posted' and invoice_exist.payment_state == 'paid'">
+                <t t-elif="invoice_exist.state == 'posted' and  invoice_exist.payment_state == 'paid'">
                     <div class="d-flex justify-content-between">
                         <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="pl-2" style="font-size:20px;">Application in Confirmed.</strong>
+                        <strong class="text-warning pl-2" style="font-size:20px;">Application is Confirmed.</strong>
                     </div>
                 </t>
-                <t t-elif="invoice_exist.state == 'posted'">
+                <t t-elif="invoice_exist.state == 'posted' and invoice_exist.payment_state == 'not_paid'">
                     <div class="d-flex justify-content-between">
                         <p class="text-nowrap" style="font-size:20px;">Your Application no. <t t-out="invoice_exist.name"/> , for <t t-out="batch.to_date.strftime('%B %Y')"/> Repeater Examination:</p>
-                        <strong class="text-warning pl-2" style="font-size:20px;">Application in Process.</strong>
+                        <strong class="pl-2" style="font-size:20px;">Application in Process.</strong>
                     </div>
                 </t>
                 <t t-elif="invoice_exist and invoice_exist.state == 'draft'">
