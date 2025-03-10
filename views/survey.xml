@@ -294,6 +294,7 @@
                 <xpath expr="//field[@name='question_and_page_ids']/tree" position="inside">
                     <field name="q_score" string="Score" style="text-align: center;"/>
                     <field name="difficulty_level" style="text-align: center;"/>
+                    <button name="action_confirm_delete" type="object" string="Delete"  class="btn-primary"/>
                 </xpath>
                 <!-- <xpath expr="//field[@name='suggested_answer_ids']" position="replace">
                     <field name="answers_count" string="No. of Answers" style="text-align: center;"/>
@@ -563,21 +564,38 @@
             <field name="model">survey.question.section</field>
             <field name="arch" type="xml">
                 <form string="My Wizard">
-                    <group>
-                        <field name="qb" readonly="1"/>
-                        <field name="chapter" string="Chapter" domain="[('survey_id', '=', qb),('is_page','=',True)]"/>
-                        <field name="upload_type"/>
-                        <field name="file"  attrs="{'invisible': [('upload_type', '=', 'single')]}" />
+                    <sheet>
+                        <group>
+                            <field name="qb" readonly="1"/>
+                            <field name="chapter" string="Chapter"
+                                domain="[('survey_id', '=', qb), ('is_page', '=', True)]"/>
+                            <field name="upload_type"/>
+                            <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
+                            <field name="file" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
+                        </group>
+                        <group>
+                            <p attrs="{'invisible': [('upload_type', '=', 'single')]}">
+                                <strong style="color: red;">Note:</strong> 
+                                All previous questions in the selected chapter will be deleted.
+                            </p>
+                        </group>
+                        <group>   
+                            <span style="font-size: 18px;">
+                                Click <a href="https://bestrust.in/document/share/9/4f0f3222-2ce0-413e-94d9-53cc59e7851c"
+                                target="_blank"><strong style="color: red;">here</strong></a> 
+                                to download the uploading format for bulk upload.
+                            </span>
+                        </group>
 
-                        <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
-                    </group>
-                    <footer>
-                        <button string="Add" type="object" name="action_add_question" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
-                    </footer>
+                        <footer>
+                            <button string="Add" type="object" name="action_add_question" class="btn-primary"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
                 </form>
             </field>
         </record>
+
 
         <record id="view_survey_question_section_form_action" model="ir.actions.act_window">
             <field name="name">Add Question</field>
@@ -594,6 +612,24 @@
         name="bes.report_survey_pdf"
         file="bes.report_survey_pdf"
        />
+
+        <record id="question_delete_wizard_form" model="ir.ui.view">
+            <field name="name">question.delete.wizard.form</field>
+            <field name="model">question.delete.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Delete">
+                    <group>
+                        <field name="question_name" />
+                        <!-- <field name="chapter" /> -->
+                        <p class="o_form_label">Are you sure you want to delete this question?</p>
+                    </group>
+                    <footer>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="action_delete_question" type="object" string="Delete" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
 
 
