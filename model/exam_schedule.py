@@ -4548,6 +4548,12 @@ class GPExam(models.Model):
         
         if self.attempting_mek_oral_prac and not self.mek_oral_prac_assignment:
             self.mek_oral_prac_attendance = 'absent'
+                
+        if self.attempting_gsk_online and not self.gsk_online_assignment:
+            self.gsk_online_attendance = 'absent'
+        
+        if self.attempting_mek_online and not self.mek_online_assignment:
+            self.mek_online_attendance = 'absent'
 
         if self.exam_violation_state == 'na':
         
@@ -5665,6 +5671,8 @@ class CCMCExam(models.Model):
             self.ccmc_oral_attendance = 'absent'
             self.ccmc_gsk_oral_attendance = 'absent'
             
+        if self.attempting_online and not self.ccmc_online_assignment:
+            self.ccmc_online_attendance = 'absent'
         
         if self.exam_violation_state == 'na': 
          
