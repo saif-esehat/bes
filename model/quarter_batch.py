@@ -32,15 +32,23 @@ class ReleaseAdmitCard(models.TransientModel):
         delhi_region = exam_batch.delhi_region
         kochi_region = exam_batch.kochi_region
         goa_region = exam_batch.goa_region
+        is_march_september = exam_batch.is_march_september
         # self.admit_card_type
                     
         if not self.exam_region:
             raise ValidationError("Please select an exam region.")
         
         if self.admit_card_type == 'gp':
-            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([('hold_admit_card','=',False),('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
-            candidates = self.env['gp.exam.schedule'].sudo().search([('hold_admit_card','=',False),('dgs_batch','=',exam_batch_id),('exam_region','=',self.exam_region.id)]) 
-            
+            candidates_count = self.env['gp.exam.schedule'].sudo().search_count([
+                ('hold_admit_card','=',False),
+                ('dgs_batch','=',exam_batch_id),
+                ('exam_region','=',self.exam_region.id)
+                ]) 
+            candidates = self.env['gp.exam.schedule'].sudo().search([
+                ('hold_admit_card','=',False),
+                ('dgs_batch','=',exam_batch_id),
+                ('exam_region','=',self.exam_region.id)
+                ]) 
             
             if self.exam_region.name == 'MUMBAI' and mumbai_region:
                 candidates.write({'hold_admit_card':False, 'registered_institute':mumbai_region.id})

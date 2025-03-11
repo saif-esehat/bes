@@ -3440,11 +3440,12 @@ class GpAdmitCardRelease(models.TransientModel):
 
     @api.depends('dgs_batch')
     def _compute_check_batch(self):
-        for record in self:
-            if record.dgs_batch.is_current_batch or not record.dgs_batch.is_march_september and not record.dgs_batch.repeater_batch:
-                record.check_batch = 'invisible'
-            elif record.dgs_batch.repeater_batch and not record.dgs_batch.is_march_september and not record.dgs_batch.is_current_batch:
-                record.check_batch = 'required'
+        if self.dgs_batch.is_current_batch or not self.dgs_batch.is_march_september and not self.dgs_batch.repeater_batch:
+            self.check_batch = 'invisible'
+        elif self.dgs_batch.repeater_batch and not self.dgs_batch.is_march_september and not self.dgs_batch.is_current_batch:
+            self.check_batch = 'required'
+        else:
+            self.check_batch = 'invisible'
             
 
     def release_gp_admit_card(self, *args, **kwargs):
@@ -4886,12 +4887,13 @@ class CcmcAdmitCardRelease(models.TransientModel):
 
     @api.depends('dgs_batch')
     def _compute_check_batch(self):
-        for record in self:
-            if record.dgs_batch.is_current_batch or not record.dgs_batch.is_march_september and not record.dgs_batch.repeater_batch:
-                record.check_batch = 'invisible'
-            elif record.dgs_batch.repeater_batch and not record.dgs_batch.is_march_september and not record.dgs_batch.is_current_batch:
-                record.check_batch = 'required'
-            
+        
+        if self.dgs_batch.is_current_batch or not self.dgs_batch.is_march_september and not self.dgs_batch.repeater_batch:
+            self.check_batch = 'invisible'
+        elif self.dgs_batch.repeater_batch and not self.dgs_batch.is_march_september and not self.dgs_batch.is_current_batch:
+            self.check_batch = 'required'
+        else:
+            self.check_batch = 'invisible'
 
     def release_ccmc_admit_card(self, *args, **kwargs):
         exam_ids = self.env.context.get('active_ids')
