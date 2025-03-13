@@ -379,6 +379,7 @@ class CustomPaymentRegister(models.TransientModel):
                                     "attempting_gsk_online":attempting_gsk_online,
                                     "attempting_mek_online":attempting_mek_online
                                     })
+                gp_exam_schedule._fees_paid_by_candidate()
             
             elif invoice.ccmc_repeater_candidate_ok:
                 dgs_batch = invoice.repeater_exam_batch.id      
@@ -387,6 +388,7 @@ class CustomPaymentRegister(models.TransientModel):
                 
                 cookery_practical = last_exam.cookery_practical
                 cookery_oral = last_exam.cookery_oral
+                ccmc_gsk_oral_marks = last_exam.ccmc_gsk_oral_marks
                 cookery_gsk_online = last_exam.cookery_gsk_online
                 overall_marks = last_exam.overall_marks
                     
@@ -394,6 +396,7 @@ class CustomPaymentRegister(models.TransientModel):
                 #Mark Percentage
                 cookery_bakery_percentage = last_exam.cookery_bakery_percentage
                 ccmc_oral_percentage = last_exam.ccmc_oral_percentage
+                ccmc_gsk_oral_percentage = last_exam.ccmc_gsk_oral_percentage
                 cookery_gsk_online_percentage = last_exam.cookery_gsk_online_percentage
                 overall_percentage = last_exam.overall_percentage
                 
@@ -404,10 +407,12 @@ class CustomPaymentRegister(models.TransientModel):
                 'dgs_batch':dgs_batch,
                 'cookery_practical':cookery_practical,
                 'cookery_oral':cookery_oral,
+                'ccmc_gsk_oral_marks':ccmc_gsk_oral_marks,
                 'cookery_gsk_online':cookery_gsk_online,
                 'overall_marks':overall_marks ,
                 'cookery_bakery_percentage':cookery_bakery_percentage,
                 'ccmc_oral_percentage':ccmc_oral_percentage,
+                'ccmc_gsk_oral_percentage':ccmc_gsk_oral_percentage,
                 'cookery_gsk_online_percentage':cookery_gsk_online_percentage,
                 'overall_percentage':overall_percentage,
                 'cookery_bakery_prac_status':last_exam.cookery_bakery_prac_status,
@@ -495,6 +500,8 @@ class CustomPaymentRegister(models.TransientModel):
                                         "attempting_online":attempting_online,
                                         "attempting_oral":attempting_oral
                                         })  
+                
+                ccmc_exam_schedule._fees_paid_by_candidate()
 
                         
             
