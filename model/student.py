@@ -34,7 +34,7 @@ class GPCandidate(models.Model):
     _description = 'GP Candidate'
     
     institute_batch_id = fields.Many2one("institute.gp.batches","Pre Sea Institute Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",compute="_update_rollno",store=True)
 
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",tracking=True)
     previous_repeater = fields.Boolean(string='Previous Attempted')
@@ -252,9 +252,11 @@ class GPCandidate(models.Model):
                 # Check if the latest exam attempt is certified
                 if last_exam_record.state == "3-certified":
                     record.roll_no = last_exam_record.exam_id
+                    record.dgs_batch = last_exam_record.dgs_batch
                 else:
                     # Set roll_no to the latest attempt's exam_id even if not certified
                     record.roll_no = last_exam_record.exam_id
+                    record.dgs_batch = last_exam_record.dgs_batch
 
     @api.depends('candidate_image')
     def _check_image(self):
@@ -671,7 +673,7 @@ class CCMCCandidate(models.Model):
     _description = 'CCMC Candidate'
     
     institute_batch_id = fields.Many2one("institute.ccmc.batches","Pre Sea Institute Batch",tracking=True)
-    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",related="institute_batch_id.dgs_batch",store=True)
+    dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",compute="_update_rollno",store=True)
     institute_id = fields.Many2one("bes.institute",string="Name of Institute",required=True,tracking=True)
     candidate_image_name = fields.Char("Candidate Image Name",tracking=True)
     candidate_image = fields.Binary(string='Candidate Image', attachment=True, help='Select an image in JPEG format.',tracking=True)
@@ -880,9 +882,11 @@ class CCMCCandidate(models.Model):
                 # Check if the latest exam attempt is certified
                 if last_exam_record.state == "3-certified":
                     record.roll_no = last_exam_record.exam_id
+                    record.dgs_batch = last_exam_record.dgs_batch
                 else:
                     # Set roll_no to the latest attempt's exam_id even if not certified
                     record.roll_no = last_exam_record.exam_id
+                    record.dgs_batch = last_exam_record.dgs_batch
 
 
     @api.depends('candidate_image')
