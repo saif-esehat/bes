@@ -3702,10 +3702,10 @@ class GPExam(models.Model):
         ('passed', 'Complied'),
     ], string='Attendance Criteria',store=True,related='gp_candidate.attendance_criteria')
     
-    admit_card_status = fields.Selection([
-        ('pending', 'Pending'),
-        ('issued', 'Issued')
-    ],default="pending", string='Admit Card Status',store=True,related='gp_candidate.institute_batch_id.admit_card_status')
+    # admit_card_status = fields.Selection([
+    #     ('pending', 'Pending'),
+    #     ('issued', 'Issued')
+    # ],default="pending", string='Admit Card Status',store=True,related='gp_candidate.institute_batch_id.admit_card_status')
 
     state = fields.Selection([
         ('1-in_process', 'In Process'),
@@ -3814,7 +3814,7 @@ class GPExam(models.Model):
             else:
                  record.absent_status = "present"
 
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_admit_card = fields.Boolean("Pending Admit Card", default=False,tracking=True)
     hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_date = fields.Date(string="Exam Date",tracking=True)
@@ -4976,7 +4976,7 @@ class CCMCExam(models.Model):
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=True,tracking=True)
     certificate_id = fields.Char(string="Certificate No.",tracking=True)
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
-    hold_admit_card = fields.Boolean("Hold Admit Card", default=False,tracking=True)
+    hold_admit_card = fields.Boolean("Pending Admit Card", default=False,tracking=True)
     hold_certificate = fields.Boolean("Hold Certificate", default=False,tracking=True)
 
     exam_region = fields.Many2one('exam.center',string='Exam Center',store=True)
@@ -5097,10 +5097,10 @@ class CCMCExam(models.Model):
         ('passed', 'Passed'),
     ], string='CCMC Online Status',default="pending",tracking=True)
     
-    admit_card_status = fields.Selection([
-        ('pending', 'Pending'),
-        ('issued', 'Issued')
-    ],default="pending", string='Admit Card Status',store=True,related='ccmc_candidate.institute_batch_id.admit_card_status')
+    # admit_card_status = fields.Selection([
+    #     ('pending', 'Pending'),
+    #     ('issued', 'Issued')
+    # ],default="pending", string='Admit Card Status',store=True,related='ccmc_candidate.institute_batch_id.admit_card_status')
     
     
     stcw_criteria = fields.Selection([
