@@ -572,11 +572,12 @@
                             <field name="upload_type"/>
                             <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
                             <field name="file" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
+                            <field name="delete_prev_ques" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
                         </group>
                         <group>
                             <p attrs="{'invisible': [('upload_type', '=', 'single')]}">
-                                <strong style="color: red;">Note:</strong> 
-                                All previous questions in the selected chapter will be deleted.
+                                <strong style="color: red;">Note: </strong> 
+                                If "Delete Previous Questions" is selected as yes then all previous questions in the selected chapter will be deleted.
                             </p>
                         </group>
                         <group>   

@@ -25,6 +25,10 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('bulk', 'Bulk')       
     ], string='Upload Type', default='single')
     file = fields.Binary(string="File", required=False)
+    delete_prev_ques = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No')
+    ], string='Delete Previous Questions', default='no')
 
 
     def action_add_question(self):
@@ -49,15 +53,19 @@ class SurveySectionQuestionWizard(models.TransientModel):
             sequence = sequence + 1
                 # Step 1: Find all questions related to the chapter
             questions = self.chapter.sudo().question_ids
-            
-            if questions:
-                # Step 2: Find and delete all answers related to the questions
-                answers = self.env['survey.question.answer'].sudo().search([('question_id', 'in', questions.ids)])
-                if answers:
-                    answers.unlink()  # Delete all answers
 
-                # Step 3: Delete all questions
-                questions.unlink()
+            if self.delete_prev_ques == 'yes':
+                if questions:
+                    # Step 2: Find and delete all answers related to the questions
+                    answers = self.env['survey.question.answer'].sudo().search([('question_id', 'in', questions.ids)])
+                    if answers:
+                        answers.unlink()  # Delete all answers
+
+                    # Step 3: Delete all questions
+                    questions.unlink()
+            else:
+                pass
+            
             
             
             for question, group in grouped:

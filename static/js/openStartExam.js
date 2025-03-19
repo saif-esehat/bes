@@ -79,7 +79,6 @@ odoo.define('bes.OpenStartExam', function (require) {
                         console.error('Error fetching IP:', error);
                     });
 
-
             }
         }
     );
