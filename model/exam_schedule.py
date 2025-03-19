@@ -3276,7 +3276,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                     ])
                 
                     
-                gp_exam.gsk_online.unlink()
+                gp_exam.gsk_online.sudo().unlink()
                 # gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
                 gsk_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','GSK')]).qb_online
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
@@ -3287,8 +3287,8 @@ class ResetOnlineExamWizard(models.TransientModel):
 
                 # import wdb;wdb.set_trace()
                 
-                gsk_survey_qb_input = gsk_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
-                gsk_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
+                gsk_survey_qb_input = gsk_survey_qb_input.sudo()._create_answer(user=gp_exam.gp_candidate.user_id)
+                gsk_survey_qb_input.sudo().write({"gp_candidate": gp_exam.gp_candidate.id,
                                            'gp_exam':gp_exam.id,
                                            'institute_id': gp_exam.gp_candidate.institute_id.id,
                                             "dgs_batch":gp_exam.dgs_batch.id,
@@ -3301,7 +3301,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             "online_start_time": start_time_ist,
                                             "online_end_time": end_time_ist,
                                             })
-                gp_exam.write({
+                gp_exam.sudo().write({
                     "gsk_online": gsk_survey_qb_input,
                     "gsk_online_token_used": False,
                     "attempted_gsk_online": False,
@@ -3322,17 +3322,17 @@ class ResetOnlineExamWizard(models.TransientModel):
                     # ('exam_date', '=', gp_exam.exam_date),
                     ('subject','=','MEK'),
                     ])
-                gp_exam.mek_online.unlink()
+                gp_exam.mek_online.sudo().unlink()
                 # mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
                 mek_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
-                mek_survey_qb_input = mek_survey_qb_input._create_answer(user=gp_exam.gp_candidate.user_id)
+                mek_survey_qb_input = mek_survey_qb_input.sudo()._create_answer(user=gp_exam.gp_candidate.user_id)
 
                 # ✅ Use already stored IST values
                 start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
                 end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
 
                 
-                mek_survey_qb_input.write({"gp_candidate": gp_exam.gp_candidate.id,
+                mek_survey_qb_input.sudo().write({"gp_candidate": gp_exam.gp_candidate.id,
                                            'gp_exam':gp_exam.id,
                                             'institute_id': gp_exam.gp_candidate.institute_id.id,
                                             "dgs_batch":gp_exam.dgs_batch.id,
@@ -3363,7 +3363,7 @@ class ResetOnlineExamWizard(models.TransientModel):
                 if not ccmc_exam.attempting_online:
                     raise ValidationError("Candidate is Not Appearing for CCMC online")
                 
-                ccmc_exam.ccmc_online.unlink()
+                ccmc_exam.ccmc_online.sudo().unlink()
 
                                 
                 online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
@@ -3379,8 +3379,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                 
                 # ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
                 ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
-                ccmc_qb_input = ccmc_qb_input._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
-                ccmc_qb_input.write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
+                ccmc_qb_input = ccmc_qb_input.sudo()._create_answer(user=ccmc_exam.ccmc_candidate.user_id)
+                ccmc_qb_input.sudo().write({"ccmc_candidate": ccmc_exam.ccmc_candidate.id,
                                      'ccmc_exam':ccmc_exam.id,
                                     'institute_id': ccmc_exam.ccmc_candidate.institute_id.id,
                                     "dgs_batch":ccmc_exam.dgs_batch.id,
