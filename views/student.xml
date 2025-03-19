@@ -536,7 +536,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <header>
-                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_expense_approval_ceo"/>
+                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_bes_coo"/>
                     </header>
                     <field name="indos_no"  optional="show"/>
                     <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
@@ -995,7 +995,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <header>
-                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_expense_approval_ceo"/>
+                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_bes_coo"/>
                     </header>
                     <field name="indos_no"  optional="show"/>
                     <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
