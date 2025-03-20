@@ -647,7 +647,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     
                     
                     for marksheet in record.ccmc_marksheet_ids:
-                        marksheet.write({'ccmc_online_assignment':True})
+                        marksheet.write({'ccmc_online_assignment':True,'ccmc_online_assignment_id':assignment.id})
                         ccmc_marksheet = marksheet
                         candidate = marksheet.ccmc_candidate.id
                         ccmc_online = marksheet.ccmc_online
@@ -1203,7 +1203,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
                     
                     for marksheet in record.gp_marksheet_ids:
-                        marksheet.write({'gsk_online_assignment':True})
+                        marksheet.write({'gsk_online_assignment':True, 'gsk_online_assignment_id':assignment.id})
                         gp_marksheet = marksheet
                         gsk_online_id = marksheet.gsk_online.id
                         candidate = marksheet.gp_candidate.id
@@ -1274,7 +1274,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
 
                     for marksheet in record.gp_marksheet_ids:
-                        marksheet.write({'mek_online_assignment':True})
+                        marksheet.write({'mek_online_assignment':True, 'mek_online_assignment_id':assignment.id})
                         gp_marksheet = marksheet
                         mek_online_id = marksheet.mek_online.id
                         candidate = marksheet.gp_candidate.id
@@ -3830,6 +3830,9 @@ class GPExam(models.Model):
         ('female', 'Female')
     ],string="Gender",related='gp_candidate.gender',store=True,tracking=True)
 
+    gsk_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="GSK Online Assignment",tracking=True)
+    mek_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="MEK Online Assignment",tracking=True)
+
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
         for record in self:
@@ -5324,7 +5327,7 @@ class CCMCExam(models.Model):
     ],string="Cookery Online Attendance")
 
     ceo_override = fields.Boolean("CEO Override", related='ccmc_candidate.ceo_override',store=True,tracking=True)
-
+    ccmc_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC Online Assignment",tracking=True)
     
     def open_reset_online_exam_wizard(self):
         view_id = self.env.ref('bes.reset_online_exam_wizard').id
@@ -6179,6 +6182,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         elif not candidate.gp_marksheet.gsk_online_attendance or candidate.gp_marksheet.gsk_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.gp_marksheet.gsk_online_assignment_id = self.examiner_id.id
                             # candidate.gp_marksheet.exam_date = self.examiner_id.exam_date
                             candidate.examiners_id.compute_candidates_done()
 
@@ -6187,6 +6191,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                         elif not candidate.gp_marksheet.mek_online_attendance or candidate.gp_marksheet.mek_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.gp_marksheet.mek_online_assignment_id = self.examiner_id.id
                             # candidate.gp_marksheet.exam_date = self.examiner_id.exam_date
                             candidate.examiners_id.compute_candidates_done()
                 elif candidate.examiners_id.course.course_code == "CCMC":
@@ -6195,6 +6200,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
                         elif not candidate.ccmc_marksheet.ccmc_online_attendance or candidate.ccmc_marksheet.ccmc_online_attendance == 'absent':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.ccmc_marksheet.ccmc_online_assignment_id = self.examiner_id.id
                             # candidate.ccmc_marksheet.exam_date = self.examiner_id.exam_date
                             candidate.examiners_id.compute_candidates_done()
 
