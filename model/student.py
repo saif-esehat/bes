@@ -223,6 +223,19 @@ class GPCandidate(models.Model):
     def action_ceo_overriden(self):
         for record in self:
             record.ceo_override = True
+        
+        message = f"All selected candidates'({len(self)}) criteria have been bypassed: Ship Visit Criteria, STCW Criteria, and Attendance Criteria."
+
+        return {
+            'name': 'Reallocation Status',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
+        }
+
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):
@@ -852,9 +865,23 @@ class CCMCCandidate(models.Model):
             else:
                 # Editable only if the user has group access
                 record.edit_profile_status = has_group_access
+
     def action_ceo_overriden(self):
         for record in self:
             record.ceo_override = True
+        
+        message = f"All selected candidates'({len(self)}) criteria have been bypassed: Ship Visit Criteria, STCW Criteria, and Attendance Criteria."
+
+        return {
+            'name': 'Reallocation Status',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
+        }
+
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
     def _check_criteria(self):

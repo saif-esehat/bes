@@ -3267,14 +3267,6 @@ class ResetOnlineExamWizard(models.TransientModel):
                 if not gp_exam.attempting_gsk_online:
                     raise ValidationError("Candidate is Not Appearing for GSK online")
                 
-                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
-                    ('dgs_batch','=',gp_exam.dgs_batch.id),
-                    ('institute_id','=',gp_exam.registered_institute.id),
-                    ('exam_type','=','online'),
-                    # ('exam_date', '=', gp_exam.exam_date),
-                    ('subject','=','GSK'),
-                    ])
-                
                     
                 gp_exam.gsk_online.sudo().unlink()
                 # gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
@@ -3282,8 +3274,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gsk_predefined_questions = gsk_survey_qb_input._prepare_user_input_predefined_questions()
 
                 # print(gsk_predefined_questions)
-                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
-                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+                start_time_ist =  self.convert_to_ist(gp_exam.gsk_online_assignment_id.online_start_time)
+                end_time_ist =  self.convert_to_ist(gp_exam.gsk_online_assignment_id.online_end_time)
 
                 # import wdb;wdb.set_trace()
                 
@@ -3314,22 +3306,15 @@ class ResetOnlineExamWizard(models.TransientModel):
                 gp_exam = self.env[self.model].browse(active_id)
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
-                
-                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
-                    ('dgs_batch','=',gp_exam.dgs_batch.id),
-                    ('institute_id','=',gp_exam.registered_institute.id),
-                    ('exam_type','=','online'),
-                    # ('exam_date', '=', gp_exam.exam_date),
-                    ('subject','=','MEK'),
-                    ])
+
                 gp_exam.mek_online.sudo().unlink()
                 # mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
                 mek_survey_qb_input = self.env["course.master.subject"].sudo().search([('name','=','MEK')]).qb_online
                 mek_survey_qb_input = mek_survey_qb_input.sudo()._create_answer(user=gp_exam.gp_candidate.user_id)
 
                 # ✅ Use already stored IST values
-                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
-                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+                start_time_ist =  self.convert_to_ist(gp_exam.mek_online_assignment_id.online_start_time)
+                end_time_ist =  self.convert_to_ist(gp_exam.mek_online_assignment_id.online_end_time)
 
                 
                 mek_survey_qb_input.sudo().write({"gp_candidate": gp_exam.gp_candidate.id,
@@ -3365,17 +3350,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                 
                 ccmc_exam.ccmc_online.sudo().unlink()
 
-                                
-                online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
-                    ('dgs_batch','=',ccmc_exam.dgs_batch.id),
-                    ('institute_id','=',ccmc_exam.registered_institute.id),
-                    ('exam_type','=','online'),
-                    # ('exam_date', '=', ccmc_exam.exam_date),
-                    ('subject','=','CCMC'),
-                    ])
-
-                start_time_ist =  self.convert_to_ist(online_assignment.online_start_time)
-                end_time_ist =  self.convert_to_ist(online_assignment.online_end_time)
+                start_time_ist =  self.convert_to_ist(ccmc_exam.ccmc_online_assignment_id.online_start_time)
+                end_time_ist =  self.convert_to_ist(ccmc_exam.ccmc_online_assignment_id.online_end_time)
                 
                 # ccmc_qb_input = self.env["survey.survey"].sudo().search([('title','=','CCMC ONLINE EXIT EXAMINATION')])
                 ccmc_qb_input = self.env["course.master.subject"].sudo().search([('name','=','CCMC')]).qb_online
