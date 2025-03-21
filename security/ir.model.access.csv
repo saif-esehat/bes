@@ -76,13 +76,14 @@ bes.admin_access_custom_form,admin_access_custom_form,bes.model_custom_form,bes.
 
 
 
-bes.admin_question_section,access_question_section,model_survey_question_section,bes.group_bes_admin,1,1,1,1
+bes.admin_question_section,access_question_section,model_survey_question_section,bes.group_bes_coo,1,1,1,1
 bes.admin_survey_user_input,access_survey_user_input,model_survey_user_input,bes.group_bes_admin,1,0,0,0
 bes.admin_survey_question,access_survey_question,model_survey_question,bes.group_bes_admin,1,0,0,0
-bes.admin_survey_user_input,access_survey_user_input,model_survey_user_input,bes.group_expense_approval_ec,1,0,0,0
-bes.admin_survey_question,access_survey_question,model_survey_question,bes.group_expense_approval_ec,1,0,0,0
+bes.admin_survey_user_input,access_survey_user_input,model_survey_user_input,bes.group_bes_coo,1,0,0,0
+bes.admin_survey_question,access_survey_question,model_survey_question,bes.group_bes_coo,1,0,0,0
 bes.admin_survey_survey,access_survey_survey,model_survey_survey,bes.group_bes_admin,1,0,0,0
 bes.admin_question_delete_wizard,access_question_delete_wizard,model_question_delete_wizard,bes.group_bes_coo,1,1,1,1
+bes.admin_batch_ceo_override_wizard,access_batch_ceo_override_wizard,model_batch_ceo_override_wizard,bes.group_bes_ceo,1,1,1,1
 
 
 

@@ -221,20 +221,22 @@ class GPCandidate(models.Model):
 
 
     def action_ceo_overriden(self):
-        for record in self:
-            record.ceo_override = True
-        
-        message = f"All selected candidates'({len(self)}) criteria have been bypassed: Ship Visit Criteria, STCW Criteria, and Attendance Criteria."
+        message = f"Are you sure you want to bypass criteria for {len(self)} selected candidates? (Ship Visit, STCW, Attendance)"
 
         return {
-            'name': 'Reallocation Status',
+            'name': 'Confirm CEO Override',
             'type': 'ir.actions.act_window',
-            'res_model': 'batch.pop.up.wizard',
+            'res_model': 'batch.ceo.override.wizard',
             'view_mode': 'form',
-            'view_type': 'form',
             'target': 'new',
-            'context': {'default_message': message},
+            'context': {
+                'default_message': message,
+                'active_model': self._name,
+                'active_ids': self.ids,
+            },
         }
+
+
 
 
     @api.depends('candidate_signature_status','candidate_image_status','indos_no')
@@ -867,19 +869,19 @@ class CCMCCandidate(models.Model):
                 record.edit_profile_status = has_group_access
 
     def action_ceo_overriden(self):
-        for record in self:
-            record.ceo_override = True
-        
-        message = f"All selected candidates'({len(self)}) criteria have been bypassed: Ship Visit Criteria, STCW Criteria, and Attendance Criteria."
+        message = f"Are you sure you want to bypass criteria for {len(self)} selected candidates? (Ship Visit, STCW, Attendance)"
 
         return {
-            'name': 'Reallocation Status',
+            'name': 'Confirm CEO Override',
             'type': 'ir.actions.act_window',
-            'res_model': 'batch.pop.up.wizard',
+            'res_model': 'batch.ceo.override.wizard',
             'view_mode': 'form',
-            'view_type': 'form',
             'target': 'new',
-            'context': {'default_message': message},
+            'context': {
+                'default_message': message,
+                'active_model': self._name,
+                'active_ids': self.ids,
+            },
         }
 
 
@@ -2478,3 +2480,40 @@ class SEPCertificateReport(models.AbstractModel):
 #     indos_no = fields.Char("Indos No",tracking=True)
 #     name = fields.Char("Name",tracking=True)
 #     candidate_code = fields.Char("Candidate Code",tracking=True)
+
+class BatchCeoOverrideWizard(models.TransientModel):
+    _name = 'batch.ceo.override.wizard'
+    _description = 'Confirmation for CEO Override'
+
+    message = fields.Text(string="Confirmation Message", readonly=True)
+
+    @api.model
+    def default_get(self, fields_list):
+        """Ensure the message is taken from context."""
+        res = super(BatchCeoOverrideWizard, self).default_get(fields_list)
+        res['message'] = self.env.context.get('default_message', "Are you sure you want to proceed?")
+        return res
+
+    def action_confirm_override(self):
+        """Execute the override action after confirmation."""
+        context = self.env.context
+        active_model = context.get('active_model')
+        active_ids = context.get('active_ids')
+
+        if active_model and active_ids:
+            records = self.env[active_model].browse(active_ids)
+            for record in records:
+                record.ceo_override = True
+
+            message = f"All selected candidates ({len(records)}) have had their criteria bypassed."
+
+            return {
+                'name': 'CEO Override Status',
+                'type': 'ir.actions.act_window',
+                'res_model': 'batch.pop.up.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'default_message': message},
+            }
+
+        return {'type': 'ir.actions.act_window_close'}

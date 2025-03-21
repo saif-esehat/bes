@@ -536,7 +536,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <header>
-                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_bes_coo"/>
+                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_bes_ceo"/>
                     </header>
                     <field name="indos_no"  optional="show"/>
                     <field name="user_state" optional="hide" widget="badge" decoration-success= "user_state == 'active'"  decoration-danger= "user_state == 'inactive'"/>
@@ -995,7 +995,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <header>
-                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_bes_coo"/>
+                        <button name="action_ceo_overriden" string="Override Criteria(CEO)" type="object" class="oe_highlight" groups="bes.group_bes_ceo"/>
                     </header>
                     <field name="indos_no"  optional="show"/>
                     <field name="ccmc_user_state" optional="hide" widget="badge" decoration-success= "ccmc_user_state == 'active'"  decoration-danger= "ccmc_user_state == 'inactive'"/>
@@ -1978,6 +1978,32 @@
             </p>
         </field>
     </record> -->
+
+    <record id="view_batch_ceo_override_wizard" model="ir.ui.view">
+        <field name="name">batch.ceo.override.wizard.form</field>
+        <field name="model">batch.ceo.override.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Action">
+                <sheet>
+                    <group>
+                        <field name="message" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_override" string="Confirm" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_batch_ceo_override_wizard" model="ir.actions.act_window">
+        <field name="name">Confirm CEO Override</field>
+        <field name="res_model">batch.ceo.override.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_batch_ceo_override_wizard"/>
+        <field name="target">new</field>
+    </record>
 
     
 </odoo>

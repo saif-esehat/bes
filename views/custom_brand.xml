@@ -16,6 +16,10 @@
         <!-- Remove the Odoo logo by not including it -->
         <!-- <a target="_blank" href="https://esehat.in" >eSehats</a> -->
     </xpath>
+    <xpath expr="//main" position="attributes">
+       <attribute name="style">width: 90% !important; margin: 0 auto; padding: 0;</attribute>
+    </xpath>
+
 </template>
 
 <template id="custom_survey_progression" inherit_id="survey.survey_progression">
