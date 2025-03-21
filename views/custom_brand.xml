@@ -10,6 +10,8 @@
 
 
 <template id="custom_survey_layout" inherit_id="survey.layout">
+    <xpath expr="//div[@class='o_survey_progress_wrapper d-inline-block pr-5 text-left']" position="replace">
+    </xpath>
     <xpath expr="//div[@class='o_survey_brand_message float-right rounded mr-3 border']" position="replace">
         <!-- Remove the Odoo logo by not including it -->
         <!-- <a target="_blank" href="https://esehat.in" >eSehats</a> -->
