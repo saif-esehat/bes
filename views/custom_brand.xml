@@ -18,7 +18,7 @@
 
 <template id="custom_survey_progression" inherit_id="survey.survey_progression">
     <xpath expr="//span[@class='o_survey_progress_number']" position="before">
-    Question
+    Questions
     </xpath>
 </template>
 
