@@ -623,7 +623,7 @@ class GPCandidatePortal(CustomerPortal):
                 cookery_prac = kwargs.get('cookery_practical')
                 cookery_oral = kwargs.get('cookery_oral')
                 cookery_gsk_online = kwargs.get('cookery_gsk_online')
-                exam_region = request.env["exam.center"].sudo().search([('id','=',exam_center)])
+                exam_region = request.env["exam.center"].sudo().search([('id','=',kwargs.get('exam_centre'))])
 
                 # exams_register = request.env['candidate.gp.register.exam.wizard'].sudo().search([('candidate_id','=',candidate.id)])
                 dgs_batch_id = kwargs.get('batch_id')
