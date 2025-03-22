@@ -22,21 +22,12 @@
 
 </template>
 
-<!-- <template id="survey_fill_header_inherit" inherit_id="survey.survey_fill_header">
-    <xpath expr="//div[@class='col-lg-10']" position="inside">
-        <t t-if="answer.predefined_question_ids">
-            <t t-set="total_questions" t-value="len(answer.predefined_question_ids.ids)"/>
-            <t t-set="answered_questions" t-value="[line.question_id.id for line in answer.user_input_line_ids]"/>
-            <t t-set="current_question" t-value="answered_questions[1] if answered_questions else answer.predefined_question_ids.ids[0]"/>
-            <t t-set="current_index" t-value="answer.predefined_question_ids.ids.index(current_question) + 1"/>
-            <h4 id="questionsCount">
-                <span t-esc='current_index'/> of <span t-esc='total_questions'/> Questions
-            </h4>
-        </t>
+<template id="survey_fill_header_inherit" inherit_id="survey.survey_fill_header">
+    <xpath expr="//div[@class='o_survey_timer col-lg-2 pt-4']" position="inside">
+        <h3 class="o_survey_timer_container timer text-right">
+        </h3>
     </xpath>
-</template> -->
-
-
+</template>
 
 <template id="custom_survey_progression" inherit_id="survey.survey_progression">
     <xpath expr="//span[@class='o_survey_progress_number']" position="before">
