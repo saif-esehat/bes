@@ -124,7 +124,7 @@
                         <img t-attf-src="data:image/png;base64,{{o.qr_code}}" style="width: 120px; height: 120px; position:absolute; top: 0; right:8px;" />
                     </t>
                     <div class="row">
-                        <div class="col-4">
+                        <div>
                             <table class="table" style="border-collapse: collapse;">
                                 <thead>
                                     <tr>
@@ -222,6 +222,7 @@
                                     <tr scope="row" t-if="o.attempting_online">
                                         <td style="border: 1px solid black;">Online</td>
                                         <t t-if="o.dgs_batch.is_march_september">
+                                        
                                             <td style="border: 1px solid black;">
                                                 <t t-if="o.exam_region.id == 1">
                                                     <t t-esc="o.dgs_batch.mumbai_online_date.strftime('%d-%b-%Y')"/>
