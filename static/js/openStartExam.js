@@ -16,11 +16,13 @@ odoo.define('bes.OpenStartExam', function (require) {
                 // e.preventDefault();
                 // e.stopPropagation(); 
 
-                debugger;
+            
                 // if (!examiner_token) {
                 //     alert('Examiner token is empty. Please provide a valid token.');
                 //     return; // Stop further process
                 // }
+                e.target.disabled = true
+
 
                 console.log("inside start gp exam");                
                 var survey_input_id = document.getElementById("survey_input_id").value;
@@ -28,6 +30,7 @@ odoo.define('bes.OpenStartExam', function (require) {
                 var online_subject = document.getElementById('online_subject').value;
 
                 if (!examiner_token) {
+                    e.target.disabled = false
                     alert('Examiner token is empty. Please provide a valid token.');
                     return; // Stop further process
                 }
@@ -54,18 +57,23 @@ odoo.define('bes.OpenStartExam', function (require) {
                             contentType: 'application/json',
                             success: function (response) {
                                 // debugger
+                                e.target.disabled = false
                                 var data = JSON.parse(response.result)
                                 if (data.error) {
                                     alert(data.error)
                                 }
                                 if (data.success) {
-                                    window.open(data.success, '_blank');
+                                    
+                                    // window.open(data.success);
+                                    window.location.href = data.success;
+
                         
                                 }
                                 // response.resul
                                 console.log("POST request successful:", response);                                
                             },
                             error: function (xhr, status, error) {
+                                e.target.disabled = false
 
                                 // debugger
                                 console.error("POST request failed:", error);
@@ -93,12 +101,15 @@ odoo.define('bes.OpenStartExam', function (require) {
             start_ccmc_exam: function (e) {
                 // e.preventDefault();
                 // e.stopPropagation(); 
-                debugger
+
+                e.target.disabled = true
+                
                 var survey_input_id = document.getElementById("survey_input_id").value;
                 var examiner_token = document.getElementById('examiner_token_input').value;
                 var online_subject = document.getElementById('online_subject').value;
 
                 if (!examiner_token) {
+                    e.target.disabled = false
                     alert('Examiner token is empty. Please provide a valid token.');
                     return; // Stop further process
                 }
@@ -123,12 +134,15 @@ odoo.define('bes.OpenStartExam', function (require) {
                             contentType: 'application/json',
                             success: function (response) {
                                 // debugger
+
+                                e.target.disabled = false
                                 var data = JSON.parse(response.result)
                                 if (data.error) {
                                     alert(data.error)
                                 }
                                 if (data.success) {
-                                    window.open(data.success, '_blank');
+                                    // window.open(data.success);
+                                    window.location.href = data.success;
                         
                                 }
                                 // response.resul
@@ -138,7 +152,7 @@ odoo.define('bes.OpenStartExam', function (require) {
 
                                 // debugger
                                 console.error("POST request failed:", error);
-                                
+                                e.target.disabled = false
                                 // Handle error
                             }
                         })
