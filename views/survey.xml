@@ -363,9 +363,10 @@
                     <field name="gp_exam"  attrs="{'invisible': [('is_gp', '=',False)]}"/>
                     <field name="ccmc_candidate"  attrs="{'invisible': [('is_ccmc', '=', False)]}"  optional="show"/>
                     <field name="ccmc_exam"  attrs="{'invisible': [('is_ccmc', '=', False)]}"  optional="show"/>
+                    <field name="indos"  optional="show"/>
                     <field name="dgs_batch"  optional="show"/>
                     <field name="institute_id"  optional="show"/>
-                    <!-- <field name="examiner" /> -->
+                    <field name="exam_center" />
                     <!-- <field name="examiner_token" /> -->
                     <field name="commence_online_exam" invisible="1"/>
                     <field name="token_regenrated" readonly="1"  optional="show"/>
@@ -474,7 +475,7 @@
                     <field name="ccmc_exam" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="institute_id"/>
                     <field name="indos"/>
-                    <!-- <field name="examiner_token"/> -->
+                    <field name="exam_center"/>
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
                     <field name="ip_address"/>
                     <field name="exam_date"/>
