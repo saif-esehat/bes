@@ -463,6 +463,25 @@
 
         </record>
 
+        <record id="survey_user_input_view_search" model="ir.ui.view">
+            <field name="name">survey.user_input.view.search.inherited</field>
+            <field name="model">survey.user_input</field>
+            <field name="inherit_id" ref="survey.survey_user_input_view_search"/>
+            <field name="arch" type="xml">
+                <!-- Correct XPath selector -->
+                <xpath expr="//search" position="inside">
+                    <!-- Add Indos field to search -->
+                    <field name="indos"/>
+
+                    <!-- Add Group By filter for Exam Region -->
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_exam_center" string="Exam Region" domain="[]" context="{'group_by': 'exam_center'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="survey_user_input_view_tree_inherited" model="ir.ui.view">
             <field name="name">survey.user_input.view.tree.inherited</field>
             <field name="model">survey.user_input</field>

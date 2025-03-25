@@ -326,12 +326,12 @@ class SurveyUserInputInherited(models.Model):
             if record.is_ccmc:
                 record.indos = record.ccmc_candidate.indos_no
                 record.examiner_token = record.ccmc_exam.token
-                record.exam_center = record.ccmc_exam.exam_center
-                
+                record.exam_center = record.ccmc_exam.exam_region
+
             elif record.is_gp:
                 record.indos = record.gp_candidate.indos_no
                 record.examiner_token = record.gp_exam.token
-                record.exam_center = record.gp_exam.exam_center
+                record.exam_center = record.gp_exam.exam_region
     
     @api.depends('user_input_line_ids', 'state')
     def _compute_total_time(self):
