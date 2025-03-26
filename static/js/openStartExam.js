@@ -64,8 +64,8 @@ odoo.define('bes.OpenStartExam', function (require) {
                                 }
                                 if (data.success) {
                                     
-                                    // window.open(data.success);
-                                    window.location.href = data.success;
+                                    window.open(data.success);
+                                    // window.location.href = data.success;
 
                         
                                 }
@@ -141,8 +141,8 @@ odoo.define('bes.OpenStartExam', function (require) {
                                     alert(data.error)
                                 }
                                 if (data.success) {
-                                    // window.open(data.success);
-                                    window.location.href = data.success;
+                                    window.open(data.success);
+                                    // window.location.href = data.success;
                         
                                 }
                                 // response.resul
