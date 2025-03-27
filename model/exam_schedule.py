@@ -3293,14 +3293,26 @@ class ResetOnlineExamWizard(models.TransientModel):
                                             "online_start_time": start_time_ist,
                                             "online_end_time": end_time_ist,
                                             })
-                gp_exam.sudo().write({
-                    "gsk_online": gsk_survey_qb_input,
-                    "gsk_online_token_used": False,
-                    "attempted_gsk_online": False,
-                    "gsk_online_attendance":'',
-                    "token":False
-                    
-                })
+                
+                if gp_exam.attempting_gsk_online and gp_exam.attempting_mek_online:
+                    gp_exam.sudo().write({
+                        "gsk_online": gsk_survey_qb_input,
+                        "gsk_online_token_used": False,
+                        "attempted_gsk_online": False,
+                        "gsk_online_attendance":'',
+                        "mek_online_attendance":'',
+                        "token":False
+                    })
+                elif gp_exam.attempting_gsk_online and not gp_exam.attempting_mek_online:
+                    gp_exam.sudo().write({
+                        "gsk_online": gsk_survey_qb_input,
+                        "gsk_online_token_used": False,
+                        "attempted_gsk_online": False,
+                        "gsk_online_attendance":'',
+                        "token":False
+                    })
+
+
             elif self.gp_subject == "mek":
                 active_id = self.env.context.get('active_id')
                 gp_exam = self.env[self.model].browse(active_id)
