@@ -363,9 +363,10 @@
                     <field name="gp_exam"  attrs="{'invisible': [('is_gp', '=',False)]}"/>
                     <field name="ccmc_candidate"  attrs="{'invisible': [('is_ccmc', '=', False)]}"  optional="show"/>
                     <field name="ccmc_exam"  attrs="{'invisible': [('is_ccmc', '=', False)]}"  optional="show"/>
+                    <field name="indos"  optional="show"/>
                     <field name="dgs_batch"  optional="show"/>
                     <field name="institute_id"  optional="show"/>
-                    <!-- <field name="examiner" /> -->
+                    <field name="exam_center" />
                     <!-- <field name="examiner_token" /> -->
                     <field name="commence_online_exam" invisible="1"/>
                     <field name="token_regenrated" readonly="1"  optional="show"/>
@@ -462,6 +463,25 @@
 
         </record>
 
+        <record id="survey_user_input_view_search" model="ir.ui.view">
+            <field name="name">survey.user_input.view.search.inherited</field>
+            <field name="model">survey.user_input</field>
+            <field name="inherit_id" ref="survey.survey_user_input_view_search"/>
+            <field name="arch" type="xml">
+                <!-- Correct XPath selector -->
+                <xpath expr="//search" position="inside">
+                    <!-- Add Indos field to search -->
+                    <field name="indos"/>
+
+                    <!-- Add Group By filter for Exam Region -->
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_exam_center" string="Exam Region" domain="[]" context="{'group_by': 'exam_center'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="survey_user_input_view_tree_inherited" model="ir.ui.view">
             <field name="name">survey.user_input.view.tree.inherited</field>
             <field name="model">survey.user_input</field>
@@ -474,7 +494,7 @@
                     <field name="ccmc_exam" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="institute_id"/>
                     <field name="indos"/>
-                    <!-- <field name="examiner_token"/> -->
+                    <field name="exam_center"/>
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>
                     <field name="ip_address"/>
                     <field name="exam_date"/>
