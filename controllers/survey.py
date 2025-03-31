@@ -350,8 +350,8 @@ class SurveyInherited(Survey):
                         answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
                     # redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/')
                     print("Coming Here")
-                    # redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
-                    redirect_url = http.request.env['ir.config_parameter'].sudo().get_param('web.base.url')+"/web/login"
+                    redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
+                    # redirect_url = http.request.env['ir.config_parameter'].sudo().get_param('web.base.url')+"/web/login"
                     # print(redirect_url)
                 else:
                     print("Coming Down")
