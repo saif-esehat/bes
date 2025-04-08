@@ -345,7 +345,8 @@
                 </group>
                 <group>
                     <!-- <field name="expense_readonly"/> -->
-                    <field name="total_expenses"/> 
+                    <field name="total_expenses" invisible="1"/> 
+                    <field name="total_expenses_new" /> 
                     <field name="state"/>
                     <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo"/>
                     <field name="modification_comment" attrs="{'invisible': [('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ceo,bes.group_expense_approval_ec"/>
