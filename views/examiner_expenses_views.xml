@@ -345,16 +345,17 @@
                 </group>
                 <group>
                     <!-- <field name="expense_readonly"/> -->
-                    <field name="total_expenses"/> 
+                    <field name="total_expenses" invisible="1"/> 
+                    <field name="total_expenses_new" /> 
                     <field name="state"/>
                     <field name="reject_reason" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo"/>
-                    <field name="modification_comment" attrs="{'invisible': [('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ceo"/>
+                    <field name="modification_comment" attrs="{'invisible': [('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ceo,bes.group_expense_approval_ec"/>
 
                 </group>
                 <footer>
                     <button string="Approve" attrs="{'invisible': [('state', '!=', 'pending'),('state', '!=', 'rejected_ceo')]}" groups="bes.group_expense_approval_ec" type="object" name="approve_time_sheet_ec" class="btn-primary"/>
-                    <button string="Approve" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo" type="object" name="approve_time_sheet_ceo" class="btn-primary"/>
-                    <button string="Reject" attrs="{'invisible': [('state', '!=', 'approved_ec')]}" groups="bes.group_expense_approval_ceo" type="object" name="reject_time_sheet_ceo" class="btn-primary"/>
+                    <button string="Approve" attrs="{'invisible': [('state', 'not in', ['approved_ec','modified_approved'])]}" groups="bes.group_expense_approval_ceo" type="object" name="approve_time_sheet_ceo" class="btn-primary"/>
+                    <button string="Reject" attrs="{'invisible': [('state', 'not in', ['approved_ec','modified_approved'])]}" groups="bes.group_expense_approval_ceo" type="object" name="reject_time_sheet_ceo" class="btn-primary"/>
                     <!-- <button string="Cancel" special="cancel" class="btn-secondary"/> -->
                 </footer>
             </form>
