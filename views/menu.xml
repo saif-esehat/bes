@@ -342,6 +342,12 @@
                   action="bes_examiner_oral_practical_duty_action" 
                   sequence="2"/> -->
 
+        <menuitem id="bes_expense_approval_accounts"
+            name="Examiner Payment"
+            action="ceo_expense_approval_action"
+            groups="bes.group_expense_approval_ceo"
+            web_icon="bes,static/description/expenses.png" />
+        
         <menuitem id="bes_expense_approval_ceo"
             name="Expense Approval"
             action="ceo_expense_approval_action"
