@@ -219,3 +219,10 @@ bes.group_exam_coordinator_exam_assignment_online_expense,access_exam_assignment
 
 bes.access_order_books,access_order_books,bes.model_order_books,base.group_user,1,1,1,1
 bes.access_order_books_line,access_order_books_line,bes.model_order_books_line,base.group_user,1,1,1,1
+
+bes.group_bes_accounts_examiner_expenses,access_examiner_expenses,bes.model_examiner_expenses,bes.group_bes_accounts,1,1,1,1
+bes.group_bes_accounts_exam_assignment_expense,access_exam_assignment_expense,bes.model_exam_assignment_expense,bes.group_bes_accounts,1,1,1,1
+bes.group_bes_accounts_exam_assignment_online_expense,access_exam_assignment_online_expense,bes.model_exam_assignment_online_expense,bes.group_bes_accounts,1,1,1,1
+bes.group_bes_accountsteam_lead_access,institute_team_lead,model_institute_team_lead,bes.group_bes_accounts,1,1,1,1
+bes.group_bes_accounts_examiner_outstation_expense,access_examiner_outstation_expense,bes.model_examiner_outstation_expense,bes.group_bes_accounts,1,1,1,1
+bes.group_bes_accounts_exam_misc_expense,access_exam_misc_expense,bes.model_exam_misc_expense,bes.group_bes_accounts,1,1,1,1
