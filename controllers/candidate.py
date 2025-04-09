@@ -341,7 +341,7 @@ class GPCandidatePortal(CustomerPortal):
                 vals = {"registered_exams":registered_exams, "error":"Invalid Examiner Token"}
                 
                 # return request.render("bes.ccmc_exam_list_view", vals)
-                return json.dumps({"error":"Token Already Used"})
+                return json.dumps({"error":"Invalid Examiner Token"})
         
         else :
             return json.dumps({"error":"Invalid IP Address"})

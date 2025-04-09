@@ -464,9 +464,20 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
     
     modification_comment = fields.Text(string='Modification Comment')
     total_expenses = fields.Integer(string="Total Expenses",related="expense.total_expenses")
+    
+    total_expenses_new = fields.Integer(string="Total Expenses",compute='_compute_expense_new')
 
     reject_reason = fields.Text("Reject Reason")
 
+
+
+    @api.depends('tavel_details')
+    def _compute_expense_new(self):
+        for record in self:
+            total = sum(detail.expenses for detail in record.tavel_details)
+            record.total_expenses_new = total
+        
+        
     @api.depends('expense_readonly')
     def _compute_is_approved(self):
         for record in self:     
